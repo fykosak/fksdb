@@ -96,7 +96,6 @@ abstract class MailCallback implements Statement
         return null;
     }
 
-
     /**
      * @phpstan-return PersonModel[]
      * @throws \ReflectionException
@@ -131,4 +130,13 @@ abstract class MailCallback implements Statement
      * }
      */
     abstract protected function getData(ModelHolder $holder, Transition $transition): array;
+
+    /**
+     * @template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
+     * @phpstan-param  Transition<THolder> $transition
+     */
+    public static function resolveLayoutName(Transition $transition): string
+    {
+        return $transition->source->value . '.' . $transition->target->value;
+    }
 }

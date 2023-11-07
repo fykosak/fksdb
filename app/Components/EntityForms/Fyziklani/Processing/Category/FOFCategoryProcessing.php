@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing\Category;
 
 use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
-use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use Nette\Forms\Form;
@@ -18,9 +20,9 @@ class FOFCategoryProcessing extends FormProcessing
      * @phpstan-param array{team:array{category:string,name:string}} $values
      * @phpstan-return array{team:array{category:string,name:string}}
      */
-    public function __invoke(array $values, Form $form, EventModel $event): array
+    public function __invoke(array $values, Form $form, EventModel $event, ?TeamModel2 $model): array
     {
-        $members = TeamFormComponent::getFormMembers($form);
+        $members = TeamForm::getFormMembers($form);
         $values['team']['category'] = $this->getCategory($members, $event)->value;
         return $values;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing\Category;
 
 use Nette\InvalidStateException;
 

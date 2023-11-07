@@ -60,10 +60,9 @@ class TeacherMail extends MailCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' .
-            $transition->source->value . '.' .
-            $transition->target->value . '.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' . self::resolveLayoutName($transition);
     }
+
 
     /**
      * @param TeamHolder $holder

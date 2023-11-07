@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani\Processing;
+namespace FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam;
 
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\InvalidStateException;
 
-class TooManySchoolsException extends InvalidStateException
+class SchoolsPerTeamException extends InvalidStateException
 {
     /**
      * @phpstan-param SchoolModel[] $schools

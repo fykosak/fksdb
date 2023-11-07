@@ -4,32 +4,60 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
         decorator: null
         transitions:
-            init->applied:
+            init->pending:
                 label: _('Register team')
+                icon: 'fas fa-plus'
+                behaviorType: primary
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamMemberMailCallback()
-                    - FKSDB\Models\Transitions\Callbacks\Fof\TeamTeacherMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
             pending->applied:
+                label: _('Move to approved')
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
                     - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
+            pending->spare:
                 label: _('Move to approved')
-            applied->spare:
                 behaviorType: warning
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
+            spare->applied:
                 label: _('Move to approved')
+                behaviorType: success
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
+            applied->pending:
+                label: _('Move to approved')
+                behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
             applied->arrived:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Arrived')
+                behaviorType: success
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()
             arrived->participated:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Present')
-            applied->missed:
+                behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+            applied->missed:
                 label: _('Did not come')
-            spare|applied->cancelled:
+                behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+            spare|applied|pending->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Cancel')
                 behaviorType: danger
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Fof\MemberMail()
+                    - FKSDB\Models\Transitions\Callbacks\Fof\TeacherMail()

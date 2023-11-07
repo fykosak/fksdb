@@ -1,9 +1,8 @@
 import {
+    forceCenter,
     forceLink,
     forceManyBody,
     forceSimulation,
-    forceX,
-    forceY,
     SimulationLinkDatum,
     SimulationNodeDatum,
 } from 'd3-force';
@@ -35,8 +34,7 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
     const simulation = forceSimulation<Node>(nodes)
         .force('link', forceLink(links))
         .force('charge', forceManyBody().strength(-1000))
-        .force('x', forceX())
-        .force('y', forceY())
+        .force('center', forceCenter())
         .alphaMin(0.001);
 
     useEffect(() => {

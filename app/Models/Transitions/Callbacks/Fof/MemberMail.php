@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Fof;
 
+use FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
-class MemberMail extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback
+class MemberMail extends TeamMemberMailCallback
 {
     /**
      * @param TeamHolder $holder
@@ -16,9 +17,7 @@ class MemberMail extends \FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallb
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member.' .
-            $transition->source->value . '.' .
-            $transition->target->value . '.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'member.' . self::resolveLayoutName($transition);
     }
 
     /**

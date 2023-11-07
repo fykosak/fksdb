@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
-use FKSDB\Components\EntityForms\Fyziklani\Processing\FOFCategoryProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeamProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueNameProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\StateStrategy\Logger;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamProcessing;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueName\UniqueNameProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -27,9 +26,8 @@ use Nette\Neon\Exception;
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
-class FOFTeamFormComponent extends TeamFormComponent
+class FOFTeamForm extends TeamForm
 {
-
     private TeamTeacherService $teacherService;
 
     final public function injectSecondary(TeamTeacherService $teacherService): void
@@ -149,7 +147,7 @@ class FOFTeamFormComponent extends TeamFormComponent
         ];
     }
 
-    private function saveTeachers(TeamModel2 $team, Form $form, Logger $logger): void
+    private function saveTeachers(TeamModel2 $team, Form $form/*, Logger $logger*/): void
     {
         $persons = self::getTeacherFromForm($form);
 
@@ -159,13 +157,13 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
         /** @var TeamTeacherModel $oldTeacher */
         foreach ($oldMemberQuery as $oldTeacher) {
-            $logger->teacherRemoved = true;
+            // $logger->teacherRemoved = true;
             $this->teacherService->disposeModel($oldTeacher);
         }
         foreach ($persons as $person) {
             $oldTeacher = $team->getTeachers()->where('person_id', $person->person_id)->fetch();
             if (!$oldTeacher) {
-                $logger->teacherAdded = true;
+                // $logger->teacherAdded = true;
                 $this->teacherService->storeModel([
                     'person_id' => $person->getPrimary(),
                     'fyziklani_team_id' => $team->fyziklani_team_id,
@@ -174,10 +172,10 @@ class FOFTeamFormComponent extends TeamFormComponent
         }
     }
 
-    protected function savePersons(TeamModel2 $team, Form $form, Logger $logger): void
+    protected function savePersons(TeamModel2 $team, Form $form/*, Logger $logger*/): void
     {
-        $this->saveTeachers($team, $form, $logger);
-        $this->saveMembers($team, $form, $logger);
+        $this->saveTeachers($team, $form/*, $logger*/);
+        $this->saveMembers($team, $form/*, $logger*/);
     }
 
     /**
