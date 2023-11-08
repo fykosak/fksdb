@@ -23,10 +23,10 @@ trait TestGridTrait
         $this->dataTestFactory = $dataTestFactory;
     }
 
-    protected function addTests(string $section): void
+    protected function addTests(): void
     {
         /** @phpstan-var array<string,Test<TModel>> $tests */
-        $tests = $this->dataTestFactory->getTests($section);
+        $tests = $this->dataTestFactory->getPersonTests();//todo
         foreach ($tests as $id => $test) {
             /** @phpstan-var RendererItem<TModel> $item */
             $item = new RendererItem(

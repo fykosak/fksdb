@@ -1,0 +1,14 @@
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType FKSDB\Components\DataTest\Test[] $tests}
+
+{block outerContent}
+    {foreach $tests as $key=>$test}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$test->getTitle()->toHtml()}</h2>
+                {control 'test_' . $key, $event}
+            </div>
+        </div>
+    {/foreach}
+
+{/block}

@@ -50,7 +50,7 @@ class PersonTestComponent extends BaseComponent
 
         $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->dataTestFactory->getTests('person') as $key => $test) {
+        foreach ($this->dataTestFactory->getPersonTests() as $key => $test) {
             $field = $testsContainer->addCheckbox($key, $test->getTitle()->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
@@ -71,8 +71,7 @@ class PersonTestComponent extends BaseComponent
             $this->tests = [];
             foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
-                    /** @phpstan-ignore-next-line */
-                    $this->tests[$testId] = $this->dataTestFactory->getTests('person')[$testId];
+                    $this->tests[$testId] = $this->dataTestFactory->getPersonTests()[$testId];
                 }
             }
             $this->offset = $values['offset'];
@@ -101,7 +100,7 @@ class PersonTestComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'tests' => $this->dataTestFactory->getTests('person'),
+            'tests' => $this->dataTestFactory->getPersonTests(),
             'logs' => $this->calculateProblems(),
         ]);
     }

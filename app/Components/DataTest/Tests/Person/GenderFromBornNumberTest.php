@@ -31,16 +31,20 @@ class GenderFromBornNumberTest extends Test
      */
     public function run(Logger $logger, Model $model): void
     {
-        $info = $model->getInfo();
-        if (!$info || !$info->born_id) {
-            return;
-        }
-        if (!$model->gender->value) {
-            $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
-            return;
-        }
-        if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
-            $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
+        try {
+            $info = $model->getInfo();
+            if (!$info || !$info->born_id) {
+                return;
+            }
+            if (!$model->gender->value) {
+                $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
+                return;
+            }
+            if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
+                $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
+            }
+        } catch (\Throwable$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
     }
 }

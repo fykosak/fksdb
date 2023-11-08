@@ -41,6 +41,6 @@ class PersonTestGrid extends BaseGrid
     {
         $this->addSimpleReferencedColumns(['@person.person_id']);
         $this->addLink('person.detail');
-        $this->addTests('person');
+        $this->addTests();
     }
 }
