@@ -21,6 +21,6 @@ class TeamAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In team "%s"(%d)'), $model->name, $model->fyziklani_team_id) . ': ';
+        return sprintf(_('In team "%s"(%d): '), $model->name, $model->fyziklani_team_id);
     }
 }

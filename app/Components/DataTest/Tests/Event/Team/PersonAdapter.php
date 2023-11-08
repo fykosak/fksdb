@@ -21,6 +21,6 @@ class PersonAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In person "%s"(%d)'), $model->getFullName(), $model->person_id) . ': ';
+        return sprintf(_('In person "%s"(%d): '), $model->getFullName(), $model->person_id);
     }
 }

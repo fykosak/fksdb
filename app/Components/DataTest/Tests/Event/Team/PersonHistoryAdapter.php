@@ -31,6 +31,6 @@ class PersonHistoryAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In person history "%s"(%d)'), $model->person->getFullName(), $model->person_id) . ': ';
+        return sprintf(_('In person history "%s"(%d): '), $model->person->getFullName(), $model->person_id);
     }
 }
