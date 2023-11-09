@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
@@ -19,7 +19,7 @@ class GenderFromBornNumberTest extends Test
 {
     public function getTitle(): Title
     {
-        return new Title(null, _('Gender from born Id'));
+        return new Title(null, _('Gender from born Id'), 'fas fa-venus-mars');
     }
     public function getDescription(): ?string
     {
@@ -31,16 +31,25 @@ class GenderFromBornNumberTest extends Test
      */
     public function run(Logger $logger, Model $model): void
     {
-        $info = $model->getInfo();
-        if (!$info || !$info->born_id) {
-            return;
+        try {
+            $info = $model->getInfo();
+            if (!$info || !$info->born_id) {
+                return;
+            }
+            if (!$model->gender->value) {
+                $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
+                return;
+            }
+            if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
+                $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
+            }
+        } catch (\Throwable$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
-        if (!$model->gender->value) {
-            $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
-            return;
-        }
-        if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
-            $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
-        }
+    }
+
+    public function getId(): string
+    {
+        return 'PersonGenderFromBorn';
     }
 }
