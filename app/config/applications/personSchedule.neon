@@ -4,12 +4,16 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\Schedule\PersonScheduleState
         decorator: null
         transitions:
-            applied->cancelled:
-                label: _('Cancel')
-            applied->missed:
-                label: _('Missed')
             applied->participated:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\IsPaid()
                 label: _('Participated')
+                icon: 'fas fa-check'
+                behaviorType: success
+            applied->missed:
+                label: _('Missed')
+                behaviorType: danger
+            applied->cancelled:
+                label: _('Cancel')
+                behaviorType: danger
 
 
