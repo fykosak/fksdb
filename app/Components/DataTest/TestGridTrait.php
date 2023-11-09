@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model;
@@ -23,11 +24,12 @@ trait TestGridTrait
         $this->dataTestFactory = $dataTestFactory;
     }
 
-    protected function addTests(): void
+    /**
+     * @phpstan-param (Test<TModel>)[] $tests
+     */
+    protected function addTests(array $tests): void
     {
-        /** @phpstan-var array<string,Test<TModel>> $tests */
-        $tests = $this->dataTestFactory->getPersonTests();//todo
-        foreach ($tests as $id => $test) {
+        foreach ($tests as $test) {
             /** @phpstan-var RendererItem<TModel> $item */
             $item = new RendererItem(
                 $this->container,
@@ -39,7 +41,7 @@ trait TestGridTrait
                 },
                 $test->getTitle()
             );
-            $this->addTableColumn($item, 'test_' . $id);
+            $this->addTableColumn($item, 'test_' . $test->getId());
         }
     }
 

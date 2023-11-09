@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Event\Team;
 
-use FKSDB\Components\DataTest\Adapter;
+use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
@@ -31,6 +31,11 @@ class PersonHistoryAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In person history "%s"(%d): '), $model->person->getFullName(), $model->person_id);
+        return sprintf(_('In person "%s"(%d) in current year: '), $model->person->getFullName(), $model->person_id);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonHistory' . $this->test->getId();
     }
 }

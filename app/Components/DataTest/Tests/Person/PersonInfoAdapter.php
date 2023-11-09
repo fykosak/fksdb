@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Adapter;
+use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
@@ -26,5 +26,10 @@ class PersonInfoAdapter extends Adapter
     protected function getLogPrepend(Model $model): string
     {
         return '';
+    }
+
+    public function getId(): string
+    {
+        return 'PersonInfo' . $this->test->getId();
     }
 }

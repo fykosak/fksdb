@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Event\Team;
 
-use FKSDB\Components\DataTest\Adapter;
+use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
@@ -22,5 +22,10 @@ class PersonAdapter extends Adapter
     protected function getLogPrepend(Model $model): string
     {
         return sprintf(_('In person "%s"(%d): '), $model->getFullName(), $model->person_id);
+    }
+
+    public function getId(): string
+    {
+        return 'Person' . $this->test->getId();
     }
 }

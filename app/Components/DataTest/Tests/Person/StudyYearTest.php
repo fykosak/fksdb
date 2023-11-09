@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
@@ -58,5 +58,10 @@ class StudyYearTest extends Test
             }
             return $datum;
         }, null);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonStudyYear';
     }
 }

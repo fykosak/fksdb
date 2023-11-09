@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\DataTest\DataTestFactory;
-use FKSDB\Components\DataTest\SingleTestComponent;
-use FKSDB\Components\DataTest\Tests\Event\Team\CategoryCheck;
+use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class ReportPresenter extends BasePresenter
@@ -38,17 +38,15 @@ class ReportPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        set_time_limit(120);
-        $tests = $this->dataTestFactory->getEventTests();
-        foreach ($tests as $key => $test) {
-            $this->addComponent(new SingleTestComponent($this->getContext(), $test), 'test_' . $key);
-        };
+        set_time_limit(-1);
         $this->template->event = $this->getEvent();
-        $this->template->tests = $tests;
     }
 
-    protected function createComponentTest(): SingleTestComponent
+    /**
+     * @phpstan-return TestsList<EventModel>
+     */
+    protected function createComponentTests(): TestsList
     {
-        return new SingleTestComponent($this->getContext(), new CategoryCheck($this->getContext()));
+        return new TestsList($this->getContext(), $this->dataTestFactory->getEventTests());
     }
 }

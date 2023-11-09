@@ -20,7 +20,9 @@ use FKSDB\Components\DataTest\Tests\PersonHistory\SetSchoolTest;
 use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model;
@@ -38,28 +40,28 @@ class DataTestFactory
     }
 
     /**
-     * @phpstan-return array<string,Test<PersonModel>>
+     * @phpstan-return Test<PersonModel>[]
      */
     public function getPersonTests(): array
     {
         return [
-            'gender_born_number' => new GenderFromBornNumberTest($this->container),
-            'participants_duration' => new ParticipantsDurationTest($this->container),
-            'organization_participation' => new EventCoveringTest($this->container),
-            'study_year' => new StudyYearTest($this->container),
-            'school_study' => new PersonHistoryAdapter(new StudyTypeTest($this->container), $this->container),
-            'school_set' => new PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
-            'postgraduate' => new PostgraduateStudyTest($this->container),
-            'school_change' => new SchoolChangeTest($this->container),
-            'phone' => new PersonInfoAdapter(
+            new GenderFromBornNumberTest($this->container),
+            new ParticipantsDurationTest($this->container),
+            new EventCoveringTest($this->container),
+            new StudyYearTest($this->container),
+            new PersonHistoryAdapter(new StudyTypeTest($this->container), $this->container),
+            new PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
+            new PostgraduateStudyTest($this->container),
+            new SchoolChangeTest($this->container),
+            new PersonInfoAdapter(
                 new PersonInfoFileLevelTest('phone', $this->container),
                 $this->container
             ),
-            'phone_parent_d' => new PersonInfoAdapter(
+            new PersonInfoAdapter(
                 new PersonInfoFileLevelTest('phone_parent_d', $this->container),
                 $this->container
             ),
-            'phone_parent_m' => new PersonInfoAdapter(
+            new PersonInfoAdapter(
                 new PersonInfoFileLevelTest('phone_parent_m', $this->container),
                 $this->container
             ),
@@ -67,7 +69,7 @@ class DataTestFactory
     }
 
     /**
-     * @phpstan-return array<string,Test<SchoolModel>>
+     * @phpstan-return Test<SchoolModel>[]
      */
     public function getSchoolTests(): array
     {
@@ -77,38 +79,42 @@ class DataTestFactory
     }
 
     /**
-     * @phpstan-return array<string,Test<EventModel>>
+     * @phpstan-return Test<EventModel>[]
      */
     public function getEventTests(): array
     {
+        $tests = [
+            new NoRoleSchedule($this->container),
+        ];
+        foreach ($this->getTeamTests() as $test) {
+            $tests[] = new TeamAdapter($test, $this->container);
+        }
+        return $tests;
+    }
+
+    /**
+     * @phpstan-return Test<TeamModel2>[]
+     */
+    public function getTeamTests(): array
+    {
         return [
-            'no_role' => new NoRoleSchedule($this->container),
-            'team_category' => new TeamAdapter(new CategoryCheck($this->container), $this->container),
-            'team_person_gender' => new TeamAdapter(
-                new PersonAdapter(
-                    new GenderFromBornNumberTest($this->container),
-                    $this->container
-                ),
+            new CategoryCheck($this->container),
+            new PersonAdapter(
+                new GenderFromBornNumberTest($this->container),
                 $this->container
             ),
-            'team_person_school_changer' => new TeamAdapter(
-                new PersonAdapter(new SchoolChangeTest($this->container), $this->container),
+            new PersonAdapter(new SchoolChangeTest($this->container), $this->container),
+            new PersonAdapter(
+                new PostgraduateStudyTest($this->container),
                 $this->container
             ),
-            'team_person_postgraduate' => new TeamAdapter(
-                new PersonAdapter(new PostgraduateStudyTest($this->container), $this->container),
+            new PersonAdapter(new StudyYearTest($this->container), $this->container),
+            new Tests\Event\Team\PersonHistoryAdapter(
+                new StudyTypeTest($this->container),
                 $this->container
             ),
-            'team_person_study_year' => new TeamAdapter(
-                new PersonAdapter(new StudyYearTest($this->container), $this->container),
-                $this->container
-            ),
-            'team_person_school_study' => new TeamAdapter(
-                new Tests\Event\Team\PersonHistoryAdapter(new StudyTypeTest($this->container), $this->container),
-                $this->container
-            ),
-            'team_person_school_set' => new TeamAdapter(
-                new Tests\Event\Team\PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
+            new Tests\Event\Team\PersonHistoryAdapter(
+                new SetSchoolTest($this->container),
                 $this->container
             ),
         ];
@@ -116,19 +122,19 @@ class DataTestFactory
 
     /**
      * @phpstan-template TModel of Model
-     * @phpstan-param array<string,Test<TModel>> $tests
+     * @phpstan-param Test<TModel>[] $tests
      * @phpstan-param TModel $model
      * @phpstan-return array<string,Message[]>
      */
     public static function runForModel(Model $model, array $tests): array
     {
         $log = [];
-        foreach ($tests as $testId => $test) {
+        foreach ($tests as $test) {
             $logger = new MemoryLogger();
             $test->run($logger, $model);
             $testLog = $logger->getMessages();
             if (count($testLog)) {
-                $log[$testId] = $testLog;
+                $log[$test->getId()] = $testLog;
             }
         }
         return $log;

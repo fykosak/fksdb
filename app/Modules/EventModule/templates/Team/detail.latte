@@ -25,9 +25,6 @@
                 {if $event->getScheduleGroups()->count()}
                     {include personSchedule, person => $member->person}
                 {/if}
-                {if $isOrganizer}
-                    {control studySchoolTest $member->getPersonHistory()}
-                {/if}
             </div>
         </div>
     {/foreach}
@@ -41,6 +38,11 @@
                 {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
             </div>
         </div>
+    {/if}
+{/define}
+{define tests, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {if $isOrganizer}
+        {control tests, $model}
     {/if}
 {/define}
 
@@ -61,4 +63,5 @@
     </div>
     {include rank, model:$model}
     {include members, model:$model}
+    {include tests, model:$model}
 {/block}

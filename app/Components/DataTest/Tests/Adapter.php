@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\DataTest;
+namespace FKSDB\Components\DataTest\Tests;
 
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;

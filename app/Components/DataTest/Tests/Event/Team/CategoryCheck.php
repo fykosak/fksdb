@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Event\Team;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\FOLCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -38,8 +38,6 @@ class CategoryCheck extends Test
                     new Message(
                         sprintf(
                             _('Wrong category actual %s calculated %s'),
-                            $model->name,
-                            $model->fyziklani_team_id,
                             $actual,
                             $calculated
                         ),
@@ -60,5 +58,10 @@ class CategoryCheck extends Test
     public function getTitle(): Title
     {
         return new Title(null, _('Category check'), 'fas fa-poo');
+    }
+
+    public function getId(): string
+    {
+        return 'teamCategory';
     }
 }

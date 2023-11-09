@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Event;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
@@ -33,10 +33,9 @@ class NoRoleSchedule extends Test
      */
     public function run(Logger $logger, Model $model): void
     {
-        $query = $this->personService->getTable()->where(
-            ':person_schedule.schedule_item.schedule_group.event_id',
-            $model->event_id
-        )->group('person_id');
+        $query = $this->personService->getTable()
+            ->where(':person_schedule.schedule_item.schedule_group.event_id', $model->event_id)
+            ->group('person_id');
         /** @var PersonModel $person */
         foreach ($query as $person) {
             foreach ($person->getEventRoles($model) as $role) {
@@ -64,5 +63,10 @@ class NoRoleSchedule extends Test
     public function getTitle(): Title
     {
         return new Title(null, _('No role schedule'), 'fas fa-poo');
+    }
+
+    public function getId(): string
+    {
+        return 'eventScheduleNoRole';
     }
 }
