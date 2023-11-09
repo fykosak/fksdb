@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-05 18:00+0100\n"
+"POT-Creation-Date: 2023-11-09 21:15+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -781,8 +781,8 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
 msgid ""
-"Organization and participation in year %d (%d) of the contest %s \"%s\"<->"
-"\"%s\"."
+"Organization and participation in year %d (%d) of the contest %s \"%s\"<-"
+">\"%s\"."
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:22
@@ -1339,7 +1339,7 @@ msgid "Application belongs to another event."
 msgstr "Časový vývoj prihlášiek"
 
 #: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:86
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:116
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:115
 #: i18n/../app/Models/MachineCode/MachineCodeType.php:65
 msgid "Wrong type of code."
 msgstr ""
@@ -1348,18 +1348,18 @@ msgstr ""
 msgid "Automaticly redirect to detail"
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:85
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:84
 msgid "Modely sa nezhodujú"
 msgstr ""
 
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:96
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:97
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:98
 #: i18n/../app/Components/Schedule/Attendance/CodeComponent.php:58
 #, php-format
 msgid "Transition successful for: %s"
 msgstr ""
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:124
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:123
 msgid "Processed: "
 msgstr ""
 
@@ -2649,7 +2649,7 @@ msgid "Participant (%s)"
 msgstr "Registrácia"
 
 #: i18n/../app/Models/Entity/ModelNotFoundException.php:13
-#: i18n/../app/Models/MachineCode/MachineCode.php:65
+#: i18n/../app/Models/MachineCode/MachineCode.php:64
 #, fuzzy
 msgid "Model not found"
 msgstr "Časový vývoj prihlášiek"
@@ -2702,24 +2702,16 @@ msgstr ""
 msgid "Unknown format \"%s\"."
 msgstr ""
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:31
+#: i18n/../app/Models/MachineCode/MachineCode.php:30
 msgid "Cannot encrypt code"
 msgstr ""
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:57
+#: i18n/../app/Models/MachineCode/MachineCode.php:56
 msgid "Wrong format"
 msgstr ""
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:78
+#: i18n/../app/Models/MachineCode/MachineCode.php:77
 msgid "Cannot decrypt code"
-msgstr ""
-
-#: i18n/../app/Models/MachineCode/MachineCode.php:94
-msgid "Not implemented"
-msgstr ""
-
-#: i18n/../app/Models/MachineCode/MachineCode.php:97
-msgid "Empty salt"
 msgstr ""
 
 #: i18n/../app/Models/Mail/MailTemplateFactory.php:125
@@ -2975,7 +2967,15 @@ msgstr ""
 msgid "Waiting"
 msgstr ""
 
-#: i18n/../app/Models/ORM/Models/EventModel.php:304
+#: i18n/../app/Models/ORM/Models/EventModel.php:308
+msgid "Not implemented"
+msgstr ""
+
+#: i18n/../app/Models/ORM/Models/EventModel.php:311
+msgid "Empty salt"
+msgstr ""
+
+#: i18n/../app/Models/ORM/Models/EventModel.php:324
 msgid "Game handler does not exist for this event"
 msgstr ""
 
@@ -3699,24 +3699,24 @@ msgstr ""
 msgid "No series available"
 msgstr ""
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:52
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:53
 #: i18n/../app/Modules/ProfileModule/DashboardPresenter.php:13
 msgid "My profile"
 msgstr ""
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:55
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:56
 msgid "Log out"
 msgstr ""
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:94
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:95
 msgid "Administrator"
 msgstr ""
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:98
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:99
 msgid "Physics correspondence seminar of MFF UK"
 msgstr ""
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:101
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:102
 msgid ""
 "Physics correspondence seminar of MFF UK for the students of elementary "
 "schools."
@@ -6688,22 +6688,6 @@ msgid "Zvolená osoba je již přihlášená."
 msgstr "Stránka požaduje prihlásenie."
 
 #, fuzzy
-#~ msgid "Submit!"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Action"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Check"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Show application!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
 #~ msgid "#nav-contests"
 #~ msgstr "Zvoliť typ"
 
@@ -6732,6 +6716,10 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Ubytnovanie neexistuje"
 
 #, fuzzy
+#~ msgid "Action"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
 #~ msgid "All tests"
 #~ msgstr "Zvoliť typ"
 
@@ -6750,6 +6738,10 @@ msgstr "Stránka požaduje prihlásenie."
 #, fuzzy
 #~ msgid "Applications detail"
 #~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Check"
+#~ msgstr "Nová platba"
 
 #, fuzzy
 #~ msgid "Check submit"
@@ -6828,6 +6820,10 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Nová platba"
 
 #, fuzzy
+#~ msgid "Payment on the spot"
+#~ msgstr "Nová platba"
+
+#, fuzzy
 #~ msgid "Person info is not set"
 #~ msgstr "Zoznam platieb"
 
@@ -6872,12 +6868,20 @@ msgstr "Stránka požaduje prihlásenie."
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
+#~ msgid "Show application!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
 #~ msgid "Skip the application and continue."
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
 #~ msgid "State of application \"%s\" changed."
 #~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Submit!"
+#~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
 #~ msgid "Team applications time progress"
@@ -6930,7 +6934,3 @@ msgstr "Stránka požaduje prihlásenie."
 #, fuzzy
 #~ msgid "{plink import}"
 #~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Payment on the spot"
-#~ msgstr "Nová platba"
