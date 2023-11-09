@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models\Event\Schedule;
+namespace FKSDB\Models\WebService\Models\Events\Schedule;
 
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;

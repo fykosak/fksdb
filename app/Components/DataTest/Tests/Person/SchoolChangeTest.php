@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -65,5 +65,10 @@ class SchoolChangeTest extends Test
                 Message::LVL_WARNING
             )
         );
+    }
+
+    public function getId(): string
+    {
+        return 'PersonSchoolChange';
     }
 }
