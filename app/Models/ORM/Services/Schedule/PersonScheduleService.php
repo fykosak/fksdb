@@ -14,14 +14,4 @@ use Nette\Application\BadRequestException;
  */
 final class PersonScheduleService extends Service
 {
-    /**
-     * @throws BadRequestException
-     */
-    public function makeAttendance(PersonScheduleModel $personSchedule): void
-    {
-        if ($personSchedule->state->value === PersonScheduleState::PARTICIPATED) {
-            throw new BadRequestException(_('Already participated'));
-        }
-        $this->storeModel(['state' => PersonScheduleState::PARTICIPATED], $personSchedule);
-    }
 }

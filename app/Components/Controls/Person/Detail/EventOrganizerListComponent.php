@@ -53,13 +53,19 @@ class EventOrganizerListComponent extends DetailComponent
             new SimpleItem($this->container, '@event_org.note'),
             'event_org_note'
         );
-        $this->addPresenterButton(':Event:EventOrganizer:edit', 'edit', _('Edit'), false, [
+        $this->addPresenterButton(':Event:EventOrganizer:edit', 'edit', new Title(null, _('button.edit')), false, [
             'eventId' => 'event_id',
             'id' => 'e_org_id',
         ]);
-        $this->addPresenterButton(':Event:EventOrganizer:detail', 'detail', _('Detail'), false, [
-            'eventId' => 'event_id',
-            'id' => 'e_org_id',
-        ]);
+        $this->addPresenterButton(
+            ':Event:EventOrganizer:detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            [
+                'eventId' => 'event_id',
+                'id' => 'e_org_id',
+            ]
+        );
     }
 }

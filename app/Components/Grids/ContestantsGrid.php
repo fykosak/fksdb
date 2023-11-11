@@ -69,7 +69,13 @@ final class ContestantsGrid extends BaseGrid
             'school_name',
         );
 
-        $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            'Contestant:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'contestant_id']
+        );
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
     }
 }

@@ -136,7 +136,7 @@ session:
    expiration: 14 days
    autoStart: true
 extensions:
-    fksrouter: FKSDB\Models\Router\RouterExtension
+    #fksrouter: FKSDB\Models\Router\RouterExtension
     acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension()
@@ -157,3 +157,5 @@ includes:
     - applications/fof.neon
     - applications/fol.neon
     - applications/dsef.neon
+    - applications/setkani.neon
+    - applications/personSchedule.neon

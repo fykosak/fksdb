@@ -42,7 +42,7 @@ abstract class SeriesTableFormComponent extends SeriesTableComponent
                 ];
             }
         );
-        $form->addSubmit('submit', _('Save'));
+        $form->addSubmit('submit', _('button.save'));
         $form->onError[] = function (Form $form) {
             foreach ($form->getErrors() as $error) {
                 $this->flashMessage($error, Message::LVL_ERROR);

@@ -7,6 +7,7 @@ namespace FKSDB\Models\Transitions\Callbacks\Payment;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
  * @phpstan-extends MailCallback<PaymentHolder>
@@ -15,13 +16,14 @@ class NewPaymentCallback extends MailCallback
 {
     /**
      * @param PaymentHolder $holder
+     * @phpstan-param Transition<PaymentHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
      *     subject:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder): array
+    protected function getData(ModelHolder $holder, Transition $transition): array
     {
         if ($holder->getModel()->person->getPreferredLang() === 'cs') {
             $subject = 'Platba na Fyziklání';
@@ -39,8 +41,9 @@ class NewPaymentCallback extends MailCallback
 
     /**
      * @param PaymentHolder $holder
+     * @phpstan-param Transition<PaymentHolder> $transition
      */
-    protected function getTemplatePath(ModelHolder $holder): string
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'create';
     }

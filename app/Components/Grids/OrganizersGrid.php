@@ -70,7 +70,7 @@ final class OrganizersGrid extends BaseGrid
             '@org.allow_pm',
         ]);
 
-        $this->addORMLink('org.edit', true);
-        $this->addORMLink('org.detail', true);
+        $this->addLink('org.edit', true);
+        $this->addLink('org.detail', true);
     }
 }

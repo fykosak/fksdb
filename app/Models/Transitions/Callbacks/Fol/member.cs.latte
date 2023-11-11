@@ -1,8 +1,9 @@
 {varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
-{var string $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
-{var string $editLink = $control->link('//:Event:TeamApplication:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+
+{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
 <p>Ahoj,<br/>
     byl(a) jsi úspěšně zaregistrován(a) na Fyziklání Online, jsi členem týmu <em>{$team->name}</em>.

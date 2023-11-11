@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends BaseGrid<ProductModel,array{}>
@@ -43,6 +44,12 @@ class ProductsGrid extends BaseGrid
             '@warehouse_product.category',
             '@warehouse_producer.name',
         ]);
-        $this->addPresenterButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
+        $this->addPresenterButton(
+            ':Warehouse:Product:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'product_id']
+        );
     }
 }

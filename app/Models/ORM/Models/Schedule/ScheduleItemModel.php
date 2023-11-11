@@ -21,6 +21,7 @@ use Nette\Security\Resource;
  * @property-read ScheduleGroupModel $schedule_group
  * @property-read float|null $price_czk
  * @property-read float|null $price_eur
+ * @property-read int|bool $payable
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
  * @property-read LocalizedString $name
@@ -76,14 +77,6 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @throws \Exception
-     */
-    public function isPayable(): bool
-    {
-        return (bool)count($this->getPrice()->getPrices());
-    }
-
-    /**
      * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
      */
     public function getInterested(): TypedGroupedSelection
@@ -95,6 +88,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     public function getUsedCapacity(): int
     {
+        //->where('state !=', PersonScheduleState::Cancelled)
         return $this->getInterested()->count();
     }
 

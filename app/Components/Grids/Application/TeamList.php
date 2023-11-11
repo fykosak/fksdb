@@ -111,9 +111,9 @@ final class TeamList extends BaseList
             'name'
         );
         $this->addPresenterButton(
-            ':Event:TeamApplication:detail',
+            ':Event:Team:detail',
             'detail',
-            _('Detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'fyziklani_team_id']
         );

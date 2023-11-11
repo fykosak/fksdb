@@ -196,7 +196,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine<BaseHolder>
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -209,7 +209,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function startup(): void
     {
-        if (in_array($this->getEvent()->event_type_id, [2, 14])) {
+        if (in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
             if ($this->getEventApplication()) {
                 $this->redirect(
                     ':Event:Application:edit',

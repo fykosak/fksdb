@@ -39,7 +39,8 @@ class PersonTestGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addSimpleReferencedColumns(['@person.person_id', '@person.person_link']);
-        $this->addTests('person');
+        $this->addSimpleReferencedColumns(['@person.person_id', '@person.full_name']);
+        $this->addLink('person.detail');
+        $this->addTests($this->dataTestFactory->getPersonTests());
     }
 }

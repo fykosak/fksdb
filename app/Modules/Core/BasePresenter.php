@@ -6,7 +6,7 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
@@ -214,7 +214,12 @@ abstract class BasePresenter extends Presenter
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
-            $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+            $testedPresenter = $this->presenterBuilder->preparePresenter(
+                (string)$presenter,
+                $action,
+                $args,
+                $baseParams
+            );
 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
@@ -365,9 +370,9 @@ abstract class BasePresenter extends Presenter
         return new ColumnRendererComponent($this->getContext());
     }
 
-    protected function createComponentColumnTable(): ColumnTableComponent
+    protected function createComponentColumnTable(): ColumnTable
     {
-        return new ColumnTableComponent($this->getContext());
+        return new ColumnTable($this->getContext());
     }
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent

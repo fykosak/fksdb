@@ -1,0 +1,54 @@
+{define rests}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests'}</h2>
+            {control rests}
+        </div>
+    </div>
+{/define}
+
+{define codeTransition, bool $isOrganizer}
+    {if $control->getComponent('codeTransition')->available() && $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Attendance'}</h2>
+                {control codeTransition}
+            </div>
+        </div>
+    {/if}
+{/define}
+
+{define titleButtons
+FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,
+bool $isOrganizer}
+    <div class="d-flex align-items-center gap-2">
+        {if $model->event->isRegistrationOpened() || $isOrganizer}
+            <a href="{plink edit id => $model->getPrimary()}"
+               class="btn btn-outline-primary">
+                <i class="fas fa-pencil me-2"></i>
+                {_'button.edit'}
+            </a>
+        {/if}
+        {if $isOrganizer}
+            {control buttonTransition false}
+        {/if}
+        {var $machineCode = $model->createMachineCode()}
+        {if $isOrganizer && $machineCode}
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-code me-2"></i>
+                    {_'Code'}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 20rem">
+                    <div class="px-3 py-2">
+                        <label class="form-label">{_'Application code'}</label>
+                        <input type="text" class="form-control-sm form-control" value="{$machineCode}"/>
+                    </div>
+                </div>
+            </div>
+        {/if}
+        {if $model instanceof FKSDB\Models\ORM\Models\EventParticipantModel && $isOrganizer}
+            {control printer:button 'person.detail', $model}
+        {/if}
+    </div>
+{/define}

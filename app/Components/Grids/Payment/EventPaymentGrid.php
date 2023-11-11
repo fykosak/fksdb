@@ -49,6 +49,6 @@ final class EventPaymentGrid extends BaseGrid
             '@payment.variable_symbol',
         ]);
 
-        $this->addORMLink('payment.detail');
+        $this->addLink('payment.detail');
     }
 }

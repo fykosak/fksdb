@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\Utils\UI\Title;
 use Nette\SmartObject;
 
 /**
@@ -30,10 +31,10 @@ class Transition
     /** @phpstan-var (callable(THolder):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
-    private string $label;
-    /** @phpstan-var (callable(THolder):void)[] */
+    private Title $label;
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
-    /** @phpstan-var (callable(THolder):void)[] */
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
 
     protected bool $validation;
@@ -73,19 +74,14 @@ class Transition
         $this->behaviorType = $behaviorType;
     }
 
-    public function getLabel(): string
+    public function label(): Title
     {
-        return _($this->label);
+        return $this->label;
     }
 
-    public function label(): string
+    public function setLabel(string $label, string $icon): void
     {
-        return _($this->label);
-    }
-
-    public function setLabel(?string $label): void
-    {
-        $this->label = $label ?? '';
+        $this->label = new Title(null, $label, $icon);
     }
 
     /**
@@ -142,7 +138,7 @@ class Transition
     final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder);
+            $callback($holder, $this);
         }
     }
 
@@ -153,7 +149,7 @@ class Transition
     {
         try {
             foreach ($this->afterExecute as $callback) {
-                $callback($holder);
+                $callback($holder, $this);
             }
         } catch (\Throwable $exception) {
             throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);

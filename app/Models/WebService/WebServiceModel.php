@@ -20,11 +20,11 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     StatsWebModel,
     WebModel
 };
-use FKSDB\Models\WebService\Models\Event\{ParticipantListWebModel,
+use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
     Schedule\GroupListWebModel,
     Schedule\ItemListWebModel,
     Schedule\PersonListWebModel,
-    TeamListWebModel,
+    TeamsWebModel,
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -46,6 +46,7 @@ class WebServiceModel
 
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        // 'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
@@ -62,8 +63,8 @@ class WebServiceModel
         'event/schedule/groups' => GroupListWebModel::class,
         'event/schedule/items' => ItemListWebModel::class,
         'event/schedule/persons' => PersonListWebModel::class,
-        'event/teams' => TeamListWebModel::class,
-        'event/participants' => ParticipantListWebModel::class,
+        'event/teams' => TeamsWebModel::class,
+        'event/participants' => ParticipantsWebModel::class,
         // game
         'game/results' => Game\ResultsWebModel::class,
         'game/submit' => Game\SubmitWebModel::class,
@@ -83,6 +84,7 @@ class WebServiceModel
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $user;
     }
+
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
@@ -178,14 +180,11 @@ class WebServiceModel
 
     /**
      * @phpstan-template TParams of array
-     * @throws \ReflectionException
      * @throws BadRequestException
      * @phpstan-param TParams $arguments
      */
-    public function getJsonResponse(string $name, array $arguments): JsonResponse
+    public function getJsonResponse(?WebModel $webModel, array $arguments): JsonResponse
     {
-        /** @phpstan-var WebModel<TParams,array<mixed>>|null $webModel */
-        $webModel = $this->getWebModel($name);
         if (!$webModel) {
             throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
         }

@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Fykosak\NetteORM\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -70,7 +71,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:edit',
             'edit',
-            _('Edit'),
+            new Title(null, _('button.edit')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-primary'
@@ -78,7 +79,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:detail',
             'detail',
-            _('Detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-info'
@@ -86,7 +87,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'Export:execute',
             'execute',
-            _('Execute export'),
+            new Title(null, _('Execute export')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-success'

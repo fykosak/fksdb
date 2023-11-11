@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\PersonInfo;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
@@ -22,7 +22,7 @@ use Nette\DI\Container;
 class PersonInfoFileLevelTest extends Test
 {
     private string $fieldName;
-    private ORMFactory $tableReflectionFactory;
+    private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(string $fieldName, Container $container)
     {
@@ -30,7 +30,7 @@ class PersonInfoFileLevelTest extends Test
         $this->fieldName = $fieldName;
     }
 
-    public function inject(ORMFactory $tableReflectionFactory): void
+    public function inject(ReflectionFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -66,5 +66,10 @@ class PersonInfoFileLevelTest extends Test
     public function run(Logger $logger, Model $model): void
     {
         $this->getRowFactory()->runTest($logger, $model);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonInfo' . $this->fieldName;
     }
 }

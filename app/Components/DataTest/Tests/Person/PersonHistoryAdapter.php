@@ -4,50 +4,34 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
 
 /**
- * @phpstan-extends Test<PersonModel>
+ * @phpstan-extends Adapter<PersonModel,PersonHistoryModel>
  */
-class PersonHistoryAdapter extends Test
+class PersonHistoryAdapter extends Adapter
 {
-    /** @phpstan-var Test<PersonHistoryModel> */
-    private Test $test;
-
-    /**
-     * @phpstan-param Test<PersonHistoryModel> $test
-     */
-    public function __construct(Test $test, Container $container)
-    {
-        parent::__construct($container);
-        $this->test = $test;
-    }
-
-    public function getTitle(): Title
-    {
-        return $this->test->getTitle();
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->test->getDescription();
-    }
-
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    protected function getModels(Model $model): iterable
     {
-        $histories = $model->getHistories();
-        /** @var PersonHistoryModel $history */
-        foreach ($histories as $history) {
-            $this->test->run($logger, $history);
-        }
+        return $model->getHistories();//@phpstan-ignore-line
+    }
+
+    /**
+     * @param PersonHistoryModel $model
+     */
+    protected function getLogPrepend(Model $model): string
+    {
+        return sprintf(_('In ac. year %d/%d: '), $model->ac_year, $model->ac_year + 1);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonHistory' . $this->test->getId();
     }
 }

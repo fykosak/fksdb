@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -45,8 +46,8 @@ final class EventOrganizersGrid extends BaseGrid
             '@person.full_name',
             '@event_org.note',
         ]);
-        $this->addPresenterButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('edit', 'edit', new Title(null, _('button.edit')), false, ['id' => 'e_org_id']);
+        $this->addPresenterButton('detail', 'detail', new Title(null, _('button.detail')), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 }

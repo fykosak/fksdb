@@ -47,22 +47,34 @@ class ContestantListComponent extends DetailComponent
             'contestant__year'
         );
         if ($this->isOrganizer) {
-            $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', _('Edit'), false, [
+            $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', new Title(null, _('button.edit')), false, [
                 'contestId' => 'contest_id',
                 'year' => 'year',
                 'id' => 'contestant_id',
             ]);
 
-            $this->addPresenterButton(':Organizer:Contestant:detail', 'detail', _('Detail'), false, [
-                'contestId' => 'contest_id',
-                'year' => 'year',
-                'id' => 'contestant_id',
-            ]);
+            $this->addPresenterButton(
+                ':Organizer:Contestant:detail',
+                'detail',
+                new Title(null, _('button.detail')),
+                false,
+                [
+                    'contestId' => 'contest_id',
+                    'year' => 'year',
+                    'id' => 'contestant_id',
+                ]
+            );
         } else {
-            $this->addPresenterButton(':Public:Dashboard:default', 'detail', _('Detail'), false, [
-                'contestId' => 'contest_id',
-                'year' => 'year',
-            ]);
+            $this->addPresenterButton(
+                ':Public:Dashboard:default',
+                'detail',
+                new Title(null, _('button.detail')),
+                false,
+                [
+                    'contestId' => 'contest_id',
+                    'year' => 'year',
+                ]
+            );
         }
     }
 

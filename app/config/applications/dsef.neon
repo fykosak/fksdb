@@ -6,17 +6,21 @@ transitions:
         transitions:
             __init->applied:
                 label: _('Register')
+                icon: 'fas fa-plus'
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Dsef\ParticipantMailCallback()
             applied->participated:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
                 label: _('Prezentovat')
+                icon: 'fas fa-check'
             applied->missed:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
                 label: _('Nepřijel')
+                icon: 'fas fa-poo'
                 behaviorType: danger
             applied->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 label: _('Zrušit přihlášku')
+                icon: 'fas fa-xmark'
                 behaviorType: danger
 

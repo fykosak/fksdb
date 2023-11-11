@@ -1,0 +1,58 @@
+{layout './detail.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType bool $isOrganizer}
+
+{block outerContent}
+    {include codeTransition from '../AbstractApplication/blocks.latte',isOrganizer:$isOrganizer }
+    {if $isOrganizer}
+        {include rests from '../AbstractApplication/blocks.latte'}
+    {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.phone',
+            'fyziklani_team.note',
+            'fyziklani_team.password',
+            'fyziklani_team.category',
+            'fyziklani_team.created',
+            'fyziklani_team.game_lang',
+            'fyziklani_team.force_a',
+            ],$model,1024}
+        </div>
+    </div>
+    {include rank from './detail.latte', model:$model}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                {control schoolCheck $model}
+            </div>
+        </div>
+    {/if}
+    {var $teacherCounter = 0;}
+    {foreach $model->getTeachers() as $teacher}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+        <div class="panel color-auto">
+            <div class="container">
+                {php $teacherCounter++}
+                <h2>{_'Teacher'} {$teacherCounter}: {control printer:templateString '@person.full_name',$teacher,1024}</h2>
+                {if $isOrganizer}
+                    {control printer:button 'person.detail', $teacher}
+                {/if}
+                {include personSchedule from './detail.latte', person => $teacher->person}
+            </div>
+        </div>
+    {/foreach}
+    {include members from './detail.latte', model:$model}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Seating'}</h2>
+                {control seating:preview}
+            </div>
+        </div>
+    {/if}
+    {include tests from './detail.latte', model:$model}
+{/block}

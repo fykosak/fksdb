@@ -130,7 +130,7 @@ final class SchoolsGrid extends BaseGrid
             'study'
         );
 
-        $this->addORMLink('school.edit');
-        $this->addORMLink('school.detail');
+        $this->addLink('school.edit');
+        $this->addLink('school.detail');
     }
 }

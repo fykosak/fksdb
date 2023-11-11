@@ -59,7 +59,7 @@ class CorrectedFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('button.save'));
     }
 
     protected function configureForm(Form $form): void

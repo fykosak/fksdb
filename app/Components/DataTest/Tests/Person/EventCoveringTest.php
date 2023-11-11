@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
@@ -170,5 +170,10 @@ class EventCoveringTest extends Test
             $contestYears[] = $contestant->getContestYear();
         }
         return self::contestYearsToArray($contestYears);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonEventCovering';
     }
 }

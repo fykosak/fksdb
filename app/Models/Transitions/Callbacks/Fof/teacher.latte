@@ -3,7 +3,7 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
 
-{var string $detailLink = $control->link('//:Event:TeamApplication:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
 {block body}
     {if $holder->getModel()->game_lang->value == 'cs'}

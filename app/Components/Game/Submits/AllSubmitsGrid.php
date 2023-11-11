@@ -75,7 +75,13 @@ class AllSubmitsGrid extends BaseGrid
             ]
         );
         if ($this->event->event_type_id === 1) {
-            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
         }
         $this->addTableButton(
             new Button(

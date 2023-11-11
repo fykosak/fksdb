@@ -7,7 +7,6 @@ namespace FKSDB\Components\Charts;
 use DateTime;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;

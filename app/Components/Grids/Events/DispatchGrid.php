@@ -74,7 +74,13 @@ final class DispatchGrid extends BaseGrid
             '@event.year',
             '@event.role',
         ]);
-        $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+        $this->addPresenterButton(
+            'Dashboard:default',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['eventId' => 'event_id']
+        );
     }
 
     protected function configureForm(Form $form): void
