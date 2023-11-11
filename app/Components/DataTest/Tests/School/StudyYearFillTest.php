@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\School;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
@@ -34,5 +34,10 @@ class StudyYearFillTest extends Test
         if ($model->active && !$model->study_p && !$model->study_h && !$model->study_u) {
             $logger->log(new Message(_('Missing study years'), Message::LVL_ERROR));
         }
+    }
+
+    public function getId(): string
+    {
+        return 'SchoolStudyYearFill';
     }
 }

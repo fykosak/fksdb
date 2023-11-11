@@ -6,8 +6,8 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\DataTest\SingleTestComponent;
-use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
+use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
@@ -26,7 +26,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
-use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -43,10 +42,12 @@ final class TeamPresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     private TeamService2 $teamService;
+    private DataTestFactory $dataTestFactory;
 
-    public function injectServiceService(TeamService2 $service): void
+    public function injectServiceService(TeamService2 $service, DataTestFactory $dataTestFactory): void
     {
         $this->teamService = $service;
+        $this->dataTestFactory = $dataTestFactory;
     }
 
     /**
@@ -107,7 +108,6 @@ final class TeamPresenter extends BasePresenter
                 'personSchedule' . $person->person_id
             );
         }
-
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         try {
@@ -338,14 +338,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return SingleTestComponent<PersonHistoryModel>
-     */
-    protected function createComponentStudySchoolTest(): SingleTestComponent
-    {
-        return new SingleTestComponent($this->getContext(), new StudyTypeTest($this->getContext()));
-    }
-
-    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -368,5 +360,13 @@ final class TeamPresenter extends BasePresenter
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
         return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+    }
+
+    /**
+     * @phpstan-return TestsList<TeamModel2>
+     */
+    protected function createComponentTests(): TestsList
+    {
+        return new TestsList($this->getContext(), $this->dataTestFactory->getTeamTests());
     }
 }

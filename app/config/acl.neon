@@ -146,7 +146,11 @@ acl:
     - allow([event.fyziklani.teacher,event.fyziklani.member,event.participant], [fyziklani.team,event.participant], [detail,edit], @ownApplicationAssertion)
     - allow(eventManager,[fyziklani.team,event.participant], ::constant(Nette\Security\Permission::ALL))# +organizer
 ## EVENT MODULE
+    - allow(organizer, event, list)
     - allow(event.organizer, event.participant, [list, detail])
+    - allow(event.organizer, event.schedule.group, [list, detail])
+    - allow(event.organizer, event.schedule.item, detail)
+    - allow(event.organizer, event.schedule.person, [list, detail])
     - allow(eventManager, event.organizer, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))

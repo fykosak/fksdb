@@ -51,6 +51,7 @@ final class PersonGrid extends BaseGrid
         );
         $this->addSimpleReferencedColumns([
             '@person.full_name',
+            '@person_info.phone',
             '@event.role',
             '@payment.payment',
             '@person_schedule.state',

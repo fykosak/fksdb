@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-05 18:00+0100\n"
+"POT-Creation-Date: 2023-11-09 21:15+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -766,8 +766,8 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
 msgid ""
-"Organization and participation in year %d (%d) of the contest %s \"%s\"<->"
-"\"%s\"."
+"Organization and participation in year %d (%d) of the contest %s \"%s\"<-"
+">\"%s\"."
 msgstr "Organizování a účasti ve stejném roce %d v soutěži s ID %d %s<->%s."
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:22
@@ -1312,29 +1312,29 @@ msgid "Application belongs to another event."
 msgstr "Přihláška patří k jiné akci"
 
 #: i18n/../app/Components/Event/Code/CodeRedirectComponent.php:86
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:116
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:115
 #: i18n/../app/Models/MachineCode/MachineCodeType.php:65
 msgid "Wrong type of code."
 msgstr "Špatný typ kódu"
 
 #: i18n/../app/Components/Event/Code/layout.latte.latte2php:3
 msgid "Automaticly redirect to detail"
-msgstr ""
+msgstr "Automaticky přesměruje na detail"
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:85
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:84
 msgid "Modely sa nezhodujú"
 msgstr ""
 
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:96
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:97
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:98
 #: i18n/../app/Components/Schedule/Attendance/CodeComponent.php:58
 #, php-format
 msgid "Transition successful for: %s"
 msgstr "Přechod úspěšný pro: %s "
 
-#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:124
+#: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:123
 msgid "Processed: "
-msgstr ""
+msgstr "Zpracováno: "
 
 #: i18n/../app/Components/Event/CodeTransition/layout.latte.latte2php:4
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:10
@@ -2570,7 +2570,7 @@ msgid "Participant (%s)"
 msgstr "Účastník (%s)"
 
 #: i18n/../app/Models/Entity/ModelNotFoundException.php:13
-#: i18n/../app/Models/MachineCode/MachineCode.php:65
+#: i18n/../app/Models/MachineCode/MachineCode.php:64
 msgid "Model not found"
 msgstr "Model nenalezen"
 
@@ -2621,25 +2621,17 @@ msgstr "Uložit CSV s uvozovkami"
 msgid "Unknown format \"%s\"."
 msgstr "Neznámý formát \"%s\"."
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:31
+#: i18n/../app/Models/MachineCode/MachineCode.php:30
 msgid "Cannot encrypt code"
 msgstr "Nelze encryptovat kód"
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:57
+#: i18n/../app/Models/MachineCode/MachineCode.php:56
 msgid "Wrong format"
 msgstr "Špatný formát"
 
-#: i18n/../app/Models/MachineCode/MachineCode.php:78
+#: i18n/../app/Models/MachineCode/MachineCode.php:77
 msgid "Cannot decrypt code"
 msgstr "Nelze decryptovat kód"
-
-#: i18n/../app/Models/MachineCode/MachineCode.php:94
-msgid "Not implemented"
-msgstr ""
-
-#: i18n/../app/Models/MachineCode/MachineCode.php:97
-msgid "Empty salt"
-msgstr "Prázdna soľ"
 
 #: i18n/../app/Models/Mail/MailTemplateFactory.php:125
 #, php-format
@@ -2888,7 +2880,15 @@ msgstr "Odeslané"
 msgid "Waiting"
 msgstr "Čekající"
 
-#: i18n/../app/Models/ORM/Models/EventModel.php:304
+#: i18n/../app/Models/ORM/Models/EventModel.php:308
+msgid "Not implemented"
+msgstr ""
+
+#: i18n/../app/Models/ORM/Models/EventModel.php:311
+msgid "Empty salt"
+msgstr "Prázdna soľ"
+
+#: i18n/../app/Models/ORM/Models/EventModel.php:324
 msgid "Game handler does not exist for this event"
 msgstr "Game hendler neexistuje pro danou akci"
 
@@ -3596,24 +3596,24 @@ msgstr "Žádný dostupný rok"
 msgid "No series available"
 msgstr "Žádná dostupná série"
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:52
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:53
 #: i18n/../app/Modules/ProfileModule/DashboardPresenter.php:13
 msgid "My profile"
 msgstr "Můj profil"
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:55
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:56
 msgid "Log out"
 msgstr "Odhlásit se"
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:94
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:95
 msgid "Administrator"
 msgstr "Správa"
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:98
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:99
 msgid "Physics correspondence seminar of MFF UK"
 msgstr "Fyzikální korespondenční seminář MFF UK"
 
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:101
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:102
 msgid ""
 "Physics correspondence seminar of MFF UK for the students of elementary "
 "schools."
@@ -6483,30 +6483,6 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#~ msgid "No transition available"
-#~ msgstr "Žádné dostupné přechody"
-
-#~ msgid "Person %s successfully showed up in %s."
-#~ msgstr "Osoba %s úspěšně prezentována v %s."
-
-#~ msgid "Person %s applied in %s."
-#~ msgstr "Osoba %s přihlášena na %s."
-
-#~ msgid "Submit!"
-#~ msgstr "Odevzdat!"
-
-#~ msgid "Action"
-#~ msgstr "Akce"
-
-#~ msgid "Check"
-#~ msgstr "Zkontrolovat"
-
-#~ msgid "Show application!"
-#~ msgstr "Ukaž přihlášku!"
-
-#~ msgid "Not payable"
-#~ msgstr "Nesplatné"
-
 #~ msgid "#"
 #~ msgstr "#"
 
@@ -6519,6 +6495,9 @@ msgstr ""
 #~ msgid "@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)"
 #~ msgstr ""
 #~ "@schedule_item.name_cs:value (@schedule_item.schedule_item_id:value)"
+
+#~ msgid "Action"
+#~ msgstr "Akce"
 
 #~ msgid "Active?"
 #~ msgstr "Platný záznam?"
@@ -6561,6 +6540,9 @@ msgstr ""
 
 #~ msgid "Cannot set variant"
 #~ msgstr "Nelze nastavit variantu"
+
+#~ msgid "Check"
+#~ msgstr "Zkontrolovat"
 
 #~ msgid "Check submit"
 #~ msgstr "Ověřit submit"
@@ -6682,6 +6664,12 @@ msgstr ""
 #~ msgid "Next year"
 #~ msgstr "Příští rok"
 
+#~ msgid "No transition available"
+#~ msgstr "Žádné dostupné přechody"
+
+#~ msgid "Not payable"
+#~ msgstr "Nesplatné"
+
 #~ msgid "Number of brochures"
 #~ msgstr "# brožurek"
 
@@ -6705,6 +6693,15 @@ msgstr ""
 
 #~ msgid "Participate events"
 #~ msgstr "Účasti na akcích"
+
+#~ msgid "Payment on the spot"
+#~ msgstr "Platba na místě"
+
+#~ msgid "Person %s applied in %s."
+#~ msgstr "Osoba %s přihlášena na %s."
+
+#~ msgid "Person %s successfully showed up in %s."
+#~ msgstr "Osoba %s úspěšně prezentována v %s."
 
 #~ msgid "Person info is not set"
 #~ msgstr "Person info není nastaveno"
@@ -6763,6 +6760,9 @@ msgstr ""
 #~ msgid "Settings"
 #~ msgstr "Nastavení"
 
+#~ msgid "Show application!"
+#~ msgstr "Ukaž přihlášku!"
+
 #~ msgid "Similarity"
 #~ msgstr "Podobnost"
 
@@ -6774,6 +6774,9 @@ msgstr ""
 
 #~ msgid "Stop import and rollback."
 #~ msgstr "Zastavit import a rollbackovat"
+
+#~ msgid "Submit!"
+#~ msgstr "Odevzdat!"
 
 #~ msgid "Task given and validated."
 #~ msgstr "Úloha zadána a ověřena."
@@ -6860,6 +6863,3 @@ msgstr ""
 
 #~ msgid "solutions"
 #~ msgstr "řešení"
-
-#~ msgid "Payment on the spot"
-#~ msgstr "Platba na místě"
