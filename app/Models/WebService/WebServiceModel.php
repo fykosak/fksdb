@@ -20,7 +20,7 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     StatsWebModel,
     WebModel
 };
-use FKSDB\Models\WebService\Models\Event\{ParticipantsWebModel,
+use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
     Schedule\GroupListWebModel,
     Schedule\ItemListWebModel,
     Schedule\PersonListWebModel,

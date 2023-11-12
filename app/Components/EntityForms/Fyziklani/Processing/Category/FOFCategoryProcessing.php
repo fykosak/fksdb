@@ -9,6 +9,7 @@ use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
@@ -105,5 +106,15 @@ class FOFCategoryProcessing extends FormProcessing
             $cnt += $years['H_' . $y];
         }
         return $sum / $cnt;
+    }
+
+    public function test(TeamModel2 $team): TeamCategory
+    {
+        $members = [];
+        /** @var TeamMemberModel $member */
+        foreach ($team->getMembers() as $member) {
+            $members[] = $member->person;
+        }
+        return $this->getCategory($members, $team->event, ['team' => ['force_a' => (bool)$team->force_a]]);
     }
 }
