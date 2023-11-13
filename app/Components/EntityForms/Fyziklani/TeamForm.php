@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamException;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueName\UniqueNameException;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -160,7 +159,7 @@ abstract class TeamForm extends EntityFormComponent
             if (preg_match('/fyziklani_team\.uq_fyziklani_team__name__event/', $exception->getMessage())) {
                 $this->flashMessage(_('Team with same name already exists'), Message::LVL_ERROR);
             }
-        } catch (UniqueNameException | DuplicateMemberException | SchoolsPerTeamException $exception) {
+        } catch (DuplicateMemberException | SchoolsPerTeamException $exception) {
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
