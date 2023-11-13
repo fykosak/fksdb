@@ -29,8 +29,10 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
@@ -119,9 +121,7 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $values
             );
-            $this->checkUniqueTeamName($values['team']['name']);
-
-
+            //  $this->checkUniqueTeamName($values['team']['name']);
             $team = $this->teamService->storeModel(
                 array_merge($values['team'], [
                     'event_id' => $this->event->event_id,
@@ -155,6 +155,11 @@ abstract class TeamForm extends EntityFormComponent
             $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
         } catch (AbortException $exception) {
             throw $exception;
+        } catch (UniqueConstraintViolationException $exception) {
+            Debugger::barDump($exception);
+            if (preg_match('/fyziklani_team\.uq_fyziklani_team__name__event/', $exception->getMessage())) {
+                $this->flashMessage(_('Team with same name already exists'), Message::LVL_ERROR);
+            }
         } catch (UniqueNameException | DuplicateMemberException | SchoolsPerTeamException $exception) {
             $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
@@ -218,17 +223,6 @@ abstract class TeamForm extends EntityFormComponent
             if ($member->fyziklani_team->event_id === $this->event->event_id) {
                 throw new DuplicateMemberException($person);
             }
-        }
-    }
-
-    protected function checkUniqueTeamName(string $name): void
-    {
-        $query = $this->event->getTeams()->where('name', $name);
-        if (isset($this->model)) {
-            $query->where('fyziklani_team_id != ?', $this->model->fyziklani_team_id);
-        }
-        if ($query->fetch()) {
-            throw new UniqueNameException($name);
         }
     }
 

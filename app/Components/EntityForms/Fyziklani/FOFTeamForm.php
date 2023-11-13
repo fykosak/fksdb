@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueName\UniqueNameProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -141,7 +140,7 @@ class FOFTeamForm extends TeamForm
     protected function getProcessing(): array
     {
         return [
-            new UniqueNameProcessing($this->container),
+            //new UniqueNameProcessing($this->container),
             new FOFCategoryProcessing($this->container),
             new SchoolsPerTeamProcessing($this->container),
         ];

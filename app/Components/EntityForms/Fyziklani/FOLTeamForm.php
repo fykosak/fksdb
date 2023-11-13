@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolRequirement\FOLSchoolRequirementProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\UniqueName\UniqueNameProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
 
@@ -23,7 +22,7 @@ class FOLTeamForm extends TeamForm
     protected function getProcessing(): array
     {
         return [
-            new UniqueNameProcessing($this->container),
+          //  new UniqueNameProcessing($this->container),
             new FOLSchoolRequirementProcessing($this->container),
             new FOLCategoryProcessing($this->container),
         ];
