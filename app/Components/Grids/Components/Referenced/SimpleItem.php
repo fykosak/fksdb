@@ -8,8 +8,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends TemplateItem<TModel,TModelHelper>
  */
 class SimpleItem extends TemplateItem

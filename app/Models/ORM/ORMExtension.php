@@ -174,7 +174,7 @@ class ORMExtension extends Extension
      *     suffix:string,
      *     states:array<string,array{badge:string,label:string}>,
      * } $definition
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      */
     private function createColumnFactory(
         string $tableName,
@@ -358,7 +358,7 @@ class ORMExtension extends Extension
      *     title:string,
      *     class:class-string<ColumnFactory<M,mixed>>,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      */
     private function registerClassColumnFactory(
         ServiceDefinition $factory,
@@ -439,7 +439,7 @@ class ORMExtension extends Extension
      *     prefix:string,
      *     suffix:string,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function setUpNumberFactory(
@@ -472,7 +472,7 @@ class ORMExtension extends Extension
      *     title:string,
      *     format?:string,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function registerAbstractDateTimeRow(
@@ -502,7 +502,7 @@ class ORMExtension extends Extension
 
     /**
      * @phpstan-param TCommonParams $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function setUpDefaultFactory(

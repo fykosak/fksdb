@@ -20,8 +20,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -81,7 +80,7 @@ class ReferencedPersonHandler extends ReferencedHandler
      *     person_info:array{email?:string},
      *     person:array<string,mixed>,
      * }|array<string,array<string,mixed>> $values
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
@@ -107,7 +106,7 @@ class ReferencedPersonHandler extends ReferencedHandler
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
@@ -161,7 +160,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             if (!$outerTransaction) {
                 $connection->commit();
             }
-        } catch (ModelDataConflictException | StorageException | ModelException $exception) {
+        } catch (ModelDataConflictException | StorageException | \PDOException $exception) {
             if (!$outerTransaction) {
                 $connection->rollBack();
             }
@@ -192,7 +191,7 @@ class ReferencedPersonHandler extends ReferencedHandler
         if (!isset($this->contestYear)) {
             throw new \InvalidArgumentException('Cannot store person_history without ContestYear');
         }
-        $history = $person->getHistoryByContestYear($this->contestYear);
+        $history = $person->getHistory($this->contestYear);
         $this->personHistoryService->storeModel(
             array_merge(
                 $history ? $this->findModelConflicts($history, $historyData, 'person_history') : $historyData,
@@ -213,7 +212,7 @@ class ReferencedPersonHandler extends ReferencedHandler
         foreach ($flagData as $flagId => $flagValue) {
             if (isset($flagValue)) {
                 $flag = $this->flagService->findByFid($flagId);
-                $personFlag = $person->hasPersonFlag($flagId);
+                $personFlag = $person->hasFlag($flagId);
                 $this->personHasFlagService->storeModel([
                     'value' => $flagValue,
                     'flag_id' => $flag->flag_id,
@@ -302,7 +301,7 @@ class ReferencedPersonHandler extends ReferencedHandler
                 if (!isset($contestYear)) {
                     throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
                 }
-                return ($history = $person->getHistoryByContestYear($contestYear))
+                return ($history = $person->getHistory($contestYear))
                     ? $history->{$field}
                     : null;
             case 'post_contact_d':
@@ -310,7 +309,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             case 'post_contact_p':
                 return $person->getPostContact(PostContactType::from(PostContactType::PERMANENT));
             case 'person_has_flag':
-                return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
+                return ($flag = $person->hasFlag($field)) ? (bool)$flag['value'] : null;
             default:
                 throw new \InvalidArgumentException("Unknown person sub '$sub'.");
         }

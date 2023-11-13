@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 

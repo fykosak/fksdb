@@ -9,7 +9,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
 /**

@@ -49,7 +49,7 @@ class FOFCategoryProcessing extends FormProcessing
 
         // calculate stats
         foreach ($members as $member) {
-            $history = $member->getHistoryByContestYear($event->getContestYear());
+            $history = $member->getHistory($event->getContestYear());
             $studyYear = $history->study_year_new;
             if (
                 $studyYear->value === StudyYear::None
@@ -115,6 +115,6 @@ class FOFCategoryProcessing extends FormProcessing
         foreach ($team->getMembers() as $member) {
             $members[] = $member->person;
         }
-        return $this->getCategory($members, $team->event, ['team' => ['force_a' => (bool)$team->force_a]]);
+        return $this->getCategory($members, $team->event);
     }
 }

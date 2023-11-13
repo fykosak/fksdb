@@ -21,7 +21,7 @@ class FOLSchoolRequirementProcessing extends FormProcessing
             throw new NoMemberException();
         }
         foreach ($members as $member) {
-            $history = $member->getHistoryByContestYear($event->getContestYear());
+            $history = $member->getHistory($event->getContestYear());
             if ($history->study_year_new->value !== StudyYear::None && !isset($history->school_id)) {
                 throw new SchoolRequirementProcessingException($history->study_year_new, $member);
             }

@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 

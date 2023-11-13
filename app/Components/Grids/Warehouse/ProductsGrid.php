@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**

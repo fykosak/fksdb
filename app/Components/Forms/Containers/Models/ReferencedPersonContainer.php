@@ -22,7 +22,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;

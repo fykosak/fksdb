@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\UI\ContestCategoryBadge;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

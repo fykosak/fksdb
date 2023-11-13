@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
 /**

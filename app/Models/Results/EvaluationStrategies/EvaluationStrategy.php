@@ -67,7 +67,7 @@ abstract class EvaluationStrategy
     private function studyYearsToCategory(PersonModel $person): ContestCategoryModel
     {
         $map = $this->getCategoryMap();
-        $personHistory = $person->getHistoryByContestYear($this->contestYear);
+        $personHistory = $person->getHistory($this->contestYear);
         foreach ($map as $key => $values) {
             if (in_array($personHistory->study_year_new->value, $values, true)) {
                 return $this->contestCategoryService->findByLabel((string)$key);

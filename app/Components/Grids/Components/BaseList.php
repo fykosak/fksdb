@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Components;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-template TFilterParams of array
  * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */

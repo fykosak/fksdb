@@ -16,7 +16,7 @@ use Nette\DI\Container;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-template TFilterParams of array
  * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */

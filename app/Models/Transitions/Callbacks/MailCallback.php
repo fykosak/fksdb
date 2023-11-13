@@ -132,8 +132,8 @@ abstract class MailCallback implements Statement
     abstract protected function getData(ModelHolder $holder, Transition $transition): array;
 
     /**
-     * @template THolder of \FKSDB\Models\Transitions\Holder\ModelHolder
-     * @phpstan-param  Transition<THolder> $transition
+     * @template TStaticHolder of \FKSDB\Models\Transitions\Holder\ModelHolder
+     * @phpstan-param  Transition<TStaticHolder> $transition
      */
     public static function resolveLayoutName(Transition $transition): string
     {

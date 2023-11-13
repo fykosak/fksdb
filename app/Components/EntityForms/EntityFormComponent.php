@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
@@ -44,7 +43,7 @@ abstract class EntityFormComponent extends FormComponent
     {
         try {
             $this->handleFormSuccess($form);
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             Debugger::log($exception);
             $previous = $exception->getPrevious();
             // catch NotNull|ForeignKey|Unique
@@ -71,7 +70,7 @@ abstract class EntityFormComponent extends FormComponent
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     abstract protected function handleFormSuccess(Form $form): void;
 

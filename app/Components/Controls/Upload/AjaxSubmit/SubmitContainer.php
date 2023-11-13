@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Upload\AjaxSubmit;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\ComponentModel\IComponent;

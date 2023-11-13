@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\EventTypeService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 

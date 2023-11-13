@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Database\Explorer;

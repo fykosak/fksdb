@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;

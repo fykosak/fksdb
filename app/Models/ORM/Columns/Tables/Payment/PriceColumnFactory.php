@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\UI\PricePrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

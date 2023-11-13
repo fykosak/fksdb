@@ -614,6 +614,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
         COMMENT 'Game lang',
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -632,6 +633,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     `person_id`                INT NOT NULL,
     `fyziklani_team_id`        INT NOT NULL,
     INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_member__person`
         FOREIGN KEY (`person_id`)
@@ -654,6 +656,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `person_id`                 INT NOT NULL,
     `fyziklani_team_id`         INT NOT NULL,
     INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_teacher__person`
         FOREIGN KEY (`person_id`)
