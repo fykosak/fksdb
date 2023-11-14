@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Transitions\Callbacks\Fof;
+namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Models\Transitions\Callbacks\TeamMemberMailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
-class MemberMail extends TeamMemberMailCallback
+class MemberTransitionMail extends TeamMemberMailCallback
 {
     /**
      * @param TeamHolder $holder

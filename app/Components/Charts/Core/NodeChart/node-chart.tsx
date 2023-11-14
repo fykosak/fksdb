@@ -1,5 +1,6 @@
 import {
     forceCenter,
+    forceCollide,
     forceLink,
     forceManyBody,
     forceSimulation,
@@ -33,7 +34,8 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
     const [alpha, setAlpha] = useState(0);
     const simulation = forceSimulation<Node>(nodes)
         .force('link', forceLink(links))
-        .force('charge', forceManyBody().strength(-1000))
+        .force('charge', forceManyBody().strength(-2000))
+        .force('collide', forceCollide())
         .force('center', forceCenter())
         .alphaMin(0.001);
 
@@ -56,25 +58,23 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
             <g fill="currentColor"
                style={{'--color': node.color} as React.CSSProperties}
                key={key}
-               onClick={() => {
-                   if (node.fx === 0) {
-                       node.fx = null;
-                       node.fy = null;
-                   } else {
-                       node.fx = 0;
-                       node.fy = 0;
-                   }
-               }}
                transform={'translate(' + node.x + ',' + node.y + ')'}>
-                <circle
-                    r="7.5"
-                />
+                <circle r="7.5"/>
                 <text x="8" y="0.31rem">
                     {node.label}
                 </text>
             </g>,
         );
     });
+    const hashFunction = (string: string) => {
+        let hash = 0;
+        for (let i = 0; i < string.length; i++) {
+            const char = string.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
+    }
 
     return <div className="node-chart">
         <span>Alpha: {alpha}</span>
@@ -87,7 +87,7 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
                         style={{'--marker-color': color} as React.CSSProperties}
                         key={color}
                         viewBox="-5 0 10 10"
-                        id={'arrow-end'}
+                        id={'arrow-end-' + hashFunction(color)}
                         refX="10"
                         refY="5"
                         markerWidth="10"
@@ -99,28 +99,24 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
                 })}
             </defs>
             <g className="links">{links.map((item, index) => {
-                let path;
                 const source = item.source as Node;
                 const target = item.target as Node;
-                if (item.type === 'bi-dir') {
-                    path = <path
-                        d={`M ${source.x} ${source.y} L ${target.x} ${target.y}`}
-                        markerEnd={`url(#arrow-end)`}
-                        markerStart={`url(#arrow-start)`}/>;
-                } else {
-                    const r = Math.hypot(target.x - source.x, target.y - source.y);
-                    const rot = Math.atan((target.y - source.y) / (target.x - source.x)) * 180 / Math.PI;
-                    path = <path
-                        d={`M ${source.x} ${source.y} A ${r} ${r} ${rot} 0 1 ${target.x} ${target.y}`}
-                        markerEnd={`url(#arrow-end)`}/>;
-                }
+                const r = Math.hypot(target.x - source.x, target.y - source.y);
+                const rot = Math.atan((target.y - source.y) / (target.x - source.x)) * 180 / Math.PI;
                 return <g key={index} style={{
                     '--color': item.color,
                     '--line': item.line === 'dashed' ? '5,5' : 'none',
                 } as React.CSSProperties}>
-                    {path}
+                    {item.type === 'bi-dir'
+                        ? <path
+                            d={`M ${source.x} ${source.y} L ${target.x} ${target.y}`}
+                            markerEnd={`url(#arrow-end)`}
+                            markerStart={`url(#arrow-start)`}/>
+                        : <path
+                            d={`M ${source.x} ${source.y} A ${r} ${r} ${rot} 0 1 ${target.x} ${target.y}`}
+                            markerEnd={`url(#arrow-end-${hashFunction(item.color)})`}/>
+                    }
                 </g>;
-
             })}</g>
             <g className="nodes">
                 {nodesElements}

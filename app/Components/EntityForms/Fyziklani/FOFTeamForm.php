@@ -14,6 +14,7 @@ use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use Nette\Forms\Control;
@@ -27,77 +28,70 @@ use Nette\Neon\Exception;
  */
 class FOFTeamForm extends TeamForm
 {
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
+    private const MEMBER_FIELDS = [
+        'person' => [
+            'other_name' => ['required' => true],
+            'family_name' => ['required' => true],
+            'gender' => ['required' => false],
+        ],
+        'person_info' => [
+            'email' => ['required' => true],
+            'born' => ['required' => false],
+            'id_number' => ['required' => false],
+        ],
+        'person_history' => [
+            'school_id' => ['required' => true],
+            'study_year_new' => [
+                'required' => true,
+                'flag' => 'ALL',
+            ],
+        ],
+        'person_has_flag' => [
+            'spam_mff' => ['required' => true],
+        ],
+        'person_schedule' => [
+            ScheduleGroupType::ACCOMMODATION => ['required' => false],
+            ScheduleGroupType::ACCOMMODATION_GENDER => ['required' => false],
+            ScheduleGroupType::VISA => ['required' => false],
+            ScheduleGroupType::WEEKEND => ['required' => false],
+        ],
+    ];
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
+    private const TEACHER_FIELDS = [
+        'person' => [
+            'other_name' => ['required' => true],
+            'family_name' => ['required' => true],
+            'gender' => ['required' => false],
+        ],
+        'person_info' => [
+            'email' => ['required' => true],
+            'born' => ['required' => false],
+            'id_number' => ['required' => false],
+            'academic_degree_prefix' => ['required' => false],
+            'academic_degree_suffix' => ['required' => false],
+        ],
+        'person_has_flag' => [
+            'spam_mff' => ['required' => true],
+        ],
+        'person_schedule' => [
+            ScheduleGroupType::ACCOMMODATION => ['required' => false],
+            ScheduleGroupType::ACCOMMODATION_TEACHER => ['required' => false],
+            ScheduleGroupType::VISA => ['required' => false],
+            ScheduleGroupType::TEACHER_PRESENT => ['required' => false],
+            ScheduleGroupType::WEEKEND => ['required' => false],
+        ],
+    ];
+
     private TeamTeacherService $teacherService;
 
     final public function injectSecondary(TeamTeacherService $teacherService): void
     {
         $this->teacherService = $teacherService;
-    }
-
-    /**
-     * @phpstan-return EvaluatedFieldsDefinition
-     */
-    protected function getMemberFieldsDefinition(): array
-    {
-        return [
-            'person' => [
-                'other_name' => ['required' => true],
-                'family_name' => ['required' => true],
-                'gender' => ['required' => false],
-            ],
-            'person_info' => [
-                'email' => ['required' => true],
-                'born' => ['required' => false],
-                'id_number' => ['required' => false],
-            ],
-            'person_history' => [
-                'school_id' => ['required' => true],
-                'study_year_new' => [
-                    'required' => true,
-                    'flag' => 'ALL',
-                ],
-            ],
-            'person_has_flag' => [
-                'spam_mff' => ['required' => true],
-            ],
-            'person_schedule' => [
-                'accommodation' => ['required' => false],
-                'accommodation_gender' => ['required' => false],
-                'visa' => ['required' => false],
-                'weekend' => ['required' => false],
-            ],
-        ];
-    }
-
-    /**
-     * @phpstan-return EvaluatedFieldsDefinition
-     */
-    protected function getTeacherFieldsDefinition(): array
-    {
-        return [
-            'person' => [
-                'other_name' => ['required' => true],
-                'family_name' => ['required' => true],
-                'gender' => ['required' => false],
-            ],
-            'person_info' => [
-                'email' => ['required' => true],
-                'born' => ['required' => false],
-                'id_number' => ['required' => false],
-                'academic_degree_prefix' => ['required' => false],
-                'academic_degree_suffix' => ['required' => false],
-            ],
-            'person_has_flag' => [
-                'spam_mff' => ['required' => true],
-            ],
-            'person_schedule' => [
-                'accommodation' => ['required' => false],
-                'accommodation_teacher' => ['required' => false],
-                'visa' => ['required' => false],
-                'teacher_present' => ['required' => false],
-                'weekend' => ['required' => false],
-            ],
-        ];
     }
 
     /**
@@ -135,49 +129,6 @@ class FOFTeamForm extends TeamForm
     }
 
     /**
-     * @phpstan-return FormProcessing[]
-     */
-    protected function getProcessing(): array
-    {
-        return [
-            //new UniqueNameProcessing($this->container),
-            new FOFCategoryProcessing($this->container),
-            new SchoolsPerTeamProcessing($this->container),
-        ];
-    }
-
-    private function saveTeachers(TeamModel2 $team, Form $form/*, Logger $logger*/): void
-    {
-        $persons = self::getTeacherFromForm($form);
-
-        $oldMemberQuery = $team->getTeachers();
-        if (count($persons)) {
-            $oldMemberQuery->where('person_id NOT IN', array_keys($persons));
-        }
-        /** @var TeamTeacherModel $oldTeacher */
-        foreach ($oldMemberQuery as $oldTeacher) {
-            // $logger->teacherRemoved = true;
-            $this->teacherService->disposeModel($oldTeacher);
-        }
-        foreach ($persons as $person) {
-            $oldTeacher = $team->getTeachers()->where('person_id', $person->person_id)->fetch();
-            if (!$oldTeacher) {
-                // $logger->teacherAdded = true;
-                $this->teacherService->storeModel([
-                    'person_id' => $person->getPrimary(),
-                    'fyziklani_team_id' => $team->fyziklani_team_id,
-                ]);
-            }
-        }
-    }
-
-    protected function savePersons(TeamModel2 $team, Form $form/*, Logger $logger*/): void
-    {
-        $this->saveTeachers($team, $form/*, $logger*/);
-        $this->saveMembers($team, $form/*, $logger*/);
-    }
-
-    /**
      * @throws Exception
      */
     private function appendTeacherFields(Form $form): void
@@ -186,7 +137,7 @@ class FOFTeamForm extends TeamForm
 
         for ($teacherIndex = 0; $teacherIndex < $teacherCount; $teacherIndex++) {
             $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
-                $this->getTeacherFieldsDefinition(),
+                self::TEACHER_FIELDS,
                 $this->event->getContestYear(),
                 'email',
                 true,
@@ -204,6 +155,39 @@ class FOFTeamForm extends TeamForm
         }
     }
 
+    protected function getMemberFieldsDefinition(): array
+    {
+        return self::MEMBER_FIELDS;
+    }
+
+    protected function savePersons(TeamModel2 $team, Form $form): void
+    {
+        $this->saveTeachers($team, $form);
+        $this->saveMembers($team, $form);
+    }
+
+    private function saveTeachers(TeamModel2 $team, Form $form): void
+    {
+        $persons = self::getTeacherFromForm($form);
+
+        $oldMemberQuery = $team->getTeachers();
+        if (count($persons)) {
+            $oldMemberQuery->where('person_id NOT IN', array_keys($persons));
+        }
+        /** @var TeamTeacherModel $oldTeacher */
+        foreach ($oldMemberQuery as $oldTeacher) {
+            $this->teacherService->disposeModel($oldTeacher);
+        }
+        foreach ($persons as $person) {
+            $oldTeacher = $team->getTeachers()->where('person_id', $person->person_id)->fetch();
+            if (!$oldTeacher) {
+                $this->teacherService->storeModel([
+                    'person_id' => $person->getPrimary(),
+                    'fyziklani_team_id' => $team->fyziklani_team_id,
+                ]);
+            }
+        }
+    }
     /**
      * @phpstan-return array{
      *     name:EvaluatedFieldMetaData,
@@ -217,6 +201,32 @@ class FOFTeamForm extends TeamForm
             'name' => ['required' => true],
             'game_lang' => ['required' => true],
             'phone' => ['required' => true],
+        ];
+    }
+
+    protected function setDefaults(Form $form): void
+    {
+        parent::setDefaults($form);
+        if (isset($this->model)) {
+            $index = 0;
+            /** @var TeamTeacherModel $teacher */
+            foreach ($this->model->getTeachers() as $teacher) {
+                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+                $referencedId = $form->getComponent('teacher_' . $index);
+                $referencedId->setDefaultValue($teacher->person);
+                $index++;
+            }
+        }
+    }
+
+    /**
+     * @phpstan-return FormProcessing[]
+     */
+    protected function getProcessing(): array
+    {
+        return [
+            new FOFCategoryProcessing($this->container),
+            new SchoolsPerTeamProcessing($this->container),
         ];
     }
 
@@ -240,20 +250,5 @@ class FOFTeamForm extends TeamForm
             $teacherIndex++;
         }
         return $persons;
-    }
-
-    protected function setDefaults(Form $form): void
-    {
-        parent::setDefaults($form);
-        if (isset($this->model)) {
-            $index = 0;
-            /** @var TeamTeacherModel $teacher */
-            foreach ($this->model->getTeachers() as $teacher) {
-                /** @phpstan-var ReferencedId<PersonModel> $referencedId */
-                $referencedId = $form->getComponent('teacher_' . $index);
-                $referencedId->setDefaultValue($teacher->person);
-                $index++;
-            }
-        }
     }
 }

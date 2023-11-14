@@ -137,6 +137,6 @@ abstract class MailCallback implements Statement
      */
     public static function resolveLayoutName(Transition $transition): string
     {
-        return $transition->source->value . '.' . $transition->target->value;
+        return $transition->source->value . '->' . $transition->target->value;
     }
 }

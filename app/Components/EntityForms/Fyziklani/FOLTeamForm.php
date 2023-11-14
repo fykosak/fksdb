@@ -22,7 +22,6 @@ class FOLTeamForm extends TeamForm
     protected function getProcessing(): array
     {
         return [
-          //  new UniqueNameProcessing($this->container),
             new FOLSchoolRequirementProcessing($this->container),
             new FOLCategoryProcessing($this->container),
         ];

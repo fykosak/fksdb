@@ -13,6 +13,8 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Mail\FOF\MemberInfoMail;
+use FKSDB\Models\Mail\FOF\TeacherInfoMail;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -31,7 +33,6 @@ use Nette\Application\AbortException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
@@ -120,22 +121,18 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $values
             );
-            //  $this->checkUniqueTeamName($values['team']['name']);
             $team = $this->teamService->storeModel(
                 array_merge($values['team'], [
                     'event_id' => $this->event->event_id,
                 ]),
                 $this->model
             );
-            //  $logger = new Logger(false, !isset($this->model));//TODO
             $this->savePersons($team, $form);
-
+            $holder = $this->machine->createHolder($team);
             if (!isset($this->model)) {
-                $holder = $this->machine->createHolder($team);
                 $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
-                $holder = $this->machine->createHolder($team);
                 $transition = Machine::selectTransition(
                     Machine::filterAvailable(
                         Machine::filterByTarget($this->machine->transitions, TeamState::from(TeamState::Pending)),
@@ -143,6 +140,9 @@ abstract class TeamForm extends EntityFormComponent
                     )
                 );
                 $this->machine->execute($transition, $holder);
+            } else {
+                (new TeacherInfoMail($this->container))($holder);
+                (new MemberInfoMail($this->container))($holder);
             }
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
@@ -155,7 +155,6 @@ abstract class TeamForm extends EntityFormComponent
         } catch (AbortException $exception) {
             throw $exception;
         } catch (UniqueConstraintViolationException $exception) {
-            Debugger::barDump($exception);
             if (preg_match('/fyziklani_team\.uq_fyziklani_team__name__event/', $exception->getMessage())) {
                 $this->flashMessage(_('Team with same name already exists'), Message::LVL_ERROR);
             }
@@ -168,9 +167,9 @@ abstract class TeamForm extends EntityFormComponent
         }
     }
 
-    protected function savePersons(TeamModel2 $team, Form $form/*, Logger $logger*/): void
+    protected function savePersons(TeamModel2 $team, Form $form): void
     {
-        $this->saveMembers($team, $form/*, $logger*/);
+        $this->saveMembers($team, $form);
     }
 
     protected function setDefaults(Form $form): void
@@ -188,7 +187,7 @@ abstract class TeamForm extends EntityFormComponent
         }
     }
 
-    protected function saveMembers(TeamModel2 $team, Form $form/*, Logger $logger*/): void
+    protected function saveMembers(TeamModel2 $team, Form $form): void
     {
         $persons = self::getFormMembers($form);
         if (!count($persons)) {
@@ -197,7 +196,6 @@ abstract class TeamForm extends EntityFormComponent
         /** @var TeamMemberModel $oldMember */
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
             $this->teamMemberService->disposeModel($oldMember);
-            // $logger->memberAdded = true;
         }
         foreach ($persons as $person) {
             $oldMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
@@ -207,7 +205,6 @@ abstract class TeamForm extends EntityFormComponent
                     'person_id' => $person->getPrimary(),
                     'fyziklani_team_id' => $team->fyziklani_team_id,
                 ]);
-                // $logger->memberRemoved = true;
             }
         }
     }

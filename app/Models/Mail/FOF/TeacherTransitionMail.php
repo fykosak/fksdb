@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Transitions\Callbacks\Fof;
+namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
@@ -17,7 +17,7 @@ use FKSDB\Models\Transitions\Transition\Transition;
 /**
  * @phpstan-extends MailCallback<TeamHolder>
  */
-class TeacherMail extends MailCallback
+class TeacherTransitionMail extends MailCallback
 {
     /**
      * @param TeamHolder $holder
