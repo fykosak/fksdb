@@ -12,10 +12,14 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use FKSDB\Models\Transitions\Statement;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
-abstract class InfoEmail
+/**
+ * @phpstan-implements Statement<void,TeamHolder>
+ */
+abstract class InfoEmail implements Statement
 {
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
@@ -32,7 +36,7 @@ abstract class InfoEmail
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
-    ) {
+    ): void {
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
@@ -43,8 +47,12 @@ abstract class InfoEmail
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function __invoke(TeamHolder $holder): void
+    public function __invoke(...$args): void
     {
+        /**
+         * @var TeamHolder $holder
+         */
+        [$holder] = $args;
         foreach ($this->getPersons($holder) as $person) {
             $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;

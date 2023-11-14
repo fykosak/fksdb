@@ -23,7 +23,7 @@ class TeacherTransitionMail extends MailCallback
      * @param TeamHolder $holder
      * @throws BadTypeException
      */
-    protected function getPersonsFromHolder(ModelHolder $holder): array
+    protected function getPersons(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
             throw new BadTypeException(TeamHolder::class, $holder);

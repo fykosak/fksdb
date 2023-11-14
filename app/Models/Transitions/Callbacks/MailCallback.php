@@ -16,6 +16,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
+use Nette\DI\Container;
 use Nette\SmartObject;
 
 /**
@@ -31,12 +32,17 @@ abstract class MailCallback implements Statement
     protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
 
-    public function __construct(
+    public function __construct(Container $container)
+    {
+        $container->callInjects($this);
+    }
+
+    public function inject(
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         AccountManager $accountManager
-    ) {
+    ): void {
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
@@ -56,7 +62,7 @@ abstract class MailCallback implements Statement
          * @phpstan-var Transition<THolder> $transition
          */
         [$holder, $transition] = $args;
-        foreach ($this->getPersonsFromHolder($holder) as $person) {
+        foreach ($this->getPersons($holder) as $person) {
             $data = $this->getData($holder, $transition);
             $data['recipient_person_id'] = $person->person_id;
             $data['text'] = $this->createMessageText($holder, $transition, $person);
@@ -102,7 +108,7 @@ abstract class MailCallback implements Statement
      * @throws BadTypeException
      * @phpstan-param THolder $holder
      */
-    protected function getPersonsFromHolder(ModelHolder $holder): array
+    protected function getPersons(ModelHolder $holder): array
     {
         $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {
