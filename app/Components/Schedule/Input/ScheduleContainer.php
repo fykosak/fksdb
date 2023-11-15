@@ -16,7 +16,8 @@ use Nette\DI\Container;
 class ScheduleContainer extends ContainerWithOptions
 {
     private EventModel $event;
-    private ScheduleGroupType $type;
+    /** @var string[] */
+    private array $types;
     private bool $required;
     private GettextTranslator $translator;
 
@@ -26,31 +27,43 @@ class ScheduleContainer extends ContainerWithOptions
     public function __construct(
         Container $container,
         EventModel $event,
-        ScheduleGroupType $type,
-        bool $required = false
+        array $meta
     ) {
         parent::__construct($container);
         $this->event = $event;
-        $this->type = $type;
-        $this->required = $required;
+        $this->types = $meta['types'];
+        $this->required = (bool)($meta['meta']['required'] ?? false);
 
         $groups = $this->event->getScheduleGroups()
-                              ->where('schedule_group_type', $this->type->value)
-                              ->order('start, schedule_group_id');
+            ->where('schedule_group_type', $this->types)
+            ->order('start, schedule_group_id');
 
         if ($groups->count('*') > 1) {
-            $this->setOption('label', $type->label());
+            $this->setOption('label', ScheduleGroupType::from($this->types[0])->label());
         }
+        /** @var ScheduleGroupModel[] $days */
+        $days = [];
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
-            $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
-            if ($this->required) {
-                $field->setRequired(_('Field %label is required.'));
+            $key = $group->start->format('d_m');
+            $days[$key] = $days[$key] ?? [];
+            $days[$key][] = $group;
+        }
+        foreach ($days as $key => $day) {
+            $formContainer = new ContainerWithOptions($this->container);
+            $formContainer->setOption('collapse', $meta['meta']['collapse'] ?? false);
+            $formContainer->setOption('label', reset($day)->start->format('c'));
+            $this->addComponent($formContainer, $key);
+            foreach ($day as $group) {
+                $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
+                if ($this->required) {
+                    $field->setRequired(_('Field %label is required.'));
+                }
+                $formContainer->addComponent(
+                    $field,
+                    (string)$group->schedule_group_id
+                );
             }
-            $this->addComponent(
-                $field,
-                (string)$group->schedule_group_id
-            );
         }
     }
 

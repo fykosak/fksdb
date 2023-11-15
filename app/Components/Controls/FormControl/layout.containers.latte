@@ -14,7 +14,18 @@
                         {if $container->getOption('description')}
                             <p>{$container->getOption('description')}</p>
                         {/if}
-                        {include subComponents conainer=>$container, level=>$level}
+{dump $container->getOptions()}
+                        {if $container->getOption('collapse')}
+                            {var $id = Nette\Utils\Random::generate(10)}
+                            <button class="btn btn-primary" data-bs-toggle="collapse" href="#{$id}">
+                                toggle schedule
+                            </button>
+                            <div class="collapse" id="{$id}">
+                                {include subComponents conainer=>$container, level=>$level}
+                            </div>
+                        {else}
+                            {include subComponents conainer=>$container, level=>$level}
+                        {/if}
                     </fieldset>
                 </div>
             {/snippet}

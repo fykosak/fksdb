@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -214,8 +213,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 return new ScheduleContainer(
                     $this->container,
                     $this->event,
-                    ScheduleGroupType::tryFrom($fieldName),
-                    (bool)($metadata['required'] ?? false)
+                    $metadata
                 );
             case 'person':
             case 'person_info':

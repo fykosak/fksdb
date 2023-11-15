@@ -29,7 +29,7 @@ use Nette\Neon\Exception;
 class FOFTeamForm extends TeamForm
 {
     /**
-     * @phpstan-return EvaluatedFieldsDefinition
+     * @phpstan-var EvaluatedFieldsDefinition
      */
     private const MEMBER_FIELDS = [
         'person' => [
@@ -49,18 +49,19 @@ class FOFTeamForm extends TeamForm
                 'flag' => 'ALL',
             ],
         ],
-        'person_has_flag' => [
-            'spam_mff' => ['required' => true],
-        ],
         'person_schedule' => [
-            ScheduleGroupType::ACCOMMODATION => ['required' => false],
-            ScheduleGroupType::ACCOMMODATION_GENDER => ['required' => false],
-            ScheduleGroupType::VISA => ['required' => false],
-            ScheduleGroupType::WEEKEND => ['required' => false],
+            'accommodation' => [
+                'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_GENDER],
+                'meta' => ['required' => false],
+            ],
+            'schedule' => [
+                'types' => [ScheduleGroupType::WEEKEND],
+                'meta' => ['required' => false, 'collapse' => true],
+            ],
         ],
     ];
     /**
-     * @phpstan-return EvaluatedFieldsDefinition
+     * @phpstan-var EvaluatedFieldsDefinition
      */
     private const TEACHER_FIELDS = [
         'person' => [
@@ -75,15 +76,15 @@ class FOFTeamForm extends TeamForm
             'academic_degree_prefix' => ['required' => false],
             'academic_degree_suffix' => ['required' => false],
         ],
-        'person_has_flag' => [
-            'spam_mff' => ['required' => true],
-        ],
         'person_schedule' => [
-            ScheduleGroupType::ACCOMMODATION => ['required' => false],
-            ScheduleGroupType::ACCOMMODATION_TEACHER => ['required' => false],
-            ScheduleGroupType::VISA => ['required' => false],
-            ScheduleGroupType::TEACHER_PRESENT => ['required' => false],
-            ScheduleGroupType::WEEKEND => ['required' => false],
+            'accommodation' => [
+                'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_TEACHER],
+                'meta' => ['required' => false],
+            ],
+            'schedule' => [
+                'types' => [ScheduleGroupType::TEACHER_PRESENT, ScheduleGroupType::WEEKEND],
+                'meta' => ['required' => false, 'collapse' => true],
+            ],
         ],
     ];
 
@@ -110,20 +111,24 @@ class FOFTeamForm extends TeamForm
             $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
             $bornField = $component['person_info']['born'];//@phpstan-ignore-line
-            /** @var Control $baseComponent */
-            foreach ($accommodationField->getComponents() as $baseComponent) {
-                $genderField->addConditionOn($baseComponent, Form::FILLED)
-                    ->addRule(Form::FILLED, _('Field %label is required.'));
-                $genderField->addConditionOn($baseComponent, Form::FILLED)
-                    ->toggle($genderField->getHtmlId() . '-pair');
-                $idNumberField->addConditionOn($baseComponent, Form::FILLED)
-                    ->addRule(Form::FILLED, _('Field %label is required.'));
-                $idNumberField->addConditionOn($baseComponent, Form::FILLED)
-                    ->toggle($idNumberField->getHtmlId() . '-pair');
-                $bornField->addConditionOn($baseComponent, Form::FILLED)
-                    ->addRule(Form::FILLED, _('Field %label is required.'));
-                $bornField->addConditionOn($baseComponent, Form::FILLED)
-                    ->toggle($bornField->getHtmlId() . '-pair');
+            /** @var ScheduleContainer $container */
+            foreach ($accommodationField->getComponents() as $dayContainer) {
+                /** @var Control $baseComponent */
+                foreach ($dayContainer->getComponents() as $baseComponent) {
+                    $genderField->addConditionOn($baseComponent, Form::FILLED)
+                        ->addRule(Form::FILLED, _('Field %label is required.'));
+                    $genderField->addConditionOn($baseComponent, Form::FILLED)
+                        ->toggle($genderField->getHtmlId() . '-pair');
+                    $idNumberField->addConditionOn($baseComponent, Form::FILLED)
+                        ->addRule(Form::FILLED, _('Field %label is required.'));
+                    $idNumberField->addConditionOn($baseComponent, Form::FILLED)
+                        ->toggle($idNumberField->getHtmlId() . '-pair');
+                    $bornField->addConditionOn($baseComponent, Form::FILLED)
+                        ->addRule(Form::FILLED, _('Field %label is required.'));
+                    $bornField->addConditionOn($baseComponent, Form::FILLED)
+                        ->toggle($bornField->getHtmlId() . '-pair');
+                }
+
             }
         }
     }
