@@ -61,26 +61,31 @@ class FOLTeamFormComponent extends TeamFormComponent
                 ],
                 'born' => [
                     'required' => false,
-                    'description' => _('Only for Czech and Slovak students'),
+                    'description' => _('Only for Czech and Slovak students.'),
                 ],
             ],
             'person_history' => [
                 'school_id' => [
                     'required' => false,
                     'description' => _(
-                        'Type a few characters of your school name, then select your school from the list. If you cannot find it, please send us email with your school details to schola.novum@fykos.cz. We will add your school and send you a reply. Then that you can proceed with registration'
+                        'Type a few characters of your school name, then select
+                        your school from the list. If you cannot find it,
+                        please send us email with your school details to
+                        schola.novum@fykos.cz. We will add your school and send
+                        you a reply. Then that you can proceed with
+                        registration.'
                     ),
                 ],
                 'study_year_new' => [
                     'required' => true,
-                    'description' => _('Pro výpočet kategorie.'),
+                    'description' => _('For category calculation.'),
                     'flag' => StudyYearNewColumnFactory::FLAG_ALL,
                 ],
             ],
             'person_has_flag' => [
                 'spam_mff' => [
                     'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
+                    'description' => _('Only for Czech and Slovak students.'),
                 ],
             ],
         ];
