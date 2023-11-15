@@ -68,11 +68,7 @@ class FOLTeamFormComponent extends TeamFormComponent
                 'school_id' => [
                     'required' => false,
                     'description' => _(
-                        'Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. 
-                        Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz údaje o vaší škole jako název,
-                        adresu a pokud možno i odkaz na webovou stránku.
-                        Školu založíme a pošleme vám odpověď. Pak budete schopni dokončit 
-                        registraci.'
+                        'Type a few characters of your school name, then select your school from the list. If you cannot find it, please send us email with your school details to schola.novum@fykos.cz. We will add your school and send you a reply. Then that you can proceed with registration'
                     ),
                 ],
                 'study_year_new' => [
