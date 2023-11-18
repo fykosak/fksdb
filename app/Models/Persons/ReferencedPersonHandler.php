@@ -271,47 +271,4 @@ class ReferencedPersonHandler extends ReferencedHandler
             $person
         );
     }
-
-    /**
-     * @return mixed
-     */
-    public static function getPersonValue(
-        ?PersonModel $person,
-        string $sub,
-        string $field,
-        ?ContestYearModel $contestYear = null,
-        ?EventModel $event = null
-    ) {
-        if (!$person) {
-            return null;
-        }
-        switch ($sub) {
-            case 'person_schedule':
-                return $person->getSerializedSchedule($event, $field);
-            case 'person':
-                return $person->{$field};
-            case 'person_info':
-                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
-                if ($field == 'agreed') {
-                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
-                    $result = $result ? true : null;
-                }
-                return $result;
-            case 'person_history':
-                if (!isset($contestYear)) {
-                    throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
-                }
-                return ($history = $person->getHistory($contestYear))
-                    ? $history->{$field}
-                    : null;
-            case 'post_contact_d':
-                return $person->getPostContact(PostContactType::from(PostContactType::DELIVERY));
-            case 'post_contact_p':
-                return $person->getPostContact(PostContactType::from(PostContactType::PERMANENT));
-            case 'person_has_flag':
-                return ($flag = $person->hasFlag($field)) ? (bool)$flag['value'] : null;
-            default:
-                throw new \InvalidArgumentException("Unknown person sub '$sub'.");
-        }
-    }
 }

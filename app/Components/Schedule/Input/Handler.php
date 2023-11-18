@@ -34,21 +34,22 @@ class Handler
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws \PDOException
-     * @phpstan-param array<string,array<int,int>> $data
+     * @phpstan-param array<string,array<string,array<int,int>>> $data
      */
     public function handle(array $data, PersonModel $person, EventModel $event): void
     {
-        foreach ($data as $type => $items) {
-            foreach ($items as $groupId => $item) {
-                /** @var ScheduleGroupModel|null $group */
-                $group = $event->getScheduleGroups()
-                    ->where('schedule_group_type', $type)
-                    ->where('schedule_group_id', $groupId)
-                    ->fetch();
-                if (!$group) {
-                    throw new ScheduleException(null, _('Schedule group does not exists'));
+        foreach ($data as $dataGroup) {
+            foreach ($dataGroup as $dayGroup) {
+                foreach ($dayGroup as $groupId => $itemId) {
+                    /** @var ScheduleGroupModel|null $group */
+                    $group = $event->getScheduleGroups()
+                        ->where('schedule_group_id', $groupId)
+                        ->fetch();
+                    if (!$group) {
+                        throw new ScheduleException(null, _('Schedule group does not exists'));
+                    }
+                    $this->saveGroup($person, $group, $itemId);
                 }
-                $this->saveGroup($person, $group, (int)$item);
             }
         }
     }
@@ -68,13 +69,25 @@ class Handler
             // create
             if ($personSchedule) {
                 if (!$group->canEdit()) {
-                    throw new ScheduleException($group, _('Modification of this item is not allowed at this time'));
+                    throw new ScheduleException(
+                        $group,
+                        sprintf(
+                            _('Schedule "%s" is not allowed at this time'),
+                            $group->name->getText($this->translator->lang)
+                        )
+                    );
                 }
                 if ($personSchedule->getPayment()) {
                     throw new ExistingPaymentException($personSchedule);
                 }
             } elseif (!$group->canCreate()) {
-                throw new ScheduleException($group, _('Given item is not available at this time'));
+                throw new ScheduleException(
+                    $group,
+                    sprintf(
+                        _('Schedule "%s" is not available at this time'),
+                        $group->name->getText($this->translator->lang)
+                    )
+                );
             } elseif (!$group->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
             }
