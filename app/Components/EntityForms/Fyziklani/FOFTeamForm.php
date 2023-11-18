@@ -55,7 +55,7 @@ class FOFTeamForm extends TeamForm
                 'meta' => ['required' => false],
             ],
             'schedule' => [
-                'types' => [ScheduleGroupType::WEEKEND],
+                'types' => [ScheduleGroupType::WEEKEND, ScheduleGroupType::WEEKEND_INFO,],
                 'meta' => ['required' => false, 'collapse' => true],
             ],
         ],
@@ -82,7 +82,11 @@ class FOFTeamForm extends TeamForm
                 'meta' => ['required' => false],
             ],
             'schedule' => [
-                'types' => [ScheduleGroupType::TEACHER_PRESENT, ScheduleGroupType::WEEKEND],
+                'types' => [
+                    ScheduleGroupType::TEACHER_PRESENT,
+                    ScheduleGroupType::WEEKEND,
+                    ScheduleGroupType::WEEKEND_INFO,
+                ],
                 'meta' => ['required' => false, 'collapse' => true],
             ],
         ],
@@ -111,7 +115,6 @@ class FOFTeamForm extends TeamForm
             $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
             $bornField = $component['person_info']['born'];//@phpstan-ignore-line
-            /** @var ScheduleContainer $container */
             foreach ($accommodationField->getComponents() as $dayContainer) {
                 /** @var Control $baseComponent */
                 foreach ($dayContainer->getComponents() as $baseComponent) {

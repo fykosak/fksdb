@@ -15,7 +15,7 @@ class ScheduleGroupField extends SelectBox
 {
     use FrontEndComponentTrait;
 
-    private ScheduleGroupModel $group;
+    public ScheduleGroupModel $group;
 
     /**
      * @throws BadRequestException

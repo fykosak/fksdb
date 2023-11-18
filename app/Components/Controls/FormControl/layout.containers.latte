@@ -14,10 +14,13 @@
                         {if $container->getOption('description')}
                             <p>{$container->getOption('description')}</p>
                         {/if}
-{dump $container->getOptions()}
                         {if $container->getOption('collapse')}
                             {var $id = Nette\Utils\Random::generate(10)}
-                            <button class="btn btn-primary" data-bs-toggle="collapse" href="#{$id}">
+                            <button class="btn btn-primary"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#{$id}"
+                                    role="button">
                                 toggle schedule
                             </button>
                             <div class="collapse" id="{$id}">
