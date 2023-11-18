@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ReflectionFactory;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;

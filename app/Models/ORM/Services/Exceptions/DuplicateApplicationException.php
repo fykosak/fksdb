@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Exceptions;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\PersonModel;
 
-class DuplicateApplicationException extends ModelException
+class DuplicateApplicationException extends \PDOException
 {
     public function __construct(?PersonModel $person = null, ?\Throwable $previous = null)
     {

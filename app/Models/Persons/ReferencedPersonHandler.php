@@ -20,8 +20,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -81,7 +80,7 @@ class ReferencedPersonHandler extends ReferencedHandler
      *     person_info:array{email?:string},
      *     person:array<string,mixed>,
      * }|array<string,array<string,mixed>> $values
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
@@ -107,7 +106,7 @@ class ReferencedPersonHandler extends ReferencedHandler
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
@@ -161,7 +160,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             if (!$outerTransaction) {
                 $connection->commit();
             }
-        } catch (ModelDataConflictException | StorageException | ModelException $exception) {
+        } catch (ModelDataConflictException | StorageException | \PDOException $exception) {
             if (!$outerTransaction) {
                 $connection->rollBack();
             }

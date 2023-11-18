@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e0a7f4f460c32642eacc8b6043858c69",
+    "content-hash": "c9e8376c9b38479d5e6036763c216ede",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -98,16 +98,16 @@
         },
         {
             "name": "fykosak/nette-orm",
-            "version": "v0.4.3",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "b2c936da18815415a677a891ec5231ad946977fe"
+                "reference": "81a114d73048cef8b9bf98f370aef05f10090767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/b2c936da18815415a677a891ec5231ad946977fe",
-                "reference": "b2c936da18815415a677a891ec5231ad946977fe",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/81a114d73048cef8b9bf98f370aef05f10090767",
+                "reference": "81a114d73048cef8b9bf98f370aef05f10090767",
                 "shasum": ""
             },
             "require": {
@@ -149,9 +149,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-orm/issues",
-                "source": "https://github.com/fykosak/nette-orm/tree/v0.4.3"
+                "source": "https://github.com/fykosak/nette-orm/tree/v0.4.4"
             },
-            "time": "2023-08-16T19:24:12+00:00"
+            "time": "2023-11-13T19:50:11+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

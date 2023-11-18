@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\UI\PermissionDeniedBadge;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;

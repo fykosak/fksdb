@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\ControlGroup;
@@ -139,7 +138,7 @@ final class SettingsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     private function handleSettingsFormSuccess(Form $form): void
     {
