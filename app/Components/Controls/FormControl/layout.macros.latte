@@ -27,13 +27,13 @@
     {switch $field->control->type}
         {case 'range'}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
-            {label $field/}
+            {label $field class: 'form-label'/}
             {input $field class: 'form-control ' . $field->getControlPrototype()->class}
             {include metadata field => $field}
         </div>
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-            {label $field/}
+            {label $field class: 'form-label'/}
             {input $field class: 'form-control ' . $field->getControlPrototype()->class, 'required'=>null}
             {include metadata field => $field}
         </div>
