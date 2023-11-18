@@ -84,12 +84,6 @@ class FOLTeamForm extends TeamForm
                     'flag' => StudyYearNewColumnFactory::FLAG_ALL,
                 ],
             ],
-            'person_has_flag' => [
-                'spam_mff' => [
-                    'required' => false,
-                    'description' => _('Pouze pro české a slovenské studenty.'),
-                ],
-            ],
         ];
     }
 

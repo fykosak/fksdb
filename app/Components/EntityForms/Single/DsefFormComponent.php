@@ -49,6 +49,7 @@ final class DsefFormComponent extends SingleFormComponent
             $halfDayComponents[] = $afternoonSelect;
         }
         /** @var SelectBox $allDaySelect */
+        // TODO!!!!
         foreach ($dsefAllDay->getComponents() as $allDaySelect) {
             /** @var SelectBox[] $halfDayComponents */
             foreach ($halfDayComponents as $halfDayComponent) {
@@ -84,18 +85,26 @@ final class DsefFormComponent extends SingleFormComponent
         return [
             'person' => [
                 'other_name' => ['required' => true],
-                'family_name' => ['required' => true]
+                'family_name' => ['required' => true],
             ],
             'person_info' => [
                 'email' => ['required' => true],
                 'born' => ['required' => true],
-                'id_number' => ['required' => true]
+                'id_number' => ['required' => true],
             ],
             'person_schedule' => [
-                'dsef_morning' => ['required' => false],
-                'dsef_afternoon' => ['required' => false],
-                'dsef_all_day' => ['required' => false],
-                'accommodation' => ['required' => false]
+                'schedule' => [
+                    'types' => [
+                        ScheduleGroupType::DSEF_ALL_DAY,
+                        ScheduleGroupType::DSEF_AFTERNOON,
+                        ScheduleGroupType::DSEF_MORNING,
+                    ],
+                    'meta' => ['required' => false, 'label' => _('Schedule')],
+                ],
+                'accommodation' => [
+                    'types' => [ScheduleGroupType::ACCOMMODATION],
+                    'meta' => ['required' => false, 'label' => _('Accommodation')],
+                ],
             ]
         ];
     }

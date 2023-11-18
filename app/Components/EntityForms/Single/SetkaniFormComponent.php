@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Neon\Exception;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -37,9 +37,18 @@ final class SetkaniFormComponent extends SingleFormComponent
                 'phone' => ['required' => true]
             ],
             'person_schedule' => [
-                'apparel' => ['required' => true],
-                'transport' => ['required' => true],
-                'ticket' => ['required' => true]
+                'apparel' => [
+                    'types' => [ScheduleGroupType::APPAREL],
+                    'meta' => ['required' => true, 'label' => _('Apparel')],
+                ],
+                'transport' => [
+                    'types' => [ScheduleGroupType::TRANSPORT],
+                    'meta' => ['required' => true, 'label' => _('Transport')],
+                ],
+                'ticket' => [
+                    'types' => [ScheduleGroupType::TICKET],
+                    'meta' => ['required' => true, 'label' => _('Ticket')],
+                ],
             ]
         ];
     }

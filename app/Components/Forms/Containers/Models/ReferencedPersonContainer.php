@@ -85,9 +85,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
-            if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
+            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('label', _('Deliver address'));
-            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
@@ -95,8 +95,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $subContainer->setOption('label', $label);
             }
             if (
-                $sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
-                $sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT
+                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
+                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT
             ) {
                 if (isset($fields['address'])) {
                     $control = new AddressDataContainer(
@@ -204,7 +204,7 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
-     * @phpstan-param EvaluatedFieldMetaData $metadata
+     * @phpstan-param EvaluatedFieldMetaData|TMeta $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {
