@@ -41,7 +41,7 @@ class ScheduleContainer extends ContainerWithOptions
         $this->event = $event;
         $this->types = $meta['types'];
         $this->required = (bool)($meta['meta']['required'] ?? false);
-        $this->label = $meta['meta']['label'] ?? '';
+        $this->label = $meta['meta']['label'];
         $this->description = $meta['meta']['description'] ?? null;
         $this->collapse = $meta['meta']['collapse'] ?? false;
         $this->createContainers();

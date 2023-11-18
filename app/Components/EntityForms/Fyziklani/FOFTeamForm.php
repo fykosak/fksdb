@@ -28,70 +28,6 @@ use Nette\Neon\Exception;
  */
 class FOFTeamForm extends TeamForm
 {
-    /**
-     * @phpstan-var EvaluatedFieldsDefinition
-     */
-    private const MEMBER_FIELDS = [
-        'person' => [
-            'other_name' => ['required' => true],
-            'family_name' => ['required' => true],
-            'gender' => ['required' => false],
-        ],
-        'person_info' => [
-            'email' => ['required' => true],
-            'born' => ['required' => false],
-            'id_number' => ['required' => false],
-        ],
-        'person_history' => [
-            'school_id' => ['required' => true],
-            'study_year_new' => [
-                'required' => true,
-                'flag' => 'ALL',
-            ],
-        ],
-        'person_schedule' => [
-            'accommodation' => [
-                'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_GENDER],
-                'meta' => ['required' => false],
-            ],
-            'schedule' => [
-                'types' => [ScheduleGroupType::WEEKEND, ScheduleGroupType::WEEKEND_INFO,],
-                'meta' => ['required' => false, 'collapse' => true],
-            ],
-        ],
-    ];
-    /**
-     * @phpstan-var EvaluatedFieldsDefinition
-     */
-    private const TEACHER_FIELDS = [
-        'person' => [
-            'other_name' => ['required' => true],
-            'family_name' => ['required' => true],
-            'gender' => ['required' => false],
-        ],
-        'person_info' => [
-            'email' => ['required' => true],
-            'born' => ['required' => false],
-            'id_number' => ['required' => false],
-            'academic_degree_prefix' => ['required' => false],
-            'academic_degree_suffix' => ['required' => false],
-        ],
-        'person_schedule' => [
-            'accommodation' => [
-                'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_TEACHER],
-                'meta' => ['required' => false],
-            ],
-            'schedule' => [
-                'types' => [
-                    ScheduleGroupType::TEACHER_PRESENT,
-                    ScheduleGroupType::WEEKEND,
-                    ScheduleGroupType::WEEKEND_INFO,
-                ],
-                'meta' => ['required' => false, 'collapse' => true],
-            ],
-        ],
-    ];
-
     private TeamTeacherService $teacherService;
 
     final public function injectSecondary(TeamTeacherService $teacherService): void
@@ -145,7 +81,7 @@ class FOFTeamForm extends TeamForm
 
         for ($teacherIndex = 0; $teacherIndex < $teacherCount; $teacherIndex++) {
             $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
-                self::TEACHER_FIELDS,
+                $this->getTeacherFieldsDefinition(),
                 $this->event->getContestYear(),
                 'email',
                 true,
@@ -163,9 +99,75 @@ class FOFTeamForm extends TeamForm
         }
     }
 
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
+    protected function getTeacherFieldsDefinition(): array
+    {
+        return [
+            'person' => [
+                'other_name' => ['required' => true],
+                'family_name' => ['required' => true],
+                'gender' => ['required' => false],
+            ],
+            'person_info' => [
+                'email' => ['required' => true],
+                'born' => ['required' => false],
+                'id_number' => ['required' => false],
+                'academic_degree_prefix' => ['required' => false],
+                'academic_degree_suffix' => ['required' => false],
+            ],
+            'person_schedule' => [
+                'accommodation' => [
+                    'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_TEACHER],
+                    'meta' => ['required' => false, 'label' => _('Accommodation')],
+                ],
+                'schedule' => [
+                    'types' => [
+                        ScheduleGroupType::TEACHER_PRESENT,
+                        ScheduleGroupType::WEEKEND,
+                        ScheduleGroupType::WEEKEND_INFO,
+                    ],
+                    'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
     protected function getMemberFieldsDefinition(): array
     {
-        return self::MEMBER_FIELDS;
+        return [
+            'person' => [
+                'other_name' => ['required' => true],
+                'family_name' => ['required' => true],
+                'gender' => ['required' => false],
+            ],
+            'person_info' => [
+                'email' => ['required' => true],
+                'born' => ['required' => false],
+                'id_number' => ['required' => false],
+            ],
+            'person_history' => [
+                'school_id' => ['required' => true],
+                'study_year_new' => [
+                    'required' => true,
+                    'flag' => 'ALL',
+                ],
+            ],
+            'person_schedule' => [
+                'accommodation' => [
+                    'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_GENDER],
+                    'meta' => ['required' => false, 'label' => _('Accommodation')],
+                ],
+                'schedule' => [
+                    'types' => [ScheduleGroupType::WEEKEND, ScheduleGroupType::WEEKEND_INFO,],
+                    'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
+                ],
+            ],
+        ];
     }
 
     protected function savePersons(TeamModel2 $team, Form $form): void

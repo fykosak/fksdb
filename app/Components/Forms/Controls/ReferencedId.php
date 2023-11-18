@@ -179,7 +179,6 @@ class ReferencedId extends HiddenField
             } catch (ScheduleException $exception) {
                 /*if ($exception->group) {
                     /@var ScheduleGroupField $component
-                    / @phpstan-ignore-next-line
                     $component = $this->referencedContainer->getComponent('person_schedule')
                         ->getComponent($exception->group->schedule_group_type->value)
                         ->getComponent((string)$exception->group->schedule_group_id);
