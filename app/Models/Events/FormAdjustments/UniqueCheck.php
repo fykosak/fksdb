@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Nette\Forms\Control;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
@@ -36,8 +36,7 @@ class UniqueCheck extends AbstractAdjustment
         if (!$control) {
             return;
         }
-        /** @phpstan-ignore-next-line */
-        $control->addRule(function (Control $control) use ($holder): bool {
+        $control->addRule(function (BaseControl $control) use ($holder): bool {
             $query = $this->eventParticipantService->getTable();
             $column = BaseHolder::getBareColumn($this->field);
             if ($control instanceof ReferencedId) {

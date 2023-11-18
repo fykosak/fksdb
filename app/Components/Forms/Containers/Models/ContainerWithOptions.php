@@ -8,9 +8,6 @@ use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
- */
 class ContainerWithOptions extends Container
 {
     /** @phpstan-var array<string,mixed> */

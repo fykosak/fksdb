@@ -215,7 +215,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 return new ScheduleContainer(
                     $this->container,
                     $this->event,
-                    $metadata
+                    $metadata //@phpstan-ignore-line
                 );
             case 'person':
             case 'person_info':

@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamProcessing;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -17,7 +18,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Neon\Exception;
@@ -51,8 +51,9 @@ class FOFTeamForm extends TeamForm
             $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
             $bornField = $component['person_info']['born'];//@phpstan-ignore-line
+            /** @var ContainerWithOptions $dayContainer */
             foreach ($accommodationField->getComponents() as $dayContainer) {
-                /** @var Control $baseComponent */
+                /** @var BaseControl $baseComponent */
                 foreach ($dayContainer->getComponents() as $baseComponent) {
                     $genderField->addConditionOn($baseComponent, Form::FILLED)
                         ->addRule(Form::FILLED, _('Field %label is required.'));
@@ -67,7 +68,6 @@ class FOFTeamForm extends TeamForm
                     $bornField->addConditionOn($baseComponent, Form::FILLED)
                         ->toggle($bornField->getHtmlId() . '-pair');
                 }
-
             }
         }
     }

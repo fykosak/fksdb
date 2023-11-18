@@ -18,7 +18,7 @@
     {/foreach}
     {var $description = $field->getOption('description')}
     {if $description}
-        <span class="text-muted">{$description}</span>
+        <span class="form-text">{$description}</span>
     {/if}
 {/define}
 
@@ -106,7 +106,7 @@
 {define controls}
     {varType Nette\Forms\Controls\BaseControl[] $controls}
     {var $buttons = []}
-    {foreach $controls as $name => $field}
+    {foreach $controls as $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}
