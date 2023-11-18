@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-extends BaseGrid<ProducerModel,array{}>

@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;

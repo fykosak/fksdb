@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {

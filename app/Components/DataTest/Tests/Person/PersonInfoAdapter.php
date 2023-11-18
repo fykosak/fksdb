@@ -7,7 +7,7 @@ namespace FKSDB\Components\DataTest\Tests\Person;
 use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<PersonModel,PersonInfoModel>

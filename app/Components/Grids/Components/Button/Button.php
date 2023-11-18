@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Button;
 
 use FKSDB\Components\Grids\Components\BaseItem;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\InvalidLinkException;
@@ -13,7 +13,7 @@ use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class Button extends BaseItem

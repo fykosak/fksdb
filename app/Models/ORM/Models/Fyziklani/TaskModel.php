@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**

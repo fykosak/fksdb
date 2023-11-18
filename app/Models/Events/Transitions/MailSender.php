@@ -19,7 +19,7 @@ use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Strings;
 
 /**

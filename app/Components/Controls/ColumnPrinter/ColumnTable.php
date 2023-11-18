@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 
 class ColumnTable extends BaseComponent

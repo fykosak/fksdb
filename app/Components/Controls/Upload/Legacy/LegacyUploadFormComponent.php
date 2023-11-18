@@ -14,8 +14,7 @@ use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -96,7 +95,7 @@ class LegacyUploadFormComponent extends FormComponent
             $this->submitHandlerFactory->uploadedStorage->commit();
             $this->taskService->explorer->getConnection()->commit();
             $this->redirect('this');
-        } catch (ModelException | ProcessingException $exception) {
+        } catch (\PDOException | ProcessingException $exception) {
             $this->submitHandlerFactory->uploadedStorage->rollback();
             $this->taskService->explorer->getConnection()->rollBack();
             Debugger::log($exception);

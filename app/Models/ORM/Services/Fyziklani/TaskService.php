@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
  * @phpstan-extends Service<TaskModel>

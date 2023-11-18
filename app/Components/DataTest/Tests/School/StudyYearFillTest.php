@@ -6,7 +6,7 @@ namespace FKSDB\Components\DataTest\Tests\School;
 
 use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;

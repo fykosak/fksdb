@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**

@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;

@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\UI\EventRolePrinter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\User;
 use Nette\Utils\Html;
 

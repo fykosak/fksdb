@@ -6,9 +6,8 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 
 /**
  * @phpstan-extends Service<EventParticipantModel>
@@ -22,7 +21,7 @@ final class EventParticipantService extends Service
     {
         try {
             return parent::storeModel($data, $model);
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 throw new DuplicateApplicationException($model ? $model->person : null, $exception);
             }

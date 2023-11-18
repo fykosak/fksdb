@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\UI\EmailPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Http\IResponse;

@@ -8,7 +8,7 @@ use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\FOLCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
