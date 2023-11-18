@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-09 21:15+0100\n"
+"POT-Creation-Date: 2023-11-15 20:30+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -437,11 +437,6 @@ msgstr ""
 msgid "Delivery address"
 msgstr ""
 
-#: i18n/../app/Components/Controls/Person/Detail/dataTest.latte.latte2php:25
-#, fuzzy
-msgid "No error found"
-msgstr "Časový vývoj prihlášiek"
-
 #: i18n/../app/Components/Controls/Person/Detail/flag.latte.latte2php:3
 msgid "Flags"
 msgstr ""
@@ -745,28 +740,62 @@ msgstr "Časový vývoj prihlášiek"
 msgid "Teams per school"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/PersonTestComponent.php:44
+#: i18n/../app/Components/DataTest/PersonTestComponent.php:57
 msgid "Offset"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/PersonTestComponent.php:45
-#: i18n/../app/Components/DataTest/PersonTestComponent.php:48
+#: i18n/../app/Components/DataTest/PersonTestComponent.php:58
+#: i18n/../app/Components/DataTest/PersonTestComponent.php:61
 msgid "Must be a int"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/PersonTestComponent.php:47
+#: i18n/../app/Components/DataTest/PersonTestComponent.php:60
 msgid "Limit"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/PersonTestComponent.php:52
+#: i18n/../app/Components/DataTest/PersonTestComponent.php:65
 #: i18n/../app/Modules/OrganizerModule/templates/Person/search.latte.latte2php:13
 msgid "Tests"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/TestGridTrait.php:62
+#: i18n/../app/Components/DataTest/TestGridTrait.php:64
 #, fuzzy
 msgid "No errors found"
 msgstr "Časový vývoj prihlášiek"
+
+#: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:53
+#, php-format
+msgid "Detect person \"%s\"(%d) on schedule without role."
+msgstr ""
+
+#: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:65
+msgid "No role schedule"
+msgstr ""
+
+#: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:40
+#, php-format
+msgid "Wrong category actual %s calculated %s"
+msgstr ""
+
+#: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:60
+#, fuzzy
+msgid "Category check"
+msgstr "Zvoliť typ"
+
+#: i18n/../app/Components/DataTest/Tests/Event/Team/PersonAdapter.php:24
+#, fuzzy, php-format
+msgid "In person \"%s\"(%d): "
+msgstr "Uprava platby #%s"
+
+#: i18n/../app/Components/DataTest/Tests/Event/Team/PersonHistoryAdapter.php:34
+#, php-format
+msgid "In person \"%s\"(%d) in current year: "
+msgstr ""
+
+#: i18n/../app/Components/DataTest/Tests/Event/TeamAdapter.php:24
+#, fuzzy, php-format
+msgid "In team \"%s\"(%d): "
+msgstr "Uprava platby #%s"
 
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:28
 msgid "Organization and participation in the same year"
@@ -793,11 +822,11 @@ msgstr ""
 msgid "Tests, if gender matches born ID"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:39
+#: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:40
 msgid "Gender is not set"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:43
+#: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:44
 msgid "Gender do not match born Id"
 msgstr ""
 
@@ -813,6 +842,11 @@ msgstr ""
 #: i18n/../app/Components/DataTest/Tests/Person/ParticipantsDurationTest.php:70
 #, php-format
 msgid "Person participated %d years in contestId %d (and its events)"
+msgstr ""
+
+#: i18n/../app/Components/DataTest/Tests/Person/PersonHistoryAdapter.php:30
+#, php-format
+msgid "In ac. year %d/%d: "
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Person/PostgraduateStudyTest.php:23
@@ -836,11 +870,11 @@ msgstr ""
 msgid "School changed in year %d"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/Tests/Person/StudyYearTest.php:23
+#: i18n/../app/Components/DataTest/Tests/Person/StudyYearTest.php:22
 msgid "Graduation years"
 msgstr ""
 
-#: i18n/../app/Components/DataTest/Tests/Person/StudyYearTest.php:28
+#: i18n/../app/Components/DataTest/Tests/Person/StudyYearTest.php:27
 msgid "Compares graduation years of each year, checks if they are the same."
 msgstr ""
 
@@ -885,9 +919,15 @@ msgstr ""
 msgid "Missing study years"
 msgstr "Zvoliť typ"
 
-#: i18n/../app/Components/DataTest/single.latte.latte2php:7
-msgid "Test:"
-msgstr ""
+#: i18n/../app/Components/DataTest/list.latte.latte2php:16
+#, fuzzy
+msgid "No error found"
+msgstr "Časový vývoj prihlášiek"
+
+#: i18n/../app/Components/DataTest/list.latte.latte2php:24
+#, fuzzy
+msgid "No error at all"
+msgstr "Časový vývoj prihlášiek"
 
 #: i18n/../app/Components/EntityForms/AddressFormComponent.php:70
 #, fuzzy
@@ -1006,27 +1046,25 @@ msgid "The second part of your name. For example, \"Einstein\"."
 msgstr " "
 
 #: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:64
+#: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:88
 msgid "Only for Czech and Slovak students"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:71
 msgid ""
-"Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. \n"
-"                        Pokud nelze školu nalézt, pošlete na email schola."
-"novum@fykos.cz údaje o vaší škole jako název,\n"
-"                        adresu a pokud možno i odkaz na webovou stránku.\n"
-"                        Školu založíme a pošleme vám odpověď. Pak budete "
-"schopni dokončit \n"
-"                        registraci."
+"Type a few characters of your school name, then select\n"
+"                        your school from the list. If you cannot find it,\n"
+"                        please send us email with your school details to\n"
+"                        schola.novum@fykos.cz. We will add your school and "
+"send\n"
+"                        you a reply. Then that you can proceed with\n"
+"                        registration."
 msgstr ""
 
-#: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:80
-msgid "Pro výpočet kategorie."
-msgstr ""
-
-#: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:87
-msgid "Pouze pro české a slovenské studenty."
-msgstr ""
+#: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamFormComponent.php:81
+#, fuzzy
+msgid "For category calculation."
+msgstr "Zoznam platieb"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/NoMemberException.php:13
 #, fuzzy
@@ -1367,7 +1405,7 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:10
 #: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:12
 #: i18n/../app/Modules/EventModule/templates/Team/detail.fol.latte.latte2php:8
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:55
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:57
 msgid "Info"
 msgstr ""
 
@@ -2320,7 +2358,7 @@ msgid "Source"
 msgstr ""
 
 #: i18n/../app/Components/Grids/SubmitsGrid.php:88
-#: i18n/../app/config/applications/personSchedule.neon.neon2php:8
+#: i18n/../app/config/applications/personSchedule.neon.neon2php:16
 #, fuzzy
 msgid "Cancel"
 msgstr "Nová platba"
@@ -2431,7 +2469,7 @@ msgid "Cannot parse code"
 msgstr ""
 
 #: i18n/../app/Components/Schedule/AllPersonList.php:154
-#: i18n/../app/Components/Schedule/PersonGrid.php:58
+#: i18n/../app/Components/Schedule/PersonGrid.php:59
 msgid "Detail"
 msgstr ""
 
@@ -3044,7 +3082,7 @@ msgstr ""
 #: i18n/../app/Models/ORM/Models/EventParticipantStatus.php:157
 #: i18n/../app/Models/ORM/Models/Fyziklani/TeamState.php:102
 #: i18n/../app/Models/ORM/Models/Schedule/PersonScheduleState.php:51
-#: i18n/../app/config/applications/personSchedule.neon.neon2php:10
+#: i18n/../app/config/applications/personSchedule.neon.neon2php:13
 #: i18n/../data/events/fov/fov.neon.neon2php:48
 #: i18n/../data/events/fov/fov34.neon.neon2php:32
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:101
@@ -3073,7 +3111,7 @@ msgstr ""
 #: i18n/../app/Models/ORM/Models/EventParticipantStatus.php:163
 #: i18n/../app/Models/ORM/Models/Fyziklani/TeamState.php:100
 #: i18n/../app/Models/ORM/Models/Schedule/PersonScheduleState.php:49
-#: i18n/../app/config/applications/personSchedule.neon.neon2php:13
+#: i18n/../app/config/applications/personSchedule.neon.neon2php:9
 #: i18n/../data/events/fov/fov.neon.neon2php:45
 #: i18n/../data/events/fov/fov34.neon.neon2php:29
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:98
@@ -4306,6 +4344,11 @@ msgstr "Zoznam platieb"
 msgid "Detailed list of payments"
 msgstr "Zoznam akcií"
 
+#: i18n/../app/Modules/EventModule/ReportPresenter.php:24
+#: i18n/../app/config/orm.neon.neon2php:133
+msgid "Report"
+msgstr ""
+
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:61
 #, php-format
 msgid "Group: %s"
@@ -4397,7 +4440,7 @@ msgstr ""
 msgid "Others group"
 msgstr "Zoznam platieb"
 
-#: i18n/../app/Modules/EventModule/TeamPresenter.php:91
+#: i18n/../app/Modules/EventModule/TeamPresenter.php:92
 #, fuzzy
 msgid "Create team"
 msgstr "Zoznam platieb"
@@ -4523,7 +4566,7 @@ msgstr ""
 msgid "Parcipant"
 msgstr "Registrácia"
 
-#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:40
+#: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:37
 msgid "Rank & points"
 msgstr ""
 
@@ -5195,10 +5238,6 @@ msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:130
 msgid "Report in english"
-msgstr ""
-
-#: i18n/../app/config/orm.neon.neon2php:133
-msgid "Report"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:136
@@ -6794,10 +6833,6 @@ msgstr "Stránka požaduje prihlásenie."
 #, fuzzy
 #~ msgid "Import of applications"
 #~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Item \"%s\""
-#~ msgstr "Uprava platby #%s"
 
 #, fuzzy
 #~ msgid "List of applications"

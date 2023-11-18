@@ -27,11 +27,11 @@ class ClosePresenter extends FyziklaniTestCase
         $this->event = $this->createEvent([]);
 
         $teams = [];
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 1, 'state' => 'participated', 'name' => 'team0']);
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 2, 'state' => 'participated', 'name' => 'team1']);
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 3, 'state' => 'participated', 'name' => 'team2']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 1, 'state' => 'participated', 'name' => 'team1']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 2, 'state' => 'participated', 'name' => 'team2']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 3, 'state' => 'participated', 'name' => 'team3']);
         $teams[] = $this->createTeam(
-            ['fyziklani_team_id' => 4, 'state' => 'participated', 'category' => 'B', 'name' => 'team3']
+            ['fyziklani_team_id' => 4, 'state' => 'participated', 'name' => 'team4', 'category' => 'B']
         );
 
         $tasks = [];
