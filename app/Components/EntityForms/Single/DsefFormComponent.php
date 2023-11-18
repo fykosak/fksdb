@@ -34,13 +34,13 @@ final class DsefFormComponent extends SingleFormComponent
 
         /** @var ScheduleContainer $dsefMorning */
         // @phpstan-ignore-next-line
-        $dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
+        //$dsefMorning = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_MORNING];
         /** @var ScheduleContainer $dsefAfternoon */
         // @phpstan-ignore-next-line
-        $dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
+        //$dsefAfternoon = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_AFTERNOON];
         /** @var ScheduleContainer $dsefAllDay */
         // @phpstan-ignore-next-line
-        $dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
+        //$dsefAllDay = $personContainer->referencedContainer['person_schedule'][ScheduleGroupType::DSEF_ALL_DAY];
         $halfDayComponents = [];
         foreach ($dsefMorning->getComponents() as $morningSelect) {
             $halfDayComponents[] = $morningSelect;
@@ -95,14 +95,12 @@ final class DsefFormComponent extends SingleFormComponent
             'person_schedule' => [
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::DSEF_ALL_DAY,
-                        ScheduleGroupType::DSEF_AFTERNOON,
-                        ScheduleGroupType::DSEF_MORNING,
+                        ScheduleGroupType::Schedule,
                     ],
                     'meta' => ['required' => false, 'label' => _('Schedule')],
                 ],
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::ACCOMMODATION],
+                    'types' => [ScheduleGroupType::Accommodation],
                     'meta' => ['required' => false, 'label' => _('Accommodation')],
                 ],
             ]

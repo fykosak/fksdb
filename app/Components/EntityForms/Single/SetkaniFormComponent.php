@@ -38,16 +38,12 @@ final class SetkaniFormComponent extends SingleFormComponent
             ],
             'person_schedule' => [
                 'apparel' => [
-                    'types' => [ScheduleGroupType::APPAREL],
+                    'types' => [ScheduleGroupType::Apparel],
                     'meta' => ['required' => true, 'label' => _('Apparel')],
                 ],
                 'transport' => [
-                    'types' => [ScheduleGroupType::TRANSPORT],
-                    'meta' => ['required' => true, 'label' => _('Transport')],
-                ],
-                'ticket' => [
-                    'types' => [ScheduleGroupType::TICKET],
-                    'meta' => ['required' => true, 'label' => _('Ticket')],
+                    'types' => [ScheduleGroupType::Transport, ScheduleGroupType::Ticket],
+                    'meta' => ['required' => true, 'label' => _('Transport & Ticket')],
                 ],
             ]
         ];

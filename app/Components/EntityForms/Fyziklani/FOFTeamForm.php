@@ -119,14 +119,14 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_TEACHER],
+                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationTeacher],
                     'meta' => ['required' => false, 'label' => _('Accommodation')],
                 ],
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::TEACHER_PRESENT,
-                        ScheduleGroupType::WEEKEND,
-                        ScheduleGroupType::WEEKEND_INFO,
+                        ScheduleGroupType::TeacherPresent,
+                        ScheduleGroupType::Schedule,
+                        ScheduleGroupType::ScheduleInfo,
                     ],
                     'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
                 ],
@@ -159,11 +159,11 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::ACCOMMODATION_GENDER],
+                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationGender],
                     'meta' => ['required' => false, 'label' => _('Accommodation')],
                 ],
                 'schedule' => [
-                    'types' => [ScheduleGroupType::WEEKEND, ScheduleGroupType::WEEKEND_INFO,],
+                    'types' => [ScheduleGroupType::Schedule, ScheduleGroupType::ScheduleInfo,],
                     'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
                 ],
             ],

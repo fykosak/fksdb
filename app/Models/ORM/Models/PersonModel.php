@@ -412,8 +412,8 @@ final class PersonModel extends Model implements Resource
     public function getScheduleRests(
         EventModel $event,
         array $types = [
-            ScheduleGroupType::ACCOMMODATION,
-            ScheduleGroupType::WEEKEND,
+            ScheduleGroupType::Accommodation,
+            ScheduleGroupType::Schedule,
         ]
     ): array {
         $toPay = [];
