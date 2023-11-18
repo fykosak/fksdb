@@ -1100,13 +1100,18 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
+        'schedule',
+        'schedule_info',
+        'dsef',
+        'apparel',
+        'transport',
+        'ticket',
+
         'weekend',
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'dsef_all_day',
-        'apparal',
-        'transport'
+        'dsef_all_day'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
