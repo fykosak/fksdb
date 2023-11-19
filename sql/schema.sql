@@ -1100,13 +1100,9 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
-        'schedule',
-        'schedule_info',
-        'dsef',
         'apparel',
         'transport',
         'ticket',
-
         'weekend',
         'weekend_info',
         'dsef_morning',

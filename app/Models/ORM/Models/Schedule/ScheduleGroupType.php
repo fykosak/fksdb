@@ -20,9 +20,12 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 
     public const TeacherPresent = 'teacher_present';
 
-    public const Schedule = 'schedule';
-    public const ScheduleInfo = 'schedule_info';
-    public const DSEF = 'dsef';
+    public const Weekend = 'schedule';
+    public const WeekendInfo = 'schedule_info';
+
+    public const DSEFMorning = 'dsef_morning';
+    public const DSEFAfternoon = 'dsef_afternoon';
+    public const DSEFAllDay = 'dsef_all_day';
 
     public const Apparel = 'apparel';
 
@@ -42,8 +45,11 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             new self(self::Visa),
             new self(self::VaccinationCovid),
             new self(self::TeacherPresent),
-            new self(self::ScheduleInfo),
-            new self(self::Schedule),
+            new self(self::WeekendInfo),
+            new self(self::Weekend),
+            new self(self::DSEFMorning),
+            new self(self::DSEFAllDay),
+            new self(self::DSEFAfternoon),
             new self(self::Apparel),
             new self(self::Transport),
             new self(self::Ticket),
@@ -75,11 +81,13 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             case self::VaccinationCovid:
                 $badge = 'badge bg-color-6';
                 break;
-            case self::DSEF:
-            case self::ScheduleInfo:
+            case self::DSEFMorning:
+            case self::DSEFAfternoon:
+            case self::DSEFAllDay:
+            case self::Weekend:
                 $badge = 'badge bg-color-7';
                 break;
-            case self::Schedule:
+            case self::WeekendInfo:
                 $badge = 'badge bg-color-8';
                 break;
             case self::Apparel:
@@ -111,11 +119,13 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return _('Visa');
             case self::VaccinationCovid:
                 return _('Covid-19 Vaccination');
-            case self::ScheduleInfo:
-                return _('Weekend info');
-            case self::Schedule:
-                return _('Weekend');
-            case self::DSEF:
+            case self::WeekendInfo:
+                return _('Info');
+            case self::Weekend:
+                return _('Schedule');
+            case self::DSEFMorning:
+            case self::DSEFAfternoon:
+            case self::DSEFAllDay:
                 return _('DSEF');
             case self::Apparel:
                 return _('Apparel');
@@ -146,7 +156,9 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             'groupTime' => false,
         ];
         switch ($this->value) {
-            case self::DSEF:
+            case self::DSEFAfternoon:
+            case self::DSEFMorning:
+            case self::DSEFAllDay:
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;
@@ -161,7 +173,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;
-            case self::Schedule:
+            case self::Weekend:
                 $params['groupTime'] = true;
                 break;
             case self::Apparel:

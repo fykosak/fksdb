@@ -112,7 +112,14 @@ final class TeamList extends BaseList
         $this->addPresenterButton(
             ':Event:Team:detail',
             'detail',
-            new Title(null, _('button.detail')),
+            new Title(null, _('button.team.detail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            ':Event:Team:edit',
+            'edit',
+            new Title(null, _('button.team.edit')),
             false,
             ['id' => 'fyziklani_team_id']
         );

@@ -15,10 +15,19 @@ use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
- * @phpstan-type TMeta array{types:string[],meta:array{label:string,description?:string,required?:bool,collapse?:bool}}
+ * @phpstan-type TMeta array{
+ * types:string[],
+ * label:string,
+ * description?:string,
+ * required?:bool,
+ * collapse?:bool,
+ * groupBy?:self::GROUP_*}
  */
 class ScheduleContainer extends ContainerWithOptions
 {
+    public const GROUP_DATE = 'date';
+    public const GROUP_NONE = 'none';
+
     private EventModel $event;
     /** @var string[] */
     private array $types;
@@ -27,6 +36,8 @@ class ScheduleContainer extends ContainerWithOptions
     private string $label;
     private ?string $description;
     private bool $collapse;
+    /** @phpstan-var self::GROUP_* */
+    private string $groupBy;
 
     /**
      * @phpstan-param TMeta $meta
@@ -40,10 +51,11 @@ class ScheduleContainer extends ContainerWithOptions
         parent::__construct($container);
         $this->event = $event;
         $this->types = $meta['types'];
-        $this->required = (bool)($meta['meta']['required'] ?? false);
-        $this->label = $meta['meta']['label'];
-        $this->description = $meta['meta']['description'] ?? null;
-        $this->collapse = $meta['meta']['collapse'] ?? false;
+        $this->required = (bool)($meta['required'] ?? false);
+        $this->label = $meta['label'];
+        $this->description = $meta['description'] ?? null;
+        $this->collapse = $meta['collapse'] ?? false;
+        $this->groupBy = $meta['groupBy'] ?? self::GROUP_NONE;
         $this->createContainers();
     }
 
@@ -67,7 +79,7 @@ class ScheduleContainer extends ContainerWithOptions
         $days = [];
         /** @var ScheduleGroupModel $group */
         foreach ($groups as $group) {
-            $key = $group->start->format('d_m');
+            $key = $this->getGroupKey($group);
             $days[$key] = $days[$key] ?? [];
             $days[$key][] = $group;
         }
@@ -89,6 +101,17 @@ class ScheduleContainer extends ContainerWithOptions
         }
     }
 
+    public function getGroupKey(ScheduleGroupModel $group): string
+    {
+        switch ($this->groupBy) {
+            default:
+            case self::GROUP_NONE:
+                return 'none';
+            case self::GROUP_DATE:
+                return $group->start->format('Y_d_m');
+        }
+    }
+
     public function setModel(PersonModel $person): void
     {
         $query = $person->getSchedule()->where('schedule_item.schedule_group.schedule_group_type', $this->types);
@@ -96,7 +119,7 @@ class ScheduleContainer extends ContainerWithOptions
         /** @var PersonScheduleModel $personSchedule */
         foreach ($query as $personSchedule) {
             $group = $personSchedule->schedule_item->schedule_group;
-            $key = $group->start->format('d_m');
+            $key = $this->getGroupKey($group);
             $data[$key] = $data[$key] ?? [];
             $data[$key][$group->schedule_group_id] = $personSchedule->schedule_item_id;
         }

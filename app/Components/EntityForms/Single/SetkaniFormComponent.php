@@ -39,11 +39,13 @@ final class SetkaniFormComponent extends SingleFormComponent
             'person_schedule' => [
                 'apparel' => [
                     'types' => [ScheduleGroupType::Apparel],
-                    'meta' => ['required' => true, 'label' => _('Apparel')],
+                    'required' => true,
+                    'label' => _('Apparel'),
                 ],
                 'transport' => [
                     'types' => [ScheduleGroupType::Transport, ScheduleGroupType::Ticket],
-                    'meta' => ['required' => true, 'label' => _('Transport & Ticket')],
+                    'required' => true,
+                    'label' => _('Transport & Ticket'),
                 ],
             ]
         ];
@@ -57,15 +59,15 @@ final class SetkaniFormComponent extends SingleFormComponent
         return [
             'diet' => [
                 'required' => false,
-                'description' => _("Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …?
-                Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?")
+                'description' => _('Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …?
+                Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?')
             ],
             'health_restrictions' => [
                 'required' => false,
-                'description' => _("Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na setkání?
+                'description' => _('Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na setkání?
                 Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš
                 nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace
-                ohledně tvého zdravotního stavu, co bychom měli vědět?")],
+                ohledně tvého zdravotního stavu, co bychom měli vědět?')],
             'note' => ['required' => false]
         ];
     }

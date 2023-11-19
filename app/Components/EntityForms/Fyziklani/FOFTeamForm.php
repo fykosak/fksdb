@@ -120,15 +120,20 @@ class FOFTeamForm extends TeamForm
             'person_schedule' => [
                 'accommodation' => [
                     'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationTeacher],
-                    'meta' => ['required' => false, 'label' => _('Accommodation')],
+                    'required' => false,
+                    'label' => _('Accommodation'),
+                    'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
                 'schedule' => [
                     'types' => [
                         ScheduleGroupType::TeacherPresent,
-                        ScheduleGroupType::Schedule,
-                        ScheduleGroupType::ScheduleInfo,
+                        ScheduleGroupType::Weekend,
+                        ScheduleGroupType::WeekendInfo,
                     ],
-                    'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
+                    'required' => false,
+                    'collapse' => true,
+                    'label' => _('Schedule'),
+                    'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
             ],
         ];
@@ -160,11 +165,16 @@ class FOFTeamForm extends TeamForm
             'person_schedule' => [
                 'accommodation' => [
                     'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationGender],
-                    'meta' => ['required' => false, 'label' => _('Accommodation')],
+                    'required' => false,
+                    'label' => _('Accommodation'),
+                    'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
                 'schedule' => [
-                    'types' => [ScheduleGroupType::Schedule, ScheduleGroupType::ScheduleInfo,],
-                    'meta' => ['required' => false, 'collapse' => true, 'label' => _('Schedule')],
+                    'types' => [ScheduleGroupType::Weekend, ScheduleGroupType::WeekendInfo],
+                    'required' => false,
+                    'collapse' => true,
+                    'label' => _('Schedule'),
+                    'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
             ],
         ];

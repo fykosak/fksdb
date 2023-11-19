@@ -413,7 +413,7 @@ final class PersonModel extends Model implements Resource
         EventModel $event,
         array $types = [
             ScheduleGroupType::Accommodation,
-            ScheduleGroupType::Schedule,
+            ScheduleGroupType::Weekend,
         ]
     ): array {
         $toPay = [];
