@@ -285,9 +285,9 @@ class FOFTeamForm extends TeamForm
     private static function formatTeacherLabel(int $index, ?TeamTeacherModel $teacher = null): string
     {
         if ($teacher) {
-            return sprintf(_('Teacher %d - %s'), $index + 1, $teacher->person->getFullName());
+            return sprintf(_('Teacher %d - %s'), $index, $teacher->person->getFullName());
         } else {
-            return sprintf(_('Teacher %d'), $index + 1);
+            return sprintf(_('Teacher %d'), $index);
         }
     }
 }

@@ -130,9 +130,11 @@ abstract class TeamForm extends EntityFormComponent
             $this->savePersons($team, $form);
             $holder = $this->machine->createHolder($team);
             if (!isset($this->model)) {
+                 // ak je nový pošle defaultný mail
                 $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
+                // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
                 $transition = Machine::selectTransition(
                     Machine::filterAvailable(
                         Machine::filterByTarget($this->machine->transitions, TeamState::from(TeamState::Pending)),
@@ -140,11 +142,13 @@ abstract class TeamForm extends EntityFormComponent
                     )
                 );
                 $this->machine->execute($transition, $holder);
-            } else {
-                // TODO
+            }
+            // pri každej editácii okrem initu pošle mail
+            if (isset($this->model)) {
                 (new TeacherInfoMail($this->container))($holder);
                 (new MemberInfoMail($this->container))($holder);
             }
+
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
                 isset($this->model)
@@ -288,9 +292,9 @@ abstract class TeamForm extends EntityFormComponent
     private static function formatMemberLabel(int $index, ?TeamMemberModel $member = null): string
     {
         if ($member) {
-            return sprintf(_('Member %d - %s'), $index + 1, $member->person->getFullName());
+            return sprintf(_('Member %d - %s'), $index, $member->person->getFullName());
         } else {
-            return sprintf(_('Member %d'), $index + 1);
+            return sprintf(_('Member %d'), $index);
         }
     }
 }
