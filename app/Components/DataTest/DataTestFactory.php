@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use FKSDB\Components\DataTest\Tests\Event\NoRoleSchedule;
+use FKSDB\Components\DataTest\Tests\Event\Schedule\RunOutCapacity;
+use FKSDB\Components\DataTest\Tests\Event\ScheduleItemAdapter;
 use FKSDB\Components\DataTest\Tests\Event\Team\CategoryCheck;
 use FKSDB\Components\DataTest\Tests\Event\Team\PersonAdapter;
 use FKSDB\Components\DataTest\Tests\Event\TeamAdapter;
@@ -85,6 +87,7 @@ class DataTestFactory
     {
         $tests = [
             new NoRoleSchedule($this->container),
+            new ScheduleItemAdapter(new RunOutCapacity($this->container), $this->container),
         ];
         foreach ($this->getTeamTests() as $test) {
             $tests[] = new TeamAdapter($test, $this->container);
