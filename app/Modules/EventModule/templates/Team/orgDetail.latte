@@ -1,6 +1,6 @@
 {layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType FKSDB\Models\ORM\Models\EventModel $event}
-{varType bool $rankVisible}
 
 {define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
     <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
@@ -15,6 +15,7 @@
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
                 <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                    {control printer:button 'person.detail', $member}
                 {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
                 {if $event->getScheduleGroups()->count()}
                     {include personSchedule, person => $member->person}
@@ -25,19 +26,20 @@
 {/define}
 
 {define rank, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
-    {if $rankVisible}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Rank & points'}</h2>
-                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
-            </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rank & points'}</h2>
+            {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
         </div>
-    {/if}
+    </div>
+{/define}
+{define tests, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {control tests, $model}
 {/define}
 
 {block titleBody}
     {include parent}
-    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:false}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:true}
 {/block}
 
 {block outerContent}
@@ -52,4 +54,5 @@
     </div>
     {include rank, model:$model}
     {include members, model:$model}
+    {include tests, model:$model}
 {/block}

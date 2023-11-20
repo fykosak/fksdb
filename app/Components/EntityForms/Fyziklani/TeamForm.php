@@ -290,7 +290,7 @@ abstract class TeamForm extends EntityFormComponent
         return $persons;
     }
 
-    private static function formatMemberLabel(int $index, ?TeamMemberModel $member = null): string
+    public static function formatMemberLabel(int $index, ?TeamMemberModel $member = null): string
     {
         if ($member) {
             return sprintf(_('Member %d - %s'), $index, $member->person->getFullName());

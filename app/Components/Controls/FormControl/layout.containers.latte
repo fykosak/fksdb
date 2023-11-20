@@ -4,40 +4,43 @@
     {if $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
         {var $attrs = array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY)}
         {if $container->getOption('visible', true)}
-            {snippet 'group-' . $container->getOption('id')}
-                {var string|null $label = $container->getOption('label')}
-                {var string|null $description = $container->getOption('description')}
-                {var $className = $label?'col-12 callout card mb-3':'mb-3'}
-                <fieldset class="{$className}" data-level={$level} n:attr="(expand) $attrs">
-                    {var $id = Nette\Utils\Random::generate(10)}
-                    <div class="{$label?'card-header d-flex justify-content-between':''}">
+            {var string|null $label = $container->getOption('label')}
+            {var string|null $description = $container->getOption('description')}
+            {var string $className = $label?'col-12 callout card mb-3':'mb-3'}
+            {var string $id = Nette\Utils\Random::generate(10)}
+            <fieldset
+                    class="{$className}"
+                    n:snippet="'group-' . $container->getOption('id')"
+                    data-level={$level}
+                    n:attr="(expand) $attrs"
+            >
+                <div class="{$label?'card-header d-flex justify-content-between':''}">
                         {if $label}
-                                <h4>{$label}</h4>
+                            <h4>{$label}</h4>
                         {/if}
                         {if $container->collapse}
-                                <button class="btn btn-outline-primary btn-sm"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#{$id}"
-                                        role="button">
-                                    {_'Toogle'}
-                                </button>
-                            {/if}
-                        {if $description}
-                                <p>{$description}</p>
+                            <button class="btn btn-outline-primary btn-sm"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#{$id}"
+                                    role="button">
+                                {_'Toogle'}
+                            </button>
                         {/if}
+                        {if $description}
+                            <p>{$description}</p>
+                        {/if}
+                </div>
+                {if $container->collapse}
+                    <div class="{$label?'card-body collapse':'mt-3'}" id="{$id}">
+                        {include subComponents container=>$container, level=>$level}
                     </div>
-                    {if $container->collapse}
-                        <div class="{$label?'card-body collapse':'mt-3'}" id="{$id}">
-                            {include subComponents container=>$container, level=>$level}
-                        </div>
-                    {else}
-                        <div class="{$label?'card-body':''}">
-                            {include subComponents container=>$container, level=>$level}
-                        </div>
-                    {/if}
-                </fieldset>
-            {/snippet}
+                {else}
+                    <div class="{$label?'card-body':''}">
+                        {include subComponents container=>$container, level=>$level}
+                    </div>
+                {/if}
+            </fieldset>
         {/if}
     {else}
         {snippet 'group-' . $container->getName()}

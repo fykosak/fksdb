@@ -1,25 +1,16 @@
 {layout './detail.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
-{varType bool $isOrganizer}
+{default bool $isOrganizer = false}
 
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
-            {if $isOrganizer}
-                {control columnTable [
-                'fyziklani_team.note',
-                'fyziklani_team.category',
-                'fyziklani_team.created',
-                ],$model,1024}
-            {else}
                 {control columnTable [
                 'fyziklani_team.category',
                 ],$model,1024}
-            {/if}
         </div>
     </div>
     {include rank from './detail.latte', model:$model}
     {include members from './detail.latte', model:$model}
-    {include tests from './detail.latte', model:$model}
 {/block}
