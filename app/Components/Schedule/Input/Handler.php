@@ -68,7 +68,7 @@ class Handler
             }
             // create
             if ($personSchedule) {
-                if (!$group->canEdit()) {
+                if (!$group->isModifiable()) {
                     throw new ScheduleException(
                         $group,
                         sprintf(
@@ -80,7 +80,7 @@ class Handler
                 if ($personSchedule->getPayment()) {
                     throw new ExistingPaymentException($personSchedule);
                 }
-            } elseif (!$group->canCreate()) {
+            } elseif (!$group->isModifiable()) {
                 throw new ScheduleException(
                     $group,
                     sprintf(
@@ -100,7 +100,7 @@ class Handler
                 $personSchedule
             );
         } elseif ($personSchedule) {
-            if (!$group->canEdit()) {
+            if (!$group->isModifiable()) {
                 throw new ScheduleException($group, _('Modification of this item is not allowed at this time'));
             }
             if ($personSchedule->getPayment()) {

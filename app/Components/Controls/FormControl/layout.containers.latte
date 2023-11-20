@@ -15,14 +15,14 @@
                     {if $description}
                         <p>{$description}</p>
                     {/if}
-                    {if $container->getOption('collapse')}
+                    {if $container->collapse}
                         {var $id = Nette\Utils\Random::generate(10)}
                         <button class="btn btn-outline-primary"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#{$id}"
                                 role="button">
-                            {_'Toogle schedule'}
+                            {_'Toogle'}
                         </button>
                         <div class="collapse mt-3" id="{$id}">
                             {include subComponents conainer=>$container, level=>$level}

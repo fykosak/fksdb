@@ -12,6 +12,9 @@ class ContainerWithOptions extends Container
 {
     /** @phpstan-var array<string,mixed> */
     private array $options = [];
+
+    public bool $collapse = false;
+
     protected DIContainer $container;
 
     public function __construct(DIContainer $container)

@@ -93,8 +93,8 @@ class FOFTeamForm extends TeamForm
                 ),
                 $this->event
             );
-            $teacherContainer->searchContainer->setOption('label', sprintf(_('Teacher #%d'), $teacherIndex + 1));
-            $teacherContainer->referencedContainer->setOption('label', sprintf(_('Teacher #%d'), $teacherIndex + 1));
+            $teacherContainer->searchContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
+            $teacherContainer->referencedContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
             $form->addComponent($teacherContainer, 'teacher_' . $teacherIndex);
         }
     }
@@ -121,8 +121,9 @@ class FOFTeamForm extends TeamForm
                 'accommodation' => [
                     'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationTeacher],
                     'required' => false,
+                    'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GROUP_NONE,
                 ],
                 'schedule' => [
                     'types' => [
@@ -131,7 +132,7 @@ class FOFTeamForm extends TeamForm
                         ScheduleGroupType::WeekendInfo,
                     ],
                     'required' => false,
-                    'collapse' => true,
+                    'collapseChild' => true,
                     'label' => _('Schedule'),
                     'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
@@ -166,13 +167,14 @@ class FOFTeamForm extends TeamForm
                 'accommodation' => [
                     'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationGender],
                     'required' => false,
+                    'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GROUP_NONE,
                 ],
                 'schedule' => [
                     'types' => [ScheduleGroupType::Weekend, ScheduleGroupType::WeekendInfo],
                     'required' => false,
-                    'collapse' => true,
+                    'collapseChild' => true,
                     'label' => _('Schedule'),
                     'groupBy' => ScheduleContainer::GROUP_DATE,
                 ],
@@ -234,6 +236,14 @@ class FOFTeamForm extends TeamForm
                 /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('teacher_' . $index);
                 $referencedId->setDefaultValue($teacher->person);
+                $referencedId->referencedContainer->setOption(
+                    'label',
+                    self::formatTeacherLabel($index, $teacher)
+                );
+                $referencedId->searchContainer->setOption(
+                    'label',
+                    self::formatTeacherLabel($index, $teacher)
+                );
                 $index++;
             }
         }
@@ -270,5 +280,14 @@ class FOFTeamForm extends TeamForm
             $teacherIndex++;
         }
         return $persons;
+    }
+
+    private static function formatTeacherLabel(int $index, ?TeamTeacherModel $teacher = null): string
+    {
+        if ($teacher) {
+            return sprintf(_('Teacher %d - %s'), $index + 1, $teacher->person->getFullName());
+        } else {
+            return sprintf(_('Teacher %d'), $index + 1);
+        }
     }
 }

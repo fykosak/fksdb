@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest\Tests\Person;
 
 use FKSDB\Components\DataTest\Tests\Test;
-use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
@@ -40,7 +40,7 @@ class GenderFromBornNumberTest extends Test
                 $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
                 return;
             }
-            if (BornNumber::getGender($info->born_id)->value !== $model->gender->value) {
+            if (BornIdColumnFactory::getGender($info->born_id)->value !== $model->gender->value) {
                 $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
             }
         } catch (\Throwable$exception) {

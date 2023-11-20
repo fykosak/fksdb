@@ -20,8 +20,8 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 
     public const TeacherPresent = 'teacher_present';
 
-    public const Weekend = 'schedule';
-    public const WeekendInfo = 'schedule_info';
+    public const Weekend = 'weekend';
+    public const WeekendInfo = 'weekend_info';
 
     public const DSEFMorning = 'dsef_morning';
     public const DSEFAfternoon = 'dsef_afternoon';

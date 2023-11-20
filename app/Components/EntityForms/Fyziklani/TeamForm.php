@@ -183,6 +183,14 @@ abstract class TeamForm extends EntityFormComponent
                 /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form->getComponent('member_' . $index);
                 $referencedId->setDefaultValue($member->person);
+                $referencedId->searchContainer->setOption(
+                    'label',
+                    self::formatMemberLabel($index + 1, $member)
+                );
+                $referencedId->referencedContainer->setOption(
+                    'label',
+                    self::formatMemberLabel($index + 1, $member)
+                );
                 $index++;
             }
         }
@@ -239,8 +247,8 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $this->event
             );
-            $memberContainer->searchContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
-            $memberContainer->referencedContainer->setOption('label', sprintf(_('Member #%d'), $member + 1));
+            $memberContainer->searchContainer->setOption('label', self::formatMemberLabel($member + 1));
+            $memberContainer->referencedContainer->setOption('label', self::formatMemberLabel($member + 1));
             $form->addComponent($memberContainer, 'member_' . $member);
         }
     }
@@ -275,5 +283,14 @@ abstract class TeamForm extends EntityFormComponent
             }
         }
         return $persons;
+    }
+
+    private static function formatMemberLabel(int $index, ?TeamMemberModel $member = null): string
+    {
+        if ($member) {
+            return sprintf(_('Member %d - %s'), $index + 1, $member->person->getFullName());
+        } else {
+            return sprintf(_('Member %d'), $index + 1);
+        }
     }
 }

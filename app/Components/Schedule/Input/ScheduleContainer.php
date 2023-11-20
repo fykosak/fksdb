@@ -20,13 +20,15 @@ use Nette\DI\Container;
  * label:string,
  * description?:string,
  * required?:bool,
- * collapse?:bool,
+ * collapseSelf?:bool,
+ * collapseChild?:bool,
  * groupBy?:self::GROUP_*}
  */
 class ScheduleContainer extends ContainerWithOptions
 {
     public const GROUP_DATE = 'date';
     public const GROUP_NONE = 'none';
+    public const GROUP_ACCOMMODATION = 'accommodation';
 
     private EventModel $event;
     /** @var string[] */
@@ -35,7 +37,7 @@ class ScheduleContainer extends ContainerWithOptions
     private GettextTranslator $translator;
     private string $label;
     private ?string $description;
-    private bool $collapse;
+    private bool $collapseChild;
     /** @phpstan-var self::GROUP_* */
     private string $groupBy;
 
@@ -54,7 +56,8 @@ class ScheduleContainer extends ContainerWithOptions
         $this->required = (bool)($meta['required'] ?? false);
         $this->label = $meta['label'];
         $this->description = $meta['description'] ?? null;
-        $this->collapse = $meta['collapse'] ?? false;
+        $this->collapseChild = $meta['collapseChild'] ?? false;
+        $this->collapse = $meta['collapseSelf'] ?? false;
         $this->groupBy = $meta['groupBy'] ?? self::GROUP_NONE;
         $this->createContainers();
     }
@@ -75,18 +78,18 @@ class ScheduleContainer extends ContainerWithOptions
 
         $this->setOption('label', $this->label);
         $this->setOption('description', $this->description);
-        /** @var ScheduleGroupModel[] $days */
-        $days = [];
-        /** @var ScheduleGroupModel $group */
-        foreach ($groups as $group) {
-            $key = $this->getGroupKey($group);
-            $days[$key] = $days[$key] ?? [];
-            $days[$key][] = $group;
+        /** @var ScheduleGroupModel[] $containerGroups */
+        $containerGroups = [];
+        /** @var ScheduleGroupModel $scheduleGroup */
+        foreach ($groups as $scheduleGroup) {
+            $key = $this->getGroupKey($scheduleGroup);
+            $containerGroups[$key] = $containerGroups[$key] ?? [];
+            $containerGroups[$key][] = $scheduleGroup;
         }
-        foreach ($days as $key => $day) {
+        foreach ($containerGroups as $key => $day) {
             $formContainer = new ContainerWithOptions($this->container);
-            $formContainer->setOption('collapse', $this->collapse);
-            $formContainer->setOption('label', reset($day)->start->format(_('__date'))); //TODO Date
+            $formContainer->collapse = $this->collapseChild;
+            $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
                 $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
@@ -101,6 +104,17 @@ class ScheduleContainer extends ContainerWithOptions
         }
     }
 
+    public function getGroupLabel(ScheduleGroupModel $group): ?string
+    {
+        switch ($this->groupBy) {
+            default:
+            case self::GROUP_NONE:
+                return null;
+            case self::GROUP_DATE:
+                return $group->start->format(_('__date'));
+        }
+    }
+
     public function getGroupKey(ScheduleGroupModel $group): string
     {
         switch ($this->groupBy) {
@@ -108,7 +122,7 @@ class ScheduleContainer extends ContainerWithOptions
             case self::GROUP_NONE:
                 return 'none';
             case self::GROUP_DATE:
-                return $group->start->format('Y_d_m');
+                return $group->start->format('Y_m_d');
         }
     }
 
