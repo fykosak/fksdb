@@ -144,7 +144,7 @@ abstract class TeamForm extends EntityFormComponent
                 $this->machine->execute($transition, $holder);
             }
             // pri každej editácii okrem initu pošle mail
-            if (isset($this->model)) {
+            if (isset($this->model) && $this->event->event_type_id === 1) {
                 (new TeacherInfoMail($this->container))($holder);
                 (new MemberInfoMail($this->container))($holder);
             }
