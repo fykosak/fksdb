@@ -7,28 +7,34 @@
             {snippet 'group-' . $container->getOption('id')}
                 {var string|null $label = $container->getOption('label')}
                 {var string|null $description = $container->getOption('description')}
-                {var $className = $label?'col-12 bd-callout bd-callout-priamry':''}
+                {var $className = $label?'col-12 callout card mb-3':'mb-3'}
                 <fieldset class="{$className}" data-level={$level} n:attr="(expand) $attrs">
-                    {if $label}
-                        <h4 class="mb-3">{$label}</h4>
-                    {/if}
-                    {if $description}
-                        <p>{$description}</p>
-                    {/if}
+                    {var $id = Nette\Utils\Random::generate(10)}
+                    <div class="{$label?'card-header d-flex justify-content-between':''}">
+                        {if $label}
+                                <h4>{$label}</h4>
+                        {/if}
+                        {if $container->collapse}
+                                <button class="btn btn-outline-primary btn-sm"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#{$id}"
+                                        role="button">
+                                    {_'Toogle'}
+                                </button>
+                            {/if}
+                        {if $description}
+                                <p>{$description}</p>
+                        {/if}
+                    </div>
                     {if $container->collapse}
-                        {var $id = Nette\Utils\Random::generate(10)}
-                        <button class="btn btn-outline-primary"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#{$id}"
-                                role="button">
-                            {_'Toogle'}
-                        </button>
-                        <div class="collapse mt-3" id="{$id}">
-                            {include subComponents conainer=>$container, level=>$level}
+                        <div class="{$label?'card-body collapse':'mt-3'}" id="{$id}">
+                            {include subComponents container=>$container, level=>$level}
                         </div>
                     {else}
-                        {include subComponents conainer=>$container, level=>$level}
+                        <div class="{$label?'card-body':''}">
+                            {include subComponents container=>$container, level=>$level}
+                        </div>
                     {/if}
                 </fieldset>
             {/snippet}
@@ -36,15 +42,13 @@
     {else}
         {snippet 'group-' . $container->getName()}
             <fieldset data-level={$level}>
-                {include subComponents conainer=>$container, level=>$level}
+                {include subComponents container=>$container, level=>$level}
             </fieldset>
         {/snippet}
     {/if}
 {/define}
 
-{define subComponents}
-    {varType FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
-    {varType int $level}
+{define subComponents, FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container,int $level}
     {var $controls = []}
     {foreach $container->getComponents() as $component}
         {if $component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}

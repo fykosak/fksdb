@@ -160,9 +160,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
-    
-    // @ts-ignore
-    $('[data-referenced]').referencedContainer();
 
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {

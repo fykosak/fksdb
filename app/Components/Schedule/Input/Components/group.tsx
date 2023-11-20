@@ -28,21 +28,11 @@ export default function Group({group, params}: OwnProps) {
                 />
                 </small>)}
         </h5>
-        {(group.registrationEnd || group.modificationEnd) &&
-            <div className="alert alert-info">
-                {group.registrationEnd && <p>
-                    <i className="fas fa-info me-2"/>
-                    {translator.getText('Registration end: ')}
-                    <DateDisplay date={group.registrationEnd} translator={translator}/>
-                </p>
-                }
-                {group.modificationEnd && group.modificationEnd != group.registrationEnd && <p>
-                    <i className="fas fa-info me-2"/>
-                    {translator.getText('Modification end: ')}
-                    <DateDisplay date={group.modificationEnd} translator={translator}/>
-                </p>
-                }
-            </div>
+        {group.registrationEnd && <p className="alert alert-info">
+            <i className="fas fa-info me-2"/>
+            {translator.getText('Registration end: ')}
+            <DateDisplay date={group.registrationEnd} translator={translator}/>
+        </p>
         }
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
             {group.items.map((item, index) => {

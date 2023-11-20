@@ -251,6 +251,7 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $this->event
             );
+            $memberContainer->referencedContainer->collapse = true;
             $memberContainer->searchContainer->setOption('label', self::formatMemberLabel($member + 1));
             $memberContainer->referencedContainer->setOption('label', self::formatMemberLabel($member + 1));
             $form->addComponent($memberContainer, 'member_' . $member);
