@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Schedule\GroupList;
 use FKSDB\Components\Schedule\ItemGrid;
+use FKSDB\Components\Schedule\ScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -127,12 +127,9 @@ final class GroupPresenter extends BasePresenter
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentGrid(): GroupList
+    protected function createComponentGrid(): ScheduleList
     {
-        return new GroupList($this->getContext(), $this->getEvent());
+        throw new GoneException();
     }
 
     /**

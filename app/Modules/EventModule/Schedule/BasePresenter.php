@@ -13,6 +13,7 @@ abstract class BasePresenter extends \FKSDB\Modules\EventModule\BasePresenter
      */
     protected function getSubTitle(): ?string
     {
-        return _('Schedule of event') . ' ' . $this->getEvent()->getName()->getText('cs');//TODO!
+        return _('Schedule of event') . ' ' .
+            $this->getEvent()->getName()->getText($this->translator->lang); // @phpstan-ignore-line
     }
 }

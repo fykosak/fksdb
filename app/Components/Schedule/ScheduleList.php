@@ -21,7 +21,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseList<ScheduleGroupModel,array{}>
  */
-final class GroupList extends BaseList
+final class ScheduleList extends BaseList
 {
     private EventModel $event;
 
@@ -46,7 +46,6 @@ final class GroupList extends BaseList
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {
