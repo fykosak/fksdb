@@ -5,19 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Schedule\GroupList;
 use FKSDB\Components\Schedule\ItemGrid;
+use FKSDB\Components\Schedule\ScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -80,19 +77,6 @@ final class GroupPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
-    public function renderList(): void
-    {
-        $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:Person:list'),
-        ];
-    }
-
     protected function getORMService(): ScheduleGroupService
     {
         return $this->service;
@@ -128,12 +112,9 @@ final class GroupPresenter extends BasePresenter
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentGrid(): GroupList
+    protected function createComponentGrid(): ScheduleList
     {
-        return new GroupList($this->getContext(), $this->getEvent());
+        throw new GoneException();
     }
 
     /**

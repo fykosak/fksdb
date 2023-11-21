@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel>
  * @deprecated
  */
 class TShirtSizeColumnFactory extends AbstractColumnFactory

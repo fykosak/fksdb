@@ -987,6 +987,10 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                 title: _('Used capacity')
+            capacity_progress:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\CapacityProgress
+                title: _('Progress bar')
         links:
             detail:
                 destination: :Schedule:Item:detail

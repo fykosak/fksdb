@@ -87,7 +87,6 @@ renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {t
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
 
-
 window.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.container-options').forEach((element: HTMLButtonElement) => {

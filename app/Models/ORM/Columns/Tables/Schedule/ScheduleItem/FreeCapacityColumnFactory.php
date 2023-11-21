@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<ScheduleItemModel,never>
+ * @phpstan-extends AbstractColumnFactory<ScheduleItemModel>
  */
 class FreeCapacityColumnFactory extends AbstractColumnFactory
 {
