@@ -90,6 +90,17 @@ renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVari
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    document.querySelectorAll('.container-options').forEach((element: HTMLButtonElement) => {
+        const getIcon = () => {
+            if (element.getAttribute('aria-expanded') === 'true') {
+                element.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
+            } else {
+                element.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+            }
+        };
+        element.addEventListener('click', getIcon);
+        getIcon();
+    });
 // @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options

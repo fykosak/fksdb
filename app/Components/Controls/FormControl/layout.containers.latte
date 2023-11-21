@@ -19,11 +19,13 @@
                             <h4>{$label}</h4>
                         {/if}
                         {if $container->collapse}
-                            <button class="btn btn-outline-primary btn-sm"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#{$id}"
-                                    role="button">
+                        <button class="btn btn-outline-primary btn-sm container-options-toggle"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{$id}"
+                                role="button"
+                                aria-expanded="false"
+                        >
                                 {_'Toogle'}
                             </button>
                         {/if}

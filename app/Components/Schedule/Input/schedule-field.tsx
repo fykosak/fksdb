@@ -11,7 +11,6 @@ import { Translator } from '@translator/translator';
 interface OwnProps {
     scheduleDef: {
         group: ScheduleGroupModel;
-        options: Params;
     };
     input: HTMLInputElement | HTMLSelectElement;
     translator: Translator;
@@ -26,7 +25,7 @@ export interface Params {
 }
 
 export default function ScheduleField({input, scheduleDef, translator}: OwnProps) {
-    const {group, options} = scheduleDef;
+    const {group} = scheduleDef;
     useEffect(() => {
         input.style.display = 'none';
         input.required = false;
@@ -39,10 +38,7 @@ export default function ScheduleField({input, scheduleDef, translator}: OwnProps
     return <StoreCreator app={app}>
         <TranslatorContext.Provider value={translator}>
             <InputConnectorPrimitive input={input}/>
-            {group
-                ? <Group group={group} params={options}/>
-                : <span className="text-muted">{translator.getText('No items found.')}</span>
-            }
+            <Group group={group}/>
         </TranslatorContext.Provider>
     </StoreCreator>;
 }
