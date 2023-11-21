@@ -53,5 +53,5 @@ transitions:
                 label: _('Cancel')
                 behaviorType: danger
                 afterExecute:
-                    - FKSDB\Models\Mail\FOF\MemberTransitionMail()
-                    - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
+                    #- FKSDB\Models\Mail\FOF\MemberTransitionMail()
+                    #- FKSDB\Models\Mail\FOF\TeacherTransitionMail()

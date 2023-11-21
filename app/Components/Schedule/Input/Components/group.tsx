@@ -1,4 +1,5 @@
 import {
+    Params,
     renderOptions,
     ScheduleGroupModel,
     ScheduleGroupType,
@@ -9,7 +10,6 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { TranslatorContext } from '@translator/context';
 import { ScheduleItemModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
-import { Params } from 'FKSDB/Components/Schedule/Input/schedule-field';
 import { useDispatch, useSelector } from 'react-redux';
 import { Store } from 'FKSDB/Components/Schedule/Input/reducer';
 import PriceLabel from 'FKSDB/Components/Schedule/Input/Components/price-label';

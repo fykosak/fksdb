@@ -8,6 +8,7 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -75,6 +76,10 @@ abstract class InfoEmail implements Statement
                 'token' => $this->createToken($person, $holder),
             ]
         );
+    }
+    final protected function resolveLogin(PersonModel $person): LoginModel
+    {
+        return $person->getLogin() ?? $this->accountManager->createLogin($person);
     }
 
     protected function createToken(PersonModel $person, TeamHolder $holder): ?AuthTokenModel

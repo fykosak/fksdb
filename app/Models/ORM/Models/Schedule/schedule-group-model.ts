@@ -30,12 +30,15 @@ export type ScheduleGroupType =
     | 'transport'
     | 'ticket';
 
-export const renderOptions = (type: ScheduleGroupType): {
-    capacity: boolean;
-    groupLabel: boolean;
-    price: boolean;
+
+export interface Params {
     groupTime: boolean;
-} => {
+    groupLabel: boolean;
+    capacity: boolean;
+    price: boolean;
+}
+
+export const renderOptions = (type: ScheduleGroupType): Params => {
     switch (type) {
         case 'dsef_morning':
         case 'dsef_all_day':
@@ -71,6 +74,7 @@ export const renderOptions = (type: ScheduleGroupType): {
                 price: true,
                 groupTime: true,
             }
+        case 'weekend_info':
         case 'apparel':
             return {
                 capacity: false,

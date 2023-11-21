@@ -17,7 +17,6 @@ use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
-use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
@@ -25,8 +24,6 @@ use Nette\SmartObject;
  */
 abstract class MailCallback implements Statement
 {
-    use SmartObject;
-
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
     protected AccountManager $accountManager;
@@ -48,7 +45,6 @@ abstract class MailCallback implements Statement
         $this->accountManager = $accountManager;
         $this->authTokenService = $authTokenService;
     }
-
 
     /**
      * @phpstan-param THolder|Transition<THolder> $args

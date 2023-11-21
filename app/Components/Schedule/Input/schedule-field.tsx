@@ -16,14 +16,6 @@ interface OwnProps {
     translator: Translator;
 }
 
-export interface Params {
-    groupTime: boolean;
-    groupLabel: boolean;
-    capacity: boolean;
-    description: boolean;
-    price: boolean;
-}
-
 export default function ScheduleField({input, scheduleDef, translator}: OwnProps) {
     const {group} = scheduleDef;
     useEffect(() => {

@@ -21,6 +21,43 @@ class TeacherTransitionMail extends MailCallback
 {
     /**
      * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
+     */
+    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' . self::resolveLayoutName($transition);
+    }
+
+    /**
+     * @param TeamHolder $holder
+     * @phpstan-param Transition<TeamHolder> $transition
+     * @phpstan-return array{
+     *     blind_carbon_copy:string|null,
+     *     subject:string,
+     *     sender:string,
+     * }
+     */
+    protected function getData(ModelHolder $holder, Transition $transition): array
+    {
+        if ($holder->getModel()->game_lang->value === 'cs') {
+            $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
+        } else {
+            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
+        }
+        if ($holder->getModel()->game_lang->value === 'cs') {
+            $sender = 'Fyziklání <fyziklani@fykos.cz>';
+        } else {
+            $sender = 'Fyziklani <fyziklani@fykos.cz>';
+        }
+        return [
+            'subject' => $subject,
+            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
+            'sender' => $sender,
+        ];
+    }
+
+    /**
+     * @param TeamHolder $holder
      * @throws BadTypeException
      */
     protected function getPersons(ModelHolder $holder): array
@@ -52,43 +89,5 @@ class TeacherTransitionMail extends MailCallback
             null,
             true
         );
-    }
-
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
-    protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' . self::resolveLayoutName($transition);
-    }
-
-
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
-     *     sender:string,
-     * }
-     */
-    protected function getData(ModelHolder $holder, Transition $transition): array
-    {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
-        } else {
-            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
-        }
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'subject' => $subject,
-            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
-            'sender' => $sender,
-        ];
     }
 }
