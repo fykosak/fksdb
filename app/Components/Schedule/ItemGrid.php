@@ -73,6 +73,14 @@ final class ItemGrid extends BaseGrid
             ),
             'capacity'
         );
+        $component->addTableColumn(
+            new TemplateItem(
+                $container,
+                '@schedule_item.capacity_progress',
+                _('Progress bar')
+            ),
+            'capacity_progress'
+        );
         $component->addTableButton(
             new Button(
                 $container,
