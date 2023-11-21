@@ -33,6 +33,7 @@ use Nette\Application\AbortException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
@@ -121,6 +122,9 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $values
             );
+            if (isset($values['state'])) {
+                throw new InvalidStateException(); // TODO
+            }
             $team = $this->teamService->storeModel(
                 array_merge($values['team'], [
                     'event_id' => $this->event->event_id,
@@ -130,7 +134,7 @@ abstract class TeamForm extends EntityFormComponent
             $this->savePersons($team, $form);
             $holder = $this->machine->createHolder($team);
             if (!isset($this->model)) {
-                 // ak je nový pošle defaultný mail
+                // ak je nový pošle defaultný mail
                 $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
             } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {

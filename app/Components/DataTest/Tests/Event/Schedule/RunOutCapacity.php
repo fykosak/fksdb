@@ -43,6 +43,6 @@ class RunOutCapacity extends Test
 
     public function getId(): string
     {
-        return 'runOutCapacity';
+        return 'RunOutCapacity';
     }
 }
