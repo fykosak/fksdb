@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<TaskModel,never>
+ * @phpstan-extends AbstractColumnFactory<TaskModel>
  */
 final class SolversCountColumnFactory extends AbstractColumnFactory
 {

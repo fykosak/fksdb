@@ -11,7 +11,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<ContestModel,never>
+ * @phpstan-extends AbstractColumnFactory<ContestModel>
  */
 class ContestColumnFactory extends AbstractColumnFactory
 {

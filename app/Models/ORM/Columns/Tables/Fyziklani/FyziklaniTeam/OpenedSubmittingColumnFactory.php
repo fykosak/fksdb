@@ -10,7 +10,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<TeamModel2,never>
+ * @phpstan-extends AbstractColumnFactory<TeamModel2>
  */
 class OpenedSubmittingColumnFactory extends AbstractColumnFactory
 {
