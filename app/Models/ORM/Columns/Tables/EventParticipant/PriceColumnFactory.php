@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel>
  */
 class PriceColumnFactory extends AbstractColumnFactory
 {

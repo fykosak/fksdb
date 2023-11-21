@@ -10,8 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
- * @phpstan-template ArgType
- * @phpstan-extends ColumnFactory<TModel,ArgType>
+ * @phpstan-extends ColumnFactory<TModel,never>
  */
 abstract class AbstractColumnFactory extends ColumnFactory
 {

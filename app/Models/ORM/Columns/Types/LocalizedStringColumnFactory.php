@@ -10,7 +10,7 @@ use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<Model,never>
+ * @phpstan-extends AbstractColumnFactory<Model>
  */
 class LocalizedStringColumnFactory extends AbstractColumnFactory
 {
