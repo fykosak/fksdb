@@ -1,3 +1,9 @@
+{varType Fykosak\Utils\UI\Navigation\NavItem[] $items}
 {block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control navigationChooser:boardInline $items}
+        </div>
+    </div>
     {control list}
 {/block}

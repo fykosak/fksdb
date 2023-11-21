@@ -7,7 +7,9 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Schedule\ScheduleList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
+use Fykosak\Utils\UI\Title;
 
 class DashboardPresenter extends BasePresenter
 {
@@ -30,10 +32,19 @@ class DashboardPresenter extends BasePresenter
         );
     }
 
+    public function renderDefault(): void
+    {
+        $this->template->items = [
+            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), ':Schedule:Group:create'),
+            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:Person:list'),
+        ];
+    }
+
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Schedule dashboard'), 'fas fa-dashboard');
     }
+
 
     /**
      * @throws EventNotFoundException

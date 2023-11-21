@@ -14,9 +14,7 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -77,19 +75,6 @@ final class GroupPresenter extends BasePresenter
             \sprintf(_('Edit group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
-    public function renderList(): void
-    {
-        $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:Person:list'),
-        ];
     }
 
     protected function getORMService(): ScheduleGroupService
