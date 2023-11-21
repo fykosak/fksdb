@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
 use FKSDB\Models\ORM\Services\PSCSubdivisionService;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Tracy\Debugger;
 

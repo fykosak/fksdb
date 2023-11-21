@@ -8,9 +8,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -23,7 +22,7 @@ final class AuthTokenService extends Service
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     public function createToken(
         LoginModel $login,

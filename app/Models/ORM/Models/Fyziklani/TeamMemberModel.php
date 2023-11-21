@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $fyziklani_team_member_id

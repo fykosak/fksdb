@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\DataTest;
+namespace FKSDB\Components\DataTest\Tests;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -22,6 +22,11 @@ abstract class Test
         $container->callInjects($this);
     }
 
+    public function getDescription(): ?string
+    {
+        return null;
+    }
+
     /**
      * @phpstan-param TModel $model
      */
@@ -29,8 +34,5 @@ abstract class Test
 
     abstract public function getTitle(): Title;
 
-    public function getDescription(): ?string
-    {
-        return null;
-    }
+    abstract public function getId(): string;
 }

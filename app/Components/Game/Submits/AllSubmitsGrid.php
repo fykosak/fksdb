@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;

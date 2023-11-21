@@ -7,7 +7,7 @@ namespace FKSDB\Models\PhoneNumber;
 use FKSDB\Models\ORM\Models\CountryModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\UI\FlagBadge;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Utils\Html;
 
 class PhoneNumberFactory

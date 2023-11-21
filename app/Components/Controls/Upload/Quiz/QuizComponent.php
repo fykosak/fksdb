@@ -20,7 +20,6 @@ use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -146,7 +145,7 @@ class QuizComponent extends FormComponent
 
             $this->flashMessage(_('Submitted'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage($exception->getMessage());

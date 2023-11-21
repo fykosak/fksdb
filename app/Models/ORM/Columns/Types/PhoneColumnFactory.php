@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;

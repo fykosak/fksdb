@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 
 /**
  * @phpstan-extends Service<PersonHasFlagModel>

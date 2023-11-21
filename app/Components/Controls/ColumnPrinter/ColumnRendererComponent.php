@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\ColumnPrinter;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\UI\InvalidLinkException;
 

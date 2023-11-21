@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\UI\PricePrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

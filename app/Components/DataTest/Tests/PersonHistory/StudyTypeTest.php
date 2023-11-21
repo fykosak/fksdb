@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\PersonHistory;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -55,5 +55,10 @@ class StudyTypeTest extends Test
                 Message::LVL_ERROR
             )
         );
+    }
+
+    public function getId(): string
+    {
+        return 'PersonHistoryStudyType';
     }
 }

@@ -12,7 +12,6 @@ use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -138,7 +137,7 @@ class AjaxSubmitComponent extends AjaxComponent
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
-        } catch (StorageException | ModelException$exception) {
+        } catch (StorageException | \PDOException $exception) {
             Debugger::log($exception);
             $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), Message::LVL_ERROR));
         }

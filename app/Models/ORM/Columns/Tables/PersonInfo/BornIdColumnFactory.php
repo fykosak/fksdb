@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Rules\BornNumber;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\UI\StringPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;

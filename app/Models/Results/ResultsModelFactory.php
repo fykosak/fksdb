@@ -21,7 +21,7 @@ use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
 use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;

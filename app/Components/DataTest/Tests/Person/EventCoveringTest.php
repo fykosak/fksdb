@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest\Tests\Person;
 
-use FKSDB\Components\DataTest\Test;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -170,5 +170,10 @@ class EventCoveringTest extends Test
             $contestYears[] = $contestant->getContestYear();
         }
         return self::contestYearsToArray($contestYears);
+    }
+
+    public function getId(): string
+    {
+        return 'PersonEventCovering';
     }
 }

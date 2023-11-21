@@ -11,7 +11,6 @@ use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Nette\DeprecatedException;
@@ -81,7 +80,7 @@ final class TaskImportFormComponent extends FormComponent
                 Message::LVL_ERROR
             );
             Debugger::log($exception);
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->getPresenter()->flashMessage(_('Error during import.'), Message::LVL_ERROR);
             Debugger::log($exception);
         } catch (DeprecatedException $exception) {

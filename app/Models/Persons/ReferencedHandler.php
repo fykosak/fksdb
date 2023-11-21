@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-template TModel of Model

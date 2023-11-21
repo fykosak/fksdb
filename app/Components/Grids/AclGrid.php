@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\RoleModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\RoleService;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;

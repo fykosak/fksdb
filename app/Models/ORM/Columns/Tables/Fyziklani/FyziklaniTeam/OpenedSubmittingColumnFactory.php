@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

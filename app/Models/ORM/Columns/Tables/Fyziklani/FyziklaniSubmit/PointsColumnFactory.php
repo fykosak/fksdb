@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 use FKSDB\Models\ORM\Columns\Types\IntColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\UI\NumberPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
