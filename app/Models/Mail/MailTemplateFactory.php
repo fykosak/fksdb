@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Application\Application;
 use Nette\Application\UI\TemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -92,6 +93,16 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{logger:MemoryLogger} $data
+     */
+    public function renderReport(array $data, Language $lang): string
+    {
+        return $this->create($lang)
+            ->renderToString(__DIR__ . '/report.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
      * @phpstan-param array<string,mixed> $data
      */
     public function renderWithParameters(string $templateFile, ?Language $lang, array $data = []): string
@@ -130,7 +141,7 @@ class MailTemplateFactory
     private function create(Language $lang): Template
     {
         $presenter = $this->application->getPresenter();
-        if (!$presenter instanceof BasePresenter) {
+        if ($presenter && !$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
         $template = $this->templateFactory->createTemplate();
