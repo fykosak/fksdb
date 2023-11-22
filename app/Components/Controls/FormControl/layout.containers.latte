@@ -6,7 +6,7 @@
         {if $container->getOption('visible', true)}
             {var string|null $label = $container->getOption('label')}
             {var string|null $description = $container->getOption('description')}
-            {var string $className = $label?'col-12 callout card mb-3':'mb-3'}
+            {var string $className = $label?'col-12 callout card mb-3 referenced-container':'mb-3 referenced-container'}
             {var string $id = Nette\Utils\Random::generate(10)}
             <fieldset
                     class="{$className}"
@@ -19,7 +19,7 @@
                             <h4>{$label}</h4>
                         {/if}
                         {if $container->collapse}
-                        <button class="btn btn-outline-primary btn-sm container-options-toggle"
+                        <button class="btn btn-outline-primary btn-sm container-toggle"
                                 type="button"
                                 data-bs-toggle="collapse"
                                 data-bs-target="#{$id}"

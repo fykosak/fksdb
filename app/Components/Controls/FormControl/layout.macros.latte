@@ -6,14 +6,13 @@
         {/foreach}
     {/foreach}
     {foreach $form->getErrors() as $error}
-        <div n:if="!isset($fieldErrors[$error])" class="alert alert-danger">{$error}</div>
+        <div n:if="!isset($fieldErrors[$error])" class="invalid-feedback">{$error}</div>
     {/foreach}
 {/define}
 
 {define metadata}
     {varType Nette\Forms\Controls\BaseControl $field}
     {foreach $field->getErrors() as $error}
-        {continueIf !$error}
         <div class="alert alert-danger">{$error}</div>
     {/foreach}
     {var $description = $field->getOption('description')}
@@ -28,13 +27,13 @@
         {case 'range'}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
             {label $field class: 'form-label'/}
-            {input $field class: 'form-control ' . $field->getControlPrototype()->class}
+            {input $field class: 'form-control ' . ($field->hasErrors()?'is-invalid ':'') . $field->getControlPrototype()->class}
             {include metadata field => $field}
         </div>
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
             {label $field class: 'form-label'/}
-            {input $field class: 'form-control ' . $field->getControlPrototype()->class, 'required'=>null}
+            {input $field class: 'form-control ' . ($field->hasErrors()?'is-invalid ':'') . $field->getControlPrototype()->class, 'required'=>null}
             {include metadata field => $field}
         </div>
     {/switch}
