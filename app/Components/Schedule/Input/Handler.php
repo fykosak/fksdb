@@ -7,6 +7,7 @@ namespace FKSDB\Components\Schedule\Input;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\Language;
@@ -61,6 +62,9 @@ class Handler
             return;
         }
         if ($value) {
+            if ($group->schedule_group_type->value === ScheduleGroupType::WeekendInfo) {
+                throw new ScheduleException($group, _('Info block cannot be selected'));
+            }
             /** @var ScheduleItemModel|null $item */
             $item = $group->getItems()->where('schedule_item_id', $value)->fetch();
             if (!$item) {

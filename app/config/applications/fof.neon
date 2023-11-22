@@ -12,25 +12,25 @@ transitions:
                     - FKSDB\Models\Mail\FOF\MemberTransitionMail()
                     - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
             pending->applied:
-                label: _('Move to approved')
+                label: _('Move to applied')
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
             pending->spare:
-                label: _('Move to approved')
+                label: _('Move to spare')
                 behaviorType: warning
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 afterExecute:
                     - FKSDB\Models\Mail\FOF\MemberTransitionMail()
                     - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
             spare->applied:
-                label: _('Move to approved')
+                label: _('Move to applied')
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
                 afterExecute:
                     - FKSDB\Models\Mail\FOF\MemberTransitionMail()
                     - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
             applied->pending:
-                label: _('Move to approved')
+                label: _('Move to pending')
                 behaviorType: danger
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
             applied->arrived:
