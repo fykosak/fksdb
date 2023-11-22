@@ -89,16 +89,24 @@ renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVari
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    document.querySelectorAll('.container-options').forEach((element: HTMLButtonElement) => {
-        const getIcon = () => {
-            if (element.getAttribute('aria-expanded') === 'true') {
-                element.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
-            } else {
-                element.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+    document.querySelectorAll('.referenced-container').forEach((fieldSet: HTMLFieldSetElement) => {
+        const button: HTMLButtonElement | null = fieldSet.querySelector('.container-toggle');
+        if (button) {
+            const getIcon = () => {
+                if (button.getAttribute('aria-expanded') === 'true') {
+                    button.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
+                } else {
+                    button.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+                }
+            };
+            button.addEventListener('click', getIcon);
+            getIcon();
+            console.log(button.parentElement.querySelectorAll('.has-error'));
+            if (fieldSet.querySelectorAll('.has-error').length && button.getAttribute('aria-expanded') === 'false') {
+                button.click();
             }
-        };
-        element.addEventListener('click', getIcon);
-        getIcon();
+        }
+
     });
 // @ts-ignore
     $.widget('fks.writeonlyInput', {

@@ -41,7 +41,7 @@ class FormControl extends BaseComponent
     {
         return [
             'class' => ($class ?? 'form-group') . ' mb-3'
-                . ($control->hasErrors() ? ' has-error ' : ' ')
+                . ($control->hasErrors() ? ' has-error has-validation ' : ' ')
                 . ($control->isRequired() ? 'required' : ''),
             'id' => $control->getHtmlId() . '-pair',
         ];
