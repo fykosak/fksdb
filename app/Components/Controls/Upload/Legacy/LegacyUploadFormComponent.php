@@ -95,7 +95,7 @@ class LegacyUploadFormComponent extends FormComponent
             $this->submitHandlerFactory->uploadedStorage->commit();
             $this->taskService->explorer->getConnection()->commit();
             $this->redirect('this');
-        } catch (\PDOException | ProcessingException $exception) {
+        } catch (ProcessingException | \PDOException $exception) {
             $this->submitHandlerFactory->uploadedStorage->rollback();
             $this->taskService->explorer->getConnection()->rollBack();
             Debugger::log($exception);

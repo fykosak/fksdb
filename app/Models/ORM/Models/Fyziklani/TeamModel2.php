@@ -142,7 +142,7 @@ final class TeamModel2 extends Model implements Resource
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
-        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
+        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {

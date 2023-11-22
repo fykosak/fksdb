@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Transitions;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\AuthTokenService;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
@@ -20,6 +16,7 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 /**
@@ -34,17 +31,9 @@ class MailSender extends MailCallback
 
     public function __construct(
         string $templateFile,
-        MailTemplateFactory $mailTemplateFactory,
-        AccountManager $accountManager,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+        Container $container
     ) {
-        parent::__construct(
-            $emailMessageService,
-            $mailTemplateFactory,
-            $authTokenService,
-            $accountManager
-        );
+        parent::__construct($container);
         $this->templateFile = $templateFile;
     }
 
@@ -52,7 +41,7 @@ class MailSender extends MailCallback
      * @param ParticipantHolder $holder
      * @phpstan-return PersonModel[]
      */
-    protected function getPersonsFromHolder(ModelHolder $holder): array
+    protected function getPersons(ModelHolder $holder): array
     {
         return [$holder->getModel()->person];
     }

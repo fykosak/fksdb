@@ -55,7 +55,21 @@ final class TeamGrid extends BaseGrid
         $this->addPresenterButton(
             'detail',
             'detail',
-            new Title(null, _('button.detail')),
+            new Title(null, _('button.team.detail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            'orgDetail',
+            'orgDetail',
+            new Title(null, _('button.team.orgDetail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            'edit',
+            'edit',
+            new Title(null, _('button.team.edit')),
             false,
             ['id' => 'fyziklani_team_id']
         );

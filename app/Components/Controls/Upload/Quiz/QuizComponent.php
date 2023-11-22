@@ -110,7 +110,7 @@ class QuizComponent extends FormComponent
                 /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
                 $person = $referencedId->getModel();
-                $contestant = $person->getContestantByContestYear($this->task->getContestYear());
+                $contestant = $person->getContestant($this->task->getContestYear());
                 // if person is not a contestant in the contest year, create him
                 $strategy = ResultsModelFactory::findEvaluationStrategy(
                     $this->getContext(),

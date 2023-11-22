@@ -26,12 +26,12 @@ final class PersonPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private const FILTERED_TYPES = [
-        ScheduleGroupType::ACCOMMODATION_GENDER,
-        ScheduleGroupType::ACCOMMODATION_TEACHER,
-        ScheduleGroupType::VISA,
-        ScheduleGroupType::APPAREL,
-        ScheduleGroupType::TRANSPORT,
-        ScheduleGroupType::TICKET,
+        ScheduleGroupType::AccommodationGender,
+        ScheduleGroupType::AccommodationTeacher,
+        ScheduleGroupType::Visa,
+        ScheduleGroupType::Apparel,
+        ScheduleGroupType::Transport,
+        ScheduleGroupType::Ticket,
     ];
 
     private PersonScheduleService $service;

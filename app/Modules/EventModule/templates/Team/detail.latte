@@ -1,9 +1,6 @@
 {layout '../@layout.latte'}
-{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $rankVisible}
-{varType bool $isOrganizer}
-{varType Fykosak\Utils\UI\PageTitle $pageTitle}
 
 {define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
     <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
@@ -17,10 +14,7 @@
             <div class="container">
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
-                <h2>{_'Parcipant'} {$counter}: {control printer:templateString '@person.full_name',$member,1024}</h2>
-                {if $isOrganizer}
-                    {control printer:button 'person.detail', $member}
-                {/if}
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
                 {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
                 {if $event->getScheduleGroups()->count()}
                     {include personSchedule, person => $member->person}
@@ -31,7 +25,7 @@
 {/define}
 
 {define rank, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
-    {if $rankVisible || $isOrganizer}
+    {if $rankVisible}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Rank & points'}</h2>
@@ -40,15 +34,10 @@
         </div>
     {/if}
 {/define}
-{define tests, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
-    {if $isOrganizer}
-        {control tests, $model}
-    {/if}
-{/define}
 
 {block titleBody}
     {include parent}
-    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:false}
 {/block}
 
 {block outerContent}
@@ -63,5 +52,4 @@
     </div>
     {include rank, model:$model}
     {include members, model:$model}
-    {include tests, model:$model}
 {/block}

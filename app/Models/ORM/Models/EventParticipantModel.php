@@ -56,7 +56,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
-        return $this->person->getHistoryByContestYear($this->event->getContestYear());
+        return $this->person->getHistory($this->event->getContestYear());
     }
 
     public function __toString(): string

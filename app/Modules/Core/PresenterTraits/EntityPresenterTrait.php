@@ -160,7 +160,7 @@ trait EntityPresenterTrait
         if ($candidate) {
             return $candidate;
         } else {
-            throw new ModelNotFoundException(_('Model does not exists'));
+            throw new ModelNotFoundException(_('Model does not exist.'));
         }
     }
 

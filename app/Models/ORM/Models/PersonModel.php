@@ -39,6 +39,47 @@ final class PersonModel extends Model implements Resource
 
     public const RESOURCE_ID = 'person';
 
+    public function getFullName(): string
+    {
+        return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
+    }
+
+    /**
+     * @phpstan-return array{
+     *     other_name:string,
+     *     family_name:string,
+     *     gender:string,
+     * }
+     */
+    public static function parseFullName(string $fullName): array
+    {
+        $names = explode(' ', $fullName);
+        $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
+        $familyName = $names[count($names) - 1];
+        return [
+            'other_name' => $otherName,
+            'family_name' => $familyName,
+            'gender' => self::inferGender(['family_name' => $familyName]),
+        ];
+    }
+
+    /**
+     * @phpstan-param array{family_name:string} $data
+     */
+    public static function inferGender(array $data): string
+    {
+        if (mb_substr($data['family_name'], -1) == 'á') {
+            return 'F';
+        } else {
+            return 'M';
+        }
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
+    }
+
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
@@ -69,15 +110,6 @@ final class PersonModel extends Model implements Resource
         return $info;
     }
 
-    public function getHistoryByContestYear(ContestYearModel $contestYear): ?PersonHistoryModel
-    {
-        /** @var PersonHistoryModel|null $history */
-        $history = $this->getHistories()
-            ->where('ac_year', $contestYear->ac_year)
-            ->fetch();
-        return $history;
-    }
-
     /**
      * @phpstan-return TypedGroupedSelection<PersonHistoryModel>
      */
@@ -88,11 +120,11 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
-    public function getHistory(int $acYear): ?PersonHistoryModel
+    public function getHistory(ContestYearModel $contestYear): ?PersonHistoryModel
     {
         /** @var PersonHistoryModel|null $history */
         $history = $this->getHistories()
-            ->where('ac_year', $acYear)
+            ->where('ac_year', $contestYear->ac_year)
             ->fetch();
         return $history;
     }
@@ -110,24 +142,11 @@ final class PersonModel extends Model implements Resource
         return $related;
     }
 
-    public function getContestantByContestYear(ContestYearModel $contestYear): ?ContestantModel
+    public function getContestant(ContestYearModel $contestYear): ?ContestantModel
     {
         /** @var ContestantModel|null $contestant */
         $contestant = $this->getContestants($contestYear->contest)->where('year', $contestYear->year)->fetch();
         return $contestant;
-    }
-
-    /**
-     * @deprecated
-     * @phpstan-return TypedGroupedSelection<OrganizerModel>
-     */
-    public function getLegacyOrganizers(?int $contestId = null): TypedGroupedSelection
-    {
-        $related = $this->getOrganizers();
-        if ($contestId) {
-            $related->where('contest_id', $contestId);
-        }
-        return $related;
     }
 
     /**
@@ -140,7 +159,7 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
-    public function hasPersonFlag(string $flagType): ?PersonHasFlagModel
+    public function hasFlag(string $flagType): ?PersonHasFlagModel
     {
         /** @var PersonHasFlagModel|null $personFlag */
         $personFlag = $this->getFlags()->where('flag.fid', $flagType)->fetch();
@@ -186,13 +205,23 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
+    public function getEventParticipant(EventModel $event): ?EventParticipantModel
+    {
+        /** @var EventParticipantModel|null $participant */
+        $participant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
+        return $participant;
+    }
+
     /**
      * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
      */
-    public function getTeamTeachers(): TypedGroupedSelection
+    public function getTeamTeachers(?EventModel $event = null): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
         $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
+        if ($event) {
+            $selection->where('fyziklani_team.event_id', $event->event_id);
+        }
         return $selection;
     }
 
@@ -206,6 +235,13 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
+    public function getTeamMember(EventModel $event): ?TeamMemberModel
+    {
+        /** @var TeamMemberModel|null $member */
+        $member = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
+        return $member;
+    }
+
     /**
      * @return TeamModel2|EventParticipantModel
      * @throws NotFoundException
@@ -213,17 +249,12 @@ final class PersonModel extends Model implements Resource
     public function getApplication(EventModel $event): Model
     {
         /** @var TeamMemberModel|null $member */
-        $member = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
+        $member = $this->getTeamMember($event);
         if ($member) {
             return $member->fyziklani_team;
         }
-        /** @var TeamTeacherModel|null $teacher */
-        $teacher = $this->getTeamTeachers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
-        if ($teacher) {
-            return $teacher->fyziklani_team;
-        }
         /** @var EventParticipantModel|null $participant */
-        $participant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
+        $participant = $this->getEventParticipant($event);
         if ($participant) {
             return $participant;
         }
@@ -240,10 +271,48 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
-    public function getFullName(): string
+    public function getEventOrganizer(EventModel $event): ?EventOrganizerModel
     {
-        return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
+        /** @var EventOrganizerModel|null $eventOrganizer */
+        $eventOrganizer = $this->getEventOrganizers()->where('event_id', $event->event_id)->fetch();
+        return $eventOrganizer;
     }
+
+    /**
+     * @phpstan-return EventRole[]
+     */
+    public function getEventRoles(EventModel $event): array
+    {
+        $roles = [];
+        $teachers = $this->getTeamTeachers($event);
+        if ($teachers->count('*')) {
+            $teams = [];
+            /** @var TeamTeacherModel $row */
+            foreach ($teachers as $row) {
+                $teams[] = $row->fyziklani_team;
+            }
+            $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
+        }
+        $eventOrganizer = $this->getEventOrganizer($event);
+        if (isset($eventOrganizer)) {
+            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
+        }
+        $eventParticipant = $this->getEventParticipant($event);
+        if (isset($eventParticipant)) {
+            $roles[] = new ParticipantRole($event, $eventParticipant);
+        }
+        $teamMember = $this->getTeamMember($event);
+        if ($teamMember) {
+            $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
+        }
+        /** @var OrganizerModel|null $organizer */
+        $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
+        if (isset($organizer)) {
+            $roles[] = new ContestOrganizerRole($event, $organizer);
+        }
+        return $roles;
+    }
+
 
     /**
      * @phpstan-return OrganizerModel[] indexed by contest_id
@@ -284,41 +353,6 @@ final class PersonModel extends Model implements Resource
             ->where('until IS NULL OR until >=?', $year);
     }
 
-    /**
-     * @phpstan-return array{
-     *     other_name:string,
-     *     family_name:string,
-     *     gender:string,
-     * }
-     */
-    public static function parseFullName(string $fullName): array
-    {
-        $names = explode(' ', $fullName);
-        $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
-        $familyName = $names[count($names) - 1];
-        return [
-            'other_name' => $otherName,
-            'family_name' => $familyName,
-            'gender' => self::inferGender(['family_name' => $familyName]),
-        ];
-    }
-
-    /**
-     * @phpstan-param array{family_name:string} $data
-     */
-    public static function inferGender(array $data): string
-    {
-        if (mb_substr($data['family_name'], -1) == 'á') {
-            return 'F';
-        } else {
-            return 'M';
-        }
-    }
-
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
-    }
 
     /**
      * @phpstan-return array<int,int>
@@ -334,17 +368,6 @@ final class PersonModel extends Model implements Resource
             $items[$model->schedule_item->schedule_group_id] = $model->schedule_item->schedule_item_id;
         }
         return $items;
-    }
-
-    /**
-     * Definitely ugly but, there is only this way... Mišo
-     * TODO refactoring
-     */
-    public function removeScheduleForEvent(EventModel $event): void
-    {
-        foreach ($this->getScheduleForEvent($event) as $row) {
-            $row->delete();//@phpstan-ignore-line
-        }
     }
 
     /**
@@ -389,8 +412,8 @@ final class PersonModel extends Model implements Resource
     public function getScheduleRests(
         EventModel $event,
         array $types = [
-            ScheduleGroupType::ACCOMMODATION,
-            ScheduleGroupType::WEEKEND,
+            ScheduleGroupType::Accommodation,
+            ScheduleGroupType::Weekend,
         ]
     ): array {
         $toPay = [];
@@ -406,6 +429,18 @@ final class PersonModel extends Model implements Resource
         }
         return $toPay;
     }
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
+     */
+    public function getTaskContributions(?TaskContributionType $type = null): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<TaskContributionModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'person_id');
+        if ($type) {
+            $selection->where('type', $type->value);
+        }
+        return $selection;
+    }
 
     /**
      * @return PersonGender|mixed|null
@@ -420,57 +455,6 @@ final class PersonModel extends Model implements Resource
                 break;
         }
         return $value;
-    }
-
-    /**
-     * @phpstan-return EventRole[]
-     */
-    public function getEventRoles(EventModel $event): array
-    {
-        $roles = [];
-        $teachers = $this->getTeamTeachers()->where('fyziklani_team.event_id', $event->event_id);
-        if ($teachers->count('*')) {
-            $teams = [];
-            /** @var TeamTeacherModel $row */
-            foreach ($teachers as $row) {
-                $teams[] = $row->fyziklani_team;
-            }
-            $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
-        }
-        /** @var EventOrganizerModel|null $eventOrganizer */
-        $eventOrganizer = $this->getEventOrganizers()->where('event_id', $event->event_id)->fetch();
-        if (isset($eventOrganizer)) {
-            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
-        }
-        /** @var EventParticipantModel|null $eventParticipant */
-        $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
-        if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($event, $eventParticipant);
-        }
-        /** @var TeamMemberModel|null $teamMember */
-        $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
-        if ($teamMember) {
-            $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
-        }
-        /** @var OrganizerModel|null $organizer */
-        $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
-        if (isset($organizer)) {
-            $roles[] = new ContestOrganizerRole($event, $organizer);
-        }
-        return $roles;
-    }
-
-    /**
-     * @phpstan-return TypedGroupedSelection<TaskContributionModel>
-     */
-    public function getTaskContributions(?TaskContributionType $type = null): TypedGroupedSelection
-    {
-        /** @phpstan-var TypedGroupedSelection<TaskContributionModel> $selection */
-        $selection = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'person_id');
-        if ($type) {
-            $selection->where('type', $type->value);
-        }
-        return $selection;
     }
 
     /**

@@ -28,14 +28,4 @@ final class EventParticipantService extends Service
             throw $exception;
         }
     }
-
-    /**
-     * @param EventParticipantModel $model
-     */
-    public function disposeModel(Model $model): void
-    {
-        $person = $model->person;
-        $person->removeScheduleForEvent($model->event);
-        parent::disposeModel($model);
-    }
 }

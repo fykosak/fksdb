@@ -21,7 +21,7 @@ abstract class TeamMemberMailCallback extends MailCallback
      * @param TeamHolder $holder
      * @throws BadTypeException
      */
-    final protected function getPersonsFromHolder(ModelHolder $holder): array
+    final protected function getPersons(ModelHolder $holder): array
     {
         if (!$holder instanceof TeamHolder) {
             throw new BadTypeException(TeamHolder::class, $holder);

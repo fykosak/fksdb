@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -32,8 +32,11 @@ use Nette\InvalidArgumentException;
 
 /**
  * @phpstan-extends ReferencedContainer<PersonModel>
+ * @phpstan-import-type TMeta from ScheduleContainer
  * @phpstan-type EvaluatedFieldMetaData array{required?:bool,caption?:string|null,description?:string|null}
- * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>>
+ * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>> & array{
+ * person_schedule?:array<string,TMeta>
+ * }
  */
 class ReferencedPersonContainer extends ReferencedContainer
 {
@@ -84,9 +87,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
-            if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
-                $subContainer->setOption('label', _('Deliver address'));
-            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) { // @phpstan-ignore-line
+                $subContainer->setOption('label', _('Delivery address'));
+            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) { // @phpstan-ignore-line
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
@@ -94,8 +97,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $subContainer->setOption('label', $label);
             }
             if (
-                $sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
-                $sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT
+                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY || // @phpstan-ignore-line
+                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT // @phpstan-ignore-line
             ) {
                 if (isset($fields['address'])) {
                     $control = new AddressDataContainer(
@@ -145,7 +148,7 @@ class ReferencedPersonContainer extends ReferencedContainer
              * @var string $fieldName
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                $value = ReferencedPersonHandler::getPersonValue(
+                $value = self::getPersonValue(
                     $model,
                     $sub,
                     $fieldName,
@@ -179,7 +182,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
-                        $component->setValues($value);
+                        $component->setModel($model);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
@@ -203,7 +206,7 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
-     * @phpstan-param EvaluatedFieldMetaData $metadata
+     * @phpstan-param EvaluatedFieldMetaData|TMeta $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {
@@ -214,8 +217,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 return new ScheduleContainer(
                     $this->container,
                     $this->event,
-                    ScheduleGroupType::tryFrom($fieldName),
-                    (bool)($metadata['required'] ?? false)
+                    $metadata //@phpstan-ignore-line
                 );
             case 'person':
             case 'person_info':
@@ -298,5 +300,48 @@ class ReferencedPersonContainer extends ReferencedContainer
             }
         }
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    private static function getPersonValue(
+        ?PersonModel $person,
+        string $sub,
+        string $field,
+        ?ContestYearModel $contestYear = null,
+        ?EventModel $event = null
+    ) {
+        if (!$person) {
+            return null;
+        }
+        switch ($sub) {
+            case 'person_schedule':
+                return $person->getSerializedSchedule($event, $field);
+            case 'person':
+                return $person->{$field};
+            case 'person_info':
+                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
+                if ($field == 'agreed') {
+                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
+                    $result = $result ? true : null;
+                }
+                return $result;
+            case 'person_history':
+                if (!isset($contestYear)) {
+                    throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
+                }
+                return ($history = $person->getHistory($contestYear))
+                    ? $history->{$field}
+                    : null;
+            case 'post_contact_d':
+                return $person->getPostContact(PostContactType::from(PostContactType::DELIVERY));
+            case 'post_contact_p':
+                return $person->getPostContact(PostContactType::from(PostContactType::PERMANENT));
+            case 'person_has_flag':
+                return ($flag = $person->hasFlag($field)) ? (bool)$flag['value'] : null;
+            default:
+                throw new \InvalidArgumentException("Unknown person sub '$sub'.");
+        }
     }
 }

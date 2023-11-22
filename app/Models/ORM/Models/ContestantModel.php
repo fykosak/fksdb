@@ -31,7 +31,7 @@ final class ContestantModel extends Model implements Resource
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
-        return $this->person->getHistoryByContestYear($this->getContestYear());
+        return $this->person->getHistory($this->getContestYear());
     }
 
     public function getResourceId(): string

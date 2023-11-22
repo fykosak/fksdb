@@ -50,7 +50,7 @@ class NoRoleSchedule extends Test
             $logger->log(
                 new Message(
                     sprintf(
-                        _('Detect person "%s"(%d) on schedule without role.'),
+                        _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),
                         $person->person_id
                     ),
@@ -62,11 +62,11 @@ class NoRoleSchedule extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('No role schedule'), 'fas fa-poo');
+        return new Title(null, _('People without role'), 'fas fa-poo');
     }
 
     public function getId(): string
     {
-        return 'eventScheduleNoRole';
+        return 'EventScheduleNoRole';
     }
 }

@@ -18,7 +18,6 @@ use Nette\InvalidArgumentException;
 
 class MailTemplateFactory
 {
-
     /** without trailing slash */
     private string $templateDir;
     /** @var Application */

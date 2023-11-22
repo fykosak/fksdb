@@ -8,6 +8,7 @@ export interface Link {
     from: string;
     to: string;
     label: string;
+    behaviorType: string;
 }
 
 export interface Node {
@@ -42,11 +43,12 @@ export default function ModelChart({data: {links, nodes}}: OwnProps) {
     const simLinks = links.map<SimLink>((link): SimLink => {
         return {
             label: link.label,
-            color: 'var(--bs-gray)',
+            color: 'var(--bs-' + link.behaviorType + ')',
             type: 'one-way',
             source: simNodes[link.from],
             target: simNodes[link.to],
         };
     });
-    return <NodeChart links={simLinks} nodes={Object.values(simNodes)} colors={['var(--bs-gray)']}/>;
+    return <NodeChart links={simLinks} nodes={Object.values(simNodes)}
+                      colors={['var(--bs-gray)', ...['success', 'danger', 'warning', 'info', 'primary'].map((value) => 'var(--bs-' + value + ')')]}/>;
 }
