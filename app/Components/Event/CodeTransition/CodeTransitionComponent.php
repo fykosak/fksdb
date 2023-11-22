@@ -81,7 +81,7 @@ final class CodeTransitionComponent extends CodeForm
     {
         $application = $this->resolveApplication($model);
         if ($model->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
+            throw new BadRequestException(_('Models are not the same!'));
         }
         $holder = $this->machine->createHolder($this->model);
         $transition = Machine::selectTransition(

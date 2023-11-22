@@ -37,7 +37,7 @@ class CategoryCheck extends Test
                 $logger->log(
                     new Message(
                         sprintf(
-                            _('Wrong category actual %s calculated %s'),
+                            _('Wrong category, actual %s calculated %s'),
                             $actual,
                             $calculated
                         ),

@@ -15,6 +15,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * @phpstan-template TModel of Model

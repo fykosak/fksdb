@@ -1,0 +1,35 @@
+{define detail,FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+    <h3>Člen</h3>
+    {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+    {foreach $team->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+        <h4>{$member->person->getFullName()}</h4>
+        <ul>
+            <li>school: {$member->getPersonHistory()->school->name}</li>
+            <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
+        </ul>
+        {include person: $member->person, event: $team->event}
+    {/foreach}
+    {if $team->getTeachers()->count('*')}
+        <h3>Učitel</h3>
+        {foreach $team->getTeachers() as $teacher}
+            {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+            <h4>{$teacher->person->getFullName()}</h4>
+            {include person: $teacher->person, event: $team->event}
+        {/foreach}
+    {/if}
+{/define}
+
+{define schedule, FKSDB\Models\ORM\Models\PersonModel $person,FKSDB\Models\ORM\Models\EventModel $event}
+    {if $person->getScheduleForEvent($event)->count('*')}
+        <h5>Program</h5>
+        <ul>
+            {foreach $person->getScheduleForEvent($event) as $personSchedule}
+                {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+                <li>
+                    {$personSchedule->schedule_item->schedule_group->name_cs}: {$personSchedule->schedule_item->name_cs}
+                </li>
+            {/foreach}
+        </ul>
+    {/if}
+{/define}

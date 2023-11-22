@@ -38,7 +38,7 @@ class RunOutCapacity extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Run out capacity'));
+        return new Title(null, _('Run out of capacity'));
     }
 
     public function getId(): string

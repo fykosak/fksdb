@@ -88,7 +88,7 @@ class ReferencedPersonContainer extends ReferencedContainer
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
             if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) { // @phpstan-ignore-line
-                $subContainer->setOption('label', _('Deliver address'));
+                $subContainer->setOption('label', _('Delivery address'));
             } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) { // @phpstan-ignore-line
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
