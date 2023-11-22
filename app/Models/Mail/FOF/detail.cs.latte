@@ -5,13 +5,13 @@
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         <h4>{$member->person->getFullName()}</h4>
         <ul>
-            <li>school: {$member->getPersonHistory()->school->name_abbrev}</li>
-            <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
+            <li>Škola: {$member->getPersonHistory()->school->name_abbrev}</li>
+            <li>Ročník: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
         {include  schedule, person:$member->person, event: $team->event}
     {/foreach}
     {if $team->getTeachers()->count('*')}
-        <h3>Učitel</h3>
+        <h3>Doprovod</h3>
         {foreach $team->getTeachers() as $teacher}
             {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
             <h4>{$teacher->person->getFullName()}</h4>
