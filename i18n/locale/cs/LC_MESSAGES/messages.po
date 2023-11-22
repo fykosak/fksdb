@@ -84,7 +84,7 @@ msgstr "Odevzdané úlohy po sériích"
 msgid ""
 "Graph shows the cummulative number of submits per series in time before "
 "deadline."
-msgstr ""
+msgstr "Graf ukazuje celkový počet odevzaných úloh série v čase před deadlinem"
 
 #: i18n/../app/Components/Charts/TotalPersonsChart.php:49
 msgid "Total persons in FKSDB"
@@ -182,7 +182,7 @@ msgstr "Kód"
 
 #: i18n/../app/Components/Controls/FormControl/layout.containers.latte.latte2php:29
 msgid "Toogle"
-msgstr ""
+msgstr "Přepnout"
 
 #: i18n/../app/Components/Controls/Inbox/Corrected/CorrectedFormComponent.php:53
 #, php-format
@@ -211,7 +211,6 @@ msgid "Submit not uploaded"
 msgstr "Odevzdání nenalezeno"
 
 #: i18n/../app/Components/Controls/Inbox/Corrected/layout.latte.latte2php:14
-#, fuzzy
 msgid "Something wrong, contact webmaster immediately!"
 msgstr "Něco se pokazilo, okamžitě kontaktujte webmastera!"
 
@@ -739,7 +738,6 @@ msgstr ""
 
 #: i18n/../app/Components/DataTest/PersonTestComponent.php:58
 #: i18n/../app/Components/DataTest/PersonTestComponent.php:61
-#, fuzzy
 msgid "Must be an integer"
 msgstr "Musí být celé číslo"
 
@@ -754,57 +752,55 @@ msgstr "Testy"
 
 #: i18n/../app/Components/DataTest/TestGridTrait.php:64
 msgid "No errors found"
-msgstr "Žádné chyby nebylý nalezeny"
+msgstr "Žádné chyby nebyly nalezeny"
 
 #: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:53
 #, php-format
 msgid "Detect person \"%s\"(%d) in schedule without any role."
-msgstr ""
+msgstr "Nalezena osoba \"%s\"(%d) v programu bez přidělené role"
 
 #: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:65
-#, fuzzy
 msgid "People without role"
-msgstr "Uzavřít bez kontroly"
+msgstr "Osoby bez přidělené role"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Schedule/ItemAdapter.php:24
 #: i18n/../app/Components/DataTest/Tests/Event/ScheduleItemAdapter.php:33
-#, fuzzy, php-format
+#, php-format
 msgid "In schedule item \"%s\"(%d): "
-msgstr "Upravit bod programu \"%s\""
+msgstr "V bodě programu \"%s\"(%d):"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Schedule/RunOutCapacity.php:32
 #, php-format
 msgid "Item has less then 10% free capacity"
-msgstr ""
+msgstr "Bod programu má méně než 10 % kapacity volné"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Schedule/RunOutCapacity.php:41
-#, fuzzy
 msgid "Run out of capacity"
-msgstr "Celková kapacita"
+msgstr "Došla kapacita"
 
 #: i18n/../app/Components/DataTest/Tests/Event/ScheduleGroupAdapter.php:24
-#, fuzzy, php-format
+#, php-format
 msgid "In schedule group \"%s\"(%d): "
-msgstr "Upravit bod programu \"%s\""
+msgstr "Ve skupině programu \"%s\"(%d):"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:40
 #, php-format
 msgid "Wrong category, actual %s calculated %s"
-msgstr ""
+msgstr "Špatná kategorie, aktuálně %s, spočítaná %s"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:60
 msgid "Category check"
-msgstr "Check kategorie"
+msgstr "Kontrola kategorie"
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/PersonAdapter.php:24
 #, php-format
 msgid "In person \"%s\"(%d): "
-msgstr "V osobě \"%s\""
+msgstr "V osobě \"%s\"(%d): "
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/PersonHistoryAdapter.php:34
 #, php-format
 msgid "In person \"%s\"(%d) in current year: "
-msgstr ""
+msgstr "V osobě \"%s\"(%d) v aktuálním ročníku: "
 
 #: i18n/../app/Components/DataTest/Tests/Event/TeamAdapter.php:24
 #, php-format
@@ -819,7 +815,7 @@ msgstr "Organizování a účasti ve stejném roce."
 msgid ""
 "Tests, if the person is participating and organizing in the same year of one "
 "contest."
-msgstr ""
+msgstr "Testuje, jestli je osoba účastník a organizátor ve stejném roce jednoho semináře"
 
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
@@ -834,7 +830,7 @@ msgstr "Pohlaví určeno z rodného čísla"
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:26
 msgid "Tests, if gender matches born ID"
-msgstr "Kontroluje jestli ohlaví souhlasí s rodným číslem"
+msgstr "Kontroluje jestli pohlaví souhlasí s rodným číslem"
 
 #: i18n/../app/Components/DataTest/Tests/Person/GenderFromBornNumberTest.php:40
 msgid "Gender is not set"
@@ -846,7 +842,7 @@ msgstr "Pohlaví nesouhlasí s rodným číslem"
 
 #: i18n/../app/Components/DataTest/Tests/Person/ParticipantsDurationTest.php:28
 msgid "Participation duration"
-msgstr "Délka účatnění"
+msgstr "Délka účastnění"
 
 #: i18n/../app/Components/DataTest/Tests/Person/ParticipantsDurationTest.php:33
 msgid "Check how long person participated in events of the contest."
@@ -860,7 +856,7 @@ msgstr "Osoba se účastnila %d ročníků akcí soutěže s ID %d"
 #: i18n/../app/Components/DataTest/Tests/Person/PersonHistoryAdapter.php:30
 #, php-format
 msgid "In ac. year %d/%d: "
-msgstr ""
+msgstr "V akademickém roce %d/%d: "
 
 #: i18n/../app/Components/DataTest/Tests/Person/PostgraduateStudyTest.php:23
 msgid "Postgraduate study"
@@ -1036,14 +1032,14 @@ msgid "Accommodation"
 msgstr "Ubytování"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/FOFTeamForm.php:289
-#, fuzzy, php-format
+#, php-format
 msgid "Teacher %d - %s"
-msgstr "Učitel: %s (%s)"
+msgstr "Učitel: %d - %s"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/FOFTeamForm.php:291
-#, fuzzy, php-format
+#, php-format
 msgid "Teacher %d"
-msgstr "Učitel #%d"
+msgstr "Učitel %d"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/FOLTeamForm.php:51
 msgid "Usually the first part of your name. For example, \"Albert\"."
@@ -1112,19 +1108,18 @@ msgid "Application has been created"
 msgstr "Přihláška byla vytvořena"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:168
-#, fuzzy
 msgid "Team with same name already exists"
-msgstr "Tým s názvem \"%s\" již existuje."
+msgstr "Tým s tímto názvem již existuje."
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:300
-#, fuzzy, php-format
+#, php-format
 msgid "Member %d - %s"
-msgstr "Člen #%d"
+msgstr "Člen %d - %s"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:302
-#, fuzzy, php-format
+#, php-format
 msgid "Member %d"
-msgstr "Člen #%d"
+msgstr "Člen %d"
 
 #: i18n/../app/Components/EntityForms/FyziklaniSubmitFormComponent.php:61
 msgid "Number of points"
@@ -1234,9 +1229,8 @@ msgid "Apparel"
 msgstr "Oblečení a doplňky"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:48
-#, fuzzy
 msgid "Transport & Ticket"
-msgstr "Přeprava"
+msgstr "Přeprava & Jízdenky"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:62
 msgid ""
@@ -1404,9 +1398,8 @@ msgid "Automaticly redirect to detail"
 msgstr "Automaticky přesměruje na detail"
 
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:84
-#, fuzzy
 msgid "Models are not the same!"
-msgstr "Model neexistuje"
+msgstr "Modely nejsou stejné!"
 
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:96
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:97
@@ -2160,14 +2153,12 @@ msgstr "Detail"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:65
 #: i18n/../app/Components/Grids/Application/TeamList.php:122
-#, fuzzy
 msgid "button.team.orgDetail"
 msgstr "Detail"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:72
 #: i18n/../app/Components/Grids/Application/TeamList.php:129
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:28
-#, fuzzy
 msgid "button.team.edit"
 msgstr "Upravit"
 
@@ -2513,7 +2504,7 @@ msgstr "Skupina programu neexistuje"
 
 #: i18n/../app/Components/Schedule/Input/Handler.php:66
 msgid "Info block cannot be selected"
-msgstr ""
+msgstr "Blok informací nemůže být vybrán"
 
 #: i18n/../app/Components/Schedule/Input/Handler.php:71
 #, php-format
@@ -2521,14 +2512,14 @@ msgid "Item with Id %s does not exists"
 msgstr "Položka s ID %s neexistuje"
 
 #: i18n/../app/Components/Schedule/Input/Handler.php:79
-#, fuzzy, php-format
+#, php-format
 msgid "Schedule \"%s\" is not allowed at this time"
-msgstr "Daná položka již není dostupná."
+msgstr "Program \"%s\" není aktuálně povolen"
 
 #: i18n/../app/Components/Schedule/Input/Handler.php:91
-#, fuzzy, php-format
+#, php-format
 msgid "Schedule \"%s\" is not available at this time"
-msgstr "Daná položka již není dostupná."
+msgstr "Program \"%s\" není aktálně dostupný"
 
 #: i18n/../app/Components/Schedule/Input/Handler.php:108
 msgid "Modification of this item is not allowed at this time"
@@ -2562,9 +2553,8 @@ msgstr "Zabrané / Volné / Celkem"
 
 #: i18n/../app/Components/Schedule/ItemGrid.php:80
 #: i18n/../app/config/orm.neon.neon2php:996
-#, fuzzy
 msgid "Progress bar"
-msgstr "V procesu"
+msgstr ""
 
 #: i18n/../app/Components/Schedule/ItemGrid.php:88
 #: i18n/../app/config/orm.neon.neon2php:1002
@@ -2997,7 +2987,7 @@ msgstr "Čekající"
 
 #: i18n/../app/Models/ORM/Models/EventModel.php:308
 msgid "Not implemented"
-msgstr ""
+msgstr "Není implementováno"
 
 #: i18n/../app/Models/ORM/Models/EventModel.php:311
 msgid "Empty salt"
@@ -3670,7 +3660,6 @@ msgid "List of entities"
 msgstr "Seznam entit"
 
 #: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
-#, fuzzy
 msgid "Model does not exist."
 msgstr "Model neexistuje"
 
@@ -4279,9 +4268,8 @@ msgid "Report"
 msgstr "Reportovat"
 
 #: i18n/../app/Modules/EventModule/Schedule/BasePresenter.php:16
-#, fuzzy
 msgid "Schedule of event"
-msgstr "Program osoby \"%s\""
+msgstr "Program akce"
 
 #: i18n/../app/Modules/EventModule/Schedule/DashboardPresenter.php:38
 msgid "Create group"
@@ -4292,9 +4280,8 @@ msgid "All persons"
 msgstr "Všechny osoby programu"
 
 #: i18n/../app/Modules/EventModule/Schedule/DashboardPresenter.php:45
-#, fuzzy
 msgid "Schedule dashboard"
-msgstr "Program začíná"
+msgstr "Tabulka programu"
 
 #: i18n/../app/Modules/EventModule/Schedule/GroupPresenter.php:58
 #, php-format
@@ -4994,19 +4981,16 @@ msgstr "Přihlásit tým"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:15
 #: i18n/../app/config/applications/fof.neon.neon2php:26
-#, fuzzy
 msgid "Move to applied"
-msgstr "Vrátit do DB jako odmítnuů"
+msgstr "Přesunout do Přihlášených"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:19
-#, fuzzy
 msgid "Move to spare"
-msgstr "Auto náhradník"
+msgstr "Přesunout do náhradníků"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:33
-#, fuzzy
 msgid "Move to pending"
-msgstr "Metoda řešení"
+msgstr "Přesunout do čekajících"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:44
 msgid "Present"
@@ -5497,11 +5481,11 @@ msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:585
 msgid "Titul před jménem"
-msgstr ""
+msgstr "Titul před jménem"
 
 #: i18n/../app/config/orm.neon.neon2php:589
 msgid "Titul za jménem"
-msgstr ""
+msgstr "Titul za jménem"
 
 #: i18n/../app/config/orm.neon.neon2php:626
 msgid "School name"
@@ -5752,10 +5736,9 @@ msgstr "Zrušit platbu"
 
 #: i18n/../app/main.tsx.tsx2php:97
 msgid "Hide"
-msgstr ""
+msgstr "Skrýt"
 
 #: i18n/../app/main.tsx.tsx2php:99
-#, fuzzy
 msgid "Show"
 msgstr "Zobrazit!"
 
