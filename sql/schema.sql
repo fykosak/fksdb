@@ -611,8 +611,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `rank_category`     INT(11)                    NULL     DEFAULT NULL,
     `rank_total`        INT(11)                    NULL     DEFAULT NULL,
     `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
-        COMMENT 'Game lang',
+    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL,
+    `origin`            TEXT                       NULL     DEFAULT NULL,
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`

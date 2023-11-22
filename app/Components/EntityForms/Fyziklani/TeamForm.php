@@ -122,7 +122,7 @@ abstract class TeamForm extends EntityFormComponent
                 ),
                 $values
             );
-            if (isset($values['state'])) {
+            if (isset($values['state'])) { // @phpstan-ignore-line
                 throw new InvalidStateException(); // TODO
             }
             $team = $this->teamService->storeModel(

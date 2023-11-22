@@ -119,5 +119,4 @@ class BornIdColumnFactory extends ColumnFactory
         }
         return +$month > 50 ? PersonGender::from(PersonGender::FEMALE) : PersonGender::from(PersonGender::MALE);
     }
-
 }

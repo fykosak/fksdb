@@ -6,14 +6,13 @@
         {/foreach}
     {/foreach}
     {foreach $form->getErrors() as $error}
-        <div n:if="!isset($fieldErrors[$error])" class="invalid-feedback">{$error}</div>
+        <div n:if="!isset($fieldErrors[$error])" class="alert alert-danger">{$error}</div>
     {/foreach}
 {/define}
 
-{define metadata}
-    {varType Nette\Forms\Controls\BaseControl $field}
+{define metadata, Nette\Forms\Controls\BaseControl $field}
     {foreach $field->getErrors() as $error}
-        <div class="alert alert-danger">{$error}</div>
+        <div class="invalid-feedback">{$error}</div>
     {/foreach}
     {var $description = $field->getOption('description')}
     {if $description}
@@ -21,8 +20,7 @@
     {/if}
 {/define}
 
-{define plain}
-    {varType Nette\Forms\Controls\TextInput $field}
+{define plain, Nette\Forms\Controls\TextInput $field}
     {switch $field->control->type}
         {case 'range'}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
@@ -49,8 +47,7 @@
     </div>
 {/define}
 
-{define radiolist}
-    {varType Nette\Forms\Controls\RadioList $field}
+{define radiolist,Nette\Forms\Controls\RadioList $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         {if !empty($field->getLabel()->getText())}
             {label $field /}
@@ -65,15 +62,13 @@
     </div>
 {/define}
 
-{define button}
-    {varType Nette\Forms\Controls\Button $field}
+{define button, Nette\Forms\Controls\Button $field}
     {var string $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
     {php $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
     {input $field class:('btn ' . (\Nette\Utils\Strings::contains($fieldClass,'btn-') ? $fieldClass : 'btn-outline-primary'))}
 {/define}
 
-{define buttonArray}
-    {varType Nette\Forms\Controls\Button[] $buttons}
+{define buttonArray,Nette\Forms\Controls\Button[] $buttons}
     {var $buttonRows = []}
     {foreach $buttons as $button}
         {php if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}

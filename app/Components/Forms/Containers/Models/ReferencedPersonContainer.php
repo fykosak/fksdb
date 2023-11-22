@@ -34,7 +34,9 @@ use Nette\InvalidArgumentException;
  * @phpstan-extends ReferencedContainer<PersonModel>
  * @phpstan-import-type TMeta from ScheduleContainer
  * @phpstan-type EvaluatedFieldMetaData array{required?:bool,caption?:string|null,description?:string|null}
- * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>> & array{person_schedule?:array<string,TMeta>}
+ * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>> & array{
+ * person_schedule?:array<string,TMeta>
+ * }
  */
 class ReferencedPersonContainer extends ReferencedContainer
 {
@@ -85,9 +87,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
-            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
+            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) { // @phpstan-ignore-line
                 $subContainer->setOption('label', _('Deliver address'));
-            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
+            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) { // @phpstan-ignore-line
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
@@ -95,8 +97,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $subContainer->setOption('label', $label);
             }
             if (
-                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
-                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT
+                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY || // @phpstan-ignore-line
+                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT // @phpstan-ignore-line
             ) {
                 if (isset($fields['address'])) {
                     $control = new AddressDataContainer(
