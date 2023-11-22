@@ -5,7 +5,7 @@
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         <h4>{$member->person->getFullName()}</h4>
         <ul>
-            <li>school: {$member->getPersonHistory()->school->name}</li>
+            <li>school: {$member->getPersonHistory()->school->name_abbrev}</li>
             <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
         {include  schedule, person:$member->person, event: $team->event}
