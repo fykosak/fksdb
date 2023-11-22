@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 19:51+0100\n"
+"POT-Creation-Date: 2023-11-22 20:08+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: David Škrob <david.skrob@fykos.cz>\n"
 "Language-Team: \n"
@@ -182,7 +182,7 @@ msgstr "Kód"
 
 #: i18n/../app/Components/Controls/FormControl/layout.containers.latte.latte2php:29
 msgid "Toogle"
-msgstr "Přepnout"
+msgstr "Rozbalit"
 
 #: i18n/../app/Components/Controls/Inbox/Corrected/CorrectedFormComponent.php:53
 #, php-format
@@ -997,6 +997,7 @@ msgstr "Parametry nejsou v souladu s Neon scheme."
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:66
 #: i18n/../app/config/orm.neon.neon2php:180
 #: i18n/../app/config/orm.neon.neon2php:223
+#: i18n/../app/config/orm.neon.neon2php:581
 #: i18n/../app/config/orm.neon.neon2php:644
 #: i18n/../app/config/orm.neon.neon2php:726
 #: i18n/../app/config/orm.neon.neon2php:833
@@ -5477,16 +5478,12 @@ msgstr ""
 msgid "How did you come to know about us?"
 msgstr "Jak jste se o nás dozvěděli?"
 
-#: i18n/../app/config/orm.neon.neon2php:581
-msgid "Poznámka"
-msgstr ""
-
 #: i18n/../app/config/orm.neon.neon2php:585
-msgid "Titul před jménem"
+msgid "Pre-nominal title"
 msgstr "Titul před jménem"
 
 #: i18n/../app/config/orm.neon.neon2php:589
-msgid "Titul za jménem"
+msgid "Post-nominal title"
 msgstr "Titul za jménem"
 
 #: i18n/../app/config/orm.neon.neon2php:626
@@ -6583,9 +6580,6 @@ msgstr ""
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:85
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
-
-#~ msgid "Deliver address"
-#~ msgstr "Doručovací adresa"
 
 #~ msgid "solutions"
 #~ msgstr "řešení"
