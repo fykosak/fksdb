@@ -223,6 +223,7 @@ class FOFTeamForm extends TeamForm
             'name' => ['required' => true],
             'game_lang' => ['required' => true],
             'phone' => ['required' => true],
+            'origin' => ['required' => false],
         ];
     }
 

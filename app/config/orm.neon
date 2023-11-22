@@ -872,6 +872,9 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                 title: _('Submit opened?')
+            origin:
+                type: text
+                title: _('How did you come to know about us?') # TODO
         links:
             detail:
                 destination: :Event:Team:detail
