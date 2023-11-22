@@ -1220,7 +1220,6 @@ msgid "Transport & Ticket"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:62
-#, fuzzy
 msgid ""
 "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
 "…?\n"
@@ -1232,7 +1231,6 @@ msgstr ""
 "(especially in the case of vegans)?"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:67
-#, fuzzy
 msgid ""
 "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
 "setkání?\n"
@@ -2143,14 +2141,12 @@ msgstr "Team detail"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:65
 #: i18n/../app/Components/Grids/Application/TeamList.php:122
-#, fuzzy
 msgid "button.team.orgDetail"
 msgstr "Team detail for organizer"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:72
 #: i18n/../app/Components/Grids/Application/TeamList.php:129
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:28
-#, fuzzy
 msgid "button.team.edit"
 msgstr "Edit team"
 
@@ -2750,7 +2746,6 @@ msgid "revoked"
 msgstr ""
 
 #: i18n/../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/NameColumnFactory.php:24
-#, fuzzy
 msgid ""
 "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
 "       a ASCII znaky."
