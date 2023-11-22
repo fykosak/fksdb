@@ -47,8 +47,8 @@ export default function Group({group}: OwnProps) {
         </p>
         }
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            {group.items.map((item, index) => {
-                return <div key={index} className="col">
+            {group.items.map((item) => {
+                return <div key={item.scheduleItemId} className="col">
                     <Item
                         params={params}
                         type={group.scheduleGroupType}
@@ -61,7 +61,28 @@ export default function Group({group}: OwnProps) {
 }
 
 function GroupInfo({group}: OwnProps) {
-    return null;
+    const translator = useContext(TranslatorContext);
+    return <div className="ms-3">
+        <h5 className="mb-3">
+            {translator.get(group.name)}
+            <small className="ms-3 text-muted">
+                <TimePrinter
+                    date={group.start}
+                    translator={translator}
+                /> - <TimePrinter
+                date={group.end}
+                translator={translator}
+            />
+            </small>
+        </h5>
+        <div>
+            {group.items.map((item) => {
+                return <div key={item.scheduleItemId} className="alert alert-info">
+                    <i className="fas fa-info me-2"/>{translator.get(item.name)}
+                </div>;
+            })}
+        </div>
+    </div>;
 }
 
 interface ItemProps {
