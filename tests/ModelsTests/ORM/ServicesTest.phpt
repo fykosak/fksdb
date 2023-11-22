@@ -9,7 +9,7 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 use Tester\Assert;
 
 class ServicesTest extends DatabaseTestCase

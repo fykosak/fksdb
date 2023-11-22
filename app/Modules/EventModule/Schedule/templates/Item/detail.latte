@@ -1,5 +1,11 @@
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
+
+{block titleBody}
+    {include parent}
+    {control printer:templateString '@schedule_item.capacity_progress', $model,1024}
+
+{/block}
 {block outerContent}
-    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
     <div class="panel color-auto">
         <div class="container">
             {control columnTable [

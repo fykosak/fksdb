@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $fyziklani_seat_id

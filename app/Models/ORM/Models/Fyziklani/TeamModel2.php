@@ -14,8 +14,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -142,7 +142,7 @@ final class TeamModel2 extends Model implements Resource
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
-        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
+        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {

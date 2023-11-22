@@ -6,7 +6,7 @@
 {block titleBody}
     {include titleBody from './detail.latte'}
     {if $isOrganizer}
-        {var FKSDB\Models\ORM\Models\ContestantModel|null $contestant = $model->person->getContestantByContestYear($model->event->getContestYear())}
+        {var FKSDB\Models\ORM\Models\ContestantModel|null $contestant = $model->person->getContestant($model->event->getContestYear())}
         {if $contestant}
             <span class="badge bg-success mt-3">{_'Is contestant'}</span>
         {else}

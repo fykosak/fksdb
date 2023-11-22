@@ -7,7 +7,7 @@ namespace FKSDB\Components\DataTest\Tests\Event\Team;
 use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<TeamModel2,PersonModel>

@@ -9,9 +9,8 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\Forms\Controls\BaseControl;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-template ArgType
- * @phpstan-extends ColumnFactory<TModel,ArgType>
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-extends ColumnFactory<TModel,never>
  */
 abstract class AbstractColumnFactory extends ColumnFactory
 {

@@ -11,8 +11,8 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\InvalidStateException;
 

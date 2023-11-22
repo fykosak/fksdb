@@ -61,6 +61,7 @@ class RankingStrategyTest extends FyziklaniTestCase
                 'state' => 'participated',
                 'points' => $sum,
                 'category' => $data[0],
+                'name' => (string)$index,
             ]);
         }
 

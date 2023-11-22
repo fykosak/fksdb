@@ -7,7 +7,7 @@ namespace FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PersonScheduleHolder;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
 /**

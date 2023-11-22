@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
@@ -27,12 +26,12 @@ final class PersonPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private const FILTERED_TYPES = [
-        ScheduleGroupType::ACCOMMODATION_GENDER,
-        ScheduleGroupType::ACCOMMODATION_TEACHER,
-        ScheduleGroupType::VISA,
-        ScheduleGroupType::APPAREL,
-        ScheduleGroupType::TRANSPORT,
-        ScheduleGroupType::TICKET,
+        ScheduleGroupType::AccommodationGender,
+        ScheduleGroupType::AccommodationTeacher,
+        ScheduleGroupType::Visa,
+        ScheduleGroupType::Apparel,
+        ScheduleGroupType::Transport,
+        ScheduleGroupType::Ticket,
     ];
 
     private PersonScheduleService $service;

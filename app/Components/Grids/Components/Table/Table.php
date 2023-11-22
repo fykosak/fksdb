@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Table;
 
 use FKSDB\Components\Grids\Components\BaseItem;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\Title;
 use Nette\ComponentModel\Container;
 use Nette\DI\Container as DIContainer;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  */
 final class Table extends BaseComponent
 {

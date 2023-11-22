@@ -55,10 +55,10 @@ class PersonTestComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('offset', _('Offset'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->offset);
         $form->addText('limit', _('Limit'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->limit);
 
         $testsContainer = new ContainerWithOptions($this->container);

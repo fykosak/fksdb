@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\UI\StringPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

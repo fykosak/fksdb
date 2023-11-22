@@ -11,8 +11,7 @@ use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
  * @phpstan-extends Service<SchedulePaymentModel>
@@ -24,7 +23,7 @@ final class SchedulePaymentService extends Service
      * @phpstan-param array<array<int,bool>> $data
      * @throws EmptyDataException
      * @throws StorageException
-     * @throws ModelException
+     * @throws \PDOException
      * @throws DuplicatePaymentException
      */
     public function storeItems(array $data, PaymentModel $payment, Language $lang): void

@@ -8,9 +8,9 @@ use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
-use FKSDB\Components\EntityForms\Fyziklani\FOFTeamFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\FOLTeamFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\TeamFormComponent;
+use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
+use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
+use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
@@ -109,7 +109,6 @@ final class TeamPresenter extends BasePresenter
             );
         }
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
-        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -119,6 +118,7 @@ final class TeamPresenter extends BasePresenter
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
     }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -126,6 +126,47 @@ final class TeamPresenter extends BasePresenter
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
+    {
+        $entity = $this->getEntity();
+        return new PageTitle(
+            null,
+            Html::el('span')
+                ->addText(sprintf(_('Team: %s'), $entity->name))
+                ->addHtml(
+                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->state->pseudoBadge())
+                ),
+            'fas fa-user'
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedOrgDetail(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     */
+    public function renderOrgDetail(): void
+    {
+        $this->renderDetail();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws \Throwable
+     */
+    public function titleOrgDetail(): PageTitle
     {
         $entity = $this->getEntity();
         return new PageTitle(
@@ -230,7 +271,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): TeamFormComponent
+    protected function createComponentCreateForm(): TeamForm
     {
         return $this->createForm(null);
     }
@@ -242,7 +283,7 @@ final class TeamPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): TeamFormComponent
+    protected function createComponentEditForm(): TeamForm
     {
         return $this->createForm($this->getEntity());
     }
@@ -250,22 +291,24 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    private function createForm(?TeamModel2 $model): TeamFormComponent
+    private function createForm(?TeamModel2 $model): TeamForm
     {
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                return new FOFTeamFormComponent(
+                return new FOFTeamForm(
                     $this->getMachine(),
                     $this->getEvent(),
                     $this->getContext(),
-                    $model
+                    $model,
+                    $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
                 );
             case 9:
-                return new FOLTeamFormComponent(
+                return new FOLTeamForm(
                     $this->getMachine(),
                     $this->getEvent(),
                     $this->getContext(),
-                    $model
+                    $model,
+                    $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
                 );
         }
         throw new InvalidStateException(_('Event type is not supported'));

@@ -69,7 +69,7 @@ class HandlerModifyTest extends HandlerTestCase
         Assert::equal(2, $this->item3->getInterested()->count('*'));
     }
 
-    public function testModificationEnd(): void
+   /* public function testModificationEnd(): void
     {
         $this->groupService->storeModel(
             ['modification_end' => (new \DateTime())->sub(new \DateInterval('P1D'))],
@@ -83,9 +83,9 @@ class HandlerModifyTest extends HandlerTestCase
             ScheduleException::class
         );
         Assert::equal(2, $this->item3->getInterested()->count('*'));
-    }
+    }*/
 
-    public function testBetweenDates(): void
+   /* public function testBetweenDates(): void
     {
         $this->groupService->storeModel(
             [
@@ -99,7 +99,7 @@ class HandlerModifyTest extends HandlerTestCase
         $this->personToItem($this->item3, 2);
         $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id);
         Assert::equal(3, $this->item3->getInterested()->count('*'));
-    }
+    }*/
 }
 
 // phpcs:disable

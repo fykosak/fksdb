@@ -15,21 +15,25 @@ class ScheduleGroupField extends SelectBox
 {
     use FrontEndComponentTrait;
 
-    private ScheduleGroupModel $group;
+    public ScheduleGroupModel $group;
 
     /**
      * @throws BadRequestException
      */
     public function __construct(ScheduleGroupModel $group, Language $lang)
     {
-        $regEnd = $group->getRegistrationEnd();
-        parent::__construct(
-            sprintf(
-                _('%s -- end of registration: %s'),
-                $group->name->getText($lang->value),
-                $regEnd->format(_('__date_time'))
-            )
-        );
+        if ($group->registration_end) {
+            parent::__construct(
+                sprintf(
+                    _('%s -- end of registration: %s'),
+                    $group->name->getText($lang->value),
+                    $group->registration_end->format(_('__date_time'))
+                )
+            );
+        } else {
+            parent::__construct($group->name->getText($lang->value));
+        }
+
         $this->group = $group;
         $this->registerFrontend('schedule.group-container');
         $this->appendProperty();
@@ -49,7 +53,6 @@ class ScheduleGroupField extends SelectBox
      * @throws \Exception
      * @phpstan-return array{
      *     group:array<string,mixed>,
-     *     options:array<string,bool>,
      * }
      */
     protected function getData(): array
@@ -62,9 +65,6 @@ class ScheduleGroupField extends SelectBox
         }
 
         $group['items'] = $itemList;
-        return [
-            'group' => $group,
-            'options' => $this->group->schedule_group_type->getRenderOptions(),
-        ];
+        return ['group' => $group,];
     }
 }

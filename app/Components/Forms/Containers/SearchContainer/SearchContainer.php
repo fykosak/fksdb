@@ -10,7 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  */
 abstract class SearchContainer extends ContainerWithOptions
 {

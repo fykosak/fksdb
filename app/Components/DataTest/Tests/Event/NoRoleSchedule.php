@@ -11,7 +11,7 @@ use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -50,7 +50,7 @@ class NoRoleSchedule extends Test
             $logger->log(
                 new Message(
                     sprintf(
-                        _('Detect person "%s"(%d) on schedule without role.'),
+                        _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),
                         $person->person_id
                     ),
@@ -62,11 +62,11 @@ class NoRoleSchedule extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('No role schedule'), 'fas fa-poo');
+        return new Title(null, _('People without role'), 'fas fa-poo');
     }
 
     public function getId(): string
     {
-        return 'eventScheduleNoRole';
+        return 'EventScheduleNoRole';
     }
 }

@@ -7,11 +7,11 @@ namespace FKSDB\Models\ORM\Columns\Tables\Contest;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\UI\ContestBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<ContestModel,never>
+ * @phpstan-extends AbstractColumnFactory<ContestModel>
  */
 class ContestColumnFactory extends AbstractColumnFactory
 {

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use FKSDB\Components\DataTest\Tests\Event\NoRoleSchedule;
+use FKSDB\Components\DataTest\Tests\Event\Schedule\ItemAdapter;
+use FKSDB\Components\DataTest\Tests\Event\Schedule\RunOutCapacity;
+use FKSDB\Components\DataTest\Tests\Event\ScheduleGroupAdapter;
 use FKSDB\Components\DataTest\Tests\Event\Team\CategoryCheck;
 use FKSDB\Components\DataTest\Tests\Event\Team\PersonAdapter;
 use FKSDB\Components\DataTest\Tests\Event\TeamAdapter;
@@ -25,7 +28,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -85,6 +88,13 @@ class DataTestFactory
     {
         $tests = [
             new NoRoleSchedule($this->container),
+            new ScheduleGroupAdapter(
+                new ItemAdapter(
+                    new RunOutCapacity($this->container),
+                    $this->container
+                ),
+                $this->container
+            ),
         ];
         foreach ($this->getTeamTests() as $test) {
             $tests[] = new TeamAdapter($test, $this->container);

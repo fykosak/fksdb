@@ -9,11 +9,11 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\UI\PricePrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel,never>
+ * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel>
  */
 class PriceColumnFactory extends AbstractColumnFactory
 {

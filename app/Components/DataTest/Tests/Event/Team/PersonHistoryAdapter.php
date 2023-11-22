@@ -8,7 +8,7 @@ use FKSDB\Components\DataTest\Tests\Adapter;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<TeamModel2,PersonHistoryModel>

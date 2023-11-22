@@ -6,7 +6,7 @@ namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;

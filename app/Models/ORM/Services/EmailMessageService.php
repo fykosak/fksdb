@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
-use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-extends Service<EmailMessageModel>

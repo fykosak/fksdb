@@ -7,11 +7,11 @@ namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\UI\StringPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel>
  * @deprecated
  */
 class TShirtSizeColumnFactory extends AbstractColumnFactory

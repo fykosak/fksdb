@@ -7,7 +7,7 @@ namespace FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
 /**

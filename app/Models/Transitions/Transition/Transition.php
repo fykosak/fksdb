@@ -117,7 +117,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(THolder):void) $callBack
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
      */
     public function addBeforeExecute(callable $callBack): void
     {
@@ -125,7 +125,7 @@ class Transition
     }
 
     /**
-     * @phpstan-param (callable(THolder):void) $callBack
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
      */
     public function addAfterExecute(callable $callBack): void
     {

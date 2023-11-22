@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Results\SQLResultsCache;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
@@ -24,7 +23,7 @@ class PointsFormComponent extends SeriesTableFormComponent
 
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelException
+     * @throws \PDOException
      * @throws BadRequestException
      */
     protected function handleFormSuccess(Form $form): void
