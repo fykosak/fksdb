@@ -20,10 +20,10 @@ class TeacherInfoMail extends InfoEmail
     protected function getData(TeamHolder $holder): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Úprava tímu – ' . $holder->getModel()->name;
+            $subject = 'Úprava týmu – ' . $holder->getModel()->name;
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {
-            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
+            $subject = 'Team update – ' . $holder->getModel()->name;
             $sender = 'Fyziklani <fyziklani@fykos.cz>';
         }
         return [

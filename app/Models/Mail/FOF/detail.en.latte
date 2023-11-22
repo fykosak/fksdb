@@ -5,8 +5,8 @@
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         <h4>{$member->person->getFullName()}</h4>
         <ul>
-            <li>school: {$member->getPersonHistory()->school->name}</li>
-            <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
+            <li>School: {$member->getPersonHistory()->school->name}</li>
+            <li>Study year: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
         {include schedule, person:$member->person, event: $team->event}
     {/foreach}
