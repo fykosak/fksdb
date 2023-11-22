@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 18:59+0100\n"
+"POT-Creation-Date: 2023-11-22 19:51+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: David Škrob <david.skrob@fykos.cz>\n"
 "Language-Team: \n"
@@ -815,7 +815,9 @@ msgstr "Organizování a účasti ve stejném roce."
 msgid ""
 "Tests, if the person is participating and organizing in the same year of one "
 "contest."
-msgstr "Testuje, jestli je osoba účastník a organizátor ve stejném roce jednoho semináře"
+msgstr ""
+"Testuje, jestli je osoba účastník a organizátor ve stejném roce jednoho "
+"semináře"
 
 #: i18n/../app/Components/DataTest/Tests/Person/EventCoveringTest.php:74
 #, php-format
@@ -6582,408 +6584,408 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#~ msgid ""
-#~ "You must register both morning and afternoon groups or only the all day "
-#~ "group."
-#~ msgstr ""
-#~ "Musíte si zaregistrovat ranní a odpolední skupiny, nebo pouze celodenní "
-#~ "skupinu."
+#~ msgid "Deliver address"
+#~ msgstr "Doručovací adresa"
 
-#~ msgid "Modification end: "
-#~ msgstr "Konec úprav: "
+#~ msgid "solutions"
+#~ msgstr "řešení"
 
-#~ msgid "No items found."
-#~ msgstr "Žádná položka nebyla nalezena"
+#~ msgid "solution"
+#~ msgstr "řešení"
 
-#~ msgid "Weekend info"
-#~ msgstr "Info o víkendu"
+#~ msgid "points"
+#~ msgstr "Bodů"
 
-#~ msgid "Weekend"
-#~ msgstr "Víkend"
+#~ msgid "active"
+#~ msgstr "aktivní"
 
-#~ msgid "DSEF morning"
-#~ msgstr "DSEF dopoledne"
+#~ msgid "Wrong task number."
+#~ msgstr "Špatné číslo úlohy."
 
-#~ msgid "DSEF afternoon"
-#~ msgstr "DSEF odpoledne"
+#~ msgid "Wrong checksum"
+#~ msgstr "Špatný kontrolní součet"
 
-#~ msgid "DSEF all day"
-#~ msgstr "DSEF celodenní"
+#~ msgid "Validation"
+#~ msgstr "Validace"
 
-#~ msgid "Parcipant"
-#~ msgstr "Účastník"
+#~ msgid "User"
+#~ msgstr "Uživatel"
 
-#~ msgid "#"
-#~ msgstr "#"
+#~ msgid "Undefined error"
+#~ msgstr "Nedefinovaná chyba"
 
-#~ msgid "%s is valid"
-#~ msgstr "Pole \"%s\" je platné"
+#~ msgid "Transitions by IDs"
+#~ msgstr "Přechody pomocí ID"
 
-#~ msgid "...reading code..."
-#~ msgstr "...čtu kód..."
+#~ msgid "Transitions"
+#~ msgstr "Přechody"
 
-#~ msgid "@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)"
-#~ msgstr ""
-#~ "@schedule_item.name_cs:value (@schedule_item.schedule_item_id:value)"
+#~ msgid "Transition will be processed automatically one of: "
+#~ msgstr "Přechod se provede automaticky: "
 
-#~ msgid "Action"
-#~ msgstr "Akce"
+#~ msgid "Transition successful for application: %s"
+#~ msgstr "Přechod úspěšný pro přihlášku: %s"
 
-#~ msgid "Active?"
-#~ msgstr "Platný záznam?"
+#~ msgid "Transition successful for %s"
+#~ msgstr "Úspěšný přechod"
 
-#~ msgid "All tests"
-#~ msgstr "Všechny testy"
+#~ msgid "Total"
+#~ msgstr "Celkově"
 
-#~ msgid "Already participated"
-#~ msgstr "Už prezentován"
+#~ msgid "To %s"
+#~ msgstr "Do %s"
 
-#~ msgid "Application not found"
-#~ msgstr "Přihláška nenalezena"
+#~ msgid "To"
+#~ msgstr "Do"
 
-#~ msgid "Applications detail"
-#~ msgstr "Detail přihlášek"
+#~ msgid "Timestamp"
+#~ msgstr "Časová známka"
 
-#~ msgid "Attendance for group"
-#~ msgstr "Prezence pro skupinu"
+#~ msgid "This option is only available to secondary school students."
+#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
 
-#~ msgid "Attendance for item"
-#~ msgstr "Prezence pro položku programu"
-
-#~ msgid "Birthday is required field."
-#~ msgstr "Pole narození je povinné"
-
-#~ msgid "Born ID is not set"
-#~ msgstr "Rodné číslo není nastaveno"
-
-#~ msgid "Bypass checksum"
-#~ msgstr "Obejít kontrolní součet"
-
-#~ msgid "CSV does not contain correct heading."
-#~ msgstr "CSV neobsahuje správné nadpisy"
-
-#~ msgid "Calculate quiz points."
-#~ msgstr "Spočítat body kvízových úloh."
-
-#~ msgid "Cannot delete variant"
-#~ msgstr "Nelze smazat variantu"
-
-#~ msgid "Cannot set variant"
-#~ msgstr "Nelze nastavit variantu"
-
-#~ msgid "Check"
-#~ msgstr "Zkontrolovat"
-
-#~ msgid "Check submit"
-#~ msgstr "Ověřit submit"
-
-#~ msgid "Choose the team which you want to edit, it will open in the new tab."
-#~ msgstr "Vyberte tým, který chcete upravovat, tým se otevře v nové záložce."
-
-#~ msgid "Cooperation status"
-#~ msgstr "Stav spolupráce"
-
-#~ msgid "Create schedule item"
-#~ msgstr "Vytvořit položku programu"
-
-#~ msgid "Data validation"
-#~ msgstr "Validace údajů"
-
-#~ msgid "Detail of group"
-#~ msgstr "Podrobnosti skupiny"
-
-#~ msgid "Detail of the submit #%d"
-#~ msgstr "Podrobnosti odevzdání #%d"
-
-#~ msgid "Edit"
-#~ msgstr "Upravit"
-
-#~ msgid "Edit application"
-#~ msgstr "Upravit přihlášku"
-
-#~ msgid "Edit group"
-#~ msgstr "Upravit skupinu"
-
-#~ msgid "Edit personal information"
-#~ msgstr "Upravit osobní informace"
-
-#~ msgid "Envelopes for person generator"
-#~ msgstr "Generátor obálek pro osoby"
-
-#~ msgid "Error mode"
-#~ msgstr "Cování při chybě."
-
-#~ msgid "Event org"
-#~ msgstr "Organizátor akce"
-
-#~ msgid "Event org Id"
-#~ msgstr "Id organizátora akce"
-
-#~ msgid "Event orgs"
-#~ msgstr "Organizátor akcí"
-
-#~ msgid "Event web-site"
-#~ msgstr "Web akce"
-
-#~ msgid "Fast attendance"
-#~ msgstr "Rychlá prezence"
-
-#~ msgid "Fast edit"
-#~ msgstr "Rychlé změny"
-
-#~ msgid "For calculation of category"
-#~ msgstr "Pro výpočet kategorie."
-
-#~ msgid "Format"
-#~ msgstr "Formát"
-
-#~ msgid "From"
-#~ msgstr "Od"
-
-#~ msgid "From %s"
-#~ msgstr "Od %s"
-
-#~ msgid "Global results"
-#~ msgstr "Celkové výsledky"
-
-#~ msgid "Global statistics"
-#~ msgstr "Globální statistiky"
-
-#~ msgid "Group transitions"
-#~ msgstr "Skupinové přechody"
-
-#~ msgid "Id"
-#~ msgstr "Id"
-
-#~ msgid "Ignore."
-#~ msgstr "Ignorovat"
-
-#~ msgid "Import of applications"
-#~ msgstr "Import přihlášek"
-
-#~ msgid "Invalid task"
-#~ msgstr "Neplatná úloha"
-
-#~ msgid "Invalid team"
-#~ msgstr "Neplatný tým"
-
-#~ msgid "Keep original state."
-#~ msgstr "Ponechat původní stav"
-
-#~ msgid "Language"
-#~ msgstr "Jazyk"
-
-#~ msgid "Level"
-#~ msgstr "Úroveň"
-
-#~ msgid "List of applications"
-#~ msgstr "Seznam přihlášek"
-
-#~ msgid "List of groups"
-#~ msgstr "Seznam skupin"
-
-#~ msgid "Next year"
-#~ msgstr "Příští rok"
-
-#~ msgid "No transition available"
-#~ msgstr "Žádné dostupné přechody"
-
-#~ msgid "Not payable"
-#~ msgstr "Nesplatné"
-
-#~ msgid "Number of brochures"
-#~ msgstr "# brožurek"
-
-#~ msgid "Number of brochures/propagation items, that he wants to send."
-#~ msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
-
-#~ msgid "Only CSV files are accepted."
-#~ msgstr "Pouze CSV soubory jsou přijímány."
-
-#~ msgid "Only check state"
-#~ msgstr "Pouze zkontrolovat stav"
-
-#~ msgid "Org Id"
-#~ msgstr "ID organizátora"
-
-#~ msgid "Output"
-#~ msgstr "Výstup"
-
-#~ msgid "Participants per team"
-#~ msgstr "Účastníci dle týmů."
-
-#~ msgid "Participate events"
-#~ msgstr "Účasti na akcích"
-
-#~ msgid "Payment on the spot"
-#~ msgstr "Platba na místě"
-
-#~ msgid "Person %s applied in %s."
-#~ msgstr "Osoba %s přihlášena na %s."
-
-#~ msgid "Person %s successfully showed up in %s."
-#~ msgstr "Osoba %s úspěšně prezentována v %s."
-
-#~ msgid "Person info is not set"
-#~ msgstr "Person info není nastaveno"
-
-#~ msgid "Person not found"
-#~ msgstr "Osoba nenalezena"
-
-#~ msgid "Person_id attribute"
-#~ msgstr "Políčko person_id"
-
-#~ msgid "Rank"
-#~ msgstr "Pořadí"
-
-#~ msgid "Register for the next year"
-#~ msgstr "Zaregistrovat se do dalšího ročníku"
-
-#~ msgid "Register into competition"
-#~ msgstr "Zaregistrovat se do soutěže"
-
-#~ msgid "Register to Výfuk"
-#~ msgstr "Zaregistrovat se do Výfuku"
-
-#~ msgid "Require Id number"
-#~ msgstr "Číslo občanského průkazu je vyžadováno"
-
-#~ msgid "SQL query"
-#~ msgstr "SQL dotaz"
-
-#~ msgid "Schedule item"
-#~ msgstr "Položka programu"
-
-#~ msgid "Schedule items"
-#~ msgstr "Položka programu"
-
-#~ msgid "Schedule per person"
-#~ msgstr "Program osob"
-
-#~ msgid "Sealing of the scoring"
-#~ msgstr "Uzavření bodování"
-
-#~ msgid "Sector"
-#~ msgstr "Sektor"
-
-#~ msgid "Select contest"
-#~ msgstr "Vyberte soutěž"
-
-#~ msgid "Select test"
-#~ msgstr "Vybrat test"
-
-#~ msgid "Set new game password."
-#~ msgstr "Nastavit nové herní heslo"
-
-#~ msgid "Settings"
-#~ msgstr "Nastavení"
-
-#~ msgid "Show application!"
-#~ msgstr "Ukaž přihlášku!"
-
-#~ msgid "Similarity"
-#~ msgstr "Podobnost"
-
-#~ msgid "Skip the application and continue."
-#~ msgstr "Přeskočit přihlášku a pokračovat."
-
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Stav přihlášky \"%s\" změněn"
-
-#~ msgid "Stop import and rollback."
-#~ msgstr "Zastavit import a rollbackovat"
-
-#~ msgid "Submit!"
-#~ msgstr "Odevzdat!"
-
-#~ msgid "Task given and validated."
-#~ msgstr "Úloha zadána a ověřena."
-
-#~ msgid "Task was given."
-#~ msgstr "Úloha byla vydána."
-
-#~ msgid "Teaches since"
-#~ msgstr "Učitelem od"
-
-#~ msgid "Teaches until"
-#~ msgstr "Učitelem do"
-
-#~ msgid "Team applications time progress"
-#~ msgstr "Počet přihlášených týmů v čase"
-
-#~ msgid "Team member"
-#~ msgstr "Člen týmu"
-
-#~ msgid "Teams per country"
-#~ msgstr "Týmy dle zemí."
-
-#~ msgid "Test:"
-#~ msgstr "Test:"
+#~ msgid "This option is only available to Czech and Slovak students."
+#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
 
 #~ msgid ""
 #~ "There is not a transition from state \"%s\" of machine \"%s\" to state "
 #~ "\"%s\"."
 #~ msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
 
-#~ msgid "This option is only available to Czech and Slovak students."
-#~ msgstr "Tato možnost je dostupná pouze pro české a slovenské studenty"
+#~ msgid "Test:"
+#~ msgstr "Test:"
 
-#~ msgid "This option is only available to secondary school students."
-#~ msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
+#~ msgid "Teams per country"
+#~ msgstr "Týmy dle zemí."
 
-#~ msgid "Timestamp"
-#~ msgstr "Časová známka"
+#~ msgid "Team member"
+#~ msgstr "Člen týmu"
 
-#~ msgid "To"
-#~ msgstr "Do"
+#~ msgid "Team applications time progress"
+#~ msgstr "Počet přihlášených týmů v čase"
 
-#~ msgid "To %s"
-#~ msgstr "Do %s"
+#~ msgid "Teaches until"
+#~ msgstr "Učitelem do"
 
-#~ msgid "Total"
-#~ msgstr "Celkově"
+#~ msgid "Teaches since"
+#~ msgstr "Učitelem od"
 
-#~ msgid "Transition successful for %s"
-#~ msgstr "Úspěšný přechod"
+#~ msgid "Task was given."
+#~ msgstr "Úloha byla vydána."
 
-#~ msgid "Transition successful for application: %s"
-#~ msgstr "Přechod úspěšný pro přihlášku: %s"
+#~ msgid "Task given and validated."
+#~ msgstr "Úloha zadána a ověřena."
 
-#~ msgid "Transition will be processed automatically one of: "
-#~ msgstr "Přechod se provede automaticky: "
+#~ msgid "Submit!"
+#~ msgstr "Odevzdat!"
 
-#~ msgid "Transitions"
-#~ msgstr "Přechody"
+#~ msgid "Stop import and rollback."
+#~ msgstr "Zastavit import a rollbackovat"
 
-#~ msgid "Transitions by IDs"
-#~ msgstr "Přechody pomocí ID"
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Stav přihlášky \"%s\" změněn"
 
-#~ msgid "Undefined error"
-#~ msgstr "Nedefinovaná chyba"
+#~ msgid "Skip the application and continue."
+#~ msgstr "Přeskočit přihlášku a pokračovat."
 
-#~ msgid "User"
-#~ msgstr "Uživatel"
+#~ msgid "Similarity"
+#~ msgstr "Podobnost"
 
-#~ msgid "Validation"
-#~ msgstr "Validace"
+#~ msgid "Show application!"
+#~ msgstr "Ukaž přihlášku!"
 
-#~ msgid "Wrong checksum"
-#~ msgstr "Špatný kontrolní součet"
+#~ msgid "Settings"
+#~ msgstr "Nastavení"
 
-#~ msgid "Wrong task number."
-#~ msgstr "Špatné číslo úlohy."
+#~ msgid "Set new game password."
+#~ msgstr "Nastavit nové herní heslo"
 
-#~ msgid "active"
-#~ msgstr "aktivní"
+#~ msgid "Select test"
+#~ msgstr "Vybrat test"
 
-#~ msgid "points"
-#~ msgstr "Bodů"
+#~ msgid "Select contest"
+#~ msgstr "Vyberte soutěž"
 
-#~ msgid "solution"
-#~ msgstr "řešení"
+#~ msgid "Sector"
+#~ msgstr "Sektor"
 
-#~ msgid "solutions"
-#~ msgstr "řešení"
+#~ msgid "Sealing of the scoring"
+#~ msgstr "Uzavření bodování"
 
-#~ msgid "Deliver address"
-#~ msgstr "Doručovací adresa"
+#~ msgid "Schedule per person"
+#~ msgstr "Program osob"
+
+#~ msgid "Schedule items"
+#~ msgstr "Položka programu"
+
+#~ msgid "Schedule item"
+#~ msgstr "Položka programu"
+
+#~ msgid "SQL query"
+#~ msgstr "SQL dotaz"
+
+#~ msgid "Require Id number"
+#~ msgstr "Číslo občanského průkazu je vyžadováno"
+
+#~ msgid "Register to Výfuk"
+#~ msgstr "Zaregistrovat se do Výfuku"
+
+#~ msgid "Register into competition"
+#~ msgstr "Zaregistrovat se do soutěže"
+
+#~ msgid "Register for the next year"
+#~ msgstr "Zaregistrovat se do dalšího ročníku"
+
+#~ msgid "Rank"
+#~ msgstr "Pořadí"
+
+#~ msgid "Person_id attribute"
+#~ msgstr "Políčko person_id"
+
+#~ msgid "Person not found"
+#~ msgstr "Osoba nenalezena"
+
+#~ msgid "Person info is not set"
+#~ msgstr "Person info není nastaveno"
+
+#~ msgid "Person %s successfully showed up in %s."
+#~ msgstr "Osoba %s úspěšně prezentována v %s."
+
+#~ msgid "Person %s applied in %s."
+#~ msgstr "Osoba %s přihlášena na %s."
+
+#~ msgid "Payment on the spot"
+#~ msgstr "Platba na místě"
+
+#~ msgid "Participate events"
+#~ msgstr "Účasti na akcích"
+
+#~ msgid "Participants per team"
+#~ msgstr "Účastníci dle týmů."
+
+#~ msgid "Output"
+#~ msgstr "Výstup"
+
+#~ msgid "Org Id"
+#~ msgstr "ID organizátora"
+
+#~ msgid "Only check state"
+#~ msgstr "Pouze zkontrolovat stav"
+
+#~ msgid "Only CSV files are accepted."
+#~ msgstr "Pouze CSV soubory jsou přijímány."
+
+#~ msgid "Number of brochures/propagation items, that he wants to send."
+#~ msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
+
+#~ msgid "Number of brochures"
+#~ msgstr "# brožurek"
+
+#~ msgid "Not payable"
+#~ msgstr "Nesplatné"
+
+#~ msgid "No transition available"
+#~ msgstr "Žádné dostupné přechody"
+
+#~ msgid "Next year"
+#~ msgstr "Příští rok"
+
+#~ msgid "List of groups"
+#~ msgstr "Seznam skupin"
+
+#~ msgid "List of applications"
+#~ msgstr "Seznam přihlášek"
+
+#~ msgid "Level"
+#~ msgstr "Úroveň"
+
+#~ msgid "Language"
+#~ msgstr "Jazyk"
+
+#~ msgid "Keep original state."
+#~ msgstr "Ponechat původní stav"
+
+#~ msgid "Invalid team"
+#~ msgstr "Neplatný tým"
+
+#~ msgid "Invalid task"
+#~ msgstr "Neplatná úloha"
+
+#~ msgid "Import of applications"
+#~ msgstr "Import přihlášek"
+
+#~ msgid "Ignore."
+#~ msgstr "Ignorovat"
+
+#~ msgid "Id"
+#~ msgstr "Id"
+
+#~ msgid "Group transitions"
+#~ msgstr "Skupinové přechody"
+
+#~ msgid "Global statistics"
+#~ msgstr "Globální statistiky"
+
+#~ msgid "Global results"
+#~ msgstr "Celkové výsledky"
+
+#~ msgid "From %s"
+#~ msgstr "Od %s"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "Format"
+#~ msgstr "Formát"
+
+#~ msgid "For calculation of category"
+#~ msgstr "Pro výpočet kategorie."
+
+#~ msgid "Fast edit"
+#~ msgstr "Rychlé změny"
+
+#~ msgid "Fast attendance"
+#~ msgstr "Rychlá prezence"
+
+#~ msgid "Event web-site"
+#~ msgstr "Web akce"
+
+#~ msgid "Event orgs"
+#~ msgstr "Organizátor akcí"
+
+#~ msgid "Event org Id"
+#~ msgstr "Id organizátora akce"
+
+#~ msgid "Event org"
+#~ msgstr "Organizátor akce"
+
+#~ msgid "Error mode"
+#~ msgstr "Cování při chybě."
+
+#~ msgid "Envelopes for person generator"
+#~ msgstr "Generátor obálek pro osoby"
+
+#~ msgid "Edit personal information"
+#~ msgstr "Upravit osobní informace"
+
+#~ msgid "Edit group"
+#~ msgstr "Upravit skupinu"
+
+#~ msgid "Edit application"
+#~ msgstr "Upravit přihlášku"
+
+#~ msgid "Edit"
+#~ msgstr "Upravit"
+
+#~ msgid "Detail of the submit #%d"
+#~ msgstr "Podrobnosti odevzdání #%d"
+
+#~ msgid "Detail of group"
+#~ msgstr "Podrobnosti skupiny"
+
+#~ msgid "Data validation"
+#~ msgstr "Validace údajů"
+
+#~ msgid "Create schedule item"
+#~ msgstr "Vytvořit položku programu"
+
+#~ msgid "Cooperation status"
+#~ msgstr "Stav spolupráce"
+
+#~ msgid "Choose the team which you want to edit, it will open in the new tab."
+#~ msgstr "Vyberte tým, který chcete upravovat, tým se otevře v nové záložce."
+
+#~ msgid "Check submit"
+#~ msgstr "Ověřit submit"
+
+#~ msgid "Check"
+#~ msgstr "Zkontrolovat"
+
+#~ msgid "Cannot set variant"
+#~ msgstr "Nelze nastavit variantu"
+
+#~ msgid "Cannot delete variant"
+#~ msgstr "Nelze smazat variantu"
+
+#~ msgid "Calculate quiz points."
+#~ msgstr "Spočítat body kvízových úloh."
+
+#~ msgid "CSV does not contain correct heading."
+#~ msgstr "CSV neobsahuje správné nadpisy"
+
+#~ msgid "Bypass checksum"
+#~ msgstr "Obejít kontrolní součet"
+
+#~ msgid "Born ID is not set"
+#~ msgstr "Rodné číslo není nastaveno"
+
+#~ msgid "Birthday is required field."
+#~ msgstr "Pole narození je povinné"
+
+#~ msgid "Attendance for item"
+#~ msgstr "Prezence pro položku programu"
+
+#~ msgid "Attendance for group"
+#~ msgstr "Prezence pro skupinu"
+
+#~ msgid "Applications detail"
+#~ msgstr "Detail přihlášek"
+
+#~ msgid "Application not found"
+#~ msgstr "Přihláška nenalezena"
+
+#~ msgid "Already participated"
+#~ msgstr "Už prezentován"
+
+#~ msgid "All tests"
+#~ msgstr "Všechny testy"
+
+#~ msgid "Active?"
+#~ msgstr "Platný záznam?"
+
+#~ msgid "Action"
+#~ msgstr "Akce"
+
+#~ msgid "@schedule_item.name_en:value (@schedule_item.schedule_item_id:value)"
+#~ msgstr ""
+#~ "@schedule_item.name_cs:value (@schedule_item.schedule_item_id:value)"
+
+#~ msgid "...reading code..."
+#~ msgstr "...čtu kód..."
+
+#~ msgid "%s is valid"
+#~ msgstr "Pole \"%s\" je platné"
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid "Parcipant"
+#~ msgstr "Účastník"
+
+#~ msgid "DSEF all day"
+#~ msgstr "DSEF celodenní"
+
+#~ msgid "DSEF afternoon"
+#~ msgstr "DSEF odpoledne"
+
+#~ msgid "DSEF morning"
+#~ msgstr "DSEF dopoledne"
+
+#~ msgid "Weekend"
+#~ msgstr "Víkend"
+
+#~ msgid "Weekend info"
+#~ msgstr "Info o víkendu"
+
+#~ msgid "No items found."
+#~ msgstr "Žádná položka nebyla nalezena"
+
+#~ msgid "Modification end: "
+#~ msgstr "Konec úprav: "
+
+#~ msgid ""
+#~ "You must register both morning and afternoon groups or only the all day "
+#~ "group."
+#~ msgstr ""
+#~ "Musíte si zaregistrovat ranní a odpolední skupiny, nebo pouze celodenní "
+#~ "skupinu."

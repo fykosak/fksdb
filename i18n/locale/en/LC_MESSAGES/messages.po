@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 18:59+0100\n"
+"POT-Creation-Date: 2023-11-22 19:51+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -6560,32 +6560,85 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Chosen person is already registered to the event."
 
+#~ msgid "řešitelů"
+#~ msgstr "contestants"
+
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
 #, fuzzy
-#~ msgid "Potvrdit jako účastnika"
-#~ msgstr "Confirm participant"
+#~ msgid "záznamy"
+#~ msgstr "records"
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#, fuzzy
+#~ msgid "záznam"
+#~ msgstr "records"
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "jS \\of M Y"
 
-#~ msgid ""
-#~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
-#~ "soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
-#~ "náročných nebo nočních her? Například různé alergie (a jejich projevy), "
-#~ "cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
-#~ "pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další "
-#~ "informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+#, fuzzy
+#~ msgid "card-body"
+#~ msgstr "points"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Login"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 #~ msgstr ""
-#~ "Do you have any health restrictions that could limit you during the "
-#~ "event? For example, various allergies (and their symptoms), diabetes, "
-#~ "epilepsy, longer-term problems... Do you take any medication? What are "
-#~ "they? Are there any other information about your health condition, what "
-#~ "should we know?"
+#~ "To calculate category. Leave empty if you are not a high school student."
 
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
+#~ msgid "Pouze pro české a slovenské studenty."
+#~ msgstr ""
+#~ "Only for Czech and Slovak students. So if you are from abroad, please "
+#~ "leave it empty as it is."
 
 #, fuzzy
 #~ msgid ""
@@ -6606,82 +6659,29 @@ msgstr "Chosen person is already registered to the event."
 #~ "send you a confirmation email. Then, you will be able to complete the "
 #~ "registration. If you are not a student, fill in \"not a student \"."
 
-#~ msgid "Pouze pro české a slovenské studenty."
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
+
+#~ msgid ""
+#~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
+#~ "soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
+#~ "náročných nebo nočních her? Například různé alergie (a jejich projevy), "
+#~ "cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
+#~ "pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další "
+#~ "informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
 #~ msgstr ""
-#~ "Only for Czech and Slovak students. So if you are from abroad, please "
-#~ "leave it empty as it is."
+#~ "Do you have any health restrictions that could limit you during the "
+#~ "event? For example, various allergies (and their symptoms), diabetes, "
+#~ "epilepsy, longer-term problems... Do you take any medication? What are "
+#~ "they? Are there any other information about your health condition, what "
+#~ "should we know?"
 
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-#~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
 
 #, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Login"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#, fuzzy
-#~ msgid "card-body"
-#~ msgstr "points"
-
-#, fuzzy
-#~ msgid "date"
-#~ msgstr "jS \\of M Y"
-
-#, fuzzy
-#~ msgid "záznam"
-#~ msgstr "records"
-
-#, fuzzy
-#~ msgid "záznamy"
-#~ msgstr "records"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
+#~ msgid "Potvrdit jako účastnika"
+#~ msgstr "Confirm participant"
