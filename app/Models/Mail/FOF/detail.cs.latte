@@ -8,14 +8,14 @@
             <li>school: {$member->getPersonHistory()->school->name}</li>
             <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
-        {include person: $member->person, event: $team->event}
+        {include  schedule, person:$member->person, event: $team->event}
     {/foreach}
     {if $team->getTeachers()->count('*')}
         <h3>Učitel</h3>
         {foreach $team->getTeachers() as $teacher}
             {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
             <h4>{$teacher->person->getFullName()}</h4>
-            {include person: $teacher->person, event: $team->event}
+            {include schedule, person:$teacher->person, event: $team->event}
         {/foreach}
     {/if}
 {/define}
