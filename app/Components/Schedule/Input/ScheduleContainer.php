@@ -126,17 +126,21 @@ class ScheduleContainer extends ContainerWithOptions
         }
     }
 
-    public function setModel(PersonModel $person): void
+    public function setModel(?PersonModel $person): void
     {
-        $query = $person->getSchedule()->where('schedule_item.schedule_group.schedule_group_type', $this->types);
         $data = [];
-        /** @var PersonScheduleModel $personSchedule */
-        foreach ($query as $personSchedule) {
-            $group = $personSchedule->schedule_item->schedule_group;
-            $key = $this->getGroupKey($group);
-            $data[$key] = $data[$key] ?? [];
-            $data[$key][$group->schedule_group_id] = $personSchedule->schedule_item_id;
+        if ($person) {
+            $query = $person->getSchedule()->where('schedule_item.schedule_group.schedule_group_type', $this->types);
+
+            /** @var PersonScheduleModel $personSchedule */
+            foreach ($query as $personSchedule) {
+                $group = $personSchedule->schedule_item->schedule_group;
+                $key = $this->getGroupKey($group);
+                $data[$key] = $data[$key] ?? [];
+                $data[$key][$group->schedule_group_id] = $personSchedule->schedule_item_id;
+            }
         }
+
         $this->setValues($data);
     }
 }
