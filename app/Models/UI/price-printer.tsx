@@ -14,7 +14,7 @@ export default function PricePrinter({price, translator}: OwnProps) {
         labels.push(<span className="me-2">{price.CZK.amount} Kč</span>)
     }
     if (Object.hasOwn(price, 'EUR')) {
-        labels.push(<span className="me-2">{price.EUR.amount} Kč</span>)
+        labels.push(<span className="me-2">{price.EUR.amount} €</span>)
     }
     if (!labels.length) {
         return <span>{translator.getText('for free')}</span>;
