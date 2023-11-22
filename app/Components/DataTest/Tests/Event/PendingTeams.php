@@ -33,7 +33,7 @@ class PendingTeams extends Test
                         $team->name,
                         $team->fyziklani_team_id
                     ),
-                    Message::LVL_ERROR
+                    Message::LVL_WARNING
                 )
             );
         }
