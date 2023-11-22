@@ -2152,18 +2152,18 @@ msgstr "Stav"
 #: i18n/../app/Components/Grids/Application/TeamList.php:115
 #: i18n/../app/config/orm.neon.neon2php:884
 msgid "button.team.detail"
-msgstr "Detail"
+msgstr "Detail týmu"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:65
 #: i18n/../app/Components/Grids/Application/TeamList.php:122
 msgid "button.team.orgDetail"
-msgstr "Detail"
+msgstr "Organizátorský detail týmu"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:72
 #: i18n/../app/Components/Grids/Application/TeamList.php:129
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:28
 msgid "button.team.edit"
-msgstr "Upravit"
+msgstr "Upravit tým"
 
 #: i18n/../app/Components/Grids/Application/TeamList.php:87
 msgid "Members"

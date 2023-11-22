@@ -2139,20 +2139,20 @@ msgstr ""
 #: i18n/../app/Components/Grids/Application/TeamList.php:115
 #: i18n/../app/config/orm.neon.neon2php:884
 msgid "button.team.detail"
-msgstr "Detail"
+msgstr "Team detail"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:65
 #: i18n/../app/Components/Grids/Application/TeamList.php:122
 #, fuzzy
 msgid "button.team.orgDetail"
-msgstr "Detail"
+msgstr "Team detail for organizer"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:72
 #: i18n/../app/Components/Grids/Application/TeamList.php:129
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:28
 #, fuzzy
 msgid "button.team.edit"
-msgstr "Edit"
+msgstr "Edit team"
 
 #: i18n/../app/Components/Grids/Application/TeamList.php:87
 msgid "Members"
