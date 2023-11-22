@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 17:38+0100\n"
+"POT-Creation-Date: 2023-11-22 18:59+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -176,7 +176,7 @@ msgstr "Submit"
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 #: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx.tsx2php:52
 #: i18n/../app/Components/Schedule/AllPersonList.php:55
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:40
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:39
 msgid "Code"
 msgstr ""
 
@@ -211,7 +211,7 @@ msgid "Submit not uploaded"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Inbox/Corrected/layout.latte.latte2php:14
-msgid "Something wrong, contact immediately webmaster!"
+msgid "Something wrong, contact webmaster immediately!"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Inbox/HandoutFormComponent.php:110
@@ -380,7 +380,6 @@ msgstr ""
 #: i18n/../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:74
 #: i18n/../app/Components/Grids/Warehouse/ItemsGrid.php:55
 #: i18n/../app/Components/Grids/Warehouse/ProductsGrid.php:50
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:29
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:183
 #: i18n/../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:44
 msgid "button.edit"
@@ -428,6 +427,7 @@ msgid "Permanent address"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Person/Detail/address.latte.latte2php:8
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:91
 msgid "Delivery address"
 msgstr ""
 
@@ -733,7 +733,7 @@ msgstr ""
 
 #: i18n/../app/Components/DataTest/PersonTestComponent.php:58
 #: i18n/../app/Components/DataTest/PersonTestComponent.php:61
-msgid "Must be a int"
+msgid "Must be an integer"
 msgstr ""
 
 #: i18n/../app/Components/DataTest/PersonTestComponent.php:60
@@ -751,11 +751,11 @@ msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:53
 #, php-format
-msgid "Detect person \"%s\"(%d) on schedule without role."
+msgid "Detect person \"%s\"(%d) in schedule without any role."
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/NoRoleSchedule.php:65
-msgid "No role schedule"
+msgid "People without role"
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/Schedule/ItemAdapter.php:24
@@ -770,7 +770,7 @@ msgid "Item has less then 10% free capacity"
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/Schedule/RunOutCapacity.php:41
-msgid "Run out capacity"
+msgid "Run out of capacity"
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/ScheduleGroupAdapter.php:24
@@ -780,7 +780,7 @@ msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:40
 #, php-format
-msgid "Wrong category actual %s calculated %s"
+msgid "Wrong category, actual %s calculated %s"
 msgstr ""
 
 #: i18n/../app/Components/DataTest/Tests/Event/Team/CategoryCheck.php:60
@@ -1388,7 +1388,7 @@ msgid "Automaticly redirect to detail"
 msgstr ""
 
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:84
-msgid "Modely sa nezhodujú"
+msgid "Models are not the same!"
 msgstr ""
 
 #: i18n/../app/Components/Event/CodeTransition/CodeTransitionComponent.php:96
@@ -1405,8 +1405,8 @@ msgstr ""
 #: i18n/../app/Components/Event/CodeTransition/layout.latte.latte2php:4
 #: i18n/../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:123
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:10
-#: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:9
-#: i18n/../app/Modules/EventModule/templates/Team/detail.fol.latte.latte2php:8
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:8
+#: i18n/../app/Modules/EventModule/templates/Team/detail.fol.latte.latte2php:7
 #: i18n/../app/Modules/EventModule/templates/Team/detail.latte.latte2php:46
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:10
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fol.latte.latte2php:8
@@ -1449,10 +1449,6 @@ msgstr ""
 
 #: i18n/../app/Components/Forms/Containers/Models/ReferencedContainer.php:126
 msgid "Delete"
-msgstr ""
-
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:91
-msgid "Deliver address"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:95
@@ -2152,6 +2148,7 @@ msgstr "Detail"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:72
 #: i18n/../app/Components/Grids/Application/TeamList.php:129
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:28
 #, fuzzy
 msgid "button.team.edit"
 msgstr "Edit"
@@ -3654,7 +3651,7 @@ msgid "List of entities"
 msgstr ""
 
 #: i18n/../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
-msgid "Model does not exists"
+msgid "Model does not exist."
 msgstr ""
 
 #: i18n/../app/Modules/Core/PresenterTraits/NoContestAvailable.php:13
@@ -4378,7 +4375,7 @@ msgstr ""
 msgid "Rests"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:44
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:43
 msgid "Application code"
 msgstr ""
 
@@ -6563,85 +6560,32 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Chosen person is already registered to the event."
 
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
-
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
 #, fuzzy
-#~ msgid "záznamy"
-#~ msgstr "records"
+#~ msgid "Potvrdit jako účastnika"
+#~ msgstr "Confirm participant"
 
-#, fuzzy
-#~ msgid "záznam"
-#~ msgstr "records"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
 
-#, fuzzy
-#~ msgid "date"
-#~ msgstr "jS \\of M Y"
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
-#, fuzzy
-#~ msgid "card-body"
-#~ msgstr "points"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Login"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgid ""
+#~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
+#~ "soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
+#~ "náročných nebo nočních her? Například různé alergie (a jejich projevy), "
+#~ "cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
+#~ "pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další "
+#~ "informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
 #~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
+#~ "Do you have any health restrictions that could limit you during the "
+#~ "event? For example, various allergies (and their symptoms), diabetes, "
+#~ "epilepsy, longer-term problems... Do you take any medication? What are "
+#~ "they? Are there any other information about your health condition, what "
+#~ "should we know?"
 
-#~ msgid "Pouze pro české a slovenské studenty."
-#~ msgstr ""
-#~ "Only for Czech and Slovak students. So if you are from abroad, please "
-#~ "leave it empty as it is."
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
 
 #, fuzzy
 #~ msgid ""
@@ -6662,29 +6606,82 @@ msgstr "Chosen person is already registered to the event."
 #~ "send you a confirmation email. Then, you will be able to complete the "
 #~ "registration. If you are not a student, fill in \"not a student \"."
 
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
-
-#~ msgid ""
-#~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
-#~ "soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky "
-#~ "náročných nebo nočních her? Například různé alergie (a jejich projevy), "
-#~ "cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už "
-#~ "pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další "
-#~ "informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+#~ msgid "Pouze pro české a slovenské studenty."
 #~ msgstr ""
-#~ "Do you have any health restrictions that could limit you during the "
-#~ "event? For example, various allergies (and their symptoms), diabetes, "
-#~ "epilepsy, longer-term problems... Do you take any medication? What are "
-#~ "they? Are there any other information about your health condition, what "
-#~ "should we know?"
+#~ "Only for Czech and Slovak students. So if you are from abroad, please "
+#~ "leave it empty as it is."
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgstr ""
+#~ "To calculate category. Leave empty if you are not a high school student."
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
 
 #, fuzzy
-#~ msgid "Potvrdit jako účastnika"
-#~ msgstr "Confirm participant"
+#~ msgid "Přihlásit se"
+#~ msgstr "Login"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#, fuzzy
+#~ msgid "card-body"
+#~ msgstr "points"
+
+#, fuzzy
+#~ msgid "date"
+#~ msgstr "jS \\of M Y"
+
+#, fuzzy
+#~ msgid "záznam"
+#~ msgstr "records"
+
+#, fuzzy
+#~ msgid "záznamy"
+#~ msgstr "records"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitelů"
+#~ msgstr "contestants"
