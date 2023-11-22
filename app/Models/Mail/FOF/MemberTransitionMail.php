@@ -61,10 +61,10 @@ class MemberTransitionMail extends MailCallback
                     $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
                     break;
                 case 'pending->spare':
-                    $subject = '';
+                    $subject = 'Status update - ' . $holder->getModel()->name;
                     break;
                 case 'spare->applied':
-                    $subject = '' . $holder->getModel()->name;
+                    $subject = 'Status update - ' . $holder->getModel()->name;
                     break;
                 default:
                     throw new InvalidStateException();

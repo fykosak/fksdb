@@ -578,15 +578,15 @@ orm:
                 permission: BASIC
             note:
                 type: string
-                title: _('Poznámka')
+                title: _('Note')
                 permission: BASIC
             academic_degree_prefix:
                 type: string
-                title: _('Titul před jménem')
+                title: _('Pre-nominal title')
                 permission: RESTRICT
             academic_degree_suffix:
                 type: string
-                title: _('Titul za jménem')
+                title: _('Post-nominal title')
                 permission: RESTRICT
             pizza:
                 type: string
