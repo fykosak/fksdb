@@ -1,0 +1,30 @@
+{define detail,FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+    <h3>Members</h3>
+    {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+    {foreach $team->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+        <h4>{$member->person->getFullName()}</h4>
+        <ul>
+            <li>school: {$member->getPersonHistory()->school->name}</li>
+            <li>study year: {$member->getPersonHistory()->study_year_new->label()}</li>
+        </ul>
+        {if $member->person->getScheduleForEvent($member->fyziklani_team->event)->count('*')}
+            <h5>Schedule</h5>
+            <ul>
+                {foreach $member->person->getScheduleForEvent($team->event) as $personSchedule}
+                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+                    <li>
+                        {$personSchedule->schedule_item->schedule_group->name_en}: {$personSchedule->schedule_item->name_en}
+                    </li>
+                {/foreach}
+            </ul>
+        {/if}
+    {/foreach}
+    {if $team->getTeachers()->count('*')}
+        <h3>Teachers</h3>
+        {foreach $team->getTeachers() as $teacher}
+            {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+            <h4>{$teacher->person->getFullName()}</h4>
+        {/foreach}
+    {/if}
+{/define}
