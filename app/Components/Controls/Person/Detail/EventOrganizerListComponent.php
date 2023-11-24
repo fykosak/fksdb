@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -34,10 +33,6 @@ class EventOrganizerListComponent extends DetailComponent
         return $this->person->getEventOrganizers();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(EventOrganizerModel $model) => 'alert alert-' .

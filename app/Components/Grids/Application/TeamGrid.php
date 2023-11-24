@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\UI\Title;
@@ -26,10 +25,6 @@ final class TeamGrid extends BaseGrid
         $this->event = $event;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;

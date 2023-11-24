@@ -35,7 +35,6 @@ class PersonTestGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {

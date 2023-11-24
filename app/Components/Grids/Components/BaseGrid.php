@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Table\TableTrait;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Nette\DI\Container;
 

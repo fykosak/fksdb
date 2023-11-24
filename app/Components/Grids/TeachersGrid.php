@@ -32,7 +32,6 @@ final class TeachersGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {
