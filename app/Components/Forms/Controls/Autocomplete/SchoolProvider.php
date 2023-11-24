@@ -39,11 +39,13 @@ class SchoolProvider implements FilteredDataProvider
 
         $schools = $this->schoolService->getTable();
         foreach ($tokens as $token) { //@phpstan-ignore-line
-            $schools->where(
-                'name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')',
-                $token,
-                $token
-            );
+            $schools->whereOr([
+                'school.name_full LIKE concat(\'%\', ?, \'%\')' => $token,
+                'school.name_abbrev LIKE concat(\'%\', ?, \'%\')' => $token,
+                'address.city LIKE concat(\'%\', ?, \'%\')' => $token,
+                'address.country.name LIKE concat(\'%\', ?, \'%\')' => $token,
+                'school.name LIKE concat(\'%\', ?, \'%\')' => $token,
+            ]);
         }
         // For backwards compatibility consider NULLs active
         if ($this->defaultValue != null) {

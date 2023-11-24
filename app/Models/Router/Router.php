@@ -71,7 +71,7 @@ class Router
             1
         );
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
-        $service->addRoute('<presenter settings>/<action=default>[/<id>]', ['module' => 'Core']);
+        $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
 
         self::addScheduleSubmodule($service->withPath('events/'));
 

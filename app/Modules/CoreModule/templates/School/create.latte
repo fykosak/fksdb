@@ -1,0 +1,44 @@
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Atributy školy</h2>
+            <p class="alert alert-danger">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                Školu vkládejte jenom tehdy, jste-li přesvědčení, že v systému není.
+            </p>
+
+            <h3>Plný název</h3>
+            <ul>
+                <li>zatím nepoužito, mělo by mít formát jako hlavní název škol v rejstříku MŠMT (někdy i včetně
+                    adresy)
+                <li> vyhledává se podle ní
+            </ul>
+            <h3>Název</h3>
+            <ul>
+                <li> název, který patří na obálku
+                <li> uvažujte, že nad tím bude osoba/organizační jednotka pod tím ulice
+            </ul>
+            <h3>Zkrácený název</h3>
+            <ul>
+                <li>nejčastěji používaný název (výsledkovky, vyhledávací pole, exporty)
+                <li> délka omezena na 32 znaků
+                <li>měl by obsahovat typ školy (G, ZŠ, SŠ apod.) a město
+                <li>pokud jde o školu mimo ČR nebo SR (nebo světové metropole)
+                    <span class="text-decoration-line-through">hodí se do názvu doplnit i zkrácené označení státu</span>
+                <li>pokud je (předokládá se) více školy daného typu v daném městě doplnit i ulici anebo
+                    oficiální název (případně zkrácený)
+            </ul>
+            <h3>Adresa</h3>
+            <ul>
+                <li> pokud je známo/podaří se vygooglit, hodí se pro korespondenci na školy (případně doplnit
+                    lazy)
+            </ul>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            {control form}
+        </div>
+    </div>
+
+{/block}

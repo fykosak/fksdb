@@ -5,26 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\AddressService;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 class SchoolFactory
 {
-
-    private SchoolProvider $schoolProvider;
     private AddressService $addressService;
     private Container $container;
 
-    public function __construct(SchoolProvider $schoolProvider, AddressService $addressService, Container $container)
+    public function __construct(AddressService $addressService, Container $container)
     {
-        $this->schoolProvider = $schoolProvider;
         $this->addressService = $addressService;
         $this->container = $container;
     }
@@ -75,20 +71,8 @@ class SchoolFactory
         return $container;
     }
 
-    /**
-     * @phpstan-return AutocompleteSelectBox<SchoolProvider>
-     */
-    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox
+    public function createSchoolSelect(bool $showUnknownSchoolHint = true): SchoolSelectField
     {
-        /** @phpstan-var AutocompleteSelectBox<SchoolProvider> $schoolElement */
-        $schoolElement = new AutocompleteSelectBox(true, _('School'));
-        $schoolElement->setDataProvider($this->schoolProvider);
-        if ($showUnknownSchoolHint) {
-            $schoolElement->setOption(
-                'description',
-                sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz')
-            );
-        }
-        return $schoolElement;
+        throw new GoneException();
     }
 }
