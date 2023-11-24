@@ -16,7 +16,7 @@ class SchoolSelectField extends AutocompleteSelectBox
 {
     public function __construct(SchoolProvider $schoolProvider, LinkGenerator $linkGenerator)
     {
-        parent::__construct(true, _('School'));
+        parent::__construct(true, _('School'), 'school');
         $this->setDataProvider($schoolProvider);
         $link = $linkGenerator->link('Core:School:create');
         $this->setOption(

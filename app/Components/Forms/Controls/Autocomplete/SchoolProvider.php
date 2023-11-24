@@ -8,10 +8,13 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
+/**
+ * @phpstan-type TItem array{label:string,value:int,html:string}
+ */
 class SchoolProvider implements FilteredDataProvider
 {
-
     private const LIMIT = 50;
 
     private SchoolService $schoolService;
@@ -67,13 +70,13 @@ class SchoolProvider implements FilteredDataProvider
         return $result;
     }
 
-    public function getItemLabel(int $id): string
+    public function getItemLabel(int $id): array
     {
         $school = $this->schoolService->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
         }
-        return $school->name_abbrev;
+        return $this->getItem($school);
     }
 
     /**
@@ -85,12 +88,13 @@ class SchoolProvider implements FilteredDataProvider
     }
 
     /**
-     * @phpstan-return array{label:string,value:int}
+     * @phpstan-return TItem
      */
     private function getItem(SchoolModel $school): array
     {
         return [
-            'label' => $school->name_abbrev,
+            'label' => $school->label()->toText(),
+            'html' => $school->label()->toHtml(),
             'value' => $school->school_id,
         ];
     }

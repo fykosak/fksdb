@@ -19,8 +19,6 @@ class SchoolColumnFactory extends AbstractColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')
-            ->addText($model->name_abbrev . ', ' . $model->address->city . ' (' . $model->address->country->name . ')')
-            ->addHtml($model->address->country->getHtmlFlag('ms-2'));
+        return $model->label();
     }
 }

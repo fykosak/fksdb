@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
+use Nette\Utils\Html;
 
 /**
  * @property-read int $school_id
@@ -36,6 +37,13 @@ final class SchoolModel extends Model implements Resource
     public function isCzSk(): bool
     {
         return in_array($this->address->country->alpha_2, ['CZ', 'SK']);
+    }
+
+    public function label(): Html
+    {
+        return Html::el('span')
+            ->addText($this->name_abbrev . ', ' . $this->address->city . ' (' . $this->address->country->name . ')')
+            ->addHtml($this->address->country->getHtmlFlag('ms-2'));
     }
 
     /**
