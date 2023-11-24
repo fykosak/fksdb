@@ -23,7 +23,10 @@ class SchoolSelectField extends AutocompleteSelectBox
         $this->setOption(
             'description',
             Html::el()->addText(_('If you cannot find the school, you can add it on '))->addHtml(
-                Html::el('a')->setAttribute('href', $link)->setText($link)
+                Html::el('a')
+                    ->setAttribute('href', $link)
+                    ->setAttribute('target', '_blank')
+                    ->setText($link)
             )
         );
     }

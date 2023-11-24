@@ -24,6 +24,16 @@ class SchoolPresenter extends BasePresenter
         return new PageTitle(null, _('Create school'));
     }
 
+    public function authorizedSuccess(): bool
+    {
+        return true;
+    }
+
+    public function titleSuccess(): PageTitle
+    {
+        return new PageTitle(null, _('Your school has been successfully added!'));
+    }
+
     protected function createComponentForm(): PublicSchoolForm
     {
         return new PublicSchoolForm($this->getContext());
