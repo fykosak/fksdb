@@ -51,7 +51,7 @@ class TeacherTransitionMail extends MailCallback
         }
         return [
             'subject' => $subject,
-            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
+            'blind_carbon_copy' => 'Fyziklani <fyziklani@fykos.cz>',
             'sender' => $sender,
         ];
     }
