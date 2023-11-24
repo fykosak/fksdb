@@ -46,9 +46,6 @@ class PersonProvider implements FilteredDataProvider
             ]);
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);

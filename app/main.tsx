@@ -193,7 +193,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const defaultValue: number = this.element.val();
             const defaultData: TData = this.element.data('ac-default');
             const renderMethod = this.element.data('ac-render-method');
-            console.log(defaultData);
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));

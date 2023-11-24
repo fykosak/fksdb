@@ -12,7 +12,7 @@ interface FilteredDataProvider extends DataProvider
 {
 
     /**
-     * @phpstan-return array<int,array<string,scalar>> see parent + filtered by the user input
+     * @phpstan-return array<int,TItem> see parent + filtered by the user input
      */
     public function getFilteredItems(?string $search): array;
 }

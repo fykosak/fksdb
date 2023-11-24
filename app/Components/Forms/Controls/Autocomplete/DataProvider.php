@@ -15,7 +15,7 @@ interface DataProvider
     public function getItems(): array;
 
     /**
-     * @return TItem
+     * @phpstan-return TItem
      */
     public function getItemLabel(int $id): array;
 

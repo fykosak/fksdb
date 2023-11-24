@@ -8,10 +8,10 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * @phpstan-type TItem array{label:string,value:int,html:string}
+ * @phpstan-implements FilteredDataProvider<TItem>
  */
 class SchoolProvider implements FilteredDataProvider
 {
@@ -32,9 +32,6 @@ class SchoolProvider implements FilteredDataProvider
         $this->schoolService = $schoolService;
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);
