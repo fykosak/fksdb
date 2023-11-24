@@ -100,12 +100,13 @@ final class PublicSchoolForm extends EntityFormComponent
         $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
         $address = $handler->store($schoolData['address']);
         $schoolData['address_id'] = $address->address_id;
+        $schoolData['verified'] = false;
         $this->schoolService->storeModel($schoolData);
         $this->getPresenter()->flashMessage(
             _('School has been created'),
             Message::LVL_SUCCESS
         );
-        $this->getPresenter()->redirect('list');
+        $this->getPresenter()->redirect('success');
     }
 
     protected function setDefaults(Form $form): void

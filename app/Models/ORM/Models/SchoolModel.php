@@ -23,6 +23,7 @@ use Nette\Utils\Html;
  * @property-read int $study_h
  * @property-read int $study_p
  * @property-read int $study_u
+ * @property-read int $verified
  */
 final class SchoolModel extends Model implements Resource
 {

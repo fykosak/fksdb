@@ -45,7 +45,7 @@ class AutocompleteSelectBox extends TextBase
     {
         parent::__construct($label);
 
-        $this->monitor(BasePresenter::class, function (BasePresenter $provider) {
+        $this->monitor(BasePresenter::class, function (BasePresenter $provider): void {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
                 $name = $this->lookupPath(BasePresenter::class);

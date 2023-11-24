@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 
 /**
@@ -27,7 +28,12 @@ class SchoolProvider implements FilteredDataProvider
      */
     private $defaultValue;
 
-    public function __construct(SchoolService $schoolService)
+    public function __construct(Container $container)
+    {
+        $container->callInjects($this);
+    }
+
+    public function inject(SchoolService $schoolService): void
     {
         $this->schoolService = $schoolService;
     }

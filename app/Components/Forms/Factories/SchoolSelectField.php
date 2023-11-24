@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Application\LinkGenerator;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
@@ -14,10 +15,10 @@ use Nette\Utils\Html;
  */
 class SchoolSelectField extends AutocompleteSelectBox
 {
-    public function __construct(SchoolProvider $schoolProvider, LinkGenerator $linkGenerator)
+    public function __construct(Container $container, LinkGenerator $linkGenerator)
     {
         parent::__construct(true, _('School'), 'school');
-        $this->setDataProvider($schoolProvider);
+        $this->setDataProvider(new SchoolProvider($container));
         $link = $linkGenerator->link('Core:School:create');
         $this->setOption(
             'description',

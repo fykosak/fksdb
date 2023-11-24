@@ -15,7 +15,7 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Resource;
 
-final class SchoolPresenter extends BasePresenter
+final class SchoolsPresenter extends BasePresenter
 {
     /** @phpstan-use EntityPresenterTrait<SchoolModel> */
     use EntityPresenterTrait;
@@ -27,7 +27,7 @@ final class SchoolPresenter extends BasePresenter
         $this->schoolService = $schoolService;
     }
 
-    public function titleList(): PageTitle
+    public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Schools'), 'fas fa-school');
     }

@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
@@ -21,19 +25,43 @@ class SchoolFormComponent extends EntityFormComponent
     public const CONT_SCHOOL = 'school';
 
     private SchoolService $schoolService;
-    private SchoolFactory $schoolFactory;
+    private AddressService $addressService;
+    private SingleReflectionFormFactory $reflectionFormFactory;
 
     final public function injectPrimary(
-        SchoolFactory $schoolFactory,
-        SchoolService $schoolService
+        AddressService $addressService,
+        SchoolService $schoolService,
+        SingleReflectionFormFactory $reflectionFormFactory
     ): void {
-        $this->schoolFactory = $schoolFactory;
+        $this->addressService = $addressService;
         $this->schoolService = $schoolService;
+        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     protected function configureForm(Form $form): void
     {
-        $form->addComponent($this->schoolFactory->createContainer(), self::CONT_SCHOOL);
+        $container = $this->reflectionFormFactory->createContainerWithMetadata('school', [
+            'name_full' => ['required' => false],
+            'name' => ['required' => true],
+            'name_abbrev' => ['required' => true],
+            'email' => ['required' => false],
+            'ic' => ['required' => false],
+            'izo' => ['required' => false],
+            'note' => ['required' => false],
+            'active' => ['required' => false],
+            'study_h' => ['required' => false],
+            'study_p' => ['required' => false],
+            'study_u' => ['required' => false],
+            'verified' => ['required' => false],
+        ]);
+        $address = new ReferencedId(
+            new AddressSearchContainer($this->container),
+            new AddressDataContainer($this->container, false, true),
+            $this->addressService,
+            new AddressHandler($this->container)
+        );
+        $container->addComponent($address, 'address_id');
+        $form->addComponent($container, self::CONT_SCHOOL);
     }
 
     protected function getTemplatePath(): string

@@ -37,7 +37,6 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @throws BadTypeException|\ReflectionException
      * @phpstan-param string[] $fields
      */
     protected function addSimpleReferencedColumns(array $fields): void
