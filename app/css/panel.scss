@@ -1,9 +1,9 @@
 .panel {
-  padding: 4.3rem 0;
+  padding: 2rem 0;
   background-color: rgba(var(--panel-bg-rgb), 0.95);
 
   &:first-of-type {
-    padding: .5rem 0;
+    padding-top: .5rem;
   }
 
   &.panel-dark, &.color-auto:nth-of-type(2n) {
@@ -25,6 +25,9 @@
 
   h1, h2 {
     font-weight: 600;
+    .badge{
+      font-size: .5em;
+    }
   }
 
   h2 {

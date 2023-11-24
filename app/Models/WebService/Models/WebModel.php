@@ -15,8 +15,8 @@ use Nette\SmartObject;
 use Tracy\Debugger;
 
 /**
- * @phpstan-template ParamsType of array
- * @phpstan-template ReturnType of array
+ * @phpstan-template TParams of array
+ * @phpstan-template TReturn of array
  */
 abstract class WebModel
 {
@@ -57,8 +57,8 @@ abstract class WebModel
 
     /**
      * @throws GoneException
-     * @phpstan-param ParamsType $params
-     * @phpstan-return ReturnType
+     * @phpstan-param TParams $params
+     * @phpstan-return TReturn
      */
     protected function getJsonResponse(array $params): array
     {
@@ -66,7 +66,7 @@ abstract class WebModel
     }
 
     /**
-     * @phpstan-param ParamsType $arguments
+     * @phpstan-param TParams $arguments
      * @throws GoneException
      * @throws NotImplementedException
      */
@@ -86,8 +86,8 @@ abstract class WebModel
 
     /**
      * @throws NotImplementedException
-     * @phpstan-param ParamsType $arguments
-     * @phpstan-return ParamsType
+     * @phpstan-param TParams $arguments
+     * @phpstan-return TParams
      */
     final public function processArguments(array $arguments): array
     {

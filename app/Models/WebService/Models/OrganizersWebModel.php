@@ -12,9 +12,10 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends WebModel<array{
- *     contest_id:int,
+ *     contest_id?:int,
+ *     contestId?:int,
  *     year?:int|null,
- * },array<string|int,mixed>>
+ * },array<mixed>>
  */
 class OrganizersWebModel extends WebModel
 {
@@ -70,7 +71,7 @@ class OrganizersWebModel extends WebModel
 
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->contestService->findByPrimary($params['contest_id']);
+        $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
         $organizers = $contest->getOrganizers();
         if (isset($params['year'])) {
             $organizers->where('since<=?', $params['year'])
@@ -79,10 +80,7 @@ class OrganizersWebModel extends WebModel
         $items = [];
         /** @var OrganizerModel $organizer */
         foreach ($organizers as $organizer) {
-            $items[] = [
-                'name' => $organizer->person->getFullName(),
-                'personId' => $organizer->person_id,
-                'email' => $organizer->person->getInfo()->email,
+            $items[] = array_merge($organizer->person->__toArray(), [
                 'academicDegreePrefix' => $organizer->person->getInfo()->academic_degree_prefix,
                 'academicDegreeSuffix' => $organizer->person->getInfo()->academic_degree_suffix,
                 'career' => $organizer->person->getInfo()->career,
@@ -93,7 +91,7 @@ class OrganizersWebModel extends WebModel
                 'until' => $organizer->until,
                 'texSignature' => $organizer->tex_signature,
                 'domainAlias' => $organizer->domain_alias,
-            ];
+            ]);
         }
         return $items;
     }
@@ -101,7 +99,8 @@ class OrganizersWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contest_id' => Expect::scalar()->castTo('int')->required(),
+            'contestId' => Expect::scalar()->castTo('int'),
+            'contest_id' => Expect::scalar()->castTo('int'),
             'year' => Expect::scalar()->castTo('int')->nullable(),
         ]);
     }

@@ -9,14 +9,12 @@ use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends BaseGrid<EventModel>
+ * @phpstan-extends BaseGrid<EventModel,array{}>
  */
 class NewApplicationsGrid extends BaseGrid
 {
@@ -45,31 +43,20 @@ class NewApplicationsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->addColumns([
-            'event.name',
-            'contest.contest',
+        $this->addSimpleReferencedColumns([
+            '@event.name',
+            '@contest.contest',
         ]);
         $button = new Button(
             $this->container,
             $this->getPresenter(),
             new Title(null, _('Create application')),
             fn(EventModel $event): array => $event->isTeamEvent()
-                ? [':Event:TeamApplication:create', ['eventId' => $event->event_id]]
+                ? [':Event:Team:create', ['eventId' => $event->event_id]]
                 : [':Public:Application:default', ['eventId' => $event->event_id]],
             null,
-            function (EventModel $modelEvent): bool {
-                try {
-                    return (bool)count(
-                        $this->eventDispatchFactory->getParticipantMachine($modelEvent)->getAvailableTransitions(
-                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::from(Machine::STATE_INIT)
-                        )
-                    );
-                } catch (\Throwable $exception) {
-                    return true;
-                }
-            }
+            fn(EventModel $modelEvent): bool => $modelEvent->isRegistrationOpened()
         );
-        $this->addButton($button, 'create');
+        $this->addTableButton($button, 'create');
     }
 }

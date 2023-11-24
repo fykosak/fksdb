@@ -20,7 +20,6 @@ use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\Submits\QuizHandler;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -64,7 +63,7 @@ class QuizComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('save', _('Save'));
+        return $form->addSubmit('save', _('button.save'));
     }
 
     protected function configureForm(Form $form): void
@@ -111,7 +110,7 @@ class QuizComponent extends FormComponent
                 /** @phpstan-var ReferencedId<PersonModel> $referencedId */
                 $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
                 $person = $referencedId->getModel();
-                $contestant = $person->getContestantByContestYear($this->task->getContestYear());
+                $contestant = $person->getContestant($this->task->getContestYear());
                 // if person is not a contestant in the contest year, create him
                 $strategy = ResultsModelFactory::findEvaluationStrategy(
                     $this->getContext(),
@@ -146,7 +145,7 @@ class QuizComponent extends FormComponent
 
             $this->flashMessage(_('Submitted'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage($exception->getMessage());

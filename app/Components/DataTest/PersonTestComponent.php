@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -37,21 +38,33 @@ class PersonTestComponent extends BaseComponent
         $this->dataTestFactory = $dataTestFactory;
     }
 
+    /**
+     * @phpstan-return array<string,Test<PersonModel>>
+     */
+    public function getAllTests(): array
+    {
+        $tests = [];
+        foreach ($this->dataTestFactory->getPersonTests() as $test) {
+            $tests[$test->getId()] = $test;
+        }
+        return $tests;
+    }
+
     protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('offset', _('Offset'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->offset);
         $form->addText('limit', _('Limit'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->limit);
 
         $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->dataTestFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->getTitle()->title);
+        foreach ($this->dataTestFactory->getPersonTests() as $test) {
+            $field = $testsContainer->addCheckbox($test->getId(), $test->getTitle()->toHtml());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -71,7 +84,7 @@ class PersonTestComponent extends BaseComponent
             $this->tests = [];
             foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
-                    $this->tests[$testId] = $this->dataTestFactory->getTests('person')[$testId];
+                    $this->tests[$testId] = $this->getAllTests()[$testId];
                 }
             }
             $this->offset = $values['offset'];
@@ -100,7 +113,7 @@ class PersonTestComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'tests' => $this->dataTestFactory->getTests('person'),
+            'tests' => $this->getAllTests(),
             'logs' => $this->calculateProblems(),
         ]);
     }

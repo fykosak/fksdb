@@ -8,12 +8,13 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends BaseGrid<EmailMessageModel>
+ * @phpstan-extends BaseGrid<EmailMessageModel,array{}>
  */
-class EmailsGrid extends BaseGrid
+final class EmailsGrid extends BaseGrid
 {
     private EmailMessageService $service;
 
@@ -36,14 +37,22 @@ class EmailsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'email_message.email_message_id',
-            'email_message.recipient',
-            'person.full_name',
-            'email_message.subject',
-            'email_message.state',
-        ]);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@email_message.email_message_id',
+            '@email_message.recipient',
+            '@person.full_name',
+            '@email_message.subject',
+            '@email_message.state',
+        ]);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'email_message_id']
+        );
     }
 }

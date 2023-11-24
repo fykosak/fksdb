@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @template TModel of Model

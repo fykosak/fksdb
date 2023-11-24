@@ -7,12 +7,17 @@ interface OwnProps {
     translator: Translator;
 }
 
-export default function PricePrinter( {price: {EUR, CZK}, translator} : OwnProps) {
-    if ((!EUR || +EUR.amount === 0) && (!CZK || +CZK.amount === 0)) {
+export default function PricePrinter({price, translator}: OwnProps) {
+
+    const labels = [];
+    if (Object.hasOwn(price, 'CZK')) {
+        labels.push(<span className="me-2">{price.CZK.amount} Kč</span>)
+    }
+    if (Object.hasOwn(price, 'EUR')) {
+        labels.push(<span className="me-2">{price.EUR.amount} €</span>)
+    }
+    if (!labels.length) {
         return <span>{translator.getText('for free')}</span>;
     }
-    if (+EUR.amount === 0) {
-        return <span>{CZK.amount} Kč</span>;
-    }
-    return <span>{EUR.amount} €/{CZK.amount} Kč</span>;
+    return <span>{labels}</span>;
 }

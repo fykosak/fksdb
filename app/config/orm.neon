@@ -39,7 +39,7 @@ orm:
                 params:
                    contestId: contest_id
                    id: contestant_id
-                title: _('Edit')
+                title: _('button.contestant.edit')
     contest_year:
         service: FKSDB\Models\ORM\Services\ContestYearService
         model: FKSDB\Models\ORM\Models\ContestYearModel
@@ -184,13 +184,13 @@ orm:
                 params:
                     eventId: event_id
                     id: e_org_id
-                title: _('Edit')
+                title: _('button.eventOrg.edit')
             detail:
                 destination: :Event:EventOrganizer:detail
                 params:
                     eventId: event_id
                     id: e_org_id
-                title: _('Detail')
+                title: _('button.eventOrg.detail')
     event_participant:
         service: FKSDB\Models\ORM\Services\EventParticipantService
         model: FKSDB\Models\ORM\Models\EventParticipantModel
@@ -261,13 +261,13 @@ orm:
                 params:
                     eventId: event_id
                     id: event_participant_id
-                title: _('Applications detail')
+                title: _('button.eventParticipant.detail')
             edit:
                 destination: :Public:Application:default
                 params:
                     eventId: event_id
                     id: event_participant_id
-                title: _('Edit application')
+                title: _('button.eventParticipant.edit')
     event_type:
         service: FKSDB\Models\ORM\Services\EventTypeService
         model: FKSDB\Models\ORM\Models\EventTypeModel
@@ -331,19 +331,27 @@ orm:
             role:
                 type: string
                 title: _('Role')
+            allow_wiki:
+                type: bool
+                title: _('Allow wiki login')
+                description: _('Allow login in to internal wiki before or after period of active orgnize')
+            allow_pm:
+                type: bool
+                title: _('Allow PM login')
+                description: _('Allow login in to Problem manager before or after period of active orgnize')
         links:
             detail:
                 destination: :Organizer:Organizer:detail
                 params:
                     contestId: contest_id
                     id: org_id
-                title: _('Detail')
+                title: _('button.organizer.detail')
             edit:
                 destination: :Organizer:Organizer:edit
                 params:
                     contestId: contest_id
                     id: org_id
-                title: _('Edit')
+                title: _('button.organizer.edit')
     payment:
         service: FKSDB\Models\ORM\Services\PaymentService
         model: FKSDB\Models\ORM\Models\PaymentModel
@@ -397,15 +405,11 @@ orm:
                 params:
                       eventId: event_id
                       id: payment_id
-                title: _('Detail')
+                title: _('button.payment.detail')
     person:
         service: FKSDB\Models\ORM\Services\PersonService
         model: FKSDB\Models\ORM\Models\PersonModel
         columns:
-            person_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkColumnFactory
-                title: _('Person')
             full_name:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameColumnFactory
@@ -440,6 +444,13 @@ orm:
                 type: string
                 title: _('Other name')
                 permission: BASIC
+        links:
+            detail:
+                destination: :Organizer:Person:detail
+                params:
+                    id: person_id
+                title: _('button.person.detail')
+                icon: 'fas fa-user'
     person_has_flag:
         service: FKSDB\Models\ORM\Services\PersonHasFlagService
         model: FKSDB\Models\ORM\Models\PersonHasFlagModel
@@ -567,15 +578,15 @@ orm:
                 permission: BASIC
             note:
                 type: string
-                title: _('Poznámka')
+                title: _('Note')
                 permission: BASIC
             academic_degree_prefix:
                 type: string
-                title: _('Titul před jménem')
+                title: _('Pre-nominal title')
                 permission: RESTRICT
             academic_degree_suffix:
                 type: string
-                title: _('Titul za jménem')
+                title: _('Post-nominal title')
                 permission: RESTRICT
             pizza:
                 type: string
@@ -636,12 +647,14 @@ orm:
                   destination: :Organizer:School:edit
                   params:
                       id: school_id
-                  title: _('Edit')
+                  title: _('button.school.edit')
+                  icon: 'fas fa-pencil'
             detail:
                   destination: :Organizer:School:detail
                   params:
                       id: school_id
-                  title: _('Detail')
+                  title: _('button.school.detail')
+                  icon: 'fas fa-school'
     study_year:
         service: FKSDB\Models\ORM\Services\StudyYearService
         model: FKSDB\Models\ORM\Models\StudyYearModel
@@ -716,12 +729,14 @@ orm:
                 destination: :Organizer:Teacher:edit
                 params:
                     id: teacher_id
-                title: _('Edit')
+                title: _('button.teacher.edit')
+                icon: 'fas fa-chalkboard-teacher'
             detail:
                 destination: :Organizer:Teacher:detail
                 params:
                     id: teacher_id
-                title: _('Detail')
+                title: _('button.teacher.detail')
+                icon: 'fas fa-pencil'
 #fyziklani
     fyziklani_room:
         service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
@@ -858,13 +873,17 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                 title: _('Submit opened?')
+            origin:
+                type: text
+                title: _('How did you come to know about us?') # TODO
         links:
             detail:
-                destination: :Event:TeamApplication:detail
+                destination: :Event:Team:detail
                 params:
                     eventId: event_id
                     id: fyziklani_team_id
-                title: _('Detail')
+                title: _('button.team.detail')
+                icon: 'fas fa-users'
     fyziklani_team_member:
         service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
         model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
@@ -916,6 +935,17 @@ orm:
             modification_end:
                 type: dateTime
                 title: _('Modification end')
+        links:
+            detail:
+                destination: :Schedule:Group:detail
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.detail')
+            edit:
+                destination: :Schedule:Group:edit
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.edit')
     schedule_item:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleItemService
         model: FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel
@@ -962,6 +992,21 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                 title: _('Used capacity')
+            capacity_progress:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\CapacityProgress
+                title: _('Progress bar')
+        links:
+            detail:
+                destination: :Schedule:Item:detail
+                params:
+                    id: schedule_item_id
+                title: _('button.scheduleItem.detail')
+            edit:
+                destination: :Schedule:Item:edit
+                params:
+                    id: schedule_item_id
+                title: _('button.scheduleItem.edit')
     schedule_payment:
         service: FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService
         model: FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel

@@ -34,8 +34,8 @@
     "setasign/fpdf": "v1.8.6",
     "setasign/fpdi": "v2.4.1",
     "league/oauth2-google": "v3.0.3",
-    "fykosak/nette-orm": "^v0.4.1",
-    "fykosak/nette-fks-utils": "^v0.1.1",
+    "fykosak/nette-orm": "^v0.4.4",
+    "fykosak/nette-fks-utils": "^v0.1.2",
     "fykosak/nette-frontend-component": "dev-dev-74#1f6b66f "
   },
   "require-dev": {
@@ -88,7 +88,7 @@
     "testPHPStan": [
       "vendor/bin/phpstan analyse -c phpstan.neon"
     ],
-    "testPHPStanClaer": [
+    "testPHPStanClear": [
       "vendor/bin/phpstan clear-result-cache"
     ]
   }

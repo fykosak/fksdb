@@ -9,11 +9,11 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ProductModel>
+ * @phpstan-extends BaseGrid<ProductModel,array{}>
  */
 class ProductsFromProducerGrid extends BaseGrid
 {
@@ -39,11 +39,11 @@ class ProductsFromProducerGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'warehouse_product.product_id',
-            'warehouse_product.name_cs',
-            'warehouse_product.name_en',
-            'warehouse_product.category',
+        $this->addSimpleReferencedColumns([
+            '@warehouse_product.product_id',
+            '@warehouse_product.name_cs',
+            '@warehouse_product.name_en',
+            '@warehouse_product.category',
         ]);
     }
 }

@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-type TData array{

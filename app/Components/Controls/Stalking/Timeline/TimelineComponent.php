@@ -65,7 +65,8 @@ class TimelineComponent extends FrontEndComponent
         /** @var OrganizerModel $organizer */
         foreach ($this->person->getOrganizers() as $organizer) {
             $since = new \DateTime(
-                $organizer->contest->getContestYear($organizer->since)->ac_year . '-' . ContestYearService::FIRST_AC_MONTH . '-1'
+                $organizer->contest->getContestYear($organizer->since)->ac_year . '-' .
+                ContestYearService::FIRST_AC_MONTH . '-1'
             );
             $until = new \DateTime();
             if ($organizer->until) {
@@ -133,7 +134,7 @@ class TimelineComponent extends FrontEndComponent
         }
         $eventTeachers = [];
         /** @var TeamTeacherModel $teacher */
-        foreach ($this->person->getFyziklaniTeachers() as $teacher) {
+        foreach ($this->person->getTeamTeachers() as $teacher) {
             $eventTeachers[] = [
                 'event' => $teacher->fyziklani_team->event->__toArray(),
                 'model' => null,

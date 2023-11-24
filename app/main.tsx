@@ -24,6 +24,7 @@ import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo'
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
+import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
 
 const translator = new Translator();
 
@@ -69,6 +70,7 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainCom
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.submits.per-series', SubmitsPerSeries, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Timeline, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
@@ -85,9 +87,27 @@ renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {t
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
 
-
 window.addEventListener('DOMContentLoaded', () => {
 
+    document.querySelectorAll('.referenced-container').forEach((fieldSet: HTMLFieldSetElement) => {
+        const button: HTMLButtonElement | null = fieldSet.querySelector('.container-toggle');
+        if (button) {
+            const getIcon = () => {
+                if (button.getAttribute('aria-expanded') === 'true') {
+                    button.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
+                } else {
+                    button.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+                }
+            };
+            button.addEventListener('click', getIcon);
+            getIcon();
+            console.log(button.parentElement.querySelectorAll('.has-error'));
+            if (fieldSet.querySelectorAll('.has-error').length && button.getAttribute('aria-expanded') === 'false') {
+                button.click();
+            }
+        }
+
+    });
 // @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options
@@ -158,98 +178,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
-
-// @ts-ignore
-    $.widget('fks.referencedContainer', {
-// default options
-        options: {},
-        _create: function () {
-            const container = this.element as JQuery<HTMLElement>;
-            const $searchInput = container.find('input[name*=\'_c_search\'][type!=\'hidden\']');
-            const $compactValueInput = container.find('input[name*=\'_c_compact\']');
-            const $clearButton = container.find('input[type=\'submit\'][name*=\'__clear\']');
-            let compacted: JQuery<HTMLDivElement> | null = null;
-
-            //  const options = this.options;
-
-            function decompactifyContainer(): void {
-                if (compacted !== null) {
-                    compacted.hide();
-                }
-                container.show();
-            }
-
-            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLDivElement> {
-                const compactGroup = document.createElement('div');
-                const ReEl = () => {
-                    return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
-                        <h4>{label}</h4>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
-                            </div>
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary"
-                                    title={translator.getText('Edit')}
-                                    onClick={() => {
-                                        decompactifyContainer();
-                                    }}>
-                                    <span className="fas fa-pen me-3"/>
-                                    {translator.getText('Edit')}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-warning"
-                                    title={translator.getText('Delete')}
-                                    onClick={() => {
-                                        $clearButton.click();
-                                    }}>
-                                    <span className="fas fa-times me-3"/>
-                                    {translator.getText('Delete')}
-                                </button>
-                            </div>
-                        </div>
-                    </fieldset>;
-                }
-                const root = createRoot(compactGroup);
-                root.render(<ReEl/>, compactGroup);
-                return $(compactGroup);
-            }
-
-
-            function compactifyContainer(): void {
-
-                if (compacted === null) {
-                    const label = container.find('> fieldset > h4').text();
-                    const value = $compactValueInput.val();
-                    compacted = createCompactField(label, value);
-                    compacted.insertAfter(container);
-                    //elContainer.find('legend').click(compactifyContainer);
-                    //decorateClearButton(); //in original container
-                }
-                compacted.show();
-                container.hide();
-            }
-
-            const hasAnyFields = container.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
-                return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
-            });
-
-            const hasErrors = container.find('.has-error');
-
-            if ($searchInput.length) {
-                // searchifyContainer();
-            } else if ($clearButton.length && !(hasAnyFields.length || hasErrors.length)) {
-                compactifyContainer();
-            } else if ($clearButton.length && (hasAnyFields.length || hasErrors.length)) {
-                // decorateClearButton();
-            }
-        },
-    });
-    // @ts-ignore
-    $('[data-referenced]').referencedContainer();
 
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {

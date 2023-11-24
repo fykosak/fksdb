@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**

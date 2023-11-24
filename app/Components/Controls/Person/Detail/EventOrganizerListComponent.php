@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\Container\RowContainer;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends DetailComponent<EventOrganizerModel>
+ * @phpstan-extends DetailComponent<EventOrganizerModel,array{}>
  */
 class EventOrganizerListComponent extends DetailComponent
 {
@@ -43,28 +42,30 @@ class EventOrganizerListComponent extends DetailComponent
     {
         $this->classNameCallback = fn(EventOrganizerModel $model) => 'alert alert-' .
             $model->event->event_type->getSymbol();
-        /** @phpstan-var RowContainer<EventOrganizerModel> $row0 */
-        $row0 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row0, 'row0');
-        $row0->addComponent(new TemplateItem($this->container, '@event.name', '@event.name:title'), 'event__name');
+        $row0 = $this->createRow();
+        $row0->addComponent(new SimpleItem($this->container, '@event.name'), 'event__name');
         $row0->addComponent(
-            new TemplateItem($this->container, '@event.event_type', '@event.event_type:title'),
+            new SimpleItem($this->container, '@event.event_type'),
             'event__type'
         );
-        /** @phpstan-var RowContainer<EventOrganizerModel> $row1 */
-        $row1 = new RowContainer($this->container, new Title(null, ''));
-        $this->addRow($row1, 'row1');
+        $row1 = $this->createRow();
         $row1->addComponent(
-            new TemplateItem($this->container, '@event_org.note', '@event_org.note:title'),
+            new SimpleItem($this->container, '@event_org.note'),
             'event_org_note'
         );
-        $this->addPresenterButton(':Event:EventOrganizer:edit', 'edit', _('Edit'), false, [
+        $this->addPresenterButton(':Event:EventOrganizer:edit', 'edit', new Title(null, _('button.edit')), false, [
             'eventId' => 'event_id',
             'id' => 'e_org_id',
         ]);
-        $this->addPresenterButton(':Event:EventOrganizer:detail', 'detail', _('Detail'), false, [
-            'eventId' => 'event_id',
-            'id' => 'e_org_id',
-        ]);
+        $this->addPresenterButton(
+            ':Event:EventOrganizer:detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            [
+                'eventId' => 'event_id',
+                'id' => 'e_org_id',
+            ]
+        );
     }
 }

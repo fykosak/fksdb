@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
@@ -36,5 +36,25 @@ final class SchoolModel extends Model implements Resource
     public function isCzSk(): bool
     {
         return in_array($this->address->country->alpha_2, ['CZ', 'SK']);
+    }
+
+    /**
+     * @phpstan-return array{
+     *     schoolId:int,
+     *     nameFull:string|null,
+     *     name:string,
+     *     nameAbbrev:string,
+     *     countryISO:string,
+     * }
+     */
+    public function __toArray(): array
+    {
+        return [
+            'schoolId' => $this->school_id,
+            'nameFull' => $this->name_full,
+            'name' => $this->name,
+            'nameAbbrev' => $this->name_abbrev,
+            'countryISO' => $this->address->country->alpha_2,
+        ];
     }
 }

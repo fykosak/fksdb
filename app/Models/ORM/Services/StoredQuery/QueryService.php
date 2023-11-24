@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
-use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-extends Service<QueryModel>

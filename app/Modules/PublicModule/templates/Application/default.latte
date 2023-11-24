@@ -1,7 +1,7 @@
 {block outerContent}
     <div class="container">
         {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-	    {ifset $model}
+        {ifset $model}
             {control columnTable ['event_participant.status'], $model,1024}<br>
         {/ifset}
         {control application:form}

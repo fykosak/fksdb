@@ -10,14 +10,14 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ContestantModel>
+ * @phpstan-extends BaseGrid<ContestantModel,array{}>
  */
-class ContestantsGrid extends BaseGrid
+final class ContestantsGrid extends BaseGrid
 {
     private ContestYearModel $contestYear;
 
@@ -41,12 +41,15 @@ class ContestantsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'person.full_name',
-            'contestant.contest_category',
-            'person_history.study_year_new',
+        $this->paginate = false;
+        $this->filtered = false;
+        $this->counter = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@contestant.contest_category',
+            '@person_history.study_year_new',
         ]);
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 function (ContestantModel $row) {
@@ -66,9 +69,13 @@ class ContestantsGrid extends BaseGrid
             'school_name',
         );
 
-        $this->addPresenterButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            'Contestant:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'contestant_id']
+        );
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
-
-        $this->paginate = false;
     }
 }

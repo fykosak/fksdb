@@ -9,12 +9,12 @@ use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<PersonModel>
+ * @phpstan-extends BaseGrid<PersonModel,array{}>
  */
 class PersonsGrid extends BaseGrid
 {
@@ -44,7 +44,7 @@ class PersonsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
@@ -52,7 +52,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_a'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
@@ -62,7 +62,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_b'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
@@ -73,7 +73,7 @@ class PersonsGrid extends BaseGrid
             ),
             'score'
         );
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this->getPresenter(),
@@ -89,7 +89,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeAB'
         );
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this->getPresenter(),
@@ -104,7 +104,7 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeBA'
         );
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this->getPresenter(),

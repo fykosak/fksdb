@@ -9,6 +9,7 @@ use FKSDB\Components\Charts\Contestants\ParticipantGeoChart;
 use FKSDB\Components\Charts\Contestants\PerSeriesChart;
 use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\Core\Chart;
+use FKSDB\Components\Charts\SubmitsPerSeriesChart;
 use FKSDB\Components\Charts\TotalPersonsChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -48,8 +49,6 @@ final class ChartPresenter extends BasePresenter
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws NoContestAvailable
-     * @throws NoContestAvailable
-     * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */
     protected function getCharts(): array
@@ -59,6 +58,7 @@ final class ChartPresenter extends BasePresenter
             'totalContestantsPerSeries' => new AggregatedSeriesChart($this->getContext(), $this->getSelectedContest()),
             'contestantsPerYears' => new PerYearsChart($this->getContext(), $this->getSelectedContest()),
             'totalPersons' => new TotalPersonsChart($this->getContext()),
+            'submitsPerSeries' => new SubmitsPerSeriesChart($this->getContext(), $this->getSelectedContestYear()),
             'geo' => new ParticipantGeoChart($this->getContext(), $this->getSelectedContestYear()),
         ];
     }

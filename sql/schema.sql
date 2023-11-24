@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     `event_id`              INT(11)       NOT NULL,
     `person_id`             INT(11)       NOT NULL,
     `note`                  TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
-    `status`                VARCHAR(20)   NOT NULL,
+    `status`                VARCHAR(20)   NOT NULL DEFAULT '__init',
     `created`               TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
     `accomodation`          TINYINT(1)    NULL     DEFAULT NULL,
     `diet`                  TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',
@@ -301,6 +301,8 @@ CREATE TABLE IF NOT EXISTS `org`
     `contribution`  TEXT         NULL DEFAULT NULL,
     `tex_signature` VARCHAR(32)  NULL DEFAULT NULL COMMENT 'zkratka používaná v TeXových vzorácích',
     `domain_alias`  VARCHAR(32)  NULL DEFAULT NULL COMMENT 'alias v doméně fykos.cz',
+    `allow_wiki`    BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do internej wiki aj po doorgovaní',
+    `allow_pm`      BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do PM aj po doorgovaní',
     UNIQUE INDEX `uq_org__contest_id` (`contest_id` ASC, `person_id` ASC),
     UNIQUE INDEX `uq_org__domain_alias` (`contest_id` ASC, `domain_alias` ASC),
     UNIQUE INDEX `uq_org__tex_signature` (`contest_id` ASC, `tex_signature` ASC),
@@ -590,6 +592,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
+        'arrived',
         'pending',
         'approved',
         'spare',
@@ -602,14 +605,16 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
     `note`              TEXT                       NULL     DEFAULT NULL,
+    `internal_note`     TEXT                       NULL     DEFAULT NULL,
     `password`          CHAR(40)                   NULL     DEFAULT NULL,
     `points`            INT(11)                    NULL     DEFAULT NULL,
     `rank_category`     INT(11)                    NULL     DEFAULT NULL,
     `rank_total`        INT(11)                    NULL     DEFAULT NULL,
     `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
-        COMMENT 'Game lang',
+    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL,
+    `origin`            TEXT                       NULL     DEFAULT NULL,
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -628,6 +633,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     `person_id`                INT NOT NULL,
     `fyziklani_team_id`        INT NOT NULL,
     INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_member__person`
         FOREIGN KEY (`person_id`)
@@ -650,6 +656,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `person_id`                 INT NOT NULL,
     `fyziklani_team_id`         INT NOT NULL,
     INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_teacher__person`
         FOREIGN KEY (`person_id`)
@@ -1093,12 +1100,14 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
+        'apparel',
+        'transport',
+        'ticket',
         'weekend',
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'apparal',
-        'transport'
+        'dsef_all_day'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
@@ -1123,17 +1132,18 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 (
     `schedule_item_id`    INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `schedule_group_id`   INT(11)        NOT NULL,
-    `price_czk`           DECIMAL(11, 2) NULL DEFAULT NULL,
-    `price_eur`           DECIMAL(11, 2) NULL DEFAULT NULL,
-    `name_cs`             VARCHAR(256)   NULL DEFAULT NULL,
-    `name_en`             VARCHAR(256)   NULL DEFAULT NULL,
-    `capacity`            INT(11)        NULL DEFAULT NULL,
-    `description_cs`      VARCHAR(256)   NULL DEFAULT NULL,
-    `description_en`      VARCHAR(256)   NULL DEFAULT NULL,
-    `long_description_cs` TEXT           NULl DEFAULT NULL COMMENT 'for web',
-    `long_description_en` TEXT           NULl DEFAULT NULL COMMENT 'for web',
-    `begin`               DATETIME       NULL DEFAULT NULL,
-    `end`                 DATETIME       NULL DEFAULT NULL,
+    `price_czk`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `price_eur`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `payable`             BOOL           NOT NULL DEFAULT FALSE,
+    `name_cs`             VARCHAR(256)   NULL     DEFAULT NULL,
+    `name_en`             VARCHAR(256)   NULL     DEFAULT NULL,
+    `capacity`            INT(11)        NULL     DEFAULT NULL,
+    `description_cs`      VARCHAR(256)   NULL     DEFAULT NULL,
+    `description_en`      VARCHAR(256)   NULL     DEFAULT NULL,
+    `long_description_cs` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
+    `long_description_en` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
+    `begin`               DATETIME       NULL     DEFAULT NULL,
+    `end`                 DATETIME       NULL     DEFAULT NULL,
     CONSTRAINT `fk_schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)
             REFERENCES `schedule_group` (`schedule_group_id`)

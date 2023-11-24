@@ -1,0 +1,15 @@
+{varType Fykosak\Utils\Logging\MemoryLogger $logger}
+<p>
+    Ahoj,<br/>
+    byly zjištěny tyto chyby, pokud je do 24 hodin neodstraníš, pošlu ti je znovu!!!
+</p>
+{foreach $logger->getMessages() as $message}
+    {if $message->level === Fykosak\Utils\Logging\Message::LVL_ERROR}
+        <p style="color:red">{$message->text}</p>
+    {else}
+        <p style="color: orange">{$message->text}</p>
+    {/if}
+{/foreach}
+<p>
+    Tvoje milovaná FKSDB
+</p>

@@ -15,11 +15,11 @@ class ContestBadge
         $component = Html::el('span');
         switch ($contest->contest_id) {
             case ContestModel::ID_FYKOS:
-                return $component->addAttributes(['class' => 'badge bg-fykos'])->addText(_('FYKOS'));
+                return $component->addAttributes(['class' => 'me-1 badge bg-fykos'])->addText(_('FYKOS'));
             case ContestModel::ID_VYFUK:
-                return $component->addAttributes(['class' => 'badge bg-vyfuk'])->addText(_('Výfuk'));
+                return $component->addAttributes(['class' => 'me-1 badge bg-vyfuk'])->addText(_('Výfuk'));
             case 3:
-                return $component->addAttributes(['class' => 'badge bg-ctyrboj'])->addText(_('Vědecký čtyřboj'));
+                return $component->addAttributes(['class' => 'me-1 badge bg-ctyrboj'])->addText(_('Vědecký čtyřboj'));
         }
         throw new \InvalidArgumentException(
             sprintf(_('Contest %d not found'), $contest->contest_id),

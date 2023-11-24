@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\UI\FlagBadge;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends FilterGrid<SchoolModel,array{
+ * @phpstan-extends BaseGrid<SchoolModel,array{
  *     term?:string,
  * }>
  */
-class SchoolsGrid extends FilterGrid
+final class SchoolsGrid extends BaseGrid
 {
     private SchoolService $service;
 
@@ -55,7 +55,10 @@ class SchoolsGrid extends FilterGrid
      */
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->filtered = true;
+        $this->paginate = true;
+        $this->counter = true;
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $school) => $school->name_full ?? $school->name,
@@ -63,7 +66,7 @@ class SchoolsGrid extends FilterGrid
             ),
             'full_name'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $school): Html => Html::el('span')
@@ -73,7 +76,7 @@ class SchoolsGrid extends FilterGrid
             ),
             'city'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SchoolModel $school): Html => Html::el('span')
@@ -83,7 +86,7 @@ class SchoolsGrid extends FilterGrid
             ),
             'active'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 function (SchoolModel $school): Html {
@@ -127,7 +130,7 @@ class SchoolsGrid extends FilterGrid
             'study'
         );
 
-        $this->addORMLink('school.edit');
-        $this->addORMLink('school.detail');
+        $this->addLink('school.edit');
+        $this->addLink('school.detail');
     }
 }

@@ -10,8 +10,9 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseList<TModel>
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseList<TModel,TFilterParams>
  */
 abstract class DetailComponent extends BaseList
 {

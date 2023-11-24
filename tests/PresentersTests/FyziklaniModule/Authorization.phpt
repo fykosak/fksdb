@@ -42,7 +42,7 @@ class Authorization extends FyziklaniTestCase
             'born' => DateTime::from('2000-01-01'),
         ], []);
 
-        $this->perOrganizer= $this->createPerson('Karkulka', 'Červená', [
+        $this->perOrganizer = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $person_history_id
@@ -22,7 +22,7 @@ final class PersonHistoryModel extends Model
      * @return StudyYear|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

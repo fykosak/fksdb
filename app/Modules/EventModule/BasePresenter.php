@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Choosers\EventChooserComponent;
+use FKSDB\Components\Controls\Choosers\EventChooser;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\ForbiddenRequestException;
@@ -42,11 +40,20 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
+     * @throws EventNotFoundException
+     */
+    protected function beforeRender(): void
+    {
+        parent::beforeRender();
+        $this->template->event = $this->getEvent();
+    }
+
+    /**
      * @param Resource|string|null $resource
      * Check if has contest permission or is Event organizer
      * @throws EventNotFoundException
      */
-    public function isAllowed($resource, ?string $privilege): bool
+    final public function isAllowed($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
@@ -54,19 +61,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function isEnabled(): bool
     {
         return true;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function getDummyHolder(): BaseHolder
-    {
-        static $holder;
-        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $holder;
     }
 
     /**
@@ -103,9 +97,9 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentEventChooser(): EventChooserComponent
+    protected function createComponentEventChooser(): EventChooser
     {
-        return new EventChooserComponent($this->getContext(), $this->getEvent());
+        return new EventChooser($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -114,5 +108,19 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function getNavRoots(): array
     {
         return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @phpstan-return string[]
+     */
+    public function formatTemplateFiles(): array
+    {
+        $files = parent::formatTemplateFiles();
+
+        return [
+            str_replace('.latte', '.' . $this->getEvent()->event_type->getSymbol() . '.latte', $files[0]),
+            ...$files,
+        ];
     }
 }

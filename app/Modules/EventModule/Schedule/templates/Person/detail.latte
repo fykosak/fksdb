@@ -1,0 +1,54 @@
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $model}
+{varType Fykosak\NetteORM\TypedGroupedSelection $otherSchedule}
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'schedule_item.name',
+            'schedule_group.name',
+            'schedule_item.price_czk',
+            'schedule_item.price_eur',
+            'payment.payment',
+            'person_schedule.state'
+            ], $model,1024}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Attendance'}</h2>
+            {control buttonTransition}
+        </div>
+    </div>
+    {foreach $schedule as $dateData}
+        <div class="panel color-auto">
+            <div class="container">
+                {foreach $dateData as $group}
+                    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+                    {if $iterator->isFirst()}
+                        <h2>
+                            {if $group->start->format('Y-d-m') === (new \DateTime())->format('Y-d-m')}
+                                {_'Today'}
+                            {else}
+                                {$group->start->format(_('__date'))}
+                            {/if}
+                        </h2>
+                    {/if}
+                {include group from './blocks.latte', person:$model->person,group:$group,displayTime:true}
+                    {if !$iterator->isLast()}
+                        <hr/>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Others group'}</h2>
+            {foreach $otherSchedule as $group}
+                {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+                {include group from './blocks.latte', person:$model->person,group:$group,displayTime:false}
+            {/foreach}
+        </div>
+    </div>
+{/block}

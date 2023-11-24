@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
@@ -13,8 +14,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -37,6 +38,7 @@ use Nette\Security\Resource;
  *      teamId:int,
  *      name:string,
  *      status:string,
+ *      code:string|null,
  *      category:string,
  *      created:string,
  *      phone:string|null,
@@ -140,7 +142,7 @@ final class TeamModel2 extends Model implements Resource
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
-        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
+        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
@@ -191,6 +193,15 @@ final class TeamModel2 extends Model implements Resource
         return $value;
     }
 
+    public function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this, $this->event->getSalt());
+        } catch (\Throwable $exception) {
+            return null;
+        }
+    }
+
     /**
      * @phpstan-return SerializedTeamModel
      */
@@ -199,6 +210,7 @@ final class TeamModel2 extends Model implements Resource
         return [
             'teamId' => $this->fyziklani_team_id,
             'name' => $this->name,
+            'code' => $this->createMachineCode(),
             'status' => $this->state->value,
             'category' => $this->category->value,
             'created' => $this->created->format('c'),

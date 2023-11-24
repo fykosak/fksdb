@@ -7,13 +7,13 @@ namespace FKSDB\Components\Grids\Components\Referenced;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Grids\Components\BaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class TemplateItem extends BaseItem
@@ -22,11 +22,9 @@ class TemplateItem extends BaseItem
     protected ?string $titleString;
     /** @phpstan-var (callable(TModel):TModelHelper)|null */
     protected $modelAccessorHelper = null;
-    protected ColumnRendererComponent $printer;
+    public ?Title $title;
 
     /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
      * @phpstan-param (callable(TModel):TModelHelper)|null $modelAccessorHelper
      */
     public function __construct(
@@ -35,13 +33,8 @@ class TemplateItem extends BaseItem
         ?string $titleString = null,
         ?callable $modelAccessorHelper = null
     ) {
-        $this->printer = new ColumnRendererComponent($container);
-        parent::__construct(
-            $container,
-            $titleString
-                ? new Title(null, $this->printer->renderToString($titleString, null, null))
-                : null
-        );
+        parent::__construct($container);
+        $this->titleString = $titleString;
         $this->templateString = $templateString;
         $this->modelAccessorHelper = $modelAccessorHelper;
     }
@@ -54,14 +47,22 @@ class TemplateItem extends BaseItem
     public function render(Model $model, int $userPermission): void
     {
         $model = isset($this->modelAccessorHelper) ? ($this->modelAccessorHelper)($model) : $model;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'template.latte', [
-            'title' => $this->title,
-            'html' => $this->printer->renderToString($this->templateString, $model, $userPermission),
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
+            'model' => $model,
+            'userPermission' => $userPermission,
+            'templateString' => $this->templateString,
         ]);
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
+    }
+
+    public function renderTitle(): void
+    {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'title.latte', [
+            'titleString' => $this->titleString,
+        ]);
     }
 }

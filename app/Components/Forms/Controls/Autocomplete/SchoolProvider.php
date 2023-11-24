@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 
 /**

@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
@@ -43,7 +42,7 @@ class SchoolFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     protected function handleFormSuccess(Form $form): void
     {

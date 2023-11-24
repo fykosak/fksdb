@@ -5,27 +5,26 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container as DIContainer;
+use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<TaskModel>
+ * @phpstan-extends BaseGrid<TaskModel,array{}>
  */
-class TaskGrid extends BaseGrid
+final class TaskGrid extends BaseGrid
 {
-
     private ContestYearModel $contestYear;
     private int $series;
 
-    public function __construct(DIContainer $container, ContestYearModel $contestYear, int $series)
+    public function __construct(Container $container, ContestYearModel $contestYear, int $series)
     {
         parent::__construct($container);
         $this->contestYear = $contestYear;
@@ -38,50 +37,59 @@ class TaskGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->paginate = false;
+        $this->counter = false;
+        $this->filtered = false;
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.label', '@task.label:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.label'),
             'label'
         );
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.name', '@task.name:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.name'),
             'name'
         );
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.points', '@task.points:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.points'),
             'points'
         );
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.submit_start', '@task.submit_start:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.submit_start'),
             'submit_start'
         );
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.submit_deadline', '@task.submit_deadline:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.submit_deadline'),
             'submit_deadline'
         );
         $this->addContributionField(TaskContributionType::from(TaskContributionType::SOLUTION));
         $this->addContributionField(TaskContributionType::from(TaskContributionType::AUTHOR));
         $this->addContributionField(TaskContributionType::from(TaskContributionType::GRADE));
-
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.average_points', '@task.average_points:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.average_points'),
             'average_points'
         );
-        $this->addColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@task.solvers_count', '@task.solvers_count:title'),
+        $this->addTableColumn(
+        /** @phpstan-ignore-next-line */
+            new SimpleItem($this->container, '@task.solvers_count'),
             'solvers_count'
         );
     }
 
     private function addContributionField(TaskContributionType $contributionType): void
     {
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 function (TaskModel $model) use ($contributionType) {

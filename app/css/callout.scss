@@ -1,18 +1,9 @@
-.bd-callout {
-  padding: 20px;
-  margin: 20px 0;
-  border: 1px solid #eee;
+.callout {
   border-left-width: 5px;
   border-radius: 3px;
   border-left-color: var(--fks-page-theme-color);
 
   h4 {
-    margin-top: 0;
-    margin-bottom: .25rem;
     color: var(--fks-page-theme-color);
-  }
-
-  p:last-child {
-    margin-bottom: 0
   }
 }

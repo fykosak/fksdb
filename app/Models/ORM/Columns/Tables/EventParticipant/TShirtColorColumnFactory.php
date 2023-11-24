@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel>
  * @deprecated
  */
 class TShirtColorColumnFactory extends AbstractColumnFactory

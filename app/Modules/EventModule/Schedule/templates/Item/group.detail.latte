@@ -1,19 +1,15 @@
-{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
-<h2>{_'Schedule group'}</h2>
-{control columnTable [
-'schedule_group.schedule_group_id',
-'schedule_group.name',
-'schedule_group.schedule_group_type',
-'event.name',
-'schedule_group.start',
-'schedule_group.end',
-'schedule_group.registration_begin',
-'schedule_group.registration_end',
-'schedule_group.modification_end',
-], $group,1024}
-<a class="btn btn-outline-primary btn-sm"
-   href="{plink :Schedule:Group:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
-<a class="btn btn-outline-primary btn-sm"
-   href="{plink :Schedule:Group:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
-<a class="btn btn-outline-secondary btn-sm"
-   href="{plink :Schedule:Group:attendance id=>$group->getPrimary()}">{_('Attendance for group')}</a>
+{define group FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+    <h2>{_'Schedule group'}</h2>
+    {control columnTable [
+    'schedule_group.schedule_group_id',
+    'schedule_group.name',
+    'schedule_group.schedule_group_type',
+    'event.name',
+    'schedule_group.start',
+    'schedule_group.end',
+    'schedule_group.registration_begin',
+    'schedule_group.registration_end',
+    'schedule_group.modification_end',
+    ], $group,1024}
+
+{/define}

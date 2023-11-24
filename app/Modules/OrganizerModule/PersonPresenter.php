@@ -180,7 +180,7 @@ final class PersonPresenter extends BasePresenter
                 $values = $button->getForm()->getValues('array');
                 $this->redirect('detail', ['id' => $values['person_id']]);
             };
-        $form->addSubmit('edit', _('Edit'))
+        $form->addSubmit('edit', _('button.edit'))
             ->onClick[] =
             function (SubmitButton $button) {
                 /** @phpstan-var array{person_id:int} $values */
@@ -299,8 +299,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string $resource
-     * all auth method is overwritten
+     * @param Resource|string|null $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

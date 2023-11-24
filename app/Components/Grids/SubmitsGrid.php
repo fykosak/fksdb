@@ -13,8 +13,7 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
@@ -24,9 +23,9 @@ use Nette\Utils\Html;
 use Tracy\Debugger;
 
 /**
- * @phpstan-extends BaseGrid<SubmitModel>
+ * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
-class SubmitsGrid extends BaseGrid
+final class SubmitsGrid extends BaseGrid
 {
     private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -52,7 +51,11 @@ class SubmitsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->paginate = false;
+        $this->counter = false;
+        $this->filtered = false;
+
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
@@ -60,7 +63,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'task'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): string => $model->submitted_on->format(_('__date_time')),
@@ -68,7 +71,7 @@ class SubmitsGrid extends BaseGrid
             ),
             'submitted_on'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitModel $model): Html => $model->source->badge(),
@@ -77,7 +80,7 @@ class SubmitsGrid extends BaseGrid
             'source'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -89,7 +92,7 @@ class SubmitsGrid extends BaseGrid
             'revoke'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -101,7 +104,7 @@ class SubmitsGrid extends BaseGrid
             'download_uploaded'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this,
@@ -113,19 +116,17 @@ class SubmitsGrid extends BaseGrid
             'download_corrected'
         );
 
-        $this->addButton(
+        $this->addTableButton(
             new Button(
                 $this->container,
                 $this->getPresenter(),
-                new Title(null, _('Detail')),
+                new Title(null, _('button.detail')),
                 fn(SubmitModel $submit): array => [':Public:Submit:quizDetail', ['id' => $submit->submit_id]],
                 null,
                 fn(SubmitModel $submit): bool => $submit->isQuiz()
             ),
             'show_quiz_detail'
         );
-
-        $this->paginate = false;
     }
 
     public function handleRevoke(int $id): void
@@ -142,7 +143,7 @@ class SubmitsGrid extends BaseGrid
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        } catch (StorageException | ModelException$exception) {
+        } catch (StorageException | \PDOException $exception) {
             Debugger::log($exception);
             $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_ERROR);
         }

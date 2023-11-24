@@ -39,26 +39,25 @@ class ApplicationComponent extends BaseComponent
     private BaseHolder $holder;
     private Connection $connection;
     private EventDispatchFactory $eventDispatchFactory;
+    /**
+     * @phpstan-var EventParticipantMachine<BaseHolder> $machine
+     */
+    private EventParticipantMachine $machine;
 
-    public function __construct(Container $container, BaseHolder $holder)
+    /**
+     * @phpstan-param EventParticipantMachine<BaseHolder> $machine
+     */
+    public function __construct(Container $container, BaseHolder $holder, EventParticipantMachine $machine)
     {
         parent::__construct($container);
         $this->holder = $holder;
+        $this->machine = $machine;
     }
 
     public function inject(Connection $connection, EventDispatchFactory $eventDispatchFactory): void
     {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->connection = $connection;
-    }
-
-    public function getMachine(): EventParticipantMachine
-    {
-        static $machine;
-        if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getParticipantMachine($this->holder->event);
-        }
-        return $machine;
     }
 
     private function getTemplateFile(): string
@@ -86,14 +85,14 @@ class ApplicationComponent extends BaseComponent
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        $container = $this->holder->createFormContainer();
+        $container = $this->holder->createFormContainer($this->getContext());
         $form->addComponent($container, 'participant');
         /*
          * Create save (no transition) button
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Save'));
+            $saveSubmit = $form->addSubmit('save', _('button.save'));
             $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
 
@@ -103,9 +102,9 @@ class ApplicationComponent extends BaseComponent
         $transitionSubmit = null;
 
         foreach (
-            $this->getMachine()->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition
+            $this->machine->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition
         ) {
-            $submit = $form->addSubmit($transition->getId(), $transition->getLabel());
+            $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
 
             if (!$transition->getValidation()) {
                 $submit->setValidationScope([]);
@@ -125,7 +124,7 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create cancel button
          */
-        $cancelSubmit = $form->addSubmit('cancel', _('Cancel'));
+        $cancelSubmit = $form->addSubmit('cancel', _('button.cancel'));
         $cancelSubmit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-warning']);
         $cancelSubmit->setValidationScope([]);
         $cancelSubmit->onClick[] = fn() => $this->finalRedirect();
@@ -169,14 +168,19 @@ class ApplicationComponent extends BaseComponent
 
                     if ($transition) {
                         $state = $this->holder->getModelState();
-                        $transition = $this->getMachine()->getTransitionByStates($state, $transition->target);
+                        $transition = Machine::selectTransition(
+                            Machine::filterByTarget(
+                                Machine::filterBySource($this->machine->transitions, $state),
+                                $transition->target
+                            )
+                        );
                     }
                     if (isset($values['participant'])) {
                         $this->holder->data += (array)$values['participant'];
                     }
 
                     if ($transition) {
-                        $this->getMachine()->execute2($transition, $this->holder);
+                        $this->machine->execute2($transition, $this->holder);
                     }
                     $this->holder->saveModel();
                     if ($transition) {
@@ -219,7 +223,7 @@ class ApplicationComponent extends BaseComponent
                     throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $exception);
                 }
             } else {
-                $this->getMachine()->execute($transition, $this->holder);
+                $this->machine->execute($transition, $this->holder);
                 $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
             }
             $this->finalRedirect();

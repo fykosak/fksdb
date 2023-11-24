@@ -6,8 +6,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-type TData array{

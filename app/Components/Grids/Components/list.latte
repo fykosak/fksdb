@@ -1,19 +1,22 @@
-{varType Fykosak\NetteORM\Model[] $models}
-{varType callable $classNameCallback}
-{varType Nette\Application\UI\Control $title}
-{varType FKSDB\Components\Grids\Components\BaseList $control}
+{layout './layout.latte'}
+{varType Fykosak\NetteORM\Model\Model[] $models}
 {varType int $userPermission}
-{block content}
+
+{varType callable $classNameCallback}
+
+{var \Nette\ComponentModel\Container $buttons = $control->getComponent('buttons')}
+{var \Nette\ComponentModel\Container $rows = $control->getComponent('rows')}
+
+{block innerContent}
     {if count($models)}
         {foreach $models as $model}
             {var string $className = $classNameCallback?($classNameCallback)($model):''}
-
             <div class="{$className}">
-                {if $title}
-                    <h4>{control $title $model,$userPermission}</h4>
+                {if $control->getComponent('title',false)}
+                    <h4>{control title $model,$userPermission}</h4>
                 {/if}
-                {control $control->rows $model,$userPermission}
-                {control $control->buttons $model,$userPermission}
+                {include rows from 'list.common.latte', $model,$userPermission,container:$rows}
+                {include buttonGroup from './Button/group.latte',$model, $userPermission,$buttons->getComponents()}
             </div>
         {/foreach}
     {else}

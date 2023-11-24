@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
 use Nette\Security\Resource;

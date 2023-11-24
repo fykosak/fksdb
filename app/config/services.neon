@@ -14,7 +14,7 @@ services:
         factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
-
+    - FKSDB\Models\Router\Router::createRouter
     ## Anonymous
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
@@ -32,7 +32,7 @@ services:
     - FKSDB\Components\DataTest\DataTestFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
-    - FKSDB\Models\ORM\ORMFactory
+    - FKSDB\Models\ORM\ReflectionFactory
     # Events
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha

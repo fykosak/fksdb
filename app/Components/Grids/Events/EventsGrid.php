@@ -9,11 +9,12 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<EventModel>
+ * @phpstan-extends BaseGrid<EventModel,array{}>
  */
 class EventsGrid extends BaseGrid
 {
@@ -49,22 +50,26 @@ class EventsGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'event.event_id',
-            'event.event_type',
-            'event.name',
-            'event.year',
-            'event.event_year',
+        $this->addSimpleReferencedColumns([
+            '@event.event_id',
+            '@event.event_type',
+            '@event.name',
+            '@event.year',
+            '@event.event_year',
         ]);
-        $this->addPresenterButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
-        $this->addPresenterButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
-
-        // $this->addORMLink('event.application.list');
+        $this->addPresenterButton(
+            ':Event:Dashboard:default',
+            'detail',
+            new Title(null, _('button.detail')),
+            true,
+            ['eventId' => 'event_id']
+        );
+        $this->addPresenterButton('edit', 'edit', new Title(null, _('button.edit')), true, ['id' => 'event_id']);
 
         $this->addPresenterButton(
             ':Event:EventOrganizer:list',
             'org',
-            _('Organizers'),
+            new Title(null, _('Organizers')),
             true,
             ['eventId' => 'event_id']
         );

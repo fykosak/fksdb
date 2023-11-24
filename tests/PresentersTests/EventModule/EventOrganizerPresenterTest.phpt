@@ -70,7 +70,7 @@ class EventOrganizerPresenterTest extends EntityPresenterTestCase
         $response = $this->createFormRequest('create', [
             EventOrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_container' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->event->event_type->contest, $this->person),
                 'note' => 'note-c',
             ],
         ]);
@@ -99,7 +99,10 @@ class EventOrganizerPresenterTest extends EntityPresenterTestCase
         $response = $this->createFormRequest('edit', [
             EventOrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->eventOrganizerPerson->person_id,
-                'person_id_container' => self::personToValues($this->eventOrganizerPerson),
+                'person_id_container' => self::personToValues(
+                    $this->event->event_type->contest,
+                    $this->eventOrganizerPerson
+                ),
                 'note' => 'note-edited',
             ],
         ], [

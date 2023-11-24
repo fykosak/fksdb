@@ -5,7 +5,7 @@
             {control columnTable [
             'org.org_id',
             'person.person_id',
-            'person.person_link',
+            'person.full_name',
             'contest.contest',
             'org.since',
             'org.until',
@@ -15,6 +15,7 @@
             'org.tex_signature',
             'org.domain_alias',
             ], $model,1024}
+            {control printer:button 'person.detail', $model}
         </div>
     </div>
 {/block}

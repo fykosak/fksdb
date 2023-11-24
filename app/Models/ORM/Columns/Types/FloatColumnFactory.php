@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;

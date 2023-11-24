@@ -4,32 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Grids\Components\FilterGrid;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<EventParticipantModel,array{
+ * @phpstan-extends BaseGrid<EventParticipantModel,array{
  *     status?:string,
  * }>
  */
-class SingleApplicationsGrid extends FilterGrid
+class SingleApplicationsGrid extends BaseGrid
 {
     protected EventModel $event;
-    private BaseHolder $holder;
 
-    public function __construct(EventModel $event, BaseHolder $holder, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
-        $this->holder = $holder;
     }
 
     /**
@@ -37,18 +35,23 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function getHoldersColumns(): array
     {
+        switch ($this->event->event_type_id) {
+            case 2:
+            case 14:
+                return ['lunch_count'];
+        }
         return [
             'price',
-            'lunch_count',
-            'tshirt_color',
-            'tshirt_size',
+            //'lunch_count',
+            //'tshirt_color',
+            //'tshirt_size',
             //'jumper_size',
-            'arrival_ticket',
-            'arrival_time',
-            'arrival_destination',
-            'departure_time',
-            'departure_ticket',
-            'departure_destination',
+            //'arrival_ticket',
+            //'arrival_time',
+            //'arrival_destination',
+            //'departure_time',
+            //'departure_ticket',
+            //'departure_destination',
             'health_restrictions',
             'diet',
             'used_drugs',
@@ -63,14 +66,11 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function addHolderColumns(): void
     {
-        $holderFields = $this->holder->getFields();
         $fields = [];
-        foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
-                $fields[] = DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
-            }
+        foreach ($this->getHoldersColumns() as $name) {
+            $fields[] = '@' . DbNames::TAB_EVENT_PARTICIPANT . '.' . $name;
         }
-        $this->addColumns($fields);
+        $this->addSimpleReferencedColumns($fields);
     }
 
     /**
@@ -97,12 +97,19 @@ class SingleApplicationsGrid extends FilterGrid
      */
     protected function configure(): void
     {
+        $this->filtered = true;
         $this->paginate = false;
-        $this->addColumns([
-            'person.full_name',
-            'event_participant.status',
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@event_participant.status',
         ]);
-        $this->addPresenterButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'event_participant_id']
+        );
         // $this->addCSVDownloadButton();
         $this->addHolderColumns();
     }

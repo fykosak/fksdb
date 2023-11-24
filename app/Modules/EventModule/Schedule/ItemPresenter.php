@@ -6,8 +6,8 @@ namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Schedule\Attendance\ItemAttendanceFormComponent;
-use FKSDB\Components\Schedule\PersonsGrid;
+use FKSDB\Components\Schedule\Attendance\CodeComponent;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -15,9 +15,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
-use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -28,11 +25,16 @@ final class ItemPresenter extends BasePresenter
     /** @phpstan-use EventEntityPresenterTrait<ScheduleItemModel> */
     use EventEntityPresenterTrait;
 
-    private ScheduleItemService $scheduleItemService;
+    private ScheduleItemService $service;
 
-    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
+    final public function injectService(ScheduleItemService $service): void
     {
-        $this->scheduleItemService = $scheduleItemService;
+        $this->service = $service;
+    }
+
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create item'), 'fas fa-plus');
     }
 
     /**
@@ -43,11 +45,28 @@ final class ItemPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
+    final public function renderDetail(): void
+    {
+        $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     */
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
             null,
-            \sprintf(_('Schedule item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(
+                _('%s of %s '),
+                $this->getEntity()->name->getText($this->translator->lang),
+                $this->getEntity()->schedule_group->name->getText($this->translator->lang)
+            ),
             'fas fa-clipboard'
         );
     }
@@ -64,57 +83,24 @@ final class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(_('Edit item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
             'fas fa-pen'
         );
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     * @throws \ReflectionException
-     */
-    public function authorizedAttendance(): bool
+
+    protected function getORMService(): ScheduleItemService
     {
-        return $this->authorizedEdit();
+        return $this->service;
     }
 
     /**
+     * @param Resource|string|null $resource
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws GoneException
-     * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
-    public function titleAttendance(): PageTitle
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return new PageTitle(
-            null,
-            \sprintf(_('Attendance for item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-user-check'
-        );
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create schedule item'), 'fas fa-plus');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    final public function renderDetail(): void
-    {
-        $this->template->model = $this->getEntity();
+        return $this->isAllowed($resource, $privilege);
     }
 
     /**
@@ -139,6 +125,15 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
+     * @return never
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -146,9 +141,9 @@ final class ItemPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentPersonsGrid(): PersonsGrid
+    protected function createComponentPersonsGrid(): PersonGrid
     {
-        return new PersonsGrid($this->getContext(), $this->getEntity());
+        return new PersonGrid($this->getContext(), $this->getEntity());
     }
 
     /**
@@ -158,31 +153,8 @@ final class ItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentAttendance(): ItemAttendanceFormComponent
+    protected function createComponentCode(): CodeComponent
     {
-        return new ItemAttendanceFormComponent($this->getContext(), $this->getEntity());
-    }
-
-    protected function getORMService(): ScheduleItemService
-    {
-        return $this->scheduleItemService;
-    }
-
-    /**
-     * @param string|Resource $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
-    }
-
-    /**
-     * @return never
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new NotImplementedException();
+        return new CodeComponent($this->getContext(), $this->getEntity());
     }
 }

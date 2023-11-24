@@ -160,7 +160,7 @@ final class RegisterPresenter extends CoreBasePresenter
     {
         $loggedPerson = $this->getLoggedPerson();
         if ($loggedPerson) {
-            $contestant = $loggedPerson->getContestantByContestYear($this->getSelectedContestYear());
+            $contestant = $loggedPerson->getContestant($this->getSelectedContestYear());
             if ($contestant) {
                 $this->flashMessage(
                     sprintf(

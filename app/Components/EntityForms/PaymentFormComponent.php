@@ -17,10 +17,10 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
@@ -108,7 +108,7 @@ class PaymentFormComponent extends EntityFormComponent
 
     /**
      * @throws UnavailableTransitionsException
-     * @throws ModelException
+     * @throws \PDOException
      * @throws StorageException
      * @throws \Throwable
      */
@@ -134,7 +134,7 @@ class PaymentFormComponent extends EntityFormComponent
             );
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $transition = $this->machine->getImplicitTransition($holder);
+                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
                 $this->machine->execute($transition, $holder);
                 $model = $holder->getModel();
             }

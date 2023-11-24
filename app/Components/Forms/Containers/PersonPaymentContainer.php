@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\Language;
@@ -87,13 +86,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         $container = null;
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
-            if (
-                !$model->schedule_item->isPayable() ||
-                !in_array(
-                    $model->schedule_item->schedule_group->schedule_group_type,
-                    [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND] // TODO to event params
-                )
-            ) {
+            if (!$model->schedule_item->payable) {
                 continue;
             }
             if ($model->person_id !== $lastPersonId) {

@@ -8,13 +8,13 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<PaymentModel>
+ * @phpstan-extends BaseGrid<PaymentModel,array{}>
  */
-class EventPaymentGrid extends BaseGrid
+final class EventPaymentGrid extends BaseGrid
 {
     private EventModel $event;
 
@@ -38,16 +38,17 @@ class EventPaymentGrid extends BaseGrid
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'payment.payment_id',
-            'person.full_name',
-            'payment.price',
-            'payment.state',
-            'payment.variable_symbol',
+        $this->paginate = false;
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@payment.payment_id',
+            '@person.full_name',
+            '@payment.price',
+            '@payment.state',
+            '@payment.variable_symbol',
         ]);
 
-        $this->addORMLink('payment.detail');
-        $this->paginate = false;
-       // $this->addCSVDownloadButton();
+        $this->addLink('payment.detail');
     }
 }

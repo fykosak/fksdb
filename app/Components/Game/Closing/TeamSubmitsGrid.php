@@ -9,11 +9,12 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<SubmitModel>
+ * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
 class TeamSubmitsGrid extends BaseGrid
 {
@@ -46,16 +47,21 @@ class TeamSubmitsGrid extends BaseGrid
     protected function configure(): void
     {
         $this->paginate = false;
-
-        $this->addColumns([
-            'fyziklani_team.name',
-            'fyziklani_task.label',
-            'fyziklani_submit.points',
-            'fyziklani_submit.created',
-            'fyziklani_submit.state',
+        $this->addSimpleReferencedColumns([
+            '@fyziklani_team.name',
+            '@fyziklani_task.label',
+            '@fyziklani_submit.points',
+            '@fyziklani_submit.created',
+            '@fyziklani_submit.state',
         ]);
         if ($this->team->event->event_type_id === 1) {
-            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
         }
     }
 }
