@@ -9,6 +9,8 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
@@ -38,6 +40,10 @@ class SchoolFormComponent extends EntityFormComponent
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void
     {
         $container = $this->reflectionFormFactory->createContainerWithMetadata('school', [

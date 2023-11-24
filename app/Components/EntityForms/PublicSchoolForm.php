@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
@@ -30,38 +32,30 @@ final class PublicSchoolForm extends EntityFormComponent
     public const CONT_SCHOOL = 'school';
 
     private SchoolService $schoolService;
+    private SingleReflectionFormFactory $reflectionFormFactory;
 
-    final public function injectPrimary(SchoolService $schoolService): void
-    {
+    final public function injectPrimary(
+        SchoolService $schoolService,
+        SingleReflectionFormFactory $reflectionFormFactory
+    ): void {
         $this->schoolService = $schoolService;
+        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void
     {
-        $container = new ContainerWithOptions($this->container);
-        $container->addText('name_full', _('Full name of school'))
-            ->addRule(Form::MAX_LENGTH, _('Max length reached'), 255)
-            ->setOption('description', _('Full name of the school.'));
+        $container = $this->reflectionFormFactory->createContainerWithMetadata('school', [
+            'name_full' => ['required' => false],
+            'name' => ['required' => true],
+            'name_abbrev' => ['required' => true],
+            'email' => ['required' => false],
+            'note' => ['required' => false],
+        ]);
 
-        $container->addText('name', _('Name'))
-            ->addRule(Form::MAX_LENGTH, _('Max length reached'), 255)
-            ->addRule(Form::FILLED, _('Name is required.'))
-            ->setOption('description', _('Envelope name.'));
-
-        $container->addText('name_abbrev', _('Abbreviated name'))
-            ->addRule(
-                Form::MAX_LENGTH,
-                _('The length of the abbreviated name is restricted to a maximum %d characters.'),
-                32
-            )
-            ->addRule(Form::FILLED, _('Short name is required.'))
-            ->setOption('description', _('Very short name.'));
-
-        $container->addText('email', _('Contact e-mail'))
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::EMAIL);
-
-        $container->addText('note', _('Note'))->setOption('description', _('Webpage or another additionial info'));
         $address = new AddressDataContainer($this->container, false, true, false);
         $address->setOption('label', _('Address'));
         $container->addComponent($address, 'address');
