@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
@@ -31,10 +30,6 @@ final class TaskGrid extends BaseGrid
         $this->series = $series;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;

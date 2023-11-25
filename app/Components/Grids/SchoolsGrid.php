@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\UI\FlagBadge;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
@@ -23,15 +24,21 @@ use Nette\Utils\Html;
 final class SchoolsGrid extends BaseGrid
 {
     private SchoolService $service;
+    private CountryService $countryService;
 
-    public function injectService(SchoolService $service): void
+    public function injectService(SchoolService $service, CountryService $countryService): void
     {
         $this->service = $service;
+        $this->countryService = $countryService;
     }
 
     protected function configureForm(Form $form): void
     {
         $form->addText('term')->setHtmlAttribute('placeholder', _('Find'));
+        $form->addCheckbox('not_verified', _('Not verified'));
+        $form->addText('city', _('City'));
+        $country = $form->addSelect('country', _('Country'));
+        $country->setItems($this->countryService->getTable()->fetchPairs('country_id', 'name'));
     }
 
     /**
@@ -40,12 +47,27 @@ final class SchoolsGrid extends BaseGrid
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
-        if (!isset($this->filterParams['term'])) {
-            return $query;
-        }
-        $tokens = preg_split('/\s+/', $this->filterParams['term']);
-        foreach ($tokens as $token) { //@phpstan-ignore-line
-            $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+        foreach ($this->filterParams as $key => $value) {
+            if (!$value) {
+                continue;
+            }
+            switch ($key) {
+                case 'city':
+                    $query->where('address.city', $value);
+                    break;
+                case 'country':
+                    $query->where('address.country_id', $value);
+                    break;
+                case 'not_verified':
+                    $query->where('verified = FALSE');
+                    break;
+                case 'term':
+                    $tokens = explode(' ', $value);
+                    foreach ($tokens as $token) {
+                        $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                    }
+                    break;
+            }
         }
         return $query;
     }
@@ -58,34 +80,24 @@ final class SchoolsGrid extends BaseGrid
         $this->filtered = true;
         $this->paginate = true;
         $this->counter = true;
-        $this->addTableColumn(
-            new RendererItem(
+        $this->addSimpleReferencedColumns([
+            '@school.name_full',
+            '@school.name',
+            '@school.name_abbrev',
+        ]);
+        $this->addTableColumn( //@phpstan-ignore-line
+            new TemplateItem( //@phpstan-ignore-line
                 $this->container,
-                fn(SchoolModel $school) => $school->name_full ?? $school->name,
-                new Title(null, _('Full name'))
-            ),
-            'full_name'
-        );
-        $this->addTableColumn(
-            new RendererItem(
-                $this->container,
-                fn(SchoolModel $school): Html => Html::el('span')
-                    ->addText($school->address->city . ' (' . $school->address->country->name . ')')
-                    ->addHtml(FlagBadge::getHtml($school->address->country)),
-                new Title(null, _('City'))
+                '@address.city (@country.name) @country.flag',
+                '@address.city:title'
             ),
             'city'
         );
-        $this->addTableColumn(
-            new RendererItem(
-                $this->container,
-                fn(SchoolModel $school): Html => Html::el('span')
-                    ->addAttributes(['class' => ('badge ' . ($school->active ? 'bg-success' : 'bg-danger'))])
-                    ->addText($school->active),
-                new Title(null, _('Active'))
-            ),
-            'active'
-        );
+        $this->addSimpleReferencedColumns([
+            '@school.active',
+            '@school.verified',
+        ]);
+
         $this->addTableColumn(
             new RendererItem(
                 $this->container,

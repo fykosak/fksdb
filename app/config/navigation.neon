@@ -24,7 +24,7 @@ navigation:
             Organizer.Person.pizza: []
 
             Organizer.Event.list: []
-            Organizer.School.list: []
+            Organizer.Schools.default: []
             Organizer.StoredQuery.list: []
             Organizer.Spam.list: []
             #Warehouse.Dashboard.default: []
@@ -51,7 +51,7 @@ navigation:
 
         Organizer.Dashboard.entity:
             Organizer.Event.list: []
-            Organizer.School.list: []
+            Organizer.Schools.list: []
             Organizer.StoredQuery.list: []
             Organizer.Spam.list: []
             #Warehouse.Dashboard.default: []

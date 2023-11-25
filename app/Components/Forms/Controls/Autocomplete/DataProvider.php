@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+/**
+ * @phpstan-template TItem of array
+ */
 interface DataProvider
 {
     /**
-     * @phpstan-return array<int,array<string,scalar>> array of associative arrays with at least LABEL and VALUE keys
+     * @phpstan-return TItem[] array of associative arrays with at least LABEL and VALUE keys
      */
     public function getItems(): array;
 
-    public function getItemLabel(int $id): string;
+    /**
+     * @phpstan-return TItem
+     */
+    public function getItemLabel(int $id): array;
 
     /**
      * Provider may or may not use knowledge of this update.

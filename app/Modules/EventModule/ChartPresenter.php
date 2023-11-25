@@ -10,7 +10,6 @@ use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;

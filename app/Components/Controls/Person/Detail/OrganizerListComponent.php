@@ -6,7 +6,6 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -35,10 +34,6 @@ class OrganizerListComponent extends DetailComponent
         return new Title(null, _('Organizers'));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(OrganizerModel $model) => 'alert alert-' . $model->contest->getContestSymbol();

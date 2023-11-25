@@ -6,7 +6,6 @@ namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -34,10 +33,6 @@ final class PersonGrid extends BaseGrid
         return $this->item->getInterested();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
