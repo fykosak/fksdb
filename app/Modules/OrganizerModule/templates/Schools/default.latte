@@ -1,0 +1,13 @@
+{varType FKSDB\Modules\OrganizerModule\SchoolsPresenter $control}
+{block titleBody}
+    {include parent}
+    <a href="{plink create}" class="btn btn-outline-primary">{$control->titleCreate()->toHtml()}</a>
+    <a href="{plink report}" class="btn btn-outline-primary">{$control->titleReport()->toHtml()}</a>
+{/block}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control grid}
+        </div>
+    </div>
+{/block}

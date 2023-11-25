@@ -112,6 +112,9 @@ final class GroupPresenter extends BasePresenter
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function createComponentGrid(): ScheduleList
     {
         throw new GoneException();

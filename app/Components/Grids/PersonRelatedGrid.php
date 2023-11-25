@@ -46,7 +46,6 @@ final class PersonRelatedGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
@@ -33,10 +32,6 @@ class ProductsFromProducerGrid extends BaseGrid
         return $this->producer->related(DbNames::TAB_WAREHOUSE_PRODUCT, 'producer_id'); // @phpstan-ignore-line
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->addSimpleReferencedColumns([

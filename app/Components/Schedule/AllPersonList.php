@@ -10,7 +10,6 @@ use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -89,10 +88,6 @@ final class AllPersonList extends BaseList
         return $query;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = true;
