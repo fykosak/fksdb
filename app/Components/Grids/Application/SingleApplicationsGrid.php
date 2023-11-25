@@ -60,10 +60,6 @@ class SingleApplicationsGrid extends BaseGrid
         ];
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function addHolderColumns(): void
     {
         $fields = [];

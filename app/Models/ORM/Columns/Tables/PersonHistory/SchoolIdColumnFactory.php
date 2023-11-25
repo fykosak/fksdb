@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
-use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\Components\Forms\Factories\SchoolSelectField;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Application\LinkGenerator;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -17,11 +19,13 @@ use Nette\Utils\Html;
  */
 class SchoolIdColumnFactory extends ColumnFactory
 {
-    private SchoolFactory $schoolFactory;
+    private Container $container;
+    private LinkGenerator $linkGenerator;
 
-    public function injectSchoolFactory(SchoolFactory $schoolFactory): void
+    public function injectSchoolFactory(Container $container, LinkGenerator $linkGenerator): void
     {
-        $this->schoolFactory = $schoolFactory;
+        $this->container = $container;
+        $this->linkGenerator = $linkGenerator;
     }
 
     /**
@@ -34,6 +38,6 @@ class SchoolIdColumnFactory extends ColumnFactory
 
     protected function createFormControl(...$args): BaseControl
     {
-        return $this->schoolFactory->createSchoolSelect();
+        return new SchoolSelectField($this->container, $this->linkGenerator);
     }
 }

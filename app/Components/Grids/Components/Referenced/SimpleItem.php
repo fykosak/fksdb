@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Referenced;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\DI\Container;
 
 /**

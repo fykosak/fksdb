@@ -22,6 +22,9 @@ use Nette\Security\IIdentity;
  */
 final class LoginModel extends Model implements IIdentity
 {
+    /**
+     * @throws \Throwable
+     */
     public function __toString(): string
     {
         return $this->person ? $this->person->__toString() : ($this->login ?? 'NAMELESS LOGIN');
