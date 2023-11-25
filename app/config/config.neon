@@ -153,7 +153,7 @@ includes:
     - forms.neon
     - stalking.neon
     #- payment.neon
-    - payments/common.neon
+    - applications/payment.neon
     - applications/fof.neon
     - applications/fol.neon
     - applications/dsef.neon

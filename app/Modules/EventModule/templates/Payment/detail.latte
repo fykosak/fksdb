@@ -30,25 +30,6 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
-            {if $model->hasGeneratedSymbols()}
-                <h2>{_'Payment info'}</h2>
-                {control columnTable [
-                'payment.constant_symbol',
-                'payment.variable_symbol',
-                'payment.specific_symbol',
-                'payment.bank_account',
-                'payment.bank_name',
-                'payment.recipient',
-                'payment.iban',
-                'payment.swift',
-                'payment.price',
-                'payment.currency'
-                ],$model,1024}
-            {/if}
-        </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
             <h2>{_'Payer information'}</h2>
             {control columnTable ['person.full_name','person_info.email'], $model, 1024}
         </div>
@@ -84,6 +65,30 @@
 
         </div>
     </div>
+
+    {if $model->hasGeneratedSymbols()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Payment info'}</h2>
+                {control columnTable [
+                'payment.constant_symbol',
+                'payment.variable_symbol',
+                'payment.specific_symbol',
+                'payment.bank_account',
+                'payment.bank_name',
+                'payment.recipient',
+                'payment.iban',
+                'payment.swift',
+                'payment.price',
+                'payment.currency'
+                ],$model,1024}
+                {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                    {control paymentQRCode}
+                {/if}
+            </div>
+        </div>
+
+    {/if}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Actions'}</h2>

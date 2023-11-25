@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
+use FKSDB\Components\Grids\Payment\PaymentQRCode;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -122,10 +123,12 @@ final class PaymentPresenter extends BasePresenter
         $params = $this->getContext()->parameters[$this->eventDispatchFactory->getPaymentFactoryName(
             $this->getEvent()
         )];
-        if (!isset($params['begin']) || !isset($params['end'])) {
+        if (!isset($params['begin']) || !isset($params['end']) || !isset($params['forEvent'])) {
             return false;
         }
-        return (time() > $params['begin']->getTimestamp()) && (time() < $params['end']->getTimestamp());
+        return (time() > $params['begin']->getTimestamp())
+            && (time() < $params['end']->getTimestamp())
+            && (+$params['forEvent'] === $this->getEvent()->event_id);
     }
     /**
      * @throws EventNotFoundException
@@ -255,5 +258,17 @@ final class PaymentPresenter extends BasePresenter
             $this->getMachine(),
             $this->getEntity()
         );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentPaymentQRCode(): PaymentQRCode
+    {
+        return new PaymentQRCode($this->getContext(), $this->getEntity());
     }
 }
