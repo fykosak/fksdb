@@ -4,8 +4,8 @@ parameters:
         end: 2024-02-16
         forEvent: 180
         symbolGenerator:
-            variableSymbolStart: 173230000
-            variableSymbolEnd: 173239999
+            variableSymbolStart: 180240000
+            variableSymbolEnd: 180249999
             info:
                 CZK:
                     bank_account: 2402414686/2010

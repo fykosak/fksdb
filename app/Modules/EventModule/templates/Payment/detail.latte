@@ -83,6 +83,7 @@
                 'payment.currency'
                 ],$model,1024}
                 {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                    <p>{_'TODO!!!'}</p>
                     {control paymentQRCode}
                 {/if}
             </div>

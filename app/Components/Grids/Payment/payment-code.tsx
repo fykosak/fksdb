@@ -11,10 +11,8 @@ export interface OwnProps {
         constantSymbol: string;
         variableSymbol: string;
         specificSymbol: string;
-        bankAccount: string;
-        bankName: string;
         recipient: string;
-        iban: string
+        iban: string;
         swift: string;
     };
     translator: Translator;
@@ -24,12 +22,26 @@ export default function PaymentCode({data}: OwnProps) {
     console.log(data);
     const [qrCode, setQRCode] = useState<string>(null);
     useEffect(function () {
-        const text = 'SPD*1.0*'
-            + 'ACC:' + data.iban.replace(' ', '') + '*'
-            + 'AM:' + data.price + '*'
-            + 'CC:' + data.currency + '*'
-            + 'RF:' + data.paymentId + '*'
-            + 'RN:' + data.recipient + '*';
+        let text = 'SPD*1.0*';
+        if (data.currency === 'CZK') {
+            text += 'ACC:' + data.iban.replace(' ', '') + '*';
+            if (data.variableSymbol) {
+                text += 'X-VS:' + data.variableSymbol + '*';
+            }
+            if (data.specificSymbol) {
+                text += 'X-SS:' + data.specificSymbol + '*';
+            }
+            if (data.constantSymbol) {
+                text += 'X-KS:' + data.constantSymbol + '*';
+            }
+        } else {
+            text += 'ACC:' + data.iban.replace(' ', '') + '+' + data.swift + '*';
+        }
+        text += 'AM:' + data.price + '*';
+        text += 'CC:' + data.currency + '*';
+        text += 'RF:' + data.paymentId + '*';
+        text += 'RN:' + data.recipient + '*'
+        console.log(text);
         QRCode.toString(text).then((code) => {
             setQRCode(code);
         });

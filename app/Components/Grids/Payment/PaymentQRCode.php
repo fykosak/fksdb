@@ -18,6 +18,19 @@ class PaymentQRCode extends FrontEndComponent
         $this->payment = $model;
     }
 
+    /**
+     * @phpstan-return array{
+     * paymentId:int,
+     * price:float|null,
+     * currency:string,
+     * constantSymbol:string,
+     * variableSymbol:string,
+     * specificSymbol:string,
+     * recipient:string,
+     * iban:string,
+     * swift:string,
+     * }
+     */
     protected function getData(): array
     {
         return [
@@ -27,8 +40,6 @@ class PaymentQRCode extends FrontEndComponent
             'constantSymbol' => $this->payment->constant_symbol,
             'variableSymbol' => $this->payment->variable_symbol,
             'specificSymbol' => $this->payment->specific_symbol,
-            'bankAccount' => $this->payment->bank_account,
-            'bankName' => $this->payment->bank_name,
             'recipient' => $this->payment->recipient,
             'iban' => $this->payment->iban,
             'swift' => $this->payment->swift,
