@@ -16,8 +16,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Modules\Core\Language;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Logger;

@@ -13,8 +13,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\Persons\Resolvers\SelfResolver;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\Language;
@@ -34,13 +32,11 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     private ContestYearModel $contestYear;
     private ?PersonModel $person;
-    private Language $lang;
 
     private AccountManager $accountManager;
 
     public function __construct(
         Container $container,
-        Language $lang,
         ContestYearModel $contestYear,
         ?PersonModel $person
     ) {

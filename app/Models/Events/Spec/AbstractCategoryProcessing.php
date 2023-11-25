@@ -16,7 +16,7 @@ use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Utils\ArrayHash;
 
-abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider
+abstract class AbstractCategoryProcessing implements OptionsProvider
 {
     protected PersonService $personService;
 

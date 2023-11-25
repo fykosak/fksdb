@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Components\Schedule\Input\ExistingPaymentException;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;

@@ -113,10 +113,7 @@ abstract class Machine
             throw new UnavailableTransitionsException();
         }
         if (!$length) {
-            if ($throw) {
-                throw new UnavailableTransitionsException();
-            }
-            return null;
+            throw new UnavailableTransitionsException();
         }
         return \array_values($transitions)[0];
     }
