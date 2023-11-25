@@ -17,7 +17,6 @@ use Nette\Schema\Expect;
  * @phpstan-extends WebModel<array{
  *     contest_id:int,
  *     year:int,
- *     series:int,
  * },array<string,mixed>>
  */
 class SeriesResultsWebModel extends WebModel
@@ -34,7 +33,6 @@ class SeriesResultsWebModel extends WebModel
         return Expect::structure([
             'contest_id' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
-            'series' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
 
@@ -47,12 +45,13 @@ class SeriesResultsWebModel extends WebModel
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $tasksData = [];
         /** @var TaskModel $task */
-        foreach ($contestYear->getTasks($params['series']) as $task) {
+        foreach ($contestYear->getTasks() as $task) {
             foreach ($evaluationStrategy->getCategories() as $category) {
                 $tasksData[$category->label] = $tasksData[$category->label] ?? [];
+                $tasksData[$category->label][$task->series] = $tasksData[$category->label][$task->series] ?? [];
                 $points = $evaluationStrategy->getTaskPoints($task, $category);
                 if (!is_null($points)) {
-                    $tasksData[$category->label][] = [
+                    $tasksData[$category->label][$task->series][] = [
                         'taskId' => $task->task_id,
                         'points' => $points,
                         'label' => $task->label,
@@ -66,7 +65,7 @@ class SeriesResultsWebModel extends WebModel
             $submitsData = [];
             $sum = 0;
             /** @var SubmitModel $submit */
-            foreach ($contestant->getSubmitsForSeries($params['series']) as $submit) {
+            foreach ($contestant->getSubmits() as $submit) {
                 $points = $evaluationStrategy->getSubmitPoints($submit);
                 $sum += $points;
                 $submitsData[$submit->task_id] = $points;
@@ -76,6 +75,7 @@ class SeriesResultsWebModel extends WebModel
                 $results[$contestant->contest_category->label] = $results[$contestant->contest_category->label] ?? [];
                 $results[$contestant->contest_category->label][] = [
                     'contestant' => [
+                        'contestantId' => $contestant->contestant_id,
                         'name' => $contestant->person->getFullName(),
                         'school' => $school->name_abbrev,
                     ],
