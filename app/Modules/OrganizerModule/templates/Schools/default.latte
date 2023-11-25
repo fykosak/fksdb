@@ -1,9 +1,8 @@
-{varType FKSDB\Modules\Core\BasePresenter|FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait $control}
+{varType FKSDB\Modules\OrganizerModule\SchoolsPresenter $control}
 {block titleBody}
     {include parent}
-    {var $pageTitle = $control->titleCreate()}
-    <a href="{plink create}" class="btn btn-outline-primary"><i
-                class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
+    <a href="{plink create}" class="btn btn-outline-primary">{$control->titleCreate()->toHtml()}</a>
+    <a href="{plink report}" class="btn btn-outline-primary">{$control->titleReport()->toHtml()}</a>
 {/block}
 {block outerContent}
     <div class="panel color-auto">
