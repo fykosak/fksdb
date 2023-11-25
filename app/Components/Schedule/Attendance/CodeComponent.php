@@ -6,7 +6,6 @@ namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;

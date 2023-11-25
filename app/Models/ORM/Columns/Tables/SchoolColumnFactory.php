@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Columns\Tables;
 
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\UI\FlagBadge;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
@@ -20,8 +19,6 @@ class SchoolColumnFactory extends AbstractColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')
-            ->addText($model->name_abbrev)
-            ->addHtml(FlagBadge::getHtml($model->address->country));
+        return $model->label();
     }
 }

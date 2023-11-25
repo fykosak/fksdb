@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -32,10 +31,6 @@ class TaskGrid extends BaseGrid
         return $this->event->getTasks();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->addSimpleReferencedColumns([

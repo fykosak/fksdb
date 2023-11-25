@@ -10,12 +10,8 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @phpstan-type TData array{
- * label:string,
- * value:int,
- * description?:string,
- * }
- * @phpstan-implements FilteredDataProvider<TagTypeModel,TData>
+ * @phpstan-type TItem array{label:string,value:int,description:string|null}
+ * @phpstan-implements FilteredDataProvider<TItem>
  */
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
@@ -41,14 +37,15 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    /**
-     * @phpstan-return TData
-     */
-    public function serializeItemId(int $id): array
+    public function getItemLabel(int $id): array
     {
         /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
-        return $this->serializeItem($tagType);
+        return [
+            'label' => $tagType->name,
+            'value' => $tagType->tag_type_id,
+            'description' => $tagType->description,
+        ];
     }
 
     /**

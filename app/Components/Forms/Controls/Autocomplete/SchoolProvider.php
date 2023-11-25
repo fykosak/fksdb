@@ -7,16 +7,15 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-type TData array{label:string,value:int,iso:string,city:string,country:string}
- * @phpstan-implements FilteredDataProvider<SchoolModel,TData>
+ * @phpstan-type TItem array{label:string,value:int,html:string}
+ * @phpstan-implements FilteredDataProvider<TItem>
  */
 class SchoolProvider implements FilteredDataProvider
 {
-
     private const LIMIT = 50;
 
     private SchoolService $schoolService;
@@ -29,7 +28,12 @@ class SchoolProvider implements FilteredDataProvider
      */
     private $defaultValue;
 
-    public function __construct(SchoolService $schoolService)
+    public function __construct(Container $container)
+    {
+        $container->callInjects($this);
+    }
+
+    public function inject(SchoolService $schoolService): void
     {
         $this->schoolService = $schoolService;
     }
@@ -41,11 +45,13 @@ class SchoolProvider implements FilteredDataProvider
 
         $schools = $this->schoolService->getTable();
         foreach ($tokens as $token) { //@phpstan-ignore-line
-            $schools->where(
-                'name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')',
-                $token,
-                $token
-            );
+            $schools->whereOr([
+                'school.name_full LIKE concat(\'%\', ?, \'%\')' => $token,
+                'school.name_abbrev LIKE concat(\'%\', ?, \'%\')' => $token,
+                'address.city LIKE concat(\'%\', ?, \'%\')' => $token,
+                'address.country.name LIKE concat(\'%\', ?, \'%\')' => $token,
+                'school.name LIKE concat(\'%\', ?, \'%\')' => $token,
+            ]);
         }
         // For backwards compatibility consider NULLs active
         if ($this->defaultValue != null) {
@@ -67,16 +73,13 @@ class SchoolProvider implements FilteredDataProvider
         return $result;
     }
 
-    /**
-     * @phpstan-return TData
-     */
-    public function serializeItemId(int $id): array
+    public function getItemLabel(int $id): array
     {
         $school = $this->schoolService->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
         }
-        return $this->serializeItem($school);
+        return $this->getItem($school);
     }
 
     /**
@@ -89,16 +92,13 @@ class SchoolProvider implements FilteredDataProvider
     }
 
     /**
-     * @phpstan-return TData
-     * @param SchoolModel $model
+     * @phpstan-return TItem
      */
     public function serializeItem(Model $model): array
     {
         return [
-            'label' => $model->name_abbrev,
-            'iso' => strtolower($model->address->country->alpha_2),
-            'country' => $model->address->country->name,
-            'city' => $model->address->city,
+            'label' => $model->label()->toText(),
+            'html' => $model->label()->toHtml(),
             'value' => $model->school_id,
         ];
     }

@@ -12,12 +12,12 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @phpstan-type TData array{
- * label:string,
- * value:int,
- * place:string|null,
+ * @phpstan-type TItem array{
+ *     label:string,
+ *     value:int,
+ *     place:string|null,
  * }
- * @phpstan-implements FilteredDataProvider<PersonModel,TData>
+ * @phpstan-implements FilteredDataProvider<TItem>
  */
 class PersonProvider implements FilteredDataProvider
 {
@@ -47,9 +47,6 @@ class PersonProvider implements FilteredDataProvider
             ]);
     }
 
-    /**
-     * @phpstan-return array<int,TData>
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);
@@ -65,13 +62,10 @@ class PersonProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    /**
-     * @phpstan-return TData
-     */
-    public function serializeItemId(int $id): array
+    public function getItemLabel(int $id): array
     {
         $person = $this->personService->findByPrimary($id);
-        return $this->serializeItem($person);
+        return $this->getItem($person);
     }
 
     /**

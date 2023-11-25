@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Models\WebService\Models\ContestsModel;
+use FKSDB\Models\WebService\Models\EventListWebModel;
 use FKSDB\Models\WebService\Models\Events\ParticipantsWebModel;
 use FKSDB\Models\WebService\Models\Events\ReportsWebModel;
 use FKSDB\Models\WebService\Models\Events\TeamsWebModel;
-use FKSDB\Models\WebService\Models\EventListWebModel;
 use FKSDB\Models\WebService\Models\EventWebModel;
 use FKSDB\Models\WebService\Models\OrganizersWebModel;
 use FKSDB\Models\WebService\Models\PaymentListWebModel;
 use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SchoolsReportsWebModel;
 use FKSDB\Models\WebService\Models\SeriesResultsWebModel;
 use FKSDB\Models\WebService\Models\SignaturesWebModel;
 use FKSDB\Models\WebService\Models\StatsWebModel;
@@ -193,6 +194,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             'contests/<contestId [0-9]+>/years/<year [0-9]+>/stats',
             array_merge(self::ROUTER, [
                 'model' => StatsWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            'schools/reports',
+            array_merge(self::ROUTER, [
+                'model' => SchoolsReportsWebModel::class,
             ])
         );
         $list->addRoute(

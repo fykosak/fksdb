@@ -101,7 +101,6 @@ window.addEventListener('DOMContentLoaded', () => {
             };
             button.addEventListener('click', getIcon);
             getIcon();
-            console.log(button.parentElement.querySelectorAll('.has-error'));
             if (fieldSet.querySelectorAll('.has-error').length && button.getAttribute('aria-expanded') === 'false') {
                 button.click();
             }
@@ -183,48 +182,17 @@ window.addEventListener('DOMContentLoaded', () => {
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
         options: {},
         _create: function () {
-            type Item = ({
-                place: string;
-            } | {
-                description: string;
-            } | {
-                iso: string;
-                country: string;
-                city: string;
-            }) & {
-                label: string;
-                value: number | string;
-            };
-            const innerRenderHtml = (item: Item): string => {
-                const renderMethod = this.element.data('ac-render-method');
-                switch (renderMethod) {
-                    case 'tags':
-                        return item.label + '<br>' + item.description;
-                    case 'person':
-                        return item.label + '<br>' + item.place + ', ID: ' + item.value;
-                    case 'school':
-                        return item.label + '<br>' + item.city + ' (' + item.country + ')' + '<i class="mx-2 flag-icon flag-icon-' + item.iso + '"/>';
-                    default:
-                        return item.label;
-                }
-            }
-            const innerRenderPlain = (item: Item): string => {
-                const renderMethod = this.element.data('ac-render-method');
-                switch (renderMethod) {
-                    case 'tags':
-                        return item.label + ' ' + item.description;
-                    case 'person':
-                        return item.label;
-                    case 'school':
-                        return item.label + ' ' + item.city + ' (' + item.country + ')';
-                    default:
-                        return item.label;
-                }
+
+            type TItem = { html?: string; label: string; description?: string; place?: string; value: number };
+            type TData = Array<TItem>;
+            const extractLast = (term: string): string => {
+                return term.split(/,\s*/).pop();
             }
 
             const multiSelect: boolean = this.element.data('ac-multiselect');
             const defaultValue: number = this.element.val();
-            const defaultItems: Item[] = this.element.data('ac-default-value');
+            const defaultData: TData = this.element.data('ac-default');
+            const renderMethod = this.element.data('ac-render-method');
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
@@ -242,8 +210,32 @@ window.addEventListener('DOMContentLoaded', () => {
             metaEl.insertAfter(el);
 
             this.element.data('autocomplete', el);
-            if (defaultItems.length) {
-                el.val(defaultItems.map((item) => innerRenderPlain(item)).join(' ,'));
+            if (defaultData) {
+                el.val(defaultData.map((value: TItem) => value.label).join(', '));
+            }
+
+            const cache: { [key: string]: TData } = {};
+            const labelCache: Record<string, string> = {};
+            let termFunction = (arg: string): string => arg;
+            // ensures default value is always suggested (needed for AJAX)
+            const conservationFunction = (data: TData): TData => {
+                if (!defaultData) {
+                    return data;
+                }
+                let found = false;
+                for (const i in data) {
+                    if (data[i].value == defaultValue) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    data = [...data, ...defaultData];
+                }
+                return data;
+            };
+            if (multiSelect) {
+                termFunction = extractLast;
             }
 
             const termFunction = multiSelect
@@ -278,8 +270,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             const labelCache: Record<string, Item> = {};
             if (multiSelect) {
-                options.select = (event: JQuery.Event, ui: { item: Item }) => {
-                    labelCache[ui.item.value] = ui.item;
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
+                    labelCache[ui.item.value] = ui.item.label;
                     if (this.element.val()) {
                         this.element.val(this.element.val() + ',' + ui.item.value);
                     } else {
@@ -292,13 +284,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 };
                 options.focus = () => false;
             } else {
-                options.select = (event: JQuery.Event, ui: { item: Item }) => {
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(innerRenderPlain(ui.item));
                     this.element.change();
                     return false;
                 };
-                options.focus = (event: JQuery.Event, ui: { item: Item }) => {
+                options.focus = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(innerRenderPlain(ui.item));
                     return false;
@@ -308,11 +300,26 @@ window.addEventListener('DOMContentLoaded', () => {
             // @ts-ignore
             const acEl = el.autocomplete(options);
 
-            acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: Item): JQuery => {
-                return $('<li>')
-                    .append('<a>' + innerRenderHtml(item) + '</a>')
-                    .appendTo(ul);
+            const renderItem = (item: TItem): JQuery => {
+                switch (renderMethod) {
+                    case 'tags':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.description + '</a>');
+                    case 'person':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>');
+                    case 'school':
+                        return $('<li>')
+                            .append('<a>' + (item.html || item.label) + '</a>');
+                    default:
+                        return eval(renderMethod);
+                }
             };
+            if (renderMethod) {
+                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: TItem): JQuery => {
+                    return renderItem(item).appendTo(ul);
+                };
+            }
         },
     });
     $('input[data-ac]')['autocomplete-select']();

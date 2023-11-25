@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 /**
- * @template TModel of \Fykosak\NetteORM\Model\Model
- * @template TData of array
- * @phpstan-extends DataProvider<TModel,TData>
+ * @phpstan-template TItem of array
+ * @phpstan-extends DataProvider<TItem>
  */
 interface FilteredDataProvider extends DataProvider
 {
 
     /**
-     * @phpstan-return array<int,TData> see parent + filtered by the user input
+     * @phpstan-return array<int,TItem> see parent + filtered by the user input
      */
     public function getFilteredItems(?string $search): array;
 }

@@ -39,7 +39,7 @@ class AutocompleteSelectBox extends TextBase
     {
         parent::__construct($label);
 
-        $this->monitor(BasePresenter::class, function (BasePresenter $provider) {
+        $this->monitor(BasePresenter::class, function (BasePresenter $provider): void {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
                 $name = $this->lookupPath(BasePresenter::class);
@@ -83,22 +83,22 @@ class AutocompleteSelectBox extends TextBase
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
-            if ($this->multiSelect) {
-                $defaultTextValue = [];
+            $defaultTextValue = [];
+            if ($this->isMultiSelect()) {
                 foreach ($defaultValue as $id) {
-                    $defaultTextValue[] = $this->getDataProvider()->serializeItemId((int)$id);
+                    $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$id);
                 }
                 $control->addAttributes([
                     'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
                 ]);
             } else {
-                $defaultTextValue[] = $this->getDataProvider()->serializeItemId((int)$defaultValue);
+                $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$defaultValue);
                 $control->addAttributes([
                     'value' => $defaultValue,
                 ]);
             }
             $control->addAttributes([
-                'data-ac-default-value' => json_encode($defaultTextValue),
+                'data-ac-default' => $defaultTextValue,
             ]);
         }
 

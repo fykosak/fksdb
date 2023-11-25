@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Application\Person;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\NetteORM\Selection\TypedSelection;
@@ -36,10 +35,6 @@ class NewApplicationsGrid extends BaseGrid
         return $this->eventService->getEventsWithOpenRegistration();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
