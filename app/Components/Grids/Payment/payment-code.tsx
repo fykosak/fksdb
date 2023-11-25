@@ -19,7 +19,6 @@ export interface OwnProps {
 }
 
 export default function PaymentCode({data}: OwnProps) {
-    console.log(data);
     const [qrCode, setQRCode] = useState<string>(null);
     useEffect(function () {
         let text = 'SPD*1.0*';
@@ -41,16 +40,15 @@ export default function PaymentCode({data}: OwnProps) {
         text += 'CC:' + data.currency + '*';
         text += 'RF:' + data.paymentId + '*';
         text += 'RN:' + data.recipient + '*'
-        console.log(text);
         QRCode.toString(text).then((code) => {
             setQRCode(code);
         });
-    }, [])
+    }, []);
 
-    console.log(qrCode);
     if (qrCode) {
         return <div style={{maxWidth: '20rem'}} dangerouslySetInnerHTML={{__html: qrCode}}/>;
     }
-    return null;
-
+    return <div className="fa-3x">
+        <i className="fas fa-spinner fa-spin"/>
+    </div>;
 }

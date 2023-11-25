@@ -21,6 +21,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
+use Nette\Utils\Html;
 
 final class PaymentPresenter extends BasePresenter
 {
@@ -90,7 +91,13 @@ final class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id),
+            Html::el('')
+                ->addText(\sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id))
+                ->addHtml(
+                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml(
+                        $this->getEntity()->state->badge()
+                    )
+                ),
             'fas fa-credit-card',
         );
     }
