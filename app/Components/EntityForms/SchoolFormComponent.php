@@ -100,7 +100,7 @@ class SchoolFormComponent extends EntityFormComponent
             isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS
         );
-        $this->getPresenter()->redirect('list');
+        $this->getPresenter()->redirect('default');
     }
 
     protected function setDefaults(Form $form): void
