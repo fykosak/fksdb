@@ -10,11 +10,17 @@ use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
-    public static function emptyStrToNull(iterable $values): ArrayHash
+    /**
+     * @phpstan-template TArray of ArrayHash
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function emptyStrToNull(ArrayHash $values): ArrayHash
     {
+        /** @phpstan-var TArray $result */
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
-            if (is_iterable($value)) {
+            if ($value instanceof ArrayHash) {
                 $result[$key] = self::emptyStrToNull($value);
             } elseif ($value === '') {
                 $result[$key] = null;
@@ -25,12 +31,17 @@ class FormUtils
         return $result;
     }
 
-    public static function emptyStrToNull2(iterable $values): array
+    /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function emptyStrToNull2(array $values): array
     {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $result[$key] = self::emptyStrToNull2($value);
+                $result[$key] = self::emptyStrToNull2((array)$value);
             } elseif ($value === '') {
                 $result[$key] = null;
             } else {
@@ -40,12 +51,17 @@ class FormUtils
         return $result;
     }
 
-    public static function removeEmptyValues(iterable $values, bool $ignoreNulls = false): array
+    /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function removeEmptyValues(array $values, bool $ignoreNulls = false): array
     {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $clear = self::removeEmptyValues($value, $ignoreNulls);
+                $clear = self::removeEmptyValues((array)$value, $ignoreNulls);
                 if (count($clear)) {
                     $result[$key] = $clear;
                 }

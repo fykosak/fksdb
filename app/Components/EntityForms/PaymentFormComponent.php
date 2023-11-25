@@ -10,49 +10,50 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
-use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\Utils\Logging\Message;
+use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property PaymentModel|null $model
+ * @phpstan-extends EntityFormComponent<PaymentModel>
  */
 class PaymentFormComponent extends EntityFormComponent
 {
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
-    private bool $isOrg;
+    private bool $isOrganizer;
     private PaymentMachine $machine;
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
     private EventModel $event;
+    private PersonModel $loggedPerson;
 
     public function __construct(
         Container $container,
-        bool $isOrg,
-        PaymentMachine $machine,
         EventModel $event,
+        PersonModel $loggedPerson,
+        bool $isOrganizer,
+        PaymentMachine $machine,
         ?PaymentModel $model
     ) {
         parent::__construct($container, $model);
         $this->machine = $machine;
+        $this->isOrganizer = $isOrganizer;
         $this->event = $event;
-        $this->isOrg = $isOrg;
+        $this->loggedPerson = $loggedPerson;
     }
 
     final public function injectPrimary(
@@ -71,23 +72,22 @@ class PaymentFormComponent extends EntityFormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
+        return $form->addSubmit('submit', isset($this->model) ? _('Save payment') : _('Proceed to summary'));
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
      * @throws NotImplementedException
+     * @throws \Exception
      */
     protected function configureForm(Form $form): void
     {
-        if ($this->isOrg) {
+        if ($this->isOrganizer) {
             $form->addComponent(
                 $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
                 'person_id'
             );
-        } else {
-            $form->addHidden('person_id');
         }
         /** @var SelectBox $currencyField */
         $currencyField = $this->reflectionFormFactory->createField('payment', 'currency');
@@ -97,85 +97,67 @@ class PaymentFormComponent extends EntityFormComponent
         $form->addComponent(
             new PersonPaymentContainer(
                 $this->getContext(),
-                $this->machine,
-                !$this->isCreating()
+                $this->event,
+                $this->loggedPerson,
+                $this->isOrganizer,
+                $this->model
             ),
-            'payment_accommodation'
+            'items'
         );
     }
 
     /**
-     * @throws NotImplementedException
      * @throws UnavailableTransitionsException
-     * @throws ModelException
+     * @throws \PDOException
      * @throws StorageException
      * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
-        $data = [
-            'currency' => $values['currency'],
-            'person_id' => $values['person_id'],
-        ];
+        /** @phpstan-var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
+        $values = $form->getValues('array');
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
-            if (isset($this->model)) {
-                $this->paymentService->storeModel($data, $this->model);
-                $model = $this->model;
-            } else {
-                $model = $this->paymentService->storeModel(
-                    array_merge($data, [
-                        'event_id' => $this->event->event_id,
-                    ])
-                );
+            $model = $this->paymentService->storeModel(
+                [
+                    'event_id' => $this->event->event_id,
+                    'currency' => $values['currency'],
+                    'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
+                ],
+                $this->model
+            );
+            $this->schedulePaymentService->storeItems(
+                (array)$values['items'],
+                $model,
+                Language::from($this->translator->lang)
+            );
+            if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $this->machine->executeImplicitTransition($holder);
+                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
+                $this->machine->execute($transition, $holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {
             $connection->rollBack();
-            return;
-        }
-        try {
-            $this->schedulePaymentService->storeItems((array)$values['payment_accommodation'], $model); // TODO
-            //$this->schedulePaymentService->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException | EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
-            return;
+            throw $exception;
         }
         $connection->commit();
-
         $this->getPresenter()->flashMessage(
-            !isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.')
+            !isset($this->model)
+                ? _('Payment has been created.')
+                : _('Payment has been updated.')
         );
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $values = $this->model->toArray();
-            $query = $this->model->getRelatedPersonSchedule();
-            $items = [];
-            foreach ($query as $row) {
-                $key = 'person' . $row->person_id;
-                $items[$key] = $items[$key] ?? [];
-                $items[$key][$row->person_schedule_id] = true;
-            }
-            $values['payment_accommodation'] = $items;
-            $this->getForm()->setDefaults($values);
-        } else {
-            /** @var LoginModel $login */
-            $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
-                'person_id' => $login->person->person_id,
-            ]);
+            $form->setDefaults($this->model->toArray());
+            /** @var PersonPaymentContainer $itemContainer */
+            $itemContainer = $form->getComponent('items');
+            $itemContainer->setPayment($this->model);
         }
     }
 }

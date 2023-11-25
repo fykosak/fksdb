@@ -11,5 +11,8 @@ use Nette\Utils\ArrayHash;
 
 interface Processing
 {
-    public function process(ArrayHash $values, ModelHolder $holder, Logger $logger, Form $form): void;
+    /**
+     * @phpstan-param ArrayHash<ArrayHash<mixed>> $values
+     */
+    public function process(ArrayHash $values): void;
 }

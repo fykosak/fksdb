@@ -6,13 +6,14 @@ namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
+ * @implements Statement<bool,BaseHolder>
  */
-class Role extends EvaluatedExpression
+class Role implements Statement
 {
     public const ADMIN = 'admin';
 
@@ -28,21 +29,19 @@ class Role extends EvaluatedExpression
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    /**
-     * @param BaseHolder $holder
-     */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
+        /** @var BaseHolder|ParticipantHolder $holder */
+        [$holder] = $args;
         switch ($this->role) {
             case self::ADMIN:
-                return $this->eventAuthorizator->isAllowed($holder->event, 'application', $holder->event);
+                if ($holder instanceof BaseHolder) {
+                    return $this->eventAuthorizator->isAllowed($holder->getModel(), 'edit', $holder->event);
+                } else {
+                    return $this->eventAuthorizator->isAllowed($holder->getModel(), 'edit', $holder->getModel()->event);
+                }
             default:
                 return false;
         }
-    }
-
-    public function __toString(): string
-    {
-        return "role($this->role)";
     }
 }

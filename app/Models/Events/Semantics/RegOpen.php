@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 
-class RegOpen extends EvaluatedExpression
+/**
+ * @implements Statement<bool,BaseHolder|ParticipantHolder>
+ */
+class RegOpen implements Statement
 {
-    /**
-     * @param BaseHolder $holder
-     */
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
-        return (!$holder->event->registration_begin || $holder->event->registration_begin->getTimestamp() <= time())
-            && (!$holder->event->registration_end || $holder->event->registration_end->getTimestamp() >= time());
-    }
-
-    public function __toString(): string
-    {
-        return 'regOpen';
+        /** @var BaseHolder|ParticipantHolder $holder */
+        [$holder] = $args;
+        return $holder->getModel()->event->isRegistrationOpened();
     }
 }

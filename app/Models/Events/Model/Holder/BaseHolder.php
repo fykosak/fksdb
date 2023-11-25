@@ -6,55 +6,46 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Processing\Processing;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
-use Fykosak\Utils\Logging\Logger;
-use Nette\Forms\Form;
-use Nette\InvalidArgumentException;
-use Nette\Neon\Neon;
-use Nette\Utils\ArrayHash;
+use Nette\DI\Container;
 
+/**
+ * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ */
 class BaseHolder implements ModelHolder
 {
-    public string $name = 'participant';
-    public string $label;
-
-    /** @var bool|callable */
+    /** @phpstan-var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
-
-    private ExpressionEvaluator $evaluator;
     public EventModel $event;
-    /** @var Service|ServiceMulti */
-    public $service;
-    /** @var EventParticipantModel|ModelMDsefParticipant|null */
-    private ?Model $model;
+    private EventParticipantService $service;
+    private ?EventParticipantModel $model;
+    /** @phpstan-var array<string,mixed> */
     public array $data = [];
 
-    public array $paramScheme;
-    private array $parameters;
-
-    /** @var Field[] */
+    /** @phpstan-var Field[] */
     private array $fields = [];
-    /** @var FormAdjustment[] */
-    private array $formAdjustments = [];
-    /** @var Processing[] */
-    private array $processings = [];
+    /** @phpstan-var FormAdjustment<BaseHolder>[] */
+    public array $formAdjustments = [];
+    /** @phpstan-var Processing[] */
+    public array $processings = [];
 
+    public function __construct(EventParticipantService $service)
+    {
+        $this->service = $service;
+    }
+
+    /**
+     * @phpstan-param FormAdjustment<BaseHolder> $formAdjustment
+     */
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
         $this->formAdjustments[] = $formAdjustment;
@@ -65,26 +56,6 @@ class BaseHolder implements ModelHolder
         $this->processings[] = $processing;
     }
 
-    /**
-     * Apply processings to the values and sets them to the ORM model.
-     */
-    public function processFormValues(
-        ArrayHash $values,
-        Logger $logger,
-        Form $form
-    ): void {
-        foreach ($this->processings as $processing) {
-            $processing->process($values, $this, $logger, $form);
-        }
-    }
-
-    public function adjustForm(Form $form): void
-    {
-        foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $this);
-        }
-    }
-
     public function addField(Field $field): void
     {
         $field->holder = $this;
@@ -92,7 +63,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @return Field[]
+     * @phpstan-return Field[]
      */
     public function getFields(): array
     {
@@ -100,47 +71,33 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param bool|callable $modifiable
+     * @phpstan-param bool|callable(BaseHolder):bool $modifiable
      */
     public function setModifiable($modifiable): void
     {
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * @throws NeonSchemaException
-     */
     public function setEvent(EventModel $event): void
     {
         $this->event = $event;
         $this->data['event_id'] = $this->event->getPrimary();
-        $this->cacheParameters();
-    }
-
-    public function setParamScheme(array $paramScheme): void
-    {
-        $this->paramScheme = $paramScheme;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
     }
 
     public function isModifiable(): bool
     {
-        return $this->evaluator->evaluate($this->modifiable, $this);
+        if (is_callable($this->modifiable)) {
+            return ($this->modifiable)($this);
+        }
+        return (bool)$this->modifiable;
     }
 
-    /**
-     * @return ModelMDsefParticipant|EventParticipantModel
-     */
-    public function getModel(): ?Model
+    public function getModel(): ?EventParticipantModel
     {
         return $this->model ?? null;
     }
 
-    public function setModel(?Model $model): void
+    public function setModel(?EventParticipantModel $model): void
     {
         $this->model = $model;
     }
@@ -162,25 +119,12 @@ class BaseHolder implements ModelHolder
             return $model->status;
         }
 
-        return EventParticipantStatus::tryFrom(Machine::STATE_INIT);
+        return EventParticipantStatus::from(Machine::STATE_INIT);
     }
 
     public function setModelState(EventParticipantStatus $state): void
     {
         $this->data['status'] = $state->value;
-    }
-
-    /**
-     * @param Service|ServiceMulti $service
-     */
-    public function setService($service): void
-    {
-        $this->service = $service;
-    }
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
     }
 
     public static function getBareColumn(string $column): ?string
@@ -190,10 +134,10 @@ class BaseHolder implements ModelHolder
         return $pos === false ? $column : substr($column, $pos + 1);
     }
 
-    public function createFormContainer(): ContainerWithOptions
+    public function createFormContainer(Container $container): ContainerWithOptions
     {
-        $container = new ContainerWithOptions();
-        $container->setOption('label', $this->label);
+        $container = new ContainerWithOptions($container);
+        $container->setOption('label', _('Participant'));
 
         foreach ($this->fields as $name => $field) {
             if (!$field->isVisible()) {
@@ -206,9 +150,6 @@ class BaseHolder implements ModelHolder
         return $container;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function getPerson(): ?PersonModel
     {
         try {
@@ -216,52 +157,21 @@ class BaseHolder implements ModelHolder
             if (!$app) {
                 return null;
             }
-            return $app->getReferencedModel(PersonModel::class);
+            return $app->person;
         } catch (CannotAccessModelException $exception) {
             return null;
         }
     }
 
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
     /**
-     * @throws NeonSchemaException
+     * @phpstan-param EventParticipantStatus $newState
      */
-    private function cacheParameters(): void
-    {
-        $parameters = $this->event->parameters ?? '';
-        $parameters = $parameters ? Neon::decode($parameters) : [];
-        if (is_string($parameters)) {
-            throw new NeonSchemaException('Parameters must be an array string given');
-        }
-        $this->parameters = NeonScheme::readSection($parameters, $this->paramScheme);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getParameter(string $name)
-    {
-        try {
-            return $this->parameters[$name] ?? null;
-        } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException(
-                "No parameter '$name' for event " . $this->event . '.',
-                0,
-                $exception
-            );
-        }
-    }
-
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
-    public function getState(): ?EnumColumn
+    public function getState(): EventParticipantStatus
     {
         return $this->model->status;
     }

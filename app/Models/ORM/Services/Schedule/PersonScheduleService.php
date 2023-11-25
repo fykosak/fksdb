@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use Fykosak\NetteORM\Service\Service;
 
-class PersonScheduleService extends Service
+/**
+ * @phpstan-extends Service<PersonScheduleModel>
+ */
+final class PersonScheduleService extends Service
 {
 }

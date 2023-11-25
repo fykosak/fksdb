@@ -5,35 +5,41 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Application\Application;
+use Nette\Application\UI\TemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
-use Nette\Localization\Translator;
 
 class MailTemplateFactory
 {
-
     /** without trailing slash */
     private string $templateDir;
     /** @var Application */
     private $application;
 
-    private Translator $translator;
+    private GettextTranslator $translator;
     private IRequest $request;
+    private TemplateFactory $templateFactory;
 
     public function __construct(
         string $templateDir,
+        TemplateFactory $templateFactory,
         Application $application,
-        Translator $translator,
+        GettextTranslator $translator,
         IRequest $request
     ) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
+        $this->templateFactory = $templateFactory;
     }
 
     /**
@@ -49,51 +55,75 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{token:AuthTokenModel} $data
      */
-    public function renderLoginInvitation(array $data): string
+    public function renderLoginInvitation(array $data, Language $lang): string
     {
-        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'loginInvitation.latte', $data);
+        return $this->create($lang)->renderToString(__DIR__ . '/loginInvitation.latte', $data);
     }
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{token:AuthTokenModel,person:PersonModel,lang:string} $data
      */
-    public function renderPasswordRecovery(array $data): string
+    public function renderPasswordRecovery(array $data, Language $lang): string
     {
-        return $this->create()->renderToString(__DIR__ . DIRECTORY_SEPARATOR . 'recovery.latte', $data);
+        return $this->create($lang)->renderToString(__DIR__ . '/recovery.latte', $data);
     }
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string} $data
+     */
+    public function renderChangeEmailOld(array $data, Language $lang): string
+    {
+        return $this->create($lang)
+            ->renderToString(__DIR__ . '/changeEmail.old.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
+     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string,token:AuthTokenModel} $data
+     */
+    public function renderChangeEmailNew(array $data, Language $lang): string
+    {
+        return $this->create($lang)
+            ->renderToString(__DIR__ . '/changeEmail.new.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
+     * @phpstan-param array{logger:MemoryLogger} $data
+     */
+    public function renderReport(array $data, Language $lang): string
+    {
+        return $this->create($lang)
+            ->renderToString(__DIR__ . '/report.latte', $data);
+    }
+
+    /**
+     * @throws BadTypeException
+     * @phpstan-param array<string,mixed> $data
      */
     public function renderWithParameters(string $templateFile, ?Language $lang, array $data = []): string
     {
-        return $this->create()->renderToString($this->resolverFileName($templateFile, $lang), $data);
+        return $this->create($this->resolverLang($lang))
+            ->renderToString($this->resolverFileName($templateFile, $lang), $data);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    final public function resolveLang(?Language $lang): Language
+    private function resolverLang(?Language $lang): Language
     {
-        if (!is_null($lang)) {
-            return $lang;
-        }
-        $presenter = $this->application->getPresenter();
-
-        if (!$presenter instanceof BasePresenter) {
-            throw new BadTypeException(BasePresenter::class, $presenter);
-        }
-        return $presenter->getLang();
+        return $lang ?? Language::from($this->translator->lang);
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    private function resolverFileName(string $filename, ?string $lang): string
+    private function resolverFileName(string $filename, ?Language $lang): string
     {
-        $lang = $this->resolveLang($lang);
-        $filename = "$filename.$lang.latte";
+        if (file_exists($filename)) {
+            return $filename;
+        }
+
+        $lang = $this->resolverLang($lang);
+        $filename = "$filename.$lang->value.latte";
         if (file_exists($filename)) {
             return $filename;
         }
@@ -101,19 +131,19 @@ class MailTemplateFactory
         if (file_exists($filename)) {
             return $filename;
         }
-        throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
+        throw new InvalidArgumentException(sprintf(_('Cannot find template "%s.%s".'), $filename, $lang->value));
     }
 
     /**
      * @throws BadTypeException
      */
-    private function create(): Template
+    private function create(Language $lang): Template
     {
         $presenter = $this->application->getPresenter();
-        if (!$presenter instanceof BasePresenter) {
+        if ($presenter && !$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
-        $template = $presenter->getTemplateFactory()->createTemplate();
+        $template = $this->templateFactory->createTemplate();
 
         if (!$template instanceof Template) {
             throw new BadTypeException(Template::class, $template);
@@ -121,7 +151,7 @@ class MailTemplateFactory
         $template->getLatte()->addProvider('uiControl', $presenter);
         $template->control = $presenter;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
-        $template->setTranslator($this->translator);
+        $template->setTranslator($this->translator, $lang->value);
         return $template;
     }
 }

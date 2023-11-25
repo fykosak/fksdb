@@ -8,13 +8,23 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
+/**
+ * @phpstan-type TItem array{
+ *     label:string,
+ *     value:int,
+ *     place:string|null,
+ * }
+ * @phpstan-implements FilteredDataProvider<TItem>
+ */
 class PersonProvider implements FilteredDataProvider
 {
 
-    private const PLACE = 'place';
     private PersonService $personService;
+    /**
+     * @phpstan-var TypedSelection<PersonModel>
+     */
     private TypedSelection $searchTable;
 
     public function __construct(PersonService $personService)
@@ -26,7 +36,7 @@ class PersonProvider implements FilteredDataProvider
     /**
      * Syntactic sugar, should be solved more generally.
      */
-    public function filterOrgs(ContestModel $contest): void
+    public function filterOrganizers(ContestModel $contest): void
     {
         $this->searchTable = $this->personService->getTable()
             ->where([
@@ -36,9 +46,6 @@ class PersonProvider implements FilteredDataProvider
             ]);
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);
@@ -54,10 +61,10 @@ class PersonProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    public function getItemLabel(int $id): array
     {
         $person = $this->personService->findByPrimary($id);
-        return $person->getFullName();
+        return $this->getItem($person);
     }
 
     public function getItems(): array
@@ -73,17 +80,24 @@ class PersonProvider implements FilteredDataProvider
         return $result;
     }
 
+    /**
+     * @phpstan-return array{
+     *     label:string,
+     *     value:int,
+     *     place:string|null,
+     * }
+     */
     private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY));
+        $address = $person->getAddress(PostContactType::from(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }
         return [
-            self::LABEL => $person->getFullName(),
-            self::VALUE => $person->person_id,
-            self::PLACE => $place,
+            'label' => $person->getFullName(),
+            'value' => $person->person_id,
+            'place' => $place,
         ];
     }
 

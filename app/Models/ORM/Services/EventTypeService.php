@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\EventTypeModel;
+use Fykosak\NetteORM\Service\Service;
 
-class EventTypeService extends Service
+/**
+ * @phpstan-extends Service<EventTypeModel>
+ */
+final class EventTypeService extends Service
 {
 }

@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Tests\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\Database\Row;
 use Nette\Schema\Helpers;
-use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
@@ -31,7 +26,13 @@ abstract class EventTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        return $this->getContainer()->getByType(EventService::class)->storeModel($data);
+        if (!isset($data['registration_begin'])) {
+            $data['registration_begin'] = '2016-01-01';
+        }
+        if (!isset($data['registration_end'])) {
+            $data['registration_end'] = '2017-01-01';
+        }
+        return $this->container->getByType(EventService::class)->storeModel($data);
     }
 
     protected function createPostRequest(array $formData, array $params = []): Request
@@ -42,8 +43,8 @@ abstract class EventTestCase extends DatabaseTestCase
             Helpers::merge($params, [
                 'action' => 'default',
                 'lang' => 'cs',
-                'contestId' => (string)1,
-                'year' => (string)1,
+                'contestId' => '1',
+                'year' => '1',
                 'eventId' => $this->getEvent()->event_id,
             ]),
             Helpers::merge($formData, [
@@ -53,26 +54,4 @@ abstract class EventTestCase extends DatabaseTestCase
     }
 
     abstract protected function getEvent(): EventModel;
-
-    protected function assertApplication(EventModel $event, string $email): EventParticipantModel
-    {
-        $person = $this->getContainer()->getByType(PersonService::class)->findByEmail($email);
-        Assert::notEqual(null, $person);
-        $application = $this->getContainer()->getByType(EventParticipantService::class)->getTable()->where([
-            'event_id' => $event->event_id,
-            'person_id' => $person->person_id,
-        ])->fetch();
-        Assert::notEqual(null, $application);
-        return $application;
-    }
-
-    protected function assertExtendedApplication(EventParticipantModel $application, string $table): Row
-    {
-        $application = $this->explorer->fetch(
-            'SELECT * FROM `' . $table . '` WHERE event_participant_id = ?',
-            $application->event_participant_id
-        );
-        Assert::notEqual(null, $application);
-        return $application;
-    }
 }

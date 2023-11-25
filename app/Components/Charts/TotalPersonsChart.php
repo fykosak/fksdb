@@ -8,6 +8,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 class TotalPersonsChart extends FrontEndComponent implements Chart
@@ -25,6 +26,9 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
         $this->personService = $personService;
     }
 
+    /**
+     * @phpstan-return array<int,array{created:string,gender:string,personId:int}>
+     */
     public function getData(): array
     {
         $query = $this->personService->getTable()->order('created');
@@ -40,9 +44,9 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Total persons in FKSDB');
+        return new Title(null, _('Total persons in FKSDB'), 'fas fa-chart-line');
     }
 
     public function getDescription(): ?string

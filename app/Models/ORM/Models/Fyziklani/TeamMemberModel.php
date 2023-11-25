@@ -7,23 +7,29 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
- * @property-read int fyziklani_team_member_id
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int fyziklani_team_id
- * @property-read TeamModel2 fyziklani_team
+ * @property-read int $fyziklani_team_member_id
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $fyziklani_team_id
+ * @property-read TeamModel2 $fyziklani_team
  */
-class TeamMemberModel extends Model
+final class TeamMemberModel extends Model
 {
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
-        return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
+        return $this->person->getHistory($this->fyziklani_team->event->getContestYear());
     }
 
+    /**
+     * @phpstan-return array{
+     *     participantId:int,
+     *     personId:int,
+     * }
+     */
     public function __toArray(): array
     {
         return [
@@ -32,6 +38,9 @@ class TeamMemberModel extends Model
         ];
     }
 
+    /**
+     * @throws \DOMException
+     */
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('participant');

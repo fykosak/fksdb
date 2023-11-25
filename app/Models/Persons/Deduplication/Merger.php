@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Database\Explorer;
@@ -26,7 +26,7 @@ class Merger
     private Explorer $explorer;
     private array $configuration;
     private Logger $logger;
-    /** @var TableMerger[] */
+    /** @phpstan-var TableMerger[] */
     private array $tableMergers = [];
 
     public function __construct(array $configuration, Explorer $explorer)
@@ -194,7 +194,7 @@ class Merger
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
-    private function &getPairData(Model $trunkRow, Model $mergedRow): array
+    private function &getPairData(Model $trunkRow, Model $mergedRow): array // phpcs:ignore
     {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);
@@ -202,7 +202,7 @@ class Merger
         return $this->getPairDataById($table, $pairId);
     }
 
-    private function &getPairDataById(string $table, string $pairId): array
+    private function &getPairDataById(string $table, string $pairId): array // phpcs:ignore
     {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];

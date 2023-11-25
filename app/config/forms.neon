@@ -13,13 +13,13 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
                 class:
                   required: false
-            post_contact_d:
-                address:
-                  required: true
+            post_contact_p:
+                required: true
             person_info:
                 email:
                   required: true
@@ -39,20 +39,16 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
                 class:
                   required: false
-            post_contact_d:
-                address:
-                  required: true
+            post_contact_p:
+                required: true
             person_info:
                 email:
                   required: true
-                phone_parent_m:
-                  required: false
-                phone_parent_d:
-                  required: false
                 origin:
                   required: false
                 agreed:
@@ -60,8 +56,21 @@ parameters:
             person_has_flag:
                 spam_mff:
                   required: true
-        adminOrg: %forms.adminPerson%
-        adminEventOrg: %forms.adminPerson%
+        registerTeacher:
+            person:
+                other_name:
+                    required: true
+                family_name:
+                    required: true
+            person_info:
+                email:
+                    required: true
+                phone:
+                    required: false
+                agreed:
+                    required: true
+        adminOrganizer: %forms.adminPerson%
+        adminEventOrganizer: %forms.adminPerson%
         adminTeacher: %forms.adminPerson%
         adminContestant:
             person:
@@ -97,14 +106,13 @@ parameters:
             person_history:
                 school_id:
                   required: true
-                study_year:
-                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
             post_contact_d:
-                address:
-                  required: false
+                required: false
             post_contact_p:
-                address:
-                  required: false
+                required: false
             person_has_flag:
                 spam_mff:
                   required: false
@@ -148,7 +156,7 @@ parameters:
                   required: false
                 citizenship:
                   required: false
-                # required to ORG
+                # required to organizer
                 uk_login:
                   required: false
                 isic_number:

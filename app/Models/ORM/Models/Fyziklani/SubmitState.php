@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class SubmitState extends FakeStringEnum implements EnumColumn
+final class SubmitState extends FakeStringEnum implements EnumColumn
 {
     public const NOT_CHECKED = 'not_checked';
     public const CHECKED = 'checked';

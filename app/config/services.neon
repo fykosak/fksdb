@@ -11,30 +11,29 @@ services:
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
-        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8})
+        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
-
+    - FKSDB\Models\Router\Router::createRouter
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
     #auth
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
-    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
+    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
     - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     #auth
     - FKSDB\Models\Authorization\ContestAuthorizator
     - FKSDB\Models\Authorization\EventAuthorizator
     - FKSDB\Models\Authorization\RelatedPersonAuthorizator
-    #datatesting
-    - FKSDB\Models\DataTesting\DataTestingFactory
+    #datatest
+    - FKSDB\Components\DataTest\DataTestFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
-    - FKSDB\Models\ORM\ORMFactory
+    - FKSDB\Models\ORM\ReflectionFactory
     # Events
-    events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
@@ -45,21 +44,21 @@ services:
     - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
-    - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
+    - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
     - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
+    - FKSDB\Models\Submits\QuizHandler
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
-    - FKSDB\Models\Submits\SeriesTable
     #results
     - FKSDB\Models\Results\SQLResultsCache
     - FKSDB\Models\Results\ResultsModelFactory
     #strored query
-    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection,...)
+    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection)
     #tasks
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
@@ -67,23 +66,18 @@ services:
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
-    - FKSDB\Components\Controls\Events\ExpressionPrinter
 
     ## forms
     #provider
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
-    - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
-    - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
-    - FKSDB\Components\Forms\Factories\SchoolFactory
-    - FKSDB\Components\Forms\Factories\PersonScheduleFactory
     #handlers
-    - FKSDB\Components\Forms\Controls\Schedule\Handler
+    - FKSDB\Components\Schedule\Input\Handler
 
 includes:
     - merger.neon

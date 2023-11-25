@@ -1,43 +1,69 @@
 {define container}
     {varType Nette\Forms\Container|FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
     {varType int $level}
-    {var $withOptions = $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
-    {var $id = ($level > 1 && $withOptions) ? $container->getOption('id') : $container->getName()}
-    {var $attrs = $withOptions? array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY):[]}
-    {if !$withOptions || $container->getOption('visible', true)}
-        <div n:snippet="group-{$id}" n:attr="(expand) $attrs" >
-            {var $className = ($level > 1 || ($level == 1 && count($container->getComponents()) > 1 && !($container->name == 'aggr')))
-            ?('col-12 bd-callout ' . ($level == 1?'bd-callout-info':($level == 2?'bd-callout-warning':'bd-callout-danger')))
-            :''}
-            <fieldset class="{$className}" data-level={$level}>
-                {if $level > 0 && $withOptions && $container->getOption('label')}
-                    <h4>{$container->getOption('label')}</h4>
+    {if $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
+        {var $attrs = array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY)}
+        {if $container->getOption('visible', true)}
+            {var string|null $label = $container->getOption('label')}
+            {var string|null $description = $container->getOption('description')}
+            {var string $className = $label?'col-12 callout card mb-3 referenced-container':'mb-3 referenced-container'}
+            {var string $id = Nette\Utils\Random::generate(10)}
+            <fieldset
+                    class="{$className}"
+                    n:snippet="'group-' . $container->getOption('id')"
+                    data-level={$level}
+                    n:attr="(expand) $attrs"
+            >
+                <div class="{$label?'card-header d-flex justify-content-between':''}">
+                        {if $label}
+                            <h4>{$label}</h4>
+                        {/if}
+                        {if $container->collapse}
+                        <button class="btn btn-outline-primary btn-sm container-toggle"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{$id}"
+                                role="button"
+                                aria-expanded="false"
+                        >
+                                {_'Toogle'}
+                            </button>
+                        {/if}
+                        {if $description}
+                            <p>{$description}</p>
+                        {/if}
+                </div>
+                {if $container->collapse}
+                    <div class="{$label?'card-body collapse':'mt-3'}" id="{$id}">
+                        {include subComponents container=>$container, level=>$level}
+                    </div>
+                {else}
+                    <div class="{$label?'card-body':''}">
+                        {include subComponents container=>$container, level=>$level}
+                    </div>
                 {/if}
-
-                <p n:if="$level > 0 && $withOptions && $container->getOption('description')">{$container->getOption('description')}</p>
-                {include subComponents conainer=>$container, level=>$level}
             </fieldset>
-        </div>
+        {/if}
+    {else}
+        {snippet 'group-' . $container->getName()}
+            <fieldset data-level={$level}>
+                {include subComponents container=>$container, level=>$level}
+            </fieldset>
+        {/snippet}
     {/if}
 {/define}
 
-{define subComponents}
-    {varType Nette\Forms\Container|FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
-    {varType int $level}
+{define subComponents, FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container,int $level}
     {var $controls = []}
     {foreach $container->getComponents() as $component}
-        {if $component instanceof Nette\Forms\Container}
+        {if $component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
             {if $controls}
                 {include controls controls => $controls}
                 {php $controls = []}
             {/if}
-            {if $level < 2 || ($component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions && $component->getOption('showGroup'))}
-                {formContainer $component}
-                    {include container container => $component, level => $level + 1}
-                {/formContainer}
-            {else}
-                {include controls controls => $component->getControls()}
-            {/if}
+            {formContainer $component}
+                {include container container => $component, level => $level + 1}
+            {/formContainer}
         {else}
             {php $controls[] = $component}
         {/if}

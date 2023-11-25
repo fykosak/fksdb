@@ -1,0 +1,6 @@
+{layout '@layout.latte'}
+{varType Fykosak\Utils\UI\Title $headline}
+{block headline}{$headline->toHtml()}{/block}
+{block content}
+    {include '../../../Grids/Components/list.latte'}
+{/block}

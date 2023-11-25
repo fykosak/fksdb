@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method TeamModel2 findByPrimary(int $key)
- * @method TeamModel2 storeModel(array $data, ?TeamModel2 $model = null)
+ * @phpstan-extends Service<TeamModel2>
+ * @phpstan-import-type SerializedTeamModel from TeamModel2
  */
-class TeamService2 extends Service
+final class TeamService2 extends Service
 {
 
     public function isReadyForClosing(EventModel $event, ?TeamCategory $category = null): bool
     {
-        $query = $event->getParticipatingFyziklaniTeams();
+        $query = $event->getParticipatingTeams();
         if ($category) {
             $query->where('category', $category->value);
         }
@@ -27,13 +27,13 @@ class TeamService2 extends Service
     }
 
     /**
-     * @return TeamModel2[]
+     * @phpstan-return SerializedTeamModel[]
      */
     public static function serialiseTeams(EventModel $event): array
     {
         $teams = [];
         /** @var TeamModel2 $team */
-        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $team) {
+        foreach ($event->getPossiblyAttendingTeams() as $team) {
             $teams[] = $team->__toArray();
         }
         return $teams;

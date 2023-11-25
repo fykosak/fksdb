@@ -25,11 +25,7 @@ DELETE FROM person_schedule;
 DELETE FROM schedule_item;
 DELETE FROM schedule_group;
 
-DELETE FROM e_dsef_participant;
-DELETE FROM e_dsef_group;
-DELETE FROM e_fyziklani_participant;
 DELETE FROM event_participant;
-DELETE FROM e_fyziklani_team;
 DELETE FROM fyziklani_team_teacher;
 DELETE FROM fyziklani_team_member;
 DELETE FROM fyziklani_team;

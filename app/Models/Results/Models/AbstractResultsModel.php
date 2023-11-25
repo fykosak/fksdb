@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
-use Fykosak\NetteORM\TypedGroupedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
-use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Row;
+use FKSDB\Models\Results\ResultsModelFactory;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -36,25 +40,32 @@ abstract class AbstractResultsModel
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected ContestYearModel $contestYear;
     protected TaskService $taskService;
+    protected ContestYearModel $contestYear;
     protected EvaluationStrategy $evaluationStrategy;
+    protected ContestCategoryService $contestCategoryService;
 
-    public function __construct(
-        ContestYearModel $contestYear,
-        TaskService $taskService,
-        EvaluationStrategy $evaluationStrategy
-    ) {
+    /**
+     * @throws BadRequestException
+     */
+    public function __construct(Container $container, ContestYearModel $contestYear)
+    {
+        $container->callInjects($this);
         $this->contestYear = $contestYear;
+        $this->evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($container, $contestYear);
+    }
+
+    public function inject(TaskService $taskService, ContestCategoryService $contestCategoryService): void
+    {
         $this->taskService = $taskService;
-        $this->evaluationStrategy = $evaluationStrategy;
+        $this->contestCategoryService = $contestCategoryService;
     }
 
     /**
-     * @return Row[]
      * @throws \PDOException
+     * @phpstan-ignore-next-line
      */
-    public function getData(ModelCategory $category): array
+    public function getData(ContestCategoryModel $category): array
     {
         $sql = $this->composeQuery($category);
 
@@ -75,12 +86,16 @@ abstract class AbstractResultsModel
         return $result;
     }
 
-    abstract protected function composeQuery(ModelCategory $category): string;
+    /**
+     * @phpstan-return literal-string
+     */
+    abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
+     * @phpstan-param array<string,int|null|array<int,string|int|null>> $conditions
      */
-    protected function conditionsToWhere(iterable $conditions): string
+    protected function conditionsToWhere(array $conditions): string
     {
         $where = [];
         foreach ($conditions as $col => $value) {
@@ -91,10 +106,11 @@ abstract class AbstractResultsModel
                     if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subValue;
+                        $set[] = is_string($subValue) ? ('"' . $subValue . '"') : $subValue;
                     }
                 }
-                $inClause = "$col IN (" . implode(',', $set) . ')';
+                $inClause = $col . ' IN (' .
+                    implode(',', $set) . ')';
                 if ($hasNull) {
                     $where[] = "$inClause OR $col IS NULL";
                 } else {
@@ -109,18 +125,25 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     protected function getTasks(int $series): TypedGroupedSelection
     {
         return $this->contestYear->getTasks($series)->order('tasknr');
     }
 
     /**
-     * @return ModelCategory[]
+     * @phpstan-return ContestCategoryModel[]
      */
     public function getCategories(): array
     {
         return $this->evaluationStrategy->getCategories();
     }
 
-    abstract public function getDataColumns(ModelCategory $category): array;
+    /**
+     * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
+     */
+    abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

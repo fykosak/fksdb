@@ -8,16 +8,22 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class Language extends FakeStringEnum
+final class Language extends FakeStringEnum
 {
     public const CS = 'cs';
     public const EN = 'en';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         switch ($this->value) {
@@ -29,6 +35,9 @@ class Language extends FakeStringEnum
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function locales(): string
     {
         switch ($this->value) {
@@ -40,11 +49,14 @@ class Language extends FakeStringEnum
         throw new NotImplementedException();
     }
 
+    /**
+     * @phpstan-return self[]
+     */
     public static function cases(): array
     {
         return [
-            new static(self::EN),
-            new static(self::CS),
+            new self(self::EN),
+            new self(self::CS),
         ];
     }
 }

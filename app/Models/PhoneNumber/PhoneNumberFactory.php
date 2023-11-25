@@ -4,55 +4,43 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\PhoneNumber;
 
-use FKSDB\Models\ORM\Models\RegionModel;
-use FKSDB\Models\ORM\Services\RegionService;
-use Fykosak\NetteORM\TypedSelection;
+use FKSDB\Models\ORM\Models\CountryModel;
+use FKSDB\Models\ORM\Services\CountryService;
+use FKSDB\Models\UI\FlagBadge;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Utils\Html;
 
 class PhoneNumberFactory
 {
-
-    private RegionService $regionService;
-
+    private CountryService $countryService;
+    /** @phpstan-var TypedSelection<CountryModel> */
     private TypedSelection $table;
 
-    public function __construct(RegionService $regionService)
+    public function __construct(CountryService $countryService)
     {
-        $this->regionService = $regionService;
-        $this->table = $this->regionService->getTable();
-    }
-
-    private function getAllRegions(): TypedSelection
-    {
-        return $this->table;
+        $this->countryService = $countryService;
+        $this->table = $this->countryService->getTable();
     }
 
     public function formatPhone(string $number): Html
     {
         try {
-            $region = $this->getRegion($number);
-            if ($region) {
-                $flag = Html::el('span')
-                    ->addAttributes(['class' => 'phone-flag me-3'])
-                    ->addHtml(
-                        Html::el('i')
-                            ->addAttributes([
-                                'class' => 'flag-icon flag-icon-' . \strtolower($region->country_iso),
-                            ])
-                    );
-                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
+            $country = $this->getCountry($number);
+            if ($country) {
+                return Html::el('span')->addHtml(FlagBadge::getHtml($country))
+                    ->addText($country->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
         return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?RegionModel
+    private function getCountry(string $number): ?CountryModel
     {
-        /** @var RegionModel $region */
-        foreach ($this->getAllRegions() as $region) {
-            if ($region->matchPhone($number)) {
-                return $region;
+        /** @var CountryModel $country */
+        foreach ($this->table as $country) {
+            if ($country->matchPhone($number)) {
+                return $country;
             }
         }
         return null;
@@ -60,6 +48,6 @@ class PhoneNumberFactory
 
     public function isValid(string $number): bool
     {
-        return !!$this->getRegion($number);
+        return (bool)$this->getCountry($number);
     }
 }

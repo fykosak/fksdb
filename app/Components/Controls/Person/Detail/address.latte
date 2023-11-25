@@ -1,0 +1,19 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\ORM\Models\AddressModel|null $address}
+{varType FKSDB\Models\ORM\Models\PostContactType $type}
+{block headline}
+    {if $type->value == 'P'}
+        {_'Permanent address'}
+    {else}
+        {_'Delivery address'}
+    {/if}
+{/block}
+{block content}
+    {if address}
+        <div class="card-body">
+            {FKSDB\Models\UI\AddressPrinter::getHtml($address)}
+        </div>
+    {else}
+        {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

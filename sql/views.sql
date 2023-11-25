@@ -9,48 +9,24 @@ from person p
          left join person_info pi on pi.person_id = p.person_id
     );
 
-create or replace view v_school as
-(
-select s.school_id,
-       s.address_id,
-       s.name_abbrev as name,
-       s.email,
-       s.izo,
-       s.ic,
-       a.target,
-       a.city,
-       r.country_iso
-from school s
-         left join address a on a.address_id = s.address_id
-         left join region r on r.region_id = a.region_id
-    );
-
-CREATE OR REPLACE VIEW v_task_stats as
-(
-SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count
-from task
-         LEFT JOIN submit ON submit.task_id = task.task_id
-GROUP BY task_id
-    );
-
 create or replace view v_contestant as
 (
-select p.name,
-       p.name_lex,
+select IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name,
+       concat(family_name, other_name)                                              as name_lex,
        p.gender,
        ct.contestant_id,
        ct.person_id,
        ct.contest_id,
        ct.year,
-       ph.study_year,
+       ph.study_year_new,
        ph.school_id,
        ph.class,
-       s.name as `school_name`
+       s.name                                                                       as `school_name`
 from contestant ct
-         inner join v_person p on p.person_id = ct.person_id
+         inner join person p on p.person_id = ct.person_id
          left join contest_year cy on cy.contest_id = ct.contest_id and cy.year = ct.year
          left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
-         left join v_school s on s.school_id = ph.school_id
+         left join school s on s.school_id = ph.school_id
     );
 CREATE OR REPLACE VIEW v_post_contact as
 (
@@ -63,18 +39,18 @@ where not (ap.address_id is null and ad.address_id is null)
 
 CREATE OR REPLACE VIEW v_person_envelope as
 (
-SELECT `pc`.`person_id`                                 AS `person_id`,
-       p.name                                           AS `CeleJmeno`,
-       `a`.`first_row`                                  AS `PrvniRadek`,
-       `a`.`second_row`                                 AS `DruhyRadek`,
-       `a`.`target`                                     AS `TretiRadek`,
-       `a`.`city`                                       AS `Mesto`,
-       `a`.`postal_code`                                AS `PSC`,
-       if((`r`.`country_iso` = 'SK'), 'Slovakia', NULL) AS `Stat`
+SELECT pc.person_id                                                                 AS `person_id`,
+       IF(display_name is null, concat(other_name, ' ', family_name), display_name) AS `CeleJmeno`,
+       a.first_row                                                                  AS `PrvniRadek`,
+       a.second_row                                                                 AS `DruhyRadek`,
+       a.target                                                                     AS `TretiRadek`,
+       a.city                                                                       AS `Mesto`,
+       a.postal_code                                                                AS `PSC`,
+       if((c.alpha_2 = 'SK'), 'Slovakia', NULL)                                     AS `Stat`
 FROM v_post_contact pc
-         inner join v_person p on p.person_id = pc.person_id
+         inner join person p on p.person_id = pc.person_id
          inner join address a on pc.address_id = a.address_id
-         inner join region r on a.region_id = r.region_id and r.country_iso in ('CZ', 'SK')
+         inner join country c on c.country_id = a.country_id and c.country_id in ('CZ', 'SK')
     );
 
 create or replace view v_series_points as
@@ -87,13 +63,15 @@ select ct.contest_id,
        sum(s.calc_points) as points,
        sum(IF(t.contest_id = 2,
               IF(t.year >= 4,
-                 IF(t.label = '1' AND ct.study_year NOT IN (6, 7), NULL, t.points),
+                 IF(t.label = '1' AND ph.study_year_new NOT IN ('P_5', 'P_6', 'P_7'), NULL, t.points),
                  t.points
                   ),
               t.points
            ))             as max_points
 from task t
-         right join v_contestant ct on ct.contest_id = t.contest_id and ct.year = t.year
+         right join contestant ct on ct.contest_id = t.contest_id and ct.year = t.year
+         left join contest_year cy on cy.contest_id = ct.contest_id and cy.year = ct.year
+         left join person_history ph on ph.person_id = ct.person_id and ph.ac_year = cy.ac_year
          left join submit s on s.task_id = t.task_id and s.contestant_id = ct.contestant_id
 group by ct.contest_id, ct.year, t.series, ct.contestant_id, ct.person_id
     );
@@ -106,22 +84,27 @@ select p.other_name                                                             
        a.target                                                                                      as street,
        a.city                                                                                        as town,
        a.postal_code                                                                                 as postcode,
-       r.country_iso                                                                                 as country,
+       c.alpha_2                                                                                     as country,
        p.display_name                                                                                as fullname,
        p.gender                                                                                      as gender,
        if(pi.born is null, null,
           concat(year(pi.born), '-', lpad(month(pi.born), 2, '0'), '-', lpad(day(pi.born), 2, '0'))) as born,
 
        coalesce(
-               if(sar.country_iso = 'cz', concat('red-izo:', s.izo), null),
-               if(sar.country_iso = 'sk', concat('sk:', s.izo), null),
+               if(sac.alpha_2 = 'cz', concat('red-izo:', s.izo), null),
+               if(sac.alpha_2 = 'sk', concat('sk:', s.izo), null),
                null, -- TODO AESOP id
                if(s.school_id is null, null, 'ufo')
            )                                                                                         as school,
        s.name_abbrev                                                                                 as `school-name`,
-       if(ph.study_year between 1 and 4, ph.ac_year + 5 - ph.study_year,
-          if(ph.study_year between 5 and 9, ph.ac_year + 14 - ph.study_year,
-             null))                                                                                  as `end-year`,
+       IF(
+                   ph.study_year_new IN ('U_ALL', 'NONE'),
+                   NULL,
+                   (
+                               ph.ac_year + IF(SUBSTRING_INDEX(study_year_new, '_', 1) = 'P', 14, 5) -
+                               (SUBSTRING_INDEX(study_year_new, '_', -1) * 1)
+                       )
+           )                                                                                         as `end-year`,
        pi.email                                                                                      as email,
        if(phf.value = 1, 'Y', if(phf.value = 0, 'N', null))                                          as `spam-flag`,
        DATE_FORMAT(phf.modified, '%Y-%m-%d')                                                         as `spam-date`, -- returns varchar instead of function date()
@@ -131,11 +114,11 @@ select p.other_name                                                             
 from person p
          left join v_post_contact pc on pc.person_id = p.person_id
          left join address a on a.address_id = pc.address_id
-         left join region r on r.region_id = a.region_id
+         left join country c on c.country_id = a.country_id
          left join person_history ph on ph.person_id = p.person_id
          left join school s on s.school_id = ph.school_id
          left join address sa on sa.address_id = s.address_id
-         left join region sar on sar.region_id = sa.region_id
+         left join country sac on sac.country_id = sa.country_id
          left join person_info pi on pi.person_id = p.person_id
          left join flag f on f.fid = 'spam_mff'
          left join person_has_flag phf on p.person_id = phf.person_id and phf.flag_id = f.flag_id
@@ -172,9 +155,15 @@ from v_aesop_person p
 
 create or replace view v_dokuwiki_user as
 (
-select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
+select l.login_id,
+       l.login,
+       l.hash,
+       IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name,
+       pi.email,
+       concat(family_name, other_name)                                              as name_lex
 from login l
-         left join v_person p on p.person_id = l.person_id
+         left join person p on p.person_id = l.person_id
+         join person_info pi on p.person_id = pi.person_id
 where exists(
         select 1
         from org o

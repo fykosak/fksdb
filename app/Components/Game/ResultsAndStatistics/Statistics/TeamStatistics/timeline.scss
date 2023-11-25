@@ -1,0 +1,22 @@
+.chart-game-team-timeline {
+  g {
+    opacity: 1;
+  }
+
+  text {
+    font-size: 10px;
+    text-anchor: middle;
+    alignment-baseline: central;
+    font-weight: bold;
+  }
+
+  rect {
+    fill: var(--color);
+  }
+
+  polyline {
+    stroke: var(--polyline-color);
+    stroke-linecap: round;
+    stroke-width: 2;
+  }
+}

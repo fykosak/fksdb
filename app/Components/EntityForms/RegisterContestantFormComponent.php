@@ -4,23 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
+use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
+use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Security\User;
 
+/**
+ * @phpstan-extends EntityFormComponent<ContestantModel>
+ */
 class RegisterContestantFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
@@ -31,10 +36,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
     private ?PersonModel $person;
     private Language $lang;
 
-    private ContestAuthorizator $contestAuthorizator;
-    private ContestantService $service;
     private AccountManager $accountManager;
-    private User $user;
 
     public function __construct(
         Container $container,
@@ -44,25 +46,17 @@ class RegisterContestantFormComponent extends EntityFormComponent
     ) {
         parent::__construct($container, null);
         $this->person = $person;
-        $this->lang = $lang;
         $this->contestYear = $contestYear;
     }
 
-    final public function injectTernary(
-        ContestAuthorizator $contestAuthorizator,
-        ContestantService $service,
-        AccountManager $accountManager,
-        User $user
-    ): void {
-        $this->contestAuthorizator = $contestAuthorizator;
-        $this->service = $service;
+    final public function inject(AccountManager $accountManager): void
+    {
         $this->accountManager = $accountManager;
-        $this->user = $user;
     }
 
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer();
+        $container = new ContainerWithOptions($this->container);
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getContext()->getParameters()['forms']['registerContestant' .
@@ -70,7 +64,7 @@ class RegisterContestantFormComponent extends EntityFormComponent
             $this->contestYear,
             PersonSearchContainer::SEARCH_NONE,
             false,
-            new SelfResolver($this->user)
+            new SelfPersonResolver($this->person)
         );
         $container->addComponent($referencedId, 'person_id');
         $form->addComponent($container, self::CONT_CONTESTANT);
@@ -84,33 +78,37 @@ class RegisterContestantFormComponent extends EntityFormComponent
 
     /**
      * @throws BadTypeException
+     * @throws BadRequestException
      */
     protected function handleFormSuccess(Form $form): void
     {
         $form->getValues('array');//trigger RPC
-        /** @var ReferencedId $referencedId */
-        $referencedId = $form[self::CONT_CONTESTANT]['person_id'];
+        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+        $referencedId = $form[self::CONT_CONTESTANT]['person_id']; //@phpstan-ignore-line
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
-        $this->service->storeModel([
-            'contest_id' => $this->contestYear->contest,
-            'person_id' => $person->person_id,
-            'year' => $this->contestYear->year,
-        ]);
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        $strategy->createContestant($person);
+
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
-            $this->accountManager->createLoginWithInvitation($person, $email, $this->lang);
-            $this->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            try {
+                $this->accountManager->sendLoginWithInvitation(
+                    $person,
+                    $email,
+                    Language::from($this->translator->lang)
+                );
+                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            } catch (\Throwable $exception) {
+                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
+            }
         }
         $this->getPresenter()->redirect(':Core:Dispatch:default');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([
+        $form->setDefaults([
             self::CONT_CONTESTANT => [
                 'person_id' => isset($this->person) ? $this->person->person_id
                     : ReferencedId::VALUE_PROMISE,

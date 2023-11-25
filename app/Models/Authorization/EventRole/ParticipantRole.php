@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authorization\EventRole;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Nette\Utils\Html;
 
 class ParticipantRole extends EventRole
 {
@@ -15,5 +16,12 @@ class ParticipantRole extends EventRole
     {
         parent::__construct('event.participant', $event);
         $this->eventParticipant = $eventParticipant;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-color-10'])
+            ->addText(sprintf(_('Participant (%s)'), $this->eventParticipant->status->label()));
     }
 }

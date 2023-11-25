@@ -5,30 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,bool,ArgType>
+ * @phpstan-template ArgType
+ */
 class Not extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):bool)|bool */
     private $expression;
 
-    /**
-     * Not constructor.
-     * @param callable|mixed $expression
-     */
+    /** @phpstan-param (callable(ArgType):bool)|bool $expression */
     public function __construct($expression)
     {
         $this->expression = $expression;
     }
 
-    final public function __invoke(ModelHolder $holder): bool
+    final public function __invoke(...$args): bool
     {
-        return !$this->evaluateArgument($this->expression, $holder);
-    }
-
-    public function __toString(): string
-    {
-        return "!($this->expression)";
+        return !$this->evaluateArgument($this->expression, ...$args);
     }
 }

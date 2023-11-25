@@ -1,0 +1,21 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+{var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+
+{block body}
+    <p>
+        Hello,<br/>
+        some changes have been made in the application of your team. Below you find the updated information:
+    </p>
+    {include detail from './detail.en.latte',holder:$holder}
+    <p>
+        You can edit it using the link in the registration email or in <a href="https://db.fykos.cz/profile/my-applications/">FKSDB</a> after clicking on the Detail of the application. Data regarding team members can be edited anytime before the end of the registration.
+    </p>
+    <p>
+        Sincerely,<br/>
+        Fyziklani organizers<br/>
+        <a href="https://fyziklani.org/en">fyziklani.org</a>
+    </p>
+{/block}

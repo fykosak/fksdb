@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method LoginModel storeModel(array $data, ?LoginModel $model = null)
+ * @phpstan-extends Service<LoginModel>
  */
-class LoginService extends Service
+final class LoginService extends Service
 {
 }

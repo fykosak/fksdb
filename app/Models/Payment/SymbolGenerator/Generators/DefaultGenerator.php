@@ -16,9 +16,14 @@ class DefaultGenerator extends AbstractSymbolGenerator
     private int $variableSymbolStart;
 
     private int $variableSymbolEnd;
-
+    /**
+     * @phpstan-var array<string,array<string,int|string>>
+     */
     private array $info;
 
+    /**
+     * @phpstan-param array<string,array<string,int|string>> $info
+     */
     public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void
     {
         $this->variableSymbolEnd = $variableSymbolEnd;
@@ -39,6 +44,7 @@ class DefaultGenerator extends AbstractSymbolGenerator
     /**
      * @throws UnsupportedCurrencyException
      * @throws \Exception
+     * @phpstan-ignore-next-line
      */
     protected function createPaymentInfo(PaymentModel $modelPayment, int $variableNumber): array
     {
@@ -54,12 +60,13 @@ class DefaultGenerator extends AbstractSymbolGenerator
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws \Exception
+     * @phpstan-ignore-next-line
      */
     protected function create(PaymentModel $modelPayment): array
     {
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(
-                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId())
+                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->payment_id)
             );
         }
         $maxVariableSymbol = $modelPayment->event->getPayments()

@@ -16,6 +16,10 @@ class XMLHelper
         throw new InvalidArgumentException();
     }
 
+    /**
+     * @throws \DOMException
+     * @phpstan-param array<string,mixed> $data
+     */
     public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void
     {
         foreach ($data as $key => $datum) {
@@ -25,6 +29,10 @@ class XMLHelper
         }
     }
 
+    /**
+     * @throws \DOMException
+     * @phpstan-param array<string,array<string,string>> $data
+     */
     public static function fillArrayArgumentsToNode(
         string $attrName,
         array $data,

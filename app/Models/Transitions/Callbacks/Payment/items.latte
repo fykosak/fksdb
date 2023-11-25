@@ -1,4 +1,5 @@
 {varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{varType string $lang}
 <div>
     <style>
         table {
@@ -22,15 +23,16 @@
     <table>
         <thead>
         <tr>
-            <th>{_('Item')}</th>
-            <th>{_('Price')}</th>
+            <th>{_'Item'}</th>
+            <th>{_'Price'}</th>
         </tr>
         </thead>
         <tbody>
-        {foreach FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice::getGridItems($model) as $item}
+        {foreach $model->getRelatedPersonSchedule() as $personSchedule}
+            {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
             <tr>
-                <td>{$item['label']}</td>
-                <td>{$item['price']}</td>
+                <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
+                <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
             </tr>
         {/foreach}
         </tbody>

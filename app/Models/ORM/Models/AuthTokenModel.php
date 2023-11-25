@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
- * @property-read string token
- * @property-read LoginModel login
- * @property-read int login_id
- * @property-read string data
- * @property-read string type
- * @property-read \DateTimeInterface until
- * TODO
+ * @property-read int $token_id
+ * @property-read int $login_id
+ * @property-read LoginModel $login
+ * @property-read string $token
+ * @property-read string $type
+ * @property-read string|null $data
+ * @property-read \DateTimeInterface $since
+ * @property-read \DateTimeInterface|null $until
  */
-class AuthTokenModel extends Model
+final class AuthTokenModel extends Model
 {
-
-    /** @const The first login for setting up a password. */
-    public const TYPE_INITIAL_LOGIN = 'initial_login';
-    /** @const Password recovery login */
-    public const TYPE_RECOVERY = 'recovery';
-    /** @const Notification about an event application. */
-    public const TYPE_EVENT_NOTIFY = 'event_notify';
 }

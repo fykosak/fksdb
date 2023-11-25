@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Comparison;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 
+/**
+ * @phpstan-template ArgType
+ * @phpstan-extends EvaluatedExpression<bool,scalar,ArgType>
+ */
 class Leq extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):scalar)|scalar */
     private $aValue;
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):scalar)|scalar */
     private $bValue;
 
     /**
-     * Leq constructor.
-     * @param mixed $aValue
-     * @param mixed $bValue
+     * @phpstan-param (callable(ArgType):scalar)|scalar $aValue
+     * @phpstan-param (callable(ArgType):scalar)|scalar $bValue
      */
     public function __construct($aValue, $bValue)
     {
@@ -26,14 +28,9 @@ class Leq extends EvaluatedExpression
         $this->bValue = $bValue;
     }
 
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
-        return $this->evaluateArgument($this->aValue, $holder) <=
-            $this->evaluateArgument($this->bValue, $holder);
-    }
-
-    public function __toString(): string
-    {
-        return "$this->aValue <= $this->bValue";
+        return $this->evaluateArgument($this->aValue, ...$args) <=
+            $this->evaluateArgument($this->bValue, ...$args);
     }
 }

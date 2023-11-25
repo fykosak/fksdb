@@ -2,18 +2,29 @@
 {varType FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage $correctedSubmitStorage}
 {varType FKSDB\Models\ORM\Models\SubmitModel|null $submit}
 {block content}
-    {control form}
-    <hr/>
+    <div>
+        <ul>
+            <li>
+                <span class="bg-success text-white p-1 d-inline-block">
+                    <i class="fas fa-cloud me-2"></i>#12345</span> {_'Submit OK'}</li>
+            <li>
+                <span class="p-1 d-inline-block">#12345</span> {_'Submit not uploaded'}</li>
+            <li>
+                <span class="bg-danger text-white p-1 d-inline-block">
+                    <i class="fas fa-skull-crossbones me-2"></i>#12345</span> {_'Something wrong, contact webmaster immediately!'}
+            </li>
+        </ul>
+    </div>
     {include parent}
 {/block}
 {define submit-row}
     {if $submit}
-        {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
-            <td class="bg-success text-white">#{$submit->submit_id}</td>
+        {if $submit->corrected && ($correctedSubmitStorage->fileExists($submit) || $submit->isQuiz())}
+            <td class="bg-success text-white"><i class="fas fa-cloud me-2"></i>#{$submit->submit_id}</td>
         {elseif !$correctedSubmitStorage->fileExists($submit) && !$submit->corrected}
-            <td class="bg-danger text-white">#{$submit->submit_id}</td>
+            <td>#{$submit->submit_id}</td>
         {else}
-            <td class="bg-warning text-white">#{$submit->submit_id}</td>
+            <td class="bg-danger text-white"><i class="fas fa-skull-crossbones me-2"></i>#{$submit->submit_id}</td>
         {/if}
     {else}
         <td></td>

@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -17,7 +18,6 @@ use Nette\Forms\Form;
 
 class PreferredLangFormComponent extends FormComponent
 {
-
     protected PersonModel $person;
     protected PersonInfoService $personInfoService;
 
@@ -34,38 +34,40 @@ class PreferredLangFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('button.save'));
     }
 
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $form = $button->getForm();
-        $values = $form->getValues();
+        /** @phpstan-var array{preferred_lang:string} $values */
+        $values = $form->getValues('array');
         try {
             $this->personInfoService->storeModel(
-                ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
+                [
+                    'preferred_lang' => $values['preferred_lang'],
+                    'person_id' => $this->person->person_id,
+                ],
                 $this->person->getInfo()
             );
-            $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
+            $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         }
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function configureForm(Form $form): void
     {
         $items = [];
-        foreach ($this->translator->getSupportedLanguages() as $lang) {
-            $language = Language::tryFrom($lang);
-            $items[$language->value] = $language->label();
+        foreach (Language::cases() as $lang) {
+            $items[$lang->value] = $lang->label();
         }
-        $form->addRadioList('preferred_lang')->setItems($items);
+        $form->addSelect('preferred_lang')->setItems($items);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);

@@ -5,27 +5,33 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
-use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
-    PaymentListWebModel,
-    SeriesResultsWebModel,
-    WebModel,
-    OrganizersWebModel,
+use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
     EventWebModel,
     ExportWebModel,
-    SignaturesWebModel,
+    Game,
+    OrganizersWebModel,
+    PaymentListWebModel,
     ResultsWebModel,
-    StatsWebModel
+    SeriesResultsWebModel,
+    SignaturesWebModel,
+    StatsWebModel,
+    WebModel
+};
+use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
+    Schedule\GroupListWebModel,
+    Schedule\ItemListWebModel,
+    Schedule\PersonListWebModel,
+    TeamsWebModel,
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
+use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
@@ -33,12 +39,15 @@ class WebServiceModel
 {
     use SmartObject;
 
-    private LoginModel $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
+    private ContestAuthorizator $contestAuthorizator;
+    private User $user;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
+        'GetFyziklaniResults' => Game\ResultsWebModel::class,
+        // 'game/submit' => Game\SubmitWebModel::class,
+        'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -48,13 +57,34 @@ class WebServiceModel
         'GetStats' => StatsWebModel::class,
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
+        'GetContests' => ContestsModel::class,
+        // events
+        'events' => EventListWebModel::class,
+        'event/schedule/groups' => GroupListWebModel::class,
+        'event/schedule/items' => ItemListWebModel::class,
+        'event/schedule/persons' => PersonListWebModel::class,
+        'event/teams' => TeamsWebModel::class,
+        'event/participants' => ParticipantsWebModel::class,
+        // game
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
+        // contest
+        'contest/organizers' => OrganizersWebModel::class,
+        'contest/stats' => StatsWebModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator)
-    {
+    public function __construct(
+        Container $container,
+        PasswordAuthenticator $authenticator,
+        ContestAuthorizator $contestAuthorizator,
+        User $user
+    ) {
         $this->authenticator = $authenticator;
         $this->container = $container;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->user = $user;
     }
+
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
@@ -69,8 +99,13 @@ class WebServiceModel
             throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
-            $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
+            $login = $this->authenticator->authenticate($args->username, $args->password);
+            $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
+            if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+                $this->log('Unauthorized.');
+                throw new \SoapFault('Sender', 'Unauthorized.');
+            }
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new \SoapFault('Sender', 'Invalid credentials.');
@@ -81,11 +116,13 @@ class WebServiceModel
      * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
+     * @phpstan-ignore-next-line
      */
     public function __call(string $name, array $args): \SoapVar
     {
-        $this->checkAuthentication(__FUNCTION__);
+        $this->checkAuthentication($name . ': ' . json_encode($args));
         $webModel = $this->getWebModel($name);
+
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
@@ -97,69 +134,60 @@ class WebServiceModel
      */
     private function checkAuthentication(string $nameService): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
+        if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+            $this->log(sprintf('Unauthorized %s ', $nameService));
+            throw new \SoapFault('Sender', 'Unauthorized');
+        }
     }
 
     private function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return WebModel<array<mixed>,array<mixed>>
      */
     private function getWebModel(string $name): ?WebModel
     {
-        $name = ucfirst($name);
-        if (isset(self::WEB_MODELS[$name])) {
+        $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
+        if ($webModelClass) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @var WebModel $model */
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
             $model = $reflection->newInstance($this->container);
-            $model->setLogin($this->authenticatedLogin ?? null);
+            $model->setUser($this->user);
             return $model;
         }
         return null;
     }
 
     /**
-     * @throws \ReflectionException|BadRequestException
+     * @phpstan-template TParams of array
+     * @throws BadRequestException
+     * @phpstan-param TParams $arguments
      */
-    public function getJsonResponse(string $name, array $arguments): JsonResponse
+    public function getJsonResponse(?WebModel $webModel, array $arguments): JsonResponse
     {
-        $webModel = $this->getWebModel($name);
         if (!$webModel) {
             throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
         }
-        $arguments = $this->processArguments($webModel, $arguments);
-        return new JsonResponse($webModel->getJsonResponse($arguments));
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    private function processArguments(WebModel $webModel, array $arguments): array
-    {
-        static $processor;
-        if (!isset($processor)) {
-            $processor = new Processor();
-        }
-        $schema = $webModel->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        return $processor->process($schema, $arguments);
+        return $webModel->getApiResponse($arguments);
     }
 }

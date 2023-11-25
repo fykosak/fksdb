@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\UI\NotSetBadge;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class ContestantsGrid extends BaseGrid
+/**
+ * @phpstan-extends BaseGrid<ContestantModel,array{}>
+ */
+final class ContestantsGrid extends BaseGrid
 {
-
     private ContestYearModel $contestYear;
 
     public function __construct(Container $container, ContestYearModel $contestYear)
@@ -27,37 +26,51 @@ class ContestantsGrid extends BaseGrid
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): IDataSource
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestantModel>
+     */
+    protected function getModels(): TypedGroupedSelection
     {
-        return new NDataSource($this->contestYear->getContestants());
+        return $this->contestYear->getContestants()->order('person.other_name ASC');
     }
 
-    /**
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
-     * @throws BadTypeException
-     */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
-
-        $this->setDefaultOrder('person.other_name ASC');
-        $this->addColumns([
-            'person.full_name',
-            'person_history.study_year',
+        $this->paginate = false;
+        $this->filtered = false;
+        $this->counter = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@contestant.contest_category',
+            '@person_history.study_year_new',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(
-            fn(ContestantModel $row) => $row->getPersonHistory()->school->name_abbrev
+        $this->addTableColumn(
+            new RendererItem(
+                $this->container,
+                function (ContestantModel $row) {
+                    if (!$row->getPersonHistory()) {
+                        return NotSetBadge::getHtml();
+                    }
+                    return $this->tableReflectionFactory->loadColumnFactory(
+                        'school',
+                        'school'
+                    )->render(
+                        $row->getPersonHistory(),
+                        1024
+                    );
+                },
+                new Title(null, _('School'))
+            ),
+            'school_name',
         );
 
-        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            'Contestant:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'contestant_id']
+        );
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
-
-        $this->addGlobalButton('add', _('Create contestant'))
-            ->setLink($this->getPresenter()->link('create'));
-
-        $this->paginate = false;
     }
 }

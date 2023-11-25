@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int submit_id
- * @property-read int contestant_id
- * @property-read ContestantModel contestant
- * @property-read int task_id
- * @property-read TaskModel task
- * @property-read \DateTimeInterface submitted_on
- * @property-read SubmitSource source
- * @property-read string note
- * @property-read float|null raw_points
- * @property-read float|null calc_points
- * @property-read int corrected FUCK MARIADB
+ * @property-read int $submit_id
+ * @property-read int $contestant_id
+ * @property-read ContestantModel $contestant
+ * @property-read int $task_id
+ * @property-read TaskModel $task
+ * @property-read \DateTimeInterface|null $submitted_on
+ * @property-read SubmitSource $source
+ * @property-read string|null $note
+ * @property-read float|null $raw_points
+ * @property-read float|null $calc_points
+ * @property-read int $corrected FUCK MARIADB
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'submit';
@@ -37,7 +35,7 @@ class SubmitModel extends Model implements Resource
         return md5(
             implode(':', [
                 $this->submit_id,
-                $this->submitted_on,
+                $this->submitted_on->format('c'),
                 $this->source,
                 $this->note,
                 $this->raw_points,
@@ -58,18 +56,25 @@ class SubmitModel extends Model implements Resource
 
     public function calculateQuestionSum(): ?int
     {
-        $query = $this->getQuestionAnswers();
-        if ($query->count('*')) {
-            $sum = 0;
-            /** @var SubmitQuestionAnswerModel $answer */
-            foreach ($query as $answer) {
-                if ($answer->answer === $answer->submit_question->answer) {
-                    $sum += $answer->submit_question->points;
-                }
-            }
-            return $sum;
+        // task does not have questions
+        if (!$this->isQuiz()) {
+            return null;
         }
-        return null;
+
+        $sum = 0;
+        // TODO rewrite to do sum directly in sql
+        /** @var SubmitQuestionModel $question */
+        foreach ($this->task->getQuestions() as $question) {
+            $answer = $this->contestant->getAnswer($question);
+            if (!isset($answer)) {
+                continue;
+            }
+            if ($answer->answer === $question->answer) {
+                $sum += $question->points;
+            }
+        }
+
+        return $sum;
     }
 
     public function isQuiz(): bool
@@ -81,7 +86,7 @@ class SubmitModel extends Model implements Resource
      * @return SubmitSource|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
@@ -92,6 +97,15 @@ class SubmitModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return array{
+     * submitId:int,
+     * taskId:int,
+     * source:string,
+     * rawPoints:float|null,
+     * calcPoints:float|null,
+     * }
+     */
     public function __toArray(): array
     {
         return [
@@ -101,10 +115,5 @@ class SubmitModel extends Model implements Resource
             'rawPoints' => $this->raw_points,
             'calcPoints' => $this->calc_points,
         ];
-    }
-
-    public function getQuestionAnswers(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_SUBMIT_QUESTION_ANSWER, 'submit_id');
     }
 }

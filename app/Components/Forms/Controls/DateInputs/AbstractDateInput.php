@@ -13,10 +13,6 @@ abstract class AbstractDateInput extends TextInput
 
     protected string $format;
 
-    /**
-     * AbstractDateInput constructor.
-     * @param string|Html|null $label
-     */
     public function __construct(string $type, string $format, ?string $label = null)
     {
         $this->format = $format;
@@ -44,7 +40,7 @@ abstract class AbstractDateInput extends TextInput
             $this->value = $value;
         } elseif ($value instanceof \DateInterval) {
             $this->value = (new DateTime())->setTime($value->h, $value->m, $value->s);
-        } elseif (is_string($value)) {
+        } elseif (is_string($value) && $value !== '') {
             $this->value = DateTime::from($value);
         } else {
             $this->value = null;

@@ -4,27 +4,37 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
+use Fykosak\NetteORM\Model\Model;
+use Nette\ComponentModel\IContainer;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 
-class SingleReflectionFormFactory
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ */
+final class SingleReflectionFormFactory
 {
+    private ReflectionFactory $tableReflectionFactory;
+    private Container $container;
 
-    protected ORMFactory $tableReflectionFactory;
-
-    public function __construct(ORMFactory $tableReflectionFactory)
+    public function __construct(ReflectionFactory $tableReflectionFactory, Container $container)
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
+        $this->container = $container;
     }
 
     /**
      * @throws BadTypeException
+     * @phpstan-return ColumnFactory<Model,mixed>
      */
     protected function loadFactory(string $tableName, string $fieldName): ColumnFactory
     {
@@ -34,6 +44,7 @@ class SingleReflectionFormFactory
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param mixed $args
      */
     public function createField(string $tableName, string $fieldName, ...$args): BaseControl
     {
@@ -41,51 +52,57 @@ class SingleReflectionFormFactory
     }
 
     /**
-     * @param array $args
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param mixed $args
+     * @phpstan-param array<string,EvaluatedFieldMetaData> $fields
      */
-    public function createContainer(string $tableName, array $fields, ...$args): ModelContainer
-    {
-        $container = new ModelContainer();
-
-        foreach ($fields as $fieldName) {
-            $container->addComponent($this->createField($tableName, $fieldName, ...$args), $fieldName);
+    public function createContainerWithMetadata(
+        string $table,
+        array $fields,
+        ?FieldLevelPermission $userPermissions = null,
+        ...$args
+    ): ModelContainer {
+        $container = new ModelContainer($this->container);
+        foreach ($fields as $field => $metadata) {
+            $this->addToContainer($container, $table, $field, $metadata, $userPermissions, ...$args);
         }
         return $container;
     }
 
     /**
+     * @param mixed $args
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @phpstan-param EvaluatedFieldMetaData $metaData
      */
-    public function createContainerWithMetadata(
+    public function addToContainer(
+        IContainer $container,
         string $table,
-        array $fields,
-        FieldLevelPermission $userPermissions,
+        string $field,
+        array $metaData = [],
+        ?FieldLevelPermission $userPermissions = null,
         ...$args
-    ): ModelContainer {
-        $container = new ModelContainer();
-        foreach ($fields as $field => $metadata) {
-            $factory = $this->loadFactory($table, $field);
-            $control = $factory->createField(...$args);
+    ): void {
+        $factory = $this->loadFactory($table, $field);
+        $control = $factory->createField(...$args);
+        if ($userPermissions) {
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
             if ($control instanceof WriteOnly) {
                 $control->setWriteOnly(!$canRead);
-            } elseif ($canRead) {
-// do nothing
-            } else {
-                continue;
+            } elseif (!$canRead) {
+                return;
             }
             $control->setDisabled(!$canWrite);
-
-            $this->appendMetadata($control, $metadata);
-            $container->addComponent($control, $field);
         }
-        return $container;
+        $this->appendMetadata($control, $metaData);
+        $container->addComponent($control, $field);
     }
 
+    /**
+     * @phpstan-param EvaluatedFieldMetaData $metadata
+     */
     protected function appendMetadata(BaseControl $control, array $metadata): void
     {
         foreach ($metadata as $key => $value) {

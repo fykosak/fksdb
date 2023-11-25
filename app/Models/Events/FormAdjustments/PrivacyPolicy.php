@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -21,6 +22,7 @@ use Nette\Utils\ArrayHash;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
+ * @phpstan-implements FormAdjustment<BaseHolder>
  */
 class PrivacyPolicy implements Processing, FormAdjustment
 {
@@ -56,11 +58,17 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process(ArrayHash $values, ModelHolder $holder, Logger $logger, Form $form): void
+    /**
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
+    public function process(ArrayHash $values): void
     {
         $this->trySetAgreed($values);
     }
 
+    /**
+     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
+     */
     private function trySetAgreed(ArrayHash $values): void
     {
         foreach ($values as $key => $value) {

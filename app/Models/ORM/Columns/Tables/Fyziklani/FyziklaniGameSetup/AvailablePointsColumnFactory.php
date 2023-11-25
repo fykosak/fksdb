@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
-class AvailablePointsColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends StringColumnFactory<GameSetupModel,never>
+ */
+class AvailablePointsColumnFactory extends StringColumnFactory
 {
     /**
-     * @param gameSetupModel $model
+     * @param GameSetupModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

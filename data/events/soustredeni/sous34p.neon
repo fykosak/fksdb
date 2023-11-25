@@ -3,199 +3,171 @@ events:
         eventTypeIds: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
-        paramScheme:
-            notifyBcc:
-                default: soustredeni@fykos.cz
-            notifyFrom:
-                default: soustredeni@fykos.cz
-            deadline:
-                default: 1970-01-01 00:00:00
-            deadlineCall1:
-                default: 1970-01-01 00:00:00
-            deadlineCall2:
-                default: 1970-01-01 00:00:00
-            deadlineCallLast:
-                default: 1970-01-01 00:00:00
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
-
-        baseMachine:
-                service: @orm.event_participant.service
-
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited)
                     __init->spare:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite Spare')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite Spare')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare)
                     invited|invited1|invited2|invited3->applied:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Confirm participation')
                     spare|spare1|spare2|spare3->interested:
-                        condition: before(param('deadline'))
+                        condition: before(FKSDB\Models\Events\Semantics\Parameter('deadline'))
                         label: _('I want to go')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3->rejected:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Decline participation')
                         behaviorType: warning
 
                     spare->spare1:
-                        condition: and(after(param('deadlineCall1')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall1')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send first call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare1)
                     invited->invited1:
-                        condition: and(after(param('deadlineCall1')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall1')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send first call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited1)
                     spare1->spare2:
-                        condition: and(after(param('deadlineCall2')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall2')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send second call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare2)
                     invited1->invited2:
-                        condition: and(after(param('deadlineCall2')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall2')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send second call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited2)
                     spare2->spare3:
-                        condition: and(after(param('deadlineCallLast')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCallLast')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send last call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare3)
                     invited2->invited3:
-                        condition: and(after(param('deadlineCallLast')),role('admin'))
+                        condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCallLast')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send last call')
                         afterExecute:
                             - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited3)
                     interested->applied:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Validate as a participant')
                     spare->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite as a participant')
                     spare1->invited1:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite as a participant')
                     spare2->invited2:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite as a participant')
                     spare3->invited3:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite as a participant')
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Participated')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Missed')
 
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Cancel the application')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Deal with outside FKSDB')
                     out_of_db->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Invited')
                     out_of_db->invited1:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Invited, first call')
                     out_of_db->invited2:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Invited, second call')
                     out_of_db->invited3:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Invited, last call')
                     out_of_db->auto.invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Invited (auto)')
                     out_of_db->spare:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Spare')
                     out_of_db->spare1:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Spare, first call')
                     out_of_db->spare2:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Spare, second call')
                     out_of_db->spare3:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Spare, last call')
                     out_of_db->auto.spare:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Spare (auto)')
                     out_of_db->applied:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Applied')
                     out_of_db->interested:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Interested')
                     out_of_db->participated:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Participated')
                     out_of_db->rejected:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Rejected')
                     out_of_db->missed:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Missed')
                     out_of_db->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Return to DB as Cancelled')
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.soustredeni.appCond%
-                        default: null
-                        factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
-                    diet:
-                        label: _('Food')
-                        description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
-                    health_restrictions:
-                        label: _('Health restrictions')
-                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
-                    tshirt_size:
-                        label: _('What t-shirt size do you wear?')
-                        required: %events.soustredeni.requiredCond%
-                        factory: Chooser("Choose size", Options(%events.soustredeni.tshirt%))
-                    price:
-                        label: _('Price of camp (CZK)')
-                        modifiable: false
-                        description: _("Price calculated according to the rules on our website.")
 
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachine:
-                    label: _('Participant')
-                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.soustredeni.appCond%
+                    default: null
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.soustredeni.person%, email, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                diet:
+                    label: _('Food')
+                    description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
+                health_restrictions:
+                    label: _('Health restrictions')
+                    description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
+                tshirt_size:
+                    label: _('What t-shirt size do you wear?')
+                    required: %events.soustredeni.requiredCond%
+                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory("Choose size", FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
+                price:
+                    label: _('Price of camp (CZK)')
+                    modifiable: false
+                    description: _("Price calculated according to the rules on our website.")
+            modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy

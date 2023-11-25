@@ -5,26 +5,40 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\DI\CompilerExtension;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 
+/**
+ * @phpstan-import-type TItem from NavigationFactory
+ * @phpstan-import-type TRootItem from NavigationFactory
+ */
 class NavigationExtension extends CompilerExtension
 {
+    public function getConfigSchema(): Schema
+    {
+        return Expect::arrayOf(
+            Expect::arrayOf(
+                Expect::arrayOf(Expect::scalar()->nullable(), Expect::string()),
+                Expect::string()
+            ),
+            Expect::string()
+        );
+    }
 
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
-
         $config = $this->getConfig();
         $navbar = $this->getContainerBuilder()->addDefinition('navbar')
             ->setType(NavigationFactory::class);
 
-        $navbar->addSetup('setStructure', [$this->createFromStructure($config['structure'])]);
+        $navbar->addSetup('setStructure', [$this->createFromStructure($config)]);//@phpstan-ignore-line
     }
 
-    private function createNode(string $nodeId, array $arguments): array
-    {
-        return $this->parseIdAsLink($nodeId, $arguments);
-    }
-
+    /**
+     * @phpstan-param array<string,array<string,array<string,scalar|null>>> $structure
+     * @phpstan-return array<string,TRootItem>
+     */
     private function createFromStructure(array $structure): array
     {
         $structureData = [];
@@ -38,17 +52,19 @@ class NavigationExtension extends CompilerExtension
         return $structureData;
     }
 
-    private function parseIdAsLink(string $nodeId, array $arguments): array
+    /**
+     * @phpstan-param array<string,scalar|null> $params
+     * @phpstan-return TItem
+     */
+    private function createNode(string $nodeId, array $params): array
     {
-        $data = $arguments;
-        $fullQualityAction = str_replace('.', ':', $nodeId);
-        $a = strrpos($fullQualityAction, ':');
-        $presenterName = substr($fullQualityAction, 0, $a);
-        $action = substr($fullQualityAction, $a + 1);
-        $data['linkPresenter'] = $presenterName;
-        $data['linkAction'] = $action;
-        $data['linkParams'] = $arguments['params'] ?? [];
-        unset($data['params']);
-        return $data;
+        [$link, $fragment] = explode('#', $nodeId);
+        [$module, $presenter, $action] = explode('.', $link);
+        return [
+            'presenter' => $module . ':' . $presenter,
+            'action' => $action,
+            'params' => $params,
+            'fragment' => $fragment,
+        ];
     }
 }

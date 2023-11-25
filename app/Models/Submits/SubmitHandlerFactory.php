@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
@@ -56,7 +55,7 @@ class SubmitHandlerFactory
         if (!$filename) {
             throw new StorageException(_('Damaged submit file'));
         }
-        $response = new FileResponse($filename, $submit->task->getFQName() . '-uploaded.pdf', 'application/pdf');
+        $response = new FileResponse($filename, $submit->submit_id . '-uploaded.pdf', 'application/pdf');
         $presenter->sendResponse($response);
     }
 
@@ -75,14 +74,14 @@ class SubmitHandlerFactory
         if (!$filename) {
             throw new StorageException(_('Damaged submit file'));
         }
-        $response = new FileResponse($filename, $submit->task->getFQName() . '-corrected.pdf', 'application/pdf');
+        $response = new FileResponse($filename, $submit->submit_id . '-corrected.pdf', 'application/pdf');
         $presenter->sendResponse($response);
     }
 
     /**
      * @throws ForbiddenRequestException
      * @throws StorageException
-     * @throws ModelException
+     * @throws \PDOException
      */
     public function handleRevoke(SubmitModel $submit): void
     {
@@ -96,27 +95,21 @@ class SubmitHandlerFactory
 
     public function handleSave(FileUpload $file, TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        $submit = $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::UPLOAD));
+        $submit = $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::UPLOAD));
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
-    public function getUserStudyYear(ContestantModel $contestant): ?int
-    {
-        // TODO AC_year from contestant
-        $personHistory = $contestant->getPersonHistory();
-        return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
-    }
-
     public function handleQuizSubmit(TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        return $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::QUIZ));
+        return $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::QUIZ));
     }
 
     private function storeSubmit(TaskModel $task, ContestantModel $contestant, SubmitSource $source): SubmitModel
     {
-        $submit = $this->submitService->findByContestant($contestant, $task);
+        /** @var SubmitModel|null $submit */
+        $submit = $contestant->getSubmits()->where('task_id', $task)->fetch();
         $data = [
             'submitted_on' => new DateTime(),
             'source' => $source->value,

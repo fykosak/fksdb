@@ -5,35 +5,55 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Statement;
+use Fykosak\Utils\UI\Title;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-template THolder of ModelHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
+ * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
+ * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
+ *     ? \FKSDB\Models\ORM\Models\PaymentState
+ *     : (THolder is \FKSDB\Models\Transitions\Holder\TeamHolder
+ *     ? \FKSDB\Models\ORM\Models\Fyziklani\TeamState
+ *     : (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ *      )
+ *     )
+ * )
+ */
 class Transition
 {
     use SmartObject;
 
-    /** @var callable|bool */
+    /** @phpstan-var (callable(THolder):bool)|bool|null */
     protected $condition;
     public BehaviorType $behaviorType;
-    private string $label;
-    /** @var Statement[] */
+    private Title $label;
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
-    /** @var Statement[] */
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
 
+    protected bool $validation;
+    /** @phpstan-var Enum */
     public EnumColumn $source;
+    /** @phpstan-var Enum */
     public EnumColumn $target;
-    protected ExpressionEvaluator $evaluator;
 
+    /**
+     * @phpstan-param Enum $sourceState
+     */
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
         $this->source = $sourceState;
     }
 
+    /**
+     * @phpstan-param Enum $targetState
+     */
     public function setTargetStateEnum(EnumColumn $targetState): void
     {
         $this->target = $targetState;
@@ -54,53 +74,82 @@ class Transition
         $this->behaviorType = $behaviorType;
     }
 
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
+    public function label(): Title
     {
-        $this->evaluator = $evaluator;
+        return $this->label;
     }
 
-    public function getLabel(): string
+    public function setLabel(string $label, string $icon): void
     {
-        return _($this->label);
+        $this->label = new Title(null, $label, $icon);
     }
 
-    public function setLabel(?string $label): void
+    /**
+     * @phpstan-param (callable(THolder):bool)|bool $condition
+     */
+    public function setCondition($condition): void
     {
-        $this->label = $label ?? '';
+        $this->condition = is_bool($condition) ? fn() => $condition : $condition;
     }
 
-    public function setCondition(?callable $callback): void
-    {
-        $this->condition = $callback;
-    }
-
+    /**
+     * @phpstan-param THolder $holder
+     */
     public function canExecute(ModelHolder $holder): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, $holder);
+        if (!isset($this->condition)) {
+            return true;
+        }
+        if (is_callable($this->condition)) {
+            return (bool)($this->condition)($holder);
+        }
+        return (bool)$this->condition;
     }
 
+    public function getValidation(): bool
+    {
+        return $this->validation ?? true;
+    }
+
+    public function setValidation(?bool $validation): void
+    {
+        $this->validation = $validation ?? true;
+    }
+
+    /**
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
+     */
     public function addBeforeExecute(callable $callBack): void
     {
         $this->beforeExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
+     */
     public function addAfterExecute(callable $callBack): void
     {
         $this->afterExecute[] = $callBack;
     }
 
+    /**
+     * @phpstan-param THolder $holder
+     */
     final public function callBeforeExecute(ModelHolder $holder): void
     {
         foreach ($this->beforeExecute as $callback) {
-            $callback($holder);
+            $callback($holder, $this);
         }
     }
 
+    /**
+     * @phpstan-param THolder $holder
+     */
     final public function callAfterExecute(ModelHolder $holder): void
     {
         try {
             foreach ($this->afterExecute as $callback) {
-                $callback($holder);
+                $callback($holder, $this);
             }
         } catch (\Throwable $exception) {
             throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);

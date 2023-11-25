@@ -4,31 +4,39 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
-use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\Utils\BaseComponent\BaseComponent;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\SubmitSource;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
-use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 class SubmitCheckComponent extends BaseComponent
 {
-    private SeriesTable $seriesTable;
     private CorrectedStorage $correctedStorage;
     private UploadedStorage $uploadedStorage;
+    private SubmitService $submitService;
+    private ContestYearModel $contestYear;
+    private int $series;
 
-    public function __construct(Container $context, SeriesTable $seriesTable)
+    public function __construct(Container $context, ContestYearModel $contestYear, int $series)
     {
         parent::__construct($context);
-        $this->seriesTable = $seriesTable;
+        $this->contestYear = $contestYear;
+        $this->series = $series;
     }
 
-    final public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void
-    {
+    final public function injectPrimary(
+        UploadedStorage $uploadedStorage,
+        CorrectedStorage $correctedStorage,
+        SubmitService $submitService
+    ): void {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
+        $this->submitService = $submitService;
     }
 
     final public function render(): void
@@ -38,9 +46,9 @@ class SubmitCheckComponent extends BaseComponent
 
     public function handleCheck(): void
     {
-        /** @var SubmitModel $submit */
         $errors = 0;
-        foreach ($this->seriesTable->getSubmits() as $submit) {
+        /** @var SubmitModel $submit */
+        foreach ($this->submitService->getForContestYear($this->contestYear, $this->series) as $submit) {
             if ($submit->source->value === SubmitSource::UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(
@@ -49,7 +57,7 @@ class SubmitCheckComponent extends BaseComponent
                 );
             }
 
-            if ($submit->corrected && !$this->correctedStorage->fileExists($submit)) {
+            if (!$submit->isQuiz() && $submit->corrected && !$this->correctedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(
                     sprintf(_('Corrected submit #%d is broken'), $submit->submit_id),
@@ -65,7 +73,7 @@ class SubmitCheckComponent extends BaseComponent
             }
         }
         $this->flashMessage(
-            sprintf(_('Test done, found %d errors'), $errors),
+            sprintf(ngettext("Test done, found %d error", 'Test done, found %d errors', $errors), $errors),
             $errors ? Message::LVL_WARNING : Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('this');

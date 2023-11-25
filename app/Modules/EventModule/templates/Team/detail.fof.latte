@@ -1,0 +1,31 @@
+{layout './detail.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{block outerContent}
+    {include rests from '../AbstractApplication/blocks.latte'}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.name',
+            'fyziklani_team.phone',
+            'fyziklani_team.note',
+            'fyziklani_team.category',
+            'fyziklani_team.game_lang',
+            ],$model,1024}
+        </div>
+    </div>
+    {include rank from './detail.latte', model:$model}
+    {var $teacherCounter = 0;}
+    {foreach $model->getTeachers() as $teacher}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+        <div class="panel color-auto">
+            <div class="container">
+                {php $teacherCounter++}
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm::formatTeacherLabel($teacherCounter,$teacher)}</h2>
+                {include personSchedule from './detail.latte', person => $teacher->person}
+            </div>
+        </div>
+    {/foreach}
+    {include members from './detail.latte', model:$model}
+{/block}

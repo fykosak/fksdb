@@ -1,17 +1,18 @@
-{layout '../layout.latte'}
-{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
+{var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
 {block body}
     <div>
         <p>
             Hello,<br/>
-            We confirm that the payment #{$model->getPaymentId()} for Fyziklani 2022 in total sum <b>{$model->getPrice()->__toString()}</b> has been accepted.
+            We confirm that the payment #{$model->payment_id} for Fyziklani 2023 in total sum <b>{$model->getPrice()->__toString()}</b> has been accepted.
         </p>
 
         <p>
             It includes the following:
         </p>
 
-        {include './items.latte'}
+        {include './items.latte', lang: 'en'}
 
         {include './signature.en.latte'}
     </div>

@@ -7,7 +7,6 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -46,7 +45,7 @@ class RelatedPersonAuthorizator
         }
 
         $model = $holder->getModel();
-        if ($model instanceof EventParticipantModel || $model instanceof ModelMDsefParticipant) {
+        if ($model instanceof EventParticipantModel) {
             if ($model->person_id == $person->person_id) {
                 return true;
             }

@@ -11,6 +11,6 @@ class DuplicateMemberException extends InvalidStateException
 {
     public function __construct(PersonModel $person, \Throwable $previous = null)
     {
-        parent::__construct(sprintf(_('Person %s already applied.'), $person->getFullName()), 0, $previous);
+        parent::__construct(sprintf(_('Person "%s" already applied.'), $person->getFullName()), 0, $previous);
     }
 }

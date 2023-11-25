@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\SubmitQuestionModel;
+use Fykosak\NetteORM\Service\Service;
 
-class SubmitQuestionService extends Service
+/**
+ * @phpstan-extends Service<SubmitQuestionModel>
+ */
+final class SubmitQuestionService extends Service
 {
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -31,6 +31,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         $this->fixture = $this->createPresenter($this->getPresenterName());
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,scalar> $postData
+     */
     protected function createPostRequest(string $action, array $params, array $postData = []): Request
     {
         $params['lang'] = 'en';
@@ -38,6 +42,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'POST', $params, $postData);
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,scalar> $postData
+     */
     protected function createGetRequest(string $action, array $params, array $postData = []): Request
     {
         $params['lang'] = 'en';
@@ -47,16 +55,16 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 
     protected function loginUser(int $roleId = 1000): void
     {
-        $this->cartesianPerson = $this->getContainer()->getByType(PersonService::class)->storeModel([
+        $this->cartesianPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->cartesianLogin = $this->getContainer()->getByType(LoginService::class)->storeModel(
+        $this->cartesianLogin = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
-        $this->getContainer()->getByType(GrantService::class)->storeModel(
+        $this->container->getByType(GrantService::class)->storeModel(
             ['login_id' => $this->cartesianLogin->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->cartesianLogin, $this->fixture);
@@ -75,6 +83,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return (string)$source;
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $params
+     * @phpstan-param array<string,mixed> $formData
+     */
     protected function createFormRequest(string $action, array $formData, array $params = []): Response
     {
         $request = $this->createPostRequest(
@@ -91,8 +103,9 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return $this->fixture->run($request);
     }
 
-    public static function personToValues(PersonModel $person): array
+    public static function personToValues(ContestModel $contest, PersonModel $person): array
     {
+        $history = $person->getHistory($contest->getCurrentContestYear());
         return [
             '_c_compact' => $person->getFullName(),
             'person' => [
@@ -104,13 +117,11 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
                 'email' => $person->getInfo()->email,
                 'born' => $person->getInfo()->born,
             ],
-            'person_history' => [
-                'school_id__meta' => (string)$person->getHistory(
-                    ContestYearService::getCurrentAcademicYear()
-                )->school_id,
-                'school_id' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->school_id,
-                'study_year' => (string)$person->getHistory(ContestYearService::getCurrentAcademicYear())->study_year,
-            ],
+            'person_history' => $history ? [
+                'school_id__meta' => (string)$history->school_id,
+                'school_id' => (string)$history->school_id,
+                'study_year_new' => $history->study_year_new->value,
+            ] : [],
             'person_has_flag' => [
                 'spam_mff' => '1',
             ],

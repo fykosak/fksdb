@@ -7,8 +7,9 @@ namespace FKSDB\Components\EntityForms\Warehouse;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
@@ -16,6 +17,9 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends EntityFormComponent<ProductModel>
+ */
 class ProductFormComponent extends EntityFormComponent
 {
 
@@ -37,8 +41,17 @@ class ProductFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array $values */
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{container:array{
+         *       name_cs:string,
+         *       name_en:string,
+         *       description_cs:string,
+         *       description_en:string,
+         *       category:string,
+         *       note:string,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
         $this->productService->storeModel($data, $this->model);
@@ -49,13 +62,10 @@ class ProductFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 
@@ -65,13 +75,13 @@ class ProductFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('warehouse_product', [
-            'name_cs',
-            'name_en',
-            'description_cs',
-            'description_en',
-            'category',
-            'note',
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_product', [
+            'name_cs' => ['required' => true],
+            'name_en' => ['required' => true],
+            'description_cs' => ['required' => true],
+            'description_en' => ['required' => true],
+            'category' => ['required' => true],
+            'note' => ['required' => true],
         ]);
         $producers = [];
         /** @var ProducerModel $producer */

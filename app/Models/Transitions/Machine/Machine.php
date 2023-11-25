@@ -9,61 +9,104 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
-use Fykosak\NetteORM\Model;
-use Nette\Application\ForbiddenRequestException;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
+/**
+ * @phpstan-template THolder of ModelHolder
+ * @phpstan-import-type Enum from Transition
+ */
 abstract class Machine
 {
     public const STATE_INIT = '__init';
     public const STATE_ANY = '*';
 
-    /** @var Transition[] */
-    protected array $transitions = [];
+    /** @phpstan-var Transition<THolder>[] */
+    public array $transitions = [];
     protected Explorer $explorer;
-    /**
-     * @var callable|null
-     * if callback return true, transition is allowed explicit, independently of transition's condition
-     */
-    private $implicitCondition = null;
 
     public function __construct(Explorer $explorer)
     {
         $this->explorer = $explorer;
     }
 
-    public function addTransition(Transition $transition): void
+    /**
+     * @phpstan-param Transition<THolder> $transition
+     */
+    final public function addTransition(Transition $transition): void
     {
         $this->transitions[] = $transition;
     }
 
     /**
-     * @return Transition[]
+     * @phpstan-param TransitionsDecorator<THolder>|null $decorator
      */
-    public function getTransitions(): array
+    final public function decorateTransitions(?TransitionsDecorator $decorator): void
     {
-        return $this->transitions;
+        if ($decorator) {
+            $decorator->decorate($this);
+        }
     }
 
     /**
      * @throws UnavailableTransitionsException
+     * @phpstan-return Transition<THolder>
      */
-    public function getTransitionById(string $id): Transition
+    final public function getTransitionById(string $id): Transition
     {
-        $transitions = \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $transition->getId() === $id
+        return self::selectTransition(
+            \array_filter(
+                $this->transitions,
+                fn(Transition $transition): bool => $transition->getId() === $id
+            )
         );
-        return $this->selectTransition($transitions);
     }
 
     /**
-     * @param Transition[] $transitions
-     * @throws \LogicException
      * @throws UnavailableTransitionsException
-     * Protect more that one transition between nodes
+     * @throws \Throwable
+     * @phpstan-param THolder $holder
+     * @phpstan-param Transition<THolder> $transition
      */
-    protected function selectTransition(array $transitions, bool $throw = true): ?Transition
+    public function execute(Transition $transition, ModelHolder $holder): void
+    {
+        if (!$this->isAvailable($transition, $holder)) {
+            throw new UnavailableTransitionsException();
+        }
+        $outerTransition = true;
+        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $outerTransition = false;
+            $this->explorer->getConnection()->beginTransaction();
+        }
+        try {
+            $transition->callBeforeExecute($holder);
+            $holder->updateState($transition->target);
+            $transition->callAfterExecute($holder);
+        } catch (\Throwable $exception) {
+            if (!$outerTransition) {
+                $this->explorer->getConnection()->rollBack();
+            }
+            throw $exception;
+        }
+        if (!$outerTransition) {
+            $this->explorer->getConnection()->commit();
+        }
+    }
+
+    /**
+     * @phpstan-return THolder
+     */
+    abstract public function createHolder(Model $model): ModelHolder;
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-return Transition<SHolder>
+     * Protect more that one transition between nodes
+     * @throws UnavailableTransitionsException
+     * @throws \LogicException
+     */
+    public static function selectTransition(array $transitions): Transition
     {
         $length = \count($transitions);
         if ($length > 1) {
@@ -78,21 +121,30 @@ abstract class Machine
         return \array_values($transitions)[0];
     }
 
-    final public function decorateTransitions(?TransitionsDecorator $decorator): void
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param SHolder $holder
+     * @phpstan-param Transition<SHolder> $transition
+     */
+    protected static function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
-        if ($decorator) {
-            $decorator->decorate($this);
+        if ($transition->source->value !== $holder->getState()->value) {
+            return false;
         }
+        return $transition->canExecute($holder);
     }
 
     /**
-     * @return Transition[]
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param Enum $target
+     * @phpstan-return Transition<SHolder>[]
      */
-    public function getAvailableTransitions(ModelHolder $holder): array
+    public static function filterByTarget(array $transitions, EnumColumn $target): array
     {
         return \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
+            $transitions,
+            fn(Transition $transition): bool => $target->value === $transition->target->value
         );
     }
 
@@ -130,53 +182,30 @@ abstract class Machine
     }
 
     /**
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionsException
-     * @throws \Throwable
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param Enum $source
+     * @phpstan-return Transition<SHolder>[]
      */
-    final public function executeImplicitTransition(ModelHolder $holder): void
+    public static function filterBySource(array $transitions, EnumColumn $source): array
     {
-        $transition = $this->selectTransition($this->getAvailableTransitions($holder));
-        $this->execute($transition, $holder);
-    }
-
-    protected function isAvailable(Transition $transition, ModelHolder $holder): bool
-    {
-        if ($transition->source->value !== $holder->getState()->value) {
-            return false;
-        }
-        if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
-            return true;
-        }
-        return $transition->canExecute($holder);
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => $source->value === $transition->source->value
+        );
     }
 
     /**
-     * @throws UnavailableTransitionsException
-     * @throws \Throwable
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-param SHolder $holder
+     * @phpstan-return Transition<SHolder>[]
      */
-    public function execute(Transition $transition, ModelHolder $holder): void
+    public static function filterAvailable(array $transitions, ModelHolder $holder): array
     {
-        if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException();
-        }
-        $outerTransition = true;
-        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
-            $outerTransition = false;
-            $this->explorer->getConnection()->beginTransaction();
-        }
-        try {
-            $transition->callBeforeExecute($holder);
-            $holder->updateState($transition->target);
-            $transition->callAfterExecute($holder);
-        } catch (\Throwable $exception) {
-            $this->explorer->getConnection()->rollBack();
-            throw $exception;
-        }
-        if (!$outerTransition) {
-            $this->explorer->getConnection()->commit();
-        }
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => self::isAvailable($transition, $holder)
+        );
     }
-
-    abstract public function createHolder(Model $model): ModelHolder;
 }

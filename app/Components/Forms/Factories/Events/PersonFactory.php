@@ -4,54 +4,52 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Events\EventsExtension;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfResolver;
-use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class PersonFactory extends AbstractFactory
 {
     private const VALUE_LOGIN = 'fromLogin';
-    /** @var callable */
-    private $fieldsDefinition;
-    /** @var callable */
-    private $searchType;
-    /** @var callable */
+    /**
+     * @phpstan-var EvaluatedFieldsDefinition
+     */
+    private array $fieldsDefinition;
+    private string $searchType;
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $allowClear;
-    /** @var callable */
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $modifiable;
-    /** @var callable */
+    /** @phpstan-var (callable(BaseHolder):bool)|bool */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private ExpressionEvaluator $evaluator;
     private User $user;
-    private DIContainer $container;
 
     /**
-     * PersonFactory constructor.
-     * @param callable|array $fieldsDefinition
-     * @param callable|string $searchType
-     * @param callable|bool $allowClear
-     * @param callable|bool $modifiable
-     * @param callable|bool $visible
+     * @phpstan-param (callable(BaseHolder):bool)|bool $allowClear
+     * @phpstan-param (callable(BaseHolder):bool)|bool $modifiable
+     * @phpstan-param (callable(BaseHolder):bool)|bool $visible
+     * @phpstan-param array<string,array<string,mixed>> $fieldsDefinition
      */
     public function __construct(
-        $fieldsDefinition,
-        $searchType,
+        array $fieldsDefinition,
+        string $searchType,
         $allowClear,
         $modifiable,
         $visible,
         ReferencedPersonFactory $referencedPersonFactory,
-        ExpressionEvaluator $evaluator,
-        User $user,
-        DIContainer $container
+        User $user
     ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
@@ -59,13 +57,12 @@ class PersonFactory extends AbstractFactory
         $this->modifiable = $modifiable;
         $this->visible = $visible;
         $this->referencedPersonFactory = $referencedPersonFactory;
-        $this->evaluator = $evaluator;
         $this->user = $user;
-        $this->container = $container;
     }
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return ReferencedId<PersonModel>
      */
     public function createComponent(Field $field): ReferencedId
     {
@@ -73,15 +70,14 @@ class PersonFactory extends AbstractFactory
             $field,
             $this->modifiable,
             $this->visible,
-            new SelfResolver($this->user),
-            $this->evaluator
+            new SelfResolver($this->user)
         );
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
             $field->holder->event->getContestYear(),
-            $this->evaluator->evaluate($this->searchType, $field->holder),
-            $this->evaluator->evaluate($this->allowClear, $field->holder),
+            $this->searchType,
+            is_callable($this->allowClear) ? ($this->allowClear)($field->holder) : $this->allowClear,
             $resolver,
             $field->holder->event
         );
@@ -96,7 +92,7 @@ class PersonFactory extends AbstractFactory
     {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
-            if ($this->user->isLoggedIn() && $this->user->getIdentity()->person) {
+            if ($this->user->isLoggedIn() && $this->user->getIdentity()->person) { // @phpstan-ignore-line
                 $default = $this->user->getIdentity()->person->person_id;
             } else {
                 $default = null;
@@ -107,11 +103,11 @@ class PersonFactory extends AbstractFactory
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return EvaluatedFieldsDefinition
      */
     private function evaluateFieldsDefinition(Field $field): array
     {
-        Helpers::registerSemantic(EventsExtension::$semanticMap);
-        $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
+        $fieldsDefinition = Helpers::resolveArrayExpression($this->fieldsDefinition);
 
         foreach ($fieldsDefinition as &$sub) {
             foreach ($sub as &$metadata) {
@@ -119,10 +115,10 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 foreach ($metadata as &$value) {
-                    $value = $this->evaluator->evaluate($value, $field->holder);
+                    $value = is_callable($value) ? ($value)($field->holder) : $value;
                 }
             }
         }
-        return $fieldsDefinition;
+        return $fieldsDefinition;// @phpstan-ignore-line
     }
 }

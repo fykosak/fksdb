@@ -1,0 +1,27 @@
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
+            <div class="mb-3">
+                {control columnTable [
+                    'schedule_group.schedule_group_id',
+                    'schedule_group.name',
+                    'schedule_group.schedule_group_type',
+                    'schedule_group.start',
+                    'schedule_group.end',
+                    'schedule_group.registration_begin',
+                    'schedule_group.registration_end',
+                    'schedule_group.modification_end',
+                    ], $model,1024}
+            </div>
+            {control printer:button 'schedule_group.edit', $model}
+            <a class="btn btn-outline-primary" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Items'}</h2>
+            {control itemsGrid}
+        </div>
+    </div>
+{/block}

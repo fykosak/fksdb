@@ -4,54 +4,47 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
-use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\UI\Presenter;
-use Nette\Database\Table\Selection;
-use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
-class TeachersGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<TeacherModel,array{}>
+ */
+final class TeachersGrid extends BaseGrid
 {
+    private TeacherService $teacherService;
 
-    public function __construct(Container $container)
+    public function inject(TeacherService $teacherService): void
     {
-        parent::__construct($container, TeacherService::class, [
-            'person.full_name',
-            'teacher.note',
-            'teacher.state',
-            'teacher.since',
-            'teacher.until',
-            'teacher.number_brochures',
-            'school.school',
-        ]);
+        $this->teacherService = $teacherService;
     }
 
-    protected function getData(): IDataSource
+    /**
+     * @phpstan-return TypedSelection<TeacherModel>
+     */
+    protected function getModels(): TypedSelection
     {
-        $teachers = $this->service->getTable()->select('teacher.*, person.family_name AS display_name');
-
-        $dataSource = new SearchableDataSource($teachers);
-        $dataSource->setFilterCallback(function (Selection $table, array $value) {
-            $tokens = preg_split('/\s+/', $value['term']);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        return $dataSource;
+        return $this->teacherService->getTable();
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
-        parent::configure($presenter);
+        $this->filtered = false;
+        $this->counter = true;
+        $this->paginate = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@teacher.note',
+            '@school.school',
+            '@teacher.role',
+            '@teacher.active',
+        ]);
         $this->addLink('teacher.edit');
         $this->addLink('teacher.detail');
     }

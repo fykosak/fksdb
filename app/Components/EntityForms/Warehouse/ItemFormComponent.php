@@ -7,18 +7,21 @@ namespace FKSDB\Components\EntityForms\Warehouse;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-extends EntityFormComponent<ItemModel>
+ */
 class ItemFormComponent extends EntityFormComponent
 {
 
@@ -47,8 +50,20 @@ class ItemFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        /** @var array $values */
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{container:array{
+         *      state:string,
+         *      description_cs:string,
+         *      description_en:string,
+         *      data:string,
+         *      purchase_price:float,
+         *      purchase_currency:string,
+         *      placement:string,
+         *      note:string,
+         *     contest_id?:int,
+         * }} $values
+         */
+        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
         if (!isset($data['contest_id'])) {
@@ -63,13 +78,10 @@ class ItemFormComponent extends EntityFormComponent
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 
@@ -79,15 +91,15 @@ class ItemFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('warehouse_item', [
-            'state',
-            'description_cs',
-            'description_en',
-            'data',
-            'purchase_price',
-            'purchase_currency',
-            'placement',
-            'note'
+        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_item', [
+            'state' => ['required' => true],
+            'description_cs' => ['required' => true],
+            'description_en' => ['required' => true],
+            'data' => ['required' => true],
+            'purchase_price' => ['required' => true],
+            'purchase_currency' => ['required' => true],
+            'placement' => ['required' => true],
+            'note' => ['required' => true],
         ]);
         $products = [];
         /** @var ProductModel $product */

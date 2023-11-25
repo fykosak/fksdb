@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 class ModelContainer extends ContainerWithOptions
 {
     /**
-     * @param Model|iterable $data
+     * @phpstan-param Model|iterable<string|int,mixed> $data
      * @return static
      */
     public function setValues($data, bool $erase = false): self

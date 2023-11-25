@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\TaskModel;
+use Fykosak\NetteORM\Service\Service;
 
-class TaskService extends Service
+/**
+ * @phpstan-extends Service<TaskModel>
+ */
+final class TaskService extends Service
 {
 }

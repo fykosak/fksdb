@@ -29,6 +29,10 @@ trait SeriesPresenterTrait
         }
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     private function isValidSeries(?int $series): bool
     {
         if (!isset($series)) {
@@ -37,6 +41,11 @@ trait SeriesPresenterTrait
         return in_array($series, $this->getAllowedSeries());
     }
 
+    /**
+     * @phpstan-return int[]
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     private function getAllowedSeries(): array
     {
         $lastSeries = $this->getSelectedContestYear()->getLastSeries();
@@ -65,6 +74,10 @@ trait SeriesPresenterTrait
         return $candidate;
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
     protected function createComponentSeriesChooser(): SeriesChooserComponent
     {
         return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getAllowedSeries());

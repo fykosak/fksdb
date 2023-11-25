@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-
+/**
+ * @phpstan-template TGlobalReturn
+ * @phpstan-template TArgType
+ */
 interface Statement
 {
-    public function __invoke(ModelHolder $holder);
+    /**
+     * @phpstan-return TGlobalReturn
+     * @phpstan-param TArgType ...$args
+     */
+    public function __invoke(...$args);
 }

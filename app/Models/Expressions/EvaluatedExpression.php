@@ -4,22 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Expressions;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-template GlobalReturn
+ * @phpstan-template SubReturn
+ * @phpstan-template ArgType
+ * @phpstan-implements Statement<GlobalReturn,ArgType>
+ */
 abstract class EvaluatedExpression implements Statement
 {
     use SmartObject;
 
     /**
-     * @param mixed $evaluated
-     * @return mixed
+     * @phpstan-param (callable(ArgType):SubReturn)|SubReturn $evaluated
+     * @phpstan-param ArgType $args
+     * @phpstan-return SubReturn
      */
-    final protected function evaluateArgument($evaluated, ModelHolder $holder)
+    final protected function evaluateArgument($evaluated, ...$args)
     {
         if (is_callable($evaluated)) {
-            return $evaluated($holder);
+            return $evaluated(...$args);
         } else {
             return $evaluated;
         }

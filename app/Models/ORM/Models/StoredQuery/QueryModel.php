@@ -6,53 +6,65 @@ namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read int query_id
- * @property-read string qid
- * @property-read string sql
- * @property-read string name
+ * @property-read int $query_id
+ * @property-read string|null $qid
+ * @property-read string $name
+ * @property-read string|null $description
+ * @property-read string $sql
  */
-class QueryModel extends Model implements Resource
+final class QueryModel extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'storedQuery';
 
     /**
-     * @return ParameterModel[]
+     * @phpstan-return ParameterModel[]
      */
     public function getParameters(): array
     {
         $result = [];
+        /** @var ParameterModel $row */
         foreach ($this->getParameters2() as $row) {
             $result[] = $row;
         }
         return $result;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<ParameterModel>
+     */
     public function getParameters2(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
+        /** @phpstan-var TypedGroupedSelection<ParameterModel> $selection */
+        $selection = $this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id');
+        return $selection;
     }
 
     /**
-     * @return StoredQueryParameter[]
+     * @phpstan-return StoredQueryParameter[]
      */
     public function getQueryParameters(): array
     {
         return array_map(fn(ParameterModel $model) => StoredQueryParameter::fromModel($model), $this->getParameters());
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TagModel>
+     */
     public function getTags(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
+        /** @phpstan-var TypedGroupedSelection<TagModel> $selection */
+        $selection = $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
+        return $selection;
     }
 
     /**
-     * @return TagTypeModel[]
+     * @phpstan-return TagTypeModel[]
      */
     public function getStoredQueryTagTypes(): array
     {

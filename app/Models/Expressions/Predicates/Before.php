@@ -5,35 +5,30 @@ declare(strict_types=1);
 namespace FKSDB\Models\Expressions\Predicates;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
+ * @phpstan-template ArgType
+ */
 class Before extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
-    /**
-     * Before constructor.
-     * @param \DateTimeInterface|callable $datetime
-     */
+    /** @phpstan-param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime */
     public function __construct($datetime)
     {
         $this->datetime = $datetime;
     }
 
-    public function __invoke(ModelHolder $holder): bool
+    public function __invoke(...$args): bool
     {
-        $datetime = $this->evaluateArgument($this->datetime, $holder);
+        $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {
             throw new InvalidStateException();
         }
         return $datetime->getTimestamp() >= time();
-    }
-
-    public function __toString(): string
-    {
-        return "now <= $this->datetime";
     }
 }

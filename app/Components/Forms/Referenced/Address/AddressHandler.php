@@ -5,39 +5,53 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Referenced\Address;
 
 use FKSDB\Models\ORM\Models\AddressModel;
-use FKSDB\Models\ORM\Models\PSCRegionModel;
+use FKSDB\Models\ORM\Models\PSCSubdivisionModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
-use FKSDB\Models\ORM\Services\PSCRegionService;
+use FKSDB\Models\ORM\Services\PSCSubdivisionService;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-extends ReferencedHandler<AddressModel>
+ */
 class AddressHandler extends ReferencedHandler
 {
     private const PATTERN = '/[0-9]{5}/';
 
     private AddressService $addressService;
-    private PSCRegionService $PSCRegionService;
+    private PSCSubdivisionService $PSCSubdivisionService;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(AddressService $addressService, PSCRegionService $PSCRegionService): void
+    public function inject(AddressService $addressService, PSCSubdivisionService $PSCSubdivisionService): void
     {
         $this->addressService = $addressService;
-        $this->PSCRegionService = $PSCRegionService;
+        $this->PSCSubdivisionService = $PSCSubdivisionService;
     }
 
-    public function store(array $values, ?Model $model = null): AddressModel
+    /**
+     * @param AddressModel|null $model
+     * @phpstan-param array{
+     *     target?:string|null,
+     *     city?:string|null,
+     *     country_id?:int|null,
+     *     postal_code:string|null,
+     * }$values
+     */
+    public function store(array $values, ?Model $model = null): ?AddressModel
     {
         $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($values), true);
-
+        if (!isset($data['target']) || !isset($data['city'])) {
+            return null;
+        }
         if (!isset($data['country_id'])) {
             $countryData = $this->inferCountry($data['postal_code']);
             if ($countryData) {
@@ -51,13 +65,19 @@ class AddressHandler extends ReferencedHandler
             in_array($data['country_id'], [CountryService::SLOVAKIA, CountryService::CZECH_REPUBLIC]) &&
             !isset($data['postal_code'])
         ) {
-            throw new InvalidAddressException(_('PSC is required for Czech and Slovak'));
+            throw new InvalidAddressException(_('ZIP code is required for Czech and Slovak'));
         }
         // $this->findModelConflicts($model, $data, null);
-        return $this->addressService->storeModel($data, $model, false);
+        return $this->addressService->storeModel($data, $model);
     }
 
-    private function inferCountry(?string $postalCode): ?array
+    /**
+     * @phpstan-return array{
+     *     country_subdivision_id?:int,
+     *     country_id:int,
+     * }|null
+     */
+    public function inferCountry(?string $postalCode): ?array
     {
         if (!$postalCode) {
             return null;
@@ -65,18 +85,18 @@ class AddressHandler extends ReferencedHandler
         if (!preg_match(self::PATTERN, $postalCode)) {
             return null;
         }
-        /** @var PSCRegionModel $pscRegion */
-        $pscRegion = $this->PSCRegionService->findByPrimary($postalCode);
-        if ($pscRegion) {
+        /** @var PSCSubdivisionModel|null $pscSubdivision */
+        $pscSubdivision = $this->PSCSubdivisionService->findByPrimary($postalCode);
+        if ($pscSubdivision) {
             return [
-                'country_subdivision_id' => $pscRegion->country_subdivision_id,
-                'country_id' => $pscRegion->country_subdivision->country_id,
+                'country_subdivision_id' => $pscSubdivision->country_subdivision_id,
+                'country_id' => $pscSubdivision->country_subdivision->country_id,
             ];
         } else {
             if (strlen($postalCode) != 5) {
                 return null;
             }
-            Debugger::log("Czechoslovak PSC not found '$postalCode'", Debugger::WARNING);
+            Debugger::log("Czechoslovak ZIP code not found '$postalCode'", Debugger::WARNING);
             $firstChar = substr($postalCode, 0, 1);
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {

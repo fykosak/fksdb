@@ -5,33 +5,40 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
-class Count
+/**
+ * @implements Statement<int,BaseHolder|ParticipantHolder>
+ */
+class Count implements Statement
 {
     use SmartObject;
 
-    private string $state;
+    /** @phpstan-var string[] */
+    private array $states;
+    private EventParticipantService $eventParticipantService;
 
-    public function __construct(string $state)
+    /**
+     * @phpstan-param string[] $states
+     */
+    public function __construct(array $states, EventParticipantService $eventParticipantService)
     {
-        $this->state = $state;
+        $this->states = $states;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     /**
-     * @param BaseHolder $holder
+     * @param BaseHolder|ParticipantHolder $args
      */
-    public function __invoke(ModelHolder $holder): int
+    public function __invoke(...$args): int
     {
-        $table = $holder->service->getTable();
-        $table->where('event_participant.event_id', $holder->event->getPrimary());
-        $table->where('status', $this->state);
+        [$holder] = $args;
+        $table = $this->eventParticipantService->getTable();
+        $table->where('event_participant.event_id', $holder->getModel()->event->getPrimary());
+        $table->where('status', $this->states);
         return $table->count('1');
-    }
-
-    public function __toString(): string
-    {
-        return "count($this->state)";
     }
 }
