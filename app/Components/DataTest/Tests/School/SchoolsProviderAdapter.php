@@ -23,7 +23,7 @@ class SchoolsProviderAdapter extends Adapter
 
     protected function getModels(Model $model): iterable
     {
-        return $this->service->getTable();
+        return $this->service->getTable(); //@phpstan-ignore-line
     }
 
     protected function getLogPrepend(Model $model): string
