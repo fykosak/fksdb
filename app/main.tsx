@@ -238,37 +238,38 @@ window.addEventListener('DOMContentLoaded', () => {
                 termFunction = extractLast;
             }
 
-            const termFunction = multiSelect
-                ? (term: string): string => term
-                : (term: string): string => term.split(/,\s*/).pop();
-
             const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
-                options.source = (request: { term: string }, response: (data: Array<Item>) => void) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const term = termFunction(request.term);
+                    if (term in cache) {
+                        response(cache[term]);
+                        return;
+                    }
                     fetch(this.element.data('ac-ajax-url'), {
                             body: JSON.stringify({acQ: term}),
                             method: 'POST',
                         },
-                    ).then((response): Promise<Array<Item>> => {
+                    ).then((response): Promise<TData> => {
                         return response.json();
-                    }).then((jsonData: Array<Item>) => {
-                        // ensures default value is always suggested (needed for AJAX)
-                        response([...jsonData.filter((item) => item.value !== defaultValue), ...defaultItems]);
+                    }).then((jsonData: TData) => {
+                        const data = conservationFunction(jsonData);
+                        cache[term] = data;
+                        response(data);
                     });
                 };
                 options.minLength = 3;
             } else {
                 const items = this.element.data('ac-items');
-                options.source = (request: { term: string }, response: (data: Array<Item>) => void) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
                     response($.ui.autocomplete.filter(items, s));
                 };
                 options.minLength = 3;
             }
-            const labelCache: Record<string, Item> = {};
+
             if (multiSelect) {
                 options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     labelCache[ui.item.value] = ui.item.label;
@@ -277,8 +278,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     } else {
                         this.element.val(ui.item.value);
                     }
-                    el.val([].concat($.map(this.element.val().split(','), (arg: string) => {
-                        return innerRenderPlain(labelCache[arg]);
+                    el.val([].concat($.map(this.element.val().split(','), (arg) => {
+                        return labelCache[arg];
                     }), ['']).join(', '));
                     return false;
                 };
@@ -286,13 +287,13 @@ window.addEventListener('DOMContentLoaded', () => {
             } else {
                 options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
-                    el.val(innerRenderPlain(ui.item));
+                    el.val(ui.item.label);
                     this.element.change();
                     return false;
                 };
                 options.focus = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
-                    el.val(innerRenderPlain(ui.item));
+                    el.val(ui.item.label);
                     return false;
                 };
             }
