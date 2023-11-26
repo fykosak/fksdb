@@ -28,14 +28,12 @@ class ParticipantMailCallback extends EventParticipantCallback
      * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string|null,
-     *     subject:string,
      *     sender:string,
      * }
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
-            'subject' => 'Registrace na DSEF – ' . $holder->getModel()->person->getFullName(),
             'blind_carbon_copy' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
             'sender' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
         ];

@@ -4,6 +4,8 @@
 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
 {var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
+{block subject}Změna stavu - {$holder->getModel()->name}{/block}
+
 {block body}
     <p>
         Ahoj,<br/>

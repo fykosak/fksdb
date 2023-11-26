@@ -6,9 +6,11 @@ namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
+use Nette\InvalidStateException;
 
 class TeacherInfoMail extends InfoEmail
 {
@@ -19,16 +21,17 @@ class TeacherInfoMail extends InfoEmail
 
     protected function getData(TeamHolder $holder): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Úprava týmu – ' . $holder->getModel()->name;
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $subject = 'Team update – ' . $holder->getModel()->name;
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
+        switch ($holder->getModel()->game_lang->value) {
+            case GameLang::CS:
+                $sender = 'Fyziklání <fyziklani@fykos.cz>';
+                break;
+            case GameLang::EN:
+                $sender = 'Fyziklani <fyziklani@fykos.cz>';
+                break;
+            default:
+                throw new InvalidStateException();
         }
         return [
-            'subject' => $subject,
-            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
             'sender' => $sender,
         ];
     }

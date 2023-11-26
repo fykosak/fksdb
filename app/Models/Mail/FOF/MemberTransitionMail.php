@@ -33,47 +33,17 @@ class MemberTransitionMail extends MailCallback
      * @param TeamHolder $holder
      * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
      *     sender:string,
      * }
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
         if ($holder->getModel()->game_lang->value === 'cs') {
-            switch (self::resolveLayoutName($transition)) {
-                case 'init->pending':
-                    $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
-                    break;
-                case 'pending->spare':
-                    $subject = 'Změna stavu - ' . $holder->getModel()->name;
-                    break;
-                case 'spare->applied':
-                    $subject = 'Změna stavu - ' . $holder->getModel()->name;
-                    break;
-                default:
-                    throw new InvalidStateException();
-            }
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {
-            switch (self::resolveLayoutName($transition)) {
-                case 'init->pending':
-                    $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
-                    break;
-                case 'pending->spare':
-                    $subject = 'Status update - ' . $holder->getModel()->name;
-                    break;
-                case 'spare->applied':
-                    $subject = 'Status update - ' . $holder->getModel()->name;
-                    break;
-                default:
-                    throw new InvalidStateException();
-            }
             $sender = 'Fyziklani <fyziklani@fykos.cz>';
         }
         return [
-            'subject' => $subject,
-            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
             'sender' => $sender,
         ];
     }

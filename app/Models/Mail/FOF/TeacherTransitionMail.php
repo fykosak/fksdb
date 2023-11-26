@@ -31,27 +31,15 @@ class TeacherTransitionMail extends MailCallback
     /**
      * @param TeamHolder $holder
      * @phpstan-param Transition<TeamHolder> $transition
-     * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
-     *     sender:string,
-     * }
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
-        } else {
-            $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
-        }
         if ($holder->getModel()->game_lang->value === 'cs') {
             $sender = 'Fyziklání <fyziklani@fykos.cz>';
         } else {
             $sender = 'Fyziklani <fyziklani@fykos.cz>';
         }
         return [
-            'subject' => $subject,
-            'blind_carbon_copy' => 'Fyziklani <fyziklani@fykos.cz>',
             'sender' => $sender,
         ];
     }

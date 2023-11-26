@@ -88,18 +88,18 @@ class MailSender extends MailCallback
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
         $token = $this->createToken($person, $holder);
-        return $this->mailTemplateFactory->renderWithParameters(
+        return $this->mailTemplateFactory->renderWithParameters2(
             $this->getTemplatePath($holder, $transition),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'token' => $token,
                 'holder' => $holder,
                 'linkArgs' => $this->createLinkArgs($holder, $token),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang()),
         );
     }
 

@@ -1,0 +1,15 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+
+{block subject}Úprava týmu –  {$holder->getModel()->name}{/block}
+
+{block body}
+    <p>
+        Ahoj,<br/>
+        zaznamenali jsme změnu údajů u týmu {$holder->getModel()->name} na Fyziklání. Níže posíláme aktualizovaný přehled informací:
+    </p>
+    {include detail from './detail.cs.latte',holder:$holder}
+    <p>
+        Tvoja FKSDB<br/>
+    </p>
+{/block}

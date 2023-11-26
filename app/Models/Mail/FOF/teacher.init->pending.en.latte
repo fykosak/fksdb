@@ -5,6 +5,8 @@
 
 {var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
+{block subject}Fyziklani Registration – {$holder->getModel()->name}{/block}
+
 {block body}
     <p>
         To whom it may concern,<br/>

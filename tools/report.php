@@ -24,11 +24,11 @@ foreach ($tests as $test) {
 }
 $mailService = $container->getByType(EmailMessageService::class);
 $mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
-$mailService->addMessageToSend([
-    'recipient' => 'fyziklani@fykos.cz',
-    'sender' => 'fksdb@fykos.cz',
-    'reply_to' => 'noreply@fykos.cz',
-    'subject' => 'Seznam chyb',
-    'text' => $mailTemplateFactory->renderReport(['logger' => $logger], Language::from(Language::CS)),
-    'priority' => 0,
-]);
+$mailService->addMessageToSend(
+    array_merge([
+        'recipient' => 'fyziklani@fykos.cz',
+        'sender' => 'fksdb@fykos.cz',
+        'reply_to' => 'noreply@fykos.cz',
+        'priority' => 0,
+    ], $mailTemplateFactory->renderReport(['logger' => $logger], Language::from(Language::CS)))
+);

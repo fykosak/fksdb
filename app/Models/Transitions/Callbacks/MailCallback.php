@@ -19,6 +19,7 @@ use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 /**
+ * @phpstan-import-type TRenderedData from MailTemplateFactory
  * @phpstan-template THolder of ModelHolder
  * @implements Statement<void,THolder|Transition<THolder>>
  */
@@ -61,7 +62,7 @@ abstract class MailCallback implements Statement
         foreach ($this->getPersons($holder) as $person) {
             $data = $this->getData($holder, $transition);
             $data['recipient_person_id'] = $person->person_id;
-            $data['text'] = $this->createMessageText($holder, $transition, $person);
+            $data = array_merge($data, $this->createMessageText($holder, $transition, $person));
             $this->emailMessageService->addMessageToSend($data);
         }
     }
@@ -71,17 +72,18 @@ abstract class MailCallback implements Statement
      * @throws BadTypeException
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
+     * @phpstan-return TRenderedData
      */
-    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
-        return $this->mailTemplateFactory->renderWithParameters(
+        return $this->mailTemplateFactory->renderWithParameters2(
             $this->getTemplatePath($holder, $transition),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'holder' => $holder,
                 'token' => $this->createToken($person, $holder),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang())
         );
     }
 
@@ -126,7 +128,6 @@ abstract class MailCallback implements Statement
      * @phpstan-param Transition<THolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      *     reply_to?:string,
      * }

@@ -17,6 +17,9 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-type TRenderedData = array{text:string,subject:string}
+ */
 class MailTemplateFactory
 {
     /** without trailing slash */
@@ -56,10 +59,11 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-param array{token:AuthTokenModel} $data
+     * @phpstan-return TRenderedData
      */
-    public function renderLoginInvitation(array $data, Language $lang): string
+    public function renderLoginInvitation(array $data, Language $lang): array
     {
-        return $this->create($lang)->renderToString(__DIR__ . '/loginInvitation.latte', $data);
+        return $this->renderWithParameters2(__DIR__ . '/loginInvitation.latte', $data, $lang);
     }
 
     /**
@@ -74,41 +78,50 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string} $data
+     * @phpstan-return TRenderedData
      */
-    public function renderChangeEmailOld(array $data, Language $lang): string
+    public function renderChangeEmailOld(array $data, Language $lang): array
     {
-        return $this->create($lang)
-            ->renderToString(__DIR__ . '/changeEmail.old.latte', $data);
+        return $this->renderWithParameters2(__DIR__ . '/changeEmail.old.latte', $data, $lang);
     }
 
     /**
      * @throws BadTypeException
      * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string,token:AuthTokenModel} $data
+     * @phpstan-return TRenderedData
      */
-    public function renderChangeEmailNew(array $data, Language $lang): string
+    public function renderChangeEmailNew(array $data, Language $lang): array
     {
-        return $this->create($lang)
-            ->renderToString(__DIR__ . '/changeEmail.new.latte', $data);
+        return $this->renderWithParameters2(__DIR__ . '/changeEmail.new.latte', $data, $lang);
     }
 
     /**
      * @throws BadTypeException
      * @phpstan-param array{logger:MemoryLogger} $data
+     * @phpstan-return TRenderedData
      */
-    public function renderReport(array $data, Language $lang): string
+    public function renderReport(array $data, Language $lang): array
     {
-        return $this->create($lang)
-            ->renderToString(__DIR__ . '/report.latte', $data);
+        return $this->renderWithParameters2(__DIR__ . '/report.latte', $data, $lang);
     }
 
     /**
+     * @phpstan-template TData of array
+     * @phpstan-param TData $data
+     * @phpstan-return TRenderedData
      * @throws BadTypeException
-     * @phpstan-param array<string,mixed> $data
      */
-    public function renderWithParameters(string $templateFile, ?Language $lang, array $data = []): string
+    public function renderWithParameters2(string $templateFile, array $data, ?Language $lang): array
     {
-        return $this->create($this->resolverLang($lang))
-            ->renderToString($this->resolverFileName($templateFile, $lang), $data);
+        $lang = $this->resolverLang($lang);
+        $templateFile = $this->resolverFileName($templateFile, $lang);
+        return [
+            'subject' => $this->create($lang)->renderToString(
+                __DIR__ . '/subject.latte',
+                array_merge(['templateFile' => $templateFile], $data)
+            ),
+            'text' => $this->create($lang)->renderToString($templateFile, $data),
+        ];
     }
 
     private function resolverLang(?Language $lang): Language

@@ -1,16 +1,20 @@
 {varType FKSDB\Modules\Core\Language $lang}
 {varType string $newEmail}
+
+{define subject}{_'Change of email'}{/define}
+
 {switch $lang->value}
-{case 'cs'}
+    {case 'cs'}
     <h1>Dostali jsme požadavek na změnu e-mailové adresy ve FKSDB.</h1>
 
     <p>Někdo chce změnit adresu na {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>
-    <p>Pokud jste to nebyli Vy, kontaktujte prosím správce FKSDB na <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.</p>
+    <p>Pokud jste to nebyli Vy, kontaktujte prosím správce FKSDB na <a href="mailto:webmaster@fykos.cz">webmaster@fykos.cz</a>.
+    </p>
     <p>
         S pozdravem,<br/>
         FKSDB
     </p>
-{default}
+    {default}
     <h1>We have received a request to change the email address in FKSDB.</h1>
 
     <p>Someone wants to change the address to {FKSDB\Models\Utils\Utils::cryptEmail($newEmail)}.</p>

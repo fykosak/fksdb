@@ -23,15 +23,13 @@ class TeamMemberMailCallback extends \FKSDB\Models\Transitions\Callbacks\TeamMem
      * @param TeamHolder $holder
      * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
+     *     blind_carbon_copy?:string,
      *     sender:string,
      * }
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
         return [
-            'subject' => _('Physics Brawl Online Team Registration'),
             'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
             'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
         ];

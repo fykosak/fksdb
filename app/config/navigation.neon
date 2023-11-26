@@ -51,7 +51,7 @@ navigation:
 
         Organizer.Dashboard.entity:
             Organizer.Event.list: []
-            Organizer.Schools.list: []
+            Organizer.Schools.default: []
             Organizer.StoredQuery.list: []
             Organizer.Spam.list: []
             #Warehouse.Dashboard.default: []

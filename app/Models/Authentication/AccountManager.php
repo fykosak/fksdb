@@ -68,7 +68,7 @@ class AccountManager
      */
     public function sendLoginWithInvitation(PersonModel $person, string $email, Language $lang): LoginModel
     {
-        $login = $this->createLogin($person);
+        $login = $this->loginService->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken(
@@ -76,8 +76,7 @@ class AccountManager
             AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
             $until
         );
-        $data = [];
-        $data['text'] = $this->mailTemplateFactory->renderLoginInvitation(
+        $data = $this->mailTemplateFactory->renderLoginInvitation(
             [
                 'token' => $token,
                 'person' => $person,
@@ -87,7 +86,6 @@ class AccountManager
             ],
             Language::from($person->getPreferredLang() ?? $lang->value)
         );
-        $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $person->person_id;
         $this->emailMessageService->addMessageToSend($data);
@@ -137,7 +135,7 @@ class AccountManager
         self::logEmailChange($person, $newEmail, true);
         $login = $person->getLogin();
         if (!$login) {
-            $this->createLogin($person);
+            $this->loginService->createLogin($person);
         }
         $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         if ($token) {
@@ -149,24 +147,26 @@ class AccountManager
             (new \DateTime())->modify('+20 minutes'),
             $newEmail
         );
-        $oldData = [
-            'text' => $this->mailTemplateFactory->renderChangeEmailOld(
+        $oldData = array_merge(
+            $this->mailTemplateFactory->renderChangeEmailOld(
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
                 $lang
             ),
-            'sender' => $this->emailFrom,
-            'subject' => _('Change of email'),
-            'recipient' => $person->getInfo()->email,
-        ];
-        $newData = [
-            'text' => $this->mailTemplateFactory->renderChangeEmailNew(
+            [
+                'sender' => $this->emailFrom,
+                'recipient' => $person->getInfo()->email,
+            ]
+        );
+        $newData = array_merge(
+            $this->mailTemplateFactory->renderChangeEmailNew(
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
                 $lang
             ),
-            'sender' => $this->emailFrom,
-            'subject' => _('Confirm your email'),
-            'recipient' => $newEmail,
-        ];
+            [
+                'sender' => $this->emailFrom,
+                'recipient' => $newEmail,
+            ]
+        );
         $this->emailMessageService->addMessageToSend($oldData);//@phpstan-ignore-line
         $this->emailMessageService->addMessageToSend($newData);
     }
@@ -213,18 +213,6 @@ class AccountManager
 
     final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel
     {
-        /** @var LoginModel $login */
-        $login = $this->loginService->storeModel([
-            'person_id' => $person->person_id,
-            'login' => $login,
-            'active' => 1,
-        ]);
-
-        /* Must be done after login_id is allocated. */
-        if ($password) {
-            $hash = $login->calculateHash($password);
-            $this->loginService->storeModel(['hash' => $hash], $login);
-        }
-        return $login;
+        return $this->loginService->createLogin($person, $login, $password);
     }
 }

@@ -19,6 +19,7 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-implements Statement<void,TeamHolder>
+ * @phpstan-import-type TRenderedData from MailTemplateFactory
  */
 abstract class InfoEmail implements Statement
 {
@@ -57,24 +58,25 @@ abstract class InfoEmail implements Statement
         foreach ($this->getPersons($holder) as $person) {
             $data = $this->getData($holder);
             $data['recipient_person_id'] = $person->person_id;
-            $data['text'] = $this->createMessageText($holder, $person);
+            $data = array_merge($data, $this->createMessageText($holder, $person));
             $this->emailMessageService->addMessageToSend($data);
         }
     }
 
     /**
      * @throws BadTypeException
+     * @phpstan-return TRenderedData
      */
-    protected function createMessageText(TeamHolder $holder, PersonModel $person): string
+    protected function createMessageText(TeamHolder $holder, PersonModel $person): array
     {
-        return $this->mailTemplateFactory->renderWithParameters(
+        return $this->mailTemplateFactory->renderWithParameters2(
             $this->getTemplatePath($holder),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'holder' => $holder,
                 'token' => $this->createToken($person, $holder),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang())
         );
     }
     final protected function resolveLogin(PersonModel $person): LoginModel
@@ -92,7 +94,6 @@ abstract class InfoEmail implements Statement
     /**
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      *     reply_to?:string,
      * }

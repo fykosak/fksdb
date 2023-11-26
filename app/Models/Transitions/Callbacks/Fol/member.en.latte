@@ -4,6 +4,8 @@
 {var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 {var $editLink = $control->link('//:Event:Team:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
 
+{define subject}{_'Physics Brawl Online Team Registration'}{/define}
+
 <p>
     Hello,<br/>
     You have been successfully registered for {$team->event->name}. You are now a member of the team <em>{$team->name}</em>.
