@@ -69,10 +69,11 @@ class MailTemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-param array{token:AuthTokenModel,person:PersonModel,lang:string} $data
+     * @phpstan-return TRenderedData
      */
-    public function renderPasswordRecovery(array $data, Language $lang): string
+    public function renderPasswordRecovery(array $data, Language $lang): array
     {
-        return $this->create($lang)->renderToString(__DIR__ . '/recovery.latte', $data);
+        return $this->renderWithParameters2(__DIR__ . '/recovery.latte', $data, $lang);
     }
 
     /**
@@ -113,7 +114,7 @@ class MailTemplateFactory
      */
     public function renderWithParameters2(string $templateFile, array $data, ?Language $lang): array
     {
-        $lang = $this->resolverLang($lang);
+        $lang = $lang ?? Language::from($this->translator->lang);
         $templateFile = $this->resolverFileName($templateFile, $lang);
         return [
             'subject' => $this->create($lang)->renderToString(
@@ -129,7 +130,7 @@ class MailTemplateFactory
         return $lang ?? Language::from($this->translator->lang);
     }
 
-    private function resolverFileName(string $filename, ?Language $lang): string
+    private function resolverFileName(string $filename, Language $lang): string
     {
         if (file_exists($filename)) {
             return $filename;

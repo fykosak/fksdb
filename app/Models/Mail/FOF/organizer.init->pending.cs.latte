@@ -1,7 +1,7 @@
 {layout './layout.latte'}
 {varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 
-{block subject}Registrace na Fyziklání – {$holder->getModel()->name}{/block}
+{define subject}Registrace na Fyziklání – {$holder->getModel()->name}{/define}
 
 {block body}
     <p>

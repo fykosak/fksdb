@@ -2,6 +2,9 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {varType FKSDB\Models\ORM\Models\PersonModel $person}
 {varType string $lang}
+
+{define subject}{_'Password recovery'}{/define}
+
 {if $lang === 'cs'}
     <p>
         Bylo zažádáno o obnovu hesla na fykos.cz pro uživatele <em>{$person->getFullName()}</em>. Pokud jste žádali vy,

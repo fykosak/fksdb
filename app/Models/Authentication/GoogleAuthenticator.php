@@ -50,7 +50,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
         } else {
             $login = $person->getLogin();
             if (!$login) {
-                $login = $this->accountManager->createLogin($person);
+                $login = $this->loginService->createLogin($person);
             }
         }
         if ($login->active == 0) {

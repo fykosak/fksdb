@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -27,8 +28,8 @@ abstract class MailCallback implements Statement
 {
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
-    protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
+    protected LoginService $loginService;
 
     public function __construct(Container $container)
     {
@@ -39,11 +40,11 @@ abstract class MailCallback implements Statement
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
-        AccountManager $accountManager
+        LoginService $loginService
     ): void {
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
-        $this->accountManager = $accountManager;
+        $this->loginService = $loginService;
         $this->authTokenService = $authTokenService;
     }
 
@@ -88,7 +89,7 @@ abstract class MailCallback implements Statement
 
     final protected function resolveLogin(PersonModel $person): LoginModel
     {
-        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+        return $person->getLogin() ?? $this->loginService->createLogin($person);
     }
 
     /**

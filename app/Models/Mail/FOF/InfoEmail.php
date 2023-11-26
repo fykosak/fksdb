@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\FOF;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
@@ -12,6 +11,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Modules\Core\Language;
@@ -25,8 +25,8 @@ abstract class InfoEmail implements Statement
 {
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
-    protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
+    protected LoginService $loginService;
 
     public function __construct(Container $container)
     {
@@ -37,12 +37,12 @@ abstract class InfoEmail implements Statement
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
-        AccountManager $accountManager
+        LoginService $loginService
     ): void {
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
-        $this->accountManager = $accountManager;
         $this->authTokenService = $authTokenService;
+        $this->loginService = $loginService;
     }
 
     /**
@@ -56,9 +56,8 @@ abstract class InfoEmail implements Statement
          */
         [$holder] = $args;
         foreach ($this->getPersons($holder) as $person) {
-            $data = $this->getData($holder);
+            $data = array_merge($this->getData($holder), $this->createMessageText($holder, $person));
             $data['recipient_person_id'] = $person->person_id;
-            $data = array_merge($data, $this->createMessageText($holder, $person));
             $this->emailMessageService->addMessageToSend($data);
         }
     }
@@ -81,7 +80,7 @@ abstract class InfoEmail implements Statement
     }
     final protected function resolveLogin(PersonModel $person): LoginModel
     {
-        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+        return $person->getLogin() ?? $this->loginService->createLogin($person);
     }
 
     protected function createToken(PersonModel $person, TeamHolder $holder): ?AuthTokenModel

@@ -1,7 +1,7 @@
 {layout './layout.latte'}
 {varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 
-{block subject}Team update – {$holder->getModel()->name}{/block}
+{define subject}Team update – {$holder->getModel()->name}{/define}
 
 {block body}
     <p>
