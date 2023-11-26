@@ -71,7 +71,6 @@ abstract class InfoEmail implements Statement
         return $this->mailTemplateFactory->renderWithParameters2(
             $this->getTemplatePath($holder),
             [
-                'person' => $person,
                 'holder' => $holder,
                 'token' => $this->createToken($person, $holder),
             ],

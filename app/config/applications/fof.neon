@@ -11,6 +11,7 @@ transitions:
                 afterExecute:
                     - FKSDB\Models\Mail\FOF\MemberTransitionMail()
                     - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
+                    - FKSDB\Models\Mail\FOF\OrganizerTransitionMail()
             pending->applied:
                 label: _('Move to applied')
                 behaviorType: success

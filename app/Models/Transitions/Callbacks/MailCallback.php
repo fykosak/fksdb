@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
@@ -61,9 +60,11 @@ abstract class MailCallback implements Statement
          */
         [$holder, $transition] = $args;
         foreach ($this->getPersons($holder) as $person) {
-            $data = $this->getData($holder, $transition);
+            $data = array_merge(
+                $this->getData($holder, $transition),
+                $this->createMessageText($holder, $transition, $person)
+            );
             $data['recipient_person_id'] = $person->person_id;
-            $data = array_merge($data, $this->createMessageText($holder, $transition, $person));
             $this->emailMessageService->addMessageToSend($data);
         }
     }
