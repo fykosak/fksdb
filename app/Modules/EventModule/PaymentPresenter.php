@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Components\Grids\Payment\PaymentList;
+use FKSDB\Components\Grids\Payment\PaymentQRCode;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -20,6 +21,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
+use Nette\Utils\Html;
 
 final class PaymentPresenter extends BasePresenter
 {
@@ -89,7 +91,13 @@ final class PaymentPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id),
+            Html::el('')
+                ->addText(\sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id))
+                ->addHtml(
+                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml(
+                        $this->getEntity()->state->badge()
+                    )
+                ),
             'fas fa-credit-card',
         );
     }
@@ -122,10 +130,12 @@ final class PaymentPresenter extends BasePresenter
         $params = $this->getContext()->parameters[$this->eventDispatchFactory->getPaymentFactoryName(
             $this->getEvent()
         )];
-        if (!isset($params['begin']) || !isset($params['end'])) {
+        if (!isset($params['begin']) || !isset($params['end']) || !isset($params['forEvent'])) {
             return false;
         }
-        return (time() > $params['begin']->getTimestamp()) && (time() < $params['end']->getTimestamp());
+        return (time() > $params['begin']->getTimestamp())
+            && (time() < $params['end']->getTimestamp())
+            && (+$params['forEvent'] === $this->getEvent()->event_id);
     }
     /**
      * @throws EventNotFoundException
@@ -255,5 +265,17 @@ final class PaymentPresenter extends BasePresenter
             $this->getMachine(),
             $this->getEntity()
         );
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentPaymentQRCode(): PaymentQRCode
+    {
+        return new PaymentQRCode($this->getContext(), $this->getEntity());
     }
 }

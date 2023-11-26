@@ -3,7 +3,6 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            <h2>{control printer:templateString '@payment.state', $model, 1024}</h2>
             {var $progress = 0}
             {switch $model->state->value}
                 {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
@@ -26,25 +25,6 @@
                     <span>{_'Payment received'}</span>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            {if $model->hasGeneratedSymbols()}
-                <h2>{_'Payment info'}</h2>
-                {control columnTable [
-                'payment.constant_symbol',
-                'payment.variable_symbol',
-                'payment.specific_symbol',
-                'payment.bank_account',
-                'payment.bank_name',
-                'payment.recipient',
-                'payment.iban',
-                'payment.swift',
-                'payment.price',
-                'payment.currency'
-                ],$model,1024}
-            {/if}
         </div>
     </div>
     <div class="panel color-auto">
@@ -84,6 +64,38 @@
 
         </div>
     </div>
+
+    {if $model->hasGeneratedSymbols()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Payment info'}</h2>
+                {if $model->currency === Fykosak\Utils\Price\Currency::CZK}
+                    {control columnTable [
+                    'payment.constant_symbol',
+                    'payment.variable_symbol',
+                    'payment.bank_account',
+                    'payment.bank_name',
+                    'payment.recipient',
+                    'payment.iban',
+                    'payment.price',
+                    ],$model,1024}
+                {else}
+                    {control columnTable [
+                    'payment.bank_name',
+                    'payment.recipient',
+                    'payment.iban',
+                    'payment.swift',
+                    'payment.price',
+                    ],$model,1024}
+                {/if}
+                {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                    <p>{_'TODO!!!'}</p>
+                    {control paymentQRCode}
+                {/if}
+            </div>
+        </div>
+
+    {/if}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Actions'}</h2>

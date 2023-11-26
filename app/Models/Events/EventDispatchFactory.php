@@ -91,7 +91,7 @@ class EventDispatchFactory
     public function getPaymentFactoryName(EventModel $event): ?string
     {
         if ($event->event_type_id === 1) {
-            return sprintf('transitions.fyziklani%dpayment', $event->event_year);
+            return 'transitions.fyziklaniPayment';
         }
         return null;
     }

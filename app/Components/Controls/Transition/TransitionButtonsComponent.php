@@ -15,6 +15,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * @phpstan-template TModel of Model
@@ -60,6 +61,7 @@ class TransitionButtonsComponent extends BaseComponent
         } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
+            Debugger::log($exception);
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');
