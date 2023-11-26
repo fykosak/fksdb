@@ -1,6 +1,9 @@
 {layout './layout.latte'}
 {varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
 {var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
+
+{define subject}Potvrzení přijetí platby{/define}
+
 {block body}
 <div>
     <p>
