@@ -10,21 +10,17 @@ use FKSDB\Modules\Core\Language;
 
 class OrganizerInfoMail extends InfoEmail
 {
+    /** @phpstan-use OrganizerMailTrait<TeamHolder> */
+    use OrganizerMailTrait;
+
     protected function getTemplatePath(TeamHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.info';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.info.cs.latte';
     }
 
     protected function getData(TeamHolder $holder): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'sender' => $sender,
-        ];
+        return MemberTransitionMail::getStaticData($holder);
     }
 
     /**
@@ -43,6 +39,7 @@ class OrganizerInfoMail extends InfoEmail
             $this->mailTemplateFactory->renderWithParameters2(
                 $this->getTemplatePath($holder),
                 [
+                    'logger' => $this->getMessageLog($holder),
                     'holder' => $holder,
                 ],
                 Language::tryFrom(Language::CS)

@@ -15,8 +15,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
 class PaymentMail extends MailCallback
 {
     /**
-     * @param PaymentHolder $holder
-     * @phpstan-param Transition<PaymentHolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy:string,
      *     sender:string,

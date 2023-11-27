@@ -5,27 +5,29 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
-use Nette\InvalidStateException;
 
 /**
  * @phpstan-extends MailCallback<TeamHolder>
  */
 class OrganizerTransitionMail extends MailCallback
 {
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
+    /** @phpstan-use OrganizerMailTrait<TeamHolder> */
+    use OrganizerMailTrait;
+
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.' . self::resolveLayoutName($transition);
+        $transitionId = self::resolveLayoutName($transition);
+        return __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.cs.latte";
+    }
+
+    protected function getData(ModelHolder $holder, Transition $transition): array
+    {
+        return MemberTransitionMail::getStaticData($holder);
     }
 
     /**
@@ -46,6 +48,7 @@ class OrganizerTransitionMail extends MailCallback
             $this->mailTemplateFactory->renderWithParameters2(
                 $this->getTemplatePath($holder, $transition),
                 [
+                    'logger' => $this->getMessageLog($holder),
                     'holder' => $holder,
                 ],
                 Language::tryFrom(Language::CS)
@@ -54,29 +57,8 @@ class OrganizerTransitionMail extends MailCallback
         $this->emailMessageService->addMessageToSend($data);
     }
 
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
-    protected function getData(ModelHolder $holder, Transition $transition): array
-    {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'sender' => $sender,
-        ];
-    }
-
     final protected function getPersons(ModelHolder $holder): array
     {
         return [];
-    }
-
-    protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
-    {
-        return null;
     }
 }

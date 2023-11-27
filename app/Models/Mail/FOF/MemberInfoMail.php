@@ -14,19 +14,13 @@ class MemberInfoMail extends InfoEmail
 {
     protected function getTemplatePath(TeamHolder $holder): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member.info';
+        $lang = $holder->getModel()->game_lang->value;
+        return __DIR__ . DIRECTORY_SEPARATOR . "organizer.info.$lang.latte";
     }
 
     protected function getData(TeamHolder $holder): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'sender' => $sender,
-        ];
+        return MemberTransitionMail::getStaticData($holder);
     }
 
     final protected function getPersons(TeamHolder $holder): array

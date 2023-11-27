@@ -25,7 +25,9 @@ class TeacherTransitionMail extends MailCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'teacher.' . self::resolveLayoutName($transition);
+        $transitionId = self::resolveLayoutName($transition);
+        $lang = $holder->getModel()->game_lang->value;
+        return __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.$lang.latte";
     }
 
     /**
@@ -34,14 +36,7 @@ class TeacherTransitionMail extends MailCallback
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'sender' => $sender,
-        ];
+        return MemberTransitionMail::getStaticData($holder);
     }
 
     /**
@@ -53,12 +48,7 @@ class TeacherTransitionMail extends MailCallback
         if (!$holder instanceof TeamHolder) {
             throw new BadTypeException(TeamHolder::class, $holder);
         }
-        $persons = [];
-        /** @var TeamTeacherModel $teacher */
-        foreach ($holder->getModel()->getTeachers() as $teacher) {
-            $persons[] = $teacher->person;
-        }
-        return $persons;
+        return self::getTeacherPersons($holder);
     }
 
     /**
@@ -77,5 +67,18 @@ class TeacherTransitionMail extends MailCallback
             null,
             true
         );
+    }
+
+    /**
+     * @return PersonModel[]
+     */
+    public static function getTeacherPersons(TeamHolder $holder): array
+    {
+        $persons = [];
+        /** @var TeamTeacherModel $teacher */
+        foreach ($holder->getModel()->getTeachers() as $teacher) {
+            $persons[] = $teacher->person;
+        }
+        return $persons;
     }
 }

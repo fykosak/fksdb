@@ -17,20 +17,16 @@ use Nette\Security\AuthenticationException;
 
 class GoogleAuthenticator extends AbstractAuthenticator
 {
-
     private OrganizerService $organizerService;
-    private AccountManager $accountManager;
     private PersonService $personService;
 
     public function __construct(
         OrganizerService $organizerService,
-        AccountManager $accountManager,
         LoginService $loginService,
         PersonService $personService
     ) {
         parent::__construct($loginService);
         $this->organizerService = $organizerService;
-        $this->accountManager = $accountManager;
         $this->personService = $personService;
     }
 

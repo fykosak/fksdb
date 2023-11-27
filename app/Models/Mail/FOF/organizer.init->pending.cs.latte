@@ -1,24 +1,28 @@
 {layout './layout.latte'}
 {varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType Fykosak\Utils\Logging\MemoryLogger $logger}
 
 {define subject}Registrace na Fyziklání – {$holder->getModel()->name}{/define}
 
 {block body}
     <p>
         Ahoj,<br/>
-        tým byl úspěšně zaregistrován do soutěže Fyziklání. Níže posíláme stručný přehled informací o týmu:
+        tým byl zaregistrován na FOF!!! Níže posíláme stručný přehled informací o týmu:
     </p>
     {include detail from './detail.cs.latte',holder:$holder}
-
+    {var $messages = $logger->getMessages()}
+    {if count($messages)}
+        {foreach $messages as $message}
+            {if $message->level === Fykosak\Utils\Logging\Message::LVL_ERROR}
+                <p style="color:red">{$message->text}</p>
+            {else}
+                <p style="color: orange">{$message->text}</p>
+            {/if}
+        {/foreach}
+    {else}
+        <p style="color:green">Sú čistí!</p>
+    {/if}
     <p>
-        Několik dní před akcí Ti přijdou podrobnější informace k příjezdu a finální harmonogram akce.
-        Pokud máš objednané ubytování nebo raut, pošleme Ti informace o platbě po spuštění platebního systému.
-        {*    	vygeneruj si platbu ve <a href="https://db.fykos.cz">FKSDB</a> (návod najdeš na <a href="https://fyziklani.cz/accommodation#how-to-pay">webu</a>) a uhraď ji prosím co nejdříve (nejpozději do konce registrace). *}
-        Pokud se to bude týkat Tvého doprovodného programu, pošleme Ti později také výzvu k přihlášení na konkrétní části programu.
-    </p>
-    <p>
-        Na viděnou na soutěži!<br/>
-        Organizátoři Fyziklání<br/>
-        <a href="https://fyziklani.cz">fyziklani.cz</a>
+        Tvoje milovaná FKSDB
     </p>
 {/block}

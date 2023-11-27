@@ -7,6 +7,7 @@ namespace FKSDB\Models\Mail\FOF;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
@@ -26,7 +27,9 @@ class MemberTransitionMail extends MailCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member.' . self::resolveLayoutName($transition);
+        $transitionId = self::resolveLayoutName($transition);
+        $lang = $holder->getModel()->game_lang->value;
+        return __DIR__ . DIRECTORY_SEPARATOR . "member.$transitionId.$lang.latte";
     }
 
     /**
@@ -38,14 +41,7 @@ class MemberTransitionMail extends MailCallback
      */
     protected function getData(ModelHolder $holder, Transition $transition): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'sender' => $sender,
-        ];
+        return self::getStaticData($holder);
     }
 
     /**
@@ -81,5 +77,28 @@ class MemberTransitionMail extends MailCallback
             null,
             true
         );
+    }
+
+    /**
+     * @param TeamHolder $holder
+     * @phpstan-return array{
+     *     sender:string,
+     * }
+     */
+    public static function getStaticData(TeamHolder $holder): array
+    {
+        switch ($holder->getModel()->game_lang->value) {
+            case GameLang::CS:
+                $sender = 'Fyziklání <fyziklani@fykos.cz>';
+                break;
+            case GameLang::EN:
+                $sender = 'Fyziklani <fyziklani@fykos.cz>';
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        return [
+            'sender' => $sender,
+        ];
     }
 }
