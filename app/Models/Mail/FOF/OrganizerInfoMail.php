@@ -36,7 +36,7 @@ class OrganizerInfoMail extends InfoEmail
         $data['recipient'] = 'Fyziklání <fyziklani@fykos.cz>';
         $data = array_merge(
             $data,
-            $this->mailTemplateFactory->renderWithParameters2(
+            $this->mailTemplateFactory->renderWithParameters(
                 $this->getTemplatePath($holder),
                 [
                     'logger' => $this->getMessageLog($holder),

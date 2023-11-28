@@ -30,7 +30,7 @@ class TeamMemberMailCallback extends MailCallback
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',

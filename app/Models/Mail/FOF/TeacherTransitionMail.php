@@ -32,9 +32,8 @@ class TeacherTransitionMail extends MailCallback
 
     /**
      * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return MemberTransitionMail::getStaticData($holder);
     }

@@ -25,7 +25,7 @@ class OrganizerTransitionMail extends MailCallback
         return __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.cs.latte";
     }
 
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return MemberTransitionMail::getStaticData($holder);
     }
@@ -41,11 +41,11 @@ class OrganizerTransitionMail extends MailCallback
          * @phpstan-var Transition<TeamHolder> $transition
          */
         [$holder, $transition] = $args;
-        $data = $this->getData($holder, $transition);
+        $data = $this->getData($holder);
         $data['recipient'] = 'Fyziklání <fyziklani@fykos.cz>';
         $data = array_merge(
             $data,
-            $this->mailTemplateFactory->renderWithParameters2(
+            $this->mailTemplateFactory->renderWithParameters(
                 $this->getTemplatePath($holder, $transition),
                 [
                     'logger' => $this->getMessageLog($holder),

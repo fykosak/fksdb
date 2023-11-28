@@ -68,7 +68,7 @@ abstract class InfoEmail implements Statement
      */
     protected function createMessageText(TeamHolder $holder, PersonModel $person): array
     {
-        return $this->mailTemplateFactory->renderWithParameters2(
+        return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder),
             [
                 'holder' => $holder,

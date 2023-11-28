@@ -64,15 +64,14 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
+     *     blind_carbon_copy?:string,
      *     subject:string,
      *     sender:string,
      *     reply_to:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => $holder->getModel()->event->getParameter('notifyBcc') ?? null,
@@ -91,7 +90,7 @@ class MailSender extends MailCallback
     protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
         $token = $this->createToken($person, $holder);
-        return $this->mailTemplateFactory->renderWithParameters2(
+        return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
             [
                 'person' => $person,

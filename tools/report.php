@@ -25,10 +25,17 @@ foreach ($tests as $test) {
 $mailService = $container->getByType(EmailMessageService::class);
 $mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
 $mailService->addMessageToSend(
-    array_merge([
-        'recipient' => 'fyziklani@fykos.cz',
-        'sender' => 'fksdb@fykos.cz',
-        'reply_to' => 'noreply@fykos.cz',
-        'priority' => 0,
-    ], $mailTemplateFactory->renderReport(['logger' => $logger], Language::from(Language::CS)))
+    array_merge(
+        [
+            'recipient' => 'fyziklani@fykos.cz',
+            'sender' => 'fksdb@fykos.cz',
+            'reply_to' => 'noreply@fykos.cz',
+            'priority' => 0,
+        ],
+        $mailTemplateFactory->renderWithParameters(
+            __DIR__ . '/report.latte',
+            ['logger' => $logger],
+            Language::from(Language::CS)
+        )
+    )
 );

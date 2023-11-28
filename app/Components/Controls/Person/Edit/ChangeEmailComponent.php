@@ -132,7 +132,8 @@ class ChangeEmailComponent extends EntityFormComponent
             $newEmail
         );
         $oldData = array_merge(
-            $this->mailTemplateFactory->renderChangeEmailOld(
+            $this->mailTemplateFactory->renderWithParameters(
+                __DIR__ . '/email.old.latte',
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
                 $lang
             ),
@@ -142,7 +143,8 @@ class ChangeEmailComponent extends EntityFormComponent
             ]
         );
         $newData = array_merge(
-            $this->mailTemplateFactory->renderChangeEmailNew(
+            $this->mailTemplateFactory->renderWithParameters(
+                __DIR__ . '/email.new.latte',
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
                 $lang
             ),

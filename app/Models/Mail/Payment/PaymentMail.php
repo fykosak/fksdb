@@ -20,7 +20,7 @@ class PaymentMail extends MailCallback
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         if ($holder->getModel()->person->getPreferredLang() === 'cs') {
             $sender = 'Fyziklání <fyziklani@fykos.cz>';

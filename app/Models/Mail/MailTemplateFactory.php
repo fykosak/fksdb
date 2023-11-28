@@ -57,62 +57,12 @@ class MailTemplateFactory
     }
 
     /**
-     * @throws BadTypeException
-     * @phpstan-param array{token:AuthTokenModel} $data
-     * @phpstan-return TRenderedData
-     */
-    public function renderLoginInvitation(array $data, Language $lang): array
-    {
-        return $this->renderWithParameters2(__DIR__ . '/loginInvitation.latte', $data, $lang);
-    }
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{token:AuthTokenModel,person:PersonModel,lang:string} $data
-     * @phpstan-return TRenderedData
-     */
-    public function renderPasswordRecovery(array $data, Language $lang): array
-    {
-        return $this->renderWithParameters2(__DIR__ . '/recovery.latte', $data, $lang);
-    }
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string} $data
-     * @phpstan-return TRenderedData
-     */
-    public function renderChangeEmailOld(array $data, Language $lang): array
-    {
-        return $this->renderWithParameters2(__DIR__ . '/changeEmail.old.latte', $data, $lang);
-    }
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{lang:Language,person:PersonModel,newEmail:string,token:AuthTokenModel} $data
-     * @phpstan-return TRenderedData
-     */
-    public function renderChangeEmailNew(array $data, Language $lang): array
-    {
-        return $this->renderWithParameters2(__DIR__ . '/changeEmail.new.latte', $data, $lang);
-    }
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{logger:MemoryLogger} $data
-     * @phpstan-return TRenderedData
-     */
-    public function renderReport(array $data, Language $lang): array
-    {
-        return $this->renderWithParameters2(__DIR__ . '/report.latte', $data, $lang);
-    }
-
-    /**
      * @phpstan-template TData of array
      * @phpstan-param TData $data
      * @phpstan-return TRenderedData
      * @throws BadTypeException
      */
-    public function renderWithParameters2(string $templateFile, array $data, ?Language $lang): array
+    public function renderWithParameters(string $templateFile, array $data, ?Language $lang): array
     {
         $lang = $lang ?? Language::from($this->translator->lang);
         $templateFile = $this->resolverFileName($templateFile, $lang);

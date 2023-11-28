@@ -61,7 +61,7 @@ abstract class MailCallback implements Statement
         [$holder, $transition] = $args;
         foreach ($this->getPersons($holder) as $person) {
             $data = array_merge(
-                $this->getData($holder, $transition),
+                $this->getData($holder),
                 $this->createMessageText($holder, $transition, $person)
             );
             $data['recipient_person_id'] = $person->person_id;
@@ -77,7 +77,7 @@ abstract class MailCallback implements Statement
      */
     protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
-        return $this->mailTemplateFactory->renderWithParameters2(
+        return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
             [
                 'person' => $person,
@@ -124,14 +124,13 @@ abstract class MailCallback implements Statement
 
     /**
      * @phpstan-param THolder $holder
-     * @phpstan-param Transition<THolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
      *     sender:string,
      *     reply_to?:string,
      * }
      */
-    abstract protected function getData(ModelHolder $holder, Transition $transition): array;
+    abstract protected function getData(ModelHolder $holder): array;
 
     /**
      * @template TStaticHolder of ModelHolder

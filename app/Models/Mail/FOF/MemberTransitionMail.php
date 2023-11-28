@@ -34,12 +34,11 @@ class MemberTransitionMail extends MailCallback
 
     /**
      * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return self::getStaticData($holder);
     }
@@ -80,7 +79,6 @@ class MemberTransitionMail extends MailCallback
     }
 
     /**
-     * @param TeamHolder $holder
      * @phpstan-return array{
      *     sender:string,
      * }

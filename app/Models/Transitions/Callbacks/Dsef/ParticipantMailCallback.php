@@ -21,11 +21,11 @@ class ParticipantMailCallback extends EventParticipantCallback
 
     /**
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
+     *     blind_carbon_copy?:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => 'Den s experimentální fyzikou <dsef@fykos.cz>',

@@ -65,7 +65,8 @@ class AccountManager
             AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
             $until
         );
-        $data = $this->mailTemplateFactory->renderLoginInvitation(
+        $data = $this->mailTemplateFactory->renderWithParameters(
+            __DIR__ . '/loginInvitation.latte',
             [
                 'token' => $token,
                 'person' => $person,
@@ -103,7 +104,9 @@ class AccountManager
         if (!$person) {
             throw new BadRequestException();
         }
-        $data = $this->mailTemplateFactory->renderPasswordRecovery([
+        $data = $this->mailTemplateFactory->renderWithParameters(
+            __DIR__ . '/recovery.latte',
+            [
             'token' => $token,
             'person' => $person,
             'lang' => $lang->value,
