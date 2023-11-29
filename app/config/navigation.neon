@@ -1,7 +1,7 @@
 navigation:
         #AK hotlinks
         Core.Dispatch.default:
-            Event.Payment.create:
+            Event.Payments.create:
                 eventId: 173
             #Schedule:PersonSchedule:default:
             #    params:
@@ -92,8 +92,8 @@ navigation:
         Event.Dashboard.default#other:
             #others
             Event.EventOrganizer.list: []
-            Event.Payment.create: []
-            Event.Payment.list: []
+            Event.Payments.create: []
+            Event.Payments.list: []
             Game.Dashboard.default: []
             Schedule.Dashboard.default: []
             Event.Chart.list: []

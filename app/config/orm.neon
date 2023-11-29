@@ -405,7 +405,7 @@ orm:
                 class: FKSDB\Models\ORM\Models\PaymentState
         links:
             detail:
-                destination: :Event:Payment:detail
+                destination: :Event:Payments:detail
                 params:
                       eventId: event_id
                       id: payment_id

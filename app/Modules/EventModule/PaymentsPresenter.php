@@ -25,7 +25,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 use Nette\Utils\Html;
 
-final class PaymentPresenter extends BasePresenter
+final class PaymentsPresenter extends BasePresenter
 {
     /** @phpstan-use EventEntityPresenterTrait<PaymentModel> */
     use EventEntityPresenterTrait;

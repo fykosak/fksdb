@@ -121,12 +121,6 @@ final class PaymentList extends BaseList
             new TemplateItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
             'price'
         );
-        $this->addPresenterButton(
-            ':Event:Payment:detail',
-            'detail',
-            new Title(null, _('button.detail')),
-            false,
-            ['id' => 'payment_id']
-        );
+        $this->addLink('payment.detail');
     }
 }
