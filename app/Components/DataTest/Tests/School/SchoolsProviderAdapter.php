@@ -28,7 +28,7 @@ class SchoolsProviderAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In school %s(%d): '), $model->name_full, $model->school_id);
+        return sprintf(_('In school %s(%d): '), $model->name_full ?? $model->name, $model->school_id);
     }
 
     public function getId(): string
