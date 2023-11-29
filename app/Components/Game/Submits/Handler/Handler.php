@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -101,7 +100,7 @@ abstract class Handler
     /**
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
-     * @throws ModelException
+     * @throws \PDOException
      */
     public function check(SubmitModel $submit, int $points): void
     {
@@ -130,7 +129,7 @@ abstract class Handler
 
     /**
      * @throws ClosedSubmittingException
-     * @throws ModelException
+     * @throws \PDOException
      */
     public function edit(SubmitModel $submit, int $points): void
     {

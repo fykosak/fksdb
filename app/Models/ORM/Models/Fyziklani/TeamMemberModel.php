@@ -8,7 +8,7 @@ use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $fyziklani_team_member_id
@@ -22,7 +22,7 @@ final class TeamMemberModel extends Model
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
-        return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
+        return $this->person->getHistory($this->fyziklani_team->event->getContestYear());
     }
 
     /**

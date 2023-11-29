@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Table;
 
 use FKSDB\Components\Grids\Components\BaseItem;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-template TRelatedModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TRelatedModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class RelatedTable extends BaseItem

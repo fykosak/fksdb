@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Transitions\Code\CodeTransition;
+use FKSDB\Components\Controls\FormComponent\CodeForm;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -13,7 +15,9 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 

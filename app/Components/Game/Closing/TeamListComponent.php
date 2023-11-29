@@ -9,11 +9,10 @@ use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -75,10 +74,6 @@ class TeamListComponent extends BaseList
         $form->addText('name', _('Team name'))->setOption('description', _('Works as %name%'));
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
     protected function configure(): void
     {
         $this->filtered = true;

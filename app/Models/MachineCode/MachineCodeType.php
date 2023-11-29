@@ -13,8 +13,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\InvalidStateException;
 

@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\UI\StringPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;

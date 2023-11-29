@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\MachineCode;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 

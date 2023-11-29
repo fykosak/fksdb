@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
@@ -25,6 +25,9 @@ final class EventOrganizerModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function __toString(): string
     {
         return $this->person->__toString();

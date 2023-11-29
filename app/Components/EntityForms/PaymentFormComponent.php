@@ -21,7 +21,6 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
@@ -109,7 +108,7 @@ class PaymentFormComponent extends EntityFormComponent
 
     /**
      * @throws UnavailableTransitionsException
-     * @throws ModelException
+     * @throws \PDOException
      * @throws StorageException
      * @throws \Throwable
      */

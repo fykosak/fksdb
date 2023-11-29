@@ -276,6 +276,7 @@ CREATE TABLE IF NOT EXISTS `school`
     `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
     `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
     `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
+    `verified`    BOOLEAN      NOT NULL DEFAULT TRUE COMMENT 'Overená po publi pridaní',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -592,6 +593,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
+        'arrived',
         'pending',
         'approved',
         'spare',
@@ -604,14 +606,16 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
     `note`              TEXT                       NULL     DEFAULT NULL,
+    `internal_note`     TEXT                       NULL     DEFAULT NULL,
     `password`          CHAR(40)                   NULL     DEFAULT NULL,
     `points`            INT(11)                    NULL     DEFAULT NULL,
     `rank_category`     INT(11)                    NULL     DEFAULT NULL,
     `rank_total`        INT(11)                    NULL     DEFAULT NULL,
     `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
-        COMMENT 'Game lang',
+    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL,
+    `origin`            TEXT                       NULL     DEFAULT NULL,
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -630,6 +634,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     `person_id`                INT NOT NULL,
     `fyziklani_team_id`        INT NOT NULL,
     INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_member__person`
         FOREIGN KEY (`person_id`)
@@ -652,6 +657,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `person_id`                 INT NOT NULL,
     `fyziklani_team_id`         INT NOT NULL,
     INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_teacher__person`
         FOREIGN KEY (`person_id`)
@@ -1095,13 +1101,14 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
+        'apparel',
+        'transport',
+        'ticket',
         'weekend',
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'dsef_all_day',
-        'apparal',
-        'transport'
+        'dsef_all_day'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,

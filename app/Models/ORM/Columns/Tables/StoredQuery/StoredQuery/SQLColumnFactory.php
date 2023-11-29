@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 use FKSDB\Components\Forms\Controls\SQLConsole;
 use FKSDB\Models\ORM\Columns\Types\TextColumnFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

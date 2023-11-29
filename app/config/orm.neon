@@ -2,6 +2,10 @@ orm:
     address:
         service: FKSDB\Models\ORM\Services\AddressService
         model: FKSDB\Models\ORM\Models\AddressModel
+        columns:
+            city:
+                type: string
+                title: _('City')
     auth_token:
         service: FKSDB\Models\ORM\Services\AuthTokenService
         model: FKSDB\Models\ORM\Models\AuthTokenModel
@@ -578,15 +582,15 @@ orm:
                 permission: BASIC
             note:
                 type: string
-                title: _('Poznámka')
+                title: _('Note')
                 permission: BASIC
             academic_degree_prefix:
                 type: string
-                title: _('Titul před jménem')
+                title: _('Pre-nominal title')
                 permission: RESTRICT
             academic_degree_suffix:
                 type: string
-                title: _('Titul za jménem')
+                title: _('Post-nominal title')
                 permission: RESTRICT
             pizza:
                 type: string
@@ -601,6 +605,14 @@ orm:
     country:
         service: FKSDB\Models\ORM\Services\CountryService
         model: FKSDB\Models\ORM\Models\CountryModel
+        columns:
+            name:
+                type: string
+                title: _('Country')
+            flag:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Country\FlagColumn
+                title: _('Flag')
     country_subdivision:
         service: FKSDB\Models\ORM\Services\CountrySubdivisionService
         model: FKSDB\Models\ORM\Models\CountrySubdivisionModel
@@ -621,12 +633,15 @@ orm:
             name_full:
                 type: string
                 title: _('Full name')
+                description: _('Full name of the school.')
             name:
                 type: string
                 title: _('School name')
+                description: _('Envelope name.')
             name_abbrev:
                 type: string
                 title: _('Abbreviated name')
+                description: _('Very short name.')
             email:
                 type: string
                 title: _('Contact e-mail')
@@ -642,15 +657,27 @@ orm:
             note:
                   type: string
                   title: _('Note')
+            study_h:
+                type: bool
+                title: _('Teach grades H_*?')
+            study_p:
+                type: bool
+                title: _('Teach grades P_*?')
+            study_u:
+                type: bool
+                title: _('Teach grades U_ALL?')
+            verified:
+                type: bool
+                title: _('Verified')
         links:
             edit:
-                  destination: :Organizer:School:edit
+                  destination: :Organizer:Schools:edit
                   params:
                       id: school_id
                   title: _('button.school.edit')
                   icon: 'fas fa-pencil'
             detail:
-                  destination: :Organizer:School:detail
+                  destination: :Organizer:Schools:detail
                   params:
                       id: school_id
                   title: _('button.school.detail')
@@ -872,6 +899,9 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                 title: _('Submit opened?')
+            origin:
+                type: text
+                title: _('How did you come to know about us?') # TODO
         links:
             detail:
                 destination: :Event:Team:detail
@@ -987,6 +1017,10 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                 title: _('Used capacity')
+            capacity_progress:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\CapacityProgress
+                title: _('Progress bar')
         links:
             detail:
                 destination: :Schedule:Item:detail

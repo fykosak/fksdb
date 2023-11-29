@@ -1,0 +1,29 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+{var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+
+{block body}
+    <p>
+        Ahoj,<br/>
+        Tvůj tým byl úspěšně zaregistrován do soutěže Fyziklání, která se bude konat 10. 2. 2023 v PVA Letňany.
+        Všechny údaje, které jste zadali do přihlášky, si můžeš zkontrolovat ve <a
+                href="https://db.fykos.cz/my-applications/">FKSDB</a> po kliknutí na Detail příslušné přihlášky,
+        případně upravit pomocí odkazu
+        <a href="{$detailLink}">zde</a>. Údaje o složení týmu můžeš změnit kdykoliv před uzavřením registrace.
+    </p>
+    {include detail from './detail.cs.latte',holder:$holder}
+    <p>
+        Několik dní před akcí Ti přijdou podrobnější informace k příjezdu a finální harmonogram akce.
+        Pokud máš objednané ubytování nebo raut, vygeneruj si platbu ve <a href="https://db.fykos.cz">FKSDB</a> (návod
+        najdeš na <a href="https://fyziklani.cz/accommodation#how-to-pay">webu</a>) a uhraď ji prosím co nejdříve
+        (nejpozději do konce registrace). Pokud máš předběžně přihlášený doprovodný program, pošleme Ti později výzvu k
+        přihlášení na konkrétní části programu.
+    </p>
+    <p>
+        Na viděnou na soutěži!<br/>
+        Organizátoři Fyziklání<br/>
+        <a href="https://fyziklani.cz">fyziklani.cz</a>
+    </p>
+{/block}

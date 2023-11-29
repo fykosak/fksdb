@@ -48,7 +48,7 @@ class SchoolPresenterTest extends AbstractOrganizerPresenterTestCase
 
     public function testList(): void
     {
-        $request = $this->createGetRequest('list', []);
+        $request = $this->createGetRequest('default', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
         Assert::contains('Test school', $html);
@@ -120,7 +120,7 @@ class SchoolPresenterTest extends AbstractOrganizerPresenterTestCase
 
     protected function getPresenterName(): string
     {
-        return 'Organizer:School';
+        return 'Organizer:Schools';
     }
 
     private function countSchools(): int

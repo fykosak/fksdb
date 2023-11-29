@@ -12,7 +12,6 @@ class Router
 {
     private const CONTESTS = ['fykos' => ContestModel::ID_FYKOS, 'vyfuk' => ContestModel::ID_VYFUK];
     // constestModules: organizer|public|warehouse
-    // eventModules: event|game|schedule
     // rootPresenters: settings
     public static function createRouter(): RouteList
     {
@@ -72,13 +71,17 @@ class Router
             1
         );
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
-        $service->addRoute('<presenter settings>/<action=default>[/<id>]', ['module' => 'Core']);
+        $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
+
+        self::addScheduleSubmodule($service->withPath('events/'));
+
         $service->addRoute(
-            '<module event|game|schedule>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+            '<module event|game>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard']
         );
+
         $service->addRoute(
-            '<module event|game|schedule>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
+            '<module event|game>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
         );
         $service->addRoute(
@@ -92,5 +95,44 @@ class Router
         );
         // phpcs:enable
         return $service;
+    }
+
+    private static function addScheduleSubmodule(RouteList $list): void
+    {
+        $list->addRoute(
+            '<eventId [0-9]+>/schedule/<action>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Dashboard',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/schedule/groups[/<id>]/<action>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Group',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/schedule/groups[/<id>]/<action>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Group',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/schedule/groups[/<groupId>]/items[/<id>]/<action>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Item',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/schedule/persons[/<id>]/<action>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Person',
+            ]
+        );
     }
 }

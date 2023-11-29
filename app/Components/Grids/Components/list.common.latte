@@ -1,11 +1,11 @@
-{define cols Fykosak\NetteORM\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
+{define cols Fykosak\NetteORM\Model\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
     {foreach $container->getComponents() as $component}
         <div class="col">
             {control $component $model, $userPermission}
         </div>
     {/foreach}
 {/define}
-{define rows Fykosak\NetteORM\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
+{define rows Fykosak\NetteORM\Model\Model|null $model,int|null $userPermission,Nette\ComponentModel\Container$container}
     {foreach $container->getComponents() as $component}
         <div class="row mb-3">
             {if $component instanceof FKSDB\Components\Grids\Components\BaseItem}

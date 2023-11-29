@@ -8,8 +8,16 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
+/**
+ * @phpstan-type TItem array{
+ *     label:string,
+ *     value:int,
+ *     place:string|null,
+ * }
+ * @phpstan-implements FilteredDataProvider<TItem>
+ */
 class PersonProvider implements FilteredDataProvider
 {
 
@@ -38,9 +46,6 @@ class PersonProvider implements FilteredDataProvider
             ]);
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim($search);
@@ -56,10 +61,10 @@ class PersonProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    public function getItemLabel(int $id): array
     {
         $person = $this->personService->findByPrimary($id);
-        return $person->getFullName();
+        return $this->getItem($person);
     }
 
     public function getItems(): array

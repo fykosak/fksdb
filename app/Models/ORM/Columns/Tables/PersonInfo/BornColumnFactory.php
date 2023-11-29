@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\UI\DatePrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

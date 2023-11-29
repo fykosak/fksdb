@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Neon\Exception;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -37,9 +37,16 @@ final class SetkaniFormComponent extends SingleFormComponent
                 'phone' => ['required' => true]
             ],
             'person_schedule' => [
-                'apparel' => ['required' => true],
-                'transport' => ['required' => true],
-                'ticket' => ['required' => true]
+                'apparel' => [
+                    'types' => [ScheduleGroupType::Apparel],
+                    'required' => true,
+                    'label' => _('Apparel'),
+                ],
+                'transport' => [
+                    'types' => [ScheduleGroupType::Transport, ScheduleGroupType::Ticket],
+                    'required' => true,
+                    'label' => _('Transport & Ticket'),
+                ],
             ]
         ];
     }
@@ -52,15 +59,15 @@ final class SetkaniFormComponent extends SingleFormComponent
         return [
             'diet' => [
                 'required' => false,
-                'description' => _("Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …?
-                Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?")
+                'description' => _('Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …?
+                Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?')
             ],
             'health_restrictions' => [
                 'required' => false,
-                'description' => _("Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na setkání?
+                'description' => _('Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na setkání?
                 Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš
                 nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace
-                ohledně tvého zdravotního stavu, co bychom měli vědět?")],
+                ohledně tvého zdravotního stavu, co bychom měli vědět?')],
             'note' => ['required' => false]
         ];
     }

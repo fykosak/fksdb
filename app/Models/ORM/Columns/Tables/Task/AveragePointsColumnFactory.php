@@ -7,11 +7,11 @@ namespace FKSDB\Models\ORM\Columns\Tables\Task;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<TaskModel,never>
+ * @phpstan-extends AbstractColumnFactory<TaskModel>
  */
 final class AveragePointsColumnFactory extends AbstractColumnFactory
 {

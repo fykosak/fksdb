@@ -7,7 +7,7 @@ namespace FKSDB\Components\DataTest;
 use FKSDB\Components\DataTest\Tests\Test;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Utils\Html;
