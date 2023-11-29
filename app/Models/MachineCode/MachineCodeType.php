@@ -18,6 +18,9 @@ use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-import-type TSupportedModel from MachineCode
+ */
 final class MachineCodeType extends FakeStringEnum
 {
     // phpcs:disable
@@ -39,7 +42,7 @@ final class MachineCodeType extends FakeStringEnum
     }
 
     /**
-     * @phpstan-return class-string<Service<Model>>
+     * @phpstan-return class-string<Service<TSupportedModel>>
      */
     public function getServiceClassName(): string
     {
@@ -59,6 +62,7 @@ final class MachineCodeType extends FakeStringEnum
 
     /**
      * @throws BadRequestException
+     * @phpstan-param TSupportedModel $model
      */
     public static function fromModel(Model $model): self
     {
@@ -71,6 +75,6 @@ final class MachineCodeType extends FakeStringEnum
         } elseif ($model instanceof TeamTeacherModel) {
             return new self(self::TeamTeacher);
         }
-        throw new BadRequestException(_('Wrong type of code.'));
+        throw new BadRequestException(_('Wrong type of code.')); //@phpstan-ignore-line
     }
 }

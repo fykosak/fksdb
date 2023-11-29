@@ -27,8 +27,9 @@ final class TeamMemberModel extends Model
 
     /**
      * @phpstan-return array{
-     *     participantId:int,
+     *     memberId:int,
      *     personId:int,
+     *     code: string|null,
      * }
      */
     public function __toArray(): array
