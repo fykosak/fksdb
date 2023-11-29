@@ -107,10 +107,12 @@ class AccountManager
         $data = $this->mailTemplateFactory->renderWithParameters(
             __DIR__ . '/recovery.latte',
             [
-            'token' => $token,
-            'person' => $person,
-            'lang' => $lang->value,
-        ], $lang);
+                'token' => $token,
+                'person' => $person,
+                'lang' => $lang->value,
+            ],
+            $lang
+        );
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $login->person_id;
 
