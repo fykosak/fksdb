@@ -39,7 +39,7 @@ export default function PaymentCode({data}: OwnProps) {
         text += 'AM:' + data.price + '*';
         text += 'CC:' + data.currency + '*';
         text += 'RF:' + data.paymentId + '*';
-        text += 'RN:' + data.recipient + '*'
+        text += 'RN:' + data.recipient + '*';
         QRCode.toString(text).then((code) => {
             setQRCode(code);
         });

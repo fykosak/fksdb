@@ -93,7 +93,6 @@ navigation:
             #others
             Event.EventOrganizer.list: []
             Event.Payment.create: []
-            Event.Payment.detailedList: []
             Event.Payment.list: []
             Game.Dashboard.default: []
             Schedule.Dashboard.default: []
