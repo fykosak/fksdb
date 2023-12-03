@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
-use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
-use FKSDB\Models\ORM\Tests\Person\PostgraduateStudyTest;
-use FKSDB\Models\ORM\Tests\Person\SchoolChangeTest;
-use FKSDB\Models\ORM\Tests\Person\StudyYearTest;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
@@ -26,6 +20,13 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Tests\Person\EventCoveringTest;
+use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
+use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
+use FKSDB\Models\ORM\Tests\Person\PostgraduateStudyTest;
+use FKSDB\Models\ORM\Tests\Person\SchoolChangeTest;
+use FKSDB\Models\ORM\Tests\Person\StudyYearTest;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
@@ -485,7 +486,7 @@ final class PersonModel extends Model implements Resource
         return [
             new GenderFromBornNumberTest($container),
             new ParticipantsDurationTest($container),
-            // new EventCoveringTest($container),
+            new EventCoveringTest($container),
             new StudyYearTest($container),
             new PostgraduateStudyTest($container),
             new SchoolChangeTest($container),

@@ -15,6 +15,8 @@ use FKSDB\Models\ORM\Tests\Adapter;
 use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonAdapter;
 use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\ContestYear\ContestYearToContestantsAdapter;
+use FKSDB\Models\ORM\Tests\Event\ConflictRole;
+use FKSDB\Models\ORM\Tests\Event\EventToPersonsAdapter;
 use FKSDB\Models\ORM\Tests\Event\Schedule\ItemAdapter;
 use FKSDB\Models\ORM\Tests\Event\Schedule\RunOutCapacity;
 use FKSDB\Models\ORM\Tests\Event\ScheduleGroupAdapter;
@@ -65,6 +67,7 @@ class DataTestFactory
     {
         return [
             ...EventModel::getTests($this->container),
+            new EventToPersonsAdapter(new ConflictRole($this->container), $this->container),
             new ScheduleGroupAdapter(
                 new ItemAdapter(
                     new RunOutCapacity($this->container),

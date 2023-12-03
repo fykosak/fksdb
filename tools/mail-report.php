@@ -23,7 +23,10 @@ use Nette\DI\Container;
 try {
     /** @var Container $container */
     $container = require __DIR__ . '/bootstrap.php';
-
+    /* Expect::structure([
+         Expect::anyOf('school', 'event', 'contest'),
+         Expect::string(),
+     ])->otherItems();*/
     set_time_limit(-1);
     $dataTestFactory = $container->getByType(DataTestFactory::class);
     [, $type] = $argv;
@@ -40,7 +43,7 @@ try {
             break;
         case 'event':
             $tests = $dataTestFactory->getEventTests();
-            $model = $container->getByType(EventService::class)->findByPrimary(+$argv[2]);//@phpstan-ignore-line
+            $model = $container->getByType(EventService::class)->findByPrimary(+$argv[3]);//@phpstan-ignore-line
             if (!$model) {
                 throw new EventNotFoundException();
             }
@@ -55,7 +58,7 @@ try {
                 ),
             ];
             /** @var ContestModel|null $contest */
-            $contest = $container->getByType(ContestService::class)->findByPrimary(+$argv[2]);//@phpstan-ignore-line
+            $contest = $container->getByType(ContestService::class)->findByPrimary(+$argv[3]);//@phpstan-ignore-line
             if (!$contest) {
                 throw new NotFoundException();
             }
@@ -79,7 +82,7 @@ try {
     );
     echo $text;
     $mailService->addMessageToSend([
-        'recipient' => 'fyziklani@fykos.cz',
+        'recipient' => $argv[2],
         'sender' => 'fksdb@fykos.cz',
         'reply_to' => 'noreply@fykos.cz',
         'subject' => 'Seznam chyb',
