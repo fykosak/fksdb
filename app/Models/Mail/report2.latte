@@ -14,9 +14,9 @@
         <h3>{$test->getTitle()->toHtml()}</h3>
         {foreach $logger->getMessages() as $message}
             {if $message->level === Fykosak\Utils\Logging\Message::LVL_ERROR}
-                <p style="color:red">{$message->text}</p>
+                <p style="color:red">{$message->toText()}</p>
             {else}
-                <p style="color: orange">{$message->text}</p>
+                <p style="color: orange">{$message->toText()}</p>
             {/if}
         {/foreach}
     {/if}
