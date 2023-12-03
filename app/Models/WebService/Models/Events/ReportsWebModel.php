@@ -20,12 +20,10 @@ use Nette\Schema\Expect;
 class ReportsWebModel extends WebModel
 {
     private EventService $eventService;
-    private DataTestFactory $dataTestFactory;
 
-    public function inject(EventService $eventService, DataTestFactory $dataTestFactory): void
+    public function inject(EventService $eventService): void
     {
         $this->eventService = $eventService;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     public function getExpectedParams(): Structure
@@ -46,7 +44,7 @@ class ReportsWebModel extends WebModel
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
-        $tests = $this->dataTestFactory->getEventTests();
+        $tests = DataTestFactory::getEventTests($this->container);
         $logger = new MemoryLogger();
         foreach ($tests as $test) {
             $test->run($logger, $event);

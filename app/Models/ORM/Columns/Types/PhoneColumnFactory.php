@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -11,7 +13,6 @@ use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -55,7 +56,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
     /**
      * @phpstan-param TModel $model
      */
-    final public function runTest(Logger $logger, Model $model): void
+    final public function runTest(TestLogger $logger, Model $model): void
     {
 
         $value = $model->{$this->modelAccessKey};
@@ -64,7 +65,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     \sprintf(_('%s number (%s) is not valid'), $this->getTitle(), $value),
                     Message::LVL_ERROR
                 )

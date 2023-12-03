@@ -48,9 +48,6 @@ final class ContestantsGrid extends BaseGrid
             new RendererItem(
                 $this->container,
                 function (ContestantModel $row) {
-                    if (!$row->getPersonHistory()) {
-                        return NotSetBadge::getHtml();
-                    }
                     return $this->tableReflectionFactory->loadColumnFactory(
                         'school',
                         'school'

@@ -2864,7 +2864,7 @@ msgstr ""
 
 #: i18n/../app/Models/ORM/Columns/Tables/PersonInfo/AgreedColumnFactory.php:27
 msgid "https://fykos.cz/doc/souhlas.pdf"
-msgstr ""
+msgstr "https://fykos.cz/doc/souhlas-en.pdf"
 
 #: i18n/../app/Models/ORM/Columns/Tables/PersonInfo/BornIdColumnFactory.php:29
 msgid "Invalid bornID format"

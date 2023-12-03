@@ -3,6 +3,7 @@ parameters:
     paths:
         - app
         - libs
+        #- tools
         #- tests
     ignoreErrors:
         - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'

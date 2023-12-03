@@ -13,9 +13,13 @@ use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
+use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -237,5 +241,16 @@ final class TeamModel2 extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    /**
+     * @phpstan-return Test<TeamModel2>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new CategoryCheck($container),
+            new PendingTeams($container),
+        ];
     }
 }

@@ -42,12 +42,10 @@ final class TeamPresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     private TeamService2 $teamService;
-    private DataTestFactory $dataTestFactory;
 
-    public function injectServiceService(TeamService2 $service, DataTestFactory $dataTestFactory): void
+    public function injectServiceService(TeamService2 $service): void
     {
         $this->teamService = $service;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     /**
@@ -410,6 +408,6 @@ final class TeamPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getTeamTests());
+        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
     }
 }
