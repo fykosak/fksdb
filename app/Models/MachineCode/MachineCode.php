@@ -5,20 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Models\MachineCode;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-type TSupportedModel (
+ *     \FKSDB\Models\ORM\Models\EventParticipantModel
+ *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
+ *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
+ *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2)
+ */
 final class MachineCode
 {
     private const CIP_ALGO = 'aes-256-cbc';
 
     /**
-     * @param PersonModel|EventParticipantModel|TeamModel2 $model
+     * @phpstan-param TSupportedModel $model
      * @throws MachineCodeException
      * @throws NotImplementedException
      * @throws BadRequestException
@@ -33,7 +37,7 @@ final class MachineCode
     }
 
     /**
-     * @param PersonModel|EventParticipantModel|TeamModel2 $model
+     * @phpstan-param TSupportedModel $model
      * @throws MachineCodeException
      * @throws NotImplementedException
      * @throws BadRequestException
@@ -47,7 +51,7 @@ final class MachineCode
     /**
      * Parse code and return model
      * code must be in format AA123456...
-     * @return PersonModel|EventParticipantModel|TeamModel2
+     * @phpstan-return TSupportedModel $model
      * @throws MachineCodeException
      */
     public static function parseCode(Container $container, string $code): Model
@@ -57,7 +61,7 @@ final class MachineCode
         }
         [, $type, $id] = $matches;
         $type = MachineCodeType::from($type);
-        /** @var Service<PersonModel|EventParticipantModel|TeamModel2> $service */
+        /** @var Service<TSupportedModel> $service */
         $service = $container->getByType($type->getServiceClassName());
         $model = $service->findByPrimary($id);
         if (!$model) {
@@ -67,7 +71,7 @@ final class MachineCode
     }
 
     /**
-     * @return PersonModel|EventParticipantModel|TeamModel2
+     * @phpstan-return TSupportedModel $model
      * @throws MachineCodeException
      */
     public static function parseHash(Container $container, string $code, string $salt): Model
