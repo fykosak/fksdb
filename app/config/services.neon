@@ -28,8 +28,6 @@ services:
     - FKSDB\Models\Authorization\ContestAuthorizator
     - FKSDB\Models\Authorization\EventAuthorizator
     - FKSDB\Models\Authorization\RelatedPersonAuthorizator
-    #datatest
-    - FKSDB\Components\DataTest\DataTestFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory
