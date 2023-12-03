@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
@@ -30,12 +30,10 @@ class PersonTestComponent extends BaseComponent
     public ?array $tests = [];
 
     private PersonService $personService;
-    private DataTestFactory $dataTestFactory;
 
-    final public function injectPrimary(PersonService $personService, DataTestFactory $dataTestFactory): void
+    final public function injectPrimary(PersonService $personService): void
     {
         $this->personService = $personService;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     /**
@@ -44,7 +42,7 @@ class PersonTestComponent extends BaseComponent
     public function getAllTests(): array
     {
         $tests = [];
-        foreach ($this->dataTestFactory->getPersonTests() as $test) {
+        foreach (DataTestFactory::getPersonTests($this->container) as $test) {
             $tests[$test->getId()] = $test;
         }
         return $tests;
@@ -63,7 +61,7 @@ class PersonTestComponent extends BaseComponent
 
         $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->dataTestFactory->getPersonTests() as $test) {
+        foreach (DataTestFactory::getPersonTests($this->container) as $test) {
             $field = $testsContainer->addCheckbox($test->getId(), $test->getTitle()->toHtml());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);

@@ -13,13 +13,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 final class ReportPresenter extends BasePresenter
 {
-    private DataTestFactory $dataTestFactory;
-
-    public function inject(DataTestFactory $dataTestFactory): void
-    {
-        $this->dataTestFactory = $dataTestFactory;
-    }
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Report'), 'fas fa-calendar-alt');
@@ -45,6 +38,6 @@ final class ReportPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getContestYearTests());
+        return new TestsList($this->getContext(), DataTestFactory::getContestYearTests($this->getContext()));
     }
 }

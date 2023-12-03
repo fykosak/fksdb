@@ -42,7 +42,7 @@ try {
             $model = $container->getByType(SchoolService::class)->getTable()->fetch();
             break;
         case 'event':
-            $tests = $dataTestFactory->getEventTests();
+            $tests = $dataTestFactory->getEventTests($container);
             $model = $container->getByType(EventService::class)->findByPrimary(+$argv[3]);//@phpstan-ignore-line
             if (!$model) {
                 throw new EventNotFoundException();

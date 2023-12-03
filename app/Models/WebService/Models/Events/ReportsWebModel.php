@@ -46,7 +46,7 @@ class ReportsWebModel extends WebModel
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
-        $tests = $this->dataTestFactory->getEventTests();
+        $tests = DataTestFactory::getEventTests($this->container);
         $logger = new MemoryLogger();
         foreach ($tests as $test) {
             $test->run($logger, $event);

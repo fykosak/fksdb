@@ -16,7 +16,7 @@ $container = require __DIR__ . '/bootstrap.php';
 set_time_limit(-1);
 $service = $container->getByType(EventService::class);
 $dataTestFactory = $container->getByType(DataTestFactory::class);
-$tests = $dataTestFactory->getEventTests();
+$tests = $dataTestFactory->getEventTests($container);
 $logger = new MemoryLogger();
 $event = $service->findByPrimary(+$argv[1]);
 foreach ($tests as $test) {

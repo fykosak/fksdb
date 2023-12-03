@@ -33,29 +33,22 @@ use Nette\DI\Container;
 
 class DataTestFactory
 {
-    private Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @phpstan-return Test<PersonModel>[]
      */
-    public function getPersonTests(): array
+    public static function getPersonTests(Container $container): array
     {
         return [
-            ...PersonModel::getTests($this->container),
+            ...PersonModel::getTests($container),
             ...self::applyAdaptor(
                 PersonHistoryAdapter::class,
-                PersonHistoryModel::getTests($this->container),
-                $this->container
+                PersonHistoryModel::getTests($container),
+                $container
             ),
             ...self::applyAdaptor(
                 PersonInfoAdapter::class,
-                PersonInfoModel::getTests($this->container),
-                $this->container
+                PersonInfoModel::getTests($container),
+                $container
             ),
         ];
     }
@@ -63,38 +56,36 @@ class DataTestFactory
     /**
      * @phpstan-return Test<EventModel>[]
      */
-    public function getEventTests(): array
+    public static function getEventTests(Container $container): array
     {
         return [
-            ...EventModel::getTests($this->container),
-            new EventToPersonsAdapter(new ConflictRole($this->container), $this->container),
-            new ScheduleGroupAdapter(
-                new ItemAdapter(
-                    new RunOutCapacity($this->container),
-                    $this->container
-                ),
-                $this->container
+            ...EventModel::getTests($container),
+            ...self::applyAdaptor(EventToPersonsAdapter::class, [new ConflictRole($container)], $container),
+            ...self::applyAdaptor(
+                ScheduleGroupAdapter::class,
+                self::applyAdaptor(ItemAdapter::class, [new RunOutCapacity($container)], $container),
+                $container
             ),
-            ...self::applyAdaptor(TeamAdapter::class, $this->getTeamTests(), $this->container),
+            ...self::applyAdaptor(TeamAdapter::class, self::getTeamTests($container), $container),
         ];
     }
 
     /**
      * @phpstan-return Test<TeamModel2>[]
      */
-    public function getTeamTests(): array
+    public static function getTeamTests(Container $container): array
     {
         return [
-            ...TeamModel2::getTests($this->container),
+            ...TeamModel2::getTests($container),
             ...self::applyAdaptor(
                 TeamToPersonAdapter::class,
-                PersonModel::getTests($this->container),
-                $this->container
+                PersonModel::getTests($container),
+                $container
             ),
             ...self::applyAdaptor(
                 TeamToPersonHistoryAdapter::class,
-                PersonHistoryModel::getTests($this->container),
-                $this->container
+                PersonHistoryModel::getTests($container),
+                $container
             ),
         ];
     }
@@ -102,26 +93,26 @@ class DataTestFactory
     /**
      * @phpstan-return Test<ContestYearModel>[]
      */
-    public function getContestYearTests(): array
+    public static function getContestYearTests(Container $container): array
     {
         return [
-            ...ContestYearModel::getTests($this->container),
+            ...ContestYearModel::getTests($container),
             ...self::applyAdaptor(
                 ContestYearToContestantsAdapter::class,
                 [
-                    ...ContestantModel::getTests($this->container),
+                    ...ContestantModel::getTests($container),
                     ...self::applyAdaptor(
                         ContestantToPersonHistoryAdapter::class,
-                        PersonHistoryModel::getTests($this->container),
-                        $this->container
+                        PersonHistoryModel::getTests($container),
+                        $container
                     ),
                     ...self::applyAdaptor(
                         ContestantToPersonAdapter::class,
-                        PersonModel::getTests($this->container),
-                        $this->container
+                        PersonModel::getTests($container),
+                        $container
                     ),
                 ],
-                $this->container
+                $container
             ),
         ];
     }

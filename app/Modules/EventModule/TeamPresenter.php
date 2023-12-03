@@ -410,6 +410,6 @@ final class TeamPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getTeamTests());
+        return new TestsList($this->getContext(), $this->dataTestFactory->getTeamTests($this->getContext()));
     }
 }
