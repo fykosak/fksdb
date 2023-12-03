@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -45,7 +45,7 @@ class ReportsWebModel extends WebModel
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
         $tests = DataTestFactory::getEventTests($this->container);
-        $logger = new MemoryLogger();
+        $logger = new TestLogger();
         foreach ($tests as $test) {
             $test->run($logger, $event);
         }
