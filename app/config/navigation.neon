@@ -23,6 +23,7 @@ navigation:
             Organizer.Teacher.list: []
             Organizer.Person.pizza: []
 
+            Organizer.Report.default: []
             Organizer.Event.list: []
             Organizer.Schools.default: []
             Organizer.StoredQuery.list: []

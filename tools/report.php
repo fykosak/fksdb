@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\EventService;
@@ -15,9 +16,8 @@ $container = require __DIR__ . '/bootstrap.php';
 
 set_time_limit(-1);
 $service = $container->getByType(EventService::class);
-$dataTestFactory = $container->getByType(DataTestFactory::class);
-$tests = $dataTestFactory->getEventTests($container);
-$logger = new MemoryLogger();
+$tests = DataTestFactory::getEventTests($container);
+$logger = new TestLogger();
 $event = $service->findByPrimary(+$argv[1]);
 foreach ($tests as $test) {
     $test->run($logger, $event);

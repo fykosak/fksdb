@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Utils\Html;
 
@@ -27,7 +26,7 @@ trait TestGridTrait
             $item = new RendererItem(
                 $this->container,
                 function (Model $person) use ($test): Html {
-                    $logger = new MemoryLogger();
+                    $logger = new TestLogger();
                     /** @phpstan-var TModel $person */
                     $test->run($logger, $person);
                     return self::createHtmlLog($logger);
@@ -41,7 +40,7 @@ trait TestGridTrait
     /**
      * @throws NotImplementedException
      */
-    private static function createHtmlLog(MemoryLogger $logger): Html
+    private static function createHtmlLog(TestLogger $logger): Html
     {
         $container = Html::el('span');
         $messages = $logger->getMessages();
@@ -69,7 +68,7 @@ trait TestGridTrait
     /**
      * @throws NotImplementedException
      */
-    private static function mapLevelToIcon(Message $message): string
+    private static function mapLevelToIcon(TestMessage $message): string
     {
         switch ($message->level) {
             case Message::LVL_ERROR:
@@ -88,12 +87,12 @@ trait TestGridTrait
     /**
      * @throws NotImplementedException
      */
-    private static function createHtmlIcon(Message $message): Html
+    private static function createHtmlIcon(TestMessage $message): Html
     {
         return Html::el('span')
             ->addAttributes([
                 'class' => 'text-' . $message->level,
-                'title' => $message->text,
+                'title' => $message->toText(),
             ])->addHtml(
                 Html::el('i')
                     ->addAttributes([

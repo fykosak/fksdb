@@ -22,7 +22,7 @@ class ContestantToPersonHistoryAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return _('In person history: ');
+        return _('In person related history');
     }
 
     public function getId(): string

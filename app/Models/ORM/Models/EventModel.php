@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
-use FKSDB\Models\ORM\Tests\Event\PendingTeams;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
@@ -19,6 +16,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
+use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
@@ -352,7 +352,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         return [
             new NoRoleSchedule($container),
-            new PendingTeams($container),
         ];
     }
 }

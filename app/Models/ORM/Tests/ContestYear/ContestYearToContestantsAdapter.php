@@ -21,7 +21,7 @@ class ContestYearToContestantsAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('in contestant %s: '), $model->person->getFullName());
+        return sprintf(_('In contestant %s'), $model->person->getFullName());
     }
 
     public function getId(): string

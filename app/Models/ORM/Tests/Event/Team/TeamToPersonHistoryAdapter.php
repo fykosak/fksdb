@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-extends Adapter<TeamModel2,PersonHistoryModel>
@@ -29,9 +30,18 @@ class TeamToPersonHistoryAdapter extends Adapter
         return $models;
     }
 
-    protected function getLogPrepend(Model $model): string
+    protected function getLogPrepend(Model $model): Html
     {
-        return sprintf(_('In person "%s"(%d) in current year: '), $model->person->getFullName(), $model->person_id);
+        return Html::el()
+            ->addText(_('In person '))
+            ->addHtml(
+                Html::el('a')
+                    ->addAttributes(
+                        ['href' => $this->linkGenerator->link('Organizer:Person:detail', ['id' => $model->person_id])]
+                    )
+                    ->addText($model->person->getFullName())
+            )
+            ->addHtml(' in related year');
     }
 
     public function getId(): string

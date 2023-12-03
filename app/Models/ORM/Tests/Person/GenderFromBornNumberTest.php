@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -29,7 +31,7 @@ class GenderFromBornNumberTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         try {
             $info = $model->getInfo();
@@ -37,14 +39,14 @@ class GenderFromBornNumberTest extends Test
                 return;
             }
             if (!$model->gender->value) {
-                $logger->log(new Message(_('Gender is not set'), Message::LVL_WARNING));
+                $logger->log(new TestMessage(_('Gender is not set'), Message::LVL_WARNING));
                 return;
             }
             if (BornIdColumnFactory::getGender($info->born_id)->value !== $model->gender->value) {
-                $logger->log(new Message(_('Gender do not match born Id'), Message::LVL_ERROR));
+                $logger->log(new TestMessage(_('Gender do not match born Id'), Message::LVL_ERROR));
             }
         } catch (\Throwable$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
+            $logger->log(new TestMessage($exception->getMessage(), Message::LVL_ERROR));
         }
     }
 

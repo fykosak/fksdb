@@ -6,9 +6,9 @@
 </p>
 {var bool $hasError = false}
 {foreach $tests as $test}
-    {var Fykosak\Utils\Logging\MemoryLogger $logger = new Fykosak\Utils\Logging\MemoryLogger()}
+    {var FKSDB\Components\DataTest\TestLogger $logger = new FKSDB\Components\DataTest\TestLogger()}
     {php $test->run($logger,$model)}
-    {var Fykosak\Utils\Logging\Message[] $messages = $logger->getMessages()}
+    {var FKSDB\Components\DataTest\TestMessage[] $messages = $logger->getMessages()}
     {if count($messages)}
         {php $hasError = true}
         <h3>{$test->getTitle()->toHtml()}</h3>

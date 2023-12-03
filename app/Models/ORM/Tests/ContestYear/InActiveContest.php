@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\ContestYear;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
@@ -19,11 +21,11 @@ class InActiveContest extends Test
     /**
      * @param ContestYearModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (!$model->isActive()) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     sprintf(_('Contest %s has not open submitting, please upload tasks!'), $model->contest->name),
                     Message::LVL_ERROR
                 )

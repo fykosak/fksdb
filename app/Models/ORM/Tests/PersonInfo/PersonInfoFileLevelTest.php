@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\PersonInfo;
 
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -63,7 +64,7 @@ class PersonInfoFileLevelTest extends Test
      * @param PersonInfoModel $model
      * @throws BadTypeException
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $this->getRowFactory()->runTest($logger, $model);
     }

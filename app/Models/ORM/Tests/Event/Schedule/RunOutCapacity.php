@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event\Schedule;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Model\Model;
@@ -19,7 +21,7 @@ class RunOutCapacity extends Test
     /**
      * @param ScheduleItemModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (is_null($model->capacity)) {
             return;
@@ -28,7 +30,7 @@ class RunOutCapacity extends Test
         $used = $model->getUsedCapacity();
         if ($used > $total * 0.9) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     _('Item has less then 10% free capacity'),
                     Message::LVL_WARNING
                 )

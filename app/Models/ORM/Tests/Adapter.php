@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
+use Nette\Application\LinkGenerator;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-template TOriginalModel of Model
@@ -20,6 +21,7 @@ abstract class Adapter extends Test
 {
     /** @phpstan-var Test<TTestedModel> */
     protected Test $test;
+    protected LinkGenerator $linkGenerator;
 
     /**
      * @phpstan-param Test<TTestedModel> $test
@@ -28,6 +30,11 @@ abstract class Adapter extends Test
     {
         parent::__construct($container);
         $this->test = $test;
+    }
+
+    public function inject(LinkGenerator $linkGenerator): void
+    {
+        $this->linkGenerator = $linkGenerator;
     }
 
     final public function getTitle(): Title
@@ -43,17 +50,18 @@ abstract class Adapter extends Test
     /**
      * @param TOriginalModel $model
      */
-    final public function run(Logger $logger, Model $model): void
+    final public function run(TestLogger $logger, Model $model): void
     {
         $models = $this->getModels($model);
         foreach ($models as $testedModel) {
-            $subLogger = new MemoryLogger();
+            $subLogger = new TestLogger();
             $this->test->run($subLogger, $testedModel);
             foreach ($subLogger->getMessages() as $message) {
                 $logger->log(
-                    new Message(
-                        $this->getLogPrepend($testedModel) . $message->text,
-                        $message->level
+                    new TestMessage(
+                        $this->getLogPrepend($testedModel),
+                        $message->level,
+                        $message,
                     )
                 );
             }
@@ -68,6 +76,7 @@ abstract class Adapter extends Test
 
     /**
      * @phpstan-param TTestedModel $model
+     * @return Html|string
      */
-    abstract protected function getLogPrepend(Model $model): string;
+    abstract protected function getLogPrepend(Model $model);
 }

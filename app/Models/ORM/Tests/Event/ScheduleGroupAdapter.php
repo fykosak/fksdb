@@ -21,7 +21,7 @@ class ScheduleGroupAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In schedule group "%s"(%d): '), $model->name_en, $model->schedule_group_id);
+        return sprintf(_('In schedule group "%s"(%d)'), $model->name_en, $model->schedule_group_id);
     }
 
     public function getId(): string

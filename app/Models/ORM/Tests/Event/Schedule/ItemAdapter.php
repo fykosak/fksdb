@@ -21,7 +21,7 @@ class ItemAdapter extends Adapter
 
     protected function getLogPrepend(Model $model): string
     {
-        return sprintf(_('In schedule item "%s"(%d): '), $model->name_en, $model->schedule_item_id);
+        return sprintf(_('In schedule item "%s"(%d)'), $model->name_en, $model->schedule_item_id);
     }
 
     public function getId(): string

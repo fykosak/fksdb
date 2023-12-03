@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -30,7 +32,7 @@ class StudyYearTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel[] $data */
@@ -45,7 +47,7 @@ class StudyYearTest extends Test
         array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger) {
             if ($last && $last->getGraduationYear() !== $datum->getGraduationYear()) {
                 $logger->log(
-                    new Message(
+                    new TestMessage(
                         sprintf(
                             'In %d expected graduation "%s" given "%s"',
                             $datum->ac_year,

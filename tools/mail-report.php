@@ -28,7 +28,6 @@ try {
          Expect::string(),
      ])->otherItems();*/
     set_time_limit(-1);
-    $dataTestFactory = $container->getByType(DataTestFactory::class);
     [, $type] = $argv;
     switch ($type) {
         case 'school':
@@ -42,7 +41,7 @@ try {
             $model = $container->getByType(SchoolService::class)->getTable()->fetch();
             break;
         case 'event':
-            $tests = $dataTestFactory->getEventTests($container);
+            $tests = DataTestFactory::getEventTests($container);
             $model = $container->getByType(EventService::class)->findByPrimary(+$argv[3]);//@phpstan-ignore-line
             if (!$model) {
                 throw new EventNotFoundException();
@@ -80,7 +79,6 @@ try {
         ],
         Language::from(Language::CS)
     );
-    echo $text;
     $mailService->addMessageToSend([
         'recipient' => $argv[2],
         'sender' => 'fksdb@fykos.cz',
@@ -90,6 +88,7 @@ try {
         'priority' => 0,
     ]);
 } catch (\Throwable $exception) {
+    echo get_class($exception) . "\n";
     echo $exception->getMessage() . "\n";
     echo $exception->getTraceAsString() . "\n";
 }

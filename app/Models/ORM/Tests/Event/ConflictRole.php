@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
@@ -28,7 +30,7 @@ class ConflictRole extends Test
     /**
      * @param TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $person = $model->person;
         if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
@@ -57,7 +59,7 @@ class ConflictRole extends Test
         }
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     sprintf(
                         _('Has conflict role %s.'),
                         join(', ', array_map(fn(EventRole $role) => $role->getRoleId(), $roles))

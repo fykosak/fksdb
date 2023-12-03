@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -35,7 +37,7 @@ class EventCoveringTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $organizers = [
             'event organizer' => self::getEventOrganizer($model),
@@ -59,7 +61,7 @@ class EventCoveringTest extends Test
      * @phpstan-param TContestYears $organizers
      */
     private function check(
-        Logger $logger,
+        TestLogger $logger,
         string $participantKey,
         array $participants,
         string $organizersKey,
@@ -69,7 +71,7 @@ class EventCoveringTest extends Test
             foreach ($years as $year => $contestYear) {
                 if (isset($organizers[$contestId]) && \array_key_exists($year, $organizers[$contestId])) {
                     $logger->log(
-                        new Message(
+                        new TestMessage(
                             \sprintf(
                                 _('Organization and participation in year %d (%d) of the contest %s "%s"<->"%s".'),
                                 $contestYear->year,

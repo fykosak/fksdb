@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\School;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model\Model;
@@ -29,10 +31,10 @@ class VerifiedSchoolTest extends Test
     /**
      * @param SchoolModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (!$model->verified) {
-            $logger->log(new Message(_('School is no verified'), Message::LVL_ERROR));
+            $logger->log(new TestMessage(_('School is no verified'), Message::LVL_ERROR));
         }
     }
 

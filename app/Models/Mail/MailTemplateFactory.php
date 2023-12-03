@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail;
 
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -95,7 +96,7 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @phpstan-param array{logger:MemoryLogger} $data
+     * @phpstan-param array{logger:TestLogger} $data
      */
     public function renderReport(array $data, Language $lang): string
     {

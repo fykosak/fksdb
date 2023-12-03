@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\PersonHistory;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
@@ -30,17 +32,17 @@ class SetSchoolTest extends Test
     /**
      * @param PersonHistoryModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if ($model->study_year_new->value !== StudyYear::None && !$model->school_id) {
             $this->addError($logger, $model);
         }
     }
 
-    private function addError(Logger $logger, PersonHistoryModel $history): void
+    private function addError(TestLogger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
-            new Message(
+            new TestMessage(
                 sprintf(
                     _('School is required for primary and high school study in year %d'),
                     $history->ac_year

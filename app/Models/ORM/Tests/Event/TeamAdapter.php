@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-extends Adapter<EventModel,TeamModel2>
@@ -19,9 +20,22 @@ class TeamAdapter extends Adapter
         return $model->getTeams(); // @phpstan-ignore-line
     }
 
-    protected function getLogPrepend(Model $model): string
+    protected function getLogPrepend(Model $model): Html
     {
-        return sprintf(_('In team "%s"(%d): '), $model->name, $model->fyziklani_team_id);
+        return Html::el()
+            ->addText(_('In team '))
+            ->addHtml(
+                Html::el('a')
+                    ->addAttributes(
+                        [
+                            'href' => $this->linkGenerator->link(
+                                'Event:Team:detail',
+                                ['id' => $model->fyziklani_team_id, 'eventId' => $model->event_id]
+                            ),
+                        ]
+                    )
+                    ->addText($model->name)
+            );
     }
 
     public function getId(): string

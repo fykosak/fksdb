@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests;
 
+use FKSDB\Components\DataTest\TestLogger;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
@@ -30,7 +30,7 @@ abstract class Test
     /**
      * @phpstan-param TModel $model
      */
-    abstract public function run(Logger $logger, Model $model): void;
+    abstract public function run(TestLogger $logger, Model $model): void;
 
     abstract public function getTitle(): Title;
 

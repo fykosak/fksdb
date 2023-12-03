@@ -27,8 +27,6 @@ use FKSDB\Models\ORM\Tests\Person\PersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\Person\PersonInfoAdapter;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 class DataTestFactory
@@ -121,13 +119,13 @@ class DataTestFactory
      * @phpstan-template TModel of Model
      * @phpstan-param Test<TModel>[] $tests
      * @phpstan-param TModel $model
-     * @phpstan-return array<string,Message[]>
+     * @phpstan-return array<string,TestMessage[]>
      */
     public static function runForModel(Model $model, array $tests): array
     {
         $log = [];
         foreach ($tests as $test) {
-            $logger = new MemoryLogger();
+            $logger = new TestLogger();
             $test->run($logger, $model);
             $testLog = $logger->getMessages();
             if (count($testLog)) {

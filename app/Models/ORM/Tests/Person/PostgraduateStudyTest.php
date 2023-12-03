@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -31,7 +33,7 @@ class PostgraduateStudyTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $postgraduate */
@@ -44,7 +46,7 @@ class PostgraduateStudyTest extends Test
             }
             if ($postgraduate) {
                 $logger->log(
-                    new Message(
+                    new TestMessage(
                         sprintf(
                             'Found undergraduate study year %d after postgraduate',
                             $history->ac_year

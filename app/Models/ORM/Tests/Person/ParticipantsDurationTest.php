@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -36,7 +38,7 @@ class ParticipantsDurationTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $data = [
             'event participant' => EventCoveringTest::getEventParticipant($model),
@@ -66,7 +68,7 @@ class ParticipantsDurationTest extends Test
                 $level = Message::LVL_ERROR;
             }
             $logger->log(
-                new Message(
+                new TestMessage(
                     \sprintf(_('Person participated %d years in contestId %d (and its events)'), $delta, $contestId),
                     $level
                 )

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\PersonHistory;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
@@ -30,7 +32,7 @@ class StudyTypeTest extends Test
     /**
      * @param PersonHistoryModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if ($model->school) {
             if ($model->study_year_new->isPrimarySchool() && !$model->school->study_p) {
@@ -43,10 +45,10 @@ class StudyTypeTest extends Test
         }
     }
 
-    private function addError(Logger $logger, PersonHistoryModel $history): void
+    private function addError(TestLogger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
-            new Message(
+            new TestMessage(
                 sprintf(
                     _('School "%s" does not teach %s study year.'),
                     $history->school->name,

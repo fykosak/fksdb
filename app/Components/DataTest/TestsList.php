@@ -7,7 +7,6 @@ namespace FKSDB\Components\DataTest;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\DI\Container;
 
 /**
@@ -30,13 +29,13 @@ class TestsList extends BaseComponent
     /**
      * @phpstan-param TModel $model
      */
-    public function render(Model $model, bool $showEmpty = false): void
+    public function render(Model $model): void
     {
         $data = [];
         foreach ($this->tests as $test) {
-            $logger = new MemoryLogger();
+            $logger = new TestLogger();
             $test->run($logger, $model);
-            if (count($logger->getMessages()) || $showEmpty) {
+            if (count($logger->getMessages())) {
                 $data[] = [
                     'messages' => $logger->getMessages(),
                     'test' => $test,

@@ -2,36 +2,34 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\ORM\Tests\Event;
+namespace FKSDB\Models\ORM\Tests\Event\Team;
 
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends Test<EventModel>
+ * @phpstan-extends Test<TeamModel2>
  */
 class PendingTeams extends Test
 {
     /**
-     * @param EventModel $model
+     * @param TeamModel2 $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
-        $teams = $model->getTeams()->where('state', TeamState::Pending);
-        /** @var TeamModel2 $team */
-        foreach ($teams as $team) {
+        if ($model->state->value === TeamState::Pending) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     sprintf(
                         _('Team "%s"(%d) is still pending! Do something about it!'),
-                        $team->name,
-                        $team->fyziklani_team_id
+                        $model->name,
+                        $model->fyziklani_team_id
                     ),
                     Message::LVL_WARNING
                 )
@@ -46,6 +44,6 @@ class PendingTeams extends Test
 
     public function getId(): string
     {
-        return 'EventPendingTeams';
+        return 'PendingTeams';
     }
 }

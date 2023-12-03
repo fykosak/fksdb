@@ -8,21 +8,29 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-extends Adapter<ContestantModel,PersonModel>
  */
 class ContestantToPersonAdapter extends Adapter
 {
-
     protected function getModels(Model $model): iterable
     {
         return [$model->person];
     }
 
-    protected function getLogPrepend(Model $model): string
+    protected function getLogPrepend(Model $model): Html
     {
-        return _('In person: ');
+        return Html::el()
+            ->addText(_('In person '))
+            ->addHtml(
+                Html::el('a')
+                    ->addAttributes(
+                        ['href' => $this->linkGenerator->link('Organizer:Person:detail', ['id' => $model->person_id])]
+                    )
+                    ->addText($model->getFullName())
+            );
     }
 
     public function getId(): string

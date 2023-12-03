@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Contestant;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -22,14 +24,14 @@ class InvalidCategory extends Test
     /**
      * @throws BadRequestException
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $model->getContestYear());
         try {
             $expected = $evaluationStrategy->studyYearsToCategory($model->person);
             if ($model->contest_category->contest_category_id !== $expected->contest_category_id) {
                 $logger->log(
-                    new Message(
+                    new TestMessage(
                         sprintf(
                             _('Invalid category, expected: %s, given: %s.'),
                             $expected->label,
@@ -41,7 +43,7 @@ class InvalidCategory extends Test
             }
         } catch (InvalidArgumentException $exception) {
             $logger->log(
-                new Message(
+                new TestMessage(
                     _('Invalid category, check study year!'),
                     Message::LVL_WARNING
                 )

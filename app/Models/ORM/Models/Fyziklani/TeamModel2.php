@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\MachineCode\MachineCode;
@@ -15,6 +13,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
+use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -249,6 +250,7 @@ final class TeamModel2 extends Model implements Resource
     {
         return [
             new CategoryCheck($container),
+            new PendingTeams($container),
         ];
     }
 }

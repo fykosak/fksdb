@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event;
 
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
@@ -31,7 +33,7 @@ class NoRoleSchedule extends Test
     /**
      * @param EventModel $model
      */
-    public function run(Logger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $query = $this->personService->getTable()
             ->where(':person_schedule.schedule_item.schedule_group.event_id', $model->event_id)
@@ -48,7 +50,7 @@ class NoRoleSchedule extends Test
                 }
             }
             $logger->log(
-                new Message(
+                new TestMessage(
                     sprintf(
                         _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),
