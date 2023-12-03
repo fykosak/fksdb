@@ -20,12 +20,10 @@ use Nette\Schema\Expect;
 class ReportsWebModel extends WebModel
 {
     private EventService $eventService;
-    private DataTestFactory $dataTestFactory;
 
-    public function inject(EventService $eventService, DataTestFactory $dataTestFactory): void
+    public function inject(EventService $eventService): void
     {
         $this->eventService = $eventService;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     public function getExpectedParams(): Structure

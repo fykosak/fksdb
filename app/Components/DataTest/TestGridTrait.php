@@ -17,13 +17,6 @@ use Nette\Utils\Html;
  */
 trait TestGridTrait
 {
-    protected DataTestFactory $dataTestFactory;
-
-    final public function injectTest(DataTestFactory $dataTestFactory): void
-    {
-        $this->dataTestFactory = $dataTestFactory;
-    }
-
     /**
      * @phpstan-param (Test<TModel>)[] $tests
      */
