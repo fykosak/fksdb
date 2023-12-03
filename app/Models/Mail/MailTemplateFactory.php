@@ -93,16 +93,6 @@ class MailTemplateFactory
         return $this->create($lang)
             ->renderToString(__DIR__ . '/changeEmail.new.latte', $data);
     }
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{logger:TestLogger} $data
-     */
-    public function renderReport(array $data, Language $lang): string
-    {
-        return $this->create($lang)
-            ->renderToString(__DIR__ . '/report.latte', $data);
-    }
     /**
      * @throws BadTypeException
      * @phpstan-template TModel of Model
