@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\DataTest\Tests\Test;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;

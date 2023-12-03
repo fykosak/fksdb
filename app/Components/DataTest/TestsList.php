@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
-use FKSDB\Components\DataTest\Tests\Test;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;

@@ -4,31 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
-use FKSDB\Components\DataTest\Tests\Event\NoRoleSchedule;
-use FKSDB\Components\DataTest\Tests\Event\PendingTeams;
-use FKSDB\Components\DataTest\Tests\Event\Schedule\ItemAdapter;
-use FKSDB\Components\DataTest\Tests\Event\Schedule\RunOutCapacity;
-use FKSDB\Components\DataTest\Tests\Event\ScheduleGroupAdapter;
-use FKSDB\Components\DataTest\Tests\Event\Team\CategoryCheck;
-use FKSDB\Components\DataTest\Tests\Event\Team\PersonAdapter;
-use FKSDB\Components\DataTest\Tests\Event\TeamAdapter;
-use FKSDB\Components\DataTest\Tests\Person\EventCoveringTest;
-use FKSDB\Components\DataTest\Tests\Person\GenderFromBornNumberTest;
-use FKSDB\Components\DataTest\Tests\Person\ParticipantsDurationTest;
-use FKSDB\Components\DataTest\Tests\Person\PersonHistoryAdapter;
-use FKSDB\Components\DataTest\Tests\Person\PersonInfoAdapter;
-use FKSDB\Components\DataTest\Tests\Person\PostgraduateStudyTest;
-use FKSDB\Components\DataTest\Tests\Person\SchoolChangeTest;
-use FKSDB\Components\DataTest\Tests\Person\StudyYearTest;
-use FKSDB\Components\DataTest\Tests\PersonHistory\SetSchoolTest;
-use FKSDB\Components\DataTest\Tests\PersonHistory\StudyTypeTest;
-use FKSDB\Components\DataTest\Tests\PersonInfo\PersonInfoFileLevelTest;
-use FKSDB\Components\DataTest\Tests\School\StudyYearFillTest;
-use FKSDB\Components\DataTest\Tests\Test;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Tests\Adapter;
+use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonAdapter;
+use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonHistoryAdapter;
+use FKSDB\Models\ORM\Tests\ContestYear\ContestYearToContestantsAdapter;
+use FKSDB\Models\ORM\Tests\Event\Schedule\ItemAdapter;
+use FKSDB\Models\ORM\Tests\Event\Schedule\RunOutCapacity;
+use FKSDB\Models\ORM\Tests\Event\ScheduleGroupAdapter;
+use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonAdapter;
+use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonHistoryAdapter;
+use FKSDB\Models\ORM\Tests\Event\TeamAdapter;
+use FKSDB\Models\ORM\Tests\Person\PersonHistoryAdapter;
+use FKSDB\Models\ORM\Tests\Person\PersonInfoAdapter;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
@@ -49,36 +44,17 @@ class DataTestFactory
     public function getPersonTests(): array
     {
         return [
-            new GenderFromBornNumberTest($this->container),
-            new ParticipantsDurationTest($this->container),
-            new EventCoveringTest($this->container),
-            new StudyYearTest($this->container),
-            new PersonHistoryAdapter(new StudyTypeTest($this->container), $this->container),
-            new PersonHistoryAdapter(new SetSchoolTest($this->container), $this->container),
-            new PostgraduateStudyTest($this->container),
-            new SchoolChangeTest($this->container),
-            new PersonInfoAdapter(
-                new PersonInfoFileLevelTest('phone', $this->container),
+            ...PersonModel::getTests($this->container),
+            ...self::applyAdaptor(
+                PersonHistoryAdapter::class,
+                PersonHistoryModel::getTests($this->container),
                 $this->container
             ),
-            new PersonInfoAdapter(
-                new PersonInfoFileLevelTest('phone_parent_d', $this->container),
+            ...self::applyAdaptor(
+                PersonInfoAdapter::class,
+                PersonInfoModel::getTests($this->container),
                 $this->container
             ),
-            new PersonInfoAdapter(
-                new PersonInfoFileLevelTest('phone_parent_m', $this->container),
-                $this->container
-            ),
-        ];
-    }
-
-    /**
-     * @phpstan-return Test<SchoolModel>[]
-     */
-    public function getSchoolTests(): array
-    {
-        return [
-            'study' => new StudyYearFillTest($this->container),
         ];
     }
 
@@ -87,8 +63,8 @@ class DataTestFactory
      */
     public function getEventTests(): array
     {
-        $tests = [
-            new NoRoleSchedule($this->container),
+        return [
+            ...EventModel::getTests($this->container),
             new ScheduleGroupAdapter(
                 new ItemAdapter(
                     new RunOutCapacity($this->container),
@@ -96,12 +72,8 @@ class DataTestFactory
                 ),
                 $this->container
             ),
-            new PendingTeams($this->container),
+            ...self::applyAdaptor(TeamAdapter::class, $this->getTeamTests(), $this->container),
         ];
-        foreach ($this->getTeamTests() as $test) {
-            $tests[] = new TeamAdapter($test, $this->container);
-        }
-        return $tests;
     }
 
     /**
@@ -110,23 +82,42 @@ class DataTestFactory
     public function getTeamTests(): array
     {
         return [
-            new CategoryCheck($this->container),
-            new PersonAdapter(
-                new GenderFromBornNumberTest($this->container),
+            ...TeamModel2::getTests($this->container),
+            ...self::applyAdaptor(
+                TeamToPersonAdapter::class,
+                PersonModel::getTests($this->container),
                 $this->container
             ),
-            new PersonAdapter(new SchoolChangeTest($this->container), $this->container),
-            new PersonAdapter(
-                new PostgraduateStudyTest($this->container),
+            ...self::applyAdaptor(
+                TeamToPersonHistoryAdapter::class,
+                PersonHistoryModel::getTests($this->container),
                 $this->container
             ),
-            new PersonAdapter(new StudyYearTest($this->container), $this->container),
-            new Tests\Event\Team\PersonHistoryAdapter(
-                new StudyTypeTest($this->container),
-                $this->container
-            ),
-            new Tests\Event\Team\PersonHistoryAdapter(
-                new SetSchoolTest($this->container),
+        ];
+    }
+
+    /**
+     * @phpstan-return Test<ContestYearModel>[]
+     */
+    public function getContestYearTests(): array
+    {
+        return [
+            ...ContestYearModel::getTests($this->container),
+            ...self::applyAdaptor(
+                ContestYearToContestantsAdapter::class,
+                [
+                    ...ContestantModel::getTests($this->container),
+                    ...self::applyAdaptor(
+                        ContestantToPersonHistoryAdapter::class,
+                        PersonHistoryModel::getTests($this->container),
+                        $this->container
+                    ),
+                    ...self::applyAdaptor(
+                        ContestantToPersonAdapter::class,
+                        PersonModel::getTests($this->container),
+                        $this->container
+                    ),
+                ],
                 $this->container
             ),
         ];
@@ -150,5 +141,20 @@ class DataTestFactory
             }
         }
         return $log;
+    }
+
+    /**
+     * @phpstan-template TOriginalModel of Model
+     * @phpstan-template TTestedModel of Model
+     * @phpstan-param Test<TTestedModel>[] $tests
+     * @phpstan-param class-string<Adapter<TOriginalModel,TTestedModel>> $adapterClass
+     * @phpstan-return Test<TOriginalModel>[]
+     */
+    public static function applyAdaptor(string $adapterClass, array $tests, Container $container): array
+    {
+        return array_map(
+            fn(Test $test) => new $adapterClass($test, $container),
+            $tests
+        );
     }
 }

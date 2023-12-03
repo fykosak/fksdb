@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
+use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
+use FKSDB\Models\ORM\Tests\Person\PostgraduateStudyTest;
+use FKSDB\Models\ORM\Tests\Person\SchoolChangeTest;
+use FKSDB\Models\ORM\Tests\Person\StudyYearTest;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
@@ -22,6 +28,7 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -429,6 +436,7 @@ final class PersonModel extends Model implements Resource
         }
         return $toPay;
     }
+
     /**
      * @phpstan-return TypedGroupedSelection<TaskContributionModel>
      */
@@ -466,6 +474,21 @@ final class PersonModel extends Model implements Resource
             'name' => $this->getFullName(),
             'personId' => $this->person_id,
             'email' => $this->getInfo()->email,
+        ];
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new GenderFromBornNumberTest($container),
+            new ParticipantsDurationTest($container),
+            // new EventCoveringTest($container),
+            new StudyYearTest($container),
+            new PostgraduateStudyTest($container),
+            new SchoolChangeTest($container),
         ];
     }
 }

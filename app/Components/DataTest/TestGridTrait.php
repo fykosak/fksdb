@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
-use FKSDB\Components\DataTest\Tests\Test;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model\Model;

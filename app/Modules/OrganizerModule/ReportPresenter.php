@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\EventModule;
+namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
 final class ReportPresenter extends BasePresenter
@@ -24,28 +25,26 @@ final class ReportPresenter extends BasePresenter
         return new PageTitle(null, _('Report'), 'fas fa-calendar-alt');
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('event', 'edit');
+        return true;
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     final public function renderDefault(): void
     {
         set_time_limit(-1);
-        $this->template->event = $this->getEvent();
+        $this->template->contestYear = $this->getSelectedContestYear();
     }
 
     /**
-     * @phpstan-return TestsList<EventModel>
+     * @phpstan-return TestsList<ContestYearModel>
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getEventTests());
+        return new TestsList($this->getContext(), $this->dataTestFactory->getContestYearTests());
     }
 }

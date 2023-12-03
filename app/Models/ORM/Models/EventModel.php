@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
+use FKSDB\Models\ORM\Tests\Event\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
@@ -340,5 +343,16 @@ final class EventModel extends Model implements Resource, NodeCreator
                 $exception
             );
         }
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new NoRoleSchedule($container),
+            new PendingTeams($container),
+        ];
     }
 }
