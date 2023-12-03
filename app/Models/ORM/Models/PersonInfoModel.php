@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Tests\PersonInfo\PersonInfoFileLevelTest;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 
 /**
  * @property-read int $person_id
@@ -42,4 +45,15 @@ use Fykosak\NetteORM\Model\Model;
  */
 final class PersonInfoModel extends Model
 {
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new PersonInfoFileLevelTest('phone', $container),
+            new PersonInfoFileLevelTest('phone_parent_d', $container),
+            new PersonInfoFileLevelTest('phone_parent_m', $container),
+        ];
+    }
 }

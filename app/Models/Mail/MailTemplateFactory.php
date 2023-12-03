@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail;
 
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Application\Application;
@@ -93,12 +96,22 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @phpstan-param array{logger:MemoryLogger} $data
+     * @phpstan-param array{logger:TestLogger} $data
      */
     public function renderReport(array $data, Language $lang): string
     {
         return $this->create($lang)
             ->renderToString(__DIR__ . '/report.latte', $data);
+    }
+    /**
+     * @throws BadTypeException
+     * @phpstan-template TModel of Model
+     * @phpstan-param array{model:TModel,tests:Test<TModel>[]} $data
+     */
+    public function renderReport2(array $data, Language $lang): string
+    {
+        return $this->create($lang)
+            ->renderToString(__DIR__ . '/report2.latte', $data);
     }
 
     /**

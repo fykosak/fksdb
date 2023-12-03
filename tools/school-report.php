@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use FKSDB\Components\DataTest\DataTestFactory;
-use FKSDB\Components\DataTest\Tests\School\SchoolsProviderAdapter;
-use FKSDB\Components\DataTest\Tests\School\VerifiedSchoolTest;
+use FKSDB\Models\ORM\Tests\School\SchoolsProviderAdapter;
+use FKSDB\Models\ORM\Tests\School\VerifiedSchoolTest;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\SchoolService;

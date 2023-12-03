@@ -23,6 +23,7 @@ navigation:
             Organizer.Teacher.list: []
             Organizer.Person.pizza: []
 
+            Organizer.Report.default: []
             Organizer.Event.list: []
             Organizer.Schools.default: []
             Organizer.StoredQuery.list: []
@@ -50,6 +51,7 @@ navigation:
             Organizer.Teacher.list: []
 
         Organizer.Dashboard.entity:
+            Organizer.Report.default: []
             Organizer.Event.list: []
             Organizer.Schools.list: []
             Organizer.StoredQuery.list: []
@@ -91,6 +93,7 @@ navigation:
             Event.Application.import: []
         Event.Dashboard.default#other:
             #others
+            Event.Report.default: []
             Event.EventOrganizer.list: []
             Event.Payment.create: []
             Event.Payment.detailedList: []

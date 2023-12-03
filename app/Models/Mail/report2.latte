@@ -1,0 +1,29 @@
+{varType Fykosak\NetteORM\Model\Model $model}
+{varType FKSDB\Models\ORM\Tests\Test[] $tests}
+<p>
+    Ahoj,<br/>
+    byly zjištěny tyto chyby, pokud je do 24 hodin neodstraníš, pošlu ti je znovu!!!
+</p>
+{var bool $hasError = false}
+{foreach $tests as $test}
+    {var FKSDB\Components\DataTest\TestLogger $logger = new FKSDB\Components\DataTest\TestLogger()}
+    {php $test->run($logger,$model)}
+    {var FKSDB\Components\DataTest\TestMessage[] $messages = $logger->getMessages()}
+    {if count($messages)}
+        {php $hasError = true}
+        <h3>{$test->getTitle()->toHtml()}</h3>
+        {foreach $logger->getMessages() as $message}
+            {if $message->level === Fykosak\Utils\Logging\Message::LVL_ERROR}
+                <p style="color:red">{$message->text}</p>
+            {else}
+                <p style="color: orange">{$message->text}</p>
+            {/if}
+        {/foreach}
+    {/if}
+{/foreach}
+{if !$hasError}
+    <p style="color:greenyellow">{_'No error at all'}</p>
+{/if}
+<p>
+    Tvoje milovaná FKSDB
+</p>
