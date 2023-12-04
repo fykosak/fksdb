@@ -12,56 +12,36 @@
                 {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
                 {php $progress = 3}
             {/switch}
-            <div class="state-line mt-3 mb-3">
-                <div class="{($progress >= 1?'done':'ongoing') . ' circle'}">
-                    <span>{_'Select items'}</span>
-                </div>
-                <div class="{($progress >= 2?'done':'ongoing') . ' line'}"></div>
-                <div class="{($progress >= 2?'done':'ongoing') . ' circle'}">
-                    <span>{_'Generate payment'}</span>
-                </div>
-                <div class="{($progress >= 3?'done':'ongoing') . ' line'}"></div>
-                <div class="{($progress >= 3?'done':'ongoing') . ' circle'}">
-                    <span>{_'Payment received'}</span>
-                </div>
-            </div>
+            {*<div class="state-line mt-3 mb-3">
+                    <div class="{($progress >= 1?'done':'ongoing') . ' circle'}">
+                        <span>{_'Select items'}</span>
+                    </div>
+                    <div class="{($progress >= 2?'done':'ongoing') . ' line'}"></div>
+                    <div class="{($progress >= 2?'done':'ongoing') . ' circle'}">
+                        <span>{_'Generate payment'}</span>
+                    </div>
+                    <div class="{($progress >= 3?'done':'ongoing') . ' line'}"></div>
+                    <div class="{($progress >= 3?'done':'ongoing') . ' circle'}">
+                        <span>{_'Payment received'}</span>
+                    </div>
+            </div>*}
+            {switch $model->state->value}
+                {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                <p>O prijatí a úspešnom spracovaní platby budete informovaný emailom. Ak ste potvrenie neobdržali do 5
+                    pracovných dní od platby, prosím kontaktujte nás TODO email</p>
+            {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
+                <p>Platba je stále rozpracovaná, ak ste vybrali všetky položky ktoré ste vybrali kliknite na TODO, a tým
+                    vytvoríte platobné pokny. Po vygenrovaní pokynou sa položky už nedajú odstrániť ani meniť!</p>
+            {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+                <p>Platbu sme úspešne prijali, Ďakujeme</p>
+            {/switch}
         </div>
     </div>
+
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Payer information'}</h2>
             {control columnTable ['person.full_name','person_info.email'], $model, 1024}
-        </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Payments contains'}</h2>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>{_'Item'}</th>
-                    <th>{_'Price'}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {foreach $model->getRelatedPersonSchedule() as $personSchedule}
-                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
-                    <tr>
-                        <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
-                        <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
-                    </tr>
-                {/foreach}
-        {if isset($model->price)}
-                    <tr class="table-primary">
-                        <td>{_'Sum'}</td>
-                        <td>{$model->getPrice()->__toString()}</td>
-                    </tr>
-                {/if}
-                </tbody>
-
-            </table>
-            <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
-
         </div>
     </div>
 
@@ -88,14 +68,48 @@
                     'payment.price',
                     ],$model,1024}
                 {/if}
-                {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
-                    <p>{_'TODO!!!'}</p>
-                    {control paymentQRCode}
-                {/if}
             </div>
         </div>
-
     {/if}
+    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Scan and pay'}</h2>
+                {control paymentQRCode}
+            </div>
+        </div>
+    {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payments contains'}</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{_'Item'}</th>
+                    <th>{_'Price'}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $model->getRelatedPersonSchedule() as $personSchedule}
+                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+                    <tr>
+                        <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
+                        <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
+                    </tr>
+                {/foreach}
+                    {if isset($model->price)}
+                    <tr class="table-primary">
+                        <td>{_'Sum'}</td>
+                        <td>{$model->getPrice()->__toString()}</td>
+                    </tr>
+                {/if}
+                </tbody>
+
+            </table>
+            <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+
+        </div>
+    </div>
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Actions'}</h2>

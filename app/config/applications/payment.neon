@@ -34,7 +34,7 @@ transitions:
         decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
         transitions:
             init->in_progress:
-                label: _('Create')
+                label: _('Add to card')
             in_progress->waiting:
                 label: _('Generate payment')
                 behaviorType: success
