@@ -6,9 +6,9 @@ namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
-use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
@@ -49,6 +49,9 @@ class ReportsWebModel extends WebModel
         foreach ($tests as $test) {
             $test->run($logger, $event);
         }
-        return array_map(fn(Message $message) => $message->__toArray(), $logger->getMessages());
+        return array_map(
+            fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],
+            $logger->getMessages()
+        );
     }
 }
