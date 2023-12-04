@@ -82,32 +82,31 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Payments contains'}</h2>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>{_'Item'}</th>
-                    <th>{_'Price'}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {foreach $model->getRelatedPersonSchedule() as $personSchedule}
-                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
-                    <tr>
-                        <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
-                        <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
-                    </tr>
-                {/foreach}
-                    {if isset($model->price)}
-                    <tr class="table-primary">
-                        <td>{_'Sum'}</td>
-                        <td>{$model->getPrice()->__toString()}</td>
-                    </tr>
-                {/if}
-                </tbody>
+            {foreach $model->getRelatedPersonSchedule() as $personSchedule}
+                {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3">{$personSchedule->schedule_item->schedule_group->name->getText($lang)}</div>
+                            <div class="col-3">{$personSchedule->schedule_item->name->getText($lang)}</div>
+                            <div class="col-3"><small class="text-muted">{_'Person'}: </small>{$personSchedule->person->getFullName()}</div>
+                            <div class="col-3">{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
+                        </div>
+                    </div>
+                </div>
+            {/foreach}
+            {if isset($model->price)}
+                <div class="card text-bg-primary mb-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <strong class="offset-6 col-3">{_'Total: '}</strong>
+                            <strong class="col-3">{$model->getPrice()->__toString()}</strong>
+                        </div>
+                    </div>
+                </div>
+            {/if}
 
-            </table>
             <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
-
         </div>
     </div>
     <div class="panel color-auto">
