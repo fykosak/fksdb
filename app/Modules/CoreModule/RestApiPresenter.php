@@ -18,7 +18,6 @@ use FKSDB\Models\WebService\Models\SeriesResultsWebModel;
 use FKSDB\Models\WebService\Models\SignaturesWebModel;
 use FKSDB\Models\WebService\Models\StatsWebModel;
 use FKSDB\Models\WebService\Models\WebModel;
-use FKSDB\Models\WebService\WebServiceModel;
 use FKSDB\Modules\Core\AuthMethod;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -48,14 +47,8 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         //'game/submit' => Game\SubmitWebModel::class,
     ];
 
-    private WebServiceModel $server;
     /** @persistent */
     public string $model;
-
-    final public function injectSoapServer(WebServiceModel $server): void
-    {
-        $this->server = $server;
-    }
 
     /* TODO */
     public function authorizedDefault(): bool
@@ -75,10 +68,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             $params = (array)json_decode($this->getHttpRequest()->getRawBody(), true);
         }
         try {
-            $response = $this->server->getJsonResponse(
-                $this->getWebModel(),
-                array_merge($params, $this->getParameters())
-            );
+            $response = $this->getWebModel()->getApiResponse(array_merge($params, $this->getParameters()));
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
@@ -109,7 +99,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
      * @throws \ReflectionException
      * @phpstan-return WebModel<array<string,mixed>,array<string,mixed>>
      */
-    private function getWebModel(): ?WebModel
+    private function getWebModel(): WebModel
     {
         $webModelClass = class_exists($this->model)
             ? $this->model
@@ -117,14 +107,14 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         if ($webModelClass) {
             $reflection = new \ReflectionClass($webModelClass);
             if (!$reflection->isSubclassOf(WebModel::class)) {
-                return null;
+                throw new \InvalidArgumentException();
             }
             /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->getContext());
             $model->setUser($this->getUser());
             return $model;
         }
-        return null;
+        throw new \InvalidArgumentException();
     }
 
     public static function createRouter(RouteList $list): void

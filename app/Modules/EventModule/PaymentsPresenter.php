@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\EntityForms\PaymentFormComponent;
+use FKSDB\Components\EntityForms\PaymentForm;
 use FKSDB\Components\Grids\Payment\PaymentList;
 use FKSDB\Components\Grids\Payment\PaymentQRCode;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -271,9 +271,9 @@ final class PaymentsPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): PaymentFormComponent
+    protected function createComponentCreateForm(): PaymentForm
     {
-        return new PaymentFormComponent(
+        return new PaymentForm(
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),
@@ -290,9 +290,9 @@ final class PaymentsPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): PaymentFormComponent
+    protected function createComponentEditForm(): PaymentForm
     {
-        return new PaymentFormComponent(
+        return new PaymentForm(
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),

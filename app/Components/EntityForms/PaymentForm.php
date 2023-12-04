@@ -29,7 +29,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends EntityFormComponent<PaymentModel>
  */
-class PaymentFormComponent extends EntityFormComponent
+class PaymentForm extends EntityFormComponent
 {
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;

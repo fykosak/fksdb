@@ -1,1 +1,32 @@
-../../../Core/templates/Entity/create.latte
+{block outerContent}
+    {block info}
+        <div class="panel color-auto">
+        <div class="container">
+            {switch $lang}
+                {case 'cs'}
+                <h2>Jak zaplatit za ubytování a program</h2>
+                <p>Vyberte položky, ktoré chcete zaplatit, môžete vybrať položky viacerých osôb</p>
+                <ul>
+                    <li>Pokial ste učitel(doprovod) tímu zobrazujú sa všetky položky pre všetky vaše tímy.</li>
+                    <li>Pokial ste člen tímu tímu zobrazujú sa všetky položky pre tvoj tím.</li>
+                </ul>
+
+                <p>Po vytvorení platby sa program resp. ubytovanie nedá v prihláške zrušit alebo zmeniť, v prípade zmeny
+                    člena
+                    programu nás kontaktujte na maily <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a></p>
+                <p>Pokial je vaš pobyt financovaný alebo spolufinancovaný cez scholarship, <strong>platbu
+                        nevytvárajte!</strong>
+                </p>
+
+                {default}
+
+            {/switch}
+        </div>
+        </div>
+    {/block}
+    <div class="panel color-auto">
+        <div class="container">
+            {control createForm}
+        </div>
+    </div>
+{/block}

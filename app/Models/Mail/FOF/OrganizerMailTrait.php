@@ -5,28 +5,29 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\Utils\Logging\MemoryLogger;
+use Nette\DI\Container;
 
 /**
  * @phpstan-template THolder of ModelHolder
  */
 trait OrganizerMailTrait
 {
-    private DataTestFactory $testFactory;
+    private Container $container;
 
-    public function injectDataTestFactory(DataTestFactory $testFactory): void
+    public function injectDataTestFactory(Container $container): void
     {
-        $this->testFactory = $testFactory;
+        $this->container = $container;
     }
 
     /**
      * @param THolder $holder
      */
-    protected function getMessageLog(ModelHolder $holder): MemoryLogger
+    protected function getMessageLog(ModelHolder $holder): TestLogger
     {
-        $logger = new MemoryLogger();
-        foreach ($this->testFactory->getTeamTests() as $test) {
+        $logger = new TestLogger();
+        foreach (DataTestFactory::getTeamTests($this->container) as $test) {
             $test->run($logger, $holder->getModel());
         }
         return $logger;

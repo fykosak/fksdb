@@ -177,17 +177,4 @@ class WebServiceModel
         }
         return null;
     }
-
-    /**
-     * @phpstan-template TParams of array
-     * @throws BadRequestException
-     * @phpstan-param TParams $arguments
-     */
-    public function getJsonResponse(?WebModel $webModel, array $arguments): JsonResponse
-    {
-        if (!$webModel) {
-            throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
-        }
-        return $webModel->getApiResponse($arguments);
-    }
 }

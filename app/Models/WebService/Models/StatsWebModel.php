@@ -10,7 +10,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{contest_id?:int,contestId?:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
+ * @phpstan-extends WebModel<array{contest_id?:int,contestId:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
  * @phpstan-import-type SerializedTaskModel from TaskModel
  * @phpstan-import-type TaskStatsType from TaskModel
  */
