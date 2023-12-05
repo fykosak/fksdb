@@ -46,10 +46,26 @@
                         <div class="progress-bar bg-danger">{$noPaymentCount}</div>
                     </div>
             </div>
-            {foreach $rests as $rest}
+            {*foreach $rests as $rest}
                 {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $rest}
-                {$rest->person->getFullName()}
-            {/foreach}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-1">
+                                <i class="{$rest->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Block'}
+                                    : </small>{$rest->schedule_item->schedule_group->name->getText($lang)}
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Variant'}
+                                    : </small>{$rest->schedule_item->name->getText($lang)}</div>
+                            <div class="col-3"><small class="text-muted">{_'Person'}
+                                    : </small>{$rest->person->getFullName()}</div>
+                            <div class="col-2">{$rest->schedule_item->getPrice()->__toString()}</div>
+                        </div>
+                    </div>
+                </div>
+            {/foreach*}
         </div>
     </div>
 {/block}

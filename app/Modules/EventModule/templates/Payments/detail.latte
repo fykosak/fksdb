@@ -31,7 +31,8 @@
                     pracovných dní od platby, prosím kontaktujte nás TODO email</p>
             {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
                 <p>Platba je stále rozpracovaná, ak ste vybrali všetky položky ktoré ste vybrali kliknite na TODO, a tým
-                    vytvoríte platobné pokny. Po vygenrovaní pokynou sa položky už nedajú odstrániť ani meniť!</p>
+                    vytvoríte platobné pokny. Po vygenrovaní pokynov sa položky už nedajú z platby odstrániť ani meniť,
+                    platba sa dá avšak ešte celá zrušiť!</p>
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
                 <p>Platbu sme úspešne prijali, Ďakujeme</p>
             {/switch}
@@ -87,10 +88,17 @@
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-3">{$personSchedule->schedule_item->schedule_group->name->getText($lang)}</div>
-                            <div class="col-3">{$personSchedule->schedule_item->name->getText($lang)}</div>
-                            <div class="col-3"><small class="text-muted">{_'Person'}: </small>{$personSchedule->person->getFullName()}</div>
-                            <div class="col-3">{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
+                            <div class="col-1">
+                                <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Block'}
+                                    : </small>{$personSchedule->schedule_item->schedule_group->name->getText($lang)}
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Variant'}
+                                    : </small>{$personSchedule->schedule_item->name->getText($lang)}</div>
+                            <div class="col-3"><small class="text-muted">{_'Person'}
+                                    : </small>{$personSchedule->person->getFullName()}</div>
+                            <div class="col-2">{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
                         </div>
                     </div>
                 </div>
@@ -99,14 +107,15 @@
                 <div class="card text-bg-primary mb-2">
                     <div class="card-body">
                         <div class="row">
-                            <strong class="offset-6 col-3">{_'Total: '}</strong>
-                            <strong class="col-3">{$model->getPrice()->__toString()}</strong>
+                            <strong class="offset-7 col-3">{_'Total: '}</strong>
+                            <strong class="col-2">{$model->getPrice()->__toString()}</strong>
                         </div>
                     </div>
                 </div>
             {/if}
-
-            <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+            {if $model->canEdit()}
+                <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+            {/if}
         </div>
     </div>
     <div class="panel color-auto">

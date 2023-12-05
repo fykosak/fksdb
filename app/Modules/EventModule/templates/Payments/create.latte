@@ -1,6 +1,13 @@
 {block outerContent}
-    {block info}
-        <div class="panel color-auto">
+    {include info}
+    <div class="panel color-auto">
+        <div class="container">
+            {control createForm}
+        </div>
+    </div>
+{/block}
+{define info}
+    <div class="panel color-auto">
         <div class="container">
             {switch $lang}
                 {case 'cs'}
@@ -17,16 +24,27 @@
                 <p>Pokial je vaš pobyt financovaný alebo spolufinancovaný cez scholarship, <strong>platbu
                         nevytvárajte!</strong>
                 </p>
+                <p>Pokiaľ potrebujete faktúru, označte to vo formulári. Položky ktoré sú v platbe budú aj fakturované,
+                    úpravy medzi platbou a faktúrou niesu možné! Pokiaľ chcete faktúrovať iba čašt nákladov vytvorete
+                    viacero platieb.</p>
 
-                {default}
+            {default}
+                <h2>How to pay for accommodation and accompanying program</h2>
+                <p>Choose items that you want to pay, you can choose items belong to more persons</p>
+                <ul>
+                    <li>As teacher you can choose from all your teams</li>
+                    <li>As member you can choose only from your team</li>
+                </ul>
 
+                <p>If the payment is created, there is no possibility remove or change booking. In case of unexpected
+                    cases, contact us on email <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a></p>
+                <p>If your stay is partially or fully funded via scholarship, please <strong>don't create a
+                        payment</strong>
+                </p>
+                <p>In case you need official invoice, choose only items that should be on invoice, any additional
+                    changes in invoice are not allowed! In case you need invoice only for part of items, create more
+                    payments.</p>
             {/switch}
         </div>
-        </div>
-    {/block}
-    <div class="panel color-auto">
-        <div class="container">
-            {control createForm}
-        </div>
     </div>
-{/block}
+{/define}

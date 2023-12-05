@@ -7,6 +7,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
@@ -98,7 +99,27 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 $badge = 'badge bg-color-10';
                 break;
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+
+        return Html::el('span')->addAttributes(['class' => $badge])->addHtml($this->title()->toHtml());
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function title(): Title
+    {
+        return new Title(null, $this->label(), $this->getIconName());
+    }
+
+    public function getIconName(): string
+    {
+        switch ($this->value) {
+            case self::Accommodation:
+                return 'fa-solid fa-bed';
+            case self::Weekend:
+                return 'fa-solid fa-calendar';
+        }
+        return '';
     }
 
     /**

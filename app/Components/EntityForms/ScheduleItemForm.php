@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
@@ -19,19 +18,22 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends EntityFormComponent<ScheduleItemModel>
  */
-class ScheduleItemFormContainer extends EntityFormComponent
+class ScheduleItemForm extends EntityFormComponent
 {
 
     public const CONTAINER = 'container';
 
     private ScheduleItemService $scheduleItemService;
-    private EventModel $event;
+    private ScheduleGroupModel $group;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(EventModel $event, Container $container, ?ScheduleItemModel $model)
-    {
+    public function __construct(
+        ScheduleGroupModel $group,
+        Container $container,
+        ?ScheduleItemModel $model
+    ) {
         parent::__construct($container, $model);
-        $this->event = $event;
+        $this->group = $group;
     }
 
     final public function injectPrimary(
@@ -57,7 +59,6 @@ class ScheduleItemFormContainer extends EntityFormComponent
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleItemService->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Item "#%d" has been saved.'), $model->schedule_item_id), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect(':Schedule:Group:detail', ['id' => $model->schedule_group_id]);
@@ -68,6 +69,12 @@ class ScheduleItemFormContainer extends EntityFormComponent
         if (isset($this->model)) {
             $form->setDefaults([
                 self::CONTAINER => $this->model->toArray(),
+            ]);
+        } else {
+            $form->setDefaults([
+                self::CONTAINER => [
+                    'schedule_group_id' => $this->group->getPrimary(),
+                ],
             ]);
         }
     }
@@ -83,13 +90,18 @@ class ScheduleItemFormContainer extends EntityFormComponent
             'name_en' => ['required' => true],
             'description_cs' => ['required' => false],
             'description_en' => ['required' => false],
+            'long_description_cs' => ['required' => false],
+            'long_description_en' => ['required' => false],
+            'payable' => ['required' => false],
+            'begin' => ['required' => false],
+            'end' => ['required' => false],
             'capacity' => ['required' => false],
             'price_czk' => ['required' => false],
             'price_eur' => ['required' => false],
         ]);
         $items = [];
         /** @var ScheduleGroupModel $group */
-        foreach ($this->event->getScheduleGroups() as $group) {
+        foreach ($this->group->event->getScheduleGroups() as $group) {
             $items[$group->schedule_group_id] = $group->name->getText($this->translator->lang)
                 . '(' . $group->schedule_group_type->value . ')';
         }

@@ -987,6 +987,9 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
                 title: _('Price EUR')
+            payable:
+                type: bool
+                title: _('Is item payable via FKSDB?')
             name_en:
                 type: string
                 title: _('Name en')
@@ -1005,6 +1008,25 @@ orm:
             description:
                 type: localizedString
                 title: _('Description')
+            long_description_en:
+                type: text
+                title: _('Long description en')
+                description: _('Allow HTML')
+            long_description_cs:
+                type: text
+                title: _('Long description cs')
+                description: _('Allow HTML')
+            long_description:
+                type: localizedString
+                title: _('Description')
+            begin:
+                type: dateTime
+                title: _('Begin')
+                description: _('Only if is diferent from group time')
+            end:
+                type: dateTime
+                title: _('End')
+                description: _('Only if is diferent from group time')
             capacity:
                 type: int
                 title: _('Total capacity')
@@ -1025,11 +1047,13 @@ orm:
             detail:
                 destination: :Schedule:Item:detail
                 params:
+                    groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.detail')
             edit:
                 destination: :Schedule:Item:edit
                 params:
+                    groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.edit')
     schedule_payment:
