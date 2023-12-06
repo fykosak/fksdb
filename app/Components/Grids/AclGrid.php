@@ -41,16 +41,12 @@ final class AclGrid extends BaseList
         $this->roleService = $roleService;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'Components/list.panel.latte';
-    }
-
     protected function configure(): void
     {
         $this->paginate = false;
         $this->counter = false;
         $this->filtered = true;
+        $this->mode = self::ModePanel;
         $this->setTitle(
             new RendererItem(
                 $this->container,

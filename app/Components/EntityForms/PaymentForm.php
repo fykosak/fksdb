@@ -38,12 +38,14 @@ class PaymentForm extends EntityFormComponent
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private SingleReflectionFormFactory $reflectionFormFactory;
-    private EventModel $event;
+    /** @phpstan-var array{EventModel} */
+    private array $sources;
     private PersonModel $loggedPerson;
 
+    /** @phpstan-param array{EventModel} $sources */
     public function __construct(
         Container $container,
-        EventModel $event,
+        array $sources,
         PersonModel $loggedPerson,
         bool $isOrganizer,
         PaymentMachine $machine,
@@ -52,7 +54,7 @@ class PaymentForm extends EntityFormComponent
         parent::__construct($container, $model);
         $this->machine = $machine;
         $this->isOrganizer = $isOrganizer;
-        $this->event = $event;
+        $this->sources = $sources;
         $this->loggedPerson = $loggedPerson;
     }
 
@@ -91,19 +93,25 @@ class PaymentForm extends EntityFormComponent
         }
         /** @var SelectBox $currencyField */
         $currencyField = $this->reflectionFormFactory->createField('payment', 'currency');
+
         // $currencyField->setItems($this->machine->priceCalculator->getAllowedCurrencies());
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(
-            new PersonPaymentContainer(
-                $this->getContext(),
-                $this->event,
-                $this->loggedPerson,
-                $this->isOrganizer,
-                $this->model
-            ),
-            'items'
-        );
+        $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
+        foreach ($this->sources as $source) {
+            if ($source instanceof EventModel) {
+                $form->addComponent(
+                    new PersonPaymentContainer(
+                        $this->getContext(),
+                        $source,
+                        $this->loggedPerson,
+                        $this->isOrganizer,
+                        $this->model
+                    ),
+                    'event_items'
+                );
+            }
+        }
     }
 
     /**
@@ -114,21 +122,26 @@ class PaymentForm extends EntityFormComponent
      */
     protected function handleFormSuccess(Form $form): void
     {
-        /** @phpstan-var array{currency:string,person_id:int,items:array<array<int,bool>>} $values */
+        /** @phpstan-var array{
+         *     currency:string,
+         *     person_id:int,
+         *     want_invoice:bool,
+         *     event_items:array<array<int,bool>>} $values
+         */
         $values = $form->getValues('array');
         $connection = $this->paymentService->explorer->getConnection();
         $connection->beginTransaction();
         try {
             $model = $this->paymentService->storeModel(
                 [
-                    'event_id' => $this->event->event_id,
                     'currency' => $values['currency'],
+                    'want_invoice' => $values['want_invoice'],
                     'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
                 ],
                 $this->model
             );
             $this->schedulePaymentService->storeItems(
-                (array)$values['items'],
+                (array)$values['event_items'],
                 $model,
                 Language::from($this->translator->lang)
             );
@@ -156,7 +169,7 @@ class PaymentForm extends EntityFormComponent
         if (isset($this->model)) {
             $form->setDefaults($this->model->toArray());
             /** @var PersonPaymentContainer $itemContainer */
-            $itemContainer = $form->getComponent('items');
+            $itemContainer = $form->getComponent('event_items');
             $itemContainer->setPayment($this->model);
         }
     }

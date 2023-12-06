@@ -403,6 +403,12 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\PaymentState
+            want_invoice:
+                type: bool
+                title: _('Want invioce')
+            invoice_id:
+                type: string
+                title: _('Invoice Id')
         links:
             detail:
                 destination: :Event:Payments:detail

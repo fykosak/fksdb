@@ -1036,7 +1036,6 @@ CREATE TABLE IF NOT EXISTS `payment`
 (
     `payment_id`      INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `person_id`       INT(11)        NOT NULL,
-    `event_id`        INT            NOT NULL,
     `state`           ENUM (
         'init',
         'in_progress',
@@ -1058,18 +1057,12 @@ CREATE TABLE IF NOT EXISTS `payment`
     `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
     `want_invoice`    BOOL           NOT NULL DEFAULT FALSE,
     `invoice_id`      VARCHAR(32)    NULL     DEFAULT NULL,
-    INDEX `idx_payment__event` (`event_id` ASC),
     INDEX `idx_payment__person` (`person_id` ASC),
     CONSTRAINT `fk_payment__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_payment__event`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE CASCADE
 )
     ENGINE = 'InnoDB';
 

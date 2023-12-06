@@ -13,8 +13,14 @@ use Nette\DI\Container;
  */
 abstract class BaseList extends BaseComponent
 {
+    protected const ModeAlert = 'alert';
+    protected const ModePanel = 'panel';
+
     /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
+
+    /** @phpstan-var self::Mode* $mode */
+    protected string $mode = self::ModeAlert;
 
     public function __construct(Container $container, int $userPermission)
     {
@@ -26,7 +32,13 @@ abstract class BaseList extends BaseComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+        switch ($this->mode) {
+            case self::ModePanel:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.panel.latte';
+            case self::ModeAlert:
+            default:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+        }
     }
 
     public function render(): void

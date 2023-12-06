@@ -32,6 +32,7 @@ class Transition
     protected $condition;
     public BehaviorType $behaviorType;
     private Title $label;
+    private string $successLabel;
     /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
     /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
@@ -49,6 +50,16 @@ class Transition
     public function setSourceStateEnum(EnumColumn $sourceState): void
     {
         $this->source = $sourceState;
+    }
+
+    public function setSuccessLabel(string $successLabel): void
+    {
+        $this->successLabel = $successLabel;
+    }
+
+    public function getSuccessLabel(): string
+    {
+            $this->successLabel ?? _('Transition successful');
     }
 
     /**

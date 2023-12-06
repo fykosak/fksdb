@@ -78,9 +78,9 @@ class EventDispatchFactory
         return $machine;
     }
 
-    public function getPaymentMachine(EventModel $event): PaymentMachine
+    public function getPaymentMachine(): PaymentMachine
     {
-        return $this->container->getService($this->getPaymentFactoryName($event) . '.machine'); //@phpstan-ignore-line
+        return $this->container->getService($this->getPaymentFactoryName() . '.machine'); //@phpstan-ignore-line
     }
 
     public function getPersonScheduleMachine(): PersonScheduleMachine
@@ -88,12 +88,9 @@ class EventDispatchFactory
         return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
     }
 
-    public function getPaymentFactoryName(EventModel $event): ?string
+    public function getPaymentFactoryName(): ?string
     {
-        if ($event->event_type_id === 1) {
-            return 'transitions.fyziklaniPayment';
-        }
-        return null;
+        return 'transitions.fykosPayment';
     }
 
     public function getTeamMachine(EventModel $event): TeamMachine

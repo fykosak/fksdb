@@ -18,17 +18,16 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class PaymentsPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<PaymentModel> */
-    use EventEntityPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<PaymentModel> */
+    use EntityPresenterTrait;
 
     private PaymentService $paymentService;
 
@@ -50,6 +49,9 @@ final class PaymentsPresenter extends BasePresenter
         return new PageTitle(null, _('Create payment'), 'fas fa-credit-card');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedDashboard(): bool
     {
         return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'dashboard', $this->getEvent());
@@ -104,12 +106,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -118,12 +117,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -143,10 +139,8 @@ final class PaymentsPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
     {
@@ -156,12 +150,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     final public function renderEdit(): void
     {
@@ -169,12 +160,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -195,15 +183,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     private function isPaymentAllowed(): bool
     {
-        $params = $this->getContext()->parameters[$this->eventDispatchFactory->getPaymentFactoryName(
-            $this->getEvent()
-        )];
-        if (!isset($params['begin']) || !isset($params['end']) || !isset($params['forEvent'])) {
-            return false;
-        }
-        return (time() > $params['begin']->getTimestamp())
-            && (time() < $params['end']->getTimestamp())
-            && (+$params['forEvent'] === $this->getEvent()->event_id);
+        return time() < $this->getEvent()->begin->getTimestamp();
     }
 
 
@@ -217,14 +197,11 @@ final class PaymentsPresenter extends BasePresenter
         return true;
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
     private function getMachine(): PaymentMachine
     {
         static $machine;
         if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getPaymentMachine($this->getEvent());
+            $machine = $this->eventDispatchFactory->getPaymentMachine();
         }
         return $machine;
     }
@@ -244,11 +221,8 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws \ReflectionException
      * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
@@ -275,7 +249,7 @@ final class PaymentsPresenter extends BasePresenter
     {
         return new PaymentForm(
             $this->getContext(),
-            $this->getEvent(),
+            [$this->getEvent()],
             $this->getLoggedPerson(),
             $this->isAllowed(PaymentModel::RESOURCE_ID, 'organizer'),
             $this->getMachine(),
@@ -285,16 +259,14 @@ final class PaymentsPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): PaymentForm
     {
         return new PaymentForm(
             $this->getContext(),
-            $this->getEvent(),
+            [$this->getEvent()],
             $this->getLoggedPerson(),
             $this->isAllowed($this->getEntity(), 'organizer'),
             $this->getMachine(),
@@ -303,11 +275,8 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentPaymentQRCode(): PaymentQRCode
     {

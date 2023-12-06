@@ -57,7 +57,10 @@ class TransitionButtonsComponent extends BaseComponent
         try {
             $transition = $this->machine->getTransitionById($transitionName);
             $this->machine->execute($transition, $holder);
-            $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+            $this->getPresenter()->flashMessage(
+                $transition->getSuccessLabel(),
+                Message::LVL_SUCCESS
+            );
         } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {

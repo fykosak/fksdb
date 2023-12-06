@@ -49,6 +49,7 @@ class TransitionsExtension extends CompilerExtension
                     'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'label' => Helpers::createExpressionSchemaType(),
                     'icon' => Expect::string('')->required(false),
+                    'successLabel' => Helpers::createExpressionSchemaType(),
                     'validation' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
@@ -100,7 +101,7 @@ class TransitionsExtension extends CompilerExtension
                             Helpers::resolveMixedExpression($transitionConfig['label']),
                             $transitionConfig['icon'],
                         ]
-                    )
+                    )->addSetup('setSuccessLabel', $transitionConfig['successLabel'])
                     ->addSetup(
                         'setBehaviorType',
                         [

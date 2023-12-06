@@ -1,34 +1,22 @@
 parameters:
-    fyziklaniPayment:
-        begin: 2023-11-25
-        end: 2024-02-16
-        forEvent: 180
+    fykosPayment:
         symbolGenerator:
-            variableSymbolStart: 180240000
-            variableSymbolEnd: 180249999
-            info:
-                CZK:
-                    bank_account: 2402414686/2010
-                    bank_name: "Fio banka, a.s."
-                    recipient: "Fykos, z.s."
-                    iban: CZ55 2010 0000 0024 0241 4686
-                    constant_symbol: "0308"
-                EUR:
-                    bank_name: "Fio banka, a.s."
-                    recipient: "Fykos, z.s."
-                    iban: CZ05 2010 0000 0022 0241 4681
-                    swift: FIOBCZPPXXX
+            CZK:
+                bank_account: 2402414686/2010
+                bank_name: "Fio banka, a.s."
+                recipient: "Fykos, z.s."
+                iban: CZ55 2010 0000 0024 0241 4686
+                constant_symbol: "0308"
+            EUR:
+                bank_name: "Fio banka, a.s."
+                recipient: "Fykos, z.s."
+                iban: CZ05 2010 0000 0022 0241 4681
+                swift: FIOBCZPPXXX
 services:
-    fyziklaniPayment.priceCalculator:
-        factory: FKSDB\Models\Payment\PriceCalculator\PriceCalculator
-        setup:
-            - addPreprocess(FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice())
-    fyziklaniPayment.symbolGenerator:
-            factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
-            setup:
-                 - setUp(%fyziklaniPayment.symbolGenerator.variableSymbolStart%, %fyziklaniPayment.symbolGenerator.variableSymbolEnd%, %fyziklaniPayment.symbolGenerator.info%)
+    priceCalculator: FKSDB\Models\Payment\PriceCalculator\PriceCalculator
+    fykosPayment.symbolGenerator: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator(%fykosPayment.symbolGenerator%)
 transitions:
-    fyziklaniPayment:
+    fykosPayment:
         machine: FKSDB\Models\Transitions\Machine\PaymentMachine
         stateEnum: FKSDB\Models\ORM\Models\PaymentState
         decorator: FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions()
@@ -38,17 +26,18 @@ transitions:
             in_progress->waiting:
                 label: _('Generate payment')
                 behaviorType: success
+                successLabel: _('Payment information has been succefully created')
                 beforeExecute:
-                    - @fyziklaniPayment.symbolGenerator
-                    - @fyziklaniPayment.priceCalculator
+                    - @fykosPayment.symbolGenerator
+                    - @priceCalculator
                 afterExecute:
                     - FKSDB\Models\Mail\Payment\PaymentMail()
             in_progress|waiting->canceled:
                 label: _('Cancel payment')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('edit')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ContestRole('edit')
                 behaviorType: danger
             waiting->received:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ImplicitEventRole('organizer')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\ContestRole('organizer')
                 label: _('Paid')
                 behaviorType: success
                 afterExecute:

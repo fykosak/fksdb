@@ -17,21 +17,21 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read PersonModel $person
  * @property-read int $payment_id
- * @property-read EventModel $event
- * @property-read int $event_id
  * @property-read PaymentState $state
  * @property-read float|null $price
- * @property-read string $currency
- * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface $received
- * @property-read string $constant_symbol
- * @property-read string $variable_symbol
- * @property-read string $specific_symbol
- * @property-read string $bank_account
- * @property-read string $bank_name
- * @property-read string $recipient
- * @property-read string $iban
- * @property-read string $swift
+ * @property-read string|null $currency
+ * @property-read \DateTimeInterface|null $created
+ * @property-read \DateTimeInterface|null $received
+ * @property-read string|null $constant_symbol
+ * @property-read string|null $variable_symbol
+ * @property-read string|null $specific_symbol
+ * @property-read string|null $bank_account
+ * @property-read string|null $bank_name
+ * @property-read string|null $recipient
+ * @property-read string|null $iban
+ * @property-read string|null $swift
+ * @property-read int want_invoice
+ * @property-read string|null invoice_id
  * @phpstan-type SerializedPaymentModel array{
  *      personId:int,
  *      paymentId:int,
@@ -50,7 +50,7 @@ use Nette\Security\Resource;
  */
 final class PaymentModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'event.payment';
+    public const RESOURCE_ID = 'payment';
 
     /**
      * @phpstan-return PersonScheduleModel[]

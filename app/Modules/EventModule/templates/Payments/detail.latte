@@ -36,6 +36,11 @@
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
                 <p>Platbu sme úspešne prijali, Ďakujeme</p>
             {/switch}
+            {if $model->want_invoice}
+                <p>
+                    K tejto platbe evudujeme záujem o vystvenie faktúry. Faktura bude poslaná na váš email, do niekoľkých dní po obdržaní paltby.
+                </p>
+            {/if}
         </div>
     </div>
 
