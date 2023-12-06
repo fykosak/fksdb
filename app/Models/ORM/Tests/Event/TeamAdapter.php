@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
@@ -20,6 +21,9 @@ class TeamAdapter extends Adapter
         return $model->getTeams(); // @phpstan-ignore-line
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function getLogPrepend(Model $model): Html
     {
         return Html::el()

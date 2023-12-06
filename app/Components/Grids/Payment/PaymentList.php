@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\Components\BaseList;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
@@ -72,6 +73,9 @@ final class PaymentList extends BaseList
         $form->addText('vs', _('Variable symbol'))->setHtmlType('number');
     }
 
+    /**
+     * @throws BadTypeException
+     */
     protected function configure(): void
     {
         $this->paginate = true;
@@ -79,5 +83,6 @@ final class PaymentList extends BaseList
         $this->counter = true;
         $this->mode = self::ModePanel;
         $this->traitConfigure();
+        $this->addLink('payment.detail');
     }
 }

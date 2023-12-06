@@ -13,8 +13,10 @@ use Nette\DI\Container;
  */
 abstract class BaseList extends BaseComponent
 {
+    // phpcs:disable
     protected const ModeAlert = 'alert';
     protected const ModePanel = 'panel';
+    // phpcs:enable
 
     /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
@@ -60,6 +62,5 @@ trait PaymentListTrait
             new TemplateItem($this->container, '@schedule_item.price_czk / @schedule_item.price_eur', _('Price')),
             'price'
         );
-        $this->addLink('payment.detail');
     }
 }

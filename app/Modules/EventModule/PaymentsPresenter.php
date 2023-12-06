@@ -62,6 +62,9 @@ final class PaymentsPresenter extends BasePresenter
         return new PageTitle(null, _('Payment dashboard'), 'fas fa-dashboard');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function renderDashboard(): void
     {
         $data = [];
@@ -126,7 +129,7 @@ final class PaymentsPresenter extends BasePresenter
         return new PageTitle(
             null,
             Html::el('')
-                ->addText(\sprintf(_('Detail of the payment #%s'), $this->getEntity()->payment_id))
+                ->addText(\sprintf(_('Detail of the payment %s'), $this->getEntity()->payment_id))
                 ->addHtml(
                     Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml(
                         $this->getEntity()->state->badge()

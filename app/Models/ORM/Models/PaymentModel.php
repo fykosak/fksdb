@@ -30,22 +30,22 @@ use Nette\Security\Resource;
  * @property-read string|null $recipient
  * @property-read string|null $iban
  * @property-read string|null $swift
- * @property-read int want_invoice
- * @property-read string|null invoice_id
+ * @property-read int $want_invoice
+ * @property-read string|null $invoice_id
  * @phpstan-type SerializedPaymentModel array{
  *      personId:int,
  *      paymentId:int,
  *      state:string,
  *      price:float|null,
- *      currency:string,
- *      constantSymbol:string,
- *      variableSymbol:string,
- *      specificSymbol:string,
- *      bankAccount:string,
- *      bankName:string,
- *      recipient:string,
- *      iban:string,
- *      swift:string,
+ *      currency:string|null,
+ *      constantSymbol:string|null,
+ *      variableSymbol:string|null,
+ *      specificSymbol:string|null,
+ *      bankAccount:string|null,
+ *      bankName:string|null,
+ *      recipient:string|null,
+ *      iban:string|null,
+ *      swift:string|null,
  * }
  */
 final class PaymentModel extends Model implements Resource

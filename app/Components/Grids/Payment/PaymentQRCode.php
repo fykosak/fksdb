@@ -22,13 +22,13 @@ class PaymentQRCode extends FrontEndComponent
      * @phpstan-return array{
      * paymentId:int,
      * price:float|null,
-     * currency:string,
-     * constantSymbol:string,
-     * variableSymbol:string,
-     * specificSymbol:string,
-     * recipient:string,
-     * iban:string,
-     * swift:string,
+     * currency:string|null,
+     * constantSymbol:string|null,
+     * variableSymbol:string|null,
+     * specificSymbol:string|null,
+     * recipient:string|null,
+     * iban:string|null,
+     * swift:string|null,
      * }
      */
     protected function getData(): array

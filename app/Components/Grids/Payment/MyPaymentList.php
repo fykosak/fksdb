@@ -18,8 +18,9 @@ use Nette\DI\Container;
  */
 final class MyPaymentList extends BaseList
 {
-    private PersonModel $person;
     use PaymentListTrait;
+
+    private PersonModel $person;
 
     public function __construct(Container $container, PersonModel $person)
     {

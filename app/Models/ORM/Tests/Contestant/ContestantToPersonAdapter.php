@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
@@ -20,6 +21,9 @@ class ContestantToPersonAdapter extends Adapter
         return [$model->person];
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function getLogPrepend(Model $model): Html
     {
         return Html::el()

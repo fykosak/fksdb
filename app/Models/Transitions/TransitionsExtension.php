@@ -25,6 +25,7 @@ use Nette\Schema\Schema;
  *      condition:\Nette\DI\Definitions\Statement|bool|null,
  *      label:\Nette\DI\Definitions\Statement|string|null,
  *      icon: string,
+ *      successLabel:string,
  *      validation:\Nette\DI\Definitions\Statement|bool|null,
  *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
  *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
@@ -101,7 +102,7 @@ class TransitionsExtension extends CompilerExtension
                             Helpers::resolveMixedExpression($transitionConfig['label']),
                             $transitionConfig['icon'],
                         ]
-                    )->addSetup('setSuccessLabel', $transitionConfig['successLabel'])
+                    )->addSetup('setSuccessLabel', [$transitionConfig['successLabel']])
                     ->addSetup(
                         'setBehaviorType',
                         [
