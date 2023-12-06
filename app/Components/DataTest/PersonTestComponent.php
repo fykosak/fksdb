@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent

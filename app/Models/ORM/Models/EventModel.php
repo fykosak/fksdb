@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
-use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;

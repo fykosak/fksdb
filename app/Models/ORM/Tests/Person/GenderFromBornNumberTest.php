@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 

@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail;
 
-use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\GettextTranslator;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Application\Application;
 use Nette\Application\UI\TemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;

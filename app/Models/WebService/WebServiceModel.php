@@ -18,18 +18,13 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     SeriesResultsWebModel,
     SignaturesWebModel,
     StatsWebModel,
-    WebModel
-};
+    WebModel};
 use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
     Schedule\GroupListWebModel,
     Schedule\ItemListWebModel,
     Schedule\PersonListWebModel,
-    TeamsWebModel,
-};
-use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
+    TeamsWebModel,};
 use Nette\DI\Container;
-use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Nette\SmartObject;
