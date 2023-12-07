@@ -6,8 +6,8 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentForm;
-use FKSDB\Components\Grids\Payment\PaymentList;
-use FKSDB\Components\Grids\Payment\PaymentQRCode;
+use FKSDB\Components\Payments\PaymentList;
+use FKSDB\Components\Payments\PaymentQRCode;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Components\Grids\Payment\MyPaymentList;
+use FKSDB\Components\Payments\MyPaymentList;
 use Fykosak\Utils\UI\PageTitle;
 
 final class MyPaymentsPresenter extends BasePresenter
