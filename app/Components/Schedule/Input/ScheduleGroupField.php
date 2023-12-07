@@ -11,7 +11,6 @@ use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
-use Tracy\Debugger;
 
 class ScheduleGroupField extends SelectBox
 {
@@ -57,6 +56,7 @@ class ScheduleGroupField extends SelectBox
 
     public function setModel(PersonScheduleModel $model): self
     {
+        /** @phpstan-ignore-next-line */
         if (is_array($this->disabled) && isset($this->disabled[$model->schedule_item_id])) {
             unset($this->disabled[$model->schedule_item_id]);
         }

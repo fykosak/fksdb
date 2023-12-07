@@ -93,7 +93,7 @@ class ScheduleItemForm extends EntityFormComponent
             'long_description_cs' => ['required' => false],
             'long_description_en' => ['required' => false],
             'payable' => ['required' => false],
-            'available'=>['required' => false],
+            'available' => ['required' => false],
             'begin' => ['required' => false],
             'end' => ['required' => false],
             'capacity' => ['required' => false],
