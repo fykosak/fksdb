@@ -996,6 +996,9 @@ orm:
             payable:
                 type: bool
                 title: _('Is item payable via FKSDB?')
+            available:
+                type: bool
+                title: _('Is item available via GUI?')
             name_en:
                 type: string
                 title: _('Name en')

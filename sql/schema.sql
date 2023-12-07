@@ -587,9 +587,9 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team`
 (
-    `fyziklani_team_id` INT                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`          INT(11)                    NOT NULL,
-    `name`              VARCHAR(30)                NOT NULL,
+    `fyziklani_team_id` INT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT(11)          NOT NULL,
+    `name`              VARCHAR(30)      NOT NULL,
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
@@ -601,19 +601,30 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'missed',
         'disqualified',
         'cancelled'
-        )                                          NOT NULL DEFAULT 'init',
-    `category`          ENUM ('A','B','C','O','F') NOT NULL,
-    `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
-    `note`              TEXT                       NULL     DEFAULT NULL,
-    `internal_note`     TEXT                       NULL     DEFAULT NULL,
-    `password`          CHAR(40)                   NULL     DEFAULT NULL,
-    `points`            INT(11)                    NULL     DEFAULT NULL,
-    `rank_category`     INT(11)                    NULL     DEFAULT NULL,
-    `rank_total`        INT(11)                    NULL     DEFAULT NULL,
-    `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL,
-    `origin`            TEXT                       NULL     DEFAULT NULL,
+        )                                NOT NULL DEFAULT 'init',
+    `category`          ENUM (
+        'A',
+        'B',
+        'C',
+        'O',
+        'F'
+        )                                NOT NULL,
+    `created`           TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `phone`             VARCHAR(30)      NULL     DEFAULT NULL,
+    `note`              TEXT             NULL     DEFAULT NULL,
+    `internal_note`     TEXT             NULL     DEFAULT NULL,
+    `password`          CHAR(40)         NULL     DEFAULT NULL,
+    `points`            INT(11)          NULL     DEFAULT NULL,
+    `rank_category`     INT(11)          NULL     DEFAULT NULL,
+    `rank_total`        INT(11)          NULL     DEFAULT NULL,
+    `force_a`           TINYINT(1)       NULL     DEFAULT NULL,
+    `game_lang`         ENUM ('cs','en') NULL     DEFAULT NULL,
+    `origin`            TEXT             NULL     DEFAULT NULL,
+    `scholarship`       ENUM (
+        'none',
+        'half',
+        'full'
+        )                                NOT NULL DEFAULT 'none',
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
@@ -1137,6 +1148,7 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
     `price_czk`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `price_eur`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `payable`             BOOL           NOT NULL DEFAULT FALSE,
+    `available`           BOOL           NOT NULL DEFAULT TRUE,
     `name_cs`             VARCHAR(256)   NULL     DEFAULT NULL,
     `name_en`             VARCHAR(256)   NULL     DEFAULT NULL,
     `capacity`            INT(11)        NULL     DEFAULT NULL,

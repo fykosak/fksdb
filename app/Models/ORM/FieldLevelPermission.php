@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM;
 
 class FieldLevelPermission
 {
-
     public const ALLOW_ANYBODY = 1;
     public const ALLOW_BASIC = 16;
     public const ALLOW_RESTRICT = 128;

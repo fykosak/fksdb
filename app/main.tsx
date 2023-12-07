@@ -25,7 +25,7 @@ import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
-import PaymentCode from 'FKSDB/Components/Grids/Payment/payment-code';
+import PaymentCode from 'FKSDB/Components/Payments/payment-code';
 
 const translator = new Translator();
 

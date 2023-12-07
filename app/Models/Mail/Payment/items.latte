@@ -28,11 +28,11 @@
         </tr>
         </thead>
         <tbody>
-        {foreach $model->getRelatedPersonSchedule() as $personSchedule}
-            {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+        {foreach $model->getSchedulePayment() as $schedulePayment}
+            {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
             <tr>
-                <td>{$personSchedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
-                <td>{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
+                <td>{$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
+                <td>{$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
             </tr>
         {/foreach}
         </tbody>

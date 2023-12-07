@@ -99,6 +99,11 @@ class Router
 
     private static function addEventsModule(RouteList $list): void
     {
+        $list->addRoute('', [
+            'module' => 'Event',
+            'presenter' => 'Dispatch',
+            'action' => 'default',
+        ]);
         $list->addRoute(
             '<eventId [0-9]+>/schedule/<action>',
             [
@@ -132,6 +137,13 @@ class Router
             [
                 'module' => 'Event',
                 'presenter' => 'Payments',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/teams[/<id [0-9]+>]/<action=default>',
+            [
+                'module' => 'Event',
+                'presenter' => 'Team',
             ]
         );
     }

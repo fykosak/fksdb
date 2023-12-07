@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids\Payment;
+namespace FKSDB\Components\Payments;
 
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Models\Exceptions\BadTypeException;

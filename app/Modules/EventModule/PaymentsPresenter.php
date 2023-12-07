@@ -189,7 +189,9 @@ final class PaymentsPresenter extends BasePresenter
         return time() < $this->getEvent()->begin->getTimestamp();
     }
 
-
+    /**
+     * @throws EventNotFoundException
+     */
     protected function isEnabled(): bool
     {
         try {
@@ -197,7 +199,7 @@ final class PaymentsPresenter extends BasePresenter
         } catch (\Throwable $exception) {
             return false;
         }
-        return true;
+        return $this->getEvent()->event_id === 180;
     }
 
     private function getMachine(): PaymentMachine

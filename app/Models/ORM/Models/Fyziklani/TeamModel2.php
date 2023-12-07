@@ -38,6 +38,7 @@ use Nette\Security\Resource;
  * @property-read int|null $rank_category
  * @property-read int|null $force_a
  * @property-read GameLang|null $game_lang
+ * @property-read string $scholarship
  * @phpstan-type SerializedTeamModel array{
  *      teamId:int,
  *      name:string,

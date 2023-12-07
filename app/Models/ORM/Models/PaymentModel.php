@@ -53,19 +53,6 @@ final class PaymentModel extends Model implements Resource
     public const RESOURCE_ID = 'payment';
 
     /**
-     * @phpstan-return PersonScheduleModel[]
-     */
-    public function getRelatedPersonSchedule(): array
-    {
-        $items = [];
-        /** @var SchedulePaymentModel $row */
-        foreach ($this->getSchedulePayment() as $row) {
-            $items[] = $row->person_schedule;
-        }
-        return $items;
-    }
-
-    /**
      * @phpstan-return TypedGroupedSelection<SchedulePaymentModel>
      */
     public function getSchedulePayment(): TypedGroupedSelection
@@ -82,7 +69,7 @@ final class PaymentModel extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return $this->state->value == PaymentState::IN_PROGRESS;
+        return $this->state->value === PaymentState::IN_PROGRESS;
     }
 
     /**

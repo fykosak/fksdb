@@ -14,9 +14,6 @@ use Fykosak\NetteORM\Model\Model;
  */
 class PersonHistoryAdapter extends Adapter
 {
-    /**
-     * @param PersonModel $model
-     */
     protected function getModels(Model $model): iterable
     {
         return $model->getHistories();//@phpstan-ignore-line

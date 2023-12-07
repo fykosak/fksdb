@@ -14,6 +14,6 @@ class PaymentEditableAssertion implements Assertion
     {
         /** @var PaymentModel|null $payment */
         $payment = $acl->getQueriedResource();
-        return !isset($payment) || $payment->state->value == PaymentState::IN_PROGRESS;
+        return !isset($payment) || $payment->canEdit();
     }
 }

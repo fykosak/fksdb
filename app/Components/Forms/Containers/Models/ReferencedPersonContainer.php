@@ -163,7 +163,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     /** @phpstan-ignore-next-line */
                 } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
-                    $component->setDisabled(false);
+                  //  $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setHtmlAttribute('readonly', 'readonly');
                     if ($component instanceof ContainerWithOptions) {
@@ -173,10 +173,11 @@ class ReferencedPersonContainer extends ReferencedContainer
                     }
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
-                    $component->setDisabled(false);
+                   // $component->setDisabled(false);
                 }
+
                 if ($mode->value == ReferencedIdMode::ROLLBACK) {
-                    $component->setDisabled(false);
+                  //  $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
                     if ($component instanceof AddressDataContainer) {

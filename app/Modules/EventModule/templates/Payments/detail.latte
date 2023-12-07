@@ -88,22 +88,22 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Payments contains'}</h2>
-            {foreach $model->getRelatedPersonSchedule() as $personSchedule}
-                {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $personSchedule}
+            {foreach $model->getSchedulePayment() as $schedulePayment}
+                {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
                 <div class="card mb-2">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-1">
-                                <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                                <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Block'}
-                                    : </small>{$personSchedule->schedule_item->schedule_group->name->getText($lang)}
+                                    : </small>{$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Variant'}
-                                    : </small>{$personSchedule->schedule_item->name->getText($lang)}</div>
+                                    : </small>{$schedulePayment->person_schedule->schedule_item->name->getText($lang)}</div>
                             <div class="col-3"><small class="text-muted">{_'Person'}
-                                    : </small>{$personSchedule->person->getFullName()}</div>
-                            <div class="col-2">{$personSchedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
+                                    : </small>{$schedulePayment->person_schedule->person->getFullName()}</div>
+                            <div class="col-2">{$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
                         </div>
                     </div>
                 </div>
