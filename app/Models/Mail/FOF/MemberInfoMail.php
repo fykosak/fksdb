@@ -15,7 +15,7 @@ class MemberInfoMail extends InfoEmail
     protected function getTemplatePath(TeamHolder $holder): string
     {
         $lang = $holder->getModel()->game_lang->value;
-        return __DIR__ . DIRECTORY_SEPARATOR . "organizer.info.$lang.latte";
+        return __DIR__ . DIRECTORY_SEPARATOR . "member.info.$lang.latte";
     }
 
     protected function getData(TeamHolder $holder): array

@@ -4,14 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\FOF;
 
+use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Modules\Core\Language;
+use Nette\DI\Container;
 
 class OrganizerInfoMail extends InfoEmail
 {
-    /** @phpstan-use OrganizerMailTrait<TeamHolder> */
-    use OrganizerMailTrait;
+    private Container $container;
+
+    public function injectContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
 
     protected function getTemplatePath(TeamHolder $holder): string
     {
@@ -39,7 +45,7 @@ class OrganizerInfoMail extends InfoEmail
             $this->mailTemplateFactory->renderWithParameters(
                 $this->getTemplatePath($holder),
                 [
-                    'logger' => $this->getMessageLog($holder),
+                    'tests' => DataTestFactory::getTeamTests($this->container),
                     'holder' => $holder,
                 ],
                 Language::tryFrom(Language::CS)

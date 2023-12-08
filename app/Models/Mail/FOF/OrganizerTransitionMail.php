@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\FOF;
 
+use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
+use Nette\DI\Container;
 
 /**
  * @phpstan-extends MailCallback<TeamHolder>
  */
 class OrganizerTransitionMail extends MailCallback
 {
-    /** @phpstan-use OrganizerMailTrait<TeamHolder> */
-    use OrganizerMailTrait;
+    private Container $container;
 
+    public function injectContainer(Container $container): void
+    {
+        $this->container = $container;
+    }
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         $transitionId = self::resolveLayoutName($transition);
@@ -48,7 +53,7 @@ class OrganizerTransitionMail extends MailCallback
             $this->mailTemplateFactory->renderWithParameters(
                 $this->getTemplatePath($holder, $transition),
                 [
-                    'logger' => $this->getMessageLog($holder),
+                    'tests' => DataTestFactory::getTeamTests($this->container),
                     'holder' => $holder,
                 ],
                 Language::tryFrom(Language::CS)
