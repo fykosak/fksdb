@@ -16,7 +16,7 @@ trait OrganizerMailTrait
 {
     private Container $container;
 
-    public function injectDataTestFactory(Container $container): void
+    public function injectContainer(Container $container): void
     {
         $this->container = $container;
     }

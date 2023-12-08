@@ -10,7 +10,7 @@
         tým byl zaregistrován na FOF!!! Níže posíláme stručný přehled informací o týmu:
     </p>
     {include detail from './detail.cs.latte',holder:$holder}
-    {var $messages = $logger->getMessages()}
+    {*var $messages = $logger->getMessages()}
     {if count($messages)}
         {foreach $messages as $message}
             {if $message->level === Fykosak\Utils\Logging\Message::LVL_ERROR}
@@ -21,7 +21,7 @@
         {/foreach}
     {else}
         <p style="color:green">Sú čistí!</p>
-    {/if}
+    {/if*}
     <p>
         Tvoje milovaná FKSDB
     </p>
