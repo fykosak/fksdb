@@ -27,18 +27,19 @@
             </div>*}
             {switch $model->state->value}
                 {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
-                <p>O prijatí a úspešnom spracovaní platby budete informovaný emailom. Ak ste potvrenie neobdržali do 5
-                    pracovných dní od platby, prosím kontaktujte nás TODO email</p>
+                <p>
+                    O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte do týdne od provedení převodu, kontaktujte nás na<a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+                </p>
             {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
-                <p>Platba je stále rozpracovaná, ak ste vybrali všetky položky ktoré ste vybrali kliknite na TODO, a tým
-                    vytvoríte platobné pokny. Po vygenrovaní pokynov sa položky už nedajú z platby odstrániť ani meniť,
-                    platba sa dá avšak ešte celá zrušiť!</p>
+                <p>
+                    Platba je stále nevytvořená; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
+                </p>
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
-                <p>Platbu sme úspešne prijali, Ďakujeme</p>
+                <p>Platbu jsme úspěšně přijali, děkujeme!</p>
             {/switch}
             {if $model->want_invoice}
                 <p>
-                    K tejto platbe evudujeme záujem o vystvenie faktúry. Faktura bude poslaná na váš email, do niekoľkých dní po obdržaní paltby.
+                    U této platby evidujeme požadavek na vytvoření faktury. Do několika dní od obdržení platby ji pošleme na váš e-mail.
                 </p>
             {/if}
         </div>

@@ -5,11 +5,10 @@
         <div class="container">
             {if !$model->canEdit()}
                 <div class="alert-danger alert">
-                    <h3>Platba má napočítanú cenu!</h3>
-                    Platba má napočítanú cenu, zmeny sa <b>nepremietnu</b> do výslednej ceny.
-                    Pred týmto zásahom kontaktujte aministrátovrov systému.
-                    Úpravy spôsobia nekonzistenciu dát.
-                    <h3><strong>Mišo vás zabije, naozaj!!!</strong></h3>
+                    <h3>Platba má již napočítanou cenu!</h3>
+                    Platba už má napočítanou cenu, změny se <b>nepromítnou</b> do výsledné ceny.
+                    Před tímto zásahem kontaktujte administrátory, jinak způsobíte nekonzistenci v datech (= zlo).
+                    <h3><strong>Mišo a Martin vás zabijou, naozaj!!!</strong></h3>
                 </div>
             {/if}
         {control editForm}
