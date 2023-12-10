@@ -7,7 +7,7 @@
 {block body}
     <div>
         <p>
-            Dobrý den,<br/>
+            Dobrý den,<br/><br/>
             byla Vám vytvořena platba #{$model->payment_id} za Fyziklání 2024 na částku
             <b>{$model->getPrice()->__toString()}</b>.
         </p>
@@ -19,7 +19,7 @@
             Prosíme o její uhrazení převodem na účet co nejdříve, nejpozději do konce registrace. Jakmile platbu zaregistrujeme, bude Vám na tento e-mail zasláno potvrzení.
         </p>
         <p>
-            Pro snadné zpracování prosím uveďte v platbě Váš variabilní a konstantní symbol. V případě, že symbol neuvedete, nebudeme vědět, že je platba od Vás.
+            Pro snadné zpracování prosím uveďte v platbě Váš variabilní a konstantní symbol. V případě, že symbol neuvedete, nebudeme vědět, že je platba od Vás. Pokud Vaše banka nenabízí možnost uvedení symbolů, uveďte je prosím do zprávy příjemce, například "VS: 123456".
         </p>
         {include './parameters.latte', lang: 'cs'}
         <p>

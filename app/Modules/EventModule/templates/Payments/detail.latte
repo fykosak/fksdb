@@ -28,11 +28,11 @@
             {switch $model->state->value}
                 {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
                 <p>
-                    O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte do týdne od provedení převodu, kontaktujte nás na<a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+                    O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte do týdne od provedení převodu, kontaktujte nás na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
                 </p>
             {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
                 <p>
-                    Platba je stále nevytvořená; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
+                    Platba je stále není vytvořena; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
                 </p>
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
                 <p>Platbu jsme úspěšně přijali, děkujeme!</p>

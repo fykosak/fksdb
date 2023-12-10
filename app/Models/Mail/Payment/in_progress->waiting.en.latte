@@ -2,23 +2,23 @@
 {varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
 {var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
 
-{define subject}Fyziklani Payment{/define}
+{define subject}Fyziklani payment{/define}
 
 {block body}
     <div>
         <p>
-            Hello,<br/>
-            The payment number #{$model->payment_id} in total sum <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2024.
+            Hello,<br/><br/>
+            The payment number #{$model->payment_id} in total sum of <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2024.
         </p>
         <p>
             The payment includes:
         </p>
         {include './items.latte', lang: 'en'}
         <p>
-            Please transfer the money to the bank account below as soon as possible, no later than by the end of registration. As soon as we receive the payment, we will send you a confirmation e-mail.
+            Please transfer the money to the bank account below as soon as possible, no later than by the end of the registration. As soon as we receive the payment, we will send you a confirmation e-mail.
         </p>
         <p>
-            Please use the variable symbol which have been assigned to your payment, otherwise we will not be able to recognize the payment is from you.
+            Please use the variable symbol which has been assigned to your payment, otherwise we will not be able to recognize the payment is from you. Write it into the reference of the payment, e.g. as "VS: 123456".
         </p>
         {include './parameters.latte', lang: 'en'}
         <p>
