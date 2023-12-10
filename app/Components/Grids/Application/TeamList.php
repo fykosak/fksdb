@@ -54,7 +54,10 @@ final class TeamList extends BaseList
             'state'
         );
         $row->addComponent(
-            new SimpleItem($this->container, '<span class="text-muted">scholarship:</span> @fyziklani_team.scholarship'),
+            new SimpleItem(
+                $this->container,
+                '<span class="text-muted">scholarship:</span> @fyziklani_team.scholarship'
+            ),
             'scholarship'
         );
         $row->addComponent(
