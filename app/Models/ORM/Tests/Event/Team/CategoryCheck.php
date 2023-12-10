@@ -11,7 +11,6 @@ use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProces
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 

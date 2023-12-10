@@ -36,16 +36,12 @@ final class TeamList extends BaseList
         $this->event = $event;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . '../Components/list.panel.latte';
-    }
-
     protected function configure(): void
     {
         $this->filtered = true;
         $this->paginate = false;
         $this->counter = true;
+        $this->mode = self::ModePanel;
         $this->setTitle(// @phpstan-ignore-line
             new TemplateItem(// @phpstan-ignore-line
                 $this->container,
@@ -56,6 +52,13 @@ final class TeamList extends BaseList
         $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.state'),
             'state'
+        );
+        $row->addComponent(
+            new SimpleItem(
+                $this->container,
+                '<span class="text-muted">scholarship:</span> @fyziklani_team.scholarship'
+            ),
+            'scholarship'
         );
         $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.category'),

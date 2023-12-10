@@ -202,6 +202,15 @@ final class PersonModel extends Model implements Resource
         return $this->getPostContact(PostContactType::from(PostContactType::PERMANENT)) ??
             $this->getPostContact(PostContactType::from(PostContactType::DELIVERY));
     }
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
+    public function getPayments(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PaymentModel> $selection */
+        $selection = $this->related(DbNames::TAB_PAYMENT, 'person_id');
+        return $selection;
+    }
 
     /**
      * @phpstan-return TypedGroupedSelection<EventParticipantModel>

@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\FOF\MemberInfoMail;
+use FKSDB\Models\Mail\FOF\OrganizerInfoMail;
 use FKSDB\Models\Mail\FOF\TeacherInfoMail;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -151,6 +152,7 @@ abstract class TeamForm extends EntityFormComponent
             if (isset($this->model) && $this->event->event_type_id === 1) {
                 (new TeacherInfoMail($this->container))($holder);
                 (new MemberInfoMail($this->container))($holder);
+                (new OrganizerInfoMail($this->container))($holder);
             }
 
             $this->teamService->explorer->commit();

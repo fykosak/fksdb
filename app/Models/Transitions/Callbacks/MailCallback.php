@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
@@ -12,6 +11,7 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -19,6 +19,7 @@ use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 /**
+ * @phpstan-import-type TRenderedData from MailTemplateFactory
  * @phpstan-template THolder of ModelHolder
  * @implements Statement<void,THolder|Transition<THolder>>
  */
@@ -26,8 +27,8 @@ abstract class MailCallback implements Statement
 {
     protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
-    protected AccountManager $accountManager;
     protected AuthTokenService $authTokenService;
+    protected LoginService $loginService;
 
     public function __construct(Container $container)
     {
@@ -38,11 +39,11 @@ abstract class MailCallback implements Statement
         EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
-        AccountManager $accountManager
+        LoginService $loginService
     ): void {
         $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
-        $this->accountManager = $accountManager;
+        $this->loginService = $loginService;
         $this->authTokenService = $authTokenService;
     }
 
@@ -59,35 +60,37 @@ abstract class MailCallback implements Statement
          */
         [$holder, $transition] = $args;
         foreach ($this->getPersons($holder) as $person) {
-            $data = $this->getData($holder, $transition);
+            $data = array_merge(
+                $this->getData($holder),
+                $this->createMessageText($holder, $transition, $person)
+            );
             $data['recipient_person_id'] = $person->person_id;
-            $data['text'] = $this->createMessageText($holder, $transition, $person);
             $this->emailMessageService->addMessageToSend($data);
         }
     }
 
     /**
-     * @phpstan-param Transition<THolder> $transition
      * @throws BadTypeException
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
+     * @phpstan-return TRenderedData
      */
-    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'holder' => $holder,
                 'token' => $this->createToken($person, $holder),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang())
         );
     }
 
     final protected function resolveLogin(PersonModel $person): LoginModel
     {
-        return $person->getLogin() ?? $this->accountManager->createLogin($person);
+        return $person->getLogin() ?? $this->loginService->createLogin($person);
     }
 
     /**
@@ -114,27 +117,23 @@ abstract class MailCallback implements Statement
     }
 
     /**
-     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
      */
     abstract protected function getTemplatePath(ModelHolder $holder, Transition $transition): string;
 
     /**
-     * @phpstan-param Transition<THolder> $transition
      * @phpstan-param THolder $holder
-     * @phpstan-param Transition<THolder> $transition
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      *     reply_to?:string,
      * }
      */
-    abstract protected function getData(ModelHolder $holder, Transition $transition): array;
+    abstract protected function getData(ModelHolder $holder): array;
 
     /**
-     * @template TStaticHolder of \FKSDB\Models\Transitions\Holder\ModelHolder
+     * @template TStaticHolder of ModelHolder
      * @phpstan-param  Transition<TStaticHolder> $transition
      */
     public static function resolveLayoutName(Transition $transition): string

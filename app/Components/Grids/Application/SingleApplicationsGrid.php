@@ -87,10 +87,6 @@ class SingleApplicationsGrid extends BaseGrid
         return $query;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;

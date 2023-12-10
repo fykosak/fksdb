@@ -9,7 +9,6 @@ use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 

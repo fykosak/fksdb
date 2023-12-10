@@ -6,6 +6,7 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -41,11 +42,11 @@ class PaymentListWebModel extends WebModel
         foreach ($event->getPayments() as $payment) {
             $paymentData = $payment->__toArray();
             $paymentData['items'] = [];
-            /** @var PersonScheduleModel $personSchedule */
-            foreach ($payment->getRelatedPersonSchedule() as $personSchedule) {
+            /** @var SchedulePaymentModel $schedulePayment */
+            foreach ($payment->getSchedulePayment() as $schedulePayment) {
                 $paymentData['items'][] = [
-                    'price' => $personSchedule->schedule_item->getPrice()->__serialize(),
-                    'itemId' => $personSchedule->schedule_item_id,
+                    'price' => $schedulePayment->person_schedule->schedule_item->getPrice()->__serialize(),
+                    'itemId' => $schedulePayment->person_schedule->schedule_item_id,
                 ];
             }
             $data[] = $paymentData;

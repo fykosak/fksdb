@@ -73,7 +73,7 @@ class Router
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
         $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
 
-        self::addScheduleSubmodule($service->withPath('events/'));
+        self::addEventsModule($service->withPath('events/'));
 
         $service->addRoute(
             '<module event|game>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
@@ -97,8 +97,13 @@ class Router
         return $service;
     }
 
-    private static function addScheduleSubmodule(RouteList $list): void
+    private static function addEventsModule(RouteList $list): void
     {
+        $list->addRoute('', [
+            'module' => 'Event',
+            'presenter' => 'Dispatch',
+            'action' => 'default',
+        ]);
         $list->addRoute(
             '<eventId [0-9]+>/schedule/<action>',
             [
@@ -107,31 +112,38 @@ class Router
             ]
         );
         $list->addRoute(
-            '<eventId [0-9]+>/schedule/groups[/<id>]/<action>',
+            '<eventId [0-9]+>/schedule/groups[/<id [0-9]+>]/<action>',
             [
                 'module' => 'Schedule',
                 'presenter' => 'Group',
             ]
         );
         $list->addRoute(
-            '<eventId [0-9]+>/schedule/groups[/<id>]/<action>',
-            [
-                'module' => 'Schedule',
-                'presenter' => 'Group',
-            ]
-        );
-        $list->addRoute(
-            '<eventId [0-9]+>/schedule/groups[/<groupId>]/items[/<id>]/<action>',
+            '<eventId [0-9]+>/schedule/groups/<groupId [0-9]+>/items[/<id [0-9]+>]/<action>',
             [
                 'module' => 'Schedule',
                 'presenter' => 'Item',
             ]
         );
         $list->addRoute(
-            '<eventId [0-9]+>/schedule/persons[/<id>]/<action>',
+            '<eventId [0-9]+>/schedule/persons[/<id [0-9]+>]/<action>',
             [
                 'module' => 'Schedule',
                 'presenter' => 'Person',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/payments[/<id [0-9]+>]/<action>',
+            [
+                'module' => 'Event',
+                'presenter' => 'Payments',
+            ]
+        );
+        $list->addRoute(
+            '<eventId [0-9]+>/teams[/<id [0-9]+>]/<action=default>',
+            [
+                'module' => 'Event',
+                'presenter' => 'Team',
             ]
         );
     }

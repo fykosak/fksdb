@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
@@ -30,6 +31,9 @@ class TeamToPersonHistoryAdapter extends Adapter
         return $models;
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function getLogPrepend(Model $model): Html
     {
         return Html::el()

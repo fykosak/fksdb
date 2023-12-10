@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
+use FKSDB\Components\EntityForms\ScheduleItemForm;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\CodeComponent;
 use FKSDB\Components\Schedule\PersonGrid;
@@ -12,6 +12,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -26,6 +27,9 @@ final class ItemPresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     private ScheduleItemService $service;
+
+    /** @persistent */
+    public ?int $groupId = null;
 
     final public function injectService(ScheduleItemService $service): void
     {
@@ -95,6 +99,19 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
+     * @throws EventNotFoundException
+     */
+    private function getGroup(): ?ScheduleGroupModel
+    {
+        if (!$this->groupId) {
+            return null;
+        }
+        /** @var ScheduleGroupModel|null $group */
+        $group = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->groupId)->fetch();
+        return $group;
+    }
+
+    /**
      * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
@@ -106,9 +123,9 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): ScheduleItemFormContainer
+    protected function createComponentCreateForm(): ScheduleItemForm
     {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), null);
+        return new ScheduleItemForm($this->getGroup(), $this->getContext(), null);
     }
 
     /**
@@ -119,9 +136,9 @@ final class ItemPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): ScheduleItemFormContainer
+    protected function createComponentEditForm(): ScheduleItemForm
     {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), $this->getEntity());
+        return new ScheduleItemForm($this->getGroup(), $this->getContext(), $this->getEntity());
     }
 
     /**

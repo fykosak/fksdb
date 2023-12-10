@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Tests\PersonInfo;
 
 use FKSDB\Components\DataTest\TestLogger;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 

@@ -17,6 +17,6 @@ parameters:
         - app/Models/Results/Models/SchoolCumulativeResultsModel.php
         - app/Models/News.php
         - libs/Forms/KdybyReplicator/KdybyReplicator.php
-        - app/Models/WebService/*
-        #- app/Models/WebService/AESOP/*
+        #- app/Models/WebService/*
+        - app/Models/WebService/AESOP/*
 

@@ -72,21 +72,25 @@ try {
 
     $mailService = $container->getByType(EmailMessageService::class);
     $mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
-    $text = $mailTemplateFactory->renderReport2(
-        [
-            'model' => $model,
-            'tests' => $tests,
-        ],
-        Language::from(Language::CS)
+    $mailService->addMessageToSend(
+        array_merge(
+            $mailTemplateFactory->renderWithParameters(
+                __DIR__ . '/report.latte',
+                [
+                    'model' => $model,
+                    'tests' => $tests,
+                ],
+                Language::from(Language::CS)
+            ),
+            [
+                'recipient' => $argv[2],
+                'sender' => 'fksdb@fykos.cz',
+                'reply_to' => 'noreply@fykos.cz',
+                'subject' => 'Seznam chyb',
+                'priority' => 0,
+            ]
+        )
     );
-    $mailService->addMessageToSend([
-        'recipient' => $argv[2],
-        'sender' => 'fksdb@fykos.cz',
-        'reply_to' => 'noreply@fykos.cz',
-        'subject' => 'Seznam chyb',
-        'text' => $text,
-        'priority' => 0,
-    ]);
 } catch (\Throwable $exception) {
     echo get_class($exception) . "\n";
     echo $exception->getMessage() . "\n";

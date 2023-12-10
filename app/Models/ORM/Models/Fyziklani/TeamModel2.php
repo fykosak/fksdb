@@ -38,6 +38,7 @@ use Nette\Security\Resource;
  * @property-read int|null $rank_category
  * @property-read int|null $force_a
  * @property-read GameLang|null $game_lang
+ * @property-read TeamScholarship $scholarship
  * @phpstan-type SerializedTeamModel array{
  *      teamId:int,
  *      name:string,
@@ -185,13 +186,16 @@ final class TeamModel2 extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = TeamState::tryFrom($value);
+                $value = TeamState::from($value);
                 break;
             case 'category':
-                $value = TeamCategory::tryFrom($value);
+                $value = TeamCategory::from($value);
                 break;
             case 'game_lang':
                 $value = GameLang::tryFrom($value);
+                break;
+            case 'scholarship':
+                $value = TeamScholarship::from($value);
                 break;
         }
         return $value;

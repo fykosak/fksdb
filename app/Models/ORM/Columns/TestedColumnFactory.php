@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\DataTest\TestLogger;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Logging\Logger;
 
 interface TestedColumnFactory
 {

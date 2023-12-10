@@ -31,11 +31,6 @@ final class ScheduleList extends BaseList
         $this->event = $event;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . '../Grids/Components/list.panel.latte';
-    }
-
     /**
      * @phpstan-return TypedGroupedSelection<ScheduleGroupModel>
      */
@@ -50,6 +45,7 @@ final class ScheduleList extends BaseList
     protected function configure(): void
     {
         $this->counter = false;
+        $this->mode = self::ModePanel;
         //    $this->classNameCallback = fn(ScheduleGroupModel $model) => 'alert alert-secondary';
         $this->setTitle( // @phpstan-ignore-line
             new TemplateItem( // @phpstan-ignore-line
