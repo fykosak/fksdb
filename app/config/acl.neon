@@ -178,7 +178,7 @@ acl:
 ##PAYMENTS (module)
     - allow(registered, payment, detail, @selfAssertion)
     - allow(registered, payment, edit, and(@selfAssertion,@paymentEditableAssertion))
-    - allow(registered, payment, create)
+    - allow([event.fyziklani.member,event.fyziklani.teacher], payment, create)
     - allow(eventManager, payment, ::constant(Nette\Security\Permission::ALL))
 
 ## WAREHOUSE MODULE
