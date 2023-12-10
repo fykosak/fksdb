@@ -100,7 +100,7 @@ final class AclGrid extends BaseList
         foreach ($this->roleService->getTable() as $role) {
             $items[$role->role_id] = $role->name;
         }
-        $form->addSelect('role', _('Role'), $items)->setPrompt(_('--select role--'));
+        $form->addSelect('role', _('Role'), $items)->setPrompt(_('Select role'));
     }
 
     /**

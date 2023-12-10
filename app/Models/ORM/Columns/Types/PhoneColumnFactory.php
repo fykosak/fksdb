@@ -40,7 +40,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         } else {
             $control = new TextInput($this->getTitle());
         }
-        $control->setHtmlAttribute('placeholder', _('+XXXXXXXXXXXX'));
+        $control->setHtmlAttribute('placeholder', '+XXXXXXXXXXXX');
         $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)

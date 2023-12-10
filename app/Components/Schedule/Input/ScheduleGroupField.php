@@ -51,7 +51,7 @@ class ScheduleGroupField extends SelectBox
                 $disabled[] = $item->getPrimary();
             }
         }
-        $this->setItems($items)->setPrompt(_('-- not selected --'))->setDisabled($disabled);
+        $this->setItems($items)->setPrompt(_('Not selected'))->setDisabled($disabled);
     }
 
     public function setModel(PersonScheduleModel $model): self

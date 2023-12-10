@@ -69,7 +69,7 @@ final class PaymentList extends BaseList
         foreach (PaymentState::cases() as $case) {
             $states[$case->value] = $case->label();
         }
-        $form->addSelect('state', ('State'), $states)->setPrompt(_('-- select state --'));
+        $form->addSelect('state', ('State'), $states)->setPrompt(_('Select state'));
         $form->addText('vs', _('Variable symbol'))->setHtmlType('number');
     }
 
