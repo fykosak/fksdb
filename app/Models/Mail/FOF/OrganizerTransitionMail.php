@@ -27,7 +27,7 @@ class OrganizerTransitionMail extends MailCallback
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         $transitionId = self::resolveLayoutName($transition);
-        return __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.cs.latte";
+        return __DIR__ . DIRECTORY_SEPARATOR . "organizer.$transitionId.cs.latte";
     }
 
     protected function getData(ModelHolder $holder): array
