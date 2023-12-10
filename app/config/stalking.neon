@@ -102,11 +102,8 @@ parameters:
             label: Payment
             minimalPermission: 128
             table: payment
-            links:
-                - payment.detail
             rows:
                 - payment.payment_id
-                - event.name
                 - payment.price
                 - payment.state
         contestant:

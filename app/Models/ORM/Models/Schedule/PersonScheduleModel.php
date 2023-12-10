@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
@@ -35,6 +36,18 @@ final class PersonScheduleModel extends Model implements Resource
         return $this->person->getFullName() . ': '
             . $this->schedule_item->schedule_group->name->getText($lang->value) . ' - '
             . $this->schedule_item->name->getText($lang->value);
+    }
+
+    public function isPaid(): bool
+    {
+        if (!$this->schedule_item->payable) {
+            return true; // ak sa nedá zaplatiť je zaplatená
+        }
+        $payment = $this->getPayment();
+        if (!$payment) {
+            return false;
+        }
+        return $payment->state->value === PaymentState::RECEIVED;
     }
 
     /**

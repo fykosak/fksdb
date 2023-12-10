@@ -41,7 +41,7 @@ final class CodeRedirectComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->elementPrototype->target = '_blank';
-        $form->addText('code', _('Code'))->setRequired(true);
+        $form->addText('code', _('Code'))->setRequired();
         $form->addSubmit('detail', _('button.detail'))->onClick[] =
             fn(Button $button) => $this->handleClick($form, 'detail');
         $form->addSubmit('edit', _('button.edit'))->onClick[] =

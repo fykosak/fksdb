@@ -24,14 +24,13 @@ class InvitedMailCallback extends EventParticipantCallback
     }
 
     /**
-     * @phpstan-param Transition<BaseHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
+     *     blind_carbon_copy?:string,
      *     subject:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'subject' => 'Pozvánka na Letní tábor Výfuku',

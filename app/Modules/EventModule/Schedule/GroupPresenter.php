@@ -56,7 +56,7 @@ final class GroupPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-clipboard-list'
+            $this->getEntity()->schedule_group_type->getIconName()
         );
     }
 

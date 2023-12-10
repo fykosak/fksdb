@@ -10,4 +10,5 @@ export interface ScheduleItemModel {
     name: LangMap<string, 'cs' | 'en'>;
     requireIdNumber: boolean;
     description: LangMap<string, 'cs' | 'en'>;
+    available: boolean;
 }

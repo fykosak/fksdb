@@ -183,10 +183,10 @@ class AllSubmitsGrid extends BaseGrid
             $states[$state->value] = $state->label();
         }
 
-        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
-        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
+        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('Select team'));
+        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('Select task'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
-        $form->addSelect('state', _('State'), $states)->setPrompt(_('--Select state--'));
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('Select state'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addCheckbox('warnings', _('Show warnings'))
             ->setOption('description', _('Show unchecked submits inserted more that 10 minutes ago.'));

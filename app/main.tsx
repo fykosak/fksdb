@@ -25,6 +25,7 @@ import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
+import PaymentCode from 'FKSDB/Components/Payments/payment-code';
 
 const translator = new Translator();
 
@@ -86,6 +87,7 @@ renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeP
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
+renderer.hashMapLoader.registerDataComponent('payment.qrcode', PaymentCode);
 
 window.addEventListener('DOMContentLoaded', () => {
 

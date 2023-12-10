@@ -3,7 +3,7 @@
 {varType bool $counter}
 {varType array $flashes}
 {varType bool $filtered}
-{varType Fykosak\NetteORM\Model[]|Nette\Database\Table\Selection $models}
+{varType Fykosak\NetteORM\Model\Model[]|Nette\Database\Table\Selection $models}
 {php $control->getPaginator()->setItemCount($models->count())}
 {if $paginate}
     {php $models->limit($control->getPaginator()->getLength(),$control->getPaginator()->getOffset())}

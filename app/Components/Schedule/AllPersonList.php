@@ -46,11 +46,6 @@ final class AllPersonList extends BaseList
         $this->personService = $personService;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . '../Grids/Components/list.panel.latte';
-    }
-
     protected function configureForm(Form $form): void
     {
         $form->addText('code', _('Code'));
@@ -96,6 +91,7 @@ final class AllPersonList extends BaseList
     {
         $this->paginate = true;
         $this->filtered = true;
+        $this->mode = self::ModePanel;
         $this->setTitle(new SimpleItem($this->getContext(), '@person.full_name'));// @phpstan-ignore-line
         $row0 = $this->createRow();
         $row0->addComponent(
