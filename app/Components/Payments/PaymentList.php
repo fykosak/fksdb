@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Payments;
 
 use FKSDB\Components\Grids\Components\BaseList;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\PaymentService;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -73,9 +74,6 @@ final class PaymentList extends BaseList
         $form->addText('vs', _('Variable symbol'))->setHtmlType('number');
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function configure(): void
     {
         $this->paginate = true;
@@ -83,6 +81,17 @@ final class PaymentList extends BaseList
         $this->counter = true;
         $this->mode = self::ModePanel;
         $this->traitConfigure();
-        $this->addLink('payment.detail');
+        $this->addButton(
+            new Button(
+                $this->container,
+                $this->getPresenter(),
+                new Title(null, _('button.payment.detail')),
+                fn(PaymentModel $model): array => [
+                    ':Event:Payments:detail',
+                    ['id' => $model->payment_id, 'eventId' => $this->event->event_id],
+                ]
+            ),
+            'detail'
+        );
     }
 }

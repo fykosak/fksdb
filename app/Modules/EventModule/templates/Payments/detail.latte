@@ -27,20 +27,51 @@
             </div>*}
             {switch $model->state->value}
                 {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
-                <p>
-                    O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte do týdne od provedení převodu, kontaktujte nás na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
-                </p>
+                {if $lang === 'cs'}
+                    <p>
+                        O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte
+                        do týdne od provedení převodu, kontaktujte nás na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+                    </p>
+                {else}
+                    <p>
+                        You will be informed by email about the acceptance and successful processing of your payment. If
+                        you do not receive a confirmation within one week of making the transfer, please contact us at
+                        <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>.
+                    </p>
+                {/if}
             {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
-                <p>
-                    Platba je stále není vytvořena; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
-                </p>
+                {if $lang === 'cs'}
+                    <p>
+                        Platba stále nebyla vytvořena; pokud jste vybrali všechny položky, které chcete zaplatit,
+                        přejděte k
+                        vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
+                    </p>
+                {else}
+                    <p>
+                        The payment has still not been created; if you have selected all the items you want to pay for,
+                        proceed to create the payment instructions. After this step, the payment cannot be changed, only
+                        completely cancelled.
+                    </p>
+                {/if}
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
-                <p>Platbu jsme úspěšně přijali, děkujeme!</p>
+                {if $lang === 'cs'}
+                    <p>Platbu jsme úspěšně přijali, děkujeme!</p>
+                {else}
+                    <p>We have successfully received your payment, thank you!</p>
+                {/if}
             {/switch}
             {if $model->want_invoice}
-                <p>
-                    U této platby evidujeme požadavek na vytvoření faktury. Do několika dní od obdržení platby ji pošleme na váš e-mail.
-                </p>
+                {if $lang === 'cs'}
+                    <p>
+                        U této platby evidujeme požadavek na vytvoření faktury. Do několika dní od obdržení platby ji
+                        pošleme na váš e-mail.
+                    </p>
+                {else}
+                    <p>
+                        We have a request for an invoice for this payment. We will send it to your email a few days
+                        after receiving the payment.
+                    </p>
+                {/if}
             {/if}
         </div>
     </div>

@@ -409,13 +409,7 @@ orm:
             invoice_id:
                 type: string
                 title: _('Invoice Id')
-        links:
-            detail:
-                destination: :Event:Payments:detail
-                params:
-                      eventId: event_id
-                      id: payment_id
-                title: _('button.payment.detail')
+        links: []
     person:
         service: FKSDB\Models\ORM\Services\PersonService
         model: FKSDB\Models\ORM\Models\PersonModel
