@@ -908,6 +908,10 @@ orm:
             origin:
                 type: text
                 title: _('How did you come to know about us?') # TODO
+            scholarship:
+                type: enum
+                title: _('Scholarship')
+                class: FKSDB\Models\ORM\Models\Fyziklani\TeamScholarship
         links:
             detail:
                 destination: :Event:Team:detail
