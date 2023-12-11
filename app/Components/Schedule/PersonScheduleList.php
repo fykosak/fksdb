@@ -30,7 +30,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends BaseList<PersonModel,array{code?:string}>
  */
-final class AllPersonList extends BaseList
+final class PersonScheduleList extends BaseList
 {
     private PersonService $personService;
     private EventModel $event;
@@ -150,6 +150,16 @@ final class AllPersonList extends BaseList
                 fn(PersonScheduleModel $model) => [':Schedule:Person:detail', ['id' => $model->person_schedule_id]]
             ),
             'detail'
+        );
+        $relatedTable->addTableButton(
+        /** @phpstan-ignore-next-line */
+            new Button(
+                $this->container,
+                $this->getPresenter(),
+                new Title(null, _('Edit')),
+                fn(PersonScheduleModel $model) => [':Schedule:Person:edit', ['id' => $model->person_schedule_id]]
+            ),
+            'edit'
         );
     }
 }

@@ -6,7 +6,7 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -31,8 +31,6 @@ use Nette\Forms\Form;
  */
 class PaymentForm extends EntityFormComponent
 {
-    private PersonFactory $personFactory;
-    private PersonProvider $personProvider;
     private bool $isOrganizer;
     private PaymentMachine $machine;
     private PaymentService $paymentService;
@@ -60,14 +58,10 @@ class PaymentForm extends EntityFormComponent
 
     final public function injectPrimary(
         PaymentService $paymentService,
-        PersonFactory $personFactory,
-        PersonProvider $personProvider,
         SchedulePaymentService $schedulePaymentService,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
         $this->paymentService = $paymentService;
-        $this->personFactory = $personFactory;
-        $this->personProvider = $personProvider;
         $this->schedulePaymentService = $schedulePaymentService;
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
@@ -87,7 +81,7 @@ class PaymentForm extends EntityFormComponent
     {
         if ($this->isOrganizer) {
             $form->addComponent(
-                $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
+                new PersonSelectBox(true, new PersonProvider($this->container), _('Person')),
                 'person_id'
             );
         }
