@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\DataTest\PersonTestGrid;
-use FKSDB\Components\DataTest\PersonTestComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
+use FKSDB\Components\DataTest\PersonTestComponent;
+use FKSDB\Components\DataTest\PersonTestGrid;
 use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -39,15 +39,11 @@ final class PersonPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private PersonService $personService;
-    private PersonFactory $personFactory;
     private int $userPermissions;
 
-    final public function injectQuarterly(
-        PersonService $personService,
-        PersonFactory $personFactory
-    ): void {
+    final public function injectQuarterly(PersonService $personService): void
+    {
         $this->personService = $personService;
-        $this->personFactory = $personFactory;
     }
 
     public function titleSearch(): PageTitle
@@ -169,7 +165,7 @@ final class PersonPresenter extends BasePresenter
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addComponent(
-            $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->personService)),
+            new PersonSelectBox(true, new PersonProvider($this->getContext()), _('Person')),
             'person_id'
         );
 

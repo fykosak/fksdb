@@ -6,12 +6,11 @@ namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -21,9 +20,7 @@ use Nette\Forms\Form;
 final class HandoutFormComponent extends FormComponent
 {
     public const TASK_PREFIX = 'task';
-    private PersonService $personService;
     private TaskContributionService $taskContributionService;
-    private PersonFactory $personFactory;
     private ContestYearModel $contestYear;
     private int $series;
 
@@ -38,12 +35,8 @@ final class HandoutFormComponent extends FormComponent
     }
 
     final public function injectPrimary(
-        PersonFactory $personFactory,
-        PersonService $personService,
         TaskContributionService $taskContributionService
     ): void {
-        $this->personFactory = $personFactory;
-        $this->personService = $personService;
         $this->taskContributionService = $taskContributionService;
     }
 
@@ -119,14 +112,14 @@ final class HandoutFormComponent extends FormComponent
 
     protected function configureForm(Form $form): void
     {
-        $provider = new PersonProvider($this->personService);
+        $provider = new PersonProvider($this->container);
         $provider->filterOrganizers($this->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->contestYear->getTasks($this->series)->order('tasknr') as $task) {
-            $control = $this->personFactory->createPersonSelect(
+            $control = new PersonSelectBox(
                 false,
-                $task->label . ' ' . $task->name->getText($this->translator->lang),
-                $provider
+                $provider,
+                $task->label . ' ' . $task->name->getText($this->translator->lang)
             );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
