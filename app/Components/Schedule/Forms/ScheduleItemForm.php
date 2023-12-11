@@ -15,7 +15,6 @@ use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use function FKSDB\Components\EntityForms\_;
 
 /**
  * @phpstan-extends EntityFormComponent<ScheduleItemModel>

@@ -151,6 +151,7 @@ final class PersonScheduleList extends BaseList
             ),
             'detail'
         );
+        /** @phpstan-ignore-next-line */
         $relatedTable->addTableButton(
         /** @phpstan-ignore-next-line */
             new Button(
