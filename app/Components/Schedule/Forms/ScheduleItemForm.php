@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms;
+namespace FKSDB\Components\Schedule\Forms;
 
+use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;

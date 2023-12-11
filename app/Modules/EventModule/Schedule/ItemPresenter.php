@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\EntityForms\ScheduleItemForm;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\CodeComponent;
+use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
