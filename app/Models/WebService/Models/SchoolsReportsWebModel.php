@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Components\DataTest\Tests\School\SchoolsProviderAdapter;
-use FKSDB\Components\DataTest\Tests\School\VerifiedSchoolTest;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -26,13 +25,14 @@ class SchoolsReportsWebModel extends WebModel
     {
         set_time_limit(-1);
 
-        $tests = [
-            new SchoolsProviderAdapter(new VerifiedSchoolTest($this->container), $this->container),
-        ];
-        $logger = new MemoryLogger();
+        $tests = SchoolModel::getTests($this->container);
+        $logger = new TestLogger();
         foreach ($tests as $test) {
-            $test->run($logger, $this->user->getIdentity());
+            $test->run($logger, $this->user->getIdentity()); //@phpstan-ignore-line
         }
-        return array_map(fn(Message $message) => $message->__toArray(), $logger->getMessages());
+        return array_map(
+            fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],
+            $logger->getMessages()
+        );
     }
 }

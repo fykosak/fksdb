@@ -85,6 +85,6 @@ final class DispatchGrid extends BaseGrid
         foreach ($this->eventTypeService->getTable() as $eventType) {
             $items[(string)$eventType->event_type_id] = $eventType->name;
         }
-        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('-- select event type --'));
+        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('Select event type'));
     }
 }

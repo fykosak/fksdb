@@ -9,8 +9,9 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
@@ -40,7 +41,7 @@ final class CodeRedirectComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->elementPrototype->target = '_blank';
-        $form->addText('code', _('Code'))->setRequired(true);
+        $form->addText('code', _('Code'))->setRequired();
         $form->addSubmit('detail', _('button.detail'))->onClick[] =
             fn(Button $button) => $this->handleClick($form, 'detail');
         $form->addSubmit('edit', _('button.edit'))->onClick[] =
@@ -80,8 +81,8 @@ final class CodeRedirectComponent extends BaseComponent
     {
         if ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
             return $model;
-        } elseif ($model instanceof PersonModel) {
-            return $model->getApplication($this->event);
+        } elseif ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
+            return $model->fyziklani_team;
         }
         throw new BadRequestException(_('Wrong type of code.'));
     }

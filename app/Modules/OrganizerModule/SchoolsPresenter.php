@@ -23,12 +23,10 @@ final class SchoolsPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private SchoolService $schoolService;
-    private DataTestFactory $dataTestFactory;
 
-    final public function injectServiceSchool(SchoolService $schoolService, DataTestFactory $dataTestFactory): void
+    final public function injectServiceSchool(SchoolService $schoolService): void
     {
         $this->schoolService = $schoolService;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     public function titleCreate(): PageTitle
@@ -83,7 +81,7 @@ final class SchoolsPresenter extends BasePresenter
     public function renderReport(): void
     {
         $tests = [];
-        foreach ($this->dataTestFactory->getSchoolTests() as $test) {
+        foreach (SchoolModel::getTests($this->getContext()) as $test) {
             $tests[$test->getId()] = $test;
         }
         $query = $this->schoolService->getTable();

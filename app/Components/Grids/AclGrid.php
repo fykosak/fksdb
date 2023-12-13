@@ -41,16 +41,12 @@ final class AclGrid extends BaseList
         $this->roleService = $roleService;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'Components/list.panel.latte';
-    }
-
     protected function configure(): void
     {
         $this->paginate = false;
         $this->counter = false;
         $this->filtered = true;
+        $this->mode = self::ModePanel;
         $this->setTitle(
             new RendererItem(
                 $this->container,
@@ -104,7 +100,7 @@ final class AclGrid extends BaseList
         foreach ($this->roleService->getTable() as $role) {
             $items[$role->role_id] = $role->name;
         }
-        $form->addSelect('role', _('Role'), $items)->setPrompt(_('--select role--'));
+        $form->addSelect('role', _('Role'), $items)->setPrompt(_('Select role'));
     }
 
     /**

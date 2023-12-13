@@ -71,7 +71,7 @@ acl:
     - addResource(fyziklani.team)     # route, list, detail, organizer
     #event module
     - addResource(event.dashboard)   # default
-    - addResource(event.payment)     # create, edit, list, detail, delete, organizer, organizer
+    - addResource(payment)     # create, edit, list, detail, delete, organizer, organizer
     - addResource(event.organizer)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
     - addResource(event.schedule.group) # create, edit, list, detail, delete
@@ -176,10 +176,10 @@ acl:
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
 ##PAYMENTS (module)
-    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, detail, @selfAssertion)
-    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
-    - allow([event.fyziklani.teacher,event.fyziklani.member], event.payment, create)
-    - allow(eventManager, event.payment, ::constant(Nette\Security\Permission::ALL))
+    - allow(registered, payment, detail, @selfAssertion)
+    - allow(registered, payment, edit, and(@selfAssertion,@paymentEditableAssertion))
+    - allow([event.fyziklani.member,event.fyziklani.teacher], payment, create)
+    - allow(eventManager, payment, ::constant(Nette\Security\Permission::ALL))
 
 ## WAREHOUSE MODULE
     - allow(organizer, warehouse.producer, ::constant(Nette\Security\Permission::ALL))

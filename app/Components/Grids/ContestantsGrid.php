@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -48,9 +47,6 @@ final class ContestantsGrid extends BaseGrid
             new RendererItem(
                 $this->container,
                 function (ContestantModel $row) {
-                    if (!$row->getPersonHistory()) {
-                        return NotSetBadge::getHtml();
-                    }
                     return $this->tableReflectionFactory->loadColumnFactory(
                         'school',
                         'school'

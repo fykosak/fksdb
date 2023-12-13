@@ -97,15 +97,22 @@ function Item({item, params}: ItemProps) {
     const dispatch = useDispatch();
     const {scheduleItemId, price, name, totalCapacity, usedCapacity, description} = item;
     const isChecked = (value === scheduleItemId);
-
+    // <i className=""></i>
     return <div
-        className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : '')}
+        className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : (item.available ? '' : 'text-secondary border-secondary'))}
         onClick={() => {
-            isChecked ? dispatch(changeData('data', null)) : dispatch(changeData('data', scheduleItemId));
+            if (item.available) {
+                if (isChecked) {
+                    dispatch(changeData('data', null));
+                } else {
+                    dispatch(changeData('data', scheduleItemId))
+                }
+            }
         }}>
+
         <div className="card-body">
             <h5 className="card-title">
-                <i className={isChecked ? 'me-3 fas fa-check-circle' : 'me-3 far fa-circle'}/>
+                <i className={'me-2 '+(isChecked ? 'fas fa-check-circle' : (item.available ? 'far fa-circle' : 'fas fa-circle-xmark'))}/>
                 {translator.get(name)}
             </h5>
             <h6 className="card-subtitle">

@@ -403,13 +403,13 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\PaymentState
-        links:
-            detail:
-                destination: :Event:Payment:detail
-                params:
-                      eventId: event_id
-                      id: payment_id
-                title: _('button.payment.detail')
+            want_invoice:
+                type: bool
+                title: _('Want invioce')
+            invoice_id:
+                type: string
+                title: _('Invoice Id')
+        links: []
     person:
         service: FKSDB\Models\ORM\Services\PersonService
         model: FKSDB\Models\ORM\Models\PersonModel
@@ -903,6 +903,10 @@ orm:
             origin:
                 type: text
                 title: _('How did you come to know about us?') # TODO
+            scholarship:
+                type: enum
+                title: _('Scholarship')
+                class: FKSDB\Models\ORM\Models\Fyziklani\TeamScholarship
         links:
             detail:
                 destination: :Event:Team:detail
@@ -988,6 +992,12 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
                 title: _('Price EUR')
+            payable:
+                type: bool
+                title: _('Is item payable via FKSDB?')
+            available:
+                type: bool
+                title: _('Is item available via GUI?')
             name_en:
                 type: string
                 title: _('Name en')
@@ -1006,6 +1016,25 @@ orm:
             description:
                 type: localizedString
                 title: _('Description')
+            long_description_en:
+                type: text
+                title: _('Long description en')
+                description: _('Allow HTML')
+            long_description_cs:
+                type: text
+                title: _('Long description cs')
+                description: _('Allow HTML')
+            long_description:
+                type: localizedString
+                title: _('Description')
+            begin:
+                type: dateTime
+                title: _('Begin')
+                description: _('Only if is diferent from group time')
+            end:
+                type: dateTime
+                title: _('End')
+                description: _('Only if is diferent from group time')
             capacity:
                 type: int
                 title: _('Total capacity')
@@ -1027,11 +1056,13 @@ orm:
             detail:
                 destination: :Schedule:Item:detail
                 params:
+                    groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.detail')
             edit:
                 destination: :Schedule:Item:edit
                 params:
+                    groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.edit')
     schedule_payment:

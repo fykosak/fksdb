@@ -70,6 +70,12 @@ class Handler
             if (!$item) {
                 throw new ScheduleException($group, sprintf(_('Item with Id %s does not exists'), $value));
             }
+            if (!$item->available) {
+                throw new ScheduleException(
+                    $group,
+                    sprintf(_('Item with Id %s is not available'), $item->name->getText($this->translator->lang))
+                );
+            }
             // create
             if ($personSchedule) {
                 if (!$group->isModifiable()) {

@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Nette\DI\Container;
 
 /**
  * @phpstan-type TItem array{
@@ -28,7 +29,12 @@ class PersonProvider implements FilteredDataProvider
      */
     private TypedSelection $searchTable;
 
-    public function __construct(PersonService $personService)
+    public function __construct(Container $container)
+    {
+        $container->callInjects($this);
+    }
+
+    public function inject(PersonService $personService): void
     {
         $this->personService = $personService;
         $this->searchTable = $this->personService->getTable();

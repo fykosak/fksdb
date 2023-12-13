@@ -1,0 +1,71 @@
+{varType FKSDB\Modules\EventModule\PaymentsPresenter $control}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $rests}
+{varType int $paidCount}
+{varType int $waitingCount}
+{varType int $noPaymentCount}
+{varType int $inProgressCount}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {if $control->authorized('create')}
+                {var $pageTitle = $control->titleCreate()}
+                <a href="{plink create}" class="btn btn-outline-primary">
+                    <i class="{$pageTitle->icon} me-1"></i>
+                    {$pageTitle->title}
+                </a>
+            {/if}
+            {if $control->authorized('list')}
+                {var $pageTitle = $control->titleList()}
+                <a href="{plink list}" class="btn btn-outline-primary">
+                    <i class="{$pageTitle->icon} me-1"></i>
+                    {$pageTitle->title}
+                </a>
+            {/if}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            {var $total = $paidCount+$waitingCount+$noPaymentCount}
+            <div class="progress-stacked">
+                    {var $style1 = 'width: ' . ($paidCount * 100 / $total) . '%'}
+                    <div class="progress" role="progressbar" style="{$style1|noescape}">
+                            <div class="progress-bar bg-success">{$paidCount}</div>
+                    </div>
+                    {var $style2 = 'width: ' . ($waitingCount * 100 / $total) . '%'}
+                    <div class="progress" role="progressbar" style="{$style2|noescape}">
+                            <div class="progress-bar bg-warning">{$waitingCount}</div>
+                    </div>
+                    {var $style3 = 'width: ' . ($inProgressCount * 100 / $total) . '%'}
+                    <div class="progress" role="progressbar" style="{$style3|noescape}">
+                            <div class="progress-bar bg-info">{$inProgressCount}</div>
+                    </div>
+                    {var $style4 = 'width: ' . ($noPaymentCount * 100 / $total) . '%'}
+                    <div class="progress" role="progressbar" style="{$style4|noescape}">
+                        <div class="progress-bar bg-danger">{$noPaymentCount}</div>
+                    </div>
+            </div>
+            {*foreach $rests as $rest}
+                {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $rest}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-1">
+                                <i class="{$rest->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Block'}
+                                    : </small>{$rest->schedule_item->schedule_group->name->getText($lang)}
+                            </div>
+                            <div class="col-3"><small class="text-muted">{_'Variant'}
+                                    : </small>{$rest->schedule_item->name->getText($lang)}</div>
+                            <div class="col-3"><small class="text-muted">{_'Person'}
+                                    : </small>{$rest->person->getFullName()}</div>
+                            <div class="col-2">{$rest->schedule_item->getPrice()->__toString()}</div>
+                        </div>
+                    </div>
+                </div>
+            {/foreach*}
+        </div>
+    </div>
+{/block}

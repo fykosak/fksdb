@@ -16,6 +16,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
@@ -340,5 +342,15 @@ final class EventModel extends Model implements Resource, NodeCreator
                 $exception
             );
         }
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new NoRoleSchedule($container),
+        ];
     }
 }

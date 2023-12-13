@@ -130,17 +130,22 @@ class ScheduleContainer extends ContainerWithOptions
     {
         $data = [];
         if ($person) {
-            $query = $person->getSchedule()->where('schedule_item.schedule_group.schedule_group_type', $this->types);
-
+            $query = $person->getSchedule()
+                ->where('schedule_item.schedule_group.schedule_group_type', $this->types)
+                ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
             /** @var PersonScheduleModel $personSchedule */
             foreach ($query as $personSchedule) {
                 $group = $personSchedule->schedule_item->schedule_group;
                 $key = $this->getGroupKey($group);
-                $data[$key] = $data[$key] ?? [];
-                $data[$key][$group->schedule_group_id] = $personSchedule->schedule_item_id;
+                /**
+                 * @var ScheduleGroupField $select
+                 * @phpstan-ignore-next-line
+                 */
+                $select = $this->getComponent($key)->getComponent((string)$group->schedule_group_id);
+                $select->setModel($personSchedule);
             }
         }
 
-        $this->setValues($data);
+        $this->setDefaults($data);
     }
 }

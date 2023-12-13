@@ -103,10 +103,10 @@ class PersonPaymentContainer extends ContainerWithOptions
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'
             );
+
             if (
                 $model->getPayment()
-                && isset($this->model)
-                && $model->getPayment()->payment_id !== $this->model->payment_id
+                && (!isset($this->model) || $model->getPayment()->payment_id !== $this->model->payment_id)
             ) {
                 $checkBox->setDisabled();
                 $checkBox->setOption(

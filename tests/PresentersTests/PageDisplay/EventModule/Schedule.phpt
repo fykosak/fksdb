@@ -66,6 +66,7 @@ class Schedule extends EventModuleTestCase
         if ($presenterName === 'Schedule:Group') {
             $params['id'] = $this->scheduleGroup->schedule_group_id;
         } elseif ($presenterName === 'Schedule:Item') {
+            $params['groupId'] = $this->scheduleGroup->schedule_group_id;
             $params['id'] = $this->scheduleItem->schedule_item_id;
         }
 

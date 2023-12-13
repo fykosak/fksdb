@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Tests\Contestant\InvalidCategory;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -29,7 +32,7 @@ final class ContestantModel extends Model implements Resource
         return $this->contest->getContestYear($this->year);
     }
 
-    public function getPersonHistory(): ?PersonHistoryModel
+    public function getPersonHistory(): PersonHistoryModel
     {
         return $this->person->getHistory($this->getContestYear());
     }
@@ -71,5 +74,15 @@ final class ContestantModel extends Model implements Resource
             ->where('submit_question_id', $question->submit_question_id)
             ->fetch();
         return $answer;
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new InvalidCategory($container),
+        ];
     }
 }

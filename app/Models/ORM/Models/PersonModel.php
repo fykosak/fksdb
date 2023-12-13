@@ -20,8 +20,16 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Tests\Person\EventCoveringTest;
+use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
+use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
+use FKSDB\Models\ORM\Tests\Person\PostgraduateStudyTest;
+use FKSDB\Models\ORM\Tests\Person\SchoolChangeTest;
+use FKSDB\Models\ORM\Tests\Person\StudyYearTest;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -193,6 +201,15 @@ final class PersonModel extends Model implements Resource
     {
         return $this->getPostContact(PostContactType::from(PostContactType::PERMANENT)) ??
             $this->getPostContact(PostContactType::from(PostContactType::DELIVERY));
+    }
+    /**
+     * @phpstan-return TypedGroupedSelection<PaymentModel>
+     */
+    public function getPayments(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PaymentModel> $selection */
+        $selection = $this->related(DbNames::TAB_PAYMENT, 'person_id');
+        return $selection;
     }
 
     /**
@@ -429,6 +446,7 @@ final class PersonModel extends Model implements Resource
         }
         return $toPay;
     }
+
     /**
      * @phpstan-return TypedGroupedSelection<TaskContributionModel>
      */
@@ -466,6 +484,21 @@ final class PersonModel extends Model implements Resource
             'name' => $this->getFullName(),
             'personId' => $this->person_id,
             'email' => $this->getInfo()->email,
+        ];
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new GenderFromBornNumberTest($container),
+            new ParticipantsDurationTest($container),
+            new EventCoveringTest($container),
+            new StudyYearTest($container),
+            new PostgraduateStudyTest($container),
+            new SchoolChangeTest($container),
         ];
     }
 }
