@@ -33,7 +33,7 @@ transitions:
             applied->pending:
                 label: _('Move to pending')
                 behaviorType: danger
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('edit')
             applied->arrived:
                 label: _('Arrived')
                 behaviorType: success
