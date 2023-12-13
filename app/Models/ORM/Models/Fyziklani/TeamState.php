@@ -60,33 +60,22 @@ final class TeamState extends FakeStringEnum implements EnumColumn
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
-    public function pseudoBadge(): Html
+    public function getPseudoState(): self
     {
-        $badge = '';
         switch ($this->value) {
-            case self::Applied:
             case self::Pending:
             case self::Approved:
-                $badge = 'badge bg-color-1';
-                break;
-            case self::Spare:
-                $badge = 'badge bg-color-9';
-                break;
-            case self::Arrived:
+                return new self(self::Applied);
             case self::Participated:
-                $badge = 'badge bg-color-3';
-                break;
-            case self::Missed:
-                $badge = 'badge bg-color-4';
-                break;
-            case self::Disqualified:
-                $badge = 'badge bg-color-5';
-                break;
-            case self::Cancelled:
-                $badge = 'badge bg-color-6';
-                break;
+                return new self(self::Participated);
+            default:
+                return clone $this;
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+    }
+
+    public function pseudoBadge(): Html
+    {
+        return $this->getPseudoState()->badge();
     }
 
     public function getBehaviorType(): string
