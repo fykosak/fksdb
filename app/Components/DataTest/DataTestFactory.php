@@ -97,19 +97,27 @@ class DataTestFactory
             ...ContestYearModel::getTests($container),
             ...self::applyAdaptor(
                 ContestYearToContestantsAdapter::class,
-                [
-                    ...ContestantModel::getTests($container),
-                    ...self::applyAdaptor(
-                        ContestantToPersonHistoryAdapter::class,
-                        PersonHistoryModel::getTests($container),
-                        $container
-                    ),
-                    ...self::applyAdaptor(
-                        ContestantToPersonAdapter::class,
-                        PersonModel::getTests($container),
-                        $container
-                    ),
-                ],
+                self::getContestantTests($container),
+                $container
+            ),
+        ];
+    }
+
+    /**
+     * @phpstan-return Test<ContestantModel>[]
+     */
+    public static function getContestantTests(Container $container): array
+    {
+        return [
+            ...ContestantModel::getTests($container),
+            ...self::applyAdaptor(
+                ContestantToPersonHistoryAdapter::class,
+                PersonHistoryModel::getTests($container),
+                $container
+            ),
+            ...self::applyAdaptor(
+                ContestantToPersonAdapter::class,
+                PersonModel::getTests($container),
                 $container
             ),
         ];

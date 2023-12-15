@@ -115,9 +115,11 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::Accommodation:
-                return 'fa-solid fa-bed';
+                return 'fas fa-bed';
             case self::Weekend:
-                return 'fa-solid fa-calendar';
+                return 'fas fa-calendar';
+            case self::WeekendInfo:
+                return 'fas fa-info';
         }
         return '';
     }

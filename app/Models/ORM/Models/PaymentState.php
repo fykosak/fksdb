@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class PaymentState extends FakeStringEnum implements EnumColumn
@@ -62,5 +63,10 @@ final class PaymentState extends FakeStringEnum implements EnumColumn
             new self(self::IN_PROGRESS),
             new self(self::INIT),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

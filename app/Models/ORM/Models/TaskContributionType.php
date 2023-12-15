@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class TaskContributionType extends FakeStringEnum implements EnumColumn
@@ -42,6 +43,11 @@ final class TaskContributionType extends FakeStringEnum implements EnumColumn
             default:
                 return _('Grade');
         }
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 
     public static function cases(): array

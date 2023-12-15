@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms;
+namespace FKSDB\Components\Contestants;
 
+use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authorization\ContestAuthorizator;
@@ -20,7 +22,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends EntityFormComponent<ContestantModel>
  */
-class ContestantFormComponent extends EntityFormComponent
+final class ContestantForm extends EntityFormComponent
 {
     use ReferencedPersonTrait;
 
