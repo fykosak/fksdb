@@ -30,7 +30,7 @@ class FyziklaniTeamTeacherRole extends EventRole
                 Html::el('span')->addAttributes(['class' => 'badge bg-color-5 me-1'])
                     ->addText(_('Teacher') . ': ')
                     ->addHtml(Html::el('i')->addAttributes(['class' => $team->scholarship->getIconName() . ' me-1']))
-                    ->addText(sprintf(_('%s (%s)'), $team->name, $team->state->label()))
+                    ->addText(sprintf('%s (%s)', $team->name, $team->state->label()))
             );
         }
         return $container;
