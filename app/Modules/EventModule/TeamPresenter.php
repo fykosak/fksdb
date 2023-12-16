@@ -43,7 +43,7 @@ final class TeamPresenter extends BasePresenter
 
     private TeamService2 $teamService;
 
-    public function injectServiceService(TeamService2 $service): void
+    public function injectService(TeamService2 $service): void
     {
         $this->teamService = $service;
     }
