@@ -78,7 +78,7 @@ final class EmailMessageModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = EmailMessageState::tryFrom($value);
+                $value = EmailMessageState::from($value);
                 break;
         }
         return $value;

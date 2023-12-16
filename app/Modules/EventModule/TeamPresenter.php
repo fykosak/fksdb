@@ -43,7 +43,7 @@ final class TeamPresenter extends BasePresenter
 
     private TeamService2 $teamService;
 
-    public function injectServiceService(TeamService2 $service): void
+    public function injectService(TeamService2 $service): void
     {
         $this->teamService = $service;
     }
@@ -131,7 +131,9 @@ final class TeamPresenter extends BasePresenter
             Html::el('span')
                 ->addText(sprintf(_('Team: %s'), $entity->name))
                 ->addHtml(
-                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->state->pseudoBadge())
+                    Html::el('small')
+                        ->addAttributes(['class' => 'ms-2'])
+                        ->addHtml($entity->state->pseudoState()->badge())
                 ),
             'fas fa-user'
         );

@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms;
+namespace FKSDB\Components\Contestants;
 
+use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
@@ -24,7 +26,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends EntityFormComponent<ContestantModel>
  */
-class RegisterContestantFormComponent extends EntityFormComponent
+final class RegisterContestantForm extends EntityFormComponent
 {
     use ReferencedPersonTrait;
 

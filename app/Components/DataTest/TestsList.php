@@ -29,7 +29,7 @@ class TestsList extends BaseComponent
     /**
      * @phpstan-param TModel $model
      */
-    public function render(Model $model): void
+    public function render(Model $model, bool $list = true): void
     {
         $data = [];
         foreach ($this->tests as $test) {
@@ -42,6 +42,10 @@ class TestsList extends BaseComponent
                 ];
             }
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte', ['data' => $data]);
+        if ($list) {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte', ['data' => $data]);
+        } else {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'noList.latte', ['data' => $data]);
+        }
     }
 }
