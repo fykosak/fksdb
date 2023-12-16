@@ -30,7 +30,7 @@ class FyziklaniTeamMemberRole extends EventRole
             )
             ->addText(
                 sprintf(
-                    _('%s (%s)'),
+                    '%s (%s)',
                     $this->member->fyziklani_team->name,
                     $this->member->fyziklani_team->state->label()
                 )

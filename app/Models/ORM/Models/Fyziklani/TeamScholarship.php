@@ -21,11 +21,11 @@ final class TeamScholarship extends FakeStringEnum implements EnumColumn
     public function badge(): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
             ->addHtml($this->title()->toHtml());
     }
 
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::Full:
@@ -59,7 +59,7 @@ final class TeamScholarship extends FakeStringEnum implements EnumColumn
     public function icon(): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
             ->addHtml(Html::el('i')->addAttributes(['class' => $this->getIconName()]));
     }
 

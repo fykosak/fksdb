@@ -19,7 +19,7 @@ final class PaymentState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])->addText(
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])->addText(
             $this->label()
         );
     }
@@ -39,7 +39,7 @@ final class PaymentState extends FakeStringEnum implements EnumColumn
         }
     }
 
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::IN_PROGRESS:

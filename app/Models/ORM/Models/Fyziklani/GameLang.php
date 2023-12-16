@@ -16,7 +16,20 @@ final class GameLang extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])->addText(
+            $this->label()
+        );
+    }
+
+    public function behaviorType(): string
+    {
+        switch ($this->value) {
+            case self::CS:
+                return 'primary';
+            case self::EN:
+                return 'danger';
+        }
+        return ''; // TODO remove on PHP8.1
     }
 
     public function label(): string

@@ -27,25 +27,25 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     public const UniversityAll = 'U_ALL';
 
     public const None = 'NONE';
+
     // phpcs:enable
+
+    public function behaviorType(): string
+    {
+        if ($this->isPrimarySchool()) {
+            return 'primary';
+        } elseif ($this->isHighSchool()) {
+            return 'success';
+        } elseif ($this->value === self::UniversityAll) {
+            return 'warning';
+        }
+        return 'dark';
+    }
 
     public function badge(): Html
     {
-        if ($this->isPrimarySchool()) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-primary')
-                ->addText($this->label());
-        } elseif ($this->isHighSchool()) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-success')
-                ->addText($this->label());
-        } elseif ($this->value === self::UniversityAll) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-warning')
-                ->addText($this->label());
-        }
         return Html::el('span')
-            ->setAttribute('class', 'badge bg-dark')
+            ->setAttribute('class', 'badge bg-' . $this->behaviorType())
             ->addText($this->label());
     }
 
@@ -55,7 +55,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
             case self::Primary5:
                 return _('Primary school 5th grade or lower.');
             case self::Primary6:
-                return _('Primary school 6th');
+                return _('Primary school 6th'); //(ISCED 2)
             case self::Primary7:
                 return _('Primary school 7th');
             case self::Primary8:
@@ -63,7 +63,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
             case self::Primary9:
                 return _('Primary school 9th');
             case self::High1:
-                return _('High school 1st grade');
+                return _('High school 1st grade'); // (ISCED 3)
             case self::High2:
                 return _('High school 2nd grade');
             case self::High3:
@@ -71,7 +71,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
             case self::High4:
                 return _('High school 4th grade');
             case self::UniversityAll:
-                return _('University any grade');
+                return _('University any grade'); // (ISCED 4 or higher)
             case self::None:
                 return _('Not a student');
         }

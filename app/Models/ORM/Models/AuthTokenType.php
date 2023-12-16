@@ -40,7 +40,7 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
     /**
      * @throws NotImplementedException
      */
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         throw new NotImplementedException();
     }

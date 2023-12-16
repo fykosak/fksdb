@@ -131,7 +131,9 @@ final class TeamPresenter extends BasePresenter
             Html::el('span')
                 ->addText(sprintf(_('Team: %s'), $entity->name))
                 ->addHtml(
-                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->state->pseudoBadge())
+                    Html::el('small')
+                        ->addAttributes(['class' => 'ms-2'])
+                        ->addHtml($entity->state->pseudoState()->badge())
                 ),
             'fas fa-user'
         );

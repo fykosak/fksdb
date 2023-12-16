@@ -28,7 +28,7 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
         ];
     }
 
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::Participated:
@@ -46,7 +46,7 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
     public function badge(): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
             ->addText($this->label());
     }
 

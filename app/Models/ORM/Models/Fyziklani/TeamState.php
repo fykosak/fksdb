@@ -28,40 +28,12 @@ final class TeamState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = '';
-        switch ($this->value) {
-            case self::Applied:
-                $badge = 'badge bg-color-1';
-                break;
-            case self::Pending:
-                $badge = 'badge bg-color-2';
-                break;
-            case self::Approved:
-                $badge = 'badge bg-color-7';
-                break;
-            case self::Spare:
-                $badge = 'badge bg-color-9';
-                break;
-            case self::Participated:
-                $badge = 'badge bg-color-3';
-                break;
-            case self::Missed:
-                $badge = 'badge bg-color-4';
-                break;
-            case self::Disqualified:
-                $badge = 'badge bg-color-5';
-                break;
-            case self::Cancelled:
-                $badge = 'badge bg-color-6';
-                break;
-            case self::Arrived:
-                $badge = 'badge bg-color-8';
-                break;
-        }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
-    public function getPseudoState(): self
+    public function pseudoState(): self
     {
         switch ($this->value) {
             case self::Pending:
@@ -70,19 +42,15 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             case self::Participated:
                 return new self(self::Participated);
             default:
-                return clone $this;
+                return $this;
         }
     }
 
-    public function pseudoBadge(): Html
-    {
-        return $this->getPseudoState()->badge();
-    }
-
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::Arrived:
+                return 'danger';
             case self::Applied:
             case self::Approved:
                 return 'info';
@@ -97,9 +65,9 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             case self::Init:
                 return 'secondary';
             case self::Disqualified:
-                return 'danger';
+            default:
+                return 'dark';
         }
-        return '';
     }
 
     public function label(): string
