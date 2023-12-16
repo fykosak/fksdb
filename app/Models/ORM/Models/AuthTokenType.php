@@ -17,7 +17,7 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
     public const EVENT_NOTIFY = 'event_notify';
     public const CHANGE_EMAIL = 'change_email';
     /** @internal */
-    public const EMAIL_MESAGE = 'email_message';
+    public const EMAIL_MESSAGE = 'email_message';
     /** @deprecated */
     public const SSO = 'sso';
 
@@ -52,11 +52,14 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
             new self(self::RECOVERY),
             new self(self::EVENT_NOTIFY),
             new self(self::CHANGE_EMAIL),
-            new self(self::EMAIL_MESAGE),
+            new self(self::EMAIL_MESSAGE),
             new self(self::SSO),
         ];
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function title(): Title
     {
         return new Title(null, $this->label());
