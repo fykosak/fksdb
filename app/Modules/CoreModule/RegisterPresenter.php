@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Contestants\RegisterContestantForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\EntityForms\RegisterContestantFormComponent;
 use FKSDB\Components\EntityForms\RegisterTeacherFormComponent;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -231,9 +231,9 @@ final class RegisterPresenter extends CoreBasePresenter
     /**
      * @throws NotFoundException
      */
-    protected function createComponentContestantForm(): RegisterContestantFormComponent
+    protected function createComponentContestantForm(): RegisterContestantForm
     {
-        return new RegisterContestantFormComponent(
+        return new RegisterContestantForm(
             $this->getContext(),
             $this->getSelectedContestYear(),
             $this->getLoggedPerson()
