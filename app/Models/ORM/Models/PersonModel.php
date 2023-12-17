@@ -20,7 +20,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Tests\Person\EmptyPerson;
+use FKSDB\Models\ORM\Tests\Person\BornDateTest;
 use FKSDB\Models\ORM\Tests\Person\EventCoveringTest;
 use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
 use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
@@ -500,7 +500,8 @@ final class PersonModel extends Model implements Resource
             new StudyYearTest($container),
             new PostgraduateStudyTest($container),
             new SchoolChangeTest($container),
-            new EmptyPerson($container),
+            // new EmptyPerson($container),
+            new BornDateTest($container),
         ];
     }
 }
