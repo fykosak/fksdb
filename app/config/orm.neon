@@ -405,7 +405,7 @@ orm:
                 class: FKSDB\Models\ORM\Models\PaymentState
             want_invoice:
                 type: bool
-                title: _('Want invioce')
+                title: _('Want invoice')
             invoice_id:
                 type: string
                 title: _('Invoice Id')
