@@ -27,7 +27,6 @@ class PersonPaymentContainer extends ContainerWithOptions
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
-
     private GettextTranslator $translator;
 
     /**
@@ -77,7 +76,7 @@ class PersonPaymentContainer extends ContainerWithOptions
             $persons = [];
             /** @var TeamModel2 $team */
             foreach ($teams as $team) {
-                $persons += $team->getPersons();
+                $persons = [...$persons, ...$team->getPersons()];
             }
             $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }
