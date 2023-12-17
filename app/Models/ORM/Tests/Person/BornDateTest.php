@@ -34,25 +34,23 @@ final class BornDateTest extends Test
         foreach ($model->getHistories() as $history) {
             $graduationYear = $history->getGraduationYear();
             if ($graduationYear) {
-                $graduationDate = new \DateTime($graduationYear . '-01-01');
-                $delta = $graduationDate->getTimestamp() - $info->born->getTimestamp();
-                $delta -= 19 * self::UNIX_YEAR;
-                $deltaYear = $delta / self::UNIX_YEAR;
-                if (abs($deltaYear) > 4) {
+                $graduationDate = new \DateTime($graduationYear . '-06-01');
+                $deltaYear = ($graduationDate->getTimestamp() - $info->born->getTimestamp()) / self::UNIX_YEAR;
+                if (abs($deltaYear - 19) > 4) {
                     $logger->log(
                         new TestMessage(
                             sprintf(
-                                _('Diff between expected graduation year an calculated is %01.2f year'),
+                                _('Expected graduation at the age of %01.2f'),
                                 $deltaYear
                             ),
                             Message::LVL_ERROR
                         )
                     );
-                } elseif (abs($deltaYear) > 2) {
+                } elseif (abs($deltaYear - 19) > 2) {
                     $logger->log(
                         new TestMessage(
                             sprintf(
-                                _('Diff between expected graduation year an calculated is %01.2f year'),
+                                _('Expected graduation at the age of %01.2f'),
                                 $deltaYear
                             ),
                             Message::LVL_WARNING
