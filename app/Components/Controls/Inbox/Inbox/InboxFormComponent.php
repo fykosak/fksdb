@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
@@ -18,7 +17,7 @@ class InboxFormComponent extends SeriesTableFormComponent
 {
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelException
+     * @throws \PDOException
      */
     protected function handleFormSuccess(Form $form): void
     {

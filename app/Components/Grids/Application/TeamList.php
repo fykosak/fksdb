@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -37,26 +36,29 @@ final class TeamList extends BaseList
         $this->event = $event;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;
         $this->paginate = false;
         $this->counter = true;
-        $this->classNameCallback = fn(TeamModel2 $team): string => 'alert alert-' . $team->state->getBehaviorType();
+        $this->mode = self::ModePanel;
         $this->setTitle(// @phpstan-ignore-line
             new TemplateItem(// @phpstan-ignore-line
                 $this->container,
-                '<h4>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h4>'
+                '<h2>@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)</h2>'
             )
         );
         $row = $this->createRow();
         $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.state'),
             'state'
+        );
+        $row->addComponent(
+            new SimpleItem(
+                $this->container,
+                '<span class="text-muted">scholarship:</span> @fyziklani_team.scholarship'
+            ),
+            'scholarship'
         );
         $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.category'),
@@ -113,7 +115,21 @@ final class TeamList extends BaseList
         $this->addPresenterButton(
             ':Event:Team:detail',
             'detail',
-            new Title(null, _('button.detail')),
+            new Title(null, _('button.team.detail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            ':Event:Team:orgDetail',
+            'orgDetail',
+            new Title(null, _('button.team.orgDetail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            ':Event:Team:edit',
+            'edit',
+            new Title(null, _('button.team.edit')),
             false,
             ['id' => 'fyziklani_team_id']
         );

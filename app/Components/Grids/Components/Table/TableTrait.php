@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Components\BaseItem;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  */
 trait TableTrait
 {

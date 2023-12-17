@@ -1,0 +1,14 @@
+{varType string $lang}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <p class="text-success">
+                {switch $lang}{case cs}
+                    Tuto stránku teď můžete zavřít a v přihlášce vyhledat přidanou školu.
+                {default}
+                    You can now close this tab and continue in the application. Your school should be available in the form already.
+                {/switch}
+            </p>
+        </div>
+    </div>
+{/block}

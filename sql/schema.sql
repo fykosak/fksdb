@@ -276,6 +276,7 @@ CREATE TABLE IF NOT EXISTS `school`
     `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
     `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
     `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
+    `verified`    BOOLEAN      NOT NULL DEFAULT TRUE COMMENT 'Overená po publi pridaní',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -586,12 +587,13 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team`
 (
-    `fyziklani_team_id` INT                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`          INT(11)                    NOT NULL,
-    `name`              VARCHAR(30)                NOT NULL,
+    `fyziklani_team_id` INT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT(11)          NOT NULL,
+    `name`              VARCHAR(30)      NOT NULL,
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
+        'arrived',
         'pending',
         'approved',
         'spare',
@@ -599,19 +601,32 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'missed',
         'disqualified',
         'cancelled'
-        )                                          NOT NULL DEFAULT 'init',
-    `category`          ENUM ('A','B','C','O','F') NOT NULL,
-    `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
-    `note`              TEXT                       NULL     DEFAULT NULL,
-    `password`          CHAR(40)                   NULL     DEFAULT NULL,
-    `points`            INT(11)                    NULL     DEFAULT NULL,
-    `rank_category`     INT(11)                    NULL     DEFAULT NULL,
-    `rank_total`        INT(11)                    NULL     DEFAULT NULL,
-    `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
-        COMMENT 'Game lang',
+        )                                NOT NULL DEFAULT 'init',
+    `category`          ENUM (
+        'A',
+        'B',
+        'C',
+        'O',
+        'F'
+        )                                NOT NULL,
+    `created`           TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `phone`             VARCHAR(30)      NULL     DEFAULT NULL,
+    `note`              TEXT             NULL     DEFAULT NULL,
+    `internal_note`     TEXT             NULL     DEFAULT NULL,
+    `password`          CHAR(40)         NULL     DEFAULT NULL,
+    `points`            INT(11)          NULL     DEFAULT NULL,
+    `rank_category`     INT(11)          NULL     DEFAULT NULL,
+    `rank_total`        INT(11)          NULL     DEFAULT NULL,
+    `force_a`           TINYINT(1)       NULL     DEFAULT NULL,
+    `game_lang`         ENUM ('cs','en') NULL     DEFAULT NULL,
+    `origin`            TEXT             NULL     DEFAULT NULL,
+    `scholarship`       ENUM (
+        'none',
+        'half',
+        'full'
+        )                                NOT NULL DEFAULT 'none',
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -630,6 +645,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     `person_id`                INT NOT NULL,
     `fyziklani_team_id`        INT NOT NULL,
     INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_member__person`
         FOREIGN KEY (`person_id`)
@@ -652,6 +668,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `person_id`                 INT NOT NULL,
     `fyziklani_team_id`         INT NOT NULL,
     INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_teacher__person`
         FOREIGN KEY (`person_id`)
@@ -1028,34 +1045,35 @@ CREATE TABLE IF NOT EXISTS `teacher`
 
 CREATE TABLE IF NOT EXISTS `payment`
 (
-    `payment_id`      INT(11)                                                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`       INT(11)                                                     NOT NULL,
-    `event_id`        INT                                                         NOT NULL,
-    `state`           ENUM ('init','in_progress','canceled','received','waiting') NOT NULL DEFAULT 'init',
-    `price`           DECIMAL(11, 2)                                              NULL     DEFAULT NULL,
-    `currency`        VARCHAR(5)                                                  NULL     DEFAULT NULL,
-    `created`         DATETIME                                                    NULL     DEFAULT NULl,
-    `received`        DATETIME                                                    NULL     DEFAULT NULL,
-    `constant_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `variable_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `specific_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `bank_account`    VARCHAR(32)                                                 NULL     DEFAULT NULL,
-    `bank_name`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `recipient`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `iban`            VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `swift`           VARCHAR(256)                                                NULL     DEFAULT NULL,
-    INDEX `idx_payment__event` (`event_id` ASC),
+    `payment_id`      INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`       INT(11)        NOT NULL,
+    `state`           ENUM (
+        'init',
+        'in_progress',
+        'canceled',
+        'received',
+        'waiting'
+        )                            NOT NULL DEFAULT 'init',
+    `price`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `currency`        VARCHAR(5)     NULL     DEFAULT NULL,
+    `created`         DATETIME       NULL     DEFAULT NULl,
+    `received`        DATETIME       NULL     DEFAULT NULL,
+    `constant_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+    `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
+    `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
+    `want_invoice`    BOOL           NOT NULL DEFAULT FALSE,
+    `invoice_id`      VARCHAR(32)    NULL     DEFAULT NULL,
     INDEX `idx_payment__person` (`person_id` ASC),
     CONSTRAINT `fk_payment__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_payment__event`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE CASCADE
 )
     ENGINE = 'InnoDB';
 
@@ -1095,13 +1113,14 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
+        'apparel',
+        'transport',
+        'ticket',
         'weekend',
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'dsef_all_day',
-        'apparal',
-        'transport'
+        'dsef_all_day'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
@@ -1129,6 +1148,7 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
     `price_czk`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `price_eur`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `payable`             BOOL           NOT NULL DEFAULT FALSE,
+    `available`           BOOL           NOT NULL DEFAULT TRUE,
     `name_cs`             VARCHAR(256)   NULL     DEFAULT NULL,
     `name_en`             VARCHAR(256)   NULL     DEFAULT NULL,
     `capacity`            INT(11)        NULL     DEFAULT NULL,

@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Table\TableTrait;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use Nette\DI\Container;
 
@@ -16,7 +15,7 @@ use Nette\DI\Container;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-template TFilterParams of array
  * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */
@@ -37,7 +36,6 @@ abstract class BaseGrid extends BaseComponent
     }
 
     /**
-     * @throws BadTypeException|\ReflectionException
      * @phpstan-param string[] $fields
      */
     protected function addSimpleReferencedColumns(array $fields): void

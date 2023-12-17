@@ -10,11 +10,12 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * @phpstan-template TModel of Model
@@ -56,10 +57,14 @@ class TransitionButtonsComponent extends BaseComponent
         try {
             $transition = $this->machine->getTransitionById($transitionName);
             $this->machine->execute($transition, $holder);
-            $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+            $this->getPresenter()->flashMessage(
+                $transition->getSuccessLabel(),
+                Message::LVL_SUCCESS
+            );
         } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
+            Debugger::log($exception);
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');

@@ -7,12 +7,11 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Schedule\Input\ScheduleException;
-use FKSDB\Components\Schedule\Input\ScheduleGroupField;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Utils\Promise;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\HiddenField;
@@ -178,14 +177,13 @@ class ReferencedId extends HiddenField
                 $this->rollback();
                 throw $exception;
             } catch (ScheduleException $exception) {
-                if ($exception->group) {
-                    /** @var ScheduleGroupField $component */
-                    /** @phpstan-ignore-next-line */
+                /*if ($exception->group) {
+                    /@var ScheduleGroupField $component
                     $component = $this->referencedContainer->getComponent('person_schedule')
                         ->getComponent($exception->group->schedule_group_type->value)
                         ->getComponent((string)$exception->group->schedule_group_id);
                     $component->addError($exception->getMessage());
-                }
+                }*/
                 $this->addError($exception->getMessage());
                 $this->rollback();
                 throw $exception;

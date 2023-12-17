@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\UI\DatePrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 

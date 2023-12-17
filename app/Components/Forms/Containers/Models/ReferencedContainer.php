@@ -10,7 +10,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
@@ -122,7 +123,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
 
     private function createClearButton(): void
     {
-        $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
+        $submit = $this->addSubmit(self::SUBMIT_CLEAR, (new Title(null, _('Delete'), 'fas fa-times'))->toHtml())
             ->setValidationScope(null);
         $cb = function (): void {
             if ($this->allowClear) {

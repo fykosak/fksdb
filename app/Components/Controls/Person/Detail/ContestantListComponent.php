@@ -6,10 +6,9 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ContestantModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
@@ -30,10 +29,6 @@ class ContestantListComponent extends DetailComponent
         return $this->person->getContestants();
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
     protected function configure(): void
     {
         $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
@@ -47,12 +42,17 @@ class ContestantListComponent extends DetailComponent
             'contestant__year'
         );
         if ($this->isOrganizer) {
-            $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', new Title(null, _('button.edit')), false, [
-                'contestId' => 'contest_id',
-                'year' => 'year',
-                'id' => 'contestant_id',
-            ]);
-
+            $this->addPresenterButton(
+                ':Organizer:Contestant:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                [
+                    'contestId' => 'contest_id',
+                    'year' => 'year',
+                    'id' => 'contestant_id',
+                ]
+            );
             $this->addPresenterButton(
                 ':Organizer:Contestant:detail',
                 'detail',

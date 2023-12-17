@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Models\MachineCode\MachineCode;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
+/**
+ * @phpstan-import-type TSupportedModel from MachineCode
+ */
 abstract class CodeForm extends FormComponent
 {
     protected function handleSuccess(Form $form): void
@@ -39,9 +42,12 @@ abstract class CodeForm extends FormComponent
 
     protected function configureForm(Form $form): void
     {
-        $form->addText('code', _('Code'))->setRequired(true);
+        $form->addText('code', _('Code'))->setRequired();
     }
 
+    /**
+     * @phpstan-param  TSupportedModel $model
+     */
     abstract protected function innerHandleSuccess(Model $model, Form $form): void;
 
     abstract protected function getSalt(): string;

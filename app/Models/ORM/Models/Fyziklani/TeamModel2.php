@@ -13,9 +13,13 @@ use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
+use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
@@ -34,6 +38,7 @@ use Nette\Security\Resource;
  * @property-read int|null $rank_category
  * @property-read int|null $force_a
  * @property-read GameLang|null $game_lang
+ * @property-read TeamScholarship $scholarship
  * @phpstan-type SerializedTeamModel array{
  *      teamId:int,
  *      name:string,
@@ -142,7 +147,7 @@ final class TeamModel2 extends Model implements Resource
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
-        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
+        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
@@ -181,13 +186,16 @@ final class TeamModel2 extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = TeamState::tryFrom($value);
+                $value = TeamState::from($value);
                 break;
             case 'category':
-                $value = TeamCategory::tryFrom($value);
+                $value = TeamCategory::from($value);
                 break;
             case 'game_lang':
                 $value = GameLang::tryFrom($value);
+                break;
+            case 'scholarship':
+                $value = TeamScholarship::from($value);
                 break;
         }
         return $value;
@@ -237,5 +245,16 @@ final class TeamModel2 extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    /**
+     * @phpstan-return Test<TeamModel2>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new CategoryCheck($container),
+            new PendingTeams($container),
+        ];
     }
 }

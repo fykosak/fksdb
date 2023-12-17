@@ -10,10 +10,10 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
+use Nette\Forms\Control;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\IControl;
 use Nette\Forms\ISubmitterControl;
 use Nette\InvalidArgumentException;
 use Nette\MemberAccessException;
@@ -108,7 +108,7 @@ class Replicator extends Container
     private function getFirstControlName(): ?string
     {
         /** @var Component[] $controls */
-        $controls = iterator_to_array($this->getComponents(false, IControl::class));
+        $controls = iterator_to_array($this->getComponents(false, Control::class));
         $firstControl = reset($controls);
         return $firstControl ? $firstControl->name : null;
     }
@@ -294,7 +294,7 @@ class Replicator extends Container
     public function isAllFilled(array $exceptChildren = []): bool
     {
         $components = [];
-        foreach ($this->getComponents(false, IControl::class) as $control) {
+        foreach ($this->getComponents(false, Control::class) as $control) {
             /** @var BaseControl $control */
             $components[] = $control->getName();
         }

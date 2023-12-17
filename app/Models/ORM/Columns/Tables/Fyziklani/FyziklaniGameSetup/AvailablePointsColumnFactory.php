@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup;
 
 use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**

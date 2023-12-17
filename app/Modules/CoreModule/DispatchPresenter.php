@@ -28,6 +28,11 @@ final class DispatchPresenter extends BasePresenter
         $person = $this->getLoggedPerson();
         $this->template->contestants = $this->getAllContestants($person);
         $this->template->organizers = $this->getAllOrganizers($person->getLogin());
+        $this->template->payments = [new NavItem(
+            new Title(null, _('Payments'), 'fas fa-credit-card'),
+            ':Event:Payments:create',
+            ['eventId' => 180]
+        )];
     }
 
     /**

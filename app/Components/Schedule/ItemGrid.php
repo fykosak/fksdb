@@ -10,8 +10,8 @@ use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Component;
@@ -73,12 +73,26 @@ final class ItemGrid extends BaseGrid
             ),
             'capacity'
         );
+        $component->addTableColumn(
+            new TemplateItem(
+                $container,
+                '@schedule_item.capacity_progress',
+                _('Progress bar')
+            ),
+            'capacity_progress'
+        );
         $component->addTableButton(
             new Button(
                 $container,
                 $presenter,
                 new Title(null, _('button.scheduleItem.detail')),
-                fn(ScheduleItemModel $model) => [':Schedule:Item:detail', ['id' => $model->schedule_item_id]]
+                fn(ScheduleItemModel $model) => [
+                    ':Schedule:Item:detail',
+                    [
+                        'id' => $model->schedule_item_id,
+                        'groupId' => $model->schedule_group_id,
+                    ],
+                ]
             ),
             'detail'
         );

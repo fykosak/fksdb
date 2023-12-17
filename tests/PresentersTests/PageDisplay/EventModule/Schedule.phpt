@@ -9,6 +9,7 @@ $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
@@ -25,7 +26,7 @@ class Schedule extends EventModuleTestCase
         $this->scheduleGroup = $this->container
             ->getByType(ScheduleGroupService::class)
             ->storeModel([
-                'schedule_group_type' => 'accommodation',
+                'schedule_group_type' => ScheduleGroupType::Accommodation,
                 'name_cs' => 'name CS',
                 'name_en' => 'name EN',
                 'event_id' => $this->event->event_id,
@@ -66,6 +67,7 @@ class Schedule extends EventModuleTestCase
         if ($presenterName === 'Schedule:Group') {
             $params['id'] = $this->scheduleGroup->schedule_group_id;
         } elseif ($presenterName === 'Schedule:Item') {
+            $params['groupId'] = $this->scheduleGroup->schedule_group_id;
             $params['id'] = $this->scheduleItem->schedule_item_id;
         }
 
@@ -80,7 +82,7 @@ class Schedule extends EventModuleTestCase
             ['Schedule:Item', 'create'],
             ['Schedule:Item', 'edit'],
             ['Schedule:Item', 'detail'],
-            ['Schedule:Group', 'list'],
+            ['Schedule:Dashboard', 'default'],
             ['Schedule:Group', 'create'],
             ['Schedule:Group', 'edit'],
             ['Schedule:Group', 'detail'],

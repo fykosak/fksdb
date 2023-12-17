@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Transitions;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\AuthTokenService;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 /**
@@ -34,17 +31,9 @@ class MailSender extends MailCallback
 
     public function __construct(
         string $templateFile,
-        MailTemplateFactory $mailTemplateFactory,
-        AccountManager $accountManager,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+        Container $container
     ) {
-        parent::__construct(
-            $emailMessageService,
-            $mailTemplateFactory,
-            $authTokenService,
-            $accountManager
-        );
+        parent::__construct($container);
         $this->templateFile = $templateFile;
     }
 
@@ -52,7 +41,7 @@ class MailSender extends MailCallback
      * @param ParticipantHolder $holder
      * @phpstan-return PersonModel[]
      */
-    protected function getPersonsFromHolder(ModelHolder $holder): array
+    protected function getPersons(ModelHolder $holder): array
     {
         return [$holder->getModel()->person];
     }
@@ -75,15 +64,14 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
+     *     blind_carbon_copy?:string,
      *     subject:string,
      *     sender:string,
      *     reply_to:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => $holder->getModel()->event->getParameter('notifyBcc') ?? null,
@@ -99,18 +87,18 @@ class MailSender extends MailCallback
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
         $token = $this->createToken($person, $holder);
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'token' => $token,
                 'holder' => $holder,
                 'linkArgs' => $this->createLinkArgs($holder, $token),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang()),
         );
     }
 

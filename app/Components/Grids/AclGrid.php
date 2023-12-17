@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\RoleModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\RoleService;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -41,16 +41,12 @@ final class AclGrid extends BaseList
         $this->roleService = $roleService;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'Components/list.panel.latte';
-    }
-
     protected function configure(): void
     {
         $this->paginate = false;
         $this->counter = false;
         $this->filtered = true;
+        $this->mode = self::ModePanel;
         $this->setTitle(
             new RendererItem(
                 $this->container,
@@ -104,7 +100,7 @@ final class AclGrid extends BaseList
         foreach ($this->roleService->getTable() as $role) {
             $items[$role->role_id] = $role->name;
         }
-        $form->addSelect('role', _('Role'), $items)->setPrompt(_('--select role--'));
+        $form->addSelect('role', _('Role'), $items)->setPrompt(_('Select role'));
     }
 
     /**

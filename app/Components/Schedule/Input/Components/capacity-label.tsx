@@ -13,7 +13,7 @@ export default function CapacityLabel({capacity, usedCapacity}: OwnProps) {
         return null;
     }
     return <small
-        className={'ms-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
+        className={'me-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
         {translator.getText('Free capacity')}:&nbsp;{(capacity - usedCapacity)}
     </small>;
 }

@@ -1,0 +1,40 @@
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{varType string $lang}
+<div>
+    <style>
+        table {
+            border-collapse: collapse;
+            color: black;
+        }
+
+        td, th {
+            border: solid 1px #ccc;
+            padding: .4rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th {
+            background-color: #ddd;
+        }
+    </style>
+    <table>
+        <thead>
+        <tr>
+            <th>{switch $lang}{case 'cs'}Položka{default}Item{/switch}</th>
+            <th>{switch $lang}{case 'cs'}Cena{default}Price{/switch}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $model->getSchedulePayment() as $schedulePayment}
+            {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
+            <tr>
+                <td>{$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</td>
+                <td>{$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>

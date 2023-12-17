@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
 
@@ -25,13 +25,11 @@ use Nette\Security\Resource;
  * @property-read LocalizedString $name
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
- * @property-read \DateTimeInterface|null $modification_end
  * @phpstan-type SerializedScheduleGroupModel array{
  *      scheduleGroupId:int,
  *      scheduleGroupType:string,
- *      registrationBegin:\DateTimeInterface|null,
- *      registrationEnd:\DateTimeInterface|null,
- *      modificationEnd:\DateTimeInterface|null,
+ *      registrationBegin:string|null,
+ *      registrationEnd:string|null,
  *      name:array<string, string>,
  *      eventId:int,
  *      start:string,
@@ -60,9 +58,8 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
-            'registrationBegin' => $this->getRegistrationBegin(),
-            'registrationEnd' => $this->getRegistrationEnd(),
-            'modificationEnd' => $this->getModificationEnd(),
+            'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
+            'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'name' => $this->name->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
@@ -75,18 +72,11 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return self::RESOURCE_ID;
     }
 
-    public function canCreate(): bool
+    public function isModifiable(): bool
     {
-        $begin = $this->getRegistrationBegin();
-        $end = $this->getRegistrationEnd();
-        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
-    }
-
-    public function canEdit(): bool
-    {
-        $begin = $this->getRegistrationBegin();
-        $end = $this->getModificationEnd();
-        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        $end = $this->registration_end ?? $this->event->registration_end;
+        return ($begin->getTimestamp() <= time()) && ($end->getTimestamp() >= time());
     }
 
     public function hasFreeCapacity(): bool
@@ -102,31 +92,6 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
         }
 
         return $available > 0;
-    }
-
-    public function getRegistrationBegin(): ?\DateTimeInterface
-    {
-        return $this->registration_begin ?? $this->event->registration_begin;
-    }
-
-    public function getRegistrationEnd(): ?\DateTimeInterface
-    {
-        return $this->registration_end ?? $this->event->registration_end;
-    }
-
-    public function getModificationEnd(): ?\DateTimeInterface
-    {
-        return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
-    }
-
-    public function hasStarted(): bool
-    {
-        return $this->start->getTimestamp() < time();
-    }
-
-    public function hasEnded(): bool
-    {
-        return $this->end->getTimestamp() < time();
     }
 
     /**

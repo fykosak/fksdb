@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
-use FKSDB\Components\Schedule\GroupList;
+use FKSDB\Components\Schedule\Forms\ScheduleGroupForm;
 use FKSDB\Components\Schedule\ItemGrid;
+use FKSDB\Components\Schedule\ScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
@@ -59,7 +56,7 @@ final class GroupPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-clipboard-list'
+            $this->getEntity()->schedule_group_type->getIconName()
         );
     }
 
@@ -80,19 +77,6 @@ final class GroupPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
-    public function renderList(): void
-    {
-        $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), 'create'),
-            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:Person:list'),
-        ];
-    }
-
     protected function getORMService(): ScheduleGroupService
     {
         return $this->service;
@@ -110,9 +94,9 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): ScheduleGroupFormComponent
+    protected function createComponentCreateForm(): ScheduleGroupForm
     {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), null);
+        return new ScheduleGroupForm($this->getEvent(), $this->getContext(), null);
     }
 
     /**
@@ -123,17 +107,17 @@ final class GroupPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): ScheduleGroupFormComponent
+    protected function createComponentEditForm(): ScheduleGroupForm
     {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
+        return new ScheduleGroupForm($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws GoneException
      */
-    protected function createComponentGrid(): GroupList
+    protected function createComponentGrid(): ScheduleList
     {
-        return new GroupList($this->getContext(), $this->getEvent());
+        throw new GoneException();
     }
 
     /**

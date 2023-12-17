@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class PostContactType extends FakeStringEnum implements EnumColumn
@@ -35,5 +36,10 @@ final class PostContactType extends FakeStringEnum implements EnumColumn
             new self(self::PERMANENT),
             new self(self::DELIVERY),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

@@ -1,0 +1,44 @@
+{varType array $data}
+{foreach $data as $datum}
+    {var FKSDB\Models\ORM\Tests\Test $test = $datum['test']}
+    {var FKSDB\Components\DataTest\TestMessage[] $messages = $datum[messages]}
+    <h3>{$test->getTitle()->toHtml()}
+        <span class="badge bg-{reset($messages)->level}">
+                    {count($messages)} {php ngettext('Error','Errors',count($messages))}
+                </span>
+    </h3>
+    <p class="text-muted">{$test->getDescription()}</p>
+    <div class="row row row-cols-1 row-cols-md-2 g-4 mb-3">
+        {foreach $messages as $message}
+            <div class="col">
+                <div class="card border-{$message->level} callout">
+                    {var $currentMessage = $message}
+                            {if $message->parent}
+                        <div class="card-header">
+                            {var $counter = 0}
+                                        {while $currentMessage->parent}
+                                <div style="padding-left: {$counter * 2}rem">
+                                    {if $counter !== 0}
+                                        <i class="fas fa-arrow-turn-up fa-rotate-90 me-2"></i>
+                                    {/if}
+                                                {$currentMessage->text}
+                                </div>
+                                {php $counter++}
+                                {php $currentMessage = $currentMessage->parent}
+                            {/while}
+                        </div>
+                    {/if}
+                    <div class="card-body">
+                        {$currentMessage->text}
+                    </div>
+                </div>
+            </div>
+        {/foreach}
+    </div>
+    <hr/>
+{/foreach}
+{if !count($data)}
+    <h3 class="text-success">{_'No error at all'}</h3>
+{/if}
+
+

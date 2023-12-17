@@ -25,6 +25,7 @@ import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
+import PaymentCode from 'FKSDB/Components/Payments/payment-code';
 
 const translator = new Translator();
 
@@ -86,10 +87,28 @@ renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeP
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
-
+renderer.hashMapLoader.registerDataComponent('payment.qrcode', PaymentCode);
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    document.querySelectorAll('.referenced-container').forEach((fieldSet: HTMLFieldSetElement) => {
+        const button: HTMLButtonElement | null = fieldSet.querySelector('.container-toggle');
+        if (button) {
+            const getIcon = () => {
+                if (button.getAttribute('aria-expanded') === 'true') {
+                    button.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
+                } else {
+                    button.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+                }
+            };
+            button.addEventListener('click', getIcon);
+            getIcon();
+            if (fieldSet.querySelectorAll('.has-error').length && button.getAttribute('aria-expanded') === 'false') {
+                button.click();
+            }
+        }
+
+    });
 // @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options
@@ -161,109 +180,21 @@ window.addEventListener('DOMContentLoaded', () => {
     // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
 
-// @ts-ignore
-    $.widget('fks.referencedContainer', {
-// default options
-        options: {},
-        _create: function () {
-            const container = this.element as JQuery<HTMLElement>;
-            const $searchInput = container.find('input[name*=\'_c_search\'][type!=\'hidden\']');
-            const $compactValueInput = container.find('input[name*=\'_c_compact\']');
-            const $clearButton = container.find('input[type=\'submit\'][name*=\'__clear\']');
-            let compacted: JQuery<HTMLDivElement> | null = null;
-
-            //  const options = this.options;
-
-            function decompactifyContainer(): void {
-                if (compacted !== null) {
-                    compacted.hide();
-                }
-                container.show();
-            }
-
-            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLDivElement> {
-                const compactGroup = document.createElement('div');
-                const ReEl = () => {
-                    return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
-                        <h4>{label}</h4>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
-                            </div>
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary me-1"
-                                    title={translator.getText('button.edit')}
-                                    onClick={() => {
-                                        decompactifyContainer();
-                                    }}>
-                                    <span className="fas fa-pen me-3"/>
-                                    {translator.getText('button.edit')}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-warning"
-                                    title={translator.getText('Delete')}
-                                    onClick={() => {
-                                        $clearButton.click();
-                                    }}>
-                                    <span className="fas fa-times me-3"/>
-                                    {translator.getText('Delete')}
-                                </button>
-                            </div>
-                        </div>
-                    </fieldset>;
-                }
-                const root = createRoot(compactGroup);
-                root.render(<ReEl/>, compactGroup);
-                return $(compactGroup);
-            }
-
-
-            function compactifyContainer(): void {
-
-                if (compacted === null) {
-                    const label = container.find('> fieldset > h4').text();
-                    const value = $compactValueInput.val();
-                    compacted = createCompactField(label, value);
-                    compacted.insertAfter(container);
-                    //elContainer.find('legend').click(compactifyContainer);
-                    //decorateClearButton(); //in original container
-                }
-                compacted.show();
-                container.hide();
-            }
-
-            const hasAnyFields = container.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
-                return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
-            });
-
-            const hasErrors = container.find('.has-error');
-
-            if ($searchInput.length) {
-                // searchifyContainer();
-            } else if ($clearButton.length && !(hasAnyFields.length || hasErrors.length)) {
-                compactifyContainer();
-            } else if ($clearButton.length && (hasAnyFields.length || hasErrors.length)) {
-                // decorateClearButton();
-            }
-        },
-    });
-    // @ts-ignore
-    $('[data-referenced]').referencedContainer();
-
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
         options: {},
         _create: function () {
+
+            type TItem = { html?: string; label: string; description?: string; place?: string; value: number };
+            type TData = Array<TItem>;
             const extractLast = (term: string): string => {
                 return term.split(/,\s*/).pop();
             }
 
             const multiSelect: boolean = this.element.data('ac-multiselect');
             const defaultValue: number = this.element.val();
-            const defaultText: string | string[] = this.element.data('ac-default-value');
+            const defaultData: TData = this.element.data('ac-default');
+            const renderMethod = this.element.data('ac-render-method');
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
@@ -281,21 +212,16 @@ window.addEventListener('DOMContentLoaded', () => {
             metaEl.insertAfter(el);
 
             this.element.data('autocomplete', el);
-            if (defaultText) {
-                if (typeof defaultText === 'string') {
-                    el.val(defaultText);
-                } else {
-                    el.val(defaultText.join(', '));
-                }
+            if (defaultData) {
+                el.val(defaultData.map((value: TItem) => value.label).join(', '));
             }
-            type TData = Array<{ value: number; label?: string | string[] }>
 
             const cache: { [key: string]: TData } = {};
             const labelCache: Record<string, string> = {};
             let termFunction = (arg: string): string => arg;
             // ensures default value is always suggested (needed for AJAX)
             const conservationFunction = (data: TData): TData => {
-                if (!defaultText) {
+                if (!defaultData) {
                     return data;
                 }
                 let found = false;
@@ -306,10 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 if (!found) {
-                    data.push({
-                        label: defaultText,
-                        value: defaultValue,
-                    });
+                    data = [...data, ...defaultData];
                 }
                 return data;
             };
@@ -350,7 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             if (multiSelect) {
-                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     labelCache[ui.item.value] = ui.item.label;
                     if (this.element.val()) {
                         this.element.val(this.element.val() + ',' + ui.item.value);
@@ -364,13 +287,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 };
                 options.focus = () => false;
             } else {
-                options.select = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     this.element.change();
                     return false;
                 };
-                options.focus = (event: JQuery.Event, ui: { item: { label: string, value: number | string } }) => {
+                options.focus = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     return false;
@@ -380,21 +303,24 @@ window.addEventListener('DOMContentLoaded', () => {
             // @ts-ignore
             const acEl = el.autocomplete(options);
 
-            const renderMethod = this.element.data('ac-render-method');
+            const renderItem = (item: TItem): JQuery => {
+                switch (renderMethod) {
+                    case 'tags':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.description + '</a>');
+                    case 'person':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>');
+                    case 'school':
+                        return $('<li>')
+                            .append('<a>' + (item.html || item.label) + '</a>');
+                    default:
+                        return eval(renderMethod);
+                }
+            };
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: { label: string, description?: string, place?: string, value: number }): JQuery => {
-                    switch (renderMethod) {
-                        case 'tags':
-                            return $('<li>')
-                                .append('<a>' + item.label + '<br>' + item.description + '</a>')
-                                .appendTo(ul);
-                        case 'person':
-                            return $('<li>')
-                                .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>')
-                                .appendTo(ul);
-                        default:
-                            return eval(renderMethod);
-                    }
+                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: TItem): JQuery => {
+                    return renderItem(item).appendTo(ul);
                 };
             }
         },

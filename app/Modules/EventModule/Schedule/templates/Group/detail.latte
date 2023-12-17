@@ -1,7 +1,7 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
+            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $model}
             <div class="mb-3">
                 {control columnTable [
                     'schedule_group.schedule_group_id',
@@ -15,7 +15,8 @@
                     ], $model,1024}
             </div>
             {control printer:button 'schedule_group.edit', $model}
-            <a class="btn btn-outline-primary" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
+            <a class="btn btn-outline-primary"
+               href="{plink :Schedule:Item:create,'groupId'=>$model->schedule_group_id}">{_'Create item'}</a>
         </div>
     </div>
     <div class="panel color-auto">

@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class ItemState extends FakeStringEnum implements EnumColumn
@@ -60,7 +61,12 @@ final class ItemState extends FakeStringEnum implements EnumColumn
             new self(self::NEW),
             new self(self::USED),
             new self(self::UNPACKED),
-            new self(self::DAMAGED)
+            new self(self::DAMAGED),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

@@ -5,35 +5,23 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\Schedule\AllPersonList;
+use FKSDB\Components\Schedule\Forms\PersonScheduleForm;
+use FKSDB\Components\Schedule\PersonScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 final class PersonPresenter extends BasePresenter
 {
     /** @phpstan-use EntityPresenterTrait<PersonScheduleModel> */
     use EntityPresenterTrait;
-
-    private const FILTERED_TYPES = [
-        ScheduleGroupType::ACCOMMODATION_GENDER,
-        ScheduleGroupType::ACCOMMODATION_TEACHER,
-        ScheduleGroupType::VISA,
-        ScheduleGroupType::APPAREL,
-        ScheduleGroupType::TRANSPORT,
-        ScheduleGroupType::TICKET,
-    ];
 
     private PersonScheduleService $service;
 
@@ -42,40 +30,24 @@ final class PersonPresenter extends BasePresenter
         $this->service = $service;
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedMySchedule(): bool
+    public function actionDelete(): void
     {
-        $person = $this->getLoggedPerson();
-        return $person && count($person->getEventRoles($this->getEvent()));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function renderMySchedule(): void
-    {
-        $this->template->schedule = $this->prepareSchedule();
-        $this->template->person = $this->getLoggedPerson();
-    }
-
-    public function titleMySchedule(): PageTitle
-    {
-        return new PageTitle(null, _('My schedule'), 'fas fa-list');
+        try {
+            $this->traitHandleDelete();
+        } catch (\Throwable $exception) {
+            $this->flashMessage(_('Error: ' . $exception->getMessage()), Message::LVL_ERROR);
+            $this->redirect('list');
+        }
+        $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
+        $this->redirect('list');
     }
 
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
-     * @throws EventNotFoundException
      */
     public function renderDetail(): void
     {
-        $this->template->schedule = $this->prepareSchedule();
-        $this->template->otherSchedule = $this->getEvent()
-            ->getScheduleGroups()
-            ->where('schedule_group_type', self::FILTERED_TYPES);
         $this->template->model = $this->getEntity();
     }
 
@@ -101,25 +73,6 @@ final class PersonPresenter extends BasePresenter
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @phpstan-return ScheduleGroupModel[][]
-     */
-    private function prepareSchedule(): array
-    {
-        $dates = [];
-        /** @var ScheduleGroupModel $group $group */
-        foreach ($this->getEvent()->getScheduleGroups()->order('schedule_group.start') as $group) {
-            if (in_array($group->schedule_group_type->value, self::FILTERED_TYPES)) {
-                continue;
-            }
-            $currentKey = $group->start->format('Y-d-m');
-            $dates[$currentKey] = $dates[$currentKey] ?? [];
-            $dates[$currentKey][] = $group;
-        }
-        return $dates;
     }
 
     /**
@@ -154,18 +107,26 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): AllPersonList
+    protected function createComponentGrid(): PersonScheduleList
     {
-        return new AllPersonList($this->getContext(), $this->getEvent());
+        return new PersonScheduleList($this->getContext(), $this->getEvent());
     }
 
-    protected function createComponentCreateForm(): Control
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCreateForm(): PersonScheduleForm
     {
-        throw new NotImplementedException();
+        return new PersonScheduleForm($this->getEvent(), $this->getContext(), null);
     }
 
-    protected function createComponentEditForm(): Control
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEditForm(): PersonScheduleForm
     {
-        throw new NotImplementedException();
+        return new PersonScheduleForm($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 }

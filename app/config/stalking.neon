@@ -102,11 +102,8 @@ parameters:
             label: Payment
             minimalPermission: 128
             table: payment
-            links:
-                - payment.detail
             rows:
                 - payment.payment_id
-                - event.name
                 - payment.price
                 - payment.state
         contestant:
@@ -136,7 +133,7 @@ parameters:
             table: fyziklani_team_member
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
+                #- fyziklani_team.state
                 - event.name
             links:
                 - fyziklani_team.detail
@@ -160,7 +157,7 @@ parameters:
                 - fyziklani_team.detail
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
+                #- fyziklani_team.state
                 - event.name
         schedule_item:
             layout: grid

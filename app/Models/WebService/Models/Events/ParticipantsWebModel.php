@@ -13,7 +13,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId?:int,event_id?:int},array<mixed>>
+ * @phpstan-extends WebModel<array{eventId?:int,event_id:int},array<mixed>>
  */
 class ParticipantsWebModel extends WebModel
 {

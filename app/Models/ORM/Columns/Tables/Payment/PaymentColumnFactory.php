@@ -12,11 +12,11 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel,never>
+ * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel>
  */
 class PaymentColumnFactory extends AbstractColumnFactory
 {

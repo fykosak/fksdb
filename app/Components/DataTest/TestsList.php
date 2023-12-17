@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\DataTest;
 
-use FKSDB\Components\DataTest\Tests\Test;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Tests\Test;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\DI\Container;
 
 /**
@@ -30,19 +29,23 @@ class TestsList extends BaseComponent
     /**
      * @phpstan-param TModel $model
      */
-    public function render(Model $model, bool $showEmpty = false): void
+    public function render(Model $model, bool $list = true): void
     {
         $data = [];
         foreach ($this->tests as $test) {
-            $logger = new MemoryLogger();
+            $logger = new TestLogger();
             $test->run($logger, $model);
-            if (count($logger->getMessages()) || $showEmpty) {
+            if (count($logger->getMessages())) {
                 $data[] = [
                     'messages' => $logger->getMessages(),
                     'test' => $test,
                 ];
             }
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte', ['data' => $data]);
+        if ($list) {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte', ['data' => $data]);
+        } else {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'noList.latte', ['data' => $data]);
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class AuthTokenType extends FakeStringEnum implements EnumColumn
@@ -16,7 +17,7 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
     public const EVENT_NOTIFY = 'event_notify';
     public const CHANGE_EMAIL = 'change_email';
     /** @internal */
-    public const EMAIL_MESAGE = 'email_message';
+    public const EMAIL_MESSAGE = 'email_message';
     /** @deprecated */
     public const SSO = 'sso';
 
@@ -39,7 +40,7 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
     /**
      * @throws NotImplementedException
      */
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         throw new NotImplementedException();
     }
@@ -51,8 +52,16 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
             new self(self::RECOVERY),
             new self(self::EVENT_NOTIFY),
             new self(self::CHANGE_EMAIL),
-            new self(self::EMAIL_MESAGE),
+            new self(self::EMAIL_MESSAGE),
             new self(self::SSO),
         ];
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

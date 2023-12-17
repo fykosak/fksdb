@@ -51,7 +51,8 @@ class GraphComponent extends FrontEndComponent implements Chart
             $edges[] = [
                 'from' => $transition->source->value,
                 'to' => $transition->target->value,
-                'label' => $transition->label()->title,
+                'label' => $transition->label()->toHtml(),
+                'behaviorType' => $transition->behaviorType->value,
             ];
         }
         return ['nodes' => $nodes, 'links' => $edges];

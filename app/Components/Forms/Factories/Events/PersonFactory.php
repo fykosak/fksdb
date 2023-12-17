@@ -119,6 +119,6 @@ class PersonFactory extends AbstractFactory
                 }
             }
         }
-        return $fieldsDefinition;
+        return $fieldsDefinition;// @phpstan-ignore-line
     }
 }

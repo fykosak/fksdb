@@ -10,7 +10,6 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -130,7 +129,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \ReflectionException
-     * @throws BadTypeException
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
@@ -302,7 +300,6 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentApplication(): ApplicationComponent
     {

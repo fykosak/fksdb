@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Components\Payments\MyPaymentList;
 use Fykosak\Utils\UI\PageTitle;
 
 final class MyPaymentsPresenter extends BasePresenter
@@ -21,17 +19,8 @@ final class MyPaymentsPresenter extends BasePresenter
         return true;
     }
 
-    /**
-     * @phpstan-return PersonRelatedGrid<PaymentModel>
-     */
-    protected function createComponentMyPaymentGrid(): PersonRelatedGrid
+    protected function createComponentMyPaymentGrid(): MyPaymentList
     {
-        /** @phpstan-ignore-next-line */
-        return new PersonRelatedGrid(
-            'payment',
-            $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
-            $this->getContext()
-        );
+        return new MyPaymentList($this->getContext(), $this->getLoggedPerson());
     }
 }

@@ -80,8 +80,8 @@ class OrganizerModule extends AbstractPageDisplayTestCase
             ['Organizer:Person', 'tests'],
             ['Organizer:Person', 'list'],
 
-            ['Organizer:School', 'list'],
-            ['Organizer:School', 'create'],
+            ['Organizer:Schools', 'default'],
+            ['Organizer:Schools', 'create'],
             ['Organizer:Spam', 'list'],
 
             ['Warehouse:Dashboard', 'default'],

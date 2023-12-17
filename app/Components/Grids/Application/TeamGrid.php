@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\UI\Title;
@@ -26,10 +25,6 @@ final class TeamGrid extends BaseGrid
         $this->event = $event;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;
@@ -47,6 +42,7 @@ final class TeamGrid extends BaseGrid
                 '@fyziklani_team.fyziklani_team_id',
                 '@fyziklani_team.name',
                 '@fyziklani_team.state',
+                '@fyziklani_team.scholarship',
                 '@fyziklani_team.game_lang',
                 '@fyziklani_team.category',
                 '@fyziklani_team.phone',
@@ -55,7 +51,21 @@ final class TeamGrid extends BaseGrid
         $this->addPresenterButton(
             'detail',
             'detail',
-            new Title(null, _('button.detail')),
+            new Title(null, _('button.team.detail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            'orgDetail',
+            'orgDetail',
+            new Title(null, _('button.team.orgDetail')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            'edit',
+            'edit',
+            new Title(null, _('button.team.edit')),
             false,
             ['id' => 'fyziklani_team_id']
         );

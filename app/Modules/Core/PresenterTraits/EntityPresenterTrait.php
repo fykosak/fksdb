@@ -8,8 +8,8 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -160,7 +160,7 @@ trait EntityPresenterTrait
         if ($candidate) {
             return $candidate;
         } else {
-            throw new ModelNotFoundException(_('Model does not exists'));
+            throw new ModelNotFoundException(_('Model does not exist.'));
         }
     }
 
