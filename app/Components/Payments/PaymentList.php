@@ -76,7 +76,7 @@ final class PaymentList extends BaseList
 
     protected function configure(): void
     {
-        $this->paginate = true;
+        $this->paginate = false;
         $this->filtered = true;
         $this->counter = true;
         $this->mode = self::ModePanel;
