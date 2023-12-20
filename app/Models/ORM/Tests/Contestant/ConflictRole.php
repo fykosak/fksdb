@@ -86,5 +86,4 @@ class ConflictRole extends Test
             }
         }
     }
-
 }
