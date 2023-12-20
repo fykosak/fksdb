@@ -1,14 +1,10 @@
 {block outerContent}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Upload'}</h2>
-            {control navigationChooser:board 'Public.Dashboard.default'}
+    {foreach $navRoots as $root}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$root['title']->toHtml()}</h2>
+                {control navigationChooser:board $root}
+            </div>
         </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Profile'}</h2>
-            {control navigationChooser:board 'Profile.Dashboard.default'}
-        </div>
-    </div>
+    {/foreach}
 {/block}

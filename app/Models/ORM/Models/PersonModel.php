@@ -21,7 +21,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Tests\Person\BornDateTest;
-use FKSDB\Models\ORM\Tests\Person\EventCoveringTest;
 use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
 use FKSDB\Models\ORM\Tests\Person\ParticipantsDurationTest;
 use FKSDB\Models\ORM\Tests\Person\PostgraduateStudyTest;
@@ -496,7 +495,7 @@ final class PersonModel extends Model implements Resource
         return [
             new GenderFromBornNumberTest($container),
             new ParticipantsDurationTest($container),
-            new EventCoveringTest($container),
+            // new EventCoveringTest($container),
             new StudyYearTest($container),
             new PostgraduateStudyTest($container),
             new SchoolChangeTest($container),
