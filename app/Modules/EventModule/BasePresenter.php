@@ -9,6 +9,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\ComponentReflection;
 use Nette\Security\Resource;
@@ -102,12 +103,37 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         return new EventChooser($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @phpstan-return string[]
-     */
     protected function getNavRoots(): array
     {
-        return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
+        return [
+            [
+                'title' => new Title(null, _('Applications')),
+                'items' => [
+                    'Event:Team:detailedList' => [],
+                    'Event:Team:default' => [],
+                    'Event:Team:mass' => [],
+                    'Event:Team:create' => [],
+                    #single
+                    'Event:Application:default' => [],
+                    'Event:Application:mass' => [],
+                    'Event:Application:import' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Others')),
+                'items' => [
+                    'Event:Report:default' => [],
+                    'Event:EventOrganizer:list' => [],
+                    'Event:Payments:create' => [],
+                    'Event:Payments:list' => [],
+                    'Game:Dashboard:default' => [],
+                    'Schedule:Dashboard:default' => [],
+                    'Event:Chart:list' => [],
+                    'Event:Dispatch:default' => [],
+                    'Event:Dashboard:default' => [],
+                ],
+            ],
+        ];
     }
 
     /**

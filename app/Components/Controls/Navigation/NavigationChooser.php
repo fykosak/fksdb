@@ -15,43 +15,73 @@ use Nette\Application\UI\InvalidLinkException;
 
 /**
  * @method BasePresenter getPresenter()
- * @phpstan-import-type TItem from NavigationFactory
- * @phpstan-import-type TRootItem from NavigationFactory
+ * @phpstan-type TItem array{
+ *      presenter:string,
+ *      action:string,
+ *      params:array<string,scalar|null>,
+ * }
+ * @phpstan-type TRootItem array{title:Title,items:array<string,scalar[]>}
  */
-final class NavigationChooserComponent extends NavigationItemComponent
+final class NavigationChooser extends NavigationItemComponent
 {
-    private NavigationFactory $navigationFactory;
     private PresenterBuilder $presenterBuilder;
 
-    final public function injectPrimary(NavigationFactory $navigationFactory, PresenterBuilder $presenterBuilder): void
+    final public function injectPrimary(PresenterBuilder $presenterBuilder): void
     {
         $this->presenterBuilder = $presenterBuilder;
-        $this->navigationFactory = $navigationFactory;
     }
 
     /**
+     * @phpstan-param TRootItem $root
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     * @throws \ReflectionException
+     * @throws BadRequestException
+     */
+    final public function renderNavTitle(array $root): void
+    {
+        $item = new NavItem($root['title'], '#', [], $this->getItems(self::mapArray($root['items'])));
+        parent::render($item);
+    }
+
+    /**
+     * @phpstan-param array<string,scalar[]> $root
+     * @return TItem[]
+     */
+    private static function mapArray(array $root): array
+    {
+        $items = [];
+        foreach ($root as $key => $value) {
+            $items[] = self::createNode($key, $value);
+        }
+        return $items;
+    }
+
+    /**
+     * @phpstan-param array<string,scalar|null> $params
+     * @phpstan-return TItem
+     */
+    private static function createNode(string $nodeId, array $params): array
+    {
+        [$module, $presenter, $action] = explode(':', $nodeId);
+        return [
+            'presenter' => $module . ':' . $presenter,
+            'action' => $action,
+            'params' => $params,
+        ];
+    }
+
+    /**
+     * @phpstan-param TRootItem $root
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    final public function renderNav(string $root): void
+    final public function renderBoard(array $root, bool $subTitle = false): void
     {
-        $structure = $this->navigationFactory->getStructure($root);
-        parent::render($this->getItem($structure));
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws InvalidLinkException
-     * @throws \ReflectionException
-     */
-    final public function renderBoard(string $root, bool $subTitle = false): void
-    {
-        $structure = $this->navigationFactory->getStructure($root);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte', [
-            'items' => $this->getItems($structure),
+            'items' => $this->getItems(self::mapArray($root['items'])),
             'subTitle' => $subTitle,
         ]);
     }
@@ -68,29 +98,17 @@ final class NavigationChooserComponent extends NavigationItemComponent
     }
 
     /**
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws InvalidLinkException
-     * @throws \ReflectionException
-     * @phpstan-param TRootItem $structure
-     */
-    private function getItem(array $structure): NavItem
-    {
-        return new NavItem($this->getItemTitle($structure), '#', [], $this->getItems($structure));
-    }
-
-    /**
      * @phpstan-return NavItem[]
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws BadRequestException
      * @throws \ReflectionException
-     * @phpstan-param TRootItem $structure
+     * @phpstan-param TItem[] $structure
      */
     private function getItems(array $structure): array
     {
         $items = [];
-        foreach ($structure['parents'] as $item) {
+        foreach ($structure as $item) {
             if ($this->isItemVisible($item)) {
                 $items[] = new NavItem(
                     $this->getItemTitle($item),
