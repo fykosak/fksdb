@@ -5,9 +5,18 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{$test->getTitle()->toHtml()}
-                <span class="badge bg-{reset($messages)->level}">
-                    {count($messages)} {php ngettext('Error','Errors',count($messages))}
-                </span>
+                {var $warnings = array_filter($messages,fn($message)=>$message->level === Fykosak\Utils\Logging\Message::LVL_WARNING)}
+                {var $errors = array_filter($messages,fn($message)=>$message->level === Fykosak\Utils\Logging\Message::LVL_ERROR)}
+                {if count($errors)}
+                    <span class="badge bg-danger">
+                        {count($errors)} {ngettext('Error','Errors',count($errors))}
+                    </span>
+                {/if}
+                {if count($warnings)}
+                    <span class="badge bg-warning">
+                        {count($warnings)} {ngettext('Warning','Warnings',count($warnings))}
+                    </span>
+                {/if}
             </h2>
             <p class="text-muted">{$test->getDescription()}</p>
             <div class="row row row-cols-1 row-cols-md-2 g-4">

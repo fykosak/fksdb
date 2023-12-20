@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Tests\Contestant\ConflictRole;
 use FKSDB\Models\ORM\Tests\Contestant\InvalidCategory;
 use FKSDB\Models\ORM\Tests\Test;
-use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
@@ -83,6 +84,7 @@ final class ContestantModel extends Model implements Resource
     {
         return [
             new InvalidCategory($container),
+            new ConflictRole($container),
         ];
     }
 }

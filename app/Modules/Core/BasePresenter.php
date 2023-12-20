@@ -7,7 +7,7 @@ namespace FKSDB\Modules\Core;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
-use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
@@ -40,6 +40,7 @@ use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
+ * @phpstan-import-type TRootItem from NavigationChooser
  */
 abstract class BasePresenter extends Presenter
 {
@@ -348,7 +349,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @phpstan-return string[]
+     * @phpstan-return TRootItem[]
      */
     protected function getNavRoots(): array
     {
@@ -360,9 +361,9 @@ abstract class BasePresenter extends Presenter
         return $this->diContainer;
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooserComponent
+    protected function createComponentNavigationChooser(): NavigationChooser
     {
-        return new NavigationChooserComponent($this->getContext());
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent

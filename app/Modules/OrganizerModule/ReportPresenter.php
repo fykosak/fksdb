@@ -15,7 +15,7 @@ final class ReportPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Report'), 'fas fa-calendar-alt');
+        return new PageTitle(null, _('Errors & warnings'), 'fas fa-triangle-exclamation');
     }
 
     public function authorizedDefault(): bool
