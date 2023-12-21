@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Utils\FormUtils;
@@ -30,7 +30,7 @@ class EventFormComponent extends EntityFormComponent
     public const CONT_EVENT = 'event';
 
     private ContestYearModel $contestYear;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
     private AuthTokenService $authTokenService;
     private EventService $eventService;
 
@@ -41,12 +41,12 @@ class EventFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
+        ReflectionFactory $reflectionFactory,
         AuthTokenService $authTokenService,
         EventService $eventService
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->eventService = $eventService;
     }
 
@@ -122,7 +122,7 @@ class EventFormComponent extends EntityFormComponent
      */
     private function createEventContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainerWithMetadata('event', [
+        return $this->reflectionFactory->createContainerWithMetadata('event', [
             'event_type_id' => ['required' => true],
             'event_year' => ['required' => true],
             'name' => ['required' => true],

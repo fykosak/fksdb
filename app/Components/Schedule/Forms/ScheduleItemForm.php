@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Forms;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
@@ -26,7 +26,7 @@ class ScheduleItemForm extends EntityFormComponent
 
     private ScheduleItemService $scheduleItemService;
     private ScheduleGroupModel $group;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
 
     public function __construct(
         ScheduleGroupModel $group,
@@ -39,10 +39,10 @@ class ScheduleItemForm extends EntityFormComponent
 
     final public function injectPrimary(
         ScheduleItemService $scheduleItemService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ReflectionFactory $reflectionFactory
     ): void {
         $this->scheduleItemService = $scheduleItemService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
@@ -86,7 +86,7 @@ class ScheduleItemForm extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('schedule_item', [
+        $container = $this->reflectionFactory->createContainerWithMetadata('schedule_item', [
             'name_cs' => ['required' => true],
             'name_en' => ['required' => true],
             'description_cs' => ['required' => false],

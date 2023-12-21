@@ -8,12 +8,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Modules\Core\Language;
@@ -33,7 +33,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     private ?PersonModel $loggedPerson;
     private AccountManager $accountManager;
     private TeacherService $teacherService;
-    private SingleReflectionFormFactory $reflectionFactory;
+    private ReflectionFactory $reflectionFactory;
 
     public function __construct(
         Container $container,
@@ -46,7 +46,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     final public function inject(
         AccountManager $accountManager,
         TeacherService $teacherService,
-        SingleReflectionFormFactory $reflectionFactory
+        ReflectionFactory $reflectionFactory
     ): void {
         $this->accountManager = $accountManager;
         $this->teacherService = $teacherService;

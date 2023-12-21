@@ -59,7 +59,7 @@ final class MassTransitionComponent extends BaseComponent
         }
         $this->getPresenter()->flashMessage(
             sprintf(
-                _('Total %d applications, state changed %d, unavailable %d. '),
+                _('Total %d applications, state changed %d, unavailable %d.'),
                 $total,
                 $total - $errored,
                 $errored

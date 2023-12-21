@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Warehouse;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
@@ -25,18 +25,18 @@ class ProductFormComponent extends EntityFormComponent
 
     protected ProducerService $producerService;
     protected ProductService $productService;
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+    protected ReflectionFactory $reflectionFactory;
 
     public const CONTAINER = 'container';
 
     public function injectServiceProducer(
         ProducerService $producerService,
         ProductService $productService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ReflectionFactory $reflectionFactory
     ): void {
         $this->producerService = $producerService;
         $this->productService = $productService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
@@ -75,7 +75,7 @@ class ProductFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_product', [
+        $container = $this->reflectionFactory->createContainerWithMetadata('warehouse_product', [
             'name_cs' => ['required' => true],
             'name_en' => ['required' => true],
             'description_cs' => ['required' => true],

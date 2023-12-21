@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
@@ -32,11 +32,11 @@ final class PublicSchoolForm extends EntityFormComponent
     public const CONT_SCHOOL = 'school';
 
     private SchoolService $schoolService;
-    private SingleReflectionFormFactory $reflectionFormFactory;
+    private ReflectionFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         SchoolService $schoolService,
-        SingleReflectionFormFactory $reflectionFormFactory
+        ReflectionFactory $reflectionFormFactory
     ): void {
         $this->schoolService = $schoolService;
         $this->reflectionFormFactory = $reflectionFormFactory;

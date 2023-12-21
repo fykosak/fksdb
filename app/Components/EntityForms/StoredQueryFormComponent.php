@@ -7,13 +7,13 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\StoredQuery\ParameterService;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\TagService;
@@ -42,14 +42,14 @@ class StoredQueryFormComponent extends EntityFormComponent
     private TagService $storedQueryTagService;
     private ParameterService $storedQueryParameterService;
     private StoredQueryFactory $storedQueryFactory;
-    private SingleReflectionFormFactory $reflectionFormFactory;
+    private ReflectionFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         QueryService $storedQueryService,
         TagService $storedQueryTagService,
         ParameterService $storedQueryParameterService,
         StoredQueryFactory $storedQueryFactory,
-        SingleReflectionFormFactory $reflectionFormFactory
+        ReflectionFactory $reflectionFormFactory
     ): void {
         $this->storedQueryService = $storedQueryService;
         $this->storedQueryTagService = $storedQueryTagService;

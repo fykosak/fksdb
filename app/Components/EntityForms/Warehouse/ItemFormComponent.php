@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Warehouse;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
@@ -28,7 +28,7 @@ class ItemFormComponent extends EntityFormComponent
     protected ProductService $productService;
     protected ItemService $itemService;
     private ContestModel $contest;
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+    protected ReflectionFactory $reflectionFactory;
 
     public const CONTAINER = 'container';
 
@@ -41,11 +41,11 @@ class ItemFormComponent extends EntityFormComponent
     public function injectServiceProducer(
         ProductService $productService,
         ItemService $itemService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ReflectionFactory $reflectionFactory
     ): void {
         $this->productService = $productService;
         $this->itemService = $itemService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
@@ -91,7 +91,7 @@ class ItemFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_item', [
+        $container = $this->reflectionFactory->createContainerWithMetadata('warehouse_item', [
             'state' => ['required' => true],
             'description_cs' => ['required' => true],
             'description_en' => ['required' => true],

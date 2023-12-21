@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\FOF\MemberInfoMail;
 use FKSDB\Models\Mail\FOF\OrganizerInfoMail;
@@ -23,6 +22,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
@@ -43,7 +43,7 @@ use Nette\InvalidStateException;
  */
 abstract class TeamForm extends EntityFormComponent
 {
-    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected ReflectionFactory $reflectionFormFactory;
     protected TeamMachine $machine;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventModel $event;
@@ -67,7 +67,7 @@ abstract class TeamForm extends EntityFormComponent
     final public function injectPrimary(
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
-        SingleReflectionFormFactory $reflectionFormFactory,
+        ReflectionFactory $reflectionFormFactory,
         ReferencedPersonFactory $referencedPersonFactory
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
