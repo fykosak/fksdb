@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
@@ -27,7 +27,7 @@ class PersonFormComponent extends EntityFormComponent
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
     private PersonService $personService;
     private PersonInfoService $personInfoService;
     private MemoryLogger $logger;
@@ -41,11 +41,11 @@ class PersonFormComponent extends EntityFormComponent
     }
 
     final public function injectFactories(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
+        ReflectionFactory $reflectionFactory,
         PersonService $personService,
         PersonInfoService $personInfoService
     ): void {
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
     }
@@ -61,7 +61,7 @@ class PersonFormComponent extends EntityFormComponent
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
                 case self::PERSON_CONTAINER:
-                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata(
+                    $control = $this->reflectionFactory->createContainerWithMetadata(
                         $table,
                         $rows,
                         $this->userPermission

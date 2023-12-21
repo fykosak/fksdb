@@ -858,7 +858,9 @@ orm:
             note:
                 type: text
                 title: _('Note')
-                omitInputField: true
+            internal_note:
+                type: text
+                title: _('Internal note')
             category:
                 type: enum
                 title: _('Category')

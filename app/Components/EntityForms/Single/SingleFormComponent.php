@@ -8,13 +8,13 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
@@ -36,7 +36,7 @@ use Nette\Forms\Form;
 abstract class SingleFormComponent extends EntityFormComponent
 {
     protected ReferencedPersonFactory $referencedPersonFactory;
-    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected ReflectionFactory $reflectionFormFactory;
     protected EventParticipantService $eventParticipantService;
     /**
      * @phpstan-var EventParticipantMachine<ParticipantHolder> $machine
@@ -63,7 +63,7 @@ abstract class SingleFormComponent extends EntityFormComponent
 
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
-        SingleReflectionFormFactory $reflectionFormFactory,
+        ReflectionFactory $reflectionFormFactory,
         EventParticipantService $eventParticipantService
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;

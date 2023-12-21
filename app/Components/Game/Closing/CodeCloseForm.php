@@ -40,20 +40,20 @@ class CodeCloseForm extends FormComponent
                 $givenTask = $codeProcessor->getTask($code);
                 if (!$expectedTask) {
                     throw new GameException(
-                        _('Final task mismatch: ') .
-                        _('system expected no task left')
+                        _('Final task mismatch') . ': ' .
+                        _('system expected no task left.')
                     );
                 }
                 if ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
                     throw new GameException(
-                        _('Final task mismatch: ') .
+                        _('Final task mismatch') . ': ' .
                         sprintf(_('system expected task %s on top.'), $expectedTask->label)
                     );
                 }
             } catch (NoTaskLeftException $exception) {
                 if ($expectedTask) {
                     throw new GameException(
-                        _('Final task mismatch: ') .
+                        _('Final task mismatch') . ': ' .
                         sprintf(_('system expected task %s on top.'), $expectedTask->label)
                     );
                 }

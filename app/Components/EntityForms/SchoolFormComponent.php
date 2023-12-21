@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
@@ -28,12 +28,12 @@ class SchoolFormComponent extends EntityFormComponent
 
     private SchoolService $schoolService;
     private AddressService $addressService;
-    private SingleReflectionFormFactory $reflectionFormFactory;
+    private ReflectionFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         AddressService $addressService,
         SchoolService $schoolService,
-        SingleReflectionFormFactory $reflectionFormFactory
+        ReflectionFactory $reflectionFormFactory
     ): void {
         $this->addressService = $addressService;
         $this->schoolService = $schoolService;

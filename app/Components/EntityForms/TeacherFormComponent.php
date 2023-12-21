@@ -6,12 +6,12 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolSelectField;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
@@ -31,7 +31,7 @@ class TeacherFormComponent extends EntityFormComponent
 
     private const CONTAINER = 'teacher';
 
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
     private TeacherService $teacherService;
     private ContestYearModel $contestYear;
     private ContestAuthorizator $contestAuthorizator;
@@ -44,12 +44,12 @@ class TeacherFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
+        ReflectionFactory $reflectionFactory,
         TeacherService $teacherService,
         ContestAuthorizator $contestAuthorizator,
         LinkGenerator $linkGenerator
     ): void {
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->teacherService = $teacherService;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->linkGenerator = $linkGenerator;
@@ -107,7 +107,7 @@ class TeacherFormComponent extends EntityFormComponent
      */
     private function createTeacherContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainerWithMetadata(
+        return $this->reflectionFactory->createContainerWithMetadata(
             'teacher',
             [
                 'active' => ['required' => true],

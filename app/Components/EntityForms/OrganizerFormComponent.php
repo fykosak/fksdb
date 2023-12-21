@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
@@ -29,7 +29,7 @@ class OrganizerFormComponent extends EntityFormComponent
     private ContestYearModel $contestYear;
     private ContestAuthorizator $contestAuthorizator;
     private OrganizerService $service;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
 
     public function __construct(Container $container, ContestYearModel $contestYear, ?OrganizerModel $model)
     {
@@ -38,11 +38,11 @@ class OrganizerFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
+        ReflectionFactory $reflectionFactory,
         OrganizerService $service,
         ContestAuthorizator $contestAuthorizator
     ): void {
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->service = $service;
         $this->contestAuthorizator = $contestAuthorizator;
     }
@@ -107,7 +107,7 @@ class OrganizerFormComponent extends EntityFormComponent
         $container = new ContainerWithOptions($this->container);
 
         foreach (['since', 'until'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField(
+            $control = $this->reflectionFactory->createField(
                 'org',
                 $field,
                 $this->contestYear->contest->getFirstYear(),
@@ -117,7 +117,7 @@ class OrganizerFormComponent extends EntityFormComponent
         }
 
         foreach (['role', 'tex_signature', 'domain_alias', 'order', 'contribution'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField('org', $field);
+            $control = $this->reflectionFactory->createField('org', $field);
             $container->addComponent($control, $field);
         }
         return $container;

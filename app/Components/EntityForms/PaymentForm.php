@@ -7,13 +7,13 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Submits\StorageException;
@@ -35,7 +35,7 @@ class PaymentForm extends EntityFormComponent
     private PaymentMachine $machine;
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
-    private SingleReflectionFormFactory $reflectionFormFactory;
+    private ReflectionFactory $reflectionFormFactory;
     /** @phpstan-var array{EventModel} */
     private array $sources;
     private PersonModel $loggedPerson;
@@ -59,7 +59,7 @@ class PaymentForm extends EntityFormComponent
     final public function injectPrimary(
         PaymentService $paymentService,
         SchedulePaymentService $schedulePaymentService,
-        SingleReflectionFormFactory $reflectionFormFactory
+        ReflectionFactory $reflectionFormFactory
     ): void {
         $this->paymentService = $paymentService;
         $this->schedulePaymentService = $schedulePaymentService;
