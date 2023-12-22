@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Single;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Forms\Form;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -17,15 +14,6 @@ use Nette\Forms\Form;
  */
 final class DsefFormComponent extends SingleFormComponent
 {
-    /**
-     * @throws BadTypeException
-     * @throws OmittedControlException
-     */
-    protected function configureForm(Form $form): void
-    {
-        parent::configureForm($form);
-    }
-
     /**
      * @phpstan-return EvaluatedFieldsDefinition
      */

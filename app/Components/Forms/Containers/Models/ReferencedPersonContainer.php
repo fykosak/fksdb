@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
@@ -144,7 +143,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 continue;
             }
             /**
-             * @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component
+             * @var BaseControl|ContainerWithOptions|AddressDataContainer|ScheduleContainer $component
              * @var string $fieldName
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Fyziklani;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -20,7 +20,6 @@ use Nette\Forms\Form;
  */
 final class NoteForm extends EntityFormComponent
 {
-    private ReflectionFactory $reflectionFormFactory;
     private TeamService2 $teamService;
 
     public function __construct(
@@ -30,29 +29,22 @@ final class NoteForm extends EntityFormComponent
         parent::__construct($container, $model);
     }
 
-    final public function injectPrimary(
-        TeamService2 $teamService,
-        ReflectionFactory $reflectionFormFactory
-    ): void {
-        $this->reflectionFormFactory = $reflectionFormFactory;
+    final public function injectPrimary(TeamService2 $teamService): void
+    {
         $this->teamService = $teamService;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainerWithMetadata(
-            'fyziklani_team',
-            [
-                'note' => ['required' => false],
-                'internal_note' => ['required' => false],
-            ],
-            new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
-        );
-        $form->addComponent($teamContainer, 'team');
+        $container = new ModelContainer($this->container, 'fyziklani_team');
+        $container->addField('note', ['required' => false]);
+        $container->addField('internal_note', ['required' => false]);
+        $form->addComponent($container, 'team');
     }
 
     protected function handleFormSuccess(Form $form): void

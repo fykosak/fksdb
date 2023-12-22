@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
@@ -11,11 +12,11 @@ use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
 /**
@@ -28,38 +29,35 @@ class SchoolFormComponent extends EntityFormComponent
 
     private SchoolService $schoolService;
     private AddressService $addressService;
-    private ReflectionFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         AddressService $addressService,
-        SchoolService $schoolService,
-        ReflectionFactory $reflectionFormFactory
+        SchoolService $schoolService
     ): void {
         $this->addressService = $addressService;
         $this->schoolService = $schoolService;
-        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->reflectionFormFactory->createContainerWithMetadata('school', [
-            'name_full' => ['required' => false],
-            'name' => ['required' => true],
-            'name_abbrev' => ['required' => true],
-            'email' => ['required' => false],
-            'ic' => ['required' => false],
-            'izo' => ['required' => false],
-            'note' => ['required' => false],
-            'active' => ['required' => false],
-            'study_h' => ['required' => false],
-            'study_p' => ['required' => false],
-            'study_u' => ['required' => false],
-            'verified' => ['required' => false],
-        ]);
+        $container = new ModelContainer($this->container, 'school');
+        $container->addField('name_full', ['required' => false]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('name_abbrev', ['required' => true]);
+        $container->addField('email', ['required' => false]);
+        $container->addField('ic', ['required' => false]);
+        $container->addField('izo', ['required' => false]);
+        $container->addField('note', ['required' => false]);
+        $container->addField('active', ['required' => false]);
+        $container->addField('study_h', ['required' => false]);
+        $container->addField('study_p', ['required' => false]);
+        $container->addField('study_u', ['required' => false]);
+        $container->addField('verified', ['required' => false]);
         $address = new ReferencedId(
             new AddressSearchContainer($this->container),
             new AddressDataContainer($this->container, false, true),

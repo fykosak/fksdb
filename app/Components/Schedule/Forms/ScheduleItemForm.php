@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Forms;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -26,7 +27,6 @@ class ScheduleItemForm extends EntityFormComponent
 
     private ScheduleItemService $scheduleItemService;
     private ScheduleGroupModel $group;
-    private ReflectionFactory $reflectionFactory;
 
     public function __construct(
         ScheduleGroupModel $group,
@@ -37,12 +37,9 @@ class ScheduleItemForm extends EntityFormComponent
         $this->group = $group;
     }
 
-    final public function injectPrimary(
-        ScheduleItemService $scheduleItemService,
-        ReflectionFactory $reflectionFactory
-    ): void {
+    final public function injectPrimary(ScheduleItemService $scheduleItemService): void
+    {
         $this->scheduleItemService = $scheduleItemService;
-        $this->reflectionFactory = $reflectionFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
@@ -83,24 +80,24 @@ class ScheduleItemForm extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->reflectionFactory->createContainerWithMetadata('schedule_item', [
-            'name_cs' => ['required' => true],
-            'name_en' => ['required' => true],
-            'description_cs' => ['required' => false],
-            'description_en' => ['required' => false],
-            'long_description_cs' => ['required' => false],
-            'long_description_en' => ['required' => false],
-            'payable' => ['required' => false],
-            'available' => ['required' => false],
-            'begin' => ['required' => false],
-            'end' => ['required' => false],
-            'capacity' => ['required' => false],
-            'price_czk' => ['required' => false],
-            'price_eur' => ['required' => false],
-        ]);
+        $container = new ModelContainer($this->container, 'schedule_item');
+        $container->addField('name_cs', ['required' => true]);
+        $container->addField('name_en', ['required' => true]);
+        $container->addField('description_cs', ['required' => false]);
+        $container->addField('description_en', ['required' => false]);
+        $container->addField('long_description_cs', ['required' => false]);
+        $container->addField('long_description_en', ['required' => false]);
+        $container->addField('payable', ['required' => false]);
+        $container->addField('available', ['required' => false]);
+        $container->addField('begin', ['required' => false]);
+        $container->addField('end', ['required' => false]);
+        $container->addField('capacity', ['required' => false]);
+        $container->addField('price_czk', ['required' => false]);
+        $container->addField('price_eur', ['required' => false]);
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->group->event->getScheduleGroups() as $group) {

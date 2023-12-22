@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -31,6 +32,7 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -79,15 +81,19 @@ abstract class TeamForm extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      * @note teoreticky by sa nemusela už overwritovať
      */
     final protected function configureForm(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainerWithMetadata(
-            'fyziklani_team',
-            $this->getTeamFieldsDefinition(),
-            new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
-        );
+        $teamContainer = new ModelContainer($this->container, 'fyziklani_team');
+        foreach ($this->getTeamFieldsDefinition() as $field => $metadata) {
+            $teamContainer->addField(
+                $field,
+                $metadata,
+                new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
+            );
+        }
         $form->addComponent($teamContainer, 'team');
         $this->appendPersonsFields($form);
 
