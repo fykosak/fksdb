@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -32,29 +33,25 @@ final class PublicSchoolForm extends EntityFormComponent
     public const CONT_SCHOOL = 'school';
 
     private SchoolService $schoolService;
-    private ReflectionFactory $reflectionFormFactory;
 
-    final public function injectPrimary(
-        SchoolService $schoolService,
-        ReflectionFactory $reflectionFormFactory
-    ): void {
+    final public function injectPrimary(SchoolService $schoolService): void
+    {
         $this->schoolService = $schoolService;
-        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->reflectionFormFactory->createContainerWithMetadata('school', [
-            'name_full' => ['required' => false],
-            'name' => ['required' => true],
-            'name_abbrev' => ['required' => true],
-            'email' => ['required' => false],
-            'note' => ['required' => false],
-        ]);
+        $container = new ModelContainer($this->container, 'school');
+        $container->addField('name_full', ['required' => false]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('name_abbrev', ['required' => true]);
+        $container->addField('email', ['required' => false]);
+        $container->addField('note', ['required' => false]);
 
         $address = new AddressDataContainer($this->container, false, true, false);
         $address->setOption('label', _('Address'));

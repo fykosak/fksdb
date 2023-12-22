@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
-use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -29,7 +30,6 @@ class OrganizerFormComponent extends EntityFormComponent
     private ContestYearModel $contestYear;
     private ContestAuthorizator $contestAuthorizator;
     private OrganizerService $service;
-    private ReflectionFactory $reflectionFactory;
 
     public function __construct(Container $container, ContestYearModel $contestYear, ?OrganizerModel $model)
     {
@@ -38,11 +38,9 @@ class OrganizerFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        ReflectionFactory $reflectionFactory,
         OrganizerService $service,
         ContestAuthorizator $contestAuthorizator
     ): void {
-        $this->reflectionFactory = $reflectionFactory;
         $this->service = $service;
         $this->contestAuthorizator = $contestAuthorizator;
     }
@@ -50,6 +48,7 @@ class OrganizerFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -101,24 +100,24 @@ class OrganizerFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     private function createContainer(): ContainerWithOptions
     {
-        $container = new ContainerWithOptions($this->container);
+        $container = new ModelContainer($this->container, 'org');
 
         foreach (['since', 'until'] as $field) {
-            $control = $this->reflectionFactory->createField(
-                'org',
+            $container->addField(
                 $field,
+                [],
+                null,
                 $this->contestYear->contest->getFirstYear(),
                 $this->contestYear->contest->getLastYear()
             );
-            $container->addComponent($control, $field);
         }
 
         foreach (['role', 'tex_signature', 'domain_alias', 'order', 'contribution'] as $field) {
-            $control = $this->reflectionFactory->createField('org', $field);
-            $container->addComponent($control, $field);
+            $container->addField($field);
         }
         return $container;
     }
