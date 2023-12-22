@@ -14,6 +14,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
@@ -52,6 +53,7 @@ final class NoteForm extends EntityFormComponent
         /** @phpstan-var array{team:array{note:string,internal_note:string}} $values */
         $values = $form->getValues('array');
         $this->teamService->storeModel($values['team'], $this->model);
+        Debugger::log(json_encode($values), 'team-notes');
         $this->getPresenter()->flashMessage(_('Notes has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
