@@ -48,4 +48,10 @@
         </div>
     </div>
     {include tests from './orgDetail.latte', model:$model}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Notes'}</h2>
+            {control noteForm}
+        </div>
+    </div>
 {/block}

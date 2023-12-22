@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -18,6 +16,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -45,7 +44,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     /** @phpstan-var EvaluatedFieldsDefinition */
     private array $fieldsDefinition;
     protected PersonService $personService;
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+    protected ReflectionFactory $reflectionFactory;
     protected FlagFactory $flagFactory;
     protected ?EventModel $event;
 
@@ -70,10 +69,10 @@ class ReferencedPersonContainer extends ReferencedContainer
     final public function injectPrimary(
         FlagFactory $flagFactory,
         PersonService $personService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ReflectionFactory $reflectionFactory
     ): void {
         $this->personService = $personService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->flagFactory = $flagFactory;
     }
 
@@ -144,7 +143,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 continue;
             }
             /**
-             * @var BaseControl|ModelContainer|AddressDataContainer|ScheduleContainer $component
+             * @var BaseControl|ContainerWithOptions|AddressDataContainer|ScheduleContainer $component
              * @var string $fieldName
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
@@ -222,21 +221,21 @@ class ReferencedPersonContainer extends ReferencedContainer
                 );
             case 'person':
             case 'person_info':
-                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
+                $control = $this->reflectionFactory->createField($sub, $fieldName);
                 break;
             case 'person_history':
                 if (!isset($this->contestYear)) {
                     throw new \InvalidArgumentException('Cannot get person_history without ContestYear');
                 }
                 if ($fieldName === 'study_year_new') {
-                    $control = $this->singleReflectionFormFactory->createField(
+                    $control = $this->reflectionFactory->createField(
                         $sub,
                         $fieldName,
                         $this->contestYear,
                         $metadata['flag'] //@phpstan-ignore-line
                     );
                 } else {
-                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
+                    $control = $this->reflectionFactory->createField($sub, $fieldName, $this->contestYear);
                 }
                 break;
             default:
@@ -247,7 +246,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     }
 
     /**
-     * @phpstan-param array{required?:bool,caption?:string|null,description?:string|null} $metadata
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     protected function appendMetadataField(BaseControl $control, string $fieldName, array $metadata): void
     {

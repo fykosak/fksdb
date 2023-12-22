@@ -35,7 +35,7 @@ final class PersonPresenter extends BasePresenter
         try {
             $this->traitHandleDelete();
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('Error: ' . $exception->getMessage()), Message::LVL_ERROR);
+            $this->flashMessage(_('Error') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('list');
         }
         $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
