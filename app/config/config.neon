@@ -125,6 +125,8 @@ php:
 
 database:
     reflection: discovered
+    options:
+        supportBooleans: true
 application:
     errorPresenter: Core:Error
     mapping:

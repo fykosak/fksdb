@@ -115,9 +115,10 @@ abstract class TeamForm extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
+        $this->teamService->explorer->beginTransaction();
         /** @phpstan-var array{team:array{category:string,name:string}} $values */
         $values = $form->getValues('array');
-        $this->teamService->explorer->beginTransaction();
+
         try {
             $values = array_reduce(
                 $this->getProcessing(),
@@ -160,7 +161,6 @@ abstract class TeamForm extends EntityFormComponent
                 (new MemberInfoMail($this->container))($holder);
                 (new OrganizerInfoMail($this->container))($holder);
             }
-
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
                 isset($this->model)
