@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9e8376c9b38479d5e6036763c216ede",
+    "content-hash": "26acef59f7c82fc4427db7e5165cbc90",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -98,16 +98,16 @@
         },
         {
             "name": "fykosak/nette-orm",
-            "version": "v0.4.4",
+            "version": "dev-dev-mapper",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "81a114d73048cef8b9bf98f370aef05f10090767"
+                "reference": "0d4f2d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/81a114d73048cef8b9bf98f370aef05f10090767",
-                "reference": "81a114d73048cef8b9bf98f370aef05f10090767",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/0d4f2d4",
+                "reference": "0d4f2d4",
                 "shasum": ""
             },
             "require": {
@@ -149,9 +149,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-orm/issues",
-                "source": "https://github.com/fykosak/nette-orm/tree/v0.4.4"
+                "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
             },
-            "time": "2023-11-13T19:50:11+00:00"
+            "time": "2023-12-23T20:12:27+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2826,6 +2826,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "fykosak/nette-orm": 20,
         "fykosak/nette-frontend-component": 20
     },
     "prefer-stable": false,
