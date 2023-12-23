@@ -88,18 +88,14 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         return $selection;
     }
 
-    public function getUsedCapacity(): int
+    public function getUsedCapacity(bool $removeRef = false): int
     {
         //->where('state !=', PersonScheduleState::Cancelled)
-        return $this->getInterested()->count();
-    }
-
-    public function hasFreeCapacity(): bool
-    {
-        if (is_null($this->capacity)) {
-            return true;
+        $query = $this->getInterested();
+        if ($removeRef) {
+            $query->unsetRefCache();
         }
-        return ($this->capacity - $this->getUsedCapacity()) > 0;
+        return $query->count();
     }
 
     /**
