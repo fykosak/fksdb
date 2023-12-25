@@ -6,6 +6,10 @@ namespace FKSDB\Components\PDFGenerators\Providers;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 
+/**
+ * @phpstan-template TRow
+ * @phpstan-template TParam of array
+ */
 abstract class AbstractPageComponent extends BaseComponent
 {
     public const FORMAT_A5_PORTRAIT = 'a5-portrait';
@@ -18,12 +22,16 @@ abstract class AbstractPageComponent extends BaseComponent
     public const FORMAT_B5_PORTRAIT = 'b5-portrait';
 
     /**
-     * @param mixed $row
+     * @phpstan-param TRow $row
+     * @phpstan-param TParam $params
      */
     abstract public function render($row, array $params = []): void;
 
     abstract public function getPageFormat(): string;
 
+    /**
+     * @phpstan-return array<string,string>
+     */
     public static function getAvailableFormats(): array
     {
         return [

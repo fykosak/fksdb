@@ -11,22 +11,20 @@ use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class ResultsWebModel extends WebModel
 {
 
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 
-    public function inject(
-        Container $container,
-        ContestYearService $contestYearService,
-        ResultsModelFactory $resultsModelFactory
-    ): void {
+    public function inject(ContestYearService $contestYearService, ResultsModelFactory $resultsModelFactory): void
+    {
         $this->contestYearService = $contestYearService;
         $this->resultsModelFactory = $resultsModelFactory;
-        $this->container = $container;
     }
 
     /**
@@ -59,7 +57,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setSeries(+$seriesSingle);
+                $resultsModel->setSeries((int)$seriesSingle);
                 $resultsNode->appendChild($this->createDetailNode($resultsModel, $doc));
             }
         }
@@ -74,20 +72,6 @@ class ResultsWebModel extends WebModel
             foreach ($args->cumulatives->cumulative as $cumulative) {
                 $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
-            }
-        }
-
-        if (isset($args->{'school-cumulatives'})) {
-            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
-
-            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'}
-                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
-            }
-
-            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
-                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
-                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
             }
         }
 
@@ -120,6 +104,20 @@ class ResultsWebModel extends WebModel
             }
         }
 
+        if (isset($args->{'school-cumulatives'})) {
+            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
+
+            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
+                $args->{'school-cumulatives'}->{'school-cumulative'}
+                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+            }
+
+            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
+                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
+                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
+            }
+        }
+
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($resultsNode), XSD_ANYXML);
@@ -133,7 +131,7 @@ class ResultsWebModel extends WebModel
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $detailNode = $doc->createElement('detail');
-        $detailNode->setAttribute('series', (string)$resultsModel->getSeries());
+        $detailNode->setAttribute('series', (string)$resultsModel->getSeries()); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
@@ -147,7 +145,7 @@ class ResultsWebModel extends WebModel
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $cumulativeNode = $doc->createElement('cumulative');
-        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
@@ -161,7 +159,7 @@ class ResultsWebModel extends WebModel
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $schoolNode = $doc->createElement('school-cumulative');
-        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $schoolNode;

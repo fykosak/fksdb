@@ -1,31 +1,37 @@
-{block content}
-    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
-    {include './group.detail.latte' group=>$model->schedule_group}
-    <hr/>
-    <h2>{_'Schedule item'}</h2>
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
 
-    <div class="mb-3">
-        <div class="row">
-            <b class="col-2">{_'Id'}</b>
-            <span class="col-10">#{$model->schedule_item_id}</span>
+{block titleBody}
+    {include parent}
+    {control printer:templateString '@schedule_item.capacity_progress', $model,1024}
+
+{/block}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'schedule_item.schedule_item_id',
+            'schedule_item.price_eur',
+            'schedule_item.price_czk',
+            'schedule_item.name',
+            'schedule_item.description',
+            'schedule_item.capacity',
+            'schedule_item.used_capacity',
+            'schedule_item.free_capacity',
+            ],$model,1024}
+            {control printer:button 'schedule_group.detail', $model}
+            {control printer:button 'schedule_item.edit', $model}
         </div>
-        {foreach [
-        '@schedule_item.price_eur',
-        '@schedule_item.price_czk',
-        '@schedule_item.name_cs',
-        '@schedule_item.name_en',
-        '@schedule_item.description_cs',
-        '@schedule_item.description_en',
-        '@schedule_item.capacity',
-        '@schedule_item.used_capacity',
-        '@schedule_item.free_capacity',
-        ] as $fieldName}
-            {include row from '../../../../../Components/Controls/ColumnPrinter/layout.row.latte' model:$model,userPermission:1024,name: $fieldName,printer:$control['valuePrinter']}
-        {/foreach}
-
     </div>
-    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:edit}">{_'Edit item'}</a>
-    <hr/>
-    <h2>{_'Persons'}</h2>
-    {control personsGrid}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Attendance'}</h2>
+            {control code}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Persons'}</h2>
+            {control personsGrid}
+        </div>
+    </div>
 {/block}

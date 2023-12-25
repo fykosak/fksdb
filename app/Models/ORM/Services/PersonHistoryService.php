@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method PersonHistoryModel storeModel(array $data, ?PersonHistoryModel $model = null)
+ * @phpstan-extends Service<PersonHistoryModel>
  */
-class PersonHistoryService extends Service
+final class PersonHistoryService extends Service
 {
 }

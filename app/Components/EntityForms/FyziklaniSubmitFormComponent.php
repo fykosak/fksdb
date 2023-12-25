@@ -6,16 +6,14 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * @property SubmitModel $model
+ * @phpstan-extends EntityFormComponent<SubmitModel>
  */
 class FyziklaniSubmitFormComponent extends EntityFormComponent
 {
@@ -27,13 +25,10 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 'team_id' => $this->model->fyziklani_team_id,
                 'points' => $this->model->points,
             ]);
@@ -42,12 +37,14 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{points:int} $values
+         */
+        $values = $form->getValues('array');
         try {
-            $logger = new MemoryLogger();
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
-            $handler->edit($logger, $this->model, $values['points']);
-            FlashMessageDump::dump($logger, $this->getPresenter());
+            $handler->edit($this->model, (int)$values['points']);
+            FlashMessageDump::dump($handler->logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);

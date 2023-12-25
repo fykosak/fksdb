@@ -1,5 +1,10 @@
-{block content}
-    {control navigationChooser:board 'Game.Dashboard.default'}
-    <hr/>
-    {control navigationChooser:board 'Game.Statistics.table'}
+{block outerContent}
+    {foreach $navRoots as $root}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$root['title']->toHtml()}</h2>
+                {control navigationChooser:board $root}
+            </div>
+        </div>
+    {/foreach}
 {/block}

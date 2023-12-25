@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
@@ -23,17 +24,17 @@ class EvaluationVyfuk2012 extends EvaluationStrategy
         return 's.raw_points';
     }
 
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): float
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): float
     {
         return $task->points;
     }
 
-    public function getSubmitPoints(SubmitModel $submit, ModelCategory $category): ?float
+    public function getSubmitPoints(SubmitModel $submit): ?float
     {
         return $submit->raw_points;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
     {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }
@@ -41,11 +42,11 @@ class EvaluationVyfuk2012 extends EvaluationStrategy
     protected function getCategoryMap(): array
     {
         return [
-            ModelCategory::VYFUK_6 => [6],
-            ModelCategory::VYFUK_7 => [7],
-            ModelCategory::VYFUK_8 => [8],
-            ModelCategory::VYFUK_9 => [9],
-            ModelCategory::VYFUK_UNK => [null],
+            ContestCategoryModel::VYFUK_6 => [StudyYear::Primary6],
+            ContestCategoryModel::VYFUK_7 => [StudyYear::Primary7],
+            ContestCategoryModel::VYFUK_8 => [StudyYear::Primary8],
+            ContestCategoryModel::VYFUK_9 => [StudyYear::Primary9],
+            ContestCategoryModel::VYFUK_UNK => [StudyYear::None],
         ];
     }
 }

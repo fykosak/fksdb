@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls;
 
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 class CaptchaBox extends SelectBox
@@ -21,7 +20,7 @@ class CaptchaBox extends SelectBox
         ]);
 
         $this->addRule(
-            fn(BaseControl $control): bool => $control->getValue() == self::VALUE_NO,
+            fn(self $control): bool => $control->getValue() == self::VALUE_NO,
             _('This form is for people only.')
         );
 

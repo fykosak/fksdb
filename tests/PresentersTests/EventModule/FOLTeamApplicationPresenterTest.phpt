@@ -45,7 +45,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -78,7 +78,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -90,7 +90,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::type(RedirectResponse::class, $response);
     }
 
-    public function testCreateOrg(): void
+    public function testCreateOrganizer(): void
     {
         $this->loginUser(5);
         $data = [
@@ -98,15 +98,15 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => (string)$this->personB->person_id,
-            'member_1_container' => self::personToValues($this->personB),
+            'member_1_container' => self::personToValues($this->event->event_type->contest, $this->personB),
             'member_2' => (string)$this->personC->person_id,
-            'member_2_container' => self::personToValues($this->personC),
+            'member_2_container' => self::personToValues($this->event->event_type->contest, $this->personC),
             'member_3' => (string)$this->personD->person_id,
-            'member_3_container' => self::personToValues($this->personD),
+            'member_3_container' => self::personToValues($this->event->event_type->contest, $this->personD),
             'member_4' => (string)$this->personE->person_id,
-            'member_4_container' => self::personToValues($this->personE),
+            'member_4_container' => self::personToValues($this->event->event_type->contest, $this->personE),
             'captcha' => 'pqrt',
             'privacy' => '1',
         ];
@@ -160,7 +160,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::exception(fn() => $this->createFormRequest('create', $data), ForbiddenRequestException::class);
     }
 
-    public function testCreateOrgOutDate(): void
+    public function testCreateOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);
@@ -169,7 +169,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team B',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -216,7 +216,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -260,7 +260,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrg(): void
+    public function testEditOrganizer(): void
     {
         $this->loginUser(5);
         $team = $this->createTeam('Original', [$this->personA]);
@@ -269,7 +269,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -297,7 +297,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -315,7 +315,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         );
     }
 
-    public function testEditOrgOutDate(): void
+    public function testEditOrganizerOutDate(): void
     {
         $this->outDateEvent();
         $this->loginUser(5);
@@ -325,7 +325,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -352,7 +352,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personB->person_id,
-            'member_0_container' => self::personToValues($this->personB),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personB),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -362,6 +362,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         ];
         $response = $this->createFormRequest('edit', $data, ['id' => $team->getPrimary()]);
         Assert::type(RedirectResponse::class, $response);
+        /** @phpstan-var TeamModel2|null $newTeam */
         $newTeam = $this->container->getByType(TeamService2::class)->findByPrimary($team->getPrimary());
         Assert::same(1, $newTeam->getMembers()->count('*'));
         Assert::same($this->personB->person_id, $newTeam->getMembers()->fetch()->person_id);
@@ -434,14 +435,17 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         Assert::same($before, $after);
     }
 
+    /**
+     * @phpstan-param PersonModel[] $persons
+     */
     protected function createTeam(string $name, array $persons): TeamModel2
     {
+        /** @phpstan-var TeamModel2 $team */
         $team = $this->container->getByType(TeamService2::class)->storeModel([
             'name' => $name,
             'category' => 'B',
             'event_id' => $this->event->event_id,
         ]);
-        /** @var PersonModel $person */
         foreach ($persons as $person) {
             $this->container->getByType(TeamMemberService::class)->storeModel([
                 'person_id' => $person->person_id,

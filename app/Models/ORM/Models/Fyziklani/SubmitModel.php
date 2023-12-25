@@ -6,30 +6,34 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
- * @property-read SubmitState state
- * @property-read int fyziklani_team_id
- * @property-read int|null points
- * @property-read int|null skipped
- * @property-read int fyziklani_task_id
- * @property-read int fyziklani_submit_id
- * @property-read int task_id
- * @property-read TeamModel2 fyziklani_team
- * @property-read TaskModel fyziklani_task
- * @property-read \DateTimeInterface modified
+ * @property-read SubmitState $state
+ * @property-read int $fyziklani_team_id
+ * @property-read int|null $points
+ * @property-read int|null $skipped
+ * @property-read int $fyziklani_task_id
+ * @property-read int $fyziklani_submit_id
+ * @property-read int $task_id
+ * @property-read TeamModel2 $fyziklani_team
+ * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $modified
+ * @phpstan-type SerializedSubmitModel array{
+ *      points:int|null,
+ *      teamId:int,
+ *      taskId:int,
+ *      modified:string,
+ * }
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
 
-    public function isChecked(): bool
-    {
-        return $this->state->value === SubmitState::CHECKED;
-    }
-
+    /**
+     * @phpstan-return SerializedSubmitModel
+     */
     public function __toArray(): array
     {
         return [
@@ -45,25 +49,17 @@ class SubmitModel extends Model implements Resource
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */
-    public function canRevoke(bool $throws = true): bool
+    public function canRevoke(): void
     {
         if (is_null($this->points)) {
-            if ($throws) {
-                throw new AlreadyRevokedSubmitException();
-            }
-            return false;
+            throw new AlreadyRevokedSubmitException();
         } elseif (!$this->fyziklani_team->hasOpenSubmitting()) {
-            if ($throws) {
-                throw new ClosedSubmittingException($this->fyziklani_team);
-            }
-            return false;
+            throw new ClosedSubmittingException($this->fyziklani_team);
         }
-        return true;
     }
 
     /**
-     * @param string $key
-     * @return SubmitState|mixed|null
+     * @return SubmitState|null|int|string
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

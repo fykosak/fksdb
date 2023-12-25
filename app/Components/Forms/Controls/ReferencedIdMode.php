@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 
-class ReferencedIdMode extends FakeStringEnum
+final class ReferencedIdMode extends FakeStringEnum
 {
     public const NORMAL = 'NORMAL';
     public const FORCE = 'FORCE';

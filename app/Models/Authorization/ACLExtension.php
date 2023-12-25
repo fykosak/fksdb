@@ -20,7 +20,7 @@ class ACLExtension extends CompilerExtension
 
         $config = $this->getConfig();
 
-        foreach ($config as $setup) {
+        foreach ($config as $setup) {//@phpstan-ignore-line
             $stmt = Helpers::resolveMixedExpression($setup);
             $definition->addSetup($stmt->entity, $stmt->arguments);
         }

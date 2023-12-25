@@ -6,37 +6,39 @@ namespace FKSDB\Models\Payment\PriceCalculator;
 
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Statement;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
+/**
+ * @implements Statement<void,PaymentHolder>
+ */
 class PriceCalculator implements Statement
 {
-
     private PaymentService $paymentService;
-    /** @var Preprocess[] */
-    private array $preProcess = [];
+    /** @phpstan-var Preprocess[] */
+    private array $preProcess;
 
     public function __construct(PaymentService $paymentService)
     {
         $this->paymentService = $paymentService;
+        $this->preProcess = [
+            new SchedulePrice(),
+        ];
     }
 
     /**
-     * @return Currency[]
+     * @phpstan-return Currency[]
      */
     public function getAllowedCurrencies(): array
     {
         return Currency::cases();
     }
 
-    public function addPreProcess(Preprocess $preProcess): void
-    {
-        $this->preProcess[] = $preProcess;
-    }
-
     /**
-     * @param ...$args
+     * @param PaymentHolder $args
      * @throws \Exception
      */
     final public function __invoke(...$args): void

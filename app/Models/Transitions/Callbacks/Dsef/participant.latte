@@ -1,0 +1,33 @@
+{layout none}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+
+{define subject}Registrace na DSEF – {$holder->getModel()->person->getFullName()}{/define}
+
+<p>
+    Potvrzujeme přijetí přihlášky osoby {$holder->getModel()->person->getFullName()} na akci <em>{$holder->getModel()->event}</em>,
+    která se koná
+    {if $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
+        {$holder->getModel()->event->begin|date:'j. n. Y'}–{$holder->getModel()->event->end|date:'j. n. Y'}.
+    {else}
+        {$holder->getModel()->event->begin|date:'j. n. Y'}.
+    {/if}
+</p>
+
+<p>
+    Případné změny lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
+    po <a n:href="//:Core:Authentication:login">přihlášení</a>
+    v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
+    nebo využitím soukromého odkazu níže:<br/>
+    {var $link = $control->link('//:Public:Application:',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'contestId'=>$holder->getModel()->event->event_type->contest_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a>.
+</p>
+
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

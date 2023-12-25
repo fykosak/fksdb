@@ -26,10 +26,12 @@ abstract class AESOPModel
     protected ContestYearModel $contestYear;
 
     protected Explorer $explorer;
+    protected Container $container;
 
     public function __construct(Container $container, ContestYearModel $contestYear)
     {
         $this->contestYear = $contestYear;
+        $this->container = $container;
         $container->callInjects($this);
     }
 
@@ -65,6 +67,11 @@ abstract class AESOPModel
         return 'ufo';
     }
 
+    /**
+     * @phpstan-param string[] $params
+     * @phpstan-param iterable<Row> $data
+     * @phpstan-param string[] $cools
+     */
     public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
     {
         $text = '';
@@ -73,22 +80,19 @@ abstract class AESOPModel
             $text .= $key . "\t" . $value . "\n";
         }
         $text .= "\n";
-        /** @var Row $datum */
         $text .= join("\t", $cools) . "\n";
         foreach ($data as $datum) {
             $text .= join("\t", iterator_to_array($datum->getIterator())) . "\n";
         }
-        $response = new PlainTextResponse($text);
-        $response->setName($this->getMask() . '.txt');
-        return $response;
+        return new PlainTextResponse($text, $this->getMask() . '.txt');
     }
 
     protected function getAESOPContestant(PersonModel $person): array
     {
         $postContact = $person->getActivePostContact();
-        $history = $person->getHistoryByContestYear($this->contestYear);
+        $history = $person->getHistory($this->contestYear);
         $school = $history->school;
-        $spamFlag = $person->hasPersonFlag('spam_mff');
+        $spamFlag = $person->hasFlag('spam_mff');
         return [
             'name' => $person->other_name,
             'surname' => $person->family_name,
@@ -101,14 +105,7 @@ abstract class AESOPModel
             'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
-            'end-year' => ($history->study_year < 5 && $history->study_year > 0)
-                ?
-                ($history->ac_year + 5 - $history->study_year)
-                :
-                (($history->study_year > 5 && $history->study_year < 10) ?
-                    ($history->ac_year + 14 - $history->study_year)
-                    : null
-                ),
+            'end-year' => $history->getGraduationYear(),
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
             'spam-date' => date('Y-m-d', $spamFlag->modified->getTimestamp()),

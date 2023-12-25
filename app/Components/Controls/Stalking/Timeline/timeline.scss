@@ -1,0 +1,21 @@
+@import "../../../../css/variables";
+
+.person-detail-timeline svg {
+  circle {
+    stroke: black;
+    stroke-width: 1;
+    fill: var(--color);
+  }
+
+  rect {
+    stroke: black;
+    stroke-width: 1;
+    fill: var(--color);
+  }
+
+  text {
+    text-anchor: middle;
+    alignment-baseline: middle;
+    fill: white;
+  }
+}

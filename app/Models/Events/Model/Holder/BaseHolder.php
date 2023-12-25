@@ -15,35 +15,37 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\DI\Container;
-use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
+/**
+ * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ */
 class BaseHolder implements ModelHolder
 {
-    /** @var bool|callable */
+    /** @phpstan-var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
-    private Container $container;
     public EventModel $event;
     private EventParticipantService $service;
     private ?EventParticipantModel $model;
+    /** @phpstan-var array<string,mixed> */
     public array $data = [];
 
-    /** @var Field[] */
+    /** @phpstan-var Field[] */
     private array $fields = [];
-    /** @var FormAdjustment[] */
-    private array $formAdjustments = [];
-    /** @var Processing[] */
-    private array $processings = [];
+    /** @phpstan-var FormAdjustment<BaseHolder>[] */
+    public array $formAdjustments = [];
+    /** @phpstan-var Processing[] */
+    public array $processings = [];
 
-    public function __construct(Container $container, EventParticipantService $service)
+    public function __construct(EventParticipantService $service)
     {
-        $this->container = $container;
         $this->service = $service;
     }
 
+    /**
+     * @phpstan-param FormAdjustment<BaseHolder> $formAdjustment
+     */
     public function addFormAdjustment(FormAdjustment $formAdjustment): void
     {
         $this->formAdjustments[] = $formAdjustment;
@@ -54,25 +56,6 @@ class BaseHolder implements ModelHolder
         $this->processings[] = $processing;
     }
 
-    /**
-     * Apply processings to the values and sets them to the ORM model.
-     */
-    public function processFormValues(ArrayHash $values, ?Transition $transition): ?EventParticipantStatus
-    {
-        $newState = $transition ? $transition->target : null;
-        foreach ($this->processings as $processing) {
-            $processing->process($values);
-        }
-        return $newState;
-    }
-
-    public function adjustForm(Form $form): void
-    {
-        foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $this);
-        }
-    }
-
     public function addField(Field $field): void
     {
         $field->holder = $this;
@@ -80,7 +63,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @return Field[]
+     * @phpstan-return Field[]
      */
     public function getFields(): array
     {
@@ -88,7 +71,7 @@ class BaseHolder implements ModelHolder
     }
 
     /**
-     * @param bool|callable $modifiable
+     * @phpstan-param bool|callable(BaseHolder):bool $modifiable
      */
     public function setModifiable($modifiable): void
     {
@@ -136,7 +119,7 @@ class BaseHolder implements ModelHolder
             return $model->status;
         }
 
-        return EventParticipantStatus::tryFrom(Machine::STATE_INIT);
+        return EventParticipantStatus::from(Machine::STATE_INIT);
     }
 
     public function setModelState(EventParticipantStatus $state): void
@@ -151,9 +134,9 @@ class BaseHolder implements ModelHolder
         return $pos === false ? $column : substr($column, $pos + 1);
     }
 
-    public function createFormContainer(): ContainerWithOptions
+    public function createFormContainer(Container $container): ContainerWithOptions
     {
-        $container = new ContainerWithOptions($this->container);
+        $container = new ContainerWithOptions($container);
         $container->setOption('label', _('Participant'));
 
         foreach ($this->fields as $name => $field) {
@@ -167,9 +150,6 @@ class BaseHolder implements ModelHolder
         return $container;
     }
 
-    /**
-     * @throws \ReflectionException
-     */
     public function getPerson(): ?PersonModel
     {
         try {
@@ -177,18 +157,21 @@ class BaseHolder implements ModelHolder
             if (!$app) {
                 return null;
             }
-            return $app->getReferencedModel(PersonModel::class);
+            return $app->person;
         } catch (CannotAccessModelException $exception) {
             return null;
         }
     }
 
+    /**
+     * @phpstan-param EventParticipantStatus $newState
+     */
     public function updateState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
 
-    public function getState(): ?EnumColumn
+    public function getState(): EventParticipantStatus
     {
         return $this->model->status;
     }

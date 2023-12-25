@@ -29,11 +29,11 @@ class SelfResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         return $this->isSelf($person)
-            ? ResolutionMode::tryFrom(ResolutionMode::OVERWRITE)
-            : ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            ? ResolutionMode::from(ResolutionMode::OVERWRITE)
+            : ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool
@@ -46,7 +46,7 @@ class SelfResolver implements Resolver
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;

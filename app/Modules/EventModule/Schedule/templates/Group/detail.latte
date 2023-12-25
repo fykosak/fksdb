@@ -1,10 +1,28 @@
-{block content}
-    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
-    <div class="mb-3">
-        {include '../Item/group.detail.latte' group=>$model}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $model}
+            <div class="mb-3">
+                {control columnTable [
+                    'schedule_group.schedule_group_id',
+                    'schedule_group.name',
+                    'schedule_group.schedule_group_type',
+                    'schedule_group.start',
+                    'schedule_group.end',
+                    'schedule_group.registration_begin',
+                    'schedule_group.registration_end',
+                    'schedule_group.modification_end',
+                    ], $model,1024}
+            </div>
+            {control printer:button 'schedule_group.edit', $model}
+            <a class="btn btn-outline-primary"
+               href="{plink :Schedule:Item:create,'groupId'=>$model->schedule_group_id}">{_'Create item'}</a>
+        </div>
     </div>
-    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Group:list}">{_'List of groups'}</a>
-    <a class="btn btn-outline-primary btn-sm" href="{plink :Schedule:Item:create}">{_'Create item'}</a>
-    <hr/>
-    {control itemsGrid}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Items'}</h2>
+            {control itemsGrid}
+        </div>
+    </div>
 {/block}

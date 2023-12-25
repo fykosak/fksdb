@@ -1,0 +1,27 @@
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel[][] $schedule}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{block outerContent}
+    {foreach $schedule as $dateData}
+        <div class="panel color-auto">
+            <div class="container">
+                {foreach $dateData as $group}
+                    {varType FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+                    {if $iterator->isFirst()}
+                        <h2>
+                            {if $group->start->format('Y-d-m') === (new \DateTime())->format('Y-d-m')}
+                                {_'Today'}
+                            {else}
+                                {$group->start->format(_('__date'))}
+                            {/if}
+                        </h2>
+                    {/if}
+                    {include group from './blocks.latte' person:$person,group:$group,displayTime:true}
+                    {if !$iterator->isLast()}
+                        <hr/>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+{/block}
+

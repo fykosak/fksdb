@@ -6,65 +6,106 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
+use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 
 /**
- * @property-read int fyziklani_team_id
- * @property-read int event_id
- * @property-read EventModel event
- * @property-read string name
- * @property-read TeamState state
- * @property-read TeamCategory category
- * @property-read \DateTimeInterface created
- * @property-read string phone
- * @property-read string note
- * @property-read string password
- * @property-read int points
- * @property-read int rank_total
- * @property-read int rank_category
- * @property-read int force_a
- * @property-read GameLang game_lang
+ * @property-read int $fyziklani_team_id
+ * @property-read int $event_id
+ * @property-read EventModel $event
+ * @property-read string $name
+ * @property-read TeamState $state
+ * @property-read TeamCategory $category
+ * @property-read \DateTimeInterface $created
+ * @property-read string|null $phone
+ * @property-read string|null $note
+ * @property-read string|null $password
+ * @property-read int|null $points
+ * @property-read int|null $rank_total
+ * @property-read int|null $rank_category
+ * @property-read int|null $force_a
+ * @property-read GameLang|null $game_lang
+ * @property-read TeamScholarship $scholarship
+ * @phpstan-type SerializedTeamModel array{
+ *      teamId:int,
+ *      name:string,
+ *      status:string,
+ *      code:string|null,
+ *      category:string,
+ *      created:string,
+ *      phone:string|null,
+ *      points:int|null,
+ *      rankCategory:int|null,
+ *      rankTotal:int|null,
+ *      forceA:int|null,
+ *      gameLang:string|null,
+ * }
  */
-class TeamModel2 extends Model implements Resource
+final class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamTeacherModel>
+     */
     public function getTeachers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamTeacherModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'fyziklani_team_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamMemberModel>
+     */
     public function getMembers(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<TeamMemberModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
+        return $selection;
     }
 
     public function getTeamSeat(): ?TeamSeatModel
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        /** @var TeamSeatModel|null $teamSeat */
+        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        return $teamSeat;
     }
 
-    /* ******************** SUBMITS ******************************* */
-
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getSubmits(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        /** @phpstan-var TypedGroupedSelection<SubmitModel> $selection */
+        $selection = $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+        return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonRevokedSubmits(): TypedGroupedSelection
     {
         return $this->getSubmits()->where('points IS NOT NULL');
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<SubmitModel>
+     */
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);
@@ -84,7 +125,7 @@ class TeamModel2 extends Model implements Resource
      * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(): bool
+    public function canClose(): void
     {
         if (!$this->hasOpenSubmitting()) {
             throw new AlreadyClosedException($this);
@@ -92,14 +133,21 @@ class TeamModel2 extends Model implements Resource
         if (!$this->hasAllSubmitsChecked()) {
             throw new NotCheckedSubmitsException($this);
         }
-        return true;
+    }
+
+    public function getSubmit(TaskModel $task): ?SubmitModel
+    {
+        /** @var SubmitModel|null $submit */
+        $submit = $this->getSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        return $submit;
     }
 
     /**
-     * @return PersonScheduleModel[]
+     * @phpstan-param string[] $types
+     * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(
-        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
+        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
@@ -112,7 +160,7 @@ class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @return PersonModel[]
+     * @phpstan-return PersonModel[]
      */
     public function getPersons(): array
     {
@@ -138,23 +186,39 @@ class TeamModel2 extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = TeamState::tryFrom($value);
+                $value = TeamState::from($value);
                 break;
             case 'category':
-                $value = TeamCategory::tryFrom($value);
+                $value = TeamCategory::from($value);
                 break;
             case 'game_lang':
                 $value = GameLang::tryFrom($value);
+                break;
+            case 'scholarship':
+                $value = TeamScholarship::from($value);
                 break;
         }
         return $value;
     }
 
+    public function createMachineCode(): ?string
+    {
+        try {
+            return MachineCode::createHash($this, $this->event->getSalt());
+        } catch (\Throwable $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * @phpstan-return SerializedTeamModel
+     */
     public function __toArray(): array
     {
         return [
             'teamId' => $this->fyziklani_team_id,
             'name' => $this->name,
+            'code' => $this->createMachineCode(),
             'status' => $this->state->value,
             'category' => $this->category->value,
             'created' => $this->created->format('c'),
@@ -181,5 +245,16 @@ class TeamModel2 extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    /**
+     * @phpstan-return Test<TeamModel2>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new CategoryCheck($container),
+            new PendingTeams($container),
+        ];
     }
 }

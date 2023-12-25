@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\StudyYearModel;
+use Fykosak\NetteORM\Service\Service;
 
-class StudyYearService extends Service
+/**
+ * @phpstan-extends Service<StudyYearModel>
+ */
+final class StudyYearService extends Service
 {
 }

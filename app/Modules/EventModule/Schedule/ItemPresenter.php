@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Schedule\PersonsGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Schedule\Attendance\CodeComponent;
+use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
+use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -15,65 +16,29 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\EventModule\BasePresenter;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method ScheduleItemModel getEntity()
- */
-class ItemPresenter extends BasePresenter
+final class ItemPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<ScheduleItemModel> */
     use EventEntityPresenterTrait;
 
-    private ScheduleGroupModel $group;
+    private ScheduleItemService $service;
 
-    private ScheduleItemService $scheduleItemService;
+    /** @persistent */
+    public ?int $groupId = null;
 
-    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
+    final public function injectService(ScheduleItemService $service): void
     {
-        $this->scheduleItemService = $scheduleItemService;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function titleDetail(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            \sprintf(_('Schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
-            'fas fa-clipboard'
-        );
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    public function titleEdit(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getName()[$this->getLang()]),
-            'fas fa-pen'
-        );
+        $this->service = $service;
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create schedule item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create item'), 'fas fa-plus');
     }
 
     /**
@@ -91,10 +56,23 @@ class ItemPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
-    protected function createComponentCreateForm(): ScheduleItemFormContainer
+    public function titleDetail(): PageTitle
     {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), null);
+        return new PageTitle(
+            null,
+            \sprintf(
+                _('%s of %s '),
+                $this->getEntity()->name->getText($this->translator->lang),
+                $this->getEntity()->schedule_group->name->getText($this->translator->lang)
+            ),
+            'fas fa-clipboard'
+        );
     }
 
     /**
@@ -105,31 +83,36 @@ class ItemPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): ScheduleItemFormContainer
+    public function titleEdit(): PageTitle
     {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), $this->getEntity());
+        return new PageTitle(
+            null,
+            \sprintf(_('Edit item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            'fas fa-pen'
+        );
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     */
-    protected function createComponentPersonsGrid(): PersonsGrid
-    {
-        return new PersonsGrid($this->getContext(), $this->getEntity());
-    }
 
     protected function getORMService(): ScheduleItemService
     {
-        return $this->scheduleItemService;
+        return $this->service;
     }
 
     /**
-     * @param string|Resource $resource
+     * @throws EventNotFoundException
+     */
+    private function getGroup(): ?ScheduleGroupModel
+    {
+        if (!$this->groupId) {
+            return null;
+        }
+        /** @var ScheduleGroupModel|null $group */
+        $group = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->groupId)->fetch();
+        return $group;
+    }
+
+    /**
+     * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -137,8 +120,58 @@ class ItemPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function createComponentGrid(): Grid
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCreateForm(): ScheduleItemForm
+    {
+        return new ScheduleItemForm($this->getGroup(), $this->getContext(), null);
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     */
+    protected function createComponentEditForm(): ScheduleItemForm
+    {
+        return new ScheduleItemForm($this->getGroup(), $this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @return never
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     */
+    protected function createComponentPersonsGrid(): PersonGrid
+    {
+        return new PersonGrid($this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentCode(): CodeComponent
+    {
+        return new CodeComponent($this->getContext(), $this->getEntity());
     }
 }

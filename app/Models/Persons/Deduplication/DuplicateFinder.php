@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons\Deduplication;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
@@ -29,7 +29,7 @@ class DuplicateFinder
 
     public function getPairs(): array
     {
-        /** @var PersonModel[][] $buckets */
+        /** @phpstan-var PersonModel[][] $buckets */
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var PersonModel $person */

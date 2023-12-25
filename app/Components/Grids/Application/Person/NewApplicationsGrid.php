@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application\Person;
 
-use FKSDB\Components\Grids\Components\Grid;
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
-use Nette\Database\Table\Selection;
 
-class NewApplicationsGrid extends Grid
+/**
+ * @phpstan-extends BaseGrid<EventModel,array{}>
+ */
+class NewApplicationsGrid extends BaseGrid
 {
     protected EventService $eventService;
 
@@ -27,44 +27,31 @@ class NewApplicationsGrid extends Grid
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function getModels(): Selection
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
+    protected function getModels(): TypedSelection
     {
-        return $this->eventService->getTable()
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
+        return $this->eventService->getEventsWithOpenRegistration();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->addColumns([
-            'event.name',
-            'contest.contest',
+        $this->addSimpleReferencedColumns([
+            '@event.name',
+            '@contest.contest',
         ]);
-        $button = new PresenterButton(
+        $button = new Button(
             $this->container,
+            $this->getPresenter(),
             new Title(null, _('Create application')),
             fn(EventModel $event): array => $event->isTeamEvent()
-                ? [':Event:TeamApplication:create', ['eventId' => $event->event_id]]
+                ? [':Event:Team:create', ['eventId' => $event->event_id]]
                 : [':Public:Application:default', ['eventId' => $event->event_id]],
             null,
-            function (EventModel $modelEvent): bool {
-                try {
-                    return (bool)count(
-                        $this->eventDispatchFactory->getEventMachine($modelEvent)->getAvailableTransitions(
-                            $this->eventDispatchFactory->getDummyHolder($modelEvent),
-                            EventParticipantStatus::tryFrom(Machine::STATE_INIT)
-                        )
-                    );
-                } catch (\Throwable $exception) {
-                    return true;
-                }
-            }
+            fn(EventModel $modelEvent): bool => $modelEvent->isRegistrationOpened()
         );
-        $this->addButton($button, 'create');
+        $this->addTableButton($button, 'create');
     }
 }

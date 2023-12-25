@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\FlagModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
-class FlagService extends Service
+/**
+ * @phpstan-extends Service<FlagModel>
+ */
+final class FlagService extends Service
 {
 
     public function findByFid(?string $fid): ?FlagModel
     {
-        return $fid ? $this->getTable()->where('fid', $fid)->fetch() : null;
+        /** @var FlagModel|null $flag */
+        $flag = $fid ? $this->getTable()->where('fid', $fid)->fetch() : null;
+        return $flag;
     }
 }

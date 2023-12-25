@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
 
-class NameColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends StringColumnFactory<TeamModel2,never>
+ */
+class NameColumnFactory extends StringColumnFactory
 {
     public function createFormControl(...$args): BaseControl
     {
-        $control = new TextInput($this->getTitle());
-        $control->setRequired(true);
+        $control = parent::createFormControl(...$args);
+        $control->setRequired();
         $control->addRule(
             Form::PATTERN,
             _(
@@ -27,10 +27,5 @@ class NameColumnFactory extends ColumnFactory
             '^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$'
         );
         return $control;
-    }
-
-    protected function createHtmlValue(Model $model): Html
-    {
-        return (new StringPrinter())($model->{$this->modelAccessKey});
     }
 }

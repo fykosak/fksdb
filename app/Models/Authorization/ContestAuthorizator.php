@@ -47,7 +47,7 @@ class ContestAuthorizator
             $role = new Grant(RoleModel::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }

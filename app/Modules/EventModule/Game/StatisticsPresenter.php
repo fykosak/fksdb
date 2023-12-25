@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class StatisticsPresenter extends BasePresenter
+final class StatisticsPresenter extends BasePresenter
 {
     /**
      * @throws EventNotFoundException
@@ -20,18 +20,17 @@ class StatisticsPresenter extends BasePresenter
         return !$this->getEvent()->getGameSetup()->result_hard_display;
     }
 
-    protected function beforeRender(): void
-    {
-        switch ($this->getAction()) {
-            case 'table':
-                $this->getPageStyleContainer()->setWidePage();
-        }
-        parent::beforeRender();
-    }
-
     public function titleCorrelation(): PageTitle
     {
         return new PageTitle(null, _('Correlation statistics'), 'fas fa-chart-pie');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCorrelation(): bool
+    {
+        return $this->isAllowed('game.statistics', 'correlation');
     }
 
     public function titleTeam(): PageTitle
@@ -39,9 +38,25 @@ class StatisticsPresenter extends BasePresenter
         return new PageTitle(null, _('Teams statistics'), 'fas fa-chart-line');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedTeam(): bool
+    {
+        return $this->isAllowed('game.statistics', 'team');
+    }
+
     public function titleTask(): PageTitle
     {
         return new PageTitle(null, _('Tasks statistics'), 'fas fa-chart-bar');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedTask(): bool
+    {
+        return $this->isAllowed('game.statistics', 'task');
     }
 
     public function titleTable(): PageTitle
@@ -52,33 +67,9 @@ class StatisticsPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedTasks(): void
+    public function authorizedTable(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedTeam(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedCorrelation(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedResultsTable(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.statistics', 'default'));
+        return $this->isAllowed('game.statistics', 'table');
     }
 
     /**
@@ -86,7 +77,7 @@ class StatisticsPresenter extends BasePresenter
      */
     protected function createComponentTeamStatistics(): ResultsAndStatisticsComponent
     {
-        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'game.statistics.team');
     }
 
     /**
@@ -94,7 +85,7 @@ class StatisticsPresenter extends BasePresenter
      */
     protected function createComponentTaskStatistics(): ResultsAndStatisticsComponent
     {
-        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'game.statistics.task');
     }
 
     /**
@@ -105,7 +96,7 @@ class StatisticsPresenter extends BasePresenter
         return new ResultsAndStatisticsComponent(
             $this->getContext(),
             $this->getEvent(),
-            'fyziklani.statistics.correlation'
+            'game.statistics.correlation'
         );
     }
 
@@ -114,6 +105,6 @@ class StatisticsPresenter extends BasePresenter
      */
     protected function createComponentTable(): ResultsAndStatisticsComponent
     {
-        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'game.results.table');
     }
 }

@@ -8,7 +8,7 @@ export interface State {
     delay: number;
     category?: string;
     hardVisible: boolean;
-    isOrg: boolean;
+    isOrganizer: boolean;
 }
 
 const initialState: State = {
@@ -18,7 +18,7 @@ const initialState: State = {
     position: 0,
     rows: 20,
     hardVisible: false,
-    isOrg: false,
+    isOrganizer: false,
 };
 
 export const presentation = (state: State = initialState, action): State => {
@@ -29,7 +29,7 @@ export const presentation = (state: State = initialState, action): State => {
         case ACTION_FETCH_SUCCESS:
             return {
                 ...state,
-                isOrg: action.data.data.isOrg,
+                isOrganizer: action.data.data.isOrganizer,
             };
         default:
             return state;

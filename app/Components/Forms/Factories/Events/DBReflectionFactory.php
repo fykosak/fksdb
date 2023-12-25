@@ -6,8 +6,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
@@ -17,31 +16,41 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-type MetaItem array{
+ *      name:string,
+ *      table:string,
+ *      nativetype:string,
+ *      size:int,
+ *      nullable:bool,
+ *      default:mixed,
+ *      autoincrement:bool,
+ *      primary:bool,
+ *      vendor:array<string,mixed>,
+ * }
+ */
 class DBReflectionFactory extends AbstractFactory
 {
 
     private Connection $connection;
-    /** @var array tableName => columnName[] */
-    private array $columns = [];
-    private ORMFactory $tableReflectionFactory;
-    private EventParticipantService $eventParticipantService;
+    /** @phpstan-var array<string,MetaItem> */
+    private array $columns;
+    private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(
         Connection $connection,
-        ORMFactory $tableReflectionFactory,
-        EventParticipantService $eventParticipantService
+        ReflectionFactory $tableReflectionFactory
     ) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->eventParticipantService = $eventParticipantService;
     }
 
     public function createComponent(Field $field): BaseControl
     {
         $element = null;
         try {
-            $tableName = $this->eventParticipantService->getTable()->getName();
-            $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $field->name)->createField();
+            $element = $this->tableReflectionFactory->loadColumnFactory('event_participant', $field->name)->createField(
+            );
         } catch (\Throwable $e) {
         }
         $column = $this->resolveColumn($field);
@@ -91,26 +100,29 @@ class DBReflectionFactory extends AbstractFactory
         $control->setDefaultValue($default);
     }
 
-    private function resolveColumn(Field $field): ?array
+    /**
+     * @phpstan-return MetaItem
+     */
+    private function resolveColumn(Field $field): array
     {
-        $tableName = $this->eventParticipantService->getTable()->getName();
-        $column = $this->getColumnMetadata($tableName, $field->name);
-
+        $column = $this->getColumnMetadata($field->name);
         if ($column === null) {
             throw new InvalidArgumentException("Cannot find reflection for field '$field->name'.");
         }
         return $column;
     }
 
-    private function getColumnMetadata(string $table, string $column): ?array
+    /**
+     * @phpstan-return MetaItem|null
+     */
+    private function getColumnMetadata(string $column): ?array
     {
-        if (!isset($this->columns[$table])) {
-            $columns = [];
-            foreach ($this->connection->getDriver()->getColumns($table) as $columnMeta) {
-                $columns[$columnMeta['name']] = $columnMeta;
+        if (!isset($this->columns)) {
+            $this->columns = [];
+            foreach ($this->connection->getDriver()->getColumns('event_participant') as $columnMeta) {
+                $this->columns[$columnMeta['name']] = $columnMeta;//@phpstan-ignore-line
             }
-            $this->columns[$table] = $columns;
         }
-        return $this->columns[$table][$column] ?? null;
+        return $this->columns[$column] ?? null;
     }
 }

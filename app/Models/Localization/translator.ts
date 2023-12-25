@@ -1,53 +1,61 @@
 import { data } from '../../../i18n/i18n-data';
 
-export type LangMap<TValue> = {
-    [key in availableLanguage]: TValue;
+export type LangMap<TValue, Lang extends string> = {
+    [key in Lang]: TValue;
 };
 
-type LanguageData = LangMap<{
-    [msqId: string]: string;
-}>;
+type LanguageData<Lang extends string> = LangMap<{
+    [msqId: string]: string[];
+}, Lang>;
 
-export type availableLanguage = 'cs' | 'en' | 'sk';
+export class Translator<Lang extends string = 'cs' | 'en'> {
 
-class Lang {
+    private readonly data: LanguageData<Lang>;
+    private readonly currentLocale: Lang = 'cs' as Lang;
 
-    private readonly data: LanguageData = {cs: {}, en: {}, sk: {}};
-
-    private currentLocale: availableLanguage = 'cs';
-
-    public constructor(langData: LanguageData) {
-        this.data = langData;
-        window.location.search.slice(1).split('&').forEach((s) => {
-            const [key, value] = s.split('=');
-            if (key === 'lang') {
-                this.setLocale(value as availableLanguage);
-            }
-        });
-    }
-
-    public getCurrentLocale(): availableLanguage {
-        return this.currentLocale;
-    }
-
-    public setLocale(locale: availableLanguage): void {
-        this.currentLocale = locale;
-    }
-
-    public getAvailableLocales(): string[] {
-        return Object.keys(this.data);
+    public constructor() {
+        this.data = data as LanguageData<Lang>;
+        const el = document.getElementsByTagName('html').item(0);
+        if (el) {
+            const lang = el.getAttribute('lang');
+            this.currentLocale = lang as Lang;
+        }
     }
 
     public getText(msgId: string): string {
-        if (this.data[this.currentLocale].hasOwnProperty(msgId) && this.data[this.currentLocale][msgId]) {
-            return this.data[this.currentLocale][msgId];
+        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId] && this.data[this.currentLocale][msgId][0]) {
+            return this.data[this.currentLocale][msgId][0];
         }
         return msgId;
     }
 
-    public getLocalizedText(msgId: string, locale: availableLanguage): string {
-        if (this.data[locale].hasOwnProperty(msgId) && this.data[locale][msgId]) {
-            return this.data[locale][msgId];
+    private getPluralFormId(count: number): number {
+        if (count == 1 || count == -1) {
+            return 0;
+        }
+        if ((count >= 2 && count <= 4) || (count >= -4 && count <= -2)) {
+            return 1;
+        }
+        return 2;
+    }
+
+    public nGetText(msgId: string, msgIdPlural: string, count: number): string {
+        const formId: number = this.getPluralFormId(count);
+        if (Object.hasOwn(this.data[this.currentLocale], msgId) && this.data[this.currentLocale][msgId] &&
+            this.data[this.currentLocale][msgId].length > formId && this.data[this.currentLocale][msgId][formId]) {
+            return this.data[this.currentLocale][msgId][formId];
+        }
+
+        if (formId == 0) {
+            return msgId;
+        }
+
+        return msgIdPlural;
+    }
+
+    public getLocalizedText(msgId: string, locale: Lang): string {
+        if (Object.hasOwn(this.data[locale], msgId) && this.data[locale][msgId] && this.data[locale][msgId][0]) {
+            return this.data[locale][msgId][0];
         }
         return msgId;
     }
@@ -60,10 +68,8 @@ class Lang {
                 return 'en-GB';
         }
     }
+
+    public get<T>(map: LangMap<T, Lang>): T {
+        return map[this.currentLocale];
+    }
 }
-
-export const translator = new Lang(data);
-
-export type LocalizedString = {
-    [key in availableLanguage]: string;
-};

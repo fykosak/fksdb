@@ -6,6 +6,10 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-template TValue
+ * @phpstan-implements MergedStrategy<TValue>
+ */
 class CompareStrategy implements MergeStrategy
 {
     private int $sign;
@@ -22,9 +26,9 @@ class CompareStrategy implements MergeStrategy
     }
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
-     * @return mixed
+     * @phpstan-param TValue $trunk
+     * @phpstan-param TValue $merged
+     * @phpstan-return TValue
      */
     public function mergeValues($trunk, $merged)
     {
@@ -42,9 +46,8 @@ class CompareStrategy implements MergeStrategy
     }
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
-     * @return int
+     * @phpstan-param TValue $trunk
+     * @phpstan-param TValue $merged
      */
     private function compare($trunk, $merged): int
     {
@@ -53,7 +56,7 @@ class CompareStrategy implements MergeStrategy
         } elseif (is_string($trunk) && is_string($merged)) {
             return strcmp($trunk, $merged);
         } elseif (is_numeric($trunk) && is_numeric($merged)) {
-            return $trunk - $merged;
+            return (int)($trunk - $merged);
         } else {
             throw new CannotMergeException();
         }

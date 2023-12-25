@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Components\Badges\NotSetBadge;
-use FKSDB\Components\Badges\PermissionDeniedBadge;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\NotSetBadge;
+use FKSDB\Models\UI\PermissionDeniedBadge;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-import-type TMetaData from MetaDataFactory
+ */
 abstract class ColumnFactory
 {
     use SmartObject;
@@ -28,19 +33,33 @@ abstract class ColumnFactory
     protected string $tableName;
     protected string $modelAccessKey;
     protected ?string $description;
+    /**
+     * @phpstan-var TMetaData
+     */
     protected array $metaData;
     protected bool $required = false;
     protected bool $omitInputField = false;
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
+    protected GettextTranslator $translator;
+    /** @phpstan-var class-string<TModel> */
     protected string $modelClassName;
 
-    public function __construct(MetaDataFactory $metaDataFactory)
+    public function __construct(Container $container)
     {
-        $this->metaDataFactory = $metaDataFactory;
+        $container->callInjects($this);
     }
 
+    final public function injectMeta(MetaDataFactory $metaDataFactory, GettextTranslator $translator): void
+    {
+        $this->metaDataFactory = $metaDataFactory;
+        $this->translator = $translator;
+    }
+
+    /**
+     * @phpstan-param class-string<TModel> $modelClassName
+     */
     final public function setUp(
         string $tableName,
         string $modelClassName,
@@ -57,6 +76,7 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     final public function createField(...$args): BaseControl
     {
@@ -106,6 +126,9 @@ abstract class ColumnFactory
         return $this->description ? _($this->description) : null;
     }
 
+    /**
+     * @phpstan-return TMetaData
+     */
     final protected function getMetaData(): array
     {
         if (!isset($this->metaData)) {
@@ -116,16 +139,14 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new OmittedControlException();
-    }
+    abstract protected function createFormControl(...$args): BaseControl;
 
-    protected function createHtmlValue(Model $model): Html
-    {
-        return (new StringPrinter())($model->{$this->modelAccessKey});
-    }
+    /**
+     * @param TModel $model
+     */
+    abstract protected function createHtmlValue(Model $model): Html;
 
     /**
      * @throws CannotAccessModelException
@@ -153,8 +174,9 @@ abstract class ColumnFactory
     }
 
     /**
-     * @throws CannotAccessModelException
+     * @phpstan-return TModel|null
      * @throws \ReflectionException
+     * @throws CannotAccessModelException
      */
     protected function resolveModel(Model $modelSingle): ?Model
     {

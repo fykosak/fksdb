@@ -9,21 +9,26 @@ use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Modules\CoreModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class PostContactPresenter extends BasePresenter
+final class PostContactPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change post contact'), 'fa fa-envelope');
+        return new PageTitle(null, _('Change post contact'), 'fas fa-envelope');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
     }
 
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::tryFrom(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
     }
 
     private function createComponentPostContactForm(PostContactType $type): AddressFormComponent

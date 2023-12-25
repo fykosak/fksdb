@@ -83,7 +83,7 @@ parameters:
             rows:
                 - person_history.ac_year
                 - school.school
-                - person_history.study_year
+                - person_history.study_year_new
                 - person_history.class
         task_contribution:
             layout: grid
@@ -91,7 +91,7 @@ parameters:
             table: task_contribution
             links: []
             rows:
-                - task.fq_name
+                - task.name
                 - task_contribution.type
                 - contest.contest
                 - task.year
@@ -102,11 +102,8 @@ parameters:
             label: Payment
             minimalPermission: 128
             table: payment
-            links:
-                - payment.detail
             rows:
                 - payment.payment_id
-                - event.name
                 - payment.price
                 - payment.state
         contestant:
@@ -136,7 +133,7 @@ parameters:
             table: fyziklani_team_member
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
+                #- fyziklani_team.state
                 - event.name
             links:
                 - fyziklani_team.detail
@@ -160,7 +157,7 @@ parameters:
                 - fyziklani_team.detail
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
+                #- fyziklani_team.state
                 - event.name
         schedule_item:
             layout: grid

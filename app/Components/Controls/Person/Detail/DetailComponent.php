@@ -4,24 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Grids\Components\ListComponent;
+use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
-abstract class DetailComponent extends ListComponent
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseList<TModel,TFilterParams>
+ */
+abstract class DetailComponent extends BaseList
 {
     protected PersonModel $person;
-    protected bool $isOrg;
+    protected bool $isOrganizer;
 
     public function __construct(
         Container $container,
         PersonModel $person,
         int $userPermissions,
-        bool $isOrg
+        bool $isOrganizer
     ) {
         parent::__construct($container, $userPermissions);
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->person = $person;
     }
 
@@ -40,4 +45,6 @@ abstract class DetailComponent extends ListComponent
     }
 
     abstract protected function getHeadline(): Title;
+
+    abstract protected function getMinimalPermissions(): int;
 }

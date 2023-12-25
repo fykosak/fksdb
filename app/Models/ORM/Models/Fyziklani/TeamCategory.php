@@ -8,9 +8,10 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class TeamCategory extends FakeStringEnum implements EnumColumn
+final class TeamCategory extends FakeStringEnum implements EnumColumn
 {
     public const A = 'A';
     public const B = 'B';
@@ -19,7 +20,7 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     public const F = 'F';
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {
@@ -51,7 +52,7 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function casesForEvent(EventModel $event): array
     {
@@ -102,5 +103,10 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     public function __toString(): string
     {
         return $this->value;
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

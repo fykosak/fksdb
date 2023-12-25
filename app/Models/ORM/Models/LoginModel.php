@@ -6,22 +6,25 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
 /**
- * @property-read int login_id
- * @property-read int|null person_id
- * @property-read PersonModel|null person
- * @property-read string login
- * @property-read string hash
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface last_login
- * @property-read int active
+ * @property-read int $login_id
+ * @property-read int|null $person_id
+ * @property-read PersonModel|null $person
+ * @property-read string|null $login
+ * @property-read string|null $hash
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface|null $last_login
+ * @property-read int $active
  */
-class LoginModel extends Model implements IIdentity
+final class LoginModel extends Model implements IIdentity
 {
+    /**
+     * @throws \Throwable
+     */
     public function __toString(): string
     {
         return $this->person ? $this->person->__toString() : ($this->login ?? 'NAMELESS LOGIN');
@@ -44,11 +47,11 @@ class LoginModel extends Model implements IIdentity
         return $this->login_id;
     }
 
-    /** @var Grant[]   cache */
+    /** @phpstan-var Grant[]   cache */
     private array $roles;
 
     /**
-     * @return Grant[]
+     * @phpstan-return Grant[]
      */
     public function getRoles(): array
     {
@@ -59,10 +62,10 @@ class LoginModel extends Model implements IIdentity
             // roles from other tables
             $person = $this->person;
             if ($person) {
-                foreach ($person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrganizers() as $organizer) {
                     $this->roles[] = new Grant(
-                        RoleModel::ORG,
-                        $org->contest,
+                        RoleModel::ORGANIZER,
+                        $organizer->contest,
                     );
                 }
                 /** @var ContestantModel $contestant */
@@ -77,13 +80,18 @@ class LoginModel extends Model implements IIdentity
         return $this->roles;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<GrantModel>
+     */
     public function getGrants(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_GRANT, 'login_id');
+        /** @phpstan-var TypedGroupedSelection<GrantModel> $selection */
+        $selection = $this->related(DbNames::TAB_GRANT, 'login_id');
+        return $selection;
     }
 
     /**
-     * @return Grant[]
+     * @phpstan-return Grant[]
      */
     public function createGrantModels(): array
     {
@@ -95,8 +103,12 @@ class LoginModel extends Model implements IIdentity
         return $grants;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<AuthTokenModel> $query */
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
         if (isset($type)) {
             $query->where('type', $type);
@@ -104,12 +116,12 @@ class LoginModel extends Model implements IIdentity
         return $query;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
+     */
     public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
     {
-        $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
-        if (isset($type)) {
-            $query->where('type', $type->value);
-        }
+        $query = $this->getTokens($type);
         $query->where('until > ?', new \DateTime());
         return $query;
     }

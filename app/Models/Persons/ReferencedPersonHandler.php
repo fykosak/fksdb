@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
-use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\Components\Forms\Controls\Schedule\ScheduleException;
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Components\Schedule\Input\Handler;
+use FKSDB\Components\Schedule\Input\ScheduleException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -20,12 +20,14 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-extends ReferencedHandler<PersonModel>
+ */
 class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;
@@ -39,14 +41,14 @@ class ReferencedPersonHandler extends ReferencedHandler
     private PostContactService $postContactService;
 
     private PersonHasFlagService $personHasFlagService;
-    private ContestYearModel $contestYear;
+    private ?ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
     private FlagService $flagService;
     private Container $container;
 
     private EventModel $event;
 
-    public function __construct(ContestYearModel $contestYear, ResolutionMode $resolution)
+    public function __construct(?ContestYearModel $contestYear, ResolutionMode $resolution)
     {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
@@ -74,7 +76,11 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     /**
      * @param PersonModel|null $model
-     * @throws ModelException
+     * @phpstan-param array{
+     *     person_info:array{email?:string},
+     *     person:array<string,mixed>,
+     * }|array<string,array<string,mixed>> $values
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
@@ -87,6 +93,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             return $model;
         } else {
             $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            /** @phpstan-ignore-next-line */
             $person = $this->storePerson($person, (array)$values['person']);
             $this->innerStore($person, $values);
             return $person;
@@ -99,11 +106,12 @@ class ReferencedPersonHandler extends ReferencedHandler
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
      * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
+     * @phpstan-param array<string,array<string,mixed>> $data
      */
     private function innerStore(PersonModel $person, array $data): void
     {
@@ -119,6 +127,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
 
             if (isset($data['person'])) {
+                /** @phpstan-ignore-next-line */
                 $this->storePerson($person, (array)$data['person']);
             }
 
@@ -151,7 +160,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             if (!$outerTransaction) {
                 $connection->commit();
             }
-        } catch (ModelDataConflictException | StorageException | ModelException $exception) {
+        } catch (ModelDataConflictException | StorageException | \PDOException $exception) {
             if (!$outerTransaction) {
                 $connection->rollBack();
             }
@@ -159,6 +168,9 @@ class ReferencedPersonHandler extends ReferencedHandler
         }
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $infoData
+     */
     private function storePersonInfo(PersonModel $person, array $infoData): void
     {
         $info = $person->getInfo();
@@ -171,9 +183,15 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $historyData
+     */
     private function storePersonHistory(PersonModel $person, array $historyData): void
     {
-        $history = $person->getHistoryByContestYear($this->contestYear);
+        if (!isset($this->contestYear)) {
+            throw new \InvalidArgumentException('Cannot store person_history without ContestYear');
+        }
+        $history = $person->getHistory($this->contestYear);
         $this->personHistoryService->storeModel(
             array_merge(
                 $history ? $this->findModelConflicts($history, $historyData, 'person_history') : $historyData,
@@ -186,12 +204,15 @@ class ReferencedPersonHandler extends ReferencedHandler
         );
     }
 
+    /**
+     * @phpstan-param array<string,mixed> $flagData
+     */
     private function storeFlags(PersonModel $person, array $flagData): void
     {
         foreach ($flagData as $flagId => $flagValue) {
             if (isset($flagValue)) {
                 $flag = $this->flagService->findByFid($flagId);
-                $personFlag = $person->hasPersonFlag($flagId);
+                $personFlag = $person->hasFlag($flagId);
                 $this->personHasFlagService->storeModel([
                     'value' => $flagValue,
                     'flag_id' => $flag->flag_id,
@@ -200,7 +221,9 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
         }
     }
-
+    /**
+     * @phpstan-param array<string,mixed> $data
+     */
     private function storePostContact(
         PersonModel $person,
         array $data,
@@ -230,59 +253,22 @@ class ReferencedPersonHandler extends ReferencedHandler
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return PostContactType::tryFrom(PostContactType::PERMANENT);
+                return PostContactType::from(PostContactType::PERMANENT);
             case self::POST_CONTACT_DELIVERY:
-                return PostContactType::tryFrom(PostContactType::DELIVERY);
+                return PostContactType::from(PostContactType::DELIVERY);
             default:
                 throw new InvalidArgumentException();
         }
     }
 
+    /**
+     * @phpstan-param array{gender?:string,family_name:string} $personData
+     */
     private function storePerson(?PersonModel $person, array $personData): PersonModel
     {
         return $this->personService->storeModel(
             $person ? $this->findModelConflicts($person, $personData, 'person') : $personData,
             $person
         );
-    }
-
-    /**
-     * @return mixed
-     */
-    public static function getPersonValue(
-        ?PersonModel $person,
-        string $sub,
-        string $field,
-        ContestYearModel $contestYear,
-        bool $extrapolate = false,
-        ?EventModel $event = null
-    ) {
-        if (!$person) {
-            return null;
-        }
-        switch ($sub) {
-            case 'person_schedule':
-                return $person->getSerializedSchedule($event, $field);
-            case 'person':
-                return $person->{$field};
-            case 'person_info':
-                $result = ($info = $person->getInfo()) ? $info->{$field} : null;
-                if ($field == 'agreed') {
-                    // See isFilled() semantics. We consider those who didn't agree as NOT filled.
-                    $result = $result ? true : null;
-                }
-                return $result;
-            case 'person_history':
-                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history->{$field}
-                    : null;
-            case 'post_contact_d':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
-            case 'post_contact_p':
-                return $person->getPostContact(PostContactType::tryFrom(PostContactType::PERMANENT));
-            case 'person_has_flag':
-                return ($flag = $person->hasPersonFlag($field)) ? (bool)$flag['value'] : null;
-            default:
-                throw new \InvalidArgumentException("Unknown person sub '$sub'.");
-        }
     }
 }

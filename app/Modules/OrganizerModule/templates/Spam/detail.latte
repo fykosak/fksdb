@@ -1,0 +1,28 @@
+{varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'email_message.email_message_id',
+            'email_message.recipient',
+            'email_message.sender',
+            'email_message.reply_to',
+            'email_message.subject',
+            'email_message.carbon_copy',
+            'email_message.blind_carbon_copy',
+            'email_message.state',
+            'email_message.created',
+            'email_message.sent',
+            ], $model,1024}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Text'}</h2>
+            <div class="embed-responsive embed-responsive-1by1">
+                <iframe class="embed-responsive-item w-100" style="min-height: 30rem"
+                        srcdoc="{$model->text}"></iframe>
+            </div>
+        </div>
+    </div>
+{/block}

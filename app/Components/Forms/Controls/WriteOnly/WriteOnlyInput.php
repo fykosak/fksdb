@@ -16,8 +16,7 @@ class WriteOnlyInput extends TextInput implements WriteOnly
     use WriteOnlyTrait;
 
     /**
-     * WriteOnlyInput constructor.
-     * @param object|string $label
+     * @param object|string|null $label
      */
     public function __construct($label = null, int $maxLength = null)
     {
@@ -28,8 +27,7 @@ class WriteOnlyInput extends TextInput implements WriteOnly
     public function getControl(): Html
     {
         $control = parent::getControl();
-        $control = $this->writeOnlyAdjustControl($control);
-        return $control;
+        return $this->writeOnlyAdjustControl($control);
     }
 
     public function loadHttpData(): void

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `event_type`
 (
     `event_type_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `contest_id`    INT(11)     NOT NULL,
-    `name`          VARCHAR(45) NULL DEFAULT NULL,
+    `name`          VARCHAR(45) NOT NULL,
     INDEX `idx_event_type__contest` (`contest_id` ASC),
     CONSTRAINT `fk_event_type__contest`
         FOREIGN KEY (`contest_id`)
@@ -50,13 +50,16 @@ CREATE TABLE IF NOT EXISTS `event`
     `event_type_id`      INT          NOT NULL,
     `year`               TINYINT(4)   NOT NULL COMMENT 'ročník semináře',
     `event_year`         TINYINT(4)   NOT NULL COMMENT 'ročník akce',
-    `begin`              DATE         NOT NULL COMMENT 'první den akce',
-    `end`                DATE         NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
-    `registration_begin` DATETIME     NULL DEFAULT NULL COMMENT 'případný počátek webové registrace',
-    `registration_end`   DATETIME     NULL DEFAULT NULL COMMENT 'případný konec webové registrace',
+    `begin`              DATETIME     NOT NULL COMMENT 'první den akce',
+    `end`                DATETIME     NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
+    `registration_begin` DATETIME     NOT NULL COMMENT 'případný počátek webové registrace',
+    `registration_end`   DATETIME     NOT NULL COMMENT 'případný konec webové registrace',
     `name`               VARCHAR(255) NOT NULL COMMENT 'název akce',
-    `fb_album_id`        BIGINT(20)   NULL DEFAULT NULL COMMENT 'id galerie na Facebooku',
-    `report`             TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_cs`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `report_en`          TEXT         NULL DEFAULT NULL COMMENT '(HTML) zápis z proběhlé akce',
+    `description_cs`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `description_en`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
+    `place`              VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kde sa akcia uskutočnila (sústredka + tabory + setkani)',
     `parameters`         TEXT         NULL DEFAULT NULL COMMENT 'optional parameters in Neon syntax, scheme is define with action',
     INDEX `idx_event__event_type1` (`event_type_id` ASC),
     UNIQUE INDEX `uq_event__event_year__event_type` (`event_year` ASC, `event_type_id` ASC),
@@ -107,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     `event_id`              INT(11)       NOT NULL,
     `person_id`             INT(11)       NOT NULL,
     `note`                  TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
-    `status`                VARCHAR(20)   NOT NULL,
+    `status`                VARCHAR(20)   NOT NULL DEFAULT '__init',
     `created`               TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
     `accomodation`          TINYINT(1)    NULL     DEFAULT NULL,
     `diet`                  TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',
@@ -215,16 +218,25 @@ CREATE TABLE IF NOT EXISTS `auth_token`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8;
 
+CREATE TABLE IF NOT EXISTS `contest_category`
+(
+    `contest_category_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`               VARCHAR(16) NOT NULL,
+    `name_cs`             VARCHAR(64) NOT NULL,
+    `name_en`             VARCHAR(64) NOT NULL
+) ENGINE = InnoDB;
+
 -- -----------------------------------------------------
 -- Table `contestant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contestant`
 (
-    `contestant_id` INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contest_id`    INT(11)    NOT NULL COMMENT 'seminář',
-    `year`          TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
-    `person_id`     INT(11)    NOT NULL,
-    `created`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `contestant_id`       INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id`          INT(11)    NOT NULL COMMENT 'seminář',
+    `year`                TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
+    `person_id`           INT(11)    NOT NULL,
+    `contest_category_id` INT        NULL     DEFAULT NULL,
+    `created`             TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE INDEX `uq_contestant__contest_id` (`contest_id` ASC, `year` ASC, `person_id` ASC),
     INDEX `idx_contestant__person_id` (`person_id` ASC),
     CONSTRAINT `fk_contestant__person`
@@ -235,6 +247,11 @@ CREATE TABLE IF NOT EXISTS `contestant`
     CONSTRAINT `fk_contestant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT,
+    CONSTRAINT `fk_contestant__contest_category`
+        FOREIGN KEY (`contest_category_id`)
+            REFERENCES `contest_category` (`contest_category_id`)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT
 )
@@ -247,15 +264,19 @@ CREATE TABLE IF NOT EXISTS `contestant`
 CREATE TABLE IF NOT EXISTS `school`
 (
     `school_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name_full`   VARCHAR(255) NULL DEFAULT NULL COMMENT 'plný název školy',
+    `name_full`   VARCHAR(255) NULL     DEFAULT NULL COMMENT 'plný název školy',
     `name`        VARCHAR(255) NOT NULL COMMENT 'zkrácený název školy (na obálku)',
     `name_abbrev` VARCHAR(32)  NOT NULL COMMENT 'Zkratka pouzivana napr. ve vysledkove listine',
     `address_id`  INT(11)      NOT NULL,
-    `email`       VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kontaktní e-mail',
-    `ic`          CHAR(8)      NULL DEFAULT NULL COMMENT 'IČ (osm číslic)',
-    `izo`         VARCHAR(32)  NULL DEFAULT NULL COMMENT 'IZO kód (norma?)',
-    `active`      TINYINT(1)   NULL DEFAULT NULL COMMENT 'Platný záznam školy',
-    `note`        VARCHAR(255) NULL DEFAULT NULL,
+    `email`       VARCHAR(255) NULL     DEFAULT NULL COMMENT 'Kontaktní e-mail',
+    `ic`          CHAR(8)      NULL     DEFAULT NULL COMMENT 'IČ (osm číslic)',
+    `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
+    `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
+    `note`        VARCHAR(255) NULL     DEFAULT NULL,
+    `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
+    `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
+    `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
+    `verified`    BOOLEAN      NOT NULL DEFAULT TRUE COMMENT 'Overená po publi pridaní',
     UNIQUE INDEX `uq_school__ic` (`ic` ASC),
     UNIQUE INDEX `uq_school__izo` (`izo` ASC),
     INDEX `idx_school__address_id` (`address_id` ASC),
@@ -281,6 +302,8 @@ CREATE TABLE IF NOT EXISTS `org`
     `contribution`  TEXT         NULL DEFAULT NULL,
     `tex_signature` VARCHAR(32)  NULL DEFAULT NULL COMMENT 'zkratka používaná v TeXových vzorácích',
     `domain_alias`  VARCHAR(32)  NULL DEFAULT NULL COMMENT 'alias v doméně fykos.cz',
+    `allow_wiki`    BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do internej wiki aj po doorgovaní',
+    `allow_pm`      BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do PM aj po doorgovaní',
     UNIQUE INDEX `uq_org__contest_id` (`contest_id` ASC, `person_id` ASC),
     UNIQUE INDEX `uq_org__domain_alias` (`contest_id` ASC, `domain_alias` ASC),
     UNIQUE INDEX `uq_org__tex_signature` (`contest_id` ASC, `tex_signature` ASC),
@@ -347,36 +370,37 @@ CREATE TABLE IF NOT EXISTS `grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info`
 (
-    `person_id`              INT(11)          NOT NULL PRIMARY KEY,
-    `preferred_lang`         ENUM ('cs','en') NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
-    `born`                   DATE             NULL DEFAULT NULL COMMENT 'datum narození',
-    `id_number`              VARCHAR(32)      NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
-    `born_id`                VARCHAR(32)      NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
-    `phone`                  VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo',
-    `im`                     VARCHAR(32)      NULL DEFAULT NULL COMMENT 'ICQ, XMPP, etc.',
-    `note`                   TEXT             NULL DEFAULT NULL COMMENT 'ostatní/poznámka',
-    `uk_login`               VARCHAR(8)       NULL DEFAULT NULL COMMENT 'CAS login, pro orgy',
-    `isic_number`            VARCHAR(14)      NULL DEFAULT NULL COMMENT 'číslo ISICu',
-    `account`                VARCHAR(32)      NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
-    `agreed`                 DATETIME         NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
-    `birthplace`             VARCHAR(255)     NULL DEFAULT NULL COMMENT 'název města narození osoby',
-    `citizenship`            CHAR(2)          NULL DEFAULT NULL COMMENT 'Státní příslušnost',
-    `health_insurance`       INT(11)          NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
-    `employer`               VARCHAR(255)     NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
-    `academic_degree_prefix` varchar(64)      NULL DEFAULT NULL COMMENT 'titul před jménem',
-    `academic_degree_suffix` varchar(64)      NULL DEFAULT NULL COMMENT 'titul za jménem',
-    `email`                  VARCHAR(255)     NULL DEFAULT NULL,
-    `origin`                 TEXT             NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
-    `career`                 TEXT             NULL DEFAULT NULL COMMENT 'co studuje/kde pracuje',
-    `homepage`               VARCHAR(255)     NULL DEFAULT NULL COMMENT 'URL osobní homepage',
-    `fb_id`                  VARCHAR(255)     NULL DEFAULT NULL,
-    `linkedin_id`            VARCHAR(255)     NULL DEFAULT NULL,
-    `phone_parent_d`         VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
-    `phone_parent_m`         VARCHAR(32)      NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
-    `duplicates`             TEXT             NULL DEFAULT NULL COMMENT 'Označení neduplicitních osob.',
-    `email_parent_d`         VARCHAR(255)     NULL DEFAULT NULL COMMENT 'email rodič otec',
-    `email_parent_m`         VARCHAR(255)     NULL DEFAULT NULL COMMENT 'email rodič mama',
-    `pizza`                  VARCHAR(255)     NULL DEFAULT NULL COMMENT 'pizza',
+    `person_id`              INT(11)               NOT NULL PRIMARY KEY,
+    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
+    `born`                   DATE                  NULL DEFAULT NULL COMMENT 'datum narození',
+    `id_number`              VARCHAR(32)           NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
+    `born_id`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
+    `phone`                  VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo',
+    `im`                     VARCHAR(32)           NULL DEFAULT NULL COMMENT 'ICQ, XMPP, etc.',
+    `note`                   TEXT                  NULL DEFAULT NULL COMMENT 'ostatní/poznámka',
+    `uk_login`               VARCHAR(8)            NULL DEFAULT NULL COMMENT 'CAS login, pro orgy',
+    `isic_number`            VARCHAR(14)           NULL DEFAULT NULL COMMENT 'číslo ISICu',
+    `account`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
+    `agreed`                 DATETIME              NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
+    `birthplace`             VARCHAR(255)          NULL DEFAULT NULL COMMENT 'název města narození osoby',
+    `citizenship`            CHAR(2)               NULL DEFAULT NULL COMMENT 'Státní příslušnost',
+    `health_insurance`       INT(11)               NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
+    `employer`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
+    `academic_degree_prefix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul před jménem',
+    `academic_degree_suffix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul za jménem',
+    `email`                  VARCHAR(255)          NULL DEFAULT NULL,
+    `origin`                 TEXT                  NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
+    `career`                 TEXT                  NULL DEFAULT NULL COMMENT 'co studuje/kde pracuje',
+    `homepage`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'URL osobní homepage',
+    `fb_id`                  VARCHAR(255)          NULL DEFAULT NULL,
+    `linkedin_id`            VARCHAR(255)          NULL DEFAULT NULL,
+    `phone_parent_d`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
+    `phone_parent_m`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
+    `duplicates`             TEXT                  NULL DEFAULT NULL COMMENT 'Označení neduplicitních osob.',
+    `email_parent_d`         VARCHAR(255)          NULL DEFAULT NULL COMMENT 'email rodič otec',
+    `email_parent_m`         VARCHAR(255)          NULL DEFAULT NULL COMMENT 'email rodič mama',
+    `pizza`                  VARCHAR(255)          NULL DEFAULT NULL COMMENT 'pizza',
+    `theme`                  ENUM ('light','dark') NULL DEFAULT NULL,
     UNIQUE INDEX `uq_person_info__email` (`email` ASC),
     UNIQUE INDEX `uq_person_info__uk_login` (`uk_login` ASC),
     UNIQUE INDEX `uq_person_info__born_id` (`born_id` ASC),
@@ -435,6 +459,7 @@ CREATE TABLE IF NOT EXISTS `psc_region`
     DEFAULT CHARACTER SET = utf8
     COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision'
 /* comment truncated */ /*n*/;
+# TODO to ORM
 
 -- -----------------------------------------------------
 -- Table `mail_batch`
@@ -447,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `mail_batch`
     `ts`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
     ENGINE = InnoDB;
-
+# TODO to ORM
 -- -----------------------------------------------------
 -- Table `mail_log`
 -- -----------------------------------------------------
@@ -480,7 +505,7 @@ CREATE TABLE IF NOT EXISTS `mail_log`
     DEFAULT CHARACTER SET = utf8
     COMMENT = 'v tabulce se loguje historická hodnota adresy nebo emailu, '
 /* comment truncated */ /*kam se posílalo*/;
-
+# TODO to ORM
 -- -----------------------------------------------------
 -- Table `task`
 -- -----------------------------------------------------
@@ -514,12 +539,12 @@ CREATE TABLE IF NOT EXISTS `submit`
     `submit_id`     INT(11)                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `contestant_id` INT(11)                         NOT NULL COMMENT 'Contestant',
     `task_id`       INT(11)                         NOT NULL COMMENT 'Task',
-    `submitted_on`  DATETIME                        NULL DEFAULT NULL,
+    `submitted_on`  DATETIME                        NULL     DEFAULT NULL,
     `source`        ENUM ('post', 'upload', 'quiz') NOT NULL COMMENT 'Typ příjmu řešení',
-    `note`          VARCHAR(255)                    NULL DEFAULT NULL COMMENT 'Pocet stranek a jine poznamky',
-    `raw_points`    DECIMAL(4, 2)                   NULL DEFAULT NULL COMMENT 'Pred prepoctem',
-    `calc_points`   DECIMAL(4, 2)                   NULL DEFAULT NULL COMMENT 'Cache spoctenych bodu.',
-    `corrected`     BOOLEAN                         NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
+    `note`          VARCHAR(255)                    NULL     DEFAULT NULL COMMENT 'Pocet stranek a jine poznamky',
+    `raw_points`    DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Pred prepoctem',
+    `calc_points`   DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Cache spoctenych bodu.',
+    `corrected`     BOOLEAN                         NOT NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
     UNIQUE INDEX `uq_submit__contestant_task` (`contestant_id` ASC, `task_id` ASC),
     INDEX `idx_task__submit` (`task_id` ASC),
     CONSTRAINT `fk_submit__contestant`
@@ -558,61 +583,17 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
     ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `e_fyziklani_team`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_fyziklani_team`
-(
-    `e_fyziklani_team_id`  INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`             INT(11)     NOT NULL,
-    `name`                 VARCHAR(30) NOT NULL,
-    `status`               VARCHAR(20) NOT NULL,
-    `teacher_id`           INT(11)     NULL     DEFAULT NULL COMMENT 'kontaktní osoba',
-    `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
-    `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
-    `teacher_schedule`     TEXT        NULL     DEFAULT NULL COMMENT 'serializovaný program',
-    `category`             CHAR(1)     NOT NULL,
-    `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`                VARCHAR(30) NULL     DEFAULT NULL,
-    `note`                 TEXT        NULL     DEFAULT NULL,
-    `password`             CHAR(40)    NULL     DEFAULT NULL,
-    `points`               INT(11)     NULL     DEFAULT NULL,
-    `rank_category`        INT(11)     NULL     DEFAULT NULL,
-    `rank_total`           INT(11)     NULL     DEFAULT NULL,
-    `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
-    `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
-    `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL COMMENT 'Game lang',
-    INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
-    INDEX `fk_e_fyziklani_team_person1_idx` (`teacher_id` ASC),
-    INDEX `fk_e_fyziklani_team_e_status1_idx` (`status` ASC),
-    CONSTRAINT `fk_e_fyziklani_team_event1`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_team_person1`
-        FOREIGN KEY (`teacher_id`)
-            REFERENCES `person` (`person_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_team_e_status1`
-        FOREIGN KEY (`status`)
-            REFERENCES `event_status` (`status`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `fyziklani_team`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team`
 (
-    `fyziklani_team_id` INT                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`          INT(11)                    NOT NULL,
-    `name`              VARCHAR(30)                NOT NULL,
+    `fyziklani_team_id` INT              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT(11)          NOT NULL,
+    `name`              VARCHAR(30)      NOT NULL,
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
+        'arrived',
         'pending',
         'approved',
         'spare',
@@ -620,19 +601,32 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'missed',
         'disqualified',
         'cancelled'
-        )                                          NOT NULL DEFAULT 'init',
-    `category`          ENUM ('A','B','C','O','F') NOT NULL,
-    `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
-    `note`              TEXT                       NULL     DEFAULT NULL,
-    `password`          CHAR(40)                   NULL     DEFAULT NULL,
-    `points`            INT(11)                    NULL     DEFAULT NULL,
-    `rank_category`     INT(11)                    NULL     DEFAULT NULL,
-    `rank_total`        INT(11)                    NULL     DEFAULT NULL,
-    `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
-        COMMENT 'Game lang',
+        )                                NOT NULL DEFAULT 'init',
+    `category`          ENUM (
+        'A',
+        'B',
+        'C',
+        'O',
+        'F'
+        )                                NOT NULL,
+    `created`           TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `phone`             VARCHAR(30)      NULL     DEFAULT NULL,
+    `note`              TEXT             NULL     DEFAULT NULL,
+    `internal_note`     TEXT             NULL     DEFAULT NULL,
+    `password`          CHAR(40)         NULL     DEFAULT NULL,
+    `points`            INT(11)          NULL     DEFAULT NULL,
+    `rank_category`     INT(11)          NULL     DEFAULT NULL,
+    `rank_total`        INT(11)          NULL     DEFAULT NULL,
+    `force_a`           TINYINT(1)       NULL     DEFAULT NULL,
+    `game_lang`         ENUM ('cs','en') NULL     DEFAULT NULL,
+    `origin`            TEXT             NULL     DEFAULT NULL,
+    `scholarship`       ENUM (
+        'none',
+        'half',
+        'full'
+        )                                NOT NULL DEFAULT 'none',
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -643,28 +637,6 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
 
 
 -- -----------------------------------------------------
--- Table `e_fyziklani_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_fyziklani_participant`
-(
-    `event_participant_id` INT NOT NULL PRIMARY KEY,
-    `e_fyziklani_team_id`  INT NOT NULL,
-    INDEX `fk_e_fyziklani_participant_e_fyziklani_team1_idx` (`e_fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_team_participan` (`event_participant_id` ASC, `e_fyziklani_team_id` ASC),
-    CONSTRAINT `fk_e_participant_fyziklani_event_participant1`
-        FOREIGN KEY (`event_participant_id`)
-            REFERENCES `event_participant` (`event_participant_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_fyziklani_participant_e_fyziklani_team1`
-        FOREIGN KEY (`e_fyziklani_team_id`)
-            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `fyziklani_team_member`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
@@ -673,6 +645,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     `person_id`                INT NOT NULL,
     `fyziklani_team_id`        INT NOT NULL,
     INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_member__person`
         FOREIGN KEY (`person_id`)
@@ -695,6 +668,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `person_id`                 INT NOT NULL,
     `fyziklani_team_id`         INT NOT NULL,
     INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
     CONSTRAINT `fk_fyziklani_team_teacher__person`
         FOREIGN KEY (`person_id`)
@@ -825,30 +799,19 @@ CREATE TABLE IF NOT EXISTS `person_has_flag`
     COMMENT = 'persons flags are per year';
 
 -- -----------------------------------------------------
--- Table `study_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `study_year`
-(
-    `study_year` TINYINT(1) NOT NULL PRIMARY KEY
-)
-    ENGINE = InnoDB
-    COMMENT = 'table just enforces referential integrity';
-
--- -----------------------------------------------------
 -- Table `person_history`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_history`
 (
-    `person_history_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`         INT         NOT NULL,
-    `ac_year`           SMALLINT(4) NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
-    `school_id`         INT         NULL DEFAULT NULL,
-    `class`             VARCHAR(16) NULL DEFAULT NULL COMMENT 'označení třídy',
-    `study_year`        TINYINT(1)  NULL DEFAULT NULL COMMENT 'ročník, který studuje',
+    `person_history_id` INT                                                                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`         INT                                                                         NOT NULL,
+    `ac_year`           SMALLINT(4)                                                                 NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
+    `school_id`         INT                                                                         NULL DEFAULT NULL,
+    `class`             VARCHAR(16)                                                                 NULL DEFAULT NULL COMMENT 'označení třídy',
+    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NOT NULL DEFAULT 'NONE',
     UNIQUE INDEX `uq_person_history__year` (`person_id` ASC, `ac_year` ASC),
     INDEX `idx_person_history__school` (`school_id` ASC),
     INDEX `idx_person_history__contest_year` (`ac_year` ASC),
-    INDEX `idx_person_history__study_year` (`study_year` ASC),
     CONSTRAINT `fk_person_history__school`
         FOREIGN KEY (`school_id`)
             REFERENCES `school` (`school_id`)
@@ -863,79 +826,31 @@ CREATE TABLE IF NOT EXISTS `person_history`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_history__study_year`
-        FOREIGN KEY (`study_year`)
-            REFERENCES `study_year` (`study_year`)
-            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
     COMMENT = 'atributy osoby řezané dle akademického roku';
 
--- -----------------------------------------------------
--- Table `e_dsef_group`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_dsef_group`
+CREATE TABLE IF NOT EXISTS `task_category`
 (
-    `e_dsef_group_id` INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`        INT(11)     NOT NULL,
-    `name`            VARCHAR(32) NOT NULL,
-    `capacity`        TINYINT(2)  NOT NULL,
-    INDEX `fk_e_dsef_group_event1_idx` (`event_id` ASC),
-    CONSTRAINT `fk_e_dsef_group_event1`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_dsef_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_dsef_participant`
-(
-    `event_participant_id` INT          NOT NULL PRIMARY KEY,
-    `e_dsef_group_id`      INT          NOT NULL,
-    `message`              VARCHAR(255) NULL DEFAULT NULL,
-    INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
-    CONSTRAINT `fk_e_dsef_participant_event_participant1`
-        FOREIGN KEY (`event_participant_id`)
-            REFERENCES `event_participant` (`event_participant_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
-        FOREIGN KEY (`e_dsef_group_id`)
-            REFERENCES `e_dsef_group` (`e_dsef_group_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `task_study_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `task_study_year`
-(
-    `task_id`    INT(11)    NOT NULL,
-    `study_year` TINYINT(1) NOT NULL,
-    PRIMARY KEY (`study_year`, `task_id`),
-    INDEX `idx_task_study_year__study_year` (`study_year` ASC),
-    INDEX `idx_task_study_year__task` (`task_id` ASC),
-    CONSTRAINT `fk_task_study_year__task`
+    `task_id`             INT(11) NOT NULL,
+    `contest_category_id` INT     NOT NULL,
+    PRIMARY KEY (`contest_category_id`, `task_id`),
+    INDEX `idx_task_category__contest_category` (`contest_category_id` ASC),
+    INDEX `idx_task_category__task` (`task_id` ASC),
+    CONSTRAINT `fk_task_category__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT `fk_task_study_year__study_year`
-        FOREIGN KEY (`study_year`)
-            REFERENCES `study_year` (`study_year`)
+    CONSTRAINT `fk_task_category__contest_category`
+        FOREIGN KEY (`contest_category_id`)
+            REFERENCES `contest_category` (`contest_category_id`)
             ON DELETE RESTRICT
             ON UPDATE RESTRICT
 )
     ENGINE = InnoDB
-    COMMENT = 'specification of allowed study years for a task';
+    COMMENT = 'specification of allowed category for a task';
 
 -- -----------------------------------------------------
 -- Table `stored_query_tag_type`
@@ -1108,14 +1023,13 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id`       INT(11)                                           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`        INT(11)                                           NOT NULL,
-    `school_id`        INT(11)                                           NOT NULL,
-    `since`            DATE,
-    `until`            DATE,
-    `note`             TEXT,
-    `state`            ENUM ('proposal','cooperate','ended','undefined') NOT NULL DEFAULT 'undefined',
-    `number_brochures` INT(11)                                           NOT NULL DEFAULT 0,
+    `teacher_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT(11)      NOT NULL,
+    `school_id`  INT(11)      NULL     DEFAULT NULL,
+    `note`       TEXT         NULL     DEFAULT NULL,
+    `active`     BOOL         NOT NULL DEFAULT FALSE,
+    `role`       VARCHAR(256) NULL     DEFAULT NULL,
+    UNIQUE INDEX `uq_teacher__person_id` (`person_id` ASC),
     CONSTRAINT `fk_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
@@ -1131,34 +1045,35 @@ CREATE TABLE IF NOT EXISTS `teacher`
 
 CREATE TABLE IF NOT EXISTS `payment`
 (
-    `payment_id`      INT(11)                                                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`       INT(11)                                                     NOT NULL,
-    `event_id`        INT                                                         NOT NULL,
-    `state`           ENUM ('init','in_progress','canceled','received','waiting') NOT NULL DEFAULT 'init',
-    `price`           DECIMAL(11, 2)                                              NULL     DEFAULT NULL,
-    `currency`        VARCHAR(5)                                                  NULL     DEFAULT NULL,
-    `created`         DATETIME                                                    NULL     DEFAULT NULl,
-    `received`        DATETIME                                                    NULL     DEFAULT NULL,
-    `constant_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `variable_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `specific_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `bank_account`    VARCHAR(32)                                                 NULL     DEFAULT NULL,
-    `bank_name`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `recipient`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `iban`            VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `swift`           VARCHAR(256)                                                NULL     DEFAULT NULL,
-    INDEX `idx_payment__event` (`event_id` ASC),
+    `payment_id`      INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`       INT(11)        NOT NULL,
+    `state`           ENUM (
+        'init',
+        'in_progress',
+        'canceled',
+        'received',
+        'waiting'
+        )                            NOT NULL DEFAULT 'init',
+    `price`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `currency`        VARCHAR(5)     NULL     DEFAULT NULL,
+    `created`         DATETIME       NULL     DEFAULT NULl,
+    `received`        DATETIME       NULL     DEFAULT NULL,
+    `constant_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+    `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
+    `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
+    `want_invoice`    BOOL           NOT NULL DEFAULT FALSE,
+    `invoice_id`      VARCHAR(32)    NULL     DEFAULT NULL,
     INDEX `idx_payment__person` (`person_id` ASC),
     CONSTRAINT `fk_payment__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_payment__event`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE CASCADE
 )
     ENGINE = 'InnoDB';
 
@@ -1198,12 +1113,14 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'visa',
         'vaccination_covid',
         'teacher_present',
+        'apparel',
+        'transport',
+        'ticket',
         'weekend',
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'apparal',
-        'transport'
+        'dsef_all_day'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
@@ -1228,17 +1145,19 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 (
     `schedule_item_id`    INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `schedule_group_id`   INT(11)        NOT NULL,
-    `price_czk`           DECIMAL(11, 2) NULL DEFAULT NULL,
-    `price_eur`           DECIMAL(11, 2) NULL DEFAULT NULL,
-    `name_cs`             VARCHAR(256)   NULL DEFAULT NULL,
-    `name_en`             VARCHAR(256)   NULL DEFAULT NULL,
-    `capacity`            INT(11)        NULL DEFAULT NULL,
-    `description_cs`      VARCHAR(256)   NULL DEFAULT NULL,
-    `description_en`      VARCHAR(256)   NULL DEFAULT NULL,
-    `long_description_cs` TEXT           NULl DEFAULT NULL COMMENT 'for web',
-    `long_description_en` TEXT           NULl DEFAULT NULL COMMENT 'for web',
-    `begin`               DATETIME       NULL DEFAULT NULL,
-    `end`                 DATETIME       NULL DEFAULT NULL,
+    `price_czk`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `price_eur`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `payable`             BOOL           NOT NULL DEFAULT FALSE,
+    `available`           BOOL           NOT NULL DEFAULT TRUE,
+    `name_cs`             VARCHAR(256)   NULL     DEFAULT NULL,
+    `name_en`             VARCHAR(256)   NULL     DEFAULT NULL,
+    `capacity`            INT(11)        NULL     DEFAULT NULL,
+    `description_cs`      VARCHAR(256)   NULL     DEFAULT NULL,
+    `description_en`      VARCHAR(256)   NULL     DEFAULT NULL,
+    `long_description_cs` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
+    `long_description_en` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
+    `begin`               DATETIME       NULL     DEFAULT NULL,
+    `end`                 DATETIME       NULL     DEFAULT NULL,
     CONSTRAINT `fk_schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)
             REFERENCES `schedule_group` (`schedule_group_id`)
@@ -1252,9 +1171,10 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT NOT NULL,
-    `schedule_item_id`   INT NOT NULL,
+    `person_schedule_id` INT                            NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT                            NOT NULL,
+    `schedule_item_id`   INT                            NOT NULL,
+    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
     INDEX `idx_person_schedule__item` (`schedule_item_id` ASC),
     INDEX `idx_person_schedule__person` (`person_id` ASC),
     CONSTRAINT `fk_person_schedule__schedule_item`
@@ -1309,6 +1229,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
     `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME     NULL                                              DEFAULT NULL,
+    `priority`            BOOLEAN      NOT NULL                                          DEFAULT FALSE,
     INDEX `idx_email_message__person` (`recipient_person_id` ASC),
     CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
     CONSTRAINT `fk_email_message__person`

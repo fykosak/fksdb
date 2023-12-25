@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-// phpcs:disable
+use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Services\ContestYearService;
 
+// phpcs:disable
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Models\YearCalculator;
 
 class AllUpload extends SubmitTestCase
 {
@@ -22,7 +22,7 @@ class AllUpload extends SubmitTestCase
             $this->person,
             ContestYearService::getCurrentAcademicYear(),
             $this->genericSchool,
-            6
+            $this->getStudyYear(),
         );
     }
 
@@ -31,6 +31,11 @@ class AllUpload extends SubmitTestCase
         $this->innerTestSubmit();
 
         $this->assertSubmit($this->contestant, $this->taskRestricted);
+    }
+
+    protected function getStudyYear(): string
+    {
+        return StudyYear::Primary6;
     }
 }
 

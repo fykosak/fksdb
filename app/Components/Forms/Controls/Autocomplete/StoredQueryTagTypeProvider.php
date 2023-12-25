@@ -6,13 +6,16 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
+/**
+ * @phpstan-type TItem array{label:string,value:int,description:string|null}
+ * @phpstan-implements FilteredDataProvider<TItem>
+ */
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
-
-    private const DESCRIPTION = 'description';
     private TagTypeService $storedQueryTagTypeService;
+    /** @phpstan-var TypedSelection<TagTypeModel> */
     private TypedSelection $searchTable;
 
     public function __construct(TagTypeService $storedQueryTagTypeService)
@@ -21,9 +24,6 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
-    /**
-     * Prefix search.
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim((string)$search);
@@ -33,16 +33,17 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    public function getItemLabel(int $id): array
     {
-        /** @var TagTypeModel $tagType */
+        /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
-        return $tagType->name;
+        return [
+            'label' => $tagType->name,
+            'value' => $tagType->tag_type_id,
+            'description' => $tagType->description,
+        ];
     }
 
-    /**
-     * @return TagTypeModel[]
-     */
     public function getItems(): array
     {
         $tagTypes = $this->searchTable
@@ -52,9 +53,9 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
-                self::LABEL => $tagType->name,
-                self::VALUE => $tagType->tag_type_id,
-                self::DESCRIPTION => $tagType->description,
+                'label' => $tagType->name,
+                'value' => $tagType->tag_type_id,
+                'description' => $tagType->description,
             ];
         }
         return $result;

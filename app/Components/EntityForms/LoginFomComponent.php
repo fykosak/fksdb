@@ -7,7 +7,6 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\FormUtils;
@@ -17,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
- * @property-read LoginModel $model
+ * @phpstan-extends EntityFormComponent<LoginModel>
  */
 class LoginFomComponent extends EntityFormComponent
 {
@@ -49,18 +48,18 @@ class LoginFomComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /**
+         * @phpstan-var array{login:array{login:string}} $values
+         */
+        $values = $form->getValues('array');
         $loginData = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->loginService->storeModel($loginData, $this->model);
         $this->getPresenter()->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
-        $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+        $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
@@ -17,13 +17,22 @@ class StoredQuery implements Resource
 {
     public ?QueryModel $queryPattern = null;
     private string $sql;
+    /** @phpstan-var StoredQueryParameter[] */
     private array $queryParameters = [];
     private Connection $connection;
-    /** from Presenter     */
+    /**
+     * from Presenter
+     * @phpstan-var array<string,scalar>
+     */
     public array $implicitParameterValues = [];
-    /** User set parameters     */
+    /**
+     * User set parameters
+     * @phpstan-var array<string,scalar>
+     */
     private array $parameterValues = [];
-    /** default parameter of ModelStoredQueryParameter     */
+    /** default parameter of ModelStoredQueryParameter
+     * @phpstan-var array<string,scalar>
+     */
     private array $parameterDefaultValues = [];
 
     private function __construct(Connection $connection)
@@ -43,7 +52,7 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @param StoredQueryParameter[] $parameters
+     * @phpstan-param (StoredQueryParameter|ParameterModel)[] $parameters
      */
     public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self
     {
@@ -58,13 +67,16 @@ class StoredQuery implements Resource
         $this->sql = $sql;
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
     public function setContextParameters(array $parameters, bool $strict = true): void
     {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
                 throw new InvalidArgumentException(
-                    "Implicit parameter name '$key' collides with an explicit parameter."
+                    sprintf(_('Implicit parameter name "%s" collides with an explicit parameter.'), $key)
                 );
             }
             if (isset($this->implicitParameterValues[$key]) || $this->implicitParameterValues[$key] != $value) {
@@ -73,12 +85,15 @@ class StoredQuery implements Resource
         }
     }
 
-    public function setParameters(iterable $parameters): void
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
+    public function setParameters(array $parameters): void
     {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
-                throw new InvalidArgumentException("Unknown parameter name '$key'.");
+                throw new InvalidArgumentException(sprintf(_('Unknown parameter name "%s".'), $key));
             }
             if (!array_key_exists($key, $this->parameterValues) || $this->parameterValues[$key] != $value) {
                 $this->parameterValues[$key] = $value;
@@ -86,6 +101,7 @@ class StoredQuery implements Resource
         }
     }
 
+    /** @phpstan-ignore-next-line */
     public function getParameters(bool $all = false): array
     {
         if ($all) {
@@ -104,13 +120,16 @@ class StoredQuery implements Resource
     }
 
     /**
-     * @return StoredQueryParameter[]
+     * @phpstan-return StoredQueryParameter[]
      */
     public function getQueryParameters(): array
     {
         return $this->queryParameters;
     }
 
+    /**
+     * @phpstan-param (StoredQueryParameter|ParameterModel)[] $queryParameters
+     */
     private function setQueryParameters(array $queryParameters): void
     {
         $this->parameterDefaultValues = [];
@@ -126,6 +145,9 @@ class StoredQuery implements Resource
         }
     }
 
+    /**
+     * @phpstan-return array<int,string>
+     */
     public function getColumnNames(): array
     {
         static $columnNames;
@@ -138,12 +160,15 @@ class StoredQuery implements Resource
 
             for ($col = 0; $col < $count; $col++) {
                 $meta = $statement->getColumnMeta($col);
-                $columnNames[] = $meta['name'];
+                $columnNames[] = $meta['name']; //@phpstan-ignore-line
             }
         }
         return $columnNames;
     }
 
+    /**
+     * @phpstan-return array<int,string>
+     */
     public function getParameterNames(): array
     {
         return array_keys($this->parameterDefaultValues);

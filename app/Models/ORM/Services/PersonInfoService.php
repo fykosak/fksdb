@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method PersonInfoModel findByPrimary($key)
+ * @phpstan-extends Service<PersonInfoModel>
  */
-class PersonInfoService extends Service
+final class PersonInfoService extends Service
 {
     /**
      * @param PersonInfoModel|null $model

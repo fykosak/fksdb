@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class ItemState extends FakeStringEnum implements EnumColumn
+final class ItemState extends FakeStringEnum implements EnumColumn
 {
     public const NEW = 'new';
     public const USED = 'used';
@@ -17,7 +18,7 @@ class ItemState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = 'badge bg-color-2';
+        $badge = 'badge bg-color-5';
         switch ($this->value) {
             case self::NEW:
                 $badge = 'badge bg-color-3';
@@ -52,7 +53,7 @@ class ItemState extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {
@@ -60,7 +61,12 @@ class ItemState extends FakeStringEnum implements EnumColumn
             new self(self::NEW),
             new self(self::USED),
             new self(self::UNPACKED),
-            new self(self::DAMAGED)
+            new self(self::DAMAGED),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

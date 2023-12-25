@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Pipeline\Stage;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class ContributionsFromXML extends Stage
 {
-    /** @var array   contribution type => xml element */
+    /** @phpstan-var array{author:string,solution:string}  contribution type => xml element */
     private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
@@ -25,7 +26,7 @@ class ContributionsFromXML extends Stage
 
     private TaskContributionService $taskContributionService;
 
-    public function __construct(TaskContributionService $taskContributionService)
+    public function inject(TaskContributionService $taskContributionService): void
     {
         $this->taskContributionService = $taskContributionService;
     }
@@ -66,7 +67,7 @@ class ContributionsFromXML extends Stage
                 }
 
                 $row = $data->getContestYear()->contest
-                    ->getOrganisers()
+                    ->getOrganizers()
                     ->where('tex_signature', $signature)
                     ->fetch();
 
@@ -82,7 +83,7 @@ class ContributionsFromXML extends Stage
                 $this->taskContributionService->disposeModel($contribution);
             }
 
-            /** @var OrgModel $contributor */
+            /** @var OrganizerModel $contributor */
             foreach ($contributors as $contributor) {
                 $this->taskContributionService->storeModel([
                     'person_id' => $contributor->person_id,

@@ -13,33 +13,33 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
-class DiplomasPresenter extends BasePresenter
+final class DiplomasPresenter extends BasePresenter
 {
 
     public function titleResults(): PageTitle
     {
-        return new PageTitle(null, _('Results for diplomas'), 'fa fa-trophy');
+        return new PageTitle(null, _('Results for diplomas'), 'fas fa-trophy');
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedResults(): bool
+    {
+        return $this->isAllowed('game.diplomas', 'results');
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Calculate final ranking'), 'fa fa-calculator');
+        return new PageTitle(null, _('Calculate final ranking'), 'fas fa-calculator');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedResults(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.diplomas', 'results'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizeDefault(): void
-    {
-        $this->setAuthorized($this->isAllowed('game.diplomas', 'calculate'));
+        return $this->isAllowed('game.diplomas', 'calculate');
     }
 
     /**
@@ -70,7 +70,7 @@ class DiplomasPresenter extends BasePresenter
     public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy($category ? TeamCategory::tryFrom($category) : null);
+        $log = $closeStrategy(TeamCategory::tryFrom($category));
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)

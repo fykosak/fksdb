@@ -5,15 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Tests\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\Database\Row;
 use Nette\Schema\Helpers;
-use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
@@ -30,6 +25,12 @@ abstract class EventTestCase extends DatabaseTestCase
         }
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
+        }
+        if (!isset($data['registration_begin'])) {
+            $data['registration_begin'] = '2016-01-01';
+        }
+        if (!isset($data['registration_end'])) {
+            $data['registration_end'] = '2017-01-01';
         }
         return $this->container->getByType(EventService::class)->storeModel($data);
     }

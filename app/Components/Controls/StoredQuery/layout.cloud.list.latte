@@ -1,12 +1,12 @@
 {layout ../@layout.latte}
 {block content}
-    {varType Fykosak\NetteORM\TypedSelection|FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel[] $tags}
+    {varType Fykosak\NetteORM\Selection\TypedSelection|FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel[] $tags}
     {varType array $activeTagIds}
     <p>
         {foreach $tags as $tagType}
             {var $active = isset($activeTagIds[$tagType->tag_type_id])?'active':''}
             <a
-                    class="btn btn-sm btn-color-{$tagType->color} {$active}"
+                    class="btn btn-sm btn-outline-{$tagType->getColor()} {$active}"
                     href="{link onClick! $tagType->tag_type_id}"
                     title="{$tagType->description}"
             >

@@ -1,0 +1,28 @@
+{block outerContent}
+    {varType array $logs}
+    {varType FKSDB\Models\ORM\Tests\Test[] $tests}
+
+    {foreach $logs as $log}
+        {varType FKSDB\Models\ORM\Models\SchoolModel[]|Fykosak\Utils\Logging\Message[][][] $log}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2> {control printer:templateString '@school.school',$log['model'],1024}</h2>
+                {control printer:button 'school.edit',$log['model']}
+                {control printer:button 'school.detail',$log['model']}
+                {foreach $log['logs'] as $key => $testLogs}
+                    <h3 class="mt-3">{$tests[$key]->getTitle()->toHtml()}</h3>
+                    {include test-results logs:$testLogs,test:$tests[$key]}
+                {/foreach}
+            </div>
+        </div>
+    {/foreach}
+    {define test-results FKSDB\Components\DataTest\TestMessage[] $logs, FKSDB\Models\ORM\Tests\Test $test}
+        {if count($logs)}
+            {foreach $logs as $log}
+                <div class="alert alert-{$log->level}">
+                    {$log->toText()}
+                </div>
+            {/foreach}
+        {/if}
+    {/define}
+{/block}

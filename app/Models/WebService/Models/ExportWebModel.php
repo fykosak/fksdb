@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class ExportWebModel extends WebModel
 {
     private StoredQueryFactory $storedQueryFactory;
@@ -29,6 +33,7 @@ class ExportWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws \DOMException
+     * @throws BadTypeException
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
@@ -59,6 +64,7 @@ class ExportWebModel extends WebModel
         }
 
         try {
+            /** @phpstan-ignore-next-line */
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($args->qid, $parameters);
         } catch (\InvalidArgumentException $exception) {
             throw new \SoapFault('Sender', $exception->getMessage(), (string)$exception);
@@ -88,10 +94,10 @@ class ExportWebModel extends WebModel
         if (!isset($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowedForLogin(
-            $this->authenticatedLogin,
+        return $this->contestAuthorizator->isAllowed(
             $query,
             'execute',
+            /** @phpstan-ignore-next-line */
             $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }

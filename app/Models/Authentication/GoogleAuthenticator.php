@@ -8,29 +8,25 @@ use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Security\AuthenticationException;
 
 class GoogleAuthenticator extends AbstractAuthenticator
 {
-
-    private OrgService $orgService;
-    private AccountManager $accountManager;
+    private OrganizerService $organizerService;
     private PersonService $personService;
 
     public function __construct(
-        OrgService $orgService,
-        AccountManager $accountManager,
+        OrganizerService $organizerService,
         LoginService $loginService,
         PersonService $personService
     ) {
         parent::__construct($loginService);
-        $this->orgService = $orgService;
-        $this->accountManager = $accountManager;
+        $this->organizerService = $organizerService;
         $this->personService = $personService;
     }
 
@@ -39,6 +35,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
+     * @phpstan-param array{email:string|null} $user
      */
     public function authenticate(array $user): LoginModel
     {
@@ -49,7 +46,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
         } else {
             $login = $person->getLogin();
             if (!$login) {
-                $login = $this->accountManager->createLogin($person);
+                $login = $this->loginService->createLogin($person);
             }
         }
         if ($login->active == 0) {
@@ -61,16 +58,20 @@ class GoogleAuthenticator extends AbstractAuthenticator
 
     /**
      * @throws AuthenticationException
+     * @phpstan-param array{email:string|null} $user
      */
     private function findPerson(array $user): ?PersonModel
     {
         if (!$user['email']) {
             throw new AuthenticationException(_('Email not found in the google account.'));
         }
-        return $this->findOrg($user) ?? $this->personService->findByEmail($user['email']);
+        return $this->findOrganizer($user) ?? $this->personService->findByEmail($user['email']);
     }
 
-    private function findOrg(array $user): ?PersonModel
+    /**
+     * @phpstan-param array{email:string|null} $user
+     */
+    private function findOrganizer(array $user): ?PersonModel
     {
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
@@ -83,10 +84,10 @@ class GoogleAuthenticator extends AbstractAuthenticator
             default:
                 return null;
         }
-        /** @var OrgModel|null $org */
-        $org = $this->orgService->getTable()
+        /** @var OrganizerModel|null $organizers */
+        $organizers = $this->organizerService->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
             ->fetch();
-        return $org ? $org->person : null;
+        return $organizers ? $organizers->person : null;
     }
 }

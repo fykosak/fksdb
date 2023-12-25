@@ -45,7 +45,6 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         parent::setUp();
 
         $this->eventId = $this->createEvent([]);
-        $this->teamId = $this->createTeam(['e_fyziklani_team_id' => 1]);
         $this->taskId = $this->createTask(['label' => 'AA']);
 
 

@@ -4,71 +4,70 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Schedule\Input\ExistingPaymentException;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\MachineExecutionException;
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
+use FKSDB\Models\Persons\ModelDataConflictException;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
+use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
-use Fykosak\Utils\Logging\FlashMessageDump;
+use Nette\Utils\ArrayHash;
+use Tracy\Debugger;
 
 /**
- * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
+ * @method BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent
 {
-
-    private ApplicationHandler $handler;
     private BaseHolder $holder;
-    /** @var callable ($primaryModelId, $eventId) */
-    private $redirectCallback;
-    private string $templateFile;
-    private EventAuthorizator $eventAuthorizator;
+    private Connection $connection;
+    private EventDispatchFactory $eventDispatchFactory;
+    /**
+     * @phpstan-var EventParticipantMachine<BaseHolder> $machine
+     */
+    private EventParticipantMachine $machine;
 
-    public function __construct(Container $container, ApplicationHandler $handler, BaseHolder $holder)
+    /**
+     * @phpstan-param EventParticipantMachine<BaseHolder> $machine
+     */
+    public function __construct(Container $container, BaseHolder $holder, EventParticipantMachine $machine)
     {
         parent::__construct($container);
-        $this->handler = $handler;
         $this->holder = $holder;
+        $this->machine = $machine;
     }
 
-    public function injectContestAuthorizator(EventAuthorizator $eventAuthorizator): void
+    public function inject(Connection $connection, EventDispatchFactory $eventDispatchFactory): void
     {
-        $this->eventAuthorizator = $eventAuthorizator;
+        $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->connection = $connection;
     }
 
-    /**
-     * @param string $template name of the standard template or whole path
-     */
-    public function setTemplate(string $template): void
+    private function getTemplateFile(): string
     {
+        $template = $this->eventDispatchFactory->getFormLayout($this->holder->event);
         if (stripos($template, '.latte') !== false) {
-            $this->templateFile = $template;
+            return $template;
         } else {
-            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
+            return __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
         }
-    }
-
-    public function setRedirectCallback(callable $redirectCallback): void
-    {
-        $this->redirectCallback = $redirectCallback;
-    }
-
-    /**
-     * Syntactic sugar for the template.
-     */
-    public function isEventAdmin(): bool
-    {
-        $event = $this->holder->event;
-        return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
     final public function render(): void
@@ -78,29 +77,22 @@ class ApplicationComponent extends BaseComponent
 
     final public function renderForm(): void
     {
-        if (!$this->templateFile) {
-            throw new InvalidStateException('Must set template for the application form.');
-        }
-        $this->template->holder = $this->holder;
-        $this->template->render($this->templateFile);
+        $this->template->render($this->getTemplateFile(), ['holder' => $this->holder]);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     protected function createComponentForm(): FormControl
     {
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
-        $container = $this->holder->createFormContainer();
+        $container = $this->holder->createFormContainer($this->getContext());
         $form->addComponent($container, 'participant');
         /*
          * Create save (no transition) button
          */
         $saveSubmit = null;
         if ($this->canEdit()) {
-            $saveSubmit = $form->addSubmit('save', _('Save'));
+            $saveSubmit = $form->addSubmit('save', _('button.save'));
             $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         }
 
@@ -110,20 +102,15 @@ class ApplicationComponent extends BaseComponent
         $transitionSubmit = null;
 
         foreach (
-            $this->handler->getMachine()->getAvailableTransitions(
-                $this->holder,
-                $this->holder->getModelState()
-            ) as $transition
+            $this->machine->getAvailableTransitions($this->holder, $this->holder->getModelState()) as $transition
         ) {
-            $transitionName = $transition->getId();
-            $submit = $form->addSubmit($transitionName, $transition->getLabel());
+            $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
 
             if (!$transition->getValidation()) {
                 $submit->setValidationScope([]);
             }
 
-            $submit->onClick[] = fn(SubmitButton $button) =>
-                $this->handleSubmit($button->getForm(), $transitionName, $transition->getValidation());
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
 
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
@@ -137,7 +124,7 @@ class ApplicationComponent extends BaseComponent
         /*
          * Create cancel button
          */
-        $cancelSubmit = $form->addSubmit('cancel', _('Cancel'));
+        $cancelSubmit = $form->addSubmit('cancel', _('button.cancel'));
         $cancelSubmit->getControlPrototype()->addAttributes(['class' => 'btn btn-outline-warning']);
         $cancelSubmit->setValidationScope([]);
         $cancelSubmit->onClick[] = fn() => $this->finalRedirect();
@@ -145,11 +132,16 @@ class ApplicationComponent extends BaseComponent
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form);
+        foreach ($this->holder->formAdjustments as $adjustment) {
+            $adjustment->adjust($form, $this->holder);
+        }
+        /** @phpstan-ignore-next-line */
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
+            /** @phpstan-ignore-next-line */
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
         } elseif ($transitionSubmit) {
+            /** @phpstan-ignore-next-line */
             $transitionSubmit->getControlPrototype()->data['submit-on'] = 'this';
         }
 
@@ -158,37 +150,102 @@ class ApplicationComponent extends BaseComponent
 
     /**
      * @throws \Throwable
+     * @phpstan-param Transition<BaseHolder>|null $transition
      */
-    public function handleSubmit(Form $form, ?string $explicitTransitionName = null, bool $storeData = true): void
+    public function handleSubmit(Form $form, ?Transition $transition = null): void
     {
         try {
-            if ($storeData) {
-                $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
+            if (!$transition || $transition->getValidation()) {
+                try {
+                    $this->connection->beginTransaction();
+                    /** @phpstan-var ArrayHash<mixed> $values */
+                    $values = $form->getValues();
+                    $values = FormUtils::emptyStrToNull($values);
+                    Debugger::log(json_encode((array)$values), 'app-form');
+                    foreach ($this->holder->processings as $processing) {
+                        $processing->process($values);
+                    }
+
+                    if ($transition) {
+                        $state = $this->holder->getModelState();
+                        $transition = Machine::selectTransition(
+                            Machine::filterByTarget(
+                                Machine::filterBySource($this->machine->transitions, $state),
+                                $transition->target
+                            )
+                        );
+                    }
+                    if (isset($values['participant'])) {
+                        $this->holder->data += (array)$values['participant'];
+                    }
+
+                    if ($transition) {
+                        $this->machine->execute2($transition, $this->holder);
+                    }
+                    $this->holder->saveModel();
+                    if ($transition) {
+                        $transition->callAfterExecute($this->holder);
+                    }
+
+                    if ($transition && $transition->isCreating()) {
+                        $this->getPresenter()->flashMessage(
+                            sprintf(_('Application "%s" created.'), $this->holder->getModel()->person->getFullName()),
+                            Message::LVL_SUCCESS
+                        );
+                    } elseif ($transition) {
+                        $this->getPresenter()->flashMessage(
+                            sprintf(
+                                _('Application state "%s" changed.'),
+                                $this->holder->getModel()->person->getFullName()
+                            ),
+                            Message::LVL_INFO
+                        );
+                    }
+                    $this->getPresenter()->flashMessage(
+                        sprintf(_('Application "%s" saved.'), $this->holder->getModel()->person->getFullName()),
+                        Message::LVL_SUCCESS
+                    );
+                    $this->connection->commit();
+                } catch (
+                    ModelDataConflictException |
+                    DuplicateApplicationException |
+                    MachineExecutionException |
+                    SubmitProcessingException |
+                    FullCapacityException |
+                    ExistingPaymentException $exception
+                ) {
+                    $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+                    /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+                    foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
+                        $referencedId->rollback();
+                    }
+                    $this->connection->rollBack();
+                    throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $exception);
+                }
             } else {
-                $this->handler->onlyExecute($this->holder, $explicitTransitionName);
+                $this->machine->execute($transition, $this->holder);
+                $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             }
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
-            FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
         }
     }
 
     private function canEdit(): bool
     {
-        return $this->holder->getModelState()
-            != Machine::STATE_INIT && $this->holder->isModifiable();
+        return $this->holder->getModelState() != Machine::STATE_INIT && $this->holder->isModifiable();
     }
 
     private function finalRedirect(): void
     {
-        if ($this->redirectCallback) {
-            $model = $this->holder->getModel();
-            $id = $model ? $model->getPrimary(false) : null;
-            ($this->redirectCallback)($id, $this->holder->event->getPrimary());
-        } else {
-            $this->redirect('this');
-        }
+        $this->getPresenter()->redirect(
+            'this',
+            [
+                'eventId' => $this->holder->event->event_id,
+                'id' => $this->holder->getModel()->getPrimary(),
+                ApplicationPresenter::PARAM_AFTER => true,
+            ]
+        );
     }
 }

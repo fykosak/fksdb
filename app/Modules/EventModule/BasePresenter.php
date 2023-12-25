@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Choosers\EventChooserComponent;
+use FKSDB\Components\Controls\Choosers\EventChooser;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Nette\Application\BadRequestException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\ComponentReflection;
 use Nette\Security\Resource;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     /** @persistent */
     public ?int $eventId = null;
@@ -30,52 +27,41 @@ abstract class BasePresenter extends AuthenticatedPresenter
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    public function isAuthorized(): bool
+    /**
+     * @param ComponentReflection|\ReflectionMethod $element
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     */
+    public function checkRequirements($element): void
     {
         if (!$this->isEnabled()) {
-            return false;
+            throw new ForbiddenRequestException();
         }
-        return parent::isAuthorized();
+        parent::checkRequirements($element);
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function beforeRender(): void
+    {
+        parent::beforeRender();
+        $this->template->event = $this->getEvent();
     }
 
     /**
      * @param Resource|string|null $resource
-     * Check if has contest permission or is Event org
+     * Check if has contest permission or is Event organizer
      * @throws EventNotFoundException
      */
-    public function isAllowed($resource, ?string $privilege): bool
+    final public function isAllowed($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
-    /**
-     * @throws NotImplementedException
-     * @throws ForbiddenRequestException
-     */
-    protected function startup(): void
-    {
-        if (!$this->isEnabled()) {
-            throw new NotImplementedException();
-        }
-        parent::startup();
     }
 
     protected function isEnabled(): bool
     {
         return true;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function getDummyHolder(): BaseHolder
-    {
-        static $holder;
-        if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $holder;
     }
 
     /**
@@ -96,49 +82,71 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
-        return $this->getEvent()->name;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws BadRequestException
-     */
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
-        switch ($this->getEvent()->event_type_id) {
-            case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fof navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-                break;
-            case 9:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-dark');
-                break;
-            case 17:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-ctyrboj navbar-dark');
-                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-                break;
-            default:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');
-        }
-        parent::beforeRender();
+        return $this->getEvent()->getName()->getText($this->translator->lang);// @phpstan-ignore-line
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentEventChooser(): EventChooserComponent
+    protected function getStyleId(): string
     {
-        return new EventChooserComponent($this->getContext(), $this->getEvent());
+        return 'event-type-' . $this->getEvent()->event_type_id;
     }
 
     /**
-     * @return string[]
+     * @throws EventNotFoundException
      */
+    protected function createComponentEventChooser(): EventChooser
+    {
+        return new EventChooser($this->getContext(), $this->getEvent());
+    }
+
     protected function getNavRoots(): array
     {
-        return ['Event.Dashboard.default'];
+        return [
+            [
+                'title' => new Title(null, _('Applications')),
+                'items' => [
+                    'Event:Team:detailedList' => [],
+                    'Event:Team:default' => [],
+                    'Event:Team:mass' => [],
+                    'Event:Team:create' => [],
+                    #single
+                    'Event:Application:default' => [],
+                    'Event:Application:mass' => [],
+                    'Event:Application:import' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Others')),
+                'items' => [
+                    'Event:Report:default' => [],
+                    'Event:EventOrganizer:list' => [],
+                    'Event:Payments:create' => [],
+                    'Event:Payments:list' => [],
+                    'Game:Dashboard:default' => [],
+                    'Schedule:Dashboard:default' => [],
+                    'Event:Chart:list' => [],
+                    'Event:Dispatch:default' => [],
+                    'Event:Dashboard:default' => [],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @phpstan-return string[]
+     */
+    public function formatTemplateFiles(): array
+    {
+        $files = parent::formatTemplateFiles();
+
+        return [
+            str_replace('.latte', '.' . $this->getEvent()->event_type->getSymbol() . '.latte', $files[0]),
+            ...$files,
+        ];
     }
 }

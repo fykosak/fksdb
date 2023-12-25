@@ -10,31 +10,28 @@
     {/foreach}
 {/define}
 
-{define metadata}
-    {varType Nette\Forms\Controls\BaseControl $field}
+{define metadata, Nette\Forms\Controls\BaseControl $field}
     {foreach $field->getErrors() as $error}
-        {continueIf !$error}
-        <div class="alert alert-danger">{$error}</div>
+        <div class="invalid-feedback">{$error}</div>
     {/foreach}
     {var $description = $field->getOption('description')}
     {if $description}
-        <span class="text-muted">{$description}</span>
+        <span class="form-text">{$description}</span>
     {/if}
 {/define}
 
-{define plain}
-    {varType Nette\Forms\Controls\TextInput $field}
+{define plain, Nette\Forms\Controls\TextInput $field}
     {switch $field->control->type}
         {case 'range'}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
-            {label $field/}
-            {input $field class: 'form-control ' . $field->getControlPrototype()->class}
+            {label $field class: 'form-label'/}
+            {input $field class: 'form-control ' . ($field->hasErrors()?'is-invalid ':'') . $field->getControlPrototype()->class}
             {include metadata field => $field}
         </div>
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-            {label $field/}
-            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class, 'required'=>null}
+            {label $field class: 'form-label'/}
+            {input $field class: 'form-control ' . ($field->hasErrors()?'is-invalid ':'') . $field->getControlPrototype()->class, 'required'=>null}
             {include metadata field => $field}
         </div>
     {/switch}
@@ -50,14 +47,12 @@
     </div>
 {/define}
 
-{define radiolist}
-    {varType Nette\Forms\Controls\RadioList $field}
+{define radiolist,Nette\Forms\Controls\RadioList $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         {if !empty($field->getLabel()->getText())}
             {label $field /}
         {/if}
         {foreach $field->getItems() as $key => $item}
-            {var $divClassName = $field->getContainerPrototype()->class ? 'mb-3'}
             <div n:class="'form-check ' . $field->getContainerPrototype()->class">
                 {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
                 {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class /}
@@ -67,16 +62,13 @@
     </div>
 {/define}
 
-{define button}
-    {varType Nette\Forms\Controls\Button $field}
-    {varType string $fieldClass}
-    {var $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
-    {var $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
+{define button, Nette\Forms\Controls\Button $field}
+    {var string $fieldClass = (string)$field->getControlPrototype()->getAttribute('class')}
+    {php $fieldClass = preg_replace('/(^|\s)btn($|\s)/', '', $fieldClass)}
     {input $field class:('btn ' . (\Nette\Utils\Strings::contains($fieldClass,'btn-') ? $fieldClass : 'btn-outline-primary'))}
 {/define}
 
-{define buttonArray}
-    {varType Nette\Forms\Controls\Button[] $buttons}
+{define buttonArray,Nette\Forms\Controls\Button[] $buttons}
     {var $buttonRows = []}
     {foreach $buttons as $button}
         {php if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
@@ -108,7 +100,7 @@
 {define controls}
     {varType Nette\Forms\Controls\BaseControl[] $controls}
     {var $buttons = []}
-    {foreach $controls as $name => $field}
+    {foreach $controls as $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}

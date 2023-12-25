@@ -5,55 +5,60 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\Model;
 
 /**
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int payment_id
- * @property-read EventModel event
- * @property-read int event_id
- * @property-read PaymentState state
- * @property-read float price
- * @property-read string currency
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface received
- * @property-read string constant_symbol
- * @property-read string variable_symbol
- * @property-read string specific_symbol
- * @property-read string bank_account
- * @property-read string bank_name
- * @property-read string recipient
- * @property-read string iban
- * @property-read string swift
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $payment_id
+ * @property-read PaymentState $state
+ * @property-read float|null $price
+ * @property-read string|null $currency
+ * @property-read \DateTimeInterface|null $created
+ * @property-read \DateTimeInterface|null $received
+ * @property-read string|null $constant_symbol
+ * @property-read string|null $variable_symbol
+ * @property-read string|null $specific_symbol
+ * @property-read string|null $bank_account
+ * @property-read string|null $bank_name
+ * @property-read string|null $recipient
+ * @property-read string|null $iban
+ * @property-read string|null $swift
+ * @property-read int $want_invoice
+ * @property-read string|null $invoice_id
+ * @phpstan-type SerializedPaymentModel array{
+ *      personId:int,
+ *      paymentId:int,
+ *      state:string,
+ *      price:float|null,
+ *      currency:string|null,
+ *      constantSymbol:string|null,
+ *      variableSymbol:string|null,
+ *      specificSymbol:string|null,
+ *      bankAccount:string|null,
+ *      bankName:string|null,
+ *      recipient:string|null,
+ *      iban:string|null,
+ *      swift:string|null,
+ * }
  */
-class PaymentModel extends Model implements Resource
+final class PaymentModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'event.payment';
+    public const RESOURCE_ID = 'payment';
 
     /**
-     * @return PersonScheduleModel[]
+     * @phpstan-return TypedGroupedSelection<SchedulePaymentModel>
      */
-    public function getRelatedPersonSchedule(): array
-    {
-        $items = [];
-        /** @var SchedulePaymentModel $row */
-        foreach ($this->getSchedulePayment() as $row) {
-            $items[] = $row->person_schedule;
-        }
-        return $items;
-    }
-
     public function getSchedulePayment(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
+        /** @phpstan-var TypedGroupedSelection<SchedulePaymentModel> $selection */
+        $selection = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
+        return $selection;
     }
 
     public function getResourceId(): string
@@ -63,7 +68,7 @@ class PaymentModel extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return $this->state->value == PaymentState::IN_PROGRESS;
+        return $this->state->value === PaymentState::IN_PROGRESS;
     }
 
     /**
@@ -84,7 +89,7 @@ class PaymentModel extends Model implements Resource
 
     /**
      * @param string $key
-     * @return PaymentState|FakeStringEnum|mixed|null
+     * @return PaymentState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
@@ -98,6 +103,9 @@ class PaymentModel extends Model implements Resource
         return $value;
     }
 
+    /**
+     * @phpstan-return SerializedPaymentModel
+     */
     public function __toArray(): array
     {
         return [

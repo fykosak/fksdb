@@ -13,6 +13,12 @@ use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{
+ *     contest_id:int,
+ *     year:int,
+ * },array<string,mixed>>
+ */
 class SeriesResultsWebModel extends WebModel
 {
     private ContestYearService $contestYearService;
@@ -27,7 +33,6 @@ class SeriesResultsWebModel extends WebModel
         return Expect::structure([
             'contest_id' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
-            'series' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
 
@@ -37,15 +42,16 @@ class SeriesResultsWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $tasksData = [];
         /** @var TaskModel $task */
-        foreach ($contestYear->getTasks($params['series']) as $task) {
+        foreach ($contestYear->getTasks() as $task) {
             foreach ($evaluationStrategy->getCategories() as $category) {
-                $tasksData[$category->value] = $tasksData[$category->value] ?? [];
+                $tasksData[$category->label] = $tasksData[$category->label] ?? [];
+                $tasksData[$category->label][$task->series] = $tasksData[$category->label][$task->series] ?? [];
                 $points = $evaluationStrategy->getTaskPoints($task, $category);
                 if (!is_null($points)) {
-                    $tasksData[$category->value][] = [
+                    $tasksData[$category->label][$task->series][] = [
                         'taskId' => $task->task_id,
                         'points' => $points,
                         'label' => $task->label,
@@ -56,21 +62,20 @@ class SeriesResultsWebModel extends WebModel
         $results = [];
         /** @var ContestantModel $contestant */
         foreach ($contestYear->getContestants() as $contestant) {
-            $category = $evaluationStrategy->studyYearsToCategory($contestant->getPersonHistory()->study_year);
-            $submits = $contestant->getSubmitsForSeries($params['series']);
             $submitsData = [];
             $sum = 0;
             /** @var SubmitModel $submit */
-            foreach ($submits as $submit) {
-                $points = $evaluationStrategy->getSubmitPoints($submit, $category);
+            foreach ($contestant->getSubmits() as $submit) {
+                $points = $evaluationStrategy->getSubmitPoints($submit);
                 $sum += $points;
                 $submitsData[$submit->task_id] = $points;
             }
             if (count($submitsData)) {
                 $school = $contestant->getPersonHistory()->school;
-                $results[$category->value] = $results[$category->value] ?? [];
-                $results[$category->value][] = [
+                $results[$contestant->contest_category->label] = $results[$contestant->contest_category->label] ?? [];
+                $results[$contestant->contest_category->label][] = [
                     'contestant' => [
+                        'contestantId' => $contestant->contestant_id,
                         'name' => $contestant->person->getFullName(),
                         'school' => $school->name_abbrev,
                     ],

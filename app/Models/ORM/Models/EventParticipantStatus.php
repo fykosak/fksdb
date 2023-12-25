@@ -6,11 +6,12 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class EventParticipantStatus extends FakeStringEnum implements EnumColumn
+final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
-
+    public const INIT = '__init';
     public const APPLIED = 'applied';
     public const APPLIED_NODSEF = 'applied.nodsef';
     public const APPLIED_NOTSAF = 'applied.notsaf';
@@ -40,6 +41,7 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
+            new self(self::INIT),
             new self(self::APPLIED),
             new self(self::APPLIED_NODSEF),
             new self(self::APPLIED_NOTSAF),
@@ -176,5 +178,10 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
                 return _('Spare 3');
         }
         return $this->value;
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

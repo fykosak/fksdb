@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
-use Nette\Security\Resource;
 use Nette\Security\Permission;
+use Nette\Security\Resource;
 use Nette\Security\UserStorage;
 
 class OwnerAssertion
@@ -27,7 +27,7 @@ class OwnerAssertion
     {
         [, $login] = $this->userStorage->getState();
         if (!$login) {
-            throw new InvalidStateException('Expecting logged user.');
+            throw new InvalidStateException(_('Expecting logged user.'));
         }
         /** @var SubmitModel $submit */
         $submit = $acl->getQueriedResource();
@@ -45,7 +45,7 @@ class OwnerAssertion
     {
         [$state] = $this->userStorage->getState();
         if (!$state) {
-            throw new InvalidStateException('Expecting logged user.');
+            throw new InvalidStateException(_('Expecting logged user.'));
         }
         /** @var ContestantModel $contestant */
         $contestant = $acl->getQueriedResource();
@@ -62,7 +62,7 @@ class OwnerAssertion
     {
         [$state] = $this->userStorage->getState();
         if (!$state) {
-            throw new InvalidStateException('Expecting logged user.');
+            throw new InvalidStateException(_('Expecting logged user.'));
         }
         /** @var PersonModel $person */
         $person = $acl->getQueriedResource();

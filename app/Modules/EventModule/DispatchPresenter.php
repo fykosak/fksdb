@@ -4,34 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 
-class DispatchPresenter extends AuthenticatedPresenter
+final class DispatchPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('List of events'), 'fa fa-calendar-alt');
+        return new PageTitle(null, _('List of events'), 'fas fa-calendar-alt');
     }
 
-    protected function createComponentContestBadge(): ContestBadge
+    public function authorizedDefault(): bool
     {
-        return new ContestBadge($this->getContext());
+        return true;
     }
 
     protected function createComponentDispatchGrid(): DispatchGrid
     {
         return new DispatchGrid($this->getContext());
-    }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->styleIds[] = 'event';
-        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-        parent::beforeRender();
     }
 }

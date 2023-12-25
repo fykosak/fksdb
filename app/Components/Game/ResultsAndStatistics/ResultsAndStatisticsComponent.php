@@ -48,6 +48,25 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     /**
      * @throws NotSetGameParametersException
      * @throws BadTypeException
+     * @phpstan-return array{
+     *  availablePoints:int[],
+     *  basePath:string,
+     *  gameStart:string,
+     *  gameEnd:string,
+     *  times:array{
+     *      toStart:int,
+     *      toEnd:int,
+     *      visible:bool,
+     *  },
+     *  lastUpdated:string,
+     *  isOrganizer:bool,
+     *  refreshDelay:int,
+     *  tasksOnBoard:int,
+     *  teams:mixed,
+     *  tasks:mixed,
+     *  submits:mixed,
+     *  categories:string[],
+     * }
      */
     protected function getData(): array
     {
@@ -69,7 +88,7 @@ class ResultsAndStatisticsComponent extends AjaxComponent
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
-            'isOrg' => true,
+            'isOrganizer' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
         ];

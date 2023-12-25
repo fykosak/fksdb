@@ -4,36 +4,59 @@
     {if $container instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
         {var $attrs = array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY)}
         {if $container->getOption('visible', true)}
-            {snippet 'group-' . $container->getOption('id')}
-                <div n:attr="(expand) $attrs">
-                    {var $className = $container->getOption('label')?'col-12 bd-callout bd-callout-priamry':''}
-                    <fieldset class="{$className}" data-level={$level}>
-                        {if $container->getOption('label')}
-                            <h4 class="mb-3">{$container->getOption('label')}</h4>
+            {var string|null $label = $container->getOption('label')}
+            {var string|null $description = $container->getOption('description')}
+            {var string $className = $label?'col-12 callout card mb-3 referenced-container':'mb-3 referenced-container'}
+            {var string $id = Nette\Utils\Random::generate(10)}
+            <fieldset
+                    class="{$className}"
+                    n:snippet="'group-' . $container->getOption('id')"
+                    data-level={$level}
+                    n:attr="(expand) $attrs"
+            >
+                <div class="{$label?'card-header d-flex justify-content-between':''}">
+                        {if $label}
+                            <h4>{$label}</h4>
                         {/if}
-                        {if $container->getOption('description')}
-                            <p>{$container->getOption('description')}</p>
+                        {if $container->collapse}
+                        <button class="btn btn-outline-primary btn-sm container-toggle"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{$id}"
+                                role="button"
+                                aria-expanded="false"
+                        >
+                                {_'Toogle'}
+                            </button>
                         {/if}
-                        {include subComponents conainer=>$container, level=>$level}
-                    </fieldset>
+                        {if $description}
+                            <p>{$description}</p>
+                        {/if}
                 </div>
-            {/snippet}
+                {if $container->collapse}
+                    <div class="{$label?'card-body collapse':'mt-3'}" id="{$id}">
+                        {include subComponents container=>$container, level=>$level}
+                    </div>
+                {else}
+                    <div class="{$label?'card-body':''}">
+                        {include subComponents container=>$container, level=>$level}
+                    </div>
+                {/if}
+            </fieldset>
         {/if}
     {else}
         {snippet 'group-' . $container->getName()}
             <fieldset data-level={$level}>
-                {include subComponents conainer=>$container, level=>$level}
+                {include subComponents container=>$container, level=>$level}
             </fieldset>
         {/snippet}
     {/if}
 {/define}
 
-{define subComponents}
-    {varType FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container}
-    {varType int $level}
+{define subComponents, FKSDB\Components\Forms\Containers\Models\ContainerWithOptions $container,int $level}
     {var $controls = []}
     {foreach $container->getComponents() as $component}
-        {if $component instanceof Nette\Forms\Container}
+        {if $component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions}
             {if $controls}
                 {include controls controls => $controls}
                 {php $controls = []}

@@ -12,28 +12,20 @@ use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait
 {
-    /** @var Chart|IComponent */
-    protected Chart $selectedChart;
+    /** @phpstan-var (Chart&IComponent)[] */
     private array $chartComponents;
-
-    public function titleChart(): PageTitle
-    {
-        return new PageTitle(null, $this->selectedChart->getTitle(), 'fas fa-chart-pie');
-    }
 
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Charts'), 'fas fa-chart-pie');
     }
 
-    final public function renderChart(): void
-    {
-        $this->template->chart = $this->selectedChart;
-    }
+    abstract public function authorizedList(): bool;
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     final public function renderList(): void
     {
@@ -41,49 +33,22 @@ trait ChartPresenterTrait
     }
 
     /**
-     * @return Chart[]
+     * @phpstan-return (Chart&IComponent)[]
+     * @throws BadTypeException
+     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws BadTypeException
-     * @throws BadTypeException
      */
-    protected function getCharts(): array
-    {
-        $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
-        return $this->chartComponents;
-    }
-
-    /**
-     * @return Chart[]
-     */
-    abstract protected function registerCharts(): array;
-
-    abstract public function authorizedList(): void;
-
-    abstract public function authorizedChart(): void;
+    abstract protected function getCharts(): array;
 
     /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
-    protected function selectChart(): void
+    protected function registerCharts(): void
     {
-        $charts = $this->getCharts();
-        $action = $this->getAction();
-        if (isset($charts[$action])) {
-            $this->selectedChart = $charts[$action];
-            $this->setView('chart');
+        foreach ($this->getCharts() as $name => $component) {
+            $this->addComponent($component, $name);
         }
-    }
-
-    abstract public function getAction(bool $fullyQualified = false): string;
-
-    /**
-     * @return static
-     */
-    abstract public function setView(string $id);
-
-    protected function createComponentChart(): IComponent
-    {
-        return $this->selectedChart;
     }
 }

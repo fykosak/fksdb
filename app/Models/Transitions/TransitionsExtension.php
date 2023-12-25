@@ -14,6 +14,24 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
+/**
+ * @phpstan-type Item array{
+ *      machine:string,
+ *      stateEnum:class-string<EnumColumn&\FKSDB\Models\Utils\FakeStringEnum>,
+ *      decorator:\Nette\DI\Definitions\Statement|null,
+ *      transitions:array<string,TransitionType>
+ * }
+ * @phpstan-type TransitionType array{
+ *      condition:\Nette\DI\Definitions\Statement|bool|null,
+ *      label:\Nette\DI\Definitions\Statement|string|null,
+ *      icon: string,
+ *      successLabel:string,
+ *      validation:\Nette\DI\Definitions\Statement|bool|null,
+ *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      behaviorType:'success'|'warning'|'danger'|'primary'|'secondary'
+ *  }
+ */
 class TransitionsExtension extends CompilerExtension
 {
     public function getConfigSchema(): Schema
@@ -31,6 +49,8 @@ class TransitionsExtension extends CompilerExtension
                 Expect::structure([
                     'condition' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'label' => Helpers::createExpressionSchemaType(),
+                    'icon' => Expect::string('')->required(false),
+                    'successLabel' => Helpers::createExpressionSchemaType(),
                     'validation' => Helpers::createBoolExpressionSchemaType(true)->default(true),
                     'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
@@ -45,19 +65,21 @@ class TransitionsExtension extends CompilerExtension
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
+        /** @phpstan-var array<string,Item> $config */
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
             self::createMachine($this, $machineName, $machine);
         }
     }
+
+    /**
+     * @phpstan-param Item $config
+     */
     public static function createMachine(CompilerExtension $extension, string $name, array $config): ServiceDefinition
     {
         $factory = $extension->getContainerBuilder()
             ->addDefinition($extension->prefix($name . '.machine'))
             ->setFactory($config['machine']);
-        if (isset($machineConfig['decorator'])) {
-            $factory->addSetup('decorateTransitions', [$machineConfig['decorator']]);
-        }
         foreach ($config['transitions'] as $mask => $transitionConfig) {
             [$sources, $target] = self::parseMask($mask, $config['stateEnum']);
             foreach ($sources as $source) {
@@ -74,7 +96,13 @@ class TransitionsExtension extends CompilerExtension
                     ->addSetup('setCondition', [$transitionConfig['condition']])
                     ->addSetup('setSourceStateEnum', [$source])
                     ->addSetup('setTargetStateEnum', [$target])
-                    ->addSetup('setLabel', [Helpers::resolveMixedExpression($transitionConfig['label'])])
+                    ->addSetup(
+                        'setLabel',
+                        [
+                            Helpers::resolveMixedExpression($transitionConfig['label']),
+                            $transitionConfig['icon'],
+                        ]
+                    )->addSetup('setSuccessLabel', [$transitionConfig['successLabel']])
                     ->addSetup(
                         'setBehaviorType',
                         [
@@ -90,22 +118,26 @@ class TransitionsExtension extends CompilerExtension
                 $factory->addSetup('addTransition', [$transition]);
             }
         }
+        if (isset($config['decorator'])) {
+            $factory->addSetup('decorateTransitions', [$config['decorator']]);
+        }
         return $factory;
     }
 
     /**
-     * @param EnumColumn|string $enumClassName
-     * @return EnumColumn[][]|EnumColumn[]
+     * @phpstan-template TEnum of (EnumColumn&\FKSDB\Models\Utils\FakeStringEnum)
+     * @phpstan-param class-string<TEnum> $enumClassName
+     * @phpstan-return array{TEnum[],TEnum}
      */
     public static function parseMask(string $mask, string $enumClassName): array
     {
         [$sources, $target] = explode('->', $mask);
         return [
             array_map(
-                fn(string $state): ?EnumColumn => $enumClassName::tryFrom($state),
+                fn(string $state): EnumColumn => $enumClassName::from($state),
                 explode('|', $sources)
             ),
-            $enumClassName::tryFrom($target),
+            $enumClassName::from($target),
         ];
     }
 }

@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
+use Fykosak\Utils\UI\Title;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
-    protected function startup(): void
+    protected function getNavRoots(): array
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        if (!$login || !$login->person) {
-            $this->redirect(':Core:Authentication:login');
-        }
-        parent::startup();
+        return [
+            [
+                'title' => new Title(null, _('My profile')),
+                'items' => [
+                    'Profile:MyApplications:default' => [],
+                    'Profile:MyPayments:default' => [],
+                    'Profile:Email:default' => [],
+                    'Profile:PostContact:default' => [],
+                    'Profile:Lang:default' => [],
+                    'Profile:Login:default' => [],
+                    'Core:Settings:default' => [],
+                ],
+            ],
+        ];
     }
 }

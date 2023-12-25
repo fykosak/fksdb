@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\NumberPrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\UI\NumberPrinter;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
-class FreeCapacityColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends AbstractColumnFactory<ScheduleItemModel>
+ */
+class FreeCapacityColumnFactory extends AbstractColumnFactory
 {
-
     /**
      * @param ScheduleItemModel $model
      */

@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\RoleModel;
+use Fykosak\NetteORM\Service\Service;
 
-class RoleService extends Service
+/**
+ * @phpstan-extends Service<RoleModel>
+ */
+final class RoleService extends Service
 {
 }

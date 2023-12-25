@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -34,20 +32,24 @@ class PreferredLangFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('button.save'));
     }
 
-    protected function handleSuccess(SubmitButton $button): void
+    protected function handleSuccess(Form $form): void
     {
-        $values = $button->getForm()->getValues();
+        /** @phpstan-var array{preferred_lang:string} $values */
+        $values = $form->getValues('array');
         try {
             $this->personInfoService->storeModel(
-                ['preferred_lang' => $values['preferred_lang'], 'person_id' => $this->person->person_id],
+                [
+                    'preferred_lang' => $values['preferred_lang'],
+                    'person_id' => $this->person->person_id,
+                ],
                 $this->person->getInfo()
             );
-            $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
+            $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         }
     }
@@ -64,9 +66,6 @@ class PreferredLangFormComponent extends FormComponent
         $form->addSelect('preferred_lang')->setItems($items);
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function render(): void
     {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);

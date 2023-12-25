@@ -9,7 +9,7 @@ use FKSDB\Models\Authorization\Grant;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 use Nette\Security\Permission;
@@ -36,7 +36,7 @@ class SelfAssertion implements Assertion
         /** @var IIdentity $identity */
         [$state, $identity] = $this->userStorage->getState();
         if (!$state) {
-            throw new InvalidStateException('Expecting logged user.');
+            throw new InvalidStateException(_('Expecting logged user.'));
         }
         /** @var Model $model */
         $model = $acl->getQueriedResource();

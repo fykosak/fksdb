@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\AjaxSubmit\Quiz\QuizComponent;
+use FKSDB\Components\Controls\Upload\Quiz\QuizComponent;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\TaskNotFoundException;
@@ -12,16 +12,15 @@ use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
-class QuizRegisterPresenter extends BasePresenter
+final class QuizRegisterPresenter extends BasePresenter
 {
     /** @persistent */
     public ?int $id = null;
 
     private TaskService $taskService;
 
-    final public function injectTernary(
-        TaskService $taskService
-    ): void {
+    final public function injectTernary(TaskService $taskService): void
+    {
         $this->taskService = $taskService;
     }
 
@@ -30,16 +29,24 @@ class QuizRegisterPresenter extends BasePresenter
         return new PageTitle(null, _('Submit a quiz'), 'fas fa-list');
     }
 
-    protected function beforeRender(): void
+    public function requiresLogin(): bool
     {
-        /** @var TaskModel $task */
+        return false;
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
+    protected function getStyleId(): string
+    {
+        /** @var TaskModel|null $task */
         $task = $this->taskService->findByPrimary($this->id);
-        if ($task) {
-            $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleIds[] = $task->contest->getContestSymbol();
+        if (isset($task)) {
+            return 'contest-' . $task->contest->getContestSymbol();
         }
-        parent::beforeRender();
+        return parent::getStyleId();
     }
 
     /**
@@ -48,7 +55,7 @@ class QuizRegisterPresenter extends BasePresenter
      */
     protected function createComponentQuizComponent(): QuizComponent
     {
-        /** @var TaskModel $task */
+        /** @var TaskModel|null $task */
         $task = $this->taskService->findByPrimary($this->id);
         if (!isset($task)) {
             throw new TaskNotFoundException();
@@ -59,6 +66,6 @@ class QuizRegisterPresenter extends BasePresenter
             throw new ForbiddenRequestException(sprintf(_('Task %s is not opened for submitting.'), $task->task_id));
         }
 
-        return new QuizComponent($this->getContext(), $this->getLang(), $task, null);
+        return new QuizComponent($this->getContext(), $task, null);
     }
 }

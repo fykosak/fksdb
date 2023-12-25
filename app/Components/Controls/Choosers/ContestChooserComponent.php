@@ -5,17 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\ORM\Models\ContestModel;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 final class ContestChooserComponent extends ChooserComponent
 {
-
+    /** @phpstan-var TypedSelection<ContestModel> */
     private TypedSelection $availableContests;
     private ContestModel $contest;
 
+    /**
+     * @phpstan-param TypedSelection<ContestModel> $availableContests
+     */
     public function __construct(Container $container, ContestModel $contest, TypedSelection $availableContests)
     {
         parent::__construct($container);

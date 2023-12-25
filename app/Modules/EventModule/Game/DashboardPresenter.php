@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
 
     public function titleDefault(): PageTitle
@@ -18,8 +18,8 @@ class DashboardPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
+    public function authorizedDefault(): bool
     {
-        $this->setAuthorized($this->isAllowed('game.dashboard', 'default'));
+        return $this->isAllowed('game.dashboard', 'default');
     }
 }

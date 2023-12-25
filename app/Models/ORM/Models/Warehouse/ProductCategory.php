@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class ProductCategory extends FakeStringEnum implements EnumColumn
+final class ProductCategory extends FakeStringEnum implements EnumColumn
 {
     public const APPAREL = 'apparel';
     public const GAME = 'game';
@@ -49,6 +50,11 @@ class ProductCategory extends FakeStringEnum implements EnumColumn
             default:
                 return _('Other');
         }
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 
     public static function cases(): array
