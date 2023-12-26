@@ -20,7 +20,6 @@ use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
