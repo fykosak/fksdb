@@ -145,38 +145,7 @@ abstract class Machine
         );
     }
 
-    public function getTransitionByStates(EnumColumn $source, EnumColumn $target): ?Transition
-    {
-        $transitions = \array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => ($source->value === $transition->source->value) &&
-                ($target->value === $transition->target->value)
-        );
-        return $this->selectTransition($transitions);
-    }
-
-    /**
-     * @return Transition[]
-     */
-    protected function geTransitionsBySource(EnumColumn $source): array
-    {
-        return array_filter(
-            $this->transitions,
-            fn(Transition $transition): bool => $source->value === $transition->source->value
-        );
-    }
-
     /* ********** execution ******** */
-
-    /**
-     * @throws UnavailableTransitionsException
-     * @throws \Throwable
-     */
-    final public function executeTransitionById(string $id, ModelHolder $holder): void
-    {
-        $transition = $this->getTransitionById($id);
-        $this->execute($transition, $holder);
-    }
 
     /**
      * @template SHolder of ModelHolder

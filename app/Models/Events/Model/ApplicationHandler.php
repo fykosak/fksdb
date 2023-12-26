@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
@@ -159,16 +160,9 @@ final class ApplicationHandler
 
         if ($target) {
             $source = $holder->getModelState();
-            $transition = $this->getMachine()->getTransitionByStates($source, $target);
-            if (!$transition) {
-                throw new MachineExecutionException(
-                    sprintf(
-                        _('There is not a transition from state "%s" to state "%s".'),
-                        $source->label(),
-                        $target->label()
-                    )
-                );
-            }
+            $transition = Machine::selectTransition(
+                Machine::filterByTarget(Machine::filterBySource($this->getMachine()->transitions, $source), $target)
+            );
         }
 
         if (isset($values[$holder->name])) {
