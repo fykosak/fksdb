@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class SubmitState extends FakeStringEnum implements EnumColumn
@@ -45,5 +46,10 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
             new self(self::NOT_CHECKED),
             new self(self::CHECKED),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

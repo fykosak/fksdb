@@ -64,7 +64,7 @@ abstract class EvaluationStrategy
         throw new InvalidArgumentException('Invalid category ' . $category->label);
     }
 
-    private function studyYearsToCategory(PersonModel $person): ContestCategoryModel
+    final public function studyYearsToCategory(PersonModel $person): ContestCategoryModel
     {
         $map = $this->getCategoryMap();
         $personHistory = $person->getHistory($this->contestYear);

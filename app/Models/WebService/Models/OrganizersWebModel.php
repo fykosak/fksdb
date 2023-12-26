@@ -13,7 +13,7 @@ use Nette\Schema\Expect;
 /**
  * @phpstan-extends WebModel<array{
  *     contest_id?:int,
- *     contestId?:int,
+ *     contestId:int,
  *     year?:int|null,
  * },array<mixed>>
  */

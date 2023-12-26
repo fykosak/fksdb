@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -36,6 +37,9 @@ class SchoolIdColumnFactory extends ColumnFactory
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function createFormControl(...$args): BaseControl
     {
         return new SchoolSelectField($this->container, $this->linkGenerator);

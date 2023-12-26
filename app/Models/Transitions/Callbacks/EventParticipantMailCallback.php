@@ -63,15 +63,14 @@ class EventParticipantMailCallback extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
+     *     blind_carbon_copy?:string,
      *     subject:string,
      *     sender:string,
      *     reply_to:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => $holder->getModel()->event->getParameter('notifyBcc') ?? null,
@@ -87,18 +86,18 @@ class EventParticipantMailCallback extends MailCallback
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): string
+    protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
         $token = $this->createToken($person, $holder);
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
-            Language::tryFrom($person->getPreferredLang()),
             [
                 'person' => $person,
                 'token' => $token,
                 'holder' => $holder,
                 'linkArgs' => $this->createLinkArgs($holder, $token),
-            ]
+            ],
+            Language::tryFrom($person->getPreferredLang()),
         );
     }
 

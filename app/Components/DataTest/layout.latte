@@ -1,5 +1,5 @@
 {varType array $logs}
-{varType FKSDB\Components\DataTest\Tests\Test[] $tests}
+{varType FKSDB\Models\ORM\Tests\Test[] $tests}
 <div class="panel color-auto">
     <div class="container">
         {control form}
@@ -7,7 +7,7 @@
 </div>
 
 {foreach $logs as $log}
-    {varType FKSDB\Models\ORM\Models\PersonModel[]|Fykosak\Utils\Logging\Message[][][] $log}
+    {varType FKSDB\Models\ORM\Models\PersonModel[]|FKSDB\Components\DataTest\TestMessage[][][] $log}
     <div class="panel color-auto">
         <div class="container">
             <h2>

@@ -22,6 +22,7 @@ use Nette\Security\Resource;
  * @property-read float|null $price_czk
  * @property-read float|null $price_eur
  * @property-read int|bool $payable
+ * @property-read int|bool $available
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
  * @property-read LocalizedString $name
@@ -43,6 +44,7 @@ use Nette\Security\Resource;
  *      name:array<string, string>,
  *      begin:\DateTimeInterface,
  *      end:\DateTimeInterface,
+ *      available: bool,
  *      description:array<string, string>,
  *      longDescription:array<string, string>,
  * }
@@ -86,18 +88,14 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         return $selection;
     }
 
-    public function getUsedCapacity(): int
+    public function getUsedCapacity(bool $removeRef = false): int
     {
         //->where('state !=', PersonScheduleState::Cancelled)
-        return $this->getInterested()->count();
-    }
-
-    public function hasFreeCapacity(): bool
-    {
-        if (is_null($this->capacity)) {
-            return true;
+        $query = $this->getInterested();
+        if ($removeRef) {
+            $query->unsetRefCache();
         }
-        return ($this->capacity - $this->getUsedCapacity()) > 0;
+        return $query->count();
     }
 
     /**
@@ -128,6 +126,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
             'end' => $this->getEnd(),
             'description' => $this->description->__serialize(),
             'longDescription' => $this->long_description->__serialize(),
+            'available' => (bool)$this->available,
         ];
     }
 

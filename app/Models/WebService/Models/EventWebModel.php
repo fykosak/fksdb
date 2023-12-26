@@ -60,6 +60,10 @@ class EventWebModel extends WebModel
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
+    /**
+     * @param EventModel $event
+     * @return array<array{person:mixed,scheduleItemId:int}>
+     */
     private function createPersonScheduleArray(EventModel $event): array
     {
         $data = [];
@@ -83,6 +87,7 @@ class EventWebModel extends WebModel
      *     scheduleItems:SerializedScheduleItemModel[],
      *     schedule_items:SerializedScheduleItemModel[],
      *  })[]
+     * @phpstan-ignore-next-line
      */
     private function createScheduleListArray(EventModel $event): array
     {
@@ -112,6 +117,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     private function createTeamListArray(EventModel $event): array
     {
         $teamsData = [];
@@ -159,7 +167,7 @@ class EventWebModel extends WebModel
         }
         return $rootNode;
     }
-
+    /** @phpstan-ignore-next-line */
     private function createParticipantListArray(EventModel $event): array
     {
         $participants = [];
@@ -182,6 +190,7 @@ class EventWebModel extends WebModel
 
     /**
      * @param TeamMemberModel|EventParticipantModel $member
+     * @phpstan-ignore-next-line
      */
     private function createParticipantArray($member): array
     {

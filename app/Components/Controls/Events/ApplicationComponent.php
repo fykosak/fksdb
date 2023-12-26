@@ -225,7 +225,7 @@ class ApplicationComponent extends BaseComponent
                 }
             } else {
                 $this->machine->execute($transition, $this->holder);
-                $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+                $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             }
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {

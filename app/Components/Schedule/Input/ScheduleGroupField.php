@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Input;
 
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Modules\Core\Language;
@@ -38,6 +39,7 @@ class ScheduleGroupField extends SelectBox
         $this->registerFrontend('schedule.group-container');
         $this->appendProperty();
         $items = [];
+        $disabled = [];
         /** @var ScheduleItemModel $item */
         foreach ($this->group->getItems() as $item) {
             $items[$item->getPrimary()] = sprintf(
@@ -45,8 +47,20 @@ class ScheduleGroupField extends SelectBox
                 $item->name->getText($lang->value),
                 $item->description->getText($lang->value)
             );
+            if (!$item->available) {
+                $disabled[] = $item->getPrimary();
+            }
         }
-        $this->setItems($items)->setPrompt(_('-- not selected --'));
+        $this->setItems($items)->setPrompt(_('Not selected'))->setDisabled($disabled);
+    }
+
+    public function setModel(PersonScheduleModel $model): self
+    {
+        /** @phpstan-ignore-next-line */
+        if (is_array($this->disabled) && isset($this->disabled[$model->schedule_item_id])) {
+            unset($this->disabled[$model->schedule_item_id]);
+        }
+        return parent::setValue($model->schedule_item_id);
     }
 
     /**

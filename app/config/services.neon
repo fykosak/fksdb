@@ -28,8 +28,6 @@ services:
     - FKSDB\Models\Authorization\ContestAuthorizator
     - FKSDB\Models\Authorization\EventAuthorizator
     - FKSDB\Models\Authorization\RelatedPersonAuthorizator
-    #datatest
-    - FKSDB\Components\DataTest\DataTestFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory
@@ -66,16 +64,10 @@ services:
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
-
-    ## forms
-    #provider
-    - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
-    - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
-    - FKSDB\Components\Forms\Factories\PersonFactory
     #handlers
     - FKSDB\Components\Schedule\Input\Handler
 

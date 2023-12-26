@@ -27,7 +27,7 @@ final class EmailMessageService extends Service
      *     recipient_person_id?:int,
      *     recipient?:string,
      *     sender:string,
-     *     reply_to?:string|null,
+     *     reply_to?:string,
      *     subject:string,
      *     carbon_copy?:string,
      *     blind_carbon_copy?:string,

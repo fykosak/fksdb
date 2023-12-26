@@ -10,6 +10,7 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
+use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
@@ -42,12 +43,10 @@ final class TeamPresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     private TeamService2 $teamService;
-    private DataTestFactory $dataTestFactory;
 
-    public function injectServiceService(TeamService2 $service, DataTestFactory $dataTestFactory): void
+    public function injectService(TeamService2 $service): void
     {
         $this->teamService = $service;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
     /**
@@ -133,7 +132,9 @@ final class TeamPresenter extends BasePresenter
             Html::el('span')
                 ->addText(sprintf(_('Team: %s'), $entity->name))
                 ->addHtml(
-                    Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->state->pseudoBadge())
+                    Html::el('small')
+                        ->addAttributes(['class' => 'ms-2'])
+                        ->addHtml($entity->state->pseudoState()->badge())
                 ),
             'fas fa-user'
         );
@@ -410,6 +411,18 @@ final class TeamPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getTeamTests());
+        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentNoteForm(): NoteForm
+    {
+        return new NoteForm($this->getContext(), $this->getEntity());
     }
 }

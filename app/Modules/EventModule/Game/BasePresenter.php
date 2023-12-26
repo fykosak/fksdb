@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
+use Fykosak\Utils\UI\Title;
 
 abstract class BasePresenter extends EventBasePresenter
 {
@@ -30,11 +31,32 @@ abstract class BasePresenter extends EventBasePresenter
         return in_array($this->getEvent()->event_type_id, self::GAME_EVENTS);
     }
 
-    /**
-     * @phpstan-return string[]
-     */
     protected function getNavRoots(): array
     {
-        return ['Game.Dashboard.default', 'Game.Statistics.table'];
+        return [
+            [
+                'title' => new Title(null, _('Game')),
+                'items' => [
+                    'Game:Submit:create' => [],
+                    'Game:Submit:list' => [],
+                    'Game:Close:list' => [],
+                    'Game:Diplomas:default' => [],
+                    'Game:Diplomas:results' => [],
+                    'Game:Task:list' => [],
+                    'Game:GameSetup:default' => [],
+                    'Game:Seating:list' => [],
+                    'Game:Presentation:default' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Graphs & Statistics')),
+                'items' => [
+                    'Game:Statistics:task' => [],
+                    'Game:Statistics:team' => [],
+                    'Game:Statistics:correlation' => [],
+                    'Game:Statistics:table' => [],
+                ],
+            ],
+        ];
     }
 }

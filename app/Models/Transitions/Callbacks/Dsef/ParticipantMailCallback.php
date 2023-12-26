@@ -14,28 +14,20 @@ use FKSDB\Models\Transitions\Transition\Transition;
  */
 class ParticipantMailCallback extends EventParticipantCallback
 {
-    /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'participant.latte';
     }
 
     /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
+     *     blind_carbon_copy?:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Registrace na DSEF – ' . $holder->getModel()->person->getFullName(),
             'blind_carbon_copy' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
             'sender' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
         ];

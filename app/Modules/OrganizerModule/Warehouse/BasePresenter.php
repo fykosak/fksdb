@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use Fykosak\Utils\UI\Title;
 use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresenter
@@ -20,13 +21,17 @@ abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresente
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    /**
-     * @phpstan-return string[]
-     */
     protected function getNavRoots(): array
     {
         $roots = parent::getNavRoots();
-        $roots[] = 'Warehouse.Dashboard.default';
+        $roots[] = [
+            'title' => new Title(null, _('Applications')),
+            'items' => [
+                'Warehouse:Producer:list' => [],
+                'Warehouse:Product:list' => [],
+                'Warehouse:Item:list' => [],
+            ],
+        ];
         return $roots;
     }
 }

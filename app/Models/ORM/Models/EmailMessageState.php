@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class EmailMessageState extends FakeStringEnum implements EnumColumn
@@ -22,25 +23,23 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             default:
             case self::CANCELED:
-                $badge = 'badge bg-color-6';
-                break;
-            case self::FAILED:
-                $badge = 'badge bg-color-4';
+                $badge = 'secondary';
                 break;
             case self::REJECTED:
-                $badge = 'badge bg-color-7';
+            case self::FAILED:
+                $badge = 'danger';
                 break;
             case self::SAVED:
-                $badge = 'badge bg-color-1';
+                $badge = 'info';
                 break;
             case self::SENT:
-                $badge = 'badge bg-color-3';
+                $badge = 'success';
                 break;
             case self::WAITING:
-                $badge = 'badge bg-color-2';
+                $badge = 'warning';
                 break;
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $badge])->addText($this->label());
     }
 
     public function label(): string
@@ -72,5 +71,10 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
             new self(self::CANCELED),
             new self(self::REJECTED),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

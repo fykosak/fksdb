@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\Tests\School\StudyYearFillTest;
+use FKSDB\Models\ORM\Tests\School\VerifiedSchoolTest;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\Security\Resource;
 use Nette\Utils\Html;
 
@@ -64,6 +68,17 @@ final class SchoolModel extends Model implements Resource
             'name' => $this->name,
             'nameAbbrev' => $this->name_abbrev,
             'countryISO' => $this->address->country->alpha_2,
+        ];
+    }
+
+    /**
+     * @phpstan-return Test<SchoolModel>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new StudyYearFillTest($container),
+            new VerifiedSchoolTest($container),
         ];
     }
 }

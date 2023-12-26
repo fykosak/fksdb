@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
+use FKSDB\Components\Schedule\Forms\ScheduleGroupForm;
 use FKSDB\Components\Schedule\ItemGrid;
 use FKSDB\Components\Schedule\ScheduleList;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -56,7 +56,7 @@ final class GroupPresenter extends BasePresenter
         return new PageTitle(
             null,
             sprintf(_('Group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
-            'fas fa-clipboard-list'
+            $this->getEntity()->schedule_group_type->getIconName()
         );
     }
 
@@ -94,9 +94,9 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): ScheduleGroupFormComponent
+    protected function createComponentCreateForm(): ScheduleGroupForm
     {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), null);
+        return new ScheduleGroupForm($this->getEvent(), $this->getContext(), null);
     }
 
     /**
@@ -107,9 +107,9 @@ final class GroupPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      */
-    protected function createComponentEditForm(): ScheduleGroupFormComponent
+    protected function createComponentEditForm(): ScheduleGroupForm
     {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
+        return new ScheduleGroupForm($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
     /**

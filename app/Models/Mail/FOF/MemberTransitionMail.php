@@ -7,6 +7,7 @@ namespace FKSDB\Models\Mail\FOF;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
@@ -26,56 +27,20 @@ class MemberTransitionMail extends MailCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member.' . self::resolveLayoutName($transition);
+        $transitionId = self::resolveLayoutName($transition);
+        $lang = $holder->getModel()->game_lang->value;
+        return __DIR__ . DIRECTORY_SEPARATOR . "member.$transitionId.$lang.latte";
     }
 
     /**
      * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
      * @phpstan-return array{
-     *     blind_carbon_copy:string|null,
-     *     subject:string,
      *     sender:string,
      * }
      */
-    protected function getData(ModelHolder $holder, Transition $transition): array
+    protected function getData(ModelHolder $holder): array
     {
-        if ($holder->getModel()->game_lang->value === 'cs') {
-            switch (self::resolveLayoutName($transition)) {
-                case 'init->pending':
-                    $subject = 'Registrace na Fyziklání – ' . $holder->getModel()->name;
-                    break;
-                case 'pending->spare':
-                    $subject = 'Změna stavu - ' . $holder->getModel()->name;
-                    break;
-                case 'spare->applied':
-                    $subject = 'Změna stavu - ' . $holder->getModel()->name;
-                    break;
-                default:
-                    throw new InvalidStateException();
-            }
-            $sender = 'Fyziklání <fyziklani@fykos.cz>';
-        } else {
-            switch (self::resolveLayoutName($transition)) {
-                case 'init->pending':
-                    $subject = 'Fyziklani Registration – ' . $holder->getModel()->name;
-                    break;
-                case 'pending->spare':
-                    $subject = 'Status update - ' . $holder->getModel()->name;
-                    break;
-                case 'spare->applied':
-                    $subject = 'Status update - ' . $holder->getModel()->name;
-                    break;
-                default:
-                    throw new InvalidStateException();
-            }
-            $sender = 'Fyziklani <fyziklani@fykos.cz>';
-        }
-        return [
-            'subject' => $subject,
-            'blind_carbon_copy' => 'FYKOS <fyziklani@fykos.cz>',
-            'sender' => $sender,
-        ];
+        return self::getStaticData($holder);
     }
 
     /**
@@ -111,5 +76,27 @@ class MemberTransitionMail extends MailCallback
             null,
             true
         );
+    }
+
+    /**
+     * @phpstan-return array{
+     *     sender:string,
+     * }
+     */
+    public static function getStaticData(TeamHolder $holder): array
+    {
+        switch ($holder->getModel()->game_lang->value) {
+            case GameLang::CS:
+                $sender = 'Fyziklání <fyziklani@fykos.cz>';
+                break;
+            case GameLang::EN:
+                $sender = 'Fyziklani <fyziklani@fykos.cz>';
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        return [
+            'sender' => $sender,
+        ];
     }
 }

@@ -28,7 +28,9 @@ class FyziklaniTeamTeacherRole extends EventRole
         foreach ($this->teams as $team) {
             $container->addHtml(
                 Html::el('span')->addAttributes(['class' => 'badge bg-color-5 me-1'])
-                    ->addText(sprintf(_('Teacher: %s (%s)'), $team->name, $team->state->label()))
+                    ->addText(_('Teacher') . ': ')
+                    ->addHtml(Html::el('i')->addAttributes(['class' => $team->scholarship->getIconName() . ' me-1']))
+                    ->addText(sprintf('%s (%s)', $team->name, $team->state->label()))
             );
         }
         return $container;

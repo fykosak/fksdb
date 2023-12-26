@@ -13,6 +13,7 @@ use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
@@ -36,13 +37,16 @@ final class AuthenticationPresenter extends BasePresenter
     private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
+    private LoginService $loginService;
 
     final public function injectTernary(
         AuthTokenService $authTokenService,
+        LoginService $loginService,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
         GoogleProvider $googleProvider
     ): void {
+        $this->loginService = $loginService;
         $this->authTokenService = $authTokenService;
         $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
@@ -266,7 +270,7 @@ final class AuthenticationPresenter extends BasePresenter
                 $login = $this->passwordAuthenticator->findLogin($values['id']);
             } catch (NoLoginException $exception) {
                 $person = $this->passwordAuthenticator->findPersonByEmail($values['id']);
-                $login = $this->accountManager->createLogin($person);
+                $login = $this->loginService->createLogin($person);
             }
 
             $this->accountManager->sendRecovery(
