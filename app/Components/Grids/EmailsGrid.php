@@ -27,7 +27,7 @@ final class EmailsGrid extends BaseGrid
      */
     protected function getModels(): TypedSelection
     {
-        return $this->service->getTable()->order('created DESC');
+        return $this->service->getTable()->order('email_message_id DESC');
     }
 
     protected function configure(): void
