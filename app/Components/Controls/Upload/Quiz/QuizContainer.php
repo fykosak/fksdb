@@ -30,7 +30,7 @@ class QuizContainer extends ContainerWithOptions
     {
         $questions = $this->task->getQuestions()->order('label');
 
-        if ($questions->count() == 0) {
+        if ($questions->count('*') === 0) {
             throw new TaskNotQuizException($this->task);
         }
 

@@ -107,7 +107,6 @@ final class TeamPresenter extends BasePresenter
                 'personSchedule' . $person->person_id
             );
         }
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
