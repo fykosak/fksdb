@@ -18,7 +18,7 @@ export default function InnerComponent() {
     let position = statePosition;
     const submitsForTeams = calculate(submits, teams);
 
-    const submitsForTeamsArray: Item[] = [];
+    const submitsForTeamsArray: Item<5 | 3 | 2 | 1>[] = [];
     for (const teamId in submitsForTeams) {
         if (Object.hasOwn(submitsForTeams, teamId)) {
             if (!category || (category === submitsForTeams[teamId].team.category)) {
@@ -37,7 +37,7 @@ export default function InnerComponent() {
             if (Object.hasOwn(submitsForTeamsArray, position)) {
                 const item = submitsForTeamsArray[position];
                 position += 1;
-                colItems.push(<TeamRow
+                colItems.push(<TeamRow<5 | 3 | 2 | 1>
                     key={item.team.teamId}
                     item={item}
                     position={position}
@@ -79,4 +79,4 @@ export default function InnerComponent() {
         <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
         <div className="row justify-content-around">{resultsItems}</div>
     </div>;
-}
+};

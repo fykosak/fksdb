@@ -6,9 +6,8 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
@@ -41,6 +40,7 @@ use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
+ * @phpstan-import-type TRootItem from NavigationChooser
  */
 abstract class BasePresenter extends Presenter
 {
@@ -215,7 +215,12 @@ abstract class BasePresenter extends Presenter
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
-            $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+            $testedPresenter = $this->presenterBuilder->preparePresenter(
+                (string)$presenter,
+                $action,
+                $args,
+                $baseParams
+            );
 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
@@ -344,7 +349,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @phpstan-return string[]
+     * @phpstan-return TRootItem[]
      */
     protected function getNavRoots(): array
     {
@@ -356,9 +361,9 @@ abstract class BasePresenter extends Presenter
         return $this->diContainer;
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooserComponent
+    protected function createComponentNavigationChooser(): NavigationChooser
     {
-        return new NavigationChooserComponent($this->getContext());
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent
@@ -366,14 +371,9 @@ abstract class BasePresenter extends Presenter
         return new ColumnRendererComponent($this->getContext());
     }
 
-    protected function createComponentColumnTable(): ColumnTableComponent
+    protected function createComponentColumnTable(): ColumnTable
     {
-        return new ColumnTableComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
+        return new ColumnTable($this->getContext());
     }
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent

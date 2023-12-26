@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
 enum StudyYear: string implements EnumColumn
 {
+    // phpcs:disable
     case Primary5 = 'P_5';
     case Primary6 = 'P_6';
     case Primary7 = 'P_7';
@@ -25,30 +27,31 @@ enum StudyYear: string implements EnumColumn
 
     case None = 'NONE';
 
-    public function badge(): Html
+    // phpcs:enable
+
+    public function behaviorType(): string
     {
         if ($this->isPrimarySchool()) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-primary')
-                ->addText($this->label());
+            return 'primary';
         } elseif ($this->isHighSchool()) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-success')
-                ->addText($this->label());
-        } elseif ($this->value === self::UniversityAll) {
-            return Html::el('span')
-                ->setAttribute('class', 'badge bg-warning')
-                ->addText($this->label());
+            return 'success';
+        } elseif ($this === self::UniversityAll) {
+            return 'warning';
         }
+        return 'dark';
+    }
+
+    public function badge(): Html
+    {
         return Html::el('span')
-            ->setAttribute('class', 'badge bg-dark')
+            ->setAttribute('class', 'badge bg-' . $this->behaviorType())
             ->addText($this->label());
     }
 
     public function label(): string
     {
         return match ($this) {
-            self::Primary5 => _('Primary school 5th grade or lower.');
+            self::Primary5 => _('Primary school 5th grade or lower.'),
             self::Primary6 => _('Primary school 6th or lower.'),
             self::Primary7 => _('Primary school 7th'),
             self::Primary8 => _('Primary school 8th'),
@@ -94,7 +97,7 @@ enum StudyYear: string implements EnumColumn
 
     public function isPrimarySchool(): bool
     {
-        return Strings::startsWith($this->value, 'PRIMARY_');
+        return Strings::startsWith($this->value, 'P_');
     }
 
     /**
@@ -112,7 +115,7 @@ enum StudyYear: string implements EnumColumn
 
     public function isHighSchool(): bool
     {
-        return Strings::startsWith($this->value, 'HIGH_');
+        return Strings::startsWith($this->value, 'H_');
     }
 
     public function getGraduationYear(int $acYear): ?int
@@ -125,5 +128,9 @@ enum StudyYear: string implements EnumColumn
         return null;
         // throw new \InvalidArgumentException('Graduation year not match');
     }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

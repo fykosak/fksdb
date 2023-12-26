@@ -7,9 +7,10 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
+use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
@@ -36,8 +37,10 @@ use Nette\Utils\Strings;
  * }
  * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
-final class TaskModel extends Model
+final class TaskModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'task';
+
     public function getFullLabel(
         Language $lang,
         bool $includeContest = false,
@@ -203,5 +206,10 @@ final class TaskModel extends Model
         }
         // if the deadline is not specified, consider task as opened, so default to true
         return true;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
     }
 }

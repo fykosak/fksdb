@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
-use FKSDB\Models\ValuePrinters\DatePrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\UI\DatePrinter;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
@@ -36,6 +36,6 @@ class AgreedColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new DatePrinter())($model->agreed);
+        return (new DatePrinter(_('__date_time')))($model->agreed);
     }
 }

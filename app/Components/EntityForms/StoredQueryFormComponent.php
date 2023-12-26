@@ -7,13 +7,12 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\StoredQuery\ParameterService;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\TagService;
@@ -22,10 +21,10 @@ use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use FKSDB\Modules\OrgModule\BasePresenter;
-use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Modules\OrganizerModule\BasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -43,24 +42,21 @@ class StoredQueryFormComponent extends EntityFormComponent
     private TagService $storedQueryTagService;
     private ParameterService $storedQueryParameterService;
     private StoredQueryFactory $storedQueryFactory;
-    private SingleReflectionFormFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         QueryService $storedQueryService,
         TagService $storedQueryTagService,
         ParameterService $storedQueryParameterService,
-        StoredQueryFactory $storedQueryFactory,
-        SingleReflectionFormFactory $reflectionFormFactory
+        StoredQueryFactory $storedQueryFactory
     ): void {
         $this->storedQueryService = $storedQueryService;
         $this->storedQueryTagService = $storedQueryTagService;
         $this->storedQueryParameterService = $storedQueryParameterService;
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     protected function handleFormSuccess(Form $form): void
     {
@@ -92,6 +88,7 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -116,18 +113,16 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     private function createMetadata(?ControlGroup $group = null): ModelContainer
     {
-        $container = $this->reflectionFormFactory->createContainerWithMetadata(
-            'stored_query',
-            [
-                'name' => ['required' => true],
-                'qid' => ['required' => false],
-                'tags' => ['required' => false],
-                'description' => ['required' => false],
-            ]
-        );
+        $container = new ModelContainer($this->container, 'stored_query');
+
+        $container->addField('name', ['required' => true]);
+        $container->addField('qid', ['required' => false]);
+        $container->addField('tags', ['required' => false]);
+        $container->addField('description', ['required' => false]);
         $container->setCurrentGroup($group);
         return $container;
     }
@@ -135,13 +130,13 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     private function createConsole(?ControlGroup $group = null): ContainerWithOptions
     {
-        $container = new ContainerWithOptions($this->container);
+        $container = new ModelContainer($this->container, 'stored_query');
         $container->setCurrentGroup($group);
-        $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
-        $container->addComponent($control, 'sql');
+        $container->addField('sql');
         return $container;
     }
 

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -122,7 +122,8 @@ class StudyYearNewColumnFactory extends ColumnFactory
 }
 
 /*
- * update person_history set study_year_new = CONCAT(IF(study_year<5,'H_','P_'),study_year) where study_year IS NOT NULL;
+ * update person_history set study_year_new = CONCAT(IF(study_year<5,'H_','P_'),study_year)
+ * where study_year IS NOT NULL;
 
 update person_history set study_year_new = 'NONE' where study_year IS NULL AND school_id IS NULL;
 

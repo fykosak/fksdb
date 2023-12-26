@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits;
 
 use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Grids\Components\Button\ControlButton;
-use FKSDB\Components\Grids\Components\FilterGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -23,7 +22,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends FilterGrid<SubmitModel,array{
+ * @phpstan-extends BaseGrid<SubmitModel,array{
  *     team?:int,
  *     code?:string,
  *     not_null?:bool,
@@ -32,7 +31,7 @@ use Nette\Forms\Form;
  *     state?:string,
  * }>
  */
-class AllSubmitsGrid extends FilterGrid
+class AllSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
     protected EventModel $event;
@@ -48,38 +47,41 @@ class AllSubmitsGrid extends FilterGrid
         $this->submitService = $submitService;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->filtered = true;
+        /** @phpstan-ignore-next-line */
+        $this->addTableColumn(
         /** @phpstan-ignore-next-line */
             new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
             'name_n_id'
         );
-        $this->addColumns(
+        $this->addSimpleReferencedColumns(
             $this->event->event_type_id === 1
                 ? [
-                'fyziklani_task.label',
-                'fyziklani_submit.state',
-                'fyziklani_submit.points',
-                'fyziklani_submit.modified',
+                '@fyziklani_task.label',
+                '@fyziklani_submit.state',
+                '@fyziklani_submit.points',
+                '@fyziklani_submit.modified',
             ]
                 : [
-                'fyziklani_task.label',
-                'fyziklani_submit.points',
+                '@fyziklani_task.label',
+                '@fyziklani_submit.points',
             ]
         );
         if ($this->event->event_type_id === 1) {
-            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
         }
-        $this->addButton(
-            new ControlButton(
+        $this->addTableButton(
+            new Button(
                 $this->container,
                 $this,
-                null,
                 new Title(null, _('Revoke')),
                 fn(?SubmitModel $row): array => ['revoke!', ['id' => $row->fyziklani_submit_id]],
                 'btn btn-sm btn-outline-danger',
@@ -181,10 +183,10 @@ class AllSubmitsGrid extends FilterGrid
             $states[$state->value] = $state->label();
         }
 
-        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
-        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
+        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('Select team'));
+        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('Select task'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
-        $form->addSelect('state', _('State'), $states)->setPrompt(_('--Select state--'));
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('Select state'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addCheckbox('warnings', _('Show warnings'))
             ->setOption('description', _('Show unchecked submits inserted more that 10 minutes ago.'));

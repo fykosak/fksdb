@@ -8,12 +8,12 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @phpstan-extends BaseGrid<TeacherModel>
+ * @phpstan-extends BaseGrid<TeacherModel,array{}>
  */
-class TeachersGrid extends BaseGrid
+final class TeachersGrid extends BaseGrid
 {
     private TeacherService $teacherService;
 
@@ -32,18 +32,20 @@ class TeachersGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {
-        $this->addColumns([
-            'person.full_name',
-            'teacher.note',
-            'school.school',
-            'teacher.role',
-            'teacher.active',
+        $this->filtered = false;
+        $this->counter = true;
+        $this->paginate = true;
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@teacher.note',
+            '@school.school',
+            '@teacher.role',
+            '@teacher.active',
         ]);
-        $this->addORMLink('teacher.edit');
-        $this->addORMLink('teacher.detail');
+        $this->addLink('teacher.edit');
+        $this->addLink('teacher.detail');
     }
 }

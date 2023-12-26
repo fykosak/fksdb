@@ -10,22 +10,23 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
- * @phpstan-extends BaseList<TModel>
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseList<TModel,TFilterParams>
  */
 abstract class DetailComponent extends BaseList
 {
     protected PersonModel $person;
-    protected bool $isOrg;
+    protected bool $isOrganizer;
 
     public function __construct(
         Container $container,
         PersonModel $person,
         int $userPermissions,
-        bool $isOrg
+        bool $isOrganizer
     ) {
         parent::__construct($container, $userPermissions);
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->person = $person;
     }
 

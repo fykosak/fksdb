@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<PersonModel>
+ * @phpstan-extends BaseGrid<PersonModel,array{}>
  */
 class PersonsGrid extends BaseGrid
 {
@@ -44,7 +44,7 @@ class PersonsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
@@ -52,7 +52,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_a'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
@@ -62,7 +62,7 @@ class PersonsGrid extends BaseGrid
             ),
             'display_name_b'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
@@ -73,10 +73,10 @@ class PersonsGrid extends BaseGrid
             ),
             'score'
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+        $this->addTableButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -89,10 +89,10 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeAB'
         );
-        $this->addButton(
-            new PresenterButton( // @phpstan-ignore-line
+        $this->addTableButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -104,10 +104,10 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeBA'
         );
-        $this->addButton(
-            new PresenterButton(// @phpstan-ignore-line
+        $this->addTableButton(
+            new Button(
                 $this->container,
-                null,
+                $this->getPresenter(),
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:dontMerge',

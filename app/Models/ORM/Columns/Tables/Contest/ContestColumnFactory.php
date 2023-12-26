@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Contest;
 
-use FKSDB\Components\Badges\ContestBadge;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\UI\ContestBadge;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<ContestModel,never>
+ * @phpstan-extends AbstractColumnFactory<ContestModel>
  */
-class ContestColumnFactory extends ColumnFactory
+class ContestColumnFactory extends AbstractColumnFactory
 {
-
     /**
      * @param ContestModel $model
      */

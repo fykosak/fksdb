@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -41,7 +41,7 @@ class EnumColumnFactory extends ColumnFactory
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($items);
-        $control->setPrompt(_('--Select options--'));
+        $control->setPrompt(_('Select options'));
         return $control;
     }
 

@@ -11,7 +11,7 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-import-type SerializedEventModel from EventModel
- * @phpstan-extends WebModel<array{event_type_ids:array<int,int>},array<int,SerializedEventModel>>
+ * @phpstan-extends WebModel<array{event_type_ids?:array<int>,eventTypes:array<int>},SerializedEventModel[]>
  */
 class EventListWebModel extends WebModel
 {
@@ -45,7 +45,10 @@ class EventListWebModel extends WebModel
 
     public function getJsonResponse(array $params): array
     {
-        $query = $this->eventService->getTable()->where('event_type_id', $params['event_type_ids']);
+        $query = $this->eventService->getTable()->where(
+            'event_type_id',
+            $params['event_type_ids'] ?? $params['eventTypes']
+        );
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
@@ -57,7 +60,8 @@ class EventListWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int'))->required(),
+            'eventTypes' => Expect::listOf(Expect::int()),
+            'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int')),
         ]);
     }
 }

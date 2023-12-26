@@ -9,13 +9,13 @@ use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\SubmitQuestionModel;
 use FKSDB\Models\Submits\SubmitNotQuizException;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends BaseGrid<SubmitQuestionModel>
+ * @phpstan-extends BaseGrid<SubmitQuestionModel,array{}>
  */
 class QuizAnswersGrid extends BaseGrid
 {
@@ -46,7 +46,7 @@ class QuizAnswersGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => $question->getFQName(),
@@ -55,7 +55,7 @@ class QuizAnswersGrid extends BaseGrid
             'name'
         );
 
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => (string)($question->points ?? 0),
@@ -64,7 +64,7 @@ class QuizAnswersGrid extends BaseGrid
             'points'
         );
 
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 function (SubmitQuestionModel $question): Html {
@@ -83,7 +83,7 @@ class QuizAnswersGrid extends BaseGrid
             return;
         }
 
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(SubmitQuestionModel $question): string => $question->answer,
@@ -92,7 +92,7 @@ class QuizAnswersGrid extends BaseGrid
             'correct_answer'
         );
 
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 function (SubmitQuestionModel $question): Html {

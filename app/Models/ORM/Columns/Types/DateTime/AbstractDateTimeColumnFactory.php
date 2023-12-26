@@ -5,26 +5,34 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\DatePrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\UI\DatePrinter;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<Model,never>
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-extends ColumnFactory<TModel,ArgType>
  */
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory
 {
+    private DatePrinter $printer;
 
-    private string $format;
-
-    final public function setFormat(string $format): void
+    public function __construct(Container $container)
     {
-        $this->format = $format;
+        parent::__construct($container);
+        $this->printer = new DatePrinter($this->getDefaultFormat());
+    }
+
+    final public function setFormat(?string $format): void
+    {
+        $this->printer = new DatePrinter($format);
     }
 
     final protected function createHtmlValue(Model $model): Html
     {
-        return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->modelAccessKey});
+        return ($this->printer)($model->{$this->modelAccessKey});
     }
 
     abstract protected function getDefaultFormat(): string;

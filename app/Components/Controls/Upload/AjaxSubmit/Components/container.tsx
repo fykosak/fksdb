@@ -1,5 +1,4 @@
 import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
-import Card from 'FKSDB/Models/UI/card';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useSelector } from 'react-redux';
@@ -9,7 +8,6 @@ import Form from './States/form-state';
 import LoadingState from './States/loading-state';
 import { TranslatorContext } from '@translator/context';
 import { Translator } from '@translator/translator';
-
 
 export default function UploadContainer() {
 
@@ -43,6 +41,20 @@ export default function UploadContainer() {
         <MessageBox/>
         {getInnerContainer(translator)}
     </Card>;
+}
 
 
+export interface OwnProps {
+    children?: React.ReactNode;
+    headline: string | JSX.Element;
+    level: string;
+}
+
+function Card({level, headline, children}: OwnProps) {
+    return <div className={'card border-' + level}>
+        <div className={'card-header card-' + level}>{headline}</div>
+        <div className="card-block card-body">
+            {children}
+        </div>
+    </div>;
 }

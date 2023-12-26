@@ -1,0 +1,71 @@
+{varType string $lang}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {switch $lang}{case cs}
+            <p class="alert alert-danger">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                Školu vkládejte pouze tehdy, jste-li přesvědčení, že v systému ještě není.
+            </p>
+            <h2>Atributy školy</h2>
+            <h3>Plný název</h3>
+            <ul>
+                <li>celý oficiální název školy, měl by mít formát jako hlavní název škol v rejstříku MŠMT (někdy i včetně adresy)
+                <li>používá se pouze ve vyhledávání
+            </ul>
+            <h3>Název</h3>
+            <ul>
+                <li>název školy, který patří na obálku
+                <li>uvažujte, že nad ním bude jméno příjemce a pod ním ulice a zbytek adresy
+            </ul>
+            <h3>Zkrácený název</h3>
+            <ul>
+                <li>nejčastěji používaný název (výsledkovky, vyhledávací pole, exporty)
+                <li>délka omezena na 32 znaků
+                <li>měl by obsahovat typ školy (G, ZŠ, SŠ apod.) a město
+                <li>pokud jde o školu mimo ČR nebo SR, hodí se do názvu doplnit i zkrácené označení státu
+                <li>je-li v daném městě vícero škol daného typu, doplňte i ulici nebo oficiální zkrácený název
+            </ul>
+            <h3>Adresa</h3>
+            <ul>
+                <li>pokud se podaří dohledat, hodí se pro korespondenci na školy (případně doplnit lazy)</li>
+            </ul>
+            {default}
+                <p class="alert alert-danger">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                    Before inserting new school, make sure it is not present in the system yet (try searching with different names, name of the city and country,...).
+                </p>
+                <h2>School attributes</h2>
+                <h3>Full name</h3>
+                <ul>
+                    <li>full official name of the school, including city and country
+                    <li>it is used in search
+                </ul>
+                <h3>School name</h3>
+                <ul>
+                    <li>Name of the school as should be written on a letter
+                    <li>consider that the name of the recipient would be written above and the street and city name below this
+                </ul>
+                <h3>Abbreviated name</h3>
+                <ul>
+                    <li>most frequently displayed name (ranking, search field,...)
+                    <li>length of 32 characters at maximum
+                    <li>should contain the type of school (HS, Uni,...) and city/country
+                    <li>should there be more schools of the same type in the same city, add the street or something specific from the official school name
+                </ul>
+                <h3>Address</h3>
+                <ul>
+                    <li>used to send mail to the school if needed (if it cannot be found, fill in lazy)</li>
+                    <li>do NOT fill in the postal code unless it is a school from Czech or Slovak Republic</li>
+                    <li>pick the country manually unless it is a school from Czech or Slovak Republic</li>
+                </ul>
+            {/switch}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            {control form}
+        </div>
+    </div>
+
+{/block}

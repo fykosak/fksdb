@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Tests\PersonHistory\SetSchoolTest;
+use FKSDB\Models\ORM\Tests\PersonHistory\StudyTypeTest;
+use FKSDB\Models\ORM\Tests\Test;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 
 /**
  * @property-read int $person_history_id
@@ -22,7 +26,7 @@ final class PersonHistoryModel extends Model
      * @return StudyYear|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
@@ -36,5 +40,15 @@ final class PersonHistoryModel extends Model
     public function getGraduationYear(): ?int
     {
         return $this->study_year_new->getGraduationYear($this->ac_year);
+    }
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new StudyTypeTest($container),
+            new SetSchoolTest($container),
+        ];
     }
 }

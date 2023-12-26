@@ -8,13 +8,13 @@ use FKSDB\Components\Controls\Person\Detail\AddressComponent;
 use FKSDB\Components\Controls\Person\Detail\Component;
 use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
 use FKSDB\Components\Controls\Person\Detail\FlagComponent;
-use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
+use FKSDB\Components\Controls\Person\Detail\OrganizerListComponent;
 use FKSDB\Components\Controls\Person\Detail\RoleComponent;
-use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
+use FKSDB\Components\Controls\Person\Detail\DataTestComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
-use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -60,9 +60,9 @@ class StalkingContainer extends BaseComponent
     }
 
     /**
-     * @phpstan-return PersonRelatedGrid<EventOrgModel>
+     * @phpstan-return PersonRelatedGrid<EventOrganizerModel>
      */
-    protected function createComponentEventOrgsGrid(): PersonRelatedGrid
+    protected function createComponentEventOrganizerGrid(): PersonRelatedGrid
     {
         /** @phpstan-ignore-next-line */
         return new PersonRelatedGrid('event_org', $this->person, $this->userPermission, $this->getContext());
@@ -91,9 +91,9 @@ class StalkingContainer extends BaseComponent
         return new PersonRelatedGrid('task_contribution', $this->person, $this->userPermission, $this->getContext());
     }
 
-    protected function createComponentOrgList(): OrgListComponent
+    protected function createComponentOrganizerList(): OrganizerListComponent
     {
-        return new OrgListComponent($this->container, $this->person, $this->userPermission, true);
+        return new OrganizerListComponent($this->container, $this->person, $this->userPermission, true);
     }
 
     /**
@@ -190,9 +190,9 @@ class StalkingContainer extends BaseComponent
         return new FlagComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
-    protected function createComponentValidation(): ValidationComponent
+    protected function createComponentDataTest(): DataTestComponent
     {
-        return new ValidationComponent($this->getContext(), $this->person, $this->userPermission);
+        return new DataTestComponent($this->getContext(), $this->person, $this->userPermission);
     }
 
     protected function createComponentTimeline(): TimelineComponent

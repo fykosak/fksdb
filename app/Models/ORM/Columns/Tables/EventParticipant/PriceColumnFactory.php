@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
-use FKSDB\Components\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ValuePrinters\PricePrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\UI\NotSetBadge;
+use FKSDB\Models\UI\PricePrinter;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventParticipantModel,never>
+ * @phpstan-extends AbstractColumnFactory<EventParticipantModel>
  */
-class PriceColumnFactory extends ColumnFactory
+class PriceColumnFactory extends AbstractColumnFactory
 {
     /**
      * @param EventParticipantModel $model
@@ -25,6 +25,6 @@ class PriceColumnFactory extends ColumnFactory
         if (\is_null($model->price)) {
             return NotSetBadge::getHtml();
         }
-        return (new PricePrinter())($model->getPrice());
+        return PricePrinter::getHtml($model->getPrice());
     }
 }

@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -27,7 +28,6 @@ class PersonFormComponent extends EntityFormComponent
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
     private PersonService $personService;
     private PersonInfoService $personInfoService;
     private MemoryLogger $logger;
@@ -41,11 +41,9 @@ class PersonFormComponent extends EntityFormComponent
     }
 
     final public function injectFactories(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonService $personService,
         PersonInfoService $personInfoService
     ): void {
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
     }
@@ -53,6 +51,7 @@ class PersonFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -61,11 +60,10 @@ class PersonFormComponent extends EntityFormComponent
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
                 case self::PERSON_CONTAINER:
-                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata(
-                        $table,
-                        $rows,
-                        $this->userPermission
-                    );
+                    $control = new ModelContainer($this->container, $table);
+                    foreach ($rows as $field => $metadata) {
+                        $control->addField($field, $metadata, $this->userPermission);
+                    }
                     break;
                 default:
                     throw new InvalidArgumentException();

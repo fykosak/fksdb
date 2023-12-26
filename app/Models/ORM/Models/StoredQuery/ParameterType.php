@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
@@ -46,5 +47,10 @@ final class ParameterType extends FakeStringEnum implements EnumColumn
             default:
                 throw new InvalidStateException("Unsupported parameter type '$this->value'.");
         }
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

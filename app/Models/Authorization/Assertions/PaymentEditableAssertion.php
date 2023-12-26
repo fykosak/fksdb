@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\PaymentState;
 use Nette\Security\Permission;
 
 class PaymentEditableAssertion implements Assertion
@@ -14,6 +13,6 @@ class PaymentEditableAssertion implements Assertion
     {
         /** @var PaymentModel|null $payment */
         $payment = $acl->getQueriedResource();
-        return !isset($payment) || $payment->state->value == PaymentState::IN_PROGRESS;
+        return !isset($payment) || $payment->canEdit();
     }
 }

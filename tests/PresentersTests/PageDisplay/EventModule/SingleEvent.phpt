@@ -8,19 +8,18 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use DateTime;
 
 class SingleEvent extends EventModuleTestCase
 {
     protected function getEventData(): array
     {
         return [
-            'event_type_id' => 7,
+            'event_type_id' => 2,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
-            'name' => 'TEST TSAF',
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
+            'name' => 'TEST DSEF',
             'registration_begin' => new \DateTime(),
             'registration_end' => new \DateTime(),
         ];
@@ -29,15 +28,16 @@ class SingleEvent extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Event:Application', 'list'],
-            ['Event:Application', 'import'],
-            ['Event:Application', 'mass'],
-           // ['Event:Application', 'attendance'],
             ['Event:Chart', 'list'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
-            ['Event:EventOrg', 'list'],
-            ['Event:EventOrg', 'create'],
+            ['Event:EventOrganizer', 'list'],
+            ['Event:EventOrganizer', 'create'],
+
+            ['Event:Application', 'default'],
+            ['Event:Application', 'create'],
+            ['Event:Application', 'import'],
+            ['Event:Application', 'mass'],
         ];
     }
 }

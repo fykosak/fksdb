@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
 
 /**
@@ -22,6 +22,9 @@ use Nette\Security\IIdentity;
  */
 final class LoginModel extends Model implements IIdentity
 {
+    /**
+     * @throws \Throwable
+     */
     public function __toString(): string
     {
         return $this->person ? $this->person->__toString() : ($this->login ?? 'NAMELESS LOGIN');
@@ -59,10 +62,10 @@ final class LoginModel extends Model implements IIdentity
             // roles from other tables
             $person = $this->person;
             if ($person) {
-                foreach ($person->getActiveOrgs() as $org) {
+                foreach ($person->getActiveOrganizers() as $organizer) {
                     $this->roles[] = new Grant(
-                        RoleModel::ORG,
-                        $org->contest,
+                        RoleModel::ORGANIZER,
+                        $organizer->contest,
                     );
                 }
                 /** @var ContestantModel $contestant */

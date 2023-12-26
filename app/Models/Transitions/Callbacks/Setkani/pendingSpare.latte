@@ -1,0 +1,23 @@
+{layout none}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+<p>
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+    kvůli plné kapacitě akce <em>{$holder->getModel()->event->getName()->getText('cs')}</em> jsi se
+    {if $holder->getModel()->person->gender->value == 'F'}stala{else}stal{/if}
+    náhradníkem. V případě uvolnění místa tě budeme kontaktovat.
+</p>
+<p>
+     Pokud si zájem o účast na akci rozmyslíš, prosíme oznam nám to změnou v přihlášce.
+    Případné změny lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
+    v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
+    či na odkazu
+    {var $link = $control->link('//:Event:Application:Detail',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a>.
+    V případě jakéhokoliv dotazu se na nás můžeš obrátit na adrese <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
+</p>
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

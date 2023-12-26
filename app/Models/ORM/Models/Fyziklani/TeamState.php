@@ -6,92 +6,90 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class TeamState extends FakeStringEnum implements EnumColumn
 {
-    public const APPLIED = 'applied';
-    public const PENDING = 'pending';
-    public const APPROVED = 'approved';
-    public const SPARE = 'spare';
-    public const PARTICIPATED = 'participated';
-    public const MISSED = 'missed';
-    public const DISQUALIFIED = 'disqualified';
-    public const CANCELLED = 'cancelled';
-    public const INIT = 'init'; // virtual state for correct ORM
+    // phpcs:disable
+    public const Applied = 'applied';
+    public const Approved = 'approved';
+    public const Arrived = 'arrived';
+    public const Cancelled = 'cancelled';
+    public const Disqualified = 'disqualified';
+    public const Missed = 'missed';
+    public const Participated = 'participated';
+    public const Pending = 'pending';
+    public const Spare = 'spare';
+
+    public const Init = 'init'; // virtual state for correct ORM
+
+    // phpcs:enable
 
     public function badge(): Html
     {
-        $badge = '';
-        switch ($this->value) {
-            case self::APPLIED:
-                $badge = 'badge bg-color-1';
-                break;
-            case self::PENDING:
-                $badge = 'badge bg-color-2';
-                break;
-            case self::APPROVED:
-                $badge = 'badge bg-color-7';
-                break;
-            case self::SPARE:
-                $badge = 'badge bg-color-9';
-                break;
-            case self::PARTICIPATED:
-                $badge = 'badge bg-color-3';
-                break;
-            case self::MISSED:
-                $badge = 'badge bg-color-4';
-                break;
-            case self::DISQUALIFIED:
-                $badge = 'badge bg-color-5';
-                break;
-            case self::CANCELLED:
-                $badge = 'badge bg-color-6';
-                break;
-        }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
-    public function getBehaviorType(): string
+    public function pseudoState(): self
     {
         switch ($this->value) {
-            case self::APPLIED:
-            case self::APPROVED:
-                return 'info';
-            case self::PENDING:
-                return 'warning';
-            case self::SPARE:
-                return 'primary';
-            case self::PARTICIPATED:
-                return 'success';
-            case self::MISSED:
-            case self::CANCELLED:
-            case self::INIT:
-                return 'secondary';
-            case self::DISQUALIFIED:
-                return 'danger';
+            case self::Pending:
+            case self::Approved:
+                return new self(self::Applied);
+            case self::Participated:
+                return new self(self::Participated);
+            default:
+                return $this;
         }
-        return '';
+    }
+
+    public function behaviorType(): string
+    {
+        switch ($this->value) {
+            case self::Arrived:
+                return 'danger';
+            case self::Applied:
+            case self::Approved:
+                return 'info';
+            case self::Pending:
+                return 'warning';
+            case self::Spare:
+                return 'primary';
+            case self::Participated:
+                return 'success';
+            case self::Missed:
+            case self::Cancelled:
+            case self::Init:
+                return 'secondary';
+            case self::Disqualified:
+            default:
+                return 'dark';
+        }
     }
 
     public function label(): string
     {
         switch ($this->value) {
-            case self::APPLIED:
+            case self::Arrived:
+                return _('Arrived');
+            case self::Applied:
                 return _('Applied');
-            case self::PENDING:
+            case self::Pending:
                 return _('Pending');
-            case self::APPROVED:
+            case self::Approved:
                 return _('Approved');
-            case self::SPARE:
+            case self::Spare:
                 return _('Spare');
-            case self::PARTICIPATED:
+            case self::Participated:
                 return _('Participated');
-            case self::MISSED:
+            case self::Missed:
                 return _('Missed');
-            case self::DISQUALIFIED:
+            case self::Disqualified:
                 return _('Disqualified');
-            case self::CANCELLED:
+            case self::Cancelled:
                 return _('Canceled');
         }
         return $this->value;
@@ -103,15 +101,21 @@ final class TeamState extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::APPLIED),
-            new self(self::PENDING),
-            new self(self::APPROVED),
-            new self(self::SPARE),
-            new self(self::PARTICIPATED),
-            new self(self::MISSED),
-            new self(self::DISQUALIFIED),
-            new self(self::CANCELLED),
-            new self(self::INIT),
+            new self(self::Applied),
+            new self(self::Arrived),
+            new self(self::Pending),
+            new self(self::Approved),
+            new self(self::Spare),
+            new self(self::Participated),
+            new self(self::Missed),
+            new self(self::Disqualified),
+            new self(self::Cancelled),
+            new self(self::Init),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

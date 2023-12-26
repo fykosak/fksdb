@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -33,7 +33,6 @@ class RegisterTeacherFormComponent extends EntityFormComponent
     private ?PersonModel $loggedPerson;
     private AccountManager $accountManager;
     private TeacherService $teacherService;
-    private SingleReflectionFormFactory $reflectionFactory;
 
     public function __construct(
         Container $container,
@@ -45,21 +44,20 @@ class RegisterTeacherFormComponent extends EntityFormComponent
 
     final public function inject(
         AccountManager $accountManager,
-        TeacherService $teacherService,
-        SingleReflectionFormFactory $reflectionFactory
+        TeacherService $teacherService
     ): void {
         $this->accountManager = $accountManager;
         $this->teacherService = $teacherService;
-        $this->reflectionFactory = $reflectionFactory;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = new ContainerWithOptions($this->container);
+        $container = new ModelContainer($this->container, 'teacher');
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getContext()->getParameters()['forms']['registerTeacher'],
@@ -69,7 +67,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
             new SelfPersonResolver($this->loggedPerson)
         );
         $container->addComponent($referencedId, 'person_id');
-        $this->reflectionFactory->addToContainer($container, 'teacher', 'active');
+        $container->addField('active');
         $form->addComponent($container, self::CONT_TEACHER);
         if (!$this->loggedPerson) {
             $captcha = new CaptchaBox();

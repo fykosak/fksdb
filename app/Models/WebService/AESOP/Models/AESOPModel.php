@@ -90,9 +90,9 @@ abstract class AESOPModel
     protected function getAESOPContestant(PersonModel $person): array
     {
         $postContact = $person->getActivePostContact();
-        $history = $person->getHistoryByContestYear($this->contestYear);
+        $history = $person->getHistory($this->contestYear);
         $school = $history->school;
-        $spamFlag = $person->hasPersonFlag('spam_mff');
+        $spamFlag = $person->hasFlag('spam_mff');
         return [
             'name' => $person->other_name,
             'surname' => $person->family_name,

@@ -7,11 +7,10 @@ namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
@@ -21,9 +20,8 @@ class TagsColumnFactory extends ColumnFactory
 {
     private TagTypeService $storedQueryTagTypeService;
 
-    public function __construct(TagTypeService $storedQueryTagTypeService, MetaDataFactory $metaDataFactory)
+    public function injectService(TagTypeService $storedQueryTagTypeService): void
     {
-        parent::__construct($metaDataFactory);
         $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 

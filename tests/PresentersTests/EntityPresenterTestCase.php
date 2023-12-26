@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -82,6 +82,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         });
         return (string)$source;
     }
+
     /**
      * @phpstan-param array<string,scalar> $params
      * @phpstan-param array<string,mixed> $formData
@@ -102,9 +103,9 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return $this->fixture->run($request);
     }
 
-    public static function personToValues(PersonModel $person): array
+    public static function personToValues(ContestModel $contest, PersonModel $person): array
     {
-        $history = $person->getHistory(ContestYearService::getCurrentAcademicYear());
+        $history = $person->getHistory($contest->getCurrentContestYear());
         return [
             '_c_compact' => $person->getFullName(),
             'person' => [

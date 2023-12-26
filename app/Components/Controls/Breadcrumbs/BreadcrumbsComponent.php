@@ -83,8 +83,8 @@ class BreadcrumbsComponent extends BaseComponent
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
 
-        $requestKey = $this->getRequestKey($request);
-        $backLinkId = $this->getBackLinkId($requestKey);
+       // $requestKey = $this->getRequestKey($request);
+       // $backLinkId = $this->getBackLinkId($requestKey);
        // $originalBackLink = $presenter->setBackLink($backLinkId);
        // $this->storeRequest($originalBackLink);
     }
@@ -191,10 +191,10 @@ class BreadcrumbsComponent extends BaseComponent
             $presenterName = $request->getPresenterName();
             /** @phpstan-var class-string<Presenter> $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
-            $action = $parameters[Presenter::ACTION_KEY];
-           // $methodName = ($presenterClassName)::publicFormatActionMethod($action);
+            // $action = $parameters[Presenter::ACTION_KEY];
+            // $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
-            $rc = ($presenterClassName)::getReflection();
+            // $rc = ($presenterClassName)::getReflection();
           /*  if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {

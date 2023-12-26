@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -19,13 +20,13 @@ class EventTypeColumnFactory extends ColumnFactory
 {
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws BadTypeException
      */
     protected function createFormControl(...$args): BaseControl
     {
         [$contest] = $args;
         if (!$contest instanceof ContestModel) {
-            throw new \InvalidArgumentException();
+            throw new BadTypeException(ContestModel::class, $contest);
         }
 
         $element = new SelectBox($this->getTitle());

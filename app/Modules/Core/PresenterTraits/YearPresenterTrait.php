@@ -7,7 +7,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -72,7 +72,7 @@ trait YearPresenterTrait
     {
         $contest = $this->getSelectedContest();
         switch ($this->getRole()->value) {
-            case PresenterRole::ORG:
+            case PresenterRole::ORGANIZER:
             case PresenterRole::ALL:
             case PresenterRole::SELECTED:
                 return $contest->getContestYears();

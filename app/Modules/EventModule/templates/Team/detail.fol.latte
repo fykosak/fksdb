@@ -1,0 +1,15 @@
+{layout './detail.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+                {control columnTable [
+                'fyziklani_team.category',
+                ],$model,1024}
+        </div>
+    </div>
+    {include rank from './detail.latte', model:$model}
+    {include members from './detail.latte', model:$model}
+{/block}

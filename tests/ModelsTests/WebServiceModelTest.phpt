@@ -9,7 +9,7 @@ $container = require '../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\WebService\WebServiceModel;
 use Tester\Assert;
 
@@ -29,7 +29,7 @@ class WebServiceModelTest extends DatabaseTestCase
 
     public function testResults(): void
     {
-        $this->container->getByType(OrgService::class)->storeModel(
+        $this->container->getByType(OrganizerService::class)->storeModel(
             [
                 'person_id' => $this->person->person_id,
                 'contest_id' => 1,

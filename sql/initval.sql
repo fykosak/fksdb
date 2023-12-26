@@ -15,18 +15,6 @@ VALUES (1, 'FYKOS_1', 'Kategorie 1. ročníků', 'Category 1st study year'),
        (9, 'VYFUK_9', 'Kategorie 9. ročníků', 'Category 9th study year'),
        (10, 'ALL', '', '');
 
-
-INSERT INTO study_year (study_year)
-VALUES (1),
-       (2),
-       (3),
-       (4),
-       (5),
-       (6),
-       (7),
-       (8),
-       (9);
-
 INSERT INTO `role` (`role_id`, `name`, `description`)
 VALUES (1, 'webmaster', 'webař'),
        (2, 'taskManager', 'úlohář'),

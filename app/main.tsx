@@ -23,6 +23,9 @@ import ScheduleField from 'FKSDB/Components/Schedule/Input/schedule-field';
 import ParticipantGeo from 'FKSDB/Components/Charts/Contestants/participant-geo';
 import BarProgress from 'FKSDB/Components/Charts/Event/Applications/bar-progress';
 import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progress';
+import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
+import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
+import PaymentCode from 'FKSDB/Components/Payments/payment-code';
 
 const translator = new Translator();
 
@@ -68,6 +71,7 @@ renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', MainCom
 renderer.hashMapLoader.registerActionsComponent('ctyrboj.submit-form', MainComponent, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart, {translator});
+renderer.hashMapLoader.registerDataComponent('chart.submits.per-series', SubmitsPerSeries, {translator});
 renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', Timeline, {translator});
 
 renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart, {translator});
@@ -82,9 +86,29 @@ renderer.hashMapLoader.registerDataComponent('chart.events.time-progress', TimeP
 
 renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {translator});
 
+renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
+renderer.hashMapLoader.registerDataComponent('payment.qrcode', PaymentCode);
 
 window.addEventListener('DOMContentLoaded', () => {
 
+    document.querySelectorAll('.referenced-container').forEach((fieldSet: HTMLFieldSetElement) => {
+        const button: HTMLButtonElement | null = fieldSet.querySelector('.container-toggle');
+        if (button) {
+            const getIcon = () => {
+                if (button.getAttribute('aria-expanded') === 'true') {
+                    button.innerHTML = '<i class="fas fa-eye-slash me-2"></i>' + translator.getText('Hide');
+                } else {
+                    button.innerHTML = '<i class="fas fa-eye me-2"></i>' + translator.getText('Show');
+                }
+            };
+            button.addEventListener('click', getIcon);
+            getIcon();
+            if (fieldSet.querySelectorAll('.has-error').length && button.getAttribute('aria-expanded') === 'false') {
+                button.click();
+            }
+        }
+
+    });
 // @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options
@@ -156,139 +180,21 @@ window.addEventListener('DOMContentLoaded', () => {
     // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
 
-// @ts-ignore
-    $.widget('fks.referencedContainer', {
-// default options
-        options: {
-            refId: null,
-            valuePromise: '__promise',
-            clearMask: '__clear',
-            submitSearchMask: '__search',
-            searchMask: '_c_search',
-            compactValueMask: '_c_compact',
-        },
-        _create: function () {
-            const container = this.element as JQuery<HTMLElement>;
-            this.transformContainer(container, document.getElementById(container.attr('data-referenced-id')));
-        },
-        transformContainer: function (container: JQuery<HTMLElement>, refId: HTMLElement) {
-            const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
-            const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
-            const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
-            let compacted = null;
-            //  const options = this.options;
-            if (refId) {
-                this.options.refId = $(refId);
-            }
-
-            function decompactifyContainer(): void {
-                if (compacted !== null) {
-                    compacted.hide();
-                }
-                container.show();
-            }
-
-            function createCompactField(label: string, value: string | number | string[]): JQuery<HTMLElement> {
-                const compactGroup = document.createElement('div');
-                const ReEl = () => {
-                    return <fieldset className="col-12 bd-callout bd-callout-info" data-level="1">
-                        <h4>{label}</h4>
-                        <div className="form-group">
-                            <div className="input-group">
-                                <p className="form-control-plaintext"><span className="fas fa-user me-3"/>{value}</p>
-                            </div>
-                            <div className="input-group-append">
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary"
-                                    title={translator.getText('Edit')}
-                                    onClick={() => {
-                                        decompactifyContainer();
-                                    }}>
-                                    <span className="fas fa-pen me-3"/>
-                                    {translator.getText('Edit')}
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-warning"
-                                    title={translator.getText('Delete')}
-                                    onClick={() => {
-                                        $clearButton.click();
-                                    }}>
-                                    <span className="fas fa-times me-3"/>
-                                    {translator.getText('Delete')}
-                                </button>
-                            </div>
-                        </div>
-                    </fieldset>;
-                }
-                const root = createRoot(compactGroup);
-                root.render(<ReEl/>, compactGroup);
-                return $(compactGroup);
-            }
-
-
-            function compactifyContainer() {
-
-                if (compacted === null) {
-                    const label = container.find('> fieldset > h4').text();
-                    const value = $compactValueInput.val();
-                    compacted = createCompactField(label, value);
-                    compacted.insertAfter(container);
-                    //elContainer.find('legend').click(compactifyContainer);
-                    //decorateClearButton(); //in original container
-                }
-                compacted.show();
-                container.hide();
-            }
-
-            const hasAnyFields = container.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
-                return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
-            });
-
-            const hasErrors = container.find('.has-error');
-
-            if ($searchInput.length) {
-                // searchifyContainer();
-            } else if ($clearButton.length && !(hasAnyFields.length || hasErrors.length)) {
-                compactifyContainer();
-            } else if ($clearButton.length && (hasAnyFields.length || hasErrors.length)) {
-                // decorateClearButton();
-            }
-        },
-    });
-    // @ts-ignore
-    $('[data-referenced]').referencedContainer();
-
-    /*   document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
-           el.addEventListener('click', (event) => {
-               if (window.confirm('O RLY?')) {
-                   // @ts-ignore
-                   el.trigger('click');
-                   return;
-               }
-               event.preventDefault();
-           })
-       });*/
-
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
-// default options
-        options: {
-            metaSuffix: '__meta',
-        },
+        options: {},
         _create: function () {
-            const split = (val) => {
-                return val.split(/,\s*/);
+
+            type TItem = { html?: string; label: string; description?: string; place?: string; value: number };
+            type TData = Array<TItem>;
+            const extractLast = (term: string): string => {
+                return term.split(/,\s*/).pop();
             }
 
-            const extractLast = (term) => {
-                return split(term).pop();
-            }
-
-            const multiSelect = this.element.data('ac-multiselect');
-            const defaultValue = this.element.val();
-            const defaultText = this.element.data('ac-default-value');
+            const multiSelect: boolean = this.element.data('ac-multiselect');
+            const defaultValue: number = this.element.val();
+            const defaultData: TData = this.element.data('ac-default');
+            const renderMethod = this.element.data('ac-render-method');
 
             const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
@@ -299,29 +205,23 @@ window.addEventListener('DOMContentLoaded', () => {
             this.element.data('uiElement', el);
 
             // element to detect enabled JavaScript
-            const metaEl = $('<input type="hidden" value="JS" />');
+            const metaEl = $('<input type="hidden" value="JS"/>');
             // this should work both for array and scalar names
-            const metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');
+            const metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2__meta$3');
             metaEl.attr('name', metaName);
             metaEl.insertAfter(el);
 
             this.element.data('autocomplete', el);
-            if (defaultText) {
-                if (typeof defaultText === 'string') {
-                    el.val(defaultText);
-                } else {
-                    el.val(defaultText.join(', '));
-                }
+            if (defaultData) {
+                el.val(defaultData.map((value: TItem) => value.label).join(', '));
             }
 
-            const cache = {}; //TODO move in better scope
-            const labelCache = {};
-            let termFunction = (arg) => {
-                return arg;
-            };
+            const cache: { [key: string]: TData } = {};
+            const labelCache: Record<string, string> = {};
+            let termFunction = (arg: string): string => arg;
             // ensures default value is always suggested (needed for AJAX)
-            const conservationFunction = (data) => {
-                if (!defaultText) {
+            const conservationFunction = (data: TData): TData => {
+                if (!defaultData) {
                     return data;
                 }
                 let found = false;
@@ -332,10 +232,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 if (!found) {
-                    data.push({
-                        label: defaultText,
-                        value: defaultValue,
-                    });
+                    data = [...data, ...defaultData];
                 }
                 return data;
             };
@@ -346,7 +243,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const options: Record<string, unknown> = {};
 
             if (this.element.data('ac-ajax')) {
-                options.source = (request, response) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const term = termFunction(request.term);
                     if (term in cache) {
                         response(cache[term]);
@@ -356,9 +253,9 @@ window.addEventListener('DOMContentLoaded', () => {
                             body: JSON.stringify({acQ: term}),
                             method: 'POST',
                         },
-                    ).then((response) => {
+                    ).then((response): Promise<TData> => {
                         return response.json();
-                    }).then((jsonData) => {
+                    }).then((jsonData: TData) => {
                         const data = conservationFunction(jsonData);
                         cache[term] = data;
                         response(data);
@@ -367,7 +264,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 options.minLength = 3;
             } else {
                 const items = this.element.data('ac-items');
-                options.source = (request, response) => {
+                options.source = (request: { term: string }, response: (data: TData) => void) => {
                     const s = termFunction(request.term);
                     // @ts-ignore
                     response($.ui.autocomplete.filter(items, s));
@@ -376,7 +273,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             if (multiSelect) {
-                options.select = (event, ui) => {
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     labelCache[ui.item.value] = ui.item.label;
                     if (this.element.val()) {
                         this.element.val(this.element.val() + ',' + ui.item.value);
@@ -390,13 +287,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 };
                 options.focus = () => false;
             } else {
-                options.select = (e, ui) => {
+                options.select = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     this.element.change();
                     return false;
                 };
-                options.focus = (e, ui) => {
+                options.focus = (event: JQuery.Event, ui: { item: TItem }) => {
                     this.element.val(ui.item.value);
                     el.val(ui.item.label);
                     return false;
@@ -406,24 +303,28 @@ window.addEventListener('DOMContentLoaded', () => {
             // @ts-ignore
             const acEl = el.autocomplete(options);
 
-            const renderMethod = this.element.data('ac-render-method');
+            const renderItem = (item: TItem): JQuery => {
+                switch (renderMethod) {
+                    case 'tags':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.description + '</a>');
+                    case 'person':
+                        return $('<li>')
+                            .append('<a>' + item.label + '<br>' + item.place + ', ID: ' + item.value + '</a>');
+                    case 'school':
+                        return $('<li>')
+                            .append('<a>' + (item.html || item.label) + '</a>');
+                    default:
+                        return eval(renderMethod);
+                }
+            };
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = (ul, item) => {
-                    switch (renderMethod) {
-                        case 'tags':
-                            return $('<li>')
-                                .append('<a>' + item.label + '<br>' + item.description + '</a>')
-                                .appendTo(ul);
-                        default:
-                            return eval(renderMethod);
-                    }
-
+                acEl.data('ui-autocomplete')._renderItem = (ul: JQuery<HTMLUListElement>, item: TItem): JQuery => {
+                    return renderItem(item).appendTo(ul);
                 };
             }
         },
-    })
-
+    });
     $('input[data-ac]')['autocomplete-select']();
-
     renderer.run();
 });

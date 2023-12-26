@@ -21,7 +21,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{event_id:int},array{
+ * @phpstan-extends WebModel<array{event_id?:int,eventId:int},array{
  *     teams?: mixed,
  *     participants?:mixed,
  *     schedule?:mixed,
@@ -60,6 +60,10 @@ class EventWebModel extends WebModel
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
+    /**
+     * @param EventModel $event
+     * @return array<array{person:mixed,scheduleItemId:int}>
+     */
     private function createPersonScheduleArray(EventModel $event): array
     {
         $data = [];
@@ -68,11 +72,7 @@ class EventWebModel extends WebModel
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             $data[] = [
-                'person' => [
-                    'name' => $model->person->getFullName(),
-                    'personId' => $model->person_id,
-                    'email' => $model->person->getInfo()->email,
-                ],
+                'person' => $model->person->__toArray(),
                 'scheduleItemId' => $model->schedule_item_id,
             ];
         }
@@ -87,6 +87,7 @@ class EventWebModel extends WebModel
      *     scheduleItems:SerializedScheduleItemModel[],
      *     schedule_items:SerializedScheduleItemModel[],
      *  })[]
+     * @phpstan-ignore-next-line
      */
     private function createScheduleListArray(EventModel $event): array
     {
@@ -116,6 +117,9 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    /**
+     * @phpstan-ignore-next-line
+     */
     private function createTeamListArray(EventModel $event): array
     {
         $teamsData = [];
@@ -139,11 +143,7 @@ class EventWebModel extends WebModel
             ];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
-                $teamData['teachers'][] = [
-                    'name' => $teacher->person->getFullName(),
-                    'personId' => $teacher->person->person_id,
-                    'email' => $teacher->person->getInfo()->email,
-                ];
+                $teamData['teachers'][] = $teacher->person->__toArray();
             }
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
@@ -167,7 +167,7 @@ class EventWebModel extends WebModel
         }
         return $rootNode;
     }
-
+    /** @phpstan-ignore-next-line */
     private function createParticipantListArray(EventModel $event): array
     {
         $participants = [];
@@ -190,6 +190,7 @@ class EventWebModel extends WebModel
 
     /**
      * @param TeamMemberModel|EventParticipantModel $member
+     * @phpstan-ignore-next-line
      */
     private function createParticipantArray($member): array
     {
@@ -214,7 +215,7 @@ class EventWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $event = $this->eventService->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($params['event_id'] ?? $params['eventId']);
         if (is_null($event)) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
@@ -232,7 +233,8 @@ class EventWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_id' => Expect::scalar()->castTo('int')->required(),
+            'event_id' => Expect::scalar()->castTo('int'),
+            'eventId' => Expect::scalar()->castTo('int'),
         ]);
     }
 }

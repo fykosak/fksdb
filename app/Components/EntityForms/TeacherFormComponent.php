@@ -5,18 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Factories\SchoolSelectField;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -28,11 +31,11 @@ class TeacherFormComponent extends EntityFormComponent
     use ReferencedPersonTrait;
 
     private const CONTAINER = 'teacher';
-    private SchoolFactory $schoolFactory;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+
     private TeacherService $teacherService;
     private ContestYearModel $contestYear;
     private ContestAuthorizator $contestAuthorizator;
+    private LinkGenerator $linkGenerator;
 
     public function __construct(Container $container, ContestYearModel $contestYear, ?Model $model)
     {
@@ -41,25 +44,25 @@ class TeacherFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
-        SchoolFactory $schoolFactory,
         TeacherService $teacherService,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        LinkGenerator $linkGenerator
     ): void {
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->schoolFactory = $schoolFactory;
         $this->teacherService = $teacherService;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->linkGenerator = $linkGenerator;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidLinkException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
         $container = $this->createTeacherContainer();
-        $schoolContainer = $this->schoolFactory->createSchoolSelect();
+        $schoolContainer = new SchoolSelectField($this->container, $this->linkGenerator);
         $container->addComponent($schoolContainer, 'school_id');
         $referencedId = $this->createPersonId(
             $this->contestYear,
@@ -100,16 +103,14 @@ class TeacherFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
-    private function createTeacherContainer(): ModelContainer
+    private function createTeacherContainer(): ContainerWithOptions
     {
-        return $this->singleReflectionFormFactory->createContainerWithMetadata(
-            'teacher',
-            [
-                'active' => ['required' => true],
-                'role' => ['required' => true],
-                'note' => ['required' => true],
-            ]
-        );
+        $container = new ModelContainer($this->container, 'teacher');
+        $container->addField('active', ['required' => true]);
+        $container->addField('role', ['required' => true]);
+        $container->addField('note', ['required' => true]);
+        return $container;
     }
 }

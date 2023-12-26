@@ -14,7 +14,7 @@ class FyziklaniTeamMemberRole extends EventRole
 
     public function __construct(EventModel $event, TeamMemberModel $member)
     {
-        parent::__construct('event.fyziklaniTeamMember', $event);
+        parent::__construct('event.fyziklani.member', $event);
         $this->member = $member;
     }
 
@@ -22,9 +22,15 @@ class FyziklaniTeamMemberRole extends EventRole
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-9'])
+            ->addText(_('Member') . ': ')
+            ->addHtml(
+                Html::el('i')->addAttributes(
+                    ['class' => $this->member->fyziklani_team->scholarship->getIconName() . ' me-1']
+                )
+            )
             ->addText(
                 sprintf(
-                    _('Team member: %s (%s)'),
+                    '%s (%s)',
                     $this->member->fyziklani_team->name,
                     $this->member->fyziklani_team->state->label()
                 )

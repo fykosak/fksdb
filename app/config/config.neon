@@ -118,22 +118,22 @@ php:
 
 database:
     reflection: discovered
+    options:
+        supportBooleans: true
 application:
     errorPresenter: Core:Error
     mapping:
         Game: FKSDB\Modules\EventModule\Game\*Presenter
         Schedule: FKSDB\Modules\EventModule\Schedule\*Presenter
-        Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
+        Warehouse: FKSDB\Modules\OrganizerModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days
    autoStart: true
 extensions:
-    fksrouter: FKSDB\Models\Router\RouterExtension
+    #fksrouter: FKSDB\Models\Router\RouterExtension
     acl: FKSDB\Models\Authorization\ACLExtension
-    navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension()
-    #payment: FKSDB\Models\Payment\PaymentExtension
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
@@ -142,9 +142,12 @@ includes:
     - acl.neon
     - orm.neon
     - services.neon
-    - navigation.neon
     - forms.neon
     - stalking.neon
     #- payment.neon
-    - payments/common.neon
-    - fyziklani/default.neon
+    - applications/payment.neon
+    - applications/fof.neon
+    - applications/fol.neon
+    - applications/dsef.neon
+    - applications/setkani.neon
+    - applications/personSchedule.neon

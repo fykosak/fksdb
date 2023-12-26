@@ -7,8 +7,8 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
@@ -21,6 +21,8 @@ use Nette\Security\Resource;
  * @property-read ScheduleGroupModel $schedule_group
  * @property-read float|null $price_czk
  * @property-read float|null $price_eur
+ * @property-read int|bool $payable
+ * @property-read int|bool $available
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
  * @property-read LocalizedString $name
@@ -42,13 +44,14 @@ use Nette\Security\Resource;
  *      name:array<string, string>,
  *      begin:\DateTimeInterface,
  *      end:\DateTimeInterface,
+ *      available: bool,
  *      description:array<string, string>,
  *      longDescription:array<string, string>,
  * }
  */
 final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
-    public const RESOURCE_ID = 'event.scheduleItem';
+    public const RESOURCE_ID = 'event.schedule.item';
 
     public function getBegin(): \DateTimeInterface
     {
@@ -76,14 +79,6 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @throws \Exception
-     */
-    public function isPayable(): bool
-    {
-        return (bool)count($this->getPrice()->getPrices());
-    }
-
-    /**
      * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
      */
     public function getInterested(): TypedGroupedSelection
@@ -93,17 +88,14 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
         return $selection;
     }
 
-    public function getUsedCapacity(): int
+    public function getUsedCapacity(bool $removeRef = false): int
     {
-        return $this->getInterested()->count();
-    }
-
-    public function hasFreeCapacity(): bool
-    {
-        if (is_null($this->capacity)) {
-            return true;
+        //->where('state !=', PersonScheduleState::Cancelled)
+        $query = $this->getInterested();
+        if ($removeRef) {
+            $query->unsetRefCache();
         }
-        return ($this->capacity - $this->getUsedCapacity()) > 0;
+        return $query->count();
     }
 
     /**
@@ -134,6 +126,7 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
             'end' => $this->getEnd(),
             'description' => $this->description->__serialize(),
             'longDescription' => $this->long_description->__serialize(),
+            'available' => (bool)$this->available,
         ];
     }
 

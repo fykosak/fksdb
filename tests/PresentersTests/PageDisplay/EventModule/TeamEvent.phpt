@@ -9,8 +9,6 @@ $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
 
-use DateTime;
-
 class TeamEvent extends EventModuleTestCase
 {
     protected function getEventData(): array
@@ -19,8 +17,8 @@ class TeamEvent extends EventModuleTestCase
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'TEST FOF',
             'registration_begin' => new \DateTime(),
             'registration_end' => new \DateTime(),
@@ -33,15 +31,13 @@ class TeamEvent extends EventModuleTestCase
             ['Event:Chart', 'list'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
-            ['Event:EventOrg', 'list'],
-            ['Event:EventOrg', 'create'],
+            ['Event:EventOrganizer', 'list'],
+            ['Event:EventOrganizer', 'create'],
 
-            ['Event:TeamApplication', 'attendance'],
-            ['Event:TeamApplication', 'create'],
-            ['Event:TeamApplication', 'detailedList'],
-            ['Event:TeamApplication', 'fastEdit'],
-            ['Event:TeamApplication', 'list'],
-            ['Event:TeamApplication', 'mass'],
+            ['Event:Team', 'default'],
+            ['Event:Team', 'create'],
+            ['Event:Team', 'detailedList'],
+            ['Event:Team', 'mass'],
         ];
     }
 }

@@ -25,7 +25,6 @@ class BaseHolder implements ModelHolder
 {
     /** @phpstan-var bool|(callable(BaseHolder):bool)|null */
     private $modifiable;
-    private Container $container;
     public EventModel $event;
     private EventParticipantService $service;
     private ?EventParticipantModel $model;
@@ -39,9 +38,8 @@ class BaseHolder implements ModelHolder
     /** @phpstan-var Processing[] */
     public array $processings = [];
 
-    public function __construct(Container $container, EventParticipantService $service)
+    public function __construct(EventParticipantService $service)
     {
-        $this->container = $container;
         $this->service = $service;
     }
 
@@ -136,9 +134,9 @@ class BaseHolder implements ModelHolder
         return $pos === false ? $column : substr($column, $pos + 1);
     }
 
-    public function createFormContainer(): ContainerWithOptions
+    public function createFormContainer(Container $container): ContainerWithOptions
     {
-        $container = new ContainerWithOptions($this->container);
+        $container = new ContainerWithOptions($container);
         $container->setOption('label', _('Participant'));
 
         foreach ($this->fields as $name => $field) {

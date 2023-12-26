@@ -14,7 +14,7 @@ services:
         factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
-
+    - FKSDB\Models\Router\Router::createRouter
     ## Anonymous
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
@@ -28,11 +28,9 @@ services:
     - FKSDB\Models\Authorization\ContestAuthorizator
     - FKSDB\Models\Authorization\EventAuthorizator
     - FKSDB\Models\Authorization\RelatedPersonAuthorizator
-    #datatesting
-    - FKSDB\Models\DataTesting\DataTestingFactory
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
-    - FKSDB\Models\ORM\ORMFactory
+    - FKSDB\Models\ORM\ReflectionFactory
     # Events
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
@@ -52,7 +50,6 @@ services:
     - FKSDB\Models\Submits\SubmitHandlerFactory
     - FKSDB\Models\Submits\QuizHandler
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
-    - FKSDB\Models\Submits\SeriesTable
     #results
     - FKSDB\Models\Results\SQLResultsCache
     - FKSDB\Models\Results\ResultsModelFactory
@@ -67,18 +64,10 @@ services:
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
-
-    ## forms
-    #provider
-    - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
-    - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
-    - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
-    - FKSDB\Components\Forms\Factories\PersonFactory
-    - FKSDB\Components\Forms\Factories\SchoolFactory
     #handlers
     - FKSDB\Components\Schedule\Input\Handler
 

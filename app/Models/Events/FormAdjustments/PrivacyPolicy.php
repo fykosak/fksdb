@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -28,14 +28,14 @@ class PrivacyPolicy implements Processing, FormAdjustment
 
     protected const CONTROL_NAME = 'privacy';
     private PersonInfoService $personInfoService;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ReflectionFactory $reflectionFactory;
 
     public function __construct(
         PersonInfoService $personInfoService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ReflectionFactory $reflectionFactory
     ) {
         $this->personInfoService = $personInfoService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     /**
@@ -49,7 +49,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
             return;
         }
 
-        $control = $this->singleReflectionFormFactory->createField('person_info', 'agreed');
+        $control = $this->reflectionFactory->createField('person_info', 'agreed');
         $control->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);

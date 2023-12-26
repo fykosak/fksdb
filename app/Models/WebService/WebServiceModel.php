@@ -18,12 +18,13 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     SeriesResultsWebModel,
     SignaturesWebModel,
     StatsWebModel,
-    WebModel
-};
-use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
+    WebModel};
+use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
+    Schedule\GroupListWebModel,
+    Schedule\ItemListWebModel,
+    Schedule\PersonListWebModel,
+    TeamsWebModel,};
 use Nette\DI\Container;
-use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -40,8 +41,7 @@ class WebServiceModel
 
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
-        'game/results' => Game\ResultsWebModel::class,
-        'game/submit' => Game\SubmitWebModel::class,
+        // 'game/submit' => Game\SubmitWebModel::class,
         'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
@@ -53,6 +53,19 @@ class WebServiceModel
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
+        // events
+        'events' => EventListWebModel::class,
+        'event/schedule/groups' => GroupListWebModel::class,
+        'event/schedule/items' => ItemListWebModel::class,
+        'event/schedule/persons' => PersonListWebModel::class,
+        'event/teams' => TeamsWebModel::class,
+        'event/participants' => ParticipantsWebModel::class,
+        // game
+        'game/results' => Game\ResultsWebModel::class,
+        'game/submit' => Game\SubmitWebModel::class,
+        // contest
+        'contest/organizers' => OrganizersWebModel::class,
+        'contest/stats' => StatsWebModel::class,
     ];
 
     public function __construct(
@@ -66,6 +79,7 @@ class WebServiceModel
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $user;
     }
+
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
@@ -141,7 +155,7 @@ class WebServiceModel
 
     /**
      * @throws \ReflectionException
-     * @phpstan-return WebModel<array<string,mixed>,array<string,mixed>>
+     * @phpstan-return WebModel<array<mixed>,array<mixed>>
      */
     private function getWebModel(string $name): ?WebModel
     {
@@ -151,25 +165,11 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
             $model = $reflection->newInstance($this->container);
             $model->setUser($this->user);
             return $model;
         }
         return null;
-    }
-
-    /**
-     * @throws \ReflectionException
-     * @throws BadRequestException
-     * @phpstan-param array<string,mixed> $arguments
-     */
-    public function getJsonResponse(string $name, array $arguments): JsonResponse
-    {
-        $webModel = $this->getWebModel($name);
-        if (!$webModel) {
-            throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
-        }
-        return $webModel->getApiResponse($arguments);
     }
 }

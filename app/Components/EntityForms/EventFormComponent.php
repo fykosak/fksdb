@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -30,7 +31,6 @@ class EventFormComponent extends EntityFormComponent
     public const CONT_EVENT = 'event';
 
     private ContestYearModel $contestYear;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
     private AuthTokenService $authTokenService;
     private EventService $eventService;
 
@@ -41,18 +41,17 @@ class EventFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
         AuthTokenService $authTokenService,
         EventService $eventService
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->eventService = $eventService;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -119,24 +118,25 @@ class EventFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
-    private function createEventContainer(): ModelContainer
+    private function createEventContainer(): ContainerWithOptions
     {
-        return $this->singleReflectionFormFactory->createContainerWithMetadata('event', [
-            'event_type_id' => ['required' => true],
-            'event_year' => ['required' => true],
-            'name' => ['required' => true],
-            'begin' => ['required' => true],
-            'end' => ['required' => true],
-            'registration_begin' => ['required' => false],
-            'registration_end' => ['required' => false],
-            'report_cs' => ['required' => false],
-            'report_en' => ['required' => false],
-            'description_cs' => ['required' => false],
-            'description_en' => ['required' => false],
-            'place' => ['required' => false],
-            'parameters' => ['required' => false],
-        ], null, $this->contestYear->contest);
+        $container = new ModelContainer($this->container, 'event');
+        $container->addField('event_type_id', ['required' => true], null, $this->contestYear->contest);
+        $container->addField('event_year', ['required' => true]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('begin', ['required' => true]);
+        $container->addField('end', ['required' => true]);
+        $container->addField('registration_begin', ['required' => false]);
+        $container->addField('registration_end', ['required' => false]);
+        $container->addField('report_cs', ['required' => false]);
+        $container->addField('report_en', ['required' => false]);
+        $container->addField('description_cs', ['required' => false]);
+        $container->addField('description_en', ['required' => false]);
+        $container->addField('place', ['required' => false]);
+        $container->addField('parameters', ['required' => false]);
+        return $container;
     }
 
     private function updateTokens(EventModel $event): void

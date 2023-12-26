@@ -5,38 +5,35 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Warehouse;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
 /**
  * @phpstan-extends EntityFormComponent<ProductModel>
  */
-class ProductFormComponent extends EntityFormComponent
+final class ProductFormComponent extends EntityFormComponent
 {
-
-    protected ProducerService $producerService;
-    protected ProductService $productService;
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ProducerService $producerService;
+    private ProductService $productService;
 
     public const CONTAINER = 'container';
 
     public function injectServiceProducer(
         ProducerService $producerService,
-        ProductService $productService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ProductService $productService
     ): void {
         $this->producerService = $producerService;
         $this->productService = $productService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
@@ -72,17 +69,17 @@ class ProductFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainerWithMetadata('warehouse_product', [
-            'name_cs' => ['required' => true],
-            'name_en' => ['required' => true],
-            'description_cs' => ['required' => true],
-            'description_en' => ['required' => true],
-            'category' => ['required' => true],
-            'note' => ['required' => true],
-        ]);
+        $container = new ModelContainer($this->container, 'warehouse_product');
+        $container->addField('name_cs', ['required' => true]);
+        $container->addField('name_en', ['required' => true]);
+        $container->addField('description_cs', ['required' => true]);
+        $container->addField('description_en', ['required' => true]);
+        $container->addField('category', ['required' => true]);
+        $container->addField('note', ['required' => true]);
         $producers = [];
         /** @var ProducerModel $producer */
         foreach ($this->producerService->getTable() as $producer) {

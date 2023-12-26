@@ -7,7 +7,7 @@
             <tbody>
             {foreach $roles as $grant}
                 <tr>
-                    <td>{control contestBadge, $grant->getContest()->contest_id}</td>
+                    <td>{FKSDB\Models\UI\ContestBadge::getHtml($grant->getContest())}</td>
                     <td>{$grant->getRoleId()}</td>
                 </tr>
             {/foreach}
@@ -15,7 +15,7 @@
         </table>
     {else}
         <div class="card-body">
-            {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+            {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
         </div>
     {/if}
 {/block}

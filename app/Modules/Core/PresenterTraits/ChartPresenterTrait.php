@@ -23,7 +23,6 @@ trait ChartPresenterTrait
     abstract public function authorizedList(): bool;
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
@@ -42,7 +41,6 @@ trait ChartPresenterTrait
     abstract protected function getCharts(): array;
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
