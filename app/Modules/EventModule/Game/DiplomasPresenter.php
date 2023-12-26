@@ -53,11 +53,11 @@ final class DiplomasPresenter extends BasePresenter
                 'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NOT NULL')
-                    ->count(),
+                    ->count('*'),
                 'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NULL')
-                    ->count(),
+                    ->count('*'),
             ];
         }
         $this->template->items = $items;

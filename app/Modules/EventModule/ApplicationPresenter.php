@@ -115,7 +115,6 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
         switch ($this->getEvent()->event_type_id) {
             case 11:
