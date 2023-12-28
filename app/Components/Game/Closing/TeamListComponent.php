@@ -7,7 +7,6 @@ namespace FKSDB\Components\Game\Closing;
 use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Components\Grids\Components\BaseList;
-use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -39,7 +38,7 @@ class TeamListComponent extends BaseList
      */
     protected function getModels(): TypedGroupedSelection
     {
-        $query = $this->event->getPossiblyAttendingTeams()->order('points');
+        $query = $this->event->getParticipatingTeams()->order('points');
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;
@@ -77,23 +76,23 @@ class TeamListComponent extends BaseList
     protected function configure(): void
     {
         $this->filtered = true;
-        $this->classNameCallback = function (TeamModel2 $team) {
+        $this->mode = self::ModeCard;
+        $this->classNameCallback = function (TeamModel2 $team): string {
             try {
                 $team->canClose();
-                return 'alert alert-info';
+                return 'info';
             } catch (AlreadyClosedException $exception) {
-                return 'alert alert-success';
+                return 'success';
             } catch (NotCheckedSubmitsException $exception) {
-                return 'alert alert-danger';
+                return 'danger';
             }
         };
-        $row1 = $this->createRow();
-        $row1->addComponent(
-            new TemplateItem($this->container, '<b>(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name</b>'),
-            'name'
+        $this->setTitle(
+            new TemplateItem(
+                $this->container,
+                '(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name @fyziklani_team.category @fyziklani_team.state'
+            )
         );
-        $row1->addComponent(new SimpleItem($this->container, '@fyziklani_team.category'), 'category');
-        $row1->addComponent(new SimpleItem($this->container, '@fyziklani_team.state'), 'state');
 
         $row2 = $this->createRow();
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');

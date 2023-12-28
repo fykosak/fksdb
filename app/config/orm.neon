@@ -878,9 +878,11 @@ orm:
                 title: _('Total rank')
                 omitInputField: true
             points:
-                type: string
+                type: int
                 title: _('Points')
                 omitInputField: true
+                nullValueFormat: notSet
+
             game_lang:
                 type: enum
                 class: FKSDB\Models\ORM\Models\Fyziklani\GameLang

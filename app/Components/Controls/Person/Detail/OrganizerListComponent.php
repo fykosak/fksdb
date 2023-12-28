@@ -36,7 +36,7 @@ class OrganizerListComponent extends DetailComponent
 
     protected function configure(): void
     {
-        $this->classNameCallback = fn(OrganizerModel $model) => 'alert alert-' . $model->contest->getContestSymbol();
+        $this->classNameCallback = fn(OrganizerModel $model): string => $model->contest->getContestSymbol();
         $row0 = $this->createRow();
         $row0->addComponent(new SimpleItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(

@@ -33,6 +33,7 @@ final class TaskCodePreprocessor
 
     /**
      * @throws TaskCodeException
+     * @throws NoTaskLeftException
      */
     public function getTask(string $code): TaskModel
     {

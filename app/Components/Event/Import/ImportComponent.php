@@ -6,7 +6,6 @@ namespace FKSDB\Components\Event\Import;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
@@ -82,9 +81,6 @@ final class ImportComponent extends BaseComponent
             }
             $this->connection->commit();
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
-        } catch (ImportHandlerException $exception) {
-            $this->connection->rollBack();
-            $this->getPresenter()->flashMessage(_('Import failed.'), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
