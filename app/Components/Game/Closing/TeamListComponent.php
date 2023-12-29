@@ -90,6 +90,7 @@ class TeamListComponent extends BaseList
         // phpcs:disable
         /** @phpstan-ignore-next-line  */
         $this->setTitle(
+        /** @phpstan-ignore-next-line */
             new TemplateItem(
                 $this->container,
                 '(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name @fyziklani_team.category @fyziklani_team.state'
