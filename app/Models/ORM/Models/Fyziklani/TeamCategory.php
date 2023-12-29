@@ -37,13 +37,13 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::A:
-                return _('High-school students A');
+                return 'A';
             case self::B:
-                return _('High-school students B');
+                return 'B';
             case self::C:
-                return _('High-school students C');
+                return 'C';
             case self::F:
-                return _('Abroad high-school students');
+                return 'F';
             case self::O:
                 return _('Open');
             default:
@@ -90,10 +90,27 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
         return [];
     }
 
+    public function behaviorType(): string
+    {
+        switch ($this->value) {
+            case self::A:
+                return 'danger';
+            case self::B:
+                return 'warning';
+            case self::C:
+                return 'success';
+            case self::O:
+                return 'primary';
+            default:
+                return 'dark';
+        }
+    }
+
     public function badge(): Html
     {
-        // TODO
-        return Html::el('span')->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
     /**

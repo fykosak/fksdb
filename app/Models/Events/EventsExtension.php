@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Events\Exceptions\MachineDefinitionException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Expressions\Helpers;
@@ -56,9 +55,6 @@ class EventsExtension extends CompilerExtension
         )->castTo('array');
     }
 
-    /**
-     * @throws MachineDefinitionException
-     */
     public function loadConfiguration(): void
     {
         parent::loadConfiguration();
@@ -133,9 +129,6 @@ class EventsExtension extends CompilerExtension
         return $keys;
     }
 
-    /**
-     * @throws MachineDefinitionException
-     */
     private function createHolderFactory(string $eventName): ServiceDefinition
     {
         $factory = $this->getContainerBuilder()
