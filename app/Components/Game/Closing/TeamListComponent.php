@@ -87,12 +87,15 @@ class TeamListComponent extends BaseList
                 return 'danger';
             }
         };
+        // phpcs:disable
+        /** @phpstan-ignore-next-line  */
         $this->setTitle(
             new TemplateItem(
                 $this->container,
                 '(@fyziklani_team.fyziklani_team_id) @fyziklani_team.name @fyziklani_team.category @fyziklani_team.state'
             )
         );
+        // phpcs:enable
 
         $row2 = $this->createRow();
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
