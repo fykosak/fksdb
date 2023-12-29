@@ -109,6 +109,10 @@ orm:
                 title: _('Events name')
                 description: _("For the camps, it is its place.")
                 required: true
+            name_new:
+                type: class
+                title: _('Event')
+                class: FKSDB\Models\ORM\Columns\Tables\Event\EventName
             begin:
                 type: dateTime
                 title: _('Event begin')
@@ -166,10 +170,6 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
                 title: _('Event type id')
-            event_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
-                title: _('Event')
         links: []
     event_org:
         service: FKSDB\Models\ORM\Services\EventOrganizerService
