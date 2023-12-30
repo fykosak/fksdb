@@ -3,6 +3,7 @@
 {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[][] $rests}
 {block headline}
     ({$team->fyziklani_team_id}) {$team->name}
+    {var $place = $team->getPlace()}
     {var $teamSeat = $team->getTeamSeat()}
     {if $teamSeat}
         {switch $teamSeat->fyziklani_seat->sector}

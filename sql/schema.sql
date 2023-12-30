@@ -625,8 +625,10 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'half',
         'full'
         )                                NOT NULL DEFAULT 'none',
+    `place`             VARCHAR(16)      NULL     DEFAULT NULL,
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__event__place` (`event_id` ASC, `place` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
