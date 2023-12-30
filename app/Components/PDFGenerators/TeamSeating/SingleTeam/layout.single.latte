@@ -4,17 +4,16 @@
 {block headline}
     ({$team->fyziklani_team_id}) {$team->name}
     {var $place = $team->getPlace()}
-    {var $teamSeat = $team->getTeamSeat()}
-    {if $teamSeat}
-        {switch $teamSeat->fyziklani_seat->sector}
+    {if $place}
+        {switch $place->sector()}
             {case 'A'}
-            <small style="color: #00ae6b">{$team->game_lang->value === 'cs'?'Zelený sektor, místo:':'Green sector, seat'} {$teamSeat->fyziklani_seat->row}{$teamSeat->fyziklani_seat->col}</small>
+            <small style="color: #00ae6b">{$team->game_lang->value === 'cs'?'Zelený sektor, místo:':'Green sector, seat'} {$place->row}{$place->col}</small>
             {case 'B'}
-            <small style="color: #1175da">{$team->game_lang->value === 'cs'?'Modrý sektor, místo:':'Blue sector, seat'} {$teamSeat->fyziklani_seat->row}{$teamSeat->fyziklani_seat->col}</small>
+            <small style="color: #1175da">{$team->game_lang->value === 'cs'?'Modrý sektor, místo:':'Blue sector, seat'} {$place->row}{$place->col}</small>
             {case 'C'}
-            <small style="color: #f2b72b">{$team->game_lang->value === 'cs'?'Žlutý sektor, místo:':'Yellow sector, seat'} {$teamSeat->fyziklani_seat->row}{$teamSeat->fyziklani_seat->col}</small>
+            <small style="color: #f2b72b">{$team->game_lang->value === 'cs'?'Žlutý sektor, místo:':'Yellow sector, seat'} {$place->row}{$place->col}</small>
             {case 'D'}
-            <small style="color: #e6060d">{$team->game_lang->value === 'cs'?'Červený sektor, místo:':'Red sector, seat'} {$teamSeat->fyziklani_seat->row}{$teamSeat->fyziklani_seat->col}</small>
+            <small style="color: #e6060d">{$team->game_lang->value === 'cs'?'Červený sektor, místo:':'Red sector, seat'} {$place->row}{$place->col}</small>
         {/switch}
     {/if}
 {/block}

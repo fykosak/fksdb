@@ -11,18 +11,22 @@ final class Place2022 implements Place
     public int $xLayout;
     public int $yLayout;
     public string $sector;
+    public string $row;
+    public string $col;
 
-    public function __construct(int $xLayout, int $yLayout, string $sector)
+    public function __construct(string $place)
     {
-        $this->yLayout = $yLayout;
-        $this->xLayout = $xLayout;
+        [$sector, $row, $col, $xLayout, $yLayout] = explode(',', $place);
+        $this->yLayout = (int)$yLayout;
+        $this->xLayout = (int)$xLayout;
         $this->sector = $sector;
+        $this->row = $row;
+        $this->col = $col;
     }
 
     public static function fromPlace(string $place): self
     {
-        [$sector, , , $xLayout, $yLayout] = explode(',', $place);
-        return new self((int)$xLayout, (int)$yLayout, (string)$sector);
+        return new self($place);
     }
 
     /**
