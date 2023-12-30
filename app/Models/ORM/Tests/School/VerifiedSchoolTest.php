@@ -15,7 +15,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<SchoolModel>
  */
-class VerifiedSchoolTest extends Test
+final class VerifiedSchoolTest extends Test
 {
     public function getTitle(): Title
     {
@@ -30,15 +30,15 @@ class VerifiedSchoolTest extends Test
     /**
      * @param SchoolModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if (!$model->verified) {
-            $logger->log(new TestMessage(_('School is no verified'), Message::LVL_ERROR));
+            $logger->log(new TestMessage($id, _('School is no verified'), Message::LVL_ERROR));
         }
     }
 
     public function getId(): string
     {
-        return 'SchoolVerified';
+        return 'schoolVerified';
     }
 }

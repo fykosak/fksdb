@@ -30,7 +30,7 @@ abstract class Test
     /**
      * @phpstan-param TModel $model
      */
-    abstract public function run(TestLogger $logger, Model $model): void;
+    abstract public function run(TestLogger $logger, Model $model, string $id): void;
 
     abstract public function getTitle(): Title;
 

@@ -20,7 +20,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<EventModel>
  */
-class NoRoleSchedule extends Test
+final class NoRoleSchedule extends Test
 {
     private PersonService $personService;
 
@@ -32,7 +32,7 @@ class NoRoleSchedule extends Test
     /**
      * @param EventModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $query = $this->personService->getTable()
             ->where(':person_schedule.schedule_item.schedule_group.event_id', $model->event_id)
@@ -50,6 +50,7 @@ class NoRoleSchedule extends Test
             }
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(
                         _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),
@@ -68,6 +69,6 @@ class NoRoleSchedule extends Test
 
     public function getId(): string
     {
-        return 'EventScheduleNoRole';
+        return 'eventScheduleNoRole';
     }
 }

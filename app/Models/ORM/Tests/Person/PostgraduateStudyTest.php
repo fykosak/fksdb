@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonModel>
  */
-class PostgraduateStudyTest extends Test
+final class PostgraduateStudyTest extends Test
 {
 
     public function getTitle(): Title
@@ -32,7 +32,7 @@ class PostgraduateStudyTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $postgraduate */
@@ -46,6 +46,7 @@ class PostgraduateStudyTest extends Test
             if ($postgraduate) {
                 $logger->log(
                     new TestMessage(
+                        $id,
                         sprintf(
                             'Found undergraduate study year %d after postgraduate',
                             $history->ac_year
@@ -59,6 +60,6 @@ class PostgraduateStudyTest extends Test
 
     public function getId(): string
     {
-        return 'PersonPostgraduateStudy';
+        return 'personPostgraduateStudy';
     }
 }

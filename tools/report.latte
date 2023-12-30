@@ -9,7 +9,7 @@
 {var bool $hasError = false}
 {foreach $tests as $test}
     {var FKSDB\Components\DataTest\TestLogger $logger = new FKSDB\Components\DataTest\TestLogger()}
-    {php $test->run($logger,$model)}
+    {php $test->run($logger,$model,'')}
     {var FKSDB\Components\DataTest\TestMessage[] $messages = $logger->getMessages()}
     {if count($messages)}
         {php $hasError = true}

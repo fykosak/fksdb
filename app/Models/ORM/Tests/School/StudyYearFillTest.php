@@ -15,7 +15,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<SchoolModel>
  */
-class StudyYearFillTest extends Test
+final class StudyYearFillTest extends Test
 {
     public function getTitle(): Title
     {
@@ -30,15 +30,15 @@ class StudyYearFillTest extends Test
     /**
      * @param SchoolModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->active && !$model->study_p && !$model->study_h && !$model->study_u) {
-            $logger->log(new TestMessage(_('Missing study years'), Message::LVL_ERROR));
+            $logger->log(new TestMessage($id, _('Missing study years'), Message::LVL_ERROR));
         }
     }
 
     public function getId(): string
     {
-        return 'SchoolStudyYearFill';
+        return 'schoolStudyYearFill';
     }
 }

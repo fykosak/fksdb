@@ -28,7 +28,7 @@ trait TestGridTrait
                 function (Model $person) use ($test): Html {
                     $logger = new TestLogger();
                     /** @phpstan-var TModel $person */
-                    $test->run($logger, $person);
+                    $test->run($logger, $person, '');
                     return self::createHtmlLog($logger);
                 },
                 $test->getTitle()

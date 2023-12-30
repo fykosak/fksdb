@@ -16,16 +16,17 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<TeamModel2>
  */
-class PendingTeams extends Test
+final class PendingTeams extends Test
 {
     /**
      * @param TeamModel2 $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->state->value === TeamState::Pending) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(
                         _('Team "%s"(%d) is still pending! Do something about it!'),
                         $model->name,
@@ -44,6 +45,6 @@ class PendingTeams extends Test
 
     public function getId(): string
     {
-        return 'PendingTeams';
+        return 'pendingTeams';
     }
 }

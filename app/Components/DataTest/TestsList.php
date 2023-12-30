@@ -34,7 +34,7 @@ class TestsList extends BaseComponent
         $data = [];
         foreach ($this->tests as $test) {
             $logger = new TestLogger();
-            $test->run($logger, $model);
+            $test->run($logger, $model, '');
             if (count($logger->getMessages())) {
                 $data[] = [
                     'messages' => $logger->getMessages(),

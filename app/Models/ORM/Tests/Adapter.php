@@ -50,15 +50,20 @@ abstract class Adapter extends Test
     /**
      * @param TOriginalModel $model
      */
-    final public function run(TestLogger $logger, Model $model): void
+    final public function run(TestLogger $logger, Model $model, string $id): void
     {
         $models = $this->getModels($model);
         foreach ($models as $testedModel) {
             $subLogger = new TestLogger();
-            $this->test->run($subLogger, $testedModel);
+            $this->test->run(
+                $subLogger,
+                $testedModel,
+                $this->test->getId()
+            );
             foreach ($subLogger->getMessages() as $message) {
                 $logger->log(
                     new TestMessage(
+                        $this->getId() . sprintf('(%d)', $testedModel->getPrimary()) . '-' . $message->id,
                         $this->getLogPrepend($testedModel),
                         $message->level,
                         $message,

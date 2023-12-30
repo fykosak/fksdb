@@ -24,12 +24,12 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel>
  */
-class ConflictRole extends Test
+final class ConflictRole extends Test
 {
     /**
      * @param TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $person = $model->person;
         if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
@@ -59,6 +59,7 @@ class ConflictRole extends Test
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(
                         _('Has conflict role %s.'),
                         join(', ', array_map(fn(EventRole $role) => $role->getRoleId(), $roles))
@@ -76,6 +77,6 @@ class ConflictRole extends Test
 
     public function getId(): string
     {
-        return 'ConflictRole';
+        return 'conflictRole';
     }
 }

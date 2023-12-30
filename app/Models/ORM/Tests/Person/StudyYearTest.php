@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonModel>
  */
-class StudyYearTest extends Test
+final class StudyYearTest extends Test
 {
     public function getTitle(): Title
     {
@@ -31,7 +31,7 @@ class StudyYearTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel[] $data */
@@ -43,10 +43,11 @@ class StudyYearTest extends Test
             }
         }
 
-        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger) {
+        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger, $id) {
             if ($last && $last->getGraduationYear() !== $datum->getGraduationYear()) {
                 $logger->log(
                     new TestMessage(
+                        $id,
                         sprintf(
                             'In %d expected graduation "%s" given "%s"',
                             $datum->ac_year,
@@ -63,6 +64,6 @@ class StudyYearTest extends Test
 
     public function getId(): string
     {
-        return 'PersonStudyYear';
+        return 'personStudyYear';
     }
 }

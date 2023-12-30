@@ -17,12 +17,13 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonModel>
  */
-class SchoolChangeTest extends Test
+final class SchoolChangeTest extends Test
 {
     public function getTitle(): Title
     {
         return new Title(null, _('School change'));
     }
+
     public function getDescription(): ?string
     {
         return _('Check if person changes primary school or high school during the study.');
@@ -31,7 +32,7 @@ class SchoolChangeTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var SchoolModel|null $highSchool */
@@ -42,23 +43,24 @@ class SchoolChangeTest extends Test
         foreach ($histories as $history) {
             if ($history->study_year_new->isPrimarySchool()) {
                 if ($primarySchool && $history->school_id && $primarySchool->school_id !== $history->school_id) {
-                    $this->addErrorChange($logger, $history);
+                    $this->addErrorChange($logger, $history, $id);
                 }
                 $primarySchool = $history->school ?? $primarySchool;
             }
             if ($history->study_year_new->isHighSchool()) {
                 if ($highSchool && $history->school_id && $highSchool->school_id !== $history->school_id) {
-                    $this->addErrorChange($logger, $history);
+                    $this->addErrorChange($logger, $history, $id);
                 }
                 $highSchool = $history->school ?? $highSchool;
             }
         }
     }
 
-    private function addErrorChange(TestLogger $logger, PersonHistoryModel $history): void
+    private function addErrorChange(TestLogger $logger, PersonHistoryModel $history, string $id): void
     {
         $logger->log(
             new TestMessage(
+                $id,
                 sprintf(
                     _('School changed in year %d'),
                     $history->ac_year
@@ -70,6 +72,6 @@ class SchoolChangeTest extends Test
 
     public function getId(): string
     {
-        return 'PersonSchoolChange';
+        return 'personSchoolChange';
     }
 }

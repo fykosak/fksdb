@@ -134,7 +134,7 @@ class DataTestFactory
         $log = [];
         foreach ($tests as $test) {
             $logger = new TestLogger();
-            $test->run($logger, $model);
+            $test->run($logger, $model, '');
             $testLog = $logger->getMessages();
             if (count($testLog)) {
                 $log[$test->getId()] = $testLog;

@@ -6,10 +6,10 @@ namespace FKSDB\Models\ORM\Tests\Event\Team;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -17,12 +17,12 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<TeamModel2>
  */
-class CategoryCheck extends Test
+final class CategoryCheck extends Test
 {
     /**
      * @param TeamModel2 $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->event->event_type_id === 1) {
             $processing = new FOFCategoryProcessing($this->container);
@@ -37,6 +37,7 @@ class CategoryCheck extends Test
             if ($actual !== $calculated) {
                 $logger->log(
                     new TestMessage(
+                        $id,
                         sprintf(
                             _('Wrong category, actual %s calculated %s'),
                             $actual,
@@ -49,6 +50,7 @@ class CategoryCheck extends Test
         } catch (\Throwable $exception) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     $exception->getMessage(),
                     Message::LVL_ERROR
                 )

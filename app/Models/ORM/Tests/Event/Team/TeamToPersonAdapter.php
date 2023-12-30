@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 /**
  * @phpstan-extends Adapter<TeamModel2,PersonModel>
  */
-class TeamToPersonAdapter extends Adapter
+final class TeamToPersonAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -39,6 +39,6 @@ class TeamToPersonAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'Person' . $this->test->getId();
+        return 'teamToPerson';
     }
 }

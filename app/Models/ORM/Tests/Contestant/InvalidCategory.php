@@ -18,12 +18,12 @@ use Nette\InvalidArgumentException;
 /**
  * @phpstan-extends Test<ContestantModel>
  */
-class InvalidCategory extends Test
+final class InvalidCategory extends Test
 {
     /**
      * @throws BadRequestException
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $model->getContestYear());
         try {
@@ -31,6 +31,7 @@ class InvalidCategory extends Test
             if ($model->contest_category->contest_category_id !== $expected->contest_category_id) {
                 $logger->log(
                     new TestMessage(
+                        $id,
                         sprintf(
                             _('Invalid category, expected: %s, given: %s.'),
                             $expected->label,
@@ -43,6 +44,7 @@ class InvalidCategory extends Test
         } catch (InvalidArgumentException $exception) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     _('Invalid category, check study year!'),
                     Message::LVL_WARNING
                 )
@@ -57,6 +59,6 @@ class InvalidCategory extends Test
 
     public function getId(): string
     {
-        return 'InactiveContest';
+        return 'inactiveContest';
     }
 }

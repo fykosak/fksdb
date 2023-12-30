@@ -21,7 +21,7 @@ use Fykosak\Utils\UI\Title;
  * @phpstan-extends Test<PersonModel>
  * @phpstan-type TContestYears array<int,array<int,ContestYearModel>>
  */
-class ParticipantsDurationTest extends Test
+final class ParticipantsDurationTest extends Test
 {
 
     private const CONTESTS = [
@@ -42,7 +42,7 @@ class ParticipantsDurationTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         $data = [
             'event participant' => self::getEventParticipant($model),
@@ -73,6 +73,7 @@ class ParticipantsDurationTest extends Test
             }
             $logger->log(
                 new TestMessage(
+                    $id,
                     \sprintf(_('Person participated %d years in contestId %d (and its events)'), $delta, $contestId),
                     $level
                 )
@@ -95,7 +96,7 @@ class ParticipantsDurationTest extends Test
 
     public function getId(): string
     {
-        return 'PersonParticipantsDuration';
+        return 'personParticipantsDuration';
     }
 
     /**

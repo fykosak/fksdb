@@ -15,12 +15,12 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<ScheduleItemModel>
  */
-class RunOutCapacity extends Test
+final class RunOutCapacity extends Test
 {
     /**
      * @param ScheduleItemModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if (is_null($model->capacity)) {
             return;
@@ -30,6 +30,7 @@ class RunOutCapacity extends Test
         if ($used > $total * 0.9) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     _('Item has less then 10% free capacity'),
                     Message::LVL_WARNING
                 )
@@ -44,6 +45,6 @@ class RunOutCapacity extends Test
 
     public function getId(): string
     {
-        return 'RunOutCapacity';
+        return 'runOutCapacity';
     }
 }

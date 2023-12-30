@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonHistoryModel>
  */
-class SetSchoolTest extends Test
+final class SetSchoolTest extends Test
 {
     public function getTitle(): Title
     {
@@ -31,17 +31,18 @@ class SetSchoolTest extends Test
     /**
      * @param PersonHistoryModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    public function run(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->study_year_new->value !== StudyYear::None && !$model->school_id) {
-            $this->addError($logger, $model);
+            $this->addError($logger, $model, $id);
         }
     }
 
-    private function addError(TestLogger $logger, PersonHistoryModel $history): void
+    private function addError(TestLogger $logger, PersonHistoryModel $history, string $id): void
     {
         $logger->log(
             new TestMessage(
+                $id,
                 sprintf(
                     _('School is required for primary and high school study in year %d'),
                     $history->ac_year
@@ -52,6 +53,6 @@ class SetSchoolTest extends Test
     }
     public function getId(): string
     {
-        return 'PersonHistorySetSchool';
+        return 'personHistorySetSchool';
     }
 }
