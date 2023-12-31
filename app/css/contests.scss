@@ -51,12 +51,6 @@
 [data-style-id="event-type-1"] {
   --fks-page-theme-color: #{$fof-color};
   @include page-theme($fof-color);
-
-  main {
- //   background-image: url(./../../www/images/contests/fof.svg);
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
 }
 
 [data-style-id="event-type-2"], [data-style-id~="event-type-14"] {

@@ -53,7 +53,11 @@ class AllSubmitsGrid extends BaseGrid
         /** @phpstan-ignore-next-line */
         $this->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
+            new TemplateItem(
+                $this->container,
+                '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)',
+                '@fyziklani_team.name:title'
+            ),
             'name_n_id'
         );
         $this->addSimpleReferencedColumns(
@@ -73,7 +77,7 @@ class AllSubmitsGrid extends BaseGrid
             $this->addPresenterButton(
                 ':Game:Submit:edit',
                 'edit',
-                new Title(null, _('button.edit')),
+                new Title(null, _('button.fyziklaniSubmit.edit')),
                 false,
                 ['id' => 'fyziklani_submit_id']
             );

@@ -14,8 +14,8 @@
         {foreach $persons as $person}
             <tr>
                 <td><b>{$person->getFullName()}</b></td>
-                <td>{control valuePrinter:templateString '@person_info.pizza', $person->getInfo(), 1024}</td>
-                <td>{control valuePrinter:templateString '@person_info.isic_number', $person->getInfo(), 1024}</td>
+                <td>{control valuePrinter:column '@person_info.pizza', $person->getInfo(), 1024}</td>
+                <td>{control valuePrinter:column '@person_info.isic_number', $person->getInfo(), 1024}</td>
             </tr>
         {/foreach}
         </tbody>

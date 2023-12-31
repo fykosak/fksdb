@@ -6,7 +6,7 @@
         {varType FKSDB\Models\ORM\Models\SchoolModel[]|Fykosak\Utils\Logging\Message[][][] $log}
         <div class="panel color-auto">
             <div class="container">
-                <h2> {control printer:templateString '@school.school',$log['model'],1024}</h2>
+                <h2> {control printer:column '@school.school',$log['model'],1024}</h2>
                 {control printer:button 'school.edit',$log['model']}
                 {control printer:button 'school.detail',$log['model']}
                 {foreach $log['logs'] as $key => $testLogs}

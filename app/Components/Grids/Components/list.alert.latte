@@ -10,7 +10,7 @@
 {block innerContent}
     {if count($models)}
         {foreach $models as $model}
-            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+            {var string $className = $classNameCallback?'alert alert-'.($classNameCallback)($model):''}
             <div class="{$className}">
                 {if $control->getComponent('title',false)}
                     <h4>{control title $model,$userPermission}</h4>
