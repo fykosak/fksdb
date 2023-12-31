@@ -21,7 +21,7 @@ abstract class Test
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->skippedTests = $this->container->getParameters()['skippedTests'];
+        $this->skippedTests = $this->container->getParameters()['skippedTests'] ?? [];
         $container->callInjects($this);
     }
 
