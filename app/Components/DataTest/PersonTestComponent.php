@@ -61,7 +61,7 @@ class PersonTestComponent extends BaseComponent
         $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
         foreach (DataTestFactory::getPersonTests($this->container) as $index => $test) {
-            $field = $testsContainer->addCheckbox($index, $test->getTitle()->toHtml());
+            $field = $testsContainer->addCheckbox((string)$index, $test->getTitle()->toHtml());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
