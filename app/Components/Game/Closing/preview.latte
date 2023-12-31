@@ -2,18 +2,29 @@
 {varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $canClose}
 {block content}
-    <h2>{_'Submits'}</h2>
-    {control teamSubmitsGrid}
-
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Submits'}</h2>
+            {control teamSubmitsGrid}
+        </div>
+    </div>
     {if $event->event_type_id === 1}
-        <h2>{_'Top problem on distributors table'}</h2>
-        <span>{$task?$task->label:'XX'}</span>
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Top problem on distributors table'}: <span class="text-success">{$task?$task->label:'XX'}</span>
+                </h2>
+            </div>
+        </div>
     {/if}
-    {if $canClose}
-        <h2>{_'Close'}</h2>
-        <a class="btn btn-outline-success" href="{link close!}">{_'Close submitting!'}</a>
-    {else}
-        <h2 class="text-danger">{_'Close without check'}</h2>
-        <a class="btn btn-outline-danger" href="{link close!}">{_'Confirm and close submitting!'}</a>
-    {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            {if $canClose}
+                <h2>{_'Close'}</h2>
+                <a class="btn btn-outline-success" href="{link close!}">{_'Close submitting!'}</a>
+            {else}
+                <h2 class="text-danger">{_'Close without check'}</h2>
+                <a class="btn btn-outline-danger" href="{link close!}">{_'Confirm and close submitting!'}</a>
+            {/if}
+        </div>
+    </div>
 {/block}

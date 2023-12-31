@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event\Schedule;
 
-use FKSDB\Models\ORM\Tests\Adapter;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<ScheduleGroupModel,ScheduleItemModel>
  */
-class ItemAdapter extends Adapter
+final class ItemAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -26,6 +26,6 @@ class ItemAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'ScheduleItem' . $this->test->getId();
+        return 'scheduleGroupToItem';
     }
 }

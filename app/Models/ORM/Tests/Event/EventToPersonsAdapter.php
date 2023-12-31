@@ -16,7 +16,7 @@ use Fykosak\NetteORM\Model\Model;
 /**
  * @phpstan-extends Adapter<EventModel,TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel>
  */
-class EventToPersonsAdapter extends Adapter
+final class EventToPersonsAdapter extends Adapter
 {
     /**
      * @param EventModel $model
@@ -54,6 +54,6 @@ class EventToPersonsAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'persons' . $this->test->getId();
+        return 'eventToPersons';
     }
 }

@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model\Model;
 /**
  * @phpstan-extends Adapter<EventModel,ScheduleItemModel>
  */
-class ScheduleItemAdapter extends Adapter
+final class ScheduleItemAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -35,6 +35,6 @@ class ScheduleItemAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'ScheduleItem' . $this->test->getId();
+        return 'eventToItem';
     }
 }

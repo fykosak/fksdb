@@ -50,7 +50,7 @@ abstract class Adapter extends Test
     /**
      * @param TOriginalModel $model
      */
-    final public function run(TestLogger $logger, Model $model): void
+    final protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $models = $this->getModels($model);
         foreach ($models as $testedModel) {
@@ -59,6 +59,7 @@ abstract class Adapter extends Test
             foreach ($subLogger->getMessages() as $message) {
                 $logger->log(
                     new TestMessage(
+                        $id . '-' . $message->id,
                         $this->getLogPrepend($testedModel),
                         $message->level,
                         $message,
