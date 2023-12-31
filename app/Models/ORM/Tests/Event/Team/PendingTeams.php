@@ -21,12 +21,12 @@ final class PendingTeams extends Test
     /**
      * @param TeamModel2 $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->state->value === TeamState::Pending) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     sprintf(
                         _('Team "%s"(%d) is still pending! Do something about it!'),
                         $model->name,

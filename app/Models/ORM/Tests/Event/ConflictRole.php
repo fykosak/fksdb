@@ -29,7 +29,7 @@ final class ConflictRole extends Test
     /**
      * @param TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $person = $model->person;
         if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
@@ -59,7 +59,7 @@ final class ConflictRole extends Test
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     sprintf(
                         _('Has conflict role %s.'),
                         join(', ', array_map(fn(EventRole $role) => $role->getRoleId(), $roles))

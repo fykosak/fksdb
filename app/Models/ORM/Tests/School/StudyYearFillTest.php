@@ -27,13 +27,10 @@ final class StudyYearFillTest extends Test
         return _('Check if school has filled any of study types (study_* fields)');
     }
 
-    /**
-     * @param SchoolModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->active && !$model->study_p && !$model->study_h && !$model->study_u) {
-            $logger->log(new TestMessage($this->formatId($model), _('Missing study years'), Message::LVL_ERROR));
+            $logger->log(new TestMessage($id, _('Missing study years'), Message::LVL_ERROR));
         }
     }
 

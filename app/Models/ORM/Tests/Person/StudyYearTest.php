@@ -28,14 +28,8 @@ final class StudyYearTest extends Test
         return _('Compares graduation years of each year, checks if they are the same.');
     }
 
-    /**
-     * @param PersonModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        if ($this->skip($model)) {
-            return;
-        }
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel[] $data */
         $data = [];
@@ -46,11 +40,11 @@ final class StudyYearTest extends Test
             }
         }
 
-        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger, $model) {
+        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger, $id) {
             if ($last && $last->getGraduationYear() !== $datum->getGraduationYear()) {
                 $logger->log(
                     new TestMessage(
-                        $this->formatId($model),
+                        $id,
                         sprintf(
                             'In %d expected graduation "%s" given "%s"',
                             $datum->ac_year,

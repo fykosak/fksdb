@@ -17,15 +17,12 @@ use Fykosak\Utils\UI\Title;
  */
 final class InActiveContest extends Test
 {
-    /**
-     * @param ContestYearModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if (!$model->isActive()) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     sprintf(_('Contest %s has not open submitting, please upload tasks!'), $model->contest->name),
                     Message::LVL_ERROR
                 )

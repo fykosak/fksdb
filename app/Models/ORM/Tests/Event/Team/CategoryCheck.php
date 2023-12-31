@@ -19,10 +19,7 @@ use Fykosak\Utils\UI\Title;
  */
 final class CategoryCheck extends Test
 {
-    /**
-     * @param TeamModel2 $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->event->event_type_id === 1) {
             $processing = new FOFCategoryProcessing($this->container);
@@ -37,7 +34,7 @@ final class CategoryCheck extends Test
             if ($actual !== $calculated) {
                 $logger->log(
                     new TestMessage(
-                        $this->formatId($model),
+                        $id,
                         sprintf(
                             _('Wrong category, actual %s calculated %s'),
                             $actual,
@@ -50,7 +47,7 @@ final class CategoryCheck extends Test
         } catch (\Throwable $exception) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     $exception->getMessage(),
                     Message::LVL_ERROR
                 )

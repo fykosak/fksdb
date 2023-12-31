@@ -50,9 +50,8 @@ abstract class Adapter extends Test
     /**
      * @param TOriginalModel $model
      */
-    final public function run(TestLogger $logger, Model $model): void
+    final protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        $id = $this->formatId($model);
         $models = $this->getModels($model);
         foreach ($models as $testedModel) {
             $subLogger = new TestLogger();

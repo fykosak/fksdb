@@ -28,10 +28,7 @@ final class GenderFromBornNumberTest extends Test
         return _('Tests, if gender matches born ID');
     }
 
-    /**
-     * @param PersonModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         try {
             $info = $model->getInfo();
@@ -39,16 +36,16 @@ final class GenderFromBornNumberTest extends Test
                 return;
             }
             if (!$model->gender->value) {
-                $logger->log(new TestMessage($this->formatId($model), _('Gender is not set'), Message::LVL_WARNING));
+                $logger->log(new TestMessage($id, _('Gender is not set'), Message::LVL_WARNING));
                 return;
             }
             if (BornIdColumnFactory::getGender($info->born_id)->value !== $model->gender->value) {
                 $logger->log(
-                    new TestMessage($this->formatId($model), _('Gender do not match born Id'), Message::LVL_ERROR)
+                    new TestMessage($id, _('Gender do not match born Id'), Message::LVL_ERROR)
                 );
             }
         } catch (\Throwable$exception) {
-            $logger->log(new TestMessage($this->formatId($model), $exception->getMessage(), Message::LVL_ERROR));
+            $logger->log(new TestMessage($id, $exception->getMessage(), Message::LVL_ERROR));
         }
     }
 

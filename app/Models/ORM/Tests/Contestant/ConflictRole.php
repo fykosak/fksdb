@@ -19,13 +19,10 @@ use Fykosak\Utils\UI\Title;
  */
 final class ConflictRole extends Test
 {
-    /**
-     * @param ContestantModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        self::checkEventOrganizer($model, $logger, $this->formatId($model));
-        self::checkOrganizer($model, $logger, $this->formatId($model));
+        self::checkEventOrganizer($model, $logger, $id);
+        self::checkOrganizer($model, $logger, $id);
     }
 
     public function getTitle(): Title

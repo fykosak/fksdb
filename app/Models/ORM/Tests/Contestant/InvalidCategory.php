@@ -23,7 +23,7 @@ final class InvalidCategory extends Test
     /**
      * @throws BadRequestException
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $model->getContestYear());
         try {
@@ -31,7 +31,7 @@ final class InvalidCategory extends Test
             if ($model->contest_category->contest_category_id !== $expected->contest_category_id) {
                 $logger->log(
                     new TestMessage(
-                        $this->formatId($model),
+                        $id,
                         sprintf(
                             _('Invalid category, expected: %s, given: %s.'),
                             $expected->label,
@@ -44,7 +44,7 @@ final class InvalidCategory extends Test
         } catch (InvalidArgumentException $exception) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     _('Invalid category, check study year!'),
                     Message::LVL_WARNING
                 )

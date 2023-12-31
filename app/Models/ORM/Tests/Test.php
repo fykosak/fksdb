@@ -33,30 +33,21 @@ abstract class Test
     /**
      * @phpstan-param TModel $model
      */
-    abstract public function run(TestLogger $logger, Model $model): void;
+    final public function run(TestLogger $logger, Model $model): void
+    {
+        $id = $this->getId() . '(' . $model->getPrimary() . ')';
+        if (in_array($id, $this->skippedTests, true)) {
+            return;
+        }
+        $this->innerRun($logger, $model, $id);
+    }
+
+    /**
+     * @phpstan-param TModel $model
+     */
+    abstract protected function innerRun(TestLogger $logger, Model $model, string $id): void;
 
     abstract public function getTitle(): Title;
 
     abstract public function getId(): string;
-
-    /**
-     * @phpstan-param TModel $model
-     */
-    protected function formatId(Model $model): string
-    {
-        return $this->getId() . '(' . $model->getPrimary() . ')';
-    }
-
-    /**
-     * @phpstan-param TModel $model
-     */
-    protected function skip(Model $model): bool
-    {
-        foreach ($this->skippedTests as $test) {
-            if ($this->formatId($model) === $test) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

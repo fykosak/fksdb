@@ -28,29 +28,22 @@ final class SetSchoolTest extends Test
         return _('Checks if school is filled when study year is filled.');
     }
 
-    /**
-     * @param PersonHistoryModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->study_year_new->value !== StudyYear::None && !$model->school_id) {
-            $this->addError($logger, $model);
+            $logger->log(
+                new TestMessage(
+                    $id,
+                    sprintf(
+                        _('School is required for primary and high school study in year %d'),
+                        $model->ac_year
+                    ),
+                    Message::LVL_ERROR
+                )
+            );
         }
     }
 
-    private function addError(TestLogger $logger, PersonHistoryModel $history): void
-    {
-        $logger->log(
-            new TestMessage(
-                $this->formatId($history),
-                sprintf(
-                    _('School is required for primary and high school study in year %d'),
-                    $history->ac_year
-                ),
-                Message::LVL_ERROR
-            )
-        );
-    }
     public function getId(): string
     {
         return 'personHistorySetSchool';

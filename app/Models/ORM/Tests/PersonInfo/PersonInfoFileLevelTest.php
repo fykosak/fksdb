@@ -63,9 +63,9 @@ final class PersonInfoFileLevelTest extends Test
      * @param PersonInfoModel $model
      * @throws BadTypeException
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        $this->getRowFactory()->runTest($logger, $model, $this->formatId($model));
+        $this->getRowFactory()->runTest($logger, $model, $id);
     }
 
     public function getId(): string

@@ -42,7 +42,7 @@ final class ParticipantsDurationTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $data = [
             'event participant' => self::getEventParticipant($model),
@@ -73,7 +73,7 @@ final class ParticipantsDurationTest extends Test
             }
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     \sprintf(_('Person participated %d years in contestId %d (and its events)'), $delta, $contestId),
                     $level
                 )

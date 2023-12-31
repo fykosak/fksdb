@@ -17,10 +17,7 @@ use Fykosak\Utils\UI\Title;
  */
 final class RunOutCapacity extends Test
 {
-    /**
-     * @param ScheduleItemModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if (is_null($model->capacity)) {
             return;
@@ -30,7 +27,7 @@ final class RunOutCapacity extends Test
         if ($used > $total * 0.9) {
             $logger->log(
                 new TestMessage(
-                    $this->formatId($model),
+                    $id,
                     _('Item has less then 10% free capacity'),
                     Message::LVL_WARNING
                 )
