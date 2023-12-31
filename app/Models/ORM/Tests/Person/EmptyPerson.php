@@ -66,14 +66,14 @@ final class EmptyPerson extends Test
         return self::$refTables;
     }
 
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         foreach ($this->getReferencingTables() as $table => $column) {
             if ($model->related($table, $column)->fetch()) {
                 return;
             }
         }
-        $logger->log(new TestMessage($id, _('Person is empty!'), Message::LVL_WARNING));
+        $logger->log(new TestMessage($this->formatId($model), _('Person is empty!'), Message::LVL_WARNING));
     }
 
     public function getTitle(): Title

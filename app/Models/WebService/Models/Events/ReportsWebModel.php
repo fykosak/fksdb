@@ -47,7 +47,7 @@ class ReportsWebModel extends WebModel
         $tests = DataTestFactory::getEventTests($this->container);
         $logger = new TestLogger();
         foreach ($tests as $test) {
-            $test->run($logger, $event, '');
+            $test->run($logger, $event);
         }
         return array_map(
             fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],

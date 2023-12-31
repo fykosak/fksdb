@@ -28,7 +28,7 @@ class SchoolsReportsWebModel extends WebModel
         $tests = SchoolModel::getTests($this->container);
         $logger = new TestLogger();
         foreach ($tests as $test) {
-            $test->run($logger, $this->user->getIdentity(), ''); //@phpstan-ignore-line
+            $test->run($logger, $this->user->getIdentity()); //@phpstan-ignore-line
         }
         return array_map(
             fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],

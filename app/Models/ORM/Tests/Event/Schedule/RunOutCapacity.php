@@ -20,7 +20,7 @@ final class RunOutCapacity extends Test
     /**
      * @param ScheduleItemModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (is_null($model->capacity)) {
             return;
@@ -30,7 +30,7 @@ final class RunOutCapacity extends Test
         if ($used > $total * 0.9) {
             $logger->log(
                 new TestMessage(
-                    $id,
+                    $this->formatId($model),
                     _('Item has less then 10% free capacity'),
                     Message::LVL_WARNING
                 )

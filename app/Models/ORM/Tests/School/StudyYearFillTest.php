@@ -30,10 +30,10 @@ final class StudyYearFillTest extends Test
     /**
      * @param SchoolModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if ($model->active && !$model->study_p && !$model->study_h && !$model->study_u) {
-            $logger->log(new TestMessage($id, _('Missing study years'), Message::LVL_ERROR));
+            $logger->log(new TestMessage($this->formatId($model), _('Missing study years'), Message::LVL_ERROR));
         }
     }
 

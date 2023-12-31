@@ -31,24 +31,24 @@ final class StudyTypeTest extends Test
     /**
      * @param PersonHistoryModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if ($model->school) {
             if ($model->study_year_new->isPrimarySchool() && !$model->school->study_p) {
-                $this->addError($logger, $model, $id);
+                $this->addError($logger, $model);
             } elseif ($model->study_year_new->isHighSchool() && !$model->school->study_h) {
-                $this->addError($logger, $model, $id);
+                $this->addError($logger, $model);
             } elseif ($model->study_year_new->value === StudyYear::UniversityAll && !$model->school->study_u) {
-                $this->addError($logger, $model, $id);
+                $this->addError($logger, $model);
             }
         }
     }
 
-    private function addError(TestLogger $logger, PersonHistoryModel $history, string $id): void
+    private function addError(TestLogger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
             new TestMessage(
-                $id,
+                $this->formatId($history),
                 sprintf(
                     _('School "%s" does not teach %s study year.'),
                     $history->school->name,

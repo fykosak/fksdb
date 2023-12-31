@@ -32,7 +32,7 @@ final class PostgraduateStudyTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel|null $postgraduate */
@@ -46,7 +46,7 @@ final class PostgraduateStudyTest extends Test
             if ($postgraduate) {
                 $logger->log(
                     new TestMessage(
-                        $id,
+                        $this->formatId($model),
                         sprintf(
                             'Found undergraduate study year %d after postgraduate',
                             $history->ac_year

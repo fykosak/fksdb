@@ -31,18 +31,18 @@ final class SetSchoolTest extends Test
     /**
      * @param PersonHistoryModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if ($model->study_year_new->value !== StudyYear::None && !$model->school_id) {
-            $this->addError($logger, $model, $id);
+            $this->addError($logger, $model);
         }
     }
 
-    private function addError(TestLogger $logger, PersonHistoryModel $history, string $id): void
+    private function addError(TestLogger $logger, PersonHistoryModel $history): void
     {
         $logger->log(
             new TestMessage(
-                $id,
+                $this->formatId($history),
                 sprintf(
                     _('School is required for primary and high school study in year %d'),
                     $history->ac_year

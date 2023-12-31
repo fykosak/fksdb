@@ -31,8 +31,11 @@ final class StudyYearTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
+        if ($this->skip($model)) {
+            return;
+        }
         $histories = $model->getHistories()->order('ac_year');
         /** @var PersonHistoryModel[] $data */
         $data = [];
@@ -43,11 +46,11 @@ final class StudyYearTest extends Test
             }
         }
 
-        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger, $id) {
+        array_reduce($data, function (?PersonHistoryModel $last, PersonHistoryModel $datum) use ($logger, $model) {
             if ($last && $last->getGraduationYear() !== $datum->getGraduationYear()) {
                 $logger->log(
                     new TestMessage(
-                        $id,
+                        $this->formatId($model),
                         sprintf(
                             'In %d expected graduation "%s" given "%s"',
                             $datum->ac_year,

@@ -32,7 +32,7 @@ final class NoRoleSchedule extends Test
     /**
      * @param EventModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $query = $this->personService->getTable()
             ->where(':person_schedule.schedule_item.schedule_group.event_id', $model->event_id)
@@ -50,7 +50,7 @@ final class NoRoleSchedule extends Test
             }
             $logger->log(
                 new TestMessage(
-                    $id,
+                    $this->formatId($model),
                     sprintf(
                         _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),

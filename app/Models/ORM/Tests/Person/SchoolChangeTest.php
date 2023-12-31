@@ -32,7 +32,7 @@ final class SchoolChangeTest extends Test
     /**
      * @param PersonModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         $histories = $model->getHistories()->order('ac_year');
         /** @var SchoolModel|null $highSchool */
@@ -43,13 +43,13 @@ final class SchoolChangeTest extends Test
         foreach ($histories as $history) {
             if ($history->study_year_new->isPrimarySchool()) {
                 if ($primarySchool && $history->school_id && $primarySchool->school_id !== $history->school_id) {
-                    $this->addErrorChange($logger, $history, $id);
+                    $this->addErrorChange($logger, $history, $this->formatId($model));
                 }
                 $primarySchool = $history->school ?? $primarySchool;
             }
             if ($history->study_year_new->isHighSchool()) {
                 if ($highSchool && $history->school_id && $highSchool->school_id !== $history->school_id) {
-                    $this->addErrorChange($logger, $history, $id);
+                    $this->addErrorChange($logger, $history, $this->formatId($model));
                 }
                 $highSchool = $history->school ?? $highSchool;
             }

@@ -17,7 +17,7 @@ try {
     $test = new EmptyPerson($container);
     $logger = new TestLogger();
     foreach ($service->getTable() as $person) {
-        $test->run($logger, $person, '');
+        $test->run($logger, $person);
     }
 } catch (\Throwable $exception) {
     echo get_class($exception) . "\n";

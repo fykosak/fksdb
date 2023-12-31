@@ -30,10 +30,10 @@ final class VerifiedSchoolTest extends Test
     /**
      * @param SchoolModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (!$model->verified) {
-            $logger->log(new TestMessage($id, _('School is no verified'), Message::LVL_ERROR));
+            $logger->log(new TestMessage($this->formatId($model), _('School is no verified'), Message::LVL_ERROR));
         }
     }
 

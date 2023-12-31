@@ -22,10 +22,10 @@ final class ConflictRole extends Test
     /**
      * @param ContestantModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
-        self::checkEventOrganizer($model, $logger);
-        self::checkOrganizer($model, $logger, $this->getId());
+        self::checkEventOrganizer($model, $logger, $this->formatId($model));
+        self::checkOrganizer($model, $logger, $this->formatId($model));
     }
 
     public function getTitle(): Title
@@ -38,7 +38,7 @@ final class ConflictRole extends Test
         return 'conflictRole';
     }
 
-    private function checkEventOrganizer(ContestantModel $contestant, TestLogger $logger): void
+    private function checkEventOrganizer(ContestantModel $contestant, TestLogger $logger, string $id): void
     {
         $contestYear = $contestant->getContestYear();
         /** @var EventOrganizerModel $eventOrganizer */
@@ -50,7 +50,7 @@ final class ConflictRole extends Test
             ) {
                 $logger->log(
                     new TestMessage(
-                        $this->getId(),
+                        $id,
                         sprintf(
                             _('Conflict role Contestant and EventOrganizer on event %s(%s)'),
                             $eventOrganizer->event->name,

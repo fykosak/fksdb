@@ -20,12 +20,12 @@ final class InActiveContest extends Test
     /**
      * @param ContestYearModel $model
      */
-    public function run(TestLogger $logger, Model $model, string $id): void
+    public function run(TestLogger $logger, Model $model): void
     {
         if (!$model->isActive()) {
             $logger->log(
                 new TestMessage(
-                    $id,
+                    $this->formatId($model),
                     sprintf(_('Contest %s has not open submitting, please upload tasks!'), $model->contest->name),
                     Message::LVL_ERROR
                 )
