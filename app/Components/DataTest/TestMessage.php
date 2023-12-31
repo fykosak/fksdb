@@ -5,19 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 class TestMessage
 {
     /** @var Html|string */
     public $text;
+    public string $id;
     public string $level;
     public ?self $parent;
 
     /**
      * @param Html|string $text
      */
-    public function __construct($text, string $level, ?self $parent = null)
+    public function __construct(string $id, $text, string $level, ?self $parent = null)
     {
+        $this->id = $id;
         $this->text = $text;
         $this->level = $level;
         $this->parent = $parent;

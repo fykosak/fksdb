@@ -9,5 +9,5 @@ use Fykosak\NetteORM\Model\Model;
 
 interface TestedColumnFactory
 {
-    public function runTest(TestLogger $logger, Model $model): void;
+    public function runTest(TestLogger $logger, Model $model, string $id): void;
 }

@@ -22,27 +22,7 @@
             <div class="row row row-cols-1 row-cols-md-2 g-4">
                 {foreach $messages as $message}
                     <div class="col">
-                        <div class="card border-{$message->level} callout">
-                            {var $currentMessage = $message}
-                            {if $message->parent}
-                                <div class="card-header">
-                                    {var $counter = 0}
-                                        {while $currentMessage->parent}
-                                        <div style="padding-left: {$counter * 2}rem">
-                                            {if $counter !== 0}
-                                                <i class="fas fa-arrow-turn-up fa-rotate-90 me-2"></i>
-                                            {/if}
-                                                {$currentMessage->text}
-                                        </div>
-                                        {php $counter++}
-                                        {php $currentMessage = $currentMessage->parent}
-                                    {/while}
-                                </div>
-                            {/if}
-                            <div class="card-body">
-                                {$currentMessage->text}
-                            </div>
-                        </div>
+                        {include card message:$message}
                     </div>
 
                 {/foreach}
@@ -58,4 +38,29 @@
     </div>
 {/if}
 
-
+{define card, FKSDB\Components\DataTest\TestMessage $message}
+    <div class="card border-{$message->level} callout">
+        {var $currentMessage = $message}
+        {if $message->parent}
+            <div class="card-header">
+                {var $counter = 0}
+                {while $currentMessage->parent}
+                    <div style="padding-left: {$counter * 2}rem">
+                        {if $counter !== 0}
+                            <i class="fas fa-arrow-turn-up fa-rotate-90 me-2"></i>
+                        {/if}
+                        {$currentMessage->text}
+                    </div>
+                    {php $counter++}
+                    {php $currentMessage = $currentMessage->parent}
+                {/while}
+            </div>
+        {/if}
+        <div class="card-body">
+            {$currentMessage->text}
+        </div>
+        <div class="card-footer">
+            <small>#{$message->id}</small>
+        </div>
+    </div>
+{/define}
