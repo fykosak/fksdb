@@ -55,7 +55,7 @@ final class PaymentList extends BaseList
             }
             switch ($key) {
                 case 'state':
-                    $query->where('state', $filterParam);
+                    $query->where('payment.state', $filterParam);
                     break;
                 case 'vs':
                     $query->where('variable_symbol', $filterParam);
