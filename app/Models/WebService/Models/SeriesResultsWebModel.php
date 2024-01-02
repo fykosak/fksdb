@@ -15,7 +15,8 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends WebModel<array{
- *     contest_id:int,
+ *     contestId:int,
+ *     contest_id?:int,
  *     year:int,
  * },array<string,mixed>>
  */
@@ -31,7 +32,8 @@ class SeriesResultsWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contest_id' => Expect::scalar()->castTo('int')->required(),
+            'contestId' => Expect::scalar()->castTo('int'),
+            'contest_id' => Expect::scalar()->castTo('int'),
             'year' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
@@ -41,7 +43,10 @@ class SeriesResultsWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $tasksData = [];
         /** @var TaskModel $task */
