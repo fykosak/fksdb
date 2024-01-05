@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  fksdb:
+    image: fksdb
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: on-failure:3
+    container_name: fksdb
+    environment:
+      TZ: 'Europe/Prague'
+      NETTE_DEVEL: '1' # Nette log level, 1 to enable
+      MODE: 'dev' # dev/prod; prod default
+    volumes:
+      - ./config/apache.conf:/etc/apache2/sites-available/000-default.conf # site config
+      - ./config/php.ini:/usr/local/etc/php/php-local.ini # site config
+      - ./config/config.neon:/var/www/fksdb/app/config/config.local.neon # site config
+      - ./log:/var/www/fksdb/log
+    ports:
+      - 8080:80 # opened ports mapping, not needed with proxy
+    user: 1000:1000 # expects the main user with uid:pid
+
+  mysql:
+    image: mysql:latest
+    restart: on-failure:3
+    environment:
+      TZ: 'Europe/Prague'
+      MYSQL_DATABASE: 'fksdb'
+      MYSQL_USER: 'fksdb'
+      MYSQL_PASSWORD: 'asdf'
+      MYSQL_ROOT_PASSWORD: 'asdf'
+    volumes:
+      - ./mysql_data:/var/lib/mysql # path to dir with database data
+      - ./config/mysql.cnf:/etc/mysql/my.cnf # mysql config
+      - /home/adam/http/fksdb.sql:/fksdb.sql # mysql config
