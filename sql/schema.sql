@@ -528,6 +528,8 @@ CREATE TABLE IF NOT EXISTS `task`
     CONSTRAINT `fk__task__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8;
@@ -851,8 +853,8 @@ CREATE TABLE IF NOT EXISTS `task_category`
     CONSTRAINT `fk__task_category__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     INDEX `idx__task_category__contest_category` (`contest_category_id` ASC),
     CONSTRAINT `fk__task_category__contest_category`
         FOREIGN KEY (`contest_category_id`)
@@ -889,8 +891,8 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag`
     CONSTRAINT `fk__stored_query_tag__query`
         FOREIGN KEY (`query_id`)
             REFERENCES `stored_query` (`query_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     INDEX `idx__stored_query_tag__tag_type` (`tag_type_id` ASC),
     CONSTRAINT `fk__stored_query_tag__tag_type`
         FOREIGN KEY (`tag_type_id`)
@@ -937,6 +939,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task`
     `points`            INT UNSIGNED                                        NULL DEFAULT NULL COMMENT 'points for non user points',
     `name`              VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
     UNIQUE INDEX `uq__fyziklani_task__event__label` (`event_id` ASC, `label` ASC),
+    INDEX `idx__fyziklani_task__label` (`label` ASC),
     INDEX `idx__fyziklani_task__event` (`event_id` ASC),
     CONSTRAINT `fk__fyziklani_task__event`
         FOREIGN KEY (`event_id`)

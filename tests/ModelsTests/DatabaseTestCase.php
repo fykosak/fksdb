@@ -86,6 +86,7 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SUBMIT_QUESTION_ANSWER,
             DbNames::TAB_SUBMIT_QUESTION,
             DbNames::TAB_SUBMIT,
+            DbNames::TAB_TASK_CATEGORY,
             DbNames::TAB_TASK,
 
             DbNames::TAB_FYZIKLANI_SUBMIT,
@@ -110,7 +111,9 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
             DbNames::TAB_AUTH_TOKEN,
+            DbNames::TAB_GRANT,
             DbNames::TAB_LOGIN,
+            DbNames::TAB_PERSON_INFO,
             DbNames::TAB_PERSON,
         ];
         foreach ($tables as $table) {
