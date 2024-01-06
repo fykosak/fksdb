@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\PDFGenerators\TeamSeating;
+namespace FKSDB\Components\TeamSeating;
 
 use Fykosak\Utils\Localization\LocalizedString;
 
@@ -42,12 +42,12 @@ final class Place2022 implements Place
         ];
     }
 
-    public function xLayout(): float
+    public function x(): float
     {
         return $this->xLayout;
     }
 
-    public function yLayout(): float
+    public function y(): float
     {
         return $this->yLayout;
     }
@@ -65,5 +65,10 @@ final class Place2022 implements Place
     public function layout(): string
     {
         return ''; //TODO
+    }
+
+    public function label(): string
+    {
+        return $this->row . $this->col;
     }
 }

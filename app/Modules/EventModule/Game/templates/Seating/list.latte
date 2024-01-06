@@ -1,20 +1,6 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel[] $rooms}
-            <ul>
-                {foreach $rooms as $room}
-                    <li>
-                        <a href="{plink preview id: $room->fyziklani_room_id}">
-                            {$room->name}
-                        </a>
-                    </li>
-                {/foreach}
-            </ul>
-        </div>
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
             <a href="{plink print}">{_'Print'}</a>
         </div>
     </div>

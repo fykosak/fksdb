@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\PDFGenerators\TeamSeating;
+namespace FKSDB\Components\TeamSeating;
 
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\InvalidStateException;
@@ -43,11 +43,6 @@ final class Place2024 implements Place
         return new self((int)$row, (string)$col);
     }
 
-    public static function getLayout(): string
-    {
-        return '';//TODO
-    }
-
     /**
      * @phpstan-return LocalizedString<'cs'|'en'>[]
      */
@@ -63,14 +58,45 @@ final class Place2024 implements Place
         ];
     }
 
-    public function xLayout(): float
+    public function x(): float
     {
-        return 0;// TODO
+        $x = -800;
+        $x += $this->row * 50;
+        if ($this->row > 13) {
+            $x += 250;
+        }
+        return $x;
     }
 
-    public function yLayout(): float
+    public function y(): float
     {
-        return 0;// TODO
+        switch ($this->col) {
+            case 'A':
+                return 325;
+            case 'B':
+                return 275;
+            case 'C':
+                return 225;
+            case 'D':
+                return 175;
+            case 'E':
+                return 75;
+            case 'F':
+                return 25;
+            case 'G':
+                return -25;
+            case 'H':
+                return -75;
+            case 'I':
+                return -175;
+            case 'J':
+                return -225;
+            case 'K':
+                return -275;
+            case 'L':
+                return -325;
+        }
+        return 0;
     }
 
     public function sector(): string
@@ -85,6 +111,25 @@ final class Place2024 implements Place
 
     public function layout(): string
     {
-        return ''; //TODO
+        return __DIR__ . '/Rooms/pva24.latte';
+    }
+
+    /**
+     * @return self[]
+     */
+    public static function getAll(): array
+    {
+        $places = [];
+        foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] as $col) {
+            for ($row = 1; $row <= 26; $row++) {
+                $places[] = new self($row, $col);
+            }
+        }
+        return $places;
+    }
+
+    public function label(): string
+    {
+        return $this->row . $this->col;
     }
 }

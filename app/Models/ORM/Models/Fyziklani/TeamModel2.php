@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
-use FKSDB\Components\PDFGenerators\TeamSeating\Place;
-use FKSDB\Components\PDFGenerators\TeamSeating\Place2022;
-use FKSDB\Components\PDFGenerators\TeamSeating\Place2024;
+use FKSDB\Components\TeamSeating\Place;
+use FKSDB\Components\TeamSeating\Place2022;
+use FKSDB\Components\TeamSeating\Place2024;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;

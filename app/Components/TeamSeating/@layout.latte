@@ -1,0 +1,44 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[] $teams}
+{default string|null $dev = false}
+{varType string $lang}
+{embed
+    './Rooms/pva24.latte'
+    sector:null,
+    lang:$lang}
+    {block seats}
+        {foreach FKSDB\Components\PDFGenerators\TeamSeating\Place2024::getAll() as $place}
+            {varType FKSDB\Components\PDFGenerators\TeamSeating\Place $place}
+            {var $cor = 'translate(' . $place->x() . ',' . $place->y() . ')'}
+            {var $className = 'seat'}
+            {if $dev}
+                {var $team = $teams[$place->label()]??null}
+                {do $className .= ' seat-dev-' . $dev}
+                <g transform="{$cor}"
+                   class="{$className}"
+                   data-sector="{$place->sector()}"
+                   data-category="{$team?$team->category->value:null}"
+                   data-lang="{$team?$team->game_lang->value:null}"
+                >
+                    <rect height="50" width="50" x="-25" y="-25"/>
+                    <text>
+                        {if $team}
+                            {$team->fyziklani_team_id}
+                        {else}
+                            {$place->label()}
+                        {/if}
+                    </text>
+                </g>
+            {else}
+                {if isset($teams[$place->label()])}
+                    {do $className .= ' seat-occupied'}
+                {/if}
+                <g transform="{$cor}" class="{$className}" data-sector="{$place->sector()}">
+                    <rect height="50" width="50" x="-25" y="-25"/>
+                    <text>
+                        {$place->label()}
+                    </text>
+                </g>
+            {/if}
+        {/foreach}
+    {/block}
+{/embed}
