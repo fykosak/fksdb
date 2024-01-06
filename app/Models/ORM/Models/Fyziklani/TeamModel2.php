@@ -9,7 +9,6 @@ use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -77,13 +76,6 @@ final class TeamModel2 extends Model implements Resource
         /** @phpstan-var TypedGroupedSelection<TeamMemberModel> $selection */
         $selection = $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
         return $selection;
-    }
-
-    public function getTeamSeat(): ?TeamSeatModel
-    {
-        /** @var TeamSeatModel|null $teamSeat */
-        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
-        return $teamSeat;
     }
 
     /**

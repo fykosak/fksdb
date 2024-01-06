@@ -86,7 +86,6 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SUBMIT_QUESTION_ANSWER,
             DbNames::TAB_SUBMIT_QUESTION,
             DbNames::TAB_SUBMIT,
-            DbNames::TAB_TASK_CATEGORY,
             DbNames::TAB_TASK,
 
             DbNames::TAB_FYZIKLANI_SUBMIT,

@@ -1,5 +1,5 @@
 {varType FKSDB\Models\ORM\Models\EventModel $event}
-{default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
+{default null $room = null}
 {default FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $team = null}
 {default bool $showTeamId = false}
 {default bool $showBigNav = false}
@@ -18,7 +18,6 @@
 {embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang->value:null}
     {block seats}
         {foreach $room->getSeats() as $seat}
-            {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
             {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
             <g transform="{$cor}">
                 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $selectedTeam = null}

@@ -765,15 +765,6 @@ orm:
                 title: _('button.teacher.detail')
                 icon: 'fas fa-pencil'
 #fyziklani
-    fyziklani_room:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel
-    fyziklani_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\SeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel
-    fyziklani_team_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
     fyziklani_submit:
         service: FKSDB\Models\ORM\Services\Fyziklani\SubmitService
         model: FKSDB\Models\ORM\Models\Fyziklani\SubmitModel

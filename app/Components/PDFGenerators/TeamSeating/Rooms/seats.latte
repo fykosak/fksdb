@@ -1,9 +1,3 @@
-{define seats FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
-    {foreach $room->getSeats() as $seat}
-        {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
-        {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
-        <g transform="{$cor}">
-            {include seat 'seat'=>$seat}
-        </g>
-    {/foreach}
+{define seats null $room}
+
 {/define}

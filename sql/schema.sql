@@ -394,8 +394,8 @@ CREATE TABLE IF NOT EXISTS `grant`
     CONSTRAINT `fk__grant__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     INDEX `idx__grant__role` (`role_id` ASC),
     CONSTRAINT `fk__grant__role`
         FOREIGN KEY (`role_id`)
@@ -453,8 +453,8 @@ CREATE TABLE IF NOT EXISTS `person_info`
     CONSTRAINT `fk__person_info__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -475,8 +475,8 @@ CREATE TABLE IF NOT EXISTS `post_contact`
     CONSTRAINT `fk__post_contact__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     INDEX `idx__post_contact__address` (`address_id` ASC),
     CONSTRAINT `fk__post_contact__address`
         FOREIGN KEY (`address_id`)
@@ -579,8 +579,8 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
     CONSTRAINT `fk__contribution__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
     INDEX `idx__task_contribution__person` (`person_id` ASC),
     CONSTRAINT `fk__task_contribution__person`
         FOREIGN KEY (`person_id`)
@@ -663,8 +663,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
     CONSTRAINT `fk__member__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE NO ACTION # TODO CASCADE?
+            ON UPDATE NO ACTION # TODO CASCADE?
 )
     ENGINE = InnoDB;
 -- -----------------------------------------------------
@@ -686,8 +686,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     CONSTRAINT `fk__team_teacher__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE NO ACTION # TODO CASCADE?
+            ON UPDATE NO ACTION # TODO CASCADE?
 )
     ENGINE = InnoDB;
 

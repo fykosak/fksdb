@@ -41,7 +41,6 @@ DELETE FROM school;
 DELETE FROM address;
 DELETE FROM auth_token;
 
-DELETE FROM contest_category;
 DELETE FROM login;
 DELETE FROM person_info;
 DELETE FROM person;
