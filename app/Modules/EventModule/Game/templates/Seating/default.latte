@@ -1,10 +1,11 @@
 {block outerContent}
+    <a href="{plink print}">{_'Print'}</a>
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'By lang'}</h2>
         </div>
         <div class="container-fluid">
-            {control seatingPreview 'lang'}
+            {control preview 'lang'}
         </div>
     </div>
     <div class="panel color-auto">
@@ -12,7 +13,13 @@
             <h2>{_'By category'}</h2>
         </div>
         <div class="container-fluid">
-            {control seatingPreview 'category'}
+            {control preview 'category'}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Edit'}</h2>
+            {control form}
         </div>
     </div>
 {/block}

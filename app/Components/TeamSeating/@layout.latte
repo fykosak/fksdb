@@ -6,8 +6,8 @@
     sector:null,
     lang:$lang}
     {block seats}
-        {foreach FKSDB\Components\PDFGenerators\TeamSeating\Place2024::getAll() as $place}
-            {varType FKSDB\Components\PDFGenerators\TeamSeating\Place $place}
+        {foreach FKSDB\Components\TeamSeating\Place2024::getAll() as $place}
+            {varType FKSDB\Components\TeamSeating\Place $place}
             {var $cor = 'translate(' . $place->x() . ',' . $place->y() . ')'}
             {var $className = 'seat'}
             {if $dev}
