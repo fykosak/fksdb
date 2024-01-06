@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model\Model;
 /**
  * @phpstan-extends Adapter<ContestantModel,PersonHistoryModel>
  */
-class ContestantToPersonHistoryAdapter extends Adapter
+final class ContestantToPersonHistoryAdapter extends Adapter
 {
 
     protected function getModels(Model $model): iterable
@@ -27,6 +27,6 @@ class ContestantToPersonHistoryAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'personHistory' . $this->test->getId();
+        return 'contestantToPersonHistory';
     }
 }

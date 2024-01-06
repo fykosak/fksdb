@@ -24,7 +24,7 @@ final class BornDateTest extends Test
      * @param PersonModel $model
      * @throws \Exception
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $info = $model->getInfo();
         if (!$info || !$info->born) {
@@ -40,6 +40,7 @@ final class BornDateTest extends Test
                 if ($delta > 4) {
                     $logger->log(
                         new TestMessage(
+                            $id,
                             sprintf(
                                 _('Expected graduation at the age of %01.2f'),
                                 $graduationAt
@@ -50,6 +51,7 @@ final class BornDateTest extends Test
                 } elseif ($delta > 2) {
                     $logger->log(
                         new TestMessage(
+                            $id,
                             sprintf(
                                 _('Expected graduation at the age of %01.2f'),
                                 $graduationAt

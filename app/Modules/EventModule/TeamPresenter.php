@@ -393,10 +393,14 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
-        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+        return new SchoolCheckComponent($this->getEntity(), $this->getContext());
     }
 
     /**
