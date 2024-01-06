@@ -673,15 +673,15 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
     `fyziklani_team_teacher_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `person_id`                 INT UNSIGNED NOT NULL,
     `fyziklani_team_id`         INT UNSIGNED NOT NULL,
-    UNIQUE INDEX `uq__fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
-    INDEX `idx__teacher__person` (`person_id` ASC),
-    CONSTRAINT `fk__teacher__person`
+    UNIQUE INDEX `uq__team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    INDEX `idx__team_teacher__person` (`person_id` ASC),
+    CONSTRAINT `fk__team_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    INDEX `idx__teacher__team` (`fyziklani_team_id` ASC),
-    CONSTRAINT `fk__teacher__team`
+    INDEX `idx__team_teacher__team` (`fyziklani_team_id` ASC),
+    CONSTRAINT `fk__team_teacher__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
