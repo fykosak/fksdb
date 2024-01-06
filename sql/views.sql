@@ -93,7 +93,6 @@ select p.other_name                                                             
        coalesce(
                if(sac.alpha_2 = 'cz', concat('red-izo:', s.izo), null),
                if(sac.alpha_2 = 'sk', concat('sk:', s.izo), null),
-               null, -- TODO AESOP id
                if(s.school_id is null, null, 'ufo')
            )                                                                                         as school,
        s.name_abbrev                                                                                 as `school-name`,

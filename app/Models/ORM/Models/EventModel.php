@@ -72,7 +72,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     public const RESOURCE_ID = 'event';
     private const POSSIBLY_ATTENDING_STATES = [
         TeamState::Participated,
-        TeamState::Approved,
         TeamState::Spare,
         TeamState::Applied,
         TeamState::Arrived,
