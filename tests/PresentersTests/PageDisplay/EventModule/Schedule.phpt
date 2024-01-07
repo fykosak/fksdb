@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 
 class Schedule extends EventModuleTestCase
 {
-
     private ScheduleGroupModel $scheduleGroup;
     private ScheduleItemModel $scheduleItem;
 

@@ -18,8 +18,7 @@ use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
-use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
+use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -386,15 +385,10 @@ final class TeamPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentSeating(): Single
     {
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            [$this->getEntity()],
-            $this->getContext()
-        );
+        return new Single($this->getContext(), $this->getEntity());
     }
 
     /**
