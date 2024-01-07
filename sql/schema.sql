@@ -9,10 +9,6 @@ SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
 
 -- -----------------------------------------------------
--- Schema fksdb
--- -----------------------------------------------------
-
--- -----------------------------------------------------
 -- Table `contest`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest`
@@ -22,7 +18,107 @@ CREATE TABLE IF NOT EXISTS `contest`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'semináře';
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `contest_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `contest_category`
+(
+    `contest_category_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`               VARCHAR(16)  NOT NULL,
+    `name_cs`             VARCHAR(64)  NOT NULL,
+    `name_en`             VARCHAR(64)  NOT NULL
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `contest_year`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `contest_year`
+(
+    `contest_id` INT UNSIGNED NOT NULL,
+    `year`       TINYINT      NOT NULL,
+    `ac_year`    SMALLINT     NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
+    PRIMARY KEY (`contest_id`, `year`),
+    INDEX `idx__contest_year__ac_year` (`ac_year` ASC),
+    INDEX `idx__contest_year__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contest_year__contest`
+        FOREIGN KEY (`contest_id`)
+            REFERENCES `contest` (`contest_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
+    COMMENT = 'mapování ročníků semináře na akademické roky';
+
+-- -----------------------------------------------------
+-- Table `role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `role`
+(
+    `role_id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`        VARCHAR(16)  NOT NULL,
+    `description` TEXT         NULL DEFAULT NULL
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `country`
+(
+    `country_id`   INT UNSIGNED NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
+    `name`         VARCHAR(64)  NOT NULL,
+    `alpha_2`      CHAR(2)      NOT NULL,
+    `alpha_3`      CHAR(3)      NOT NULL,
+    `phone_nsn`    INT          NULL DEFAULT NULL,
+    `phone_prefix` VARCHAR(16)  NULL DEFAULT NULL
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `country_subdivision`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `country_subdivision`
+(
+    `country_subdivision_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `code`                   VARCHAR(32)  NOT NULL COMMENT 'ISO 3166-2 code',
+    `name`                   VARCHAR(64)  NOT NULL,
+    `country_id`             INT UNSIGNED NOT NULL,
+    CONSTRAINT `fk_country_subdivision__country`
+        FOREIGN KEY (`country_id`)
+            REFERENCES `country` (`country_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `psc_region`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psc_region`
+(
+    `psc`                    CHAR(5)      NOT NULL PRIMARY KEY,
+    `country_subdivision_id` INT UNSIGNED NOT NULL,
+    INDEX `idx__psc__country_subdivision` (`country_subdivision_id` ASC),
+    CONSTRAINT `fk__psc__country_subdivision`
+        FOREIGN KEY (`country_subdivision_id`)
+            REFERENCES `country_subdivision` (`country_subdivision_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
+    COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision';
 
 -- -----------------------------------------------------
 -- Table `event_type`
@@ -39,7 +135,9 @@ CREATE TABLE IF NOT EXISTS `event_type`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `event`
@@ -70,7 +168,9 @@ CREATE TABLE IF NOT EXISTS `event`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person`
@@ -143,36 +243,10 @@ CREATE TABLE IF NOT EXISTS `event_participant`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
--- -----------------------------------------------------
--- Table `country`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `country`
-(
-    `country_id`   INT UNSIGNED NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
-    `name`         VARCHAR(64)  NOT NULL,
-    `alpha_2`      CHAR(2)      NOT NULL,
-    `alpha_3`      CHAR(3)      NOT NULL,
-    `phone_nsn`    INT          NULL DEFAULT NULL,
-    `phone_prefix` VARCHAR(16)  NULL DEFAULT NULL
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
--- -----------------------------------------------------
--- Table `country_subdivision`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `country_subdivision`
-(
-    `country_subdivision_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `code`                   VARCHAR(32)  NOT NULL COMMENT 'ISO 3166-2 code',
-    `name`                   VARCHAR(64)  NOT NULL,
-    `country_id`             INT UNSIGNED NOT NULL,
-    CONSTRAINT `fk_country_subdivision__country`
-        FOREIGN KEY (`country_id`)
-            REFERENCES `country` (`country_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `address`
 -- -----------------------------------------------------
@@ -202,8 +276,7 @@ CREATE TABLE IF NOT EXISTS `address`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'adresa jako poštovní nikoli územní identifikátor, immut'
-/* comment truncated */ /*able.*/;
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `login`
@@ -226,7 +299,8 @@ CREATE TABLE IF NOT EXISTS `login`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `auth_token`
@@ -249,15 +323,9 @@ CREATE TABLE IF NOT EXISTS `auth_token`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
-CREATE TABLE IF NOT EXISTS `contest_category`
-(
-    `contest_category_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `label`               VARCHAR(16)  NOT NULL,
-    `name_cs`             VARCHAR(64)  NOT NULL,
-    `name_en`             VARCHAR(64)  NOT NULL
-) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `contestant`
@@ -291,7 +359,8 @@ CREATE TABLE IF NOT EXISTS `contestant`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `school`
@@ -325,7 +394,8 @@ CREATE TABLE IF NOT EXISTS `school`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `org`
@@ -361,19 +431,8 @@ CREATE TABLE IF NOT EXISTS `org`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16)  NOT NULL,
-    `description` TEXT         NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `grant`
@@ -405,7 +464,8 @@ CREATE TABLE IF NOT EXISTS `grant`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person_info`
@@ -453,8 +513,7 @@ CREATE TABLE IF NOT EXISTS `person_info`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'Podrobné informace o osobě, zde jsou všechny osobní úda'
-/* comment truncated */ /*je (t*/;
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `post_contact`
@@ -481,25 +540,8 @@ CREATE TABLE IF NOT EXISTS `post_contact`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'Přiřazení adres lidem vztahem M:N';
-
--- -----------------------------------------------------
--- Table `psc_region`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `psc_region`
-(
-    `psc`                    CHAR(5)      NOT NULL PRIMARY KEY,
-    `country_subdivision_id` INT UNSIGNED NOT NULL,
-    INDEX `idx__psc__country_subdivision` (`country_subdivision_id` ASC),
-    CONSTRAINT `fk__psc__country_subdivision`
-        FOREIGN KEY (`country_subdivision_id`)
-            REFERENCES `country_subdivision` (`country_subdivision_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision';
 
 -- -----------------------------------------------------
 -- Table `task`
@@ -527,7 +569,8 @@ CREATE TABLE IF NOT EXISTS `task`
             ON DELETE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit`
@@ -558,7 +601,8 @@ CREATE TABLE IF NOT EXISTS `submit`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `task_contribution`
@@ -583,7 +627,9 @@ CREATE TABLE IF NOT EXISTS `task_contribution`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_team`
@@ -638,8 +684,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
-
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_team_member`
@@ -663,7 +710,10 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
             ON DELETE NO ACTION # TODO CASCADE?
             ON UPDATE NO ACTION # TODO CASCADE?
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `fyziklani_team_teacher`
 -- -----------------------------------------------------
@@ -686,7 +736,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
             ON DELETE NO ACTION # TODO CASCADE?
             ON UPDATE NO ACTION # TODO CASCADE?
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `stored_query`
@@ -702,6 +754,8 @@ CREATE TABLE IF NOT EXISTS `stored_query`
     UNIQUE INDEX `uq__stored_query__qid` (`qid` ASC)
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'Uložené SQL dotazy s možností parametrizace z aplikace.';
 
 -- -----------------------------------------------------
@@ -724,7 +778,9 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `flag`
@@ -732,36 +788,15 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter`
 CREATE TABLE IF NOT EXISTS `flag`
 (
     `flag_id`     INT UNSIGNED                                          NOT NULL PRIMARY KEY,
-    `fid`         VARCHAR(16)                                           NOT NULL,                                  # TODO rename
+    `fid`         VARCHAR(16)                                           NOT NULL, # TODO rename
     `name`        VARCHAR(64)                                           NOT NULL,
     `description` TEXT                                                  NULL DEFAULT NULL,
     `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL COMMENT 'rozsah platnosti flagu',
     UNIQUE INDEX `uq__flag__name` (`fid` ASC)
 )
     ENGINE = InnoDB
-    COMMENT = 'general purpose flag for the person (for presentation layer)'
-/* comment truncated */ /*
-*/;
-
--- -----------------------------------------------------
--- Table `contest_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contest_year`
-(
-    `contest_id` INT UNSIGNED NOT NULL,
-    `year`       TINYINT      NOT NULL,
-    `ac_year`    SMALLINT     NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
-    PRIMARY KEY (`contest_id`, `year`),
-    INDEX `idx__contest_year__ac_year` (`ac_year` ASC),
-    INDEX `idx__contest_year__contest` (`contest_id` ASC),
-    CONSTRAINT `fk__contest_year__contest`
-        FOREIGN KEY (`contest_id`)
-            REFERENCES `contest` (`contest_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB
-    COMMENT = 'mapování ročníků semináře na akademické roky';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person_has_flag`
@@ -803,6 +838,8 @@ CREATE TABLE IF NOT EXISTS `person_has_flag`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'persons flags are per year';
 
 -- -----------------------------------------------------
@@ -839,8 +876,13 @@ CREATE TABLE IF NOT EXISTS `person_history`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'atributy osoby řezané dle akademického roku';
 
+-- -----------------------------------------------------
+-- Table `task_category`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `task_category`
 (
     `task_id`             INT UNSIGNED NOT NULL,
@@ -860,6 +902,8 @@ CREATE TABLE IF NOT EXISTS `task_category`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'specification of allowed category for a task';
 
 -- -----------------------------------------------------
@@ -874,7 +918,8 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag_type`
     UNIQUE INDEX `uq__stored_query_tag_type__name` (`name` ASC)
 )
     ENGINE = InnoDB
-    COMMENT = 'Štítky uložených SQL dotazů.';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `stored_query_tag`
@@ -898,7 +943,8 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag`
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    COMMENT = 'M:N párování SQL dotazů se štítky';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `event_org`
@@ -923,7 +969,9 @@ CREATE TABLE IF NOT EXISTS `event_org`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_task`
@@ -943,7 +991,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_submit`
@@ -971,7 +1021,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `teacher`
@@ -998,8 +1050,13 @@ CREATE TABLE IF NOT EXISTS `teacher`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `payment`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `payment`
 (
     `payment_id`      INT UNSIGNED   NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -1032,7 +1089,9 @@ CREATE TABLE IF NOT EXISTS `payment`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 
 -- -----------------------------------------------------
@@ -1055,7 +1114,9 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `schedule_group`
@@ -1095,7 +1156,9 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `schedule_item`
@@ -1124,7 +1187,9 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person_schedule`
@@ -1148,7 +1213,10 @@ CREATE TABLE IF NOT EXISTS `person_schedule`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `schedule_payment`
 -- -----------------------------------------------------
@@ -1171,7 +1239,10 @@ CREATE TABLE IF NOT EXISTS `schedule_payment`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `email_message`
 -- -----------------------------------------------------
@@ -1199,7 +1270,10 @@ CREATE TABLE IF NOT EXISTS `email_message`
             ON DELETE NO ACTION,
     CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL )
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `submit_question`
 -- -----------------------------------------------------
@@ -1217,7 +1291,9 @@ CREATE TABLE IF NOT EXISTS `submit_question`
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit_question_answer`
@@ -1242,14 +1318,25 @@ CREATE TABLE IF NOT EXISTS `submit_question_answer`
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_producer`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_producer`
 (
     `producer_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name`        VARCHAR(256) NOT NULL
-) ENGINE = InnoDB;
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_product`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_product`
 (
     `product_id`     INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1266,8 +1353,14 @@ CREATE TABLE IF NOT EXISTS `warehouse_product`
             REFERENCES `warehouse_producer` (`producer_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_item`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_item`
 (
     `item_id`           INT UNSIGNED                             NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1305,8 +1398,14 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
             REFERENCES `contest` (`contest_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `unsubscribed_email`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `unsubscribed_email`
 (
     `unsubscribed_email_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -1314,9 +1413,10 @@ CREATE TABLE IF NOT EXISTS `unsubscribed_email`
     `email_hash`            CHAR(40)     NOT NULL COMMENT 'SHA1 hash of the email address in lowercase',
     `note`                  VARCHAR(255)          DEFAULT NULL,
     UNIQUE KEY `uq__unsubscribed_email__email_hash` (`email_hash`)
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
-
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
