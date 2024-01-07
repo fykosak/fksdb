@@ -88,7 +88,6 @@ CREATE TABLE IF NOT EXISTS `person`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
-# TODO indexy
 
 -- -----------------------------------------------------
 -- Table `event_participant`
@@ -132,8 +131,6 @@ CREATE TABLE IF NOT EXISTS `event_participant`
     `used_drugs`           TEXT          NULL     DEFAULT NULL COMMENT 'úžívané léky',
     `lunch_count`          TINYINT       NULL     DEFAULT 0,
     UNIQUE INDEX `uq__event_participant__person_event` (`event_id` ASC, `person_id` ASC),
-    INDEX `idx__event_participant__status` (`status` ASC),
-    INDEX `idx__event_participant__event` (`event_id` ASC),
     CONSTRAINT `fk__event_participant__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -222,8 +219,6 @@ CREATE TABLE IF NOT EXISTS `login`
     `active`     BOOL         NOT NULL,
     UNIQUE INDEX `uq__login__login` (`login` ASC),
     UNIQUE INDEX `uq__login__person` (`person_id` ASC),
-    INDEX `idx__login__login` (`login` ASC),
-    INDEX `idx__login__person` (`person_id` ASC),
     CONSTRAINT `fk__login__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
@@ -311,7 +306,7 @@ CREATE TABLE IF NOT EXISTS `school`
     `email`       VARCHAR(255) NULL     DEFAULT NULL COMMENT 'Kontaktní e-mail',
     `ic`          CHAR(8)      NULL     DEFAULT NULL COMMENT 'IČ (osm číslic)',
     `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
-    `active`      BOOL         NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
+    `active`      BOOL         NOT NULL DEFAULT TRUE COMMENT 'Platný záznam školy',
     `note`        VARCHAR(255) NULL     DEFAULT NULL,
     `study_h`     BOOL         NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
     `study_p`     BOOL         NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
@@ -418,7 +413,7 @@ CREATE TABLE IF NOT EXISTS `grant`
 CREATE TABLE IF NOT EXISTS `person_info`
 (
     `person_id`              INT UNSIGNED          NOT NULL PRIMARY KEY,
-    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
+    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1',
     `born`                   DATE                  NULL DEFAULT NULL COMMENT 'datum narození',
     `id_number`              VARCHAR(32)           NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
     `born_id`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
@@ -718,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter`
     `query_id`        INT UNSIGNED                       NOT NULL,
     `name`            VARCHAR(16)                        NOT NULL COMMENT 'název parametru pro použití v SQL',
     `description`     TEXT                               NULL DEFAULT NULL,
-    `type`            ENUM ('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ parametru', # TODO to enum
+    `type`            ENUM ('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ parametru',
     `default_integer` INT                                NULL DEFAULT NULL COMMENT 'implicitní hodnota',
     `default_string`  VARCHAR(255)                       NULL DEFAULT NULL COMMENT 'implicitní hodnota',
     INDEX `idx__stored_query_parameter__stored_query` (`query_id` ASC),
@@ -740,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `flag`
     `fid`         VARCHAR(16)                                           NOT NULL,                                  # TODO rename
     `name`        VARCHAR(64)                                           NOT NULL,
     `description` TEXT                                                  NULL DEFAULT NULL,
-    `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL COMMENT 'rozsah platnosti flagu', # TODO to enum
+    `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL COMMENT 'rozsah platnosti flagu',
     UNIQUE INDEX `uq__flag__name` (`fid` ASC)
 )
     ENGINE = InnoDB
@@ -941,7 +936,6 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task`
     `points`            INT UNSIGNED                                        NULL DEFAULT NULL COMMENT 'points for non user points',
     `name`              VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
     UNIQUE INDEX `uq__fyziklani_task__event__label` (`event_id` ASC, `label` ASC),
-    INDEX `idx__fyziklani_task__label` (`label` ASC),
     INDEX `idx__fyziklani_task__event` (`event_id` ASC),
     CONSTRAINT `fk__fyziklani_task__event`
         FOREIGN KEY (`event_id`)
@@ -1123,8 +1117,6 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
     `long_description_en` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
     `begin`               DATETIME       NULL     DEFAULT NULL,
     `end`                 DATETIME       NULL     DEFAULT NULL,
-    INDEX `fk__schedule_item__payable` (`payable` ASC),
-    INDEX `fk__schedule_item__available` (`available` ASC),
     INDEX `fk__schedule_item__group` (`schedule_group_id` ASC),
     CONSTRAINT `fk__schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)
@@ -1194,7 +1186,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `carbon_copy`         VARCHAR(128)    NULL                                           DEFAULT NULL,
     `blind_carbon_copy`   VARCHAR(128)    NULL                                           DEFAULT NULL,
     `text`                TEXT            NOT NULL,
-    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
+    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
     `created`             DATETIME        NOT NULL                                       DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME        NULL                                           DEFAULT NULL,
     `priority`            BOOL            NOT NULL                                       DEFAULT FALSE,
@@ -1262,7 +1254,7 @@ CREATE TABLE IF NOT EXISTS `warehouse_product`
 (
     `product_id`     INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `producer_id`    INT UNSIGNED                                            NULL DEFAULT NULL,
-    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL, # TODO,
+    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL,
     `name_cs`        VARCHAR(256)                                            NOT NULL,
     `name_en`        VARCHAR(256)                                            NOT NULL,
     `description_cs` TEXT                                                    NULL DEFAULT NULL,
@@ -1281,12 +1273,12 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
     `item_id`           INT UNSIGNED                             NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `product_id`        INT UNSIGNED                             NOT NULL,
     `contest_id`        INT UNSIGNED                             NOT NULL,
-    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,                                         # TODO to enum
+    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,
     `description_cs`    VARCHAR(250)                             NULL     DEFAULT NULL,
     `description_en`    VARCHAR(250)                             NULL     DEFAULT NULL,
     `data`              VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
     `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
-    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna', # TODO to enum
+    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna',
     `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
     `available`         BOOL                                     NOT NULL DEFAULT FALSE COMMENT 'available in online store',
