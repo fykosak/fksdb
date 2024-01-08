@@ -20,7 +20,6 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     StatsWebModel,
     WebModel};
 use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
-    Schedule\GroupListWebModel,
     Schedule\ItemListWebModel,
     Schedule\PersonListWebModel,
     TeamsWebModel,};
@@ -55,7 +54,6 @@ class WebServiceModel
         'GetContests' => ContestsModel::class,
         // events
         'events' => EventListWebModel::class,
-        'event/schedule/groups' => GroupListWebModel::class,
         'event/schedule/items' => ItemListWebModel::class,
         'event/schedule/persons' => PersonListWebModel::class,
         'event/teams' => TeamsWebModel::class,
