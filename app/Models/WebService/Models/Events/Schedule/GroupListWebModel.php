@@ -6,6 +6,7 @@ namespace FKSDB\Models\WebService\Models\Events\Schedule;
 
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
 use Nette\Application\BadRequestException;
@@ -14,7 +15,29 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
+ * @phpstan-type SerializedScheduleItemModel array{
+ *      groupId:int,
+ *      itemId:int,
+ *      price:array<string, string>,
+ *      totalCapacity:int|null,
+ *      usedCapacity:int|null,
+ *      name:array<string, string>,
+ *      begin:\DateTimeInterface,
+ *      end:\DateTimeInterface,
+ *      available: bool,
+ *      description:array<string, string>,
+ *      longDescription:array<string, string>,
+ * }
+ * @phpstan-type SerializedScheduleGroupModel array{
+ *      groupId:int,
+ *      type:string,
+ *      registration:array{begin:string|null,end:string|null,},
+ *      name:array<string, string>,
+ *      eventId:int,
+ *      start:string,
+ *      end:string,
+ *      items: SerializedScheduleItemModel[],
+ * }
  * @phpstan-extends WebModel<array{eventId:int,types:string[]},SerializedScheduleGroupModel[]>
  */
 class GroupListWebModel extends WebModel
@@ -55,7 +78,36 @@ class GroupListWebModel extends WebModel
         }
         /** @var ScheduleGroupModel $group */
         foreach ($query as $group) {
-            $data[] = $group->__toArray();
+            $items = [];
+            /** @var ScheduleItemModel $item */
+            foreach ($group->getItems() as $item) {
+                $items[$item->schedule_item_id] = [
+                    'groupId' => $item->schedule_group_id,
+                    'price' => $item->getPrice()->__serialize(),
+                    'totalCapacity' => $item->capacity,
+                    'usedCapacity' => $item->getUsedCapacity(),
+                    'itemId' => $item->schedule_item_id,
+                    'name' => $item->name->__serialize(),
+                    'begin' => $item->getBegin(),
+                    'end' => $item->getEnd(),
+                    'description' => $item->description->__serialize(),
+                    'longDescription' => $item->long_description->__serialize(),
+                    'available' => (bool)$item->available,
+                ];
+            }
+            $data[$group->schedule_group_id] = [
+                'groupId' => $group->schedule_group_id,
+                'type' => $group->schedule_group_type->value,
+                'registration' => [
+                    'begin' => $group->registration_begin ? $group->registration_begin->format('c') : null,
+                    'end' => $group->registration_end ? $group->registration_end->format('c') : null,
+                ],
+                'name' => $group->name->__serialize(),
+                'eventId' => $group->event_id,
+                'start' => $group->start->format('c'),
+                'end' => $group->end->format('c'),
+                'items' => $items,
+            ];
         }
         return $data;
     }

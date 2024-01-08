@@ -8,6 +8,7 @@ use FKSDB\Models\WebService\Models\ContestsModel;
 use FKSDB\Models\WebService\Models\EventListWebModel;
 use FKSDB\Models\WebService\Models\Events\ParticipantsWebModel;
 use FKSDB\Models\WebService\Models\Events\ReportsWebModel;
+use FKSDB\Models\WebService\Models\Events\Schedule\GroupListWebModel;
 use FKSDB\Models\WebService\Models\Events\TeamsWebModel;
 use FKSDB\Models\WebService\Models\EventWebModel;
 use FKSDB\Models\WebService\Models\OrganizersWebModel;
@@ -119,12 +120,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 
     public static function createRouter(RouteList $list): void
     {
-        /*   $list->addRoute(
-               'events/<eventId [0-9]+>/schedule/group',
-               array_merge(self::ROUTER, [
-                   'model' => GroupListWebModel::class,
-               ])
-           );
+        $list->addRoute(
+            'events/<eventId [0-9]+>/schedule',
+            array_merge(self::ROUTER, [
+                'model' => GroupListWebModel::class,
+            ])
+        );/*
            $list->addRoute(
                'events/<eventId [0-9]+>/schedule/group/<groupId [0-9]+>/item',
                array_merge(self::ROUTER, [
