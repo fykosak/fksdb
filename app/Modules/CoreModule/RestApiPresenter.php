@@ -30,7 +30,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     private const ROUTER = ['module' => 'Core', 'presenter' => 'RestApi', 'action' => 'default'];
     public const WEB_MODELS = [
         'GetFyziklaniResults' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
-        // 'game/submit' => Game\SubmitWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -40,12 +39,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
-        // events
-        'events' => EventListWebModel::class,
-
-        // game
-        'game/results' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
-        //'game/submit' => Game\SubmitWebModel::class,
     ];
 
     /** @persistent */
