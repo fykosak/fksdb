@@ -19,8 +19,10 @@ use Nette\Schema\Expect;
  *      groupId:int,
  *      itemId:int,
  *      price:array<string, string>,
- *      totalCapacity:int|null,
- *      usedCapacity:int|null,
+ *      capacity:array{
+ *          total:int|null,
+ *          used:int|null,
+ *      },
  *      name:array<string, string>,
  *      begin:\DateTimeInterface,
  *      end:\DateTimeInterface,
@@ -83,10 +85,12 @@ class GroupListWebModel extends WebModel
             foreach ($group->getItems() as $item) {
                 $items[$item->schedule_item_id] = [
                     'groupId' => $item->schedule_group_id,
-                    'price' => $item->getPrice()->__serialize(),
-                    'totalCapacity' => $item->capacity,
-                    'usedCapacity' => $item->getUsedCapacity(),
                     'itemId' => $item->schedule_item_id,
+                    'price' => $item->getPrice()->__serialize(),
+                    'capacity' => [
+                        'total' => $item->capacity,
+                        'used' => $item->getUsedCapacity(),
+                    ],
                     'name' => $item->name->__serialize(),
                     'begin' => $item->getBegin(),
                     'end' => $item->getEnd(),
