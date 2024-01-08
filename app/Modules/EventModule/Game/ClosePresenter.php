@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\PreviewComponent;
-use FKSDB\Components\Game\Closing\TeamListComponent;
+use FKSDB\Components\Game\Closing\TeamList;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -99,9 +99,9 @@ final class ClosePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): TeamListComponent
+    protected function createComponentGrid(): TeamList
     {
-        return new TeamListComponent($this->getContext(), $this->getEvent());
+        return new TeamList($this->getContext(), $this->getEvent());
     }
 
     /**

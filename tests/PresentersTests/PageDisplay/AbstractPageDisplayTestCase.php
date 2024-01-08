@@ -38,7 +38,9 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
         );
         $this->authenticateLogin($this->login);
     }
-
+    /**
+     * @phpstan-param array<scalar> $params
+     */
     final protected function createRequest(string $presenterName, string $action, array $params): Request
     {
         $params['lang'] = $params['lang'] ?? 'en';
@@ -48,6 +50,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
 
     /**
      * @dataProvider getPages
+     * @phpstan-param array<scalar> $params
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void
     {
@@ -66,10 +69,17 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
         });
     }
 
+    /**
+     * @phpstan-param array<scalar> $params
+     * @phpstan-return array{string,string,array<scalar>}
+     */
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         return [$presenterName, $action, $params];
     }
 
+    /**
+     * @phpstan-return array<array{string,string}>
+     */
     abstract public function getPages(): array;
 }

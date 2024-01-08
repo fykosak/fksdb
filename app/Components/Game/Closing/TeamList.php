@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -23,7 +24,7 @@ use Nette\Forms\Form;
  *     name?:string,
  * }>
  */
-class TeamListComponent extends BaseList
+class TeamList extends BaseList
 {
     private EventModel $event;
 
@@ -100,5 +101,6 @@ class TeamListComponent extends BaseList
 
         $row2 = $this->createRow();
         $row2->addComponent(new TemplateItem($this->container, _('points: @fyziklani_team.points')), 'points');
+        $this->addPresenterButton('team', 'detail', new Title(null, _('Detail')), false, ['id' => 'fyziklani_team_id']);
     }
 }

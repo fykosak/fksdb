@@ -6,10 +6,12 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
+use FKSDB\Components\TeamSeating\Place;
+use FKSDB\Components\TeamSeating\Place2022;
+use FKSDB\Components\TeamSeating\Place2024;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -40,6 +42,7 @@ use Nette\Security\Resource;
  * @property-read int|null $force_a
  * @property-read GameLang|null $game_lang
  * @property-read TeamScholarship $scholarship
+ * @property-read string|null $place
  * @phpstan-type SerializedTeamModel array{
  *      teamId:int,
  *      name:string,
@@ -79,11 +82,19 @@ final class TeamModel2 extends Model implements Resource
         return $selection;
     }
 
-    public function getTeamSeat(): ?TeamSeatModel
+    public function getPlace(): ?Place
     {
-        /** @var TeamSeatModel|null $teamSeat */
-        $teamSeat = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
-        return $teamSeat;
+        if (!isset($this->place)) {
+            return null;
+        }
+        switch ($this->event_id) {
+            case 180:
+                return Place2024::fromPlace($this->place);
+            case 173:
+            case 165:
+                return Place2022::fromPlace($this->place);
+        }
+        return null;
     }
 
     /**
