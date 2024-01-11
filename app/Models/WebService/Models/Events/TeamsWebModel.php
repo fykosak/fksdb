@@ -46,9 +46,22 @@ class TeamsWebModel extends WebModel
         $data = [];
         /** @var TeamModel2 $team */
         foreach ($event->getTeams() as $team) {
-            $teamData = $team->__toArray();
-            $teamData['teachers'] = [];
-            $teamData['members'] = [];
+            $teamData = [
+                'teamId' => $team->fyziklani_team_id,
+                'name' => $team->name,
+                'code' => $team->createMachineCode(),
+                'status' => $team->state->value,
+                'category' => $team->category->value,
+                'created' => $team->created->format('c'),
+                'phone' => $team->phone,
+                'points' => $team->points,
+                'rankCategory' => $team->rank_category,
+                'rankTotal' => $team->rank_total,
+                'forceA' => $team->force_a,
+                'gameLang' => $team->game_lang->value,
+                'teachers' => [],
+                'members' => [],
+            ];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
                 $teamData['teachers'][] = array_merge($teacher->person->__toArray(), [
