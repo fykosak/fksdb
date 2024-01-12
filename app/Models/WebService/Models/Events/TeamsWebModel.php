@@ -51,6 +51,7 @@ class TeamsWebModel extends WebModel
                 'name' => $team->name,
                 'code' => $team->createMachineCode(),
                 'status' => $team->state->value,
+                'state' => $team->state->value,
                 'category' => $team->category->value,
                 'created' => $team->created->format('c'),
                 'phone' => $team->phone,
@@ -64,19 +65,25 @@ class TeamsWebModel extends WebModel
             ];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
-                $teamData['teachers'][] = array_merge($teacher->person->__toArray(), [
-                    'code' => $teacher->createMachineCode(),
-                ]);
+                $teamData['teachers'][] = array_merge(
+                    $teacher->person->__toArray(),
+                    [
+                        'code' => $teacher->createMachineCode(),
+                    ]
+                );
             }
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {
                 $history = $member->getPersonHistory();
                 $school = $history->school;
-                $teamData['members'][] = array_merge($member->person->__toArray(), [
-                    'code' => $member->createMachineCode(),
-                    'school' => $school ? $school->__toArray() : null,
-                    'studyYear' => $history ? $history->study_year_new->value : null,
-                ]);
+                $teamData['members'][] = array_merge(
+                    $member->person->__toArray(),
+                    [
+                        'code' => $member->createMachineCode(),
+                        'school' => $school ? $school->__toArray() : null,
+                        'studyYear' => $history ? $history->study_year_new->value : null,
+                    ]
+                );
             }
             $data[] = $teamData;
         }

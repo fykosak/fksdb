@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
@@ -25,7 +27,6 @@ use Nette\Schema\Expect;
  */
 class EventWebModel extends WebModel
 {
-
     private EventService $eventService;
     private PersonScheduleService $personScheduleService;
 
@@ -50,6 +51,7 @@ class EventWebModel extends WebModel
         }
         $doc = new \DOMDocument();
         $root = $this->createEventDetailNode($doc, $event);
+        $root->appendChild($this->createParticipantListNode($doc, $event));
         $doc->formatOutput = true;
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
@@ -109,6 +111,41 @@ class EventWebModel extends WebModel
         $rootNode = $doc->createElement('eventDetail');
         $rootNode->appendChild($event->createXMLNode($doc));
         return $rootNode;
+    }
+
+    /**
+     * @throws \DOMException
+     */
+    private function createParticipantListNode(\DOMDocument $doc, EventModel $event): \DOMElement
+    {
+        $rootNode = $doc->createElement('participants');
+        /** @var EventParticipantModel $participant */
+        foreach ($event->getParticipants() as $participant) {
+            $pNode = $this->createParticipantNode($participant, $doc);
+            $rootNode->appendChild($pNode);
+        }
+        return $rootNode;
+    }
+
+    /**
+     * @throws \DOMException
+     */
+    private function createParticipantNode(EventParticipantModel $participant, \DOMDocument $doc): \DOMElement
+    {
+        $pNode = $participant->createXMLNode($doc);
+        $history = $participant->getPersonHistory();
+        XMLHelper::fillArrayToNode([
+            'name' => $participant->person->getFullName(),
+            'personId' => (string)$participant->person->person_id,
+            'email' => $participant->person->getInfo()->email,
+            'schoolId' => $history ? (string)$history->school_id : null,
+            'schoolName' => $history ? $history->school->name_abbrev : null,
+            'studyYear' => $history ? (string)$history->study_year_new->numeric() : null,
+            'studyYearNew' => $history ? $history->study_year_new->value : null,
+            'countryIso' => $history ? (
+            ($school = $history->school) ? $school->address->country->alpha_2 : null) : null,
+        ], $doc, $pNode);
+        return $pNode;
     }
 
     /**

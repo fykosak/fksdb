@@ -15,7 +15,6 @@ use Nette\Schema\Expect;
  */
 class EventListWebModel extends WebModel
 {
-
     private EventService $eventService;
 
     public function inject(EventService $eventService): void

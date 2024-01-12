@@ -177,19 +177,18 @@ final class TeamModel2 extends Model implements Resource
     public function getPersons(): array
     {
         $persons = [];
-        /** @var TeamMemberModel $pRow */
-        foreach ($this->getMembers() as $pRow) {
-            $persons[] = $pRow->person;
+        /** @var TeamMemberModel $member */
+        foreach ($this->getMembers() as $member) {
+            $persons[] = $member->person;
         }
-        /** @var TeamTeacherModel $pRow */
-        foreach ($this->getTeachers() as $pRow) {
-            $persons[] = $pRow->person;
+        /** @var TeamTeacherModel $teacher */
+        foreach ($this->getTeachers() as $teacher) {
+            $persons[] = $teacher->person;
         }
         return $persons;
     }
 
     /**
-     * @param string $key
      * @return GameLang|TeamCategory|TeamState|mixed|null
      * @throws \ReflectionException
      */
