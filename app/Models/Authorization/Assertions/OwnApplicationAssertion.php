@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -32,13 +32,13 @@ class OwnApplicationAssertion implements Assertion
 
     private function isPartOfTeam(Role $role, TeamModel2 $application): bool
     {
-        if ($role instanceof FyziklaniTeamTeacherRole) {
+        if ($role instanceof TeamTeacherRole) {
             foreach ($role->teams as $team) {
                 if ($team->fyziklani_team_id === $application->fyziklani_team_id) {
                     return true;
                 }
             }
-        } elseif ($role instanceof FyziklaniTeamMemberRole) {
+        } elseif ($role instanceof TeamMemberRole) {
             if ($role->member->fyziklani_team_id === $application->fyziklani_team_id) {
                 return true;
             }

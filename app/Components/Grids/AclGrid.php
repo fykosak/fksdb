@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\GrantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\RoleModel;
@@ -61,9 +60,8 @@ final class AclGrid extends BaseList
                 $this->container,
                 function (LoginModel $login) {
                     $container = Html::el('span');
-                    /** @var GrantModel $grant */
-                    foreach ($login->getGrants()->where('contest_id', $this->contest->contest_id) as $grant) {
-                        $container->addHtml($grant->role->badge());
+                    foreach ($login->createContestRoles($this->contest) as $grant) {
+                        $container->addHtml($grant->badge());
                     }
                     return $container;
                 },

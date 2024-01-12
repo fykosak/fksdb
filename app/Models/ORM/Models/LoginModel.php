@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Grant;
+use FKSDB\Models\Authorization\ContestRole;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -47,31 +47,31 @@ final class LoginModel extends Model implements IIdentity
         return $this->login_id;
     }
 
-    /** @phpstan-var Grant[]   cache */
+    /** @phpstan-var ContestRole[]   cache */
     private array $roles;
 
     /**
-     * @phpstan-return Grant[]
+     * @phpstan-return ContestRole[]
      */
     public function getRoles(): array
     {
         if (!isset($this->roles)) {
             // explicitly assigned roles
-            $this->roles = [new Grant(RoleModel::REGISTERED, null), ...$this->createGrantModels()];
+            $this->roles = [new ContestRole(ContestRole::Registered, null), ...$this->createContestRoles()];
 
             // roles from other tables
             $person = $this->person;
             if ($person) {
                 foreach ($person->getActiveOrganizers() as $organizer) {
-                    $this->roles[] = new Grant(
-                        RoleModel::ORGANIZER,
+                    $this->roles[] = new ContestRole(
+                        ContestRole::Organizer,
                         $organizer->contest,
                     );
                 }
                 /** @var ContestantModel $contestant */
                 foreach ($person->getContestants() as $contestant) {
-                    $this->roles[] = new Grant(
-                        RoleModel::CONTESTANT,
+                    $this->roles[] = new ContestRole(
+                        ContestRole::Contestant,
                         $contestant->contest,
                     );
                 }
@@ -91,14 +91,31 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return Grant[]
+     * @phpstan-return ContestRole[]
      */
     public function createGrantModels(): array
     {
         $grants = [];
         /** @var GrantModel $grant */
         foreach ($this->getGrants() as $grant) {
-            $grants[] = new Grant($grant->role->name, $grant->contest);
+            $grants[] = new ContestRole($grant->role->name, $grant->contest);
+        }
+        return $grants;
+    }
+
+    /**
+     * @phpstan-return ContestRole[]
+     */
+    public function createContestRoles(?ContestModel $contest = null): array
+    {
+        $grants = [];
+        $query = $this->getGrants();
+        if ($contest) {
+            $query->where('contest_id', $contest->contest_id);
+        }
+        /** @var GrantModel $grant */
+        foreach ($query as $grant) {
+            $grants[] = new ContestRole($grant->role->name, $grant->contest);
         }
         return $grants;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Grant;
+use FKSDB\Models\Authorization\ContestRole;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -49,7 +49,7 @@ class OwnerAssertion
         }
         /** @var ContestantModel $contestant */
         $contestant = $acl->getQueriedResource();
-        /** @var Grant $grant */
+        /** @var ContestRole $grant */
         $grant = $acl->getQueriedRole();
 
         return $contestant->contest_id === $grant->getContest()->contest_id;
@@ -66,7 +66,7 @@ class OwnerAssertion
         }
         /** @var PersonModel $person */
         $person = $acl->getQueriedResource();
-        /** @var Grant $grant */
+        /** @var ContestRole $grant */
         $grant = $acl->getQueriedRole();
 
         //TODO restrict also to the current year? Probably another assertion.

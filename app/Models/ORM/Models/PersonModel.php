@@ -7,10 +7,9 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
-    FyziklaniTeamMemberRole,
-    FyziklaniTeamTeacherRole,
-    ParticipantRole
-};
+    Fyziklani\TeamMemberRole,
+    Fyziklani\TeamTeacherRole,
+    ParticipantRole};
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -308,7 +307,7 @@ final class PersonModel extends Model implements Resource
             foreach ($teachers as $row) {
                 $teams[] = $row->fyziklani_team;
             }
-            $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
+            $roles[] = new TeamTeacherRole($event, $teams);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
@@ -320,7 +319,7 @@ final class PersonModel extends Model implements Resource
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
+            $roles[] = new TeamMemberRole($event, $teamMember);
         }
         /** @var OrganizerModel|null $organizer */
         $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();

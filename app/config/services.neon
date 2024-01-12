@@ -14,7 +14,14 @@ services:
         factory: SoapServer(%wsdlUrl%,{encoding: UTF-8, send_errors: true,cache_wsdl: WSDL_CACHE_NONE})
         setup:
             - setObject(@webServiceModel)
+    #router
     - FKSDB\Models\Router\Router::createRouter
+    #ACL
+    - FKSDB\Models\Authorization\ACL::create
+    ownerAssertion: FKSDB\Models\Authorization\Assertions\OwnerAssertion
+    selfAssertion: FKSDB\Models\Authorization\Assertions\SelfAssertion
+    paymentEditableAssertion: FKSDB\Models\Authorization\Assertions\PaymentEditableAssertion
+    ownApplicationAssertion: FKSDB\Models\Authorization\Assertions\OwnApplicationAssertion
     ## Anonymous
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)

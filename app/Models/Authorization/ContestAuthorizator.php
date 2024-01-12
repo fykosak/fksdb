@@ -6,9 +6,8 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\RoleModel;
-use Nette\Security\Resource;
 use Nette\Security\Permission;
+use Nette\Security\Resource;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -44,7 +43,7 @@ class ContestAuthorizator
     public function isAllowed($resource, ?string $privilege, ?ContestModel $contest = null): bool
     {
         if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(RoleModel::GUEST, null);
+            $role = new ContestRole(ContestRole::Guest, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var LoginModel|null $login */

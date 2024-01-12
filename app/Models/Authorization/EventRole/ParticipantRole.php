@@ -10,11 +10,12 @@ use Nette\Utils\Html;
 
 class ParticipantRole extends EventRole
 {
+    public const ROLE_ID = 'event.participant';
     public EventParticipantModel $eventParticipant;
 
     public function __construct(EventModel $event, EventParticipantModel $eventParticipant)
     {
-        parent::__construct('event.participant', $event);
+        parent::__construct(self::ROLE_ID, $event);
         $this->eventParticipant = $eventParticipant;
     }
 

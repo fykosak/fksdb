@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -41,8 +41,8 @@ final class NoRoleSchedule extends Test
         foreach ($query as $person) {
             foreach ($person->getEventRoles($model) as $role) {
                 if (
-                    $role instanceof FyziklaniTeamMemberRole
-                    || $role instanceof FyziklaniTeamTeacherRole
+                    $role instanceof TeamMemberRole
+                    || $role instanceof TeamTeacherRole
                     || $role instanceof ParticipantRole
                 ) {
                     continue 2;

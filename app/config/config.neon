@@ -139,14 +139,14 @@ session:
    autoStart: true
 extensions:
     #fksrouter: FKSDB\Models\Router\RouterExtension
-    acl: FKSDB\Models\Authorization\ACLExtension
+    #acl: FKSDB\Models\Authorization\ACLExtension
     events: FKSDB\Models\Events\EventsExtension()
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
 includes:
     - router.neon
-    - acl.neon
+    #- acl.neon
     - orm.neon
     - services.neon
     - forms.neon
