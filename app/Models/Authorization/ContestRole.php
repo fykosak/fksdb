@@ -13,6 +13,7 @@ use Nette\Utils\Html;
  */
 class ContestRole implements Role
 {
+    // phpcs:disable
     public const Registered = 'registered';
     public const Guest = 'guest';
 
@@ -32,6 +33,7 @@ class ContestRole implements Role
     public const Wiki = 'wiki';
     public const Superuser = 'superuser';
     public const Cartesian = 'cartesian';
+    // phpcs:enable
 
     private ?ContestModel $contest;
     private string $roleId;
