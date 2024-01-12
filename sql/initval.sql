@@ -33,6 +33,12 @@ VALUES (1, 'webmaster', 'webař'),
        (100, 'superuser', 'složení všech rolí'),
        (1000, 'cartesian', 'cokoli s čímkoli');
 
+INSERT INTO `event_role`(`event_role_id`, `name`, `description`)
+VALUES (1, 'medic', ''),
+       (2, 'cook', ''),
+       (3, 'applicationManager', ''),
+       (4, 'boss', '');
+
 INSERT INTO `flag` (`flag_id`, `fid`, `name`, `description`, `type`)
 VALUES (1, 'serial_author', 'serial_author', 'Je organizátornizátor autor seriálu', 'contest_year'),
        (2, 'email_invalid', 'Neplatný e-mail',

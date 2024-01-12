@@ -9,6 +9,7 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
+use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
@@ -346,6 +347,24 @@ final class EventModel extends Model implements Resource, NodeCreator
                 $exception
             );
         }
+    }
+
+    /**
+     * @phpstan-return EventRole[]
+     */
+    public function createEventRoles(?LoginModel $login = null): array
+    {
+        $grants = [];
+        $query = $this->related(DbNames::TAB_EVENT_GRANT, 'event_id');
+        if ($login) {
+            $query->where('login_id', $login->login_id);
+        }
+
+        /** @var EventGrantModel $grant */
+        foreach ($query as $grant) {
+            $grants[] = new EventRole($grant->event_role->name, $grant->event);
+        }
+        return $grants;
     }
 
     /**

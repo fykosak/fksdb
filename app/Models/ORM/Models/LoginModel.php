@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -81,35 +82,12 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<GrantModel>
-     */
-    public function getGrants(): TypedGroupedSelection
-    {
-        /** @phpstan-var TypedGroupedSelection<GrantModel> $selection */
-        $selection = $this->related(DbNames::TAB_GRANT, 'login_id');
-        return $selection;
-    }
-
-    /**
-     * @phpstan-return ContestRole[]
-     */
-    public function createGrantModels(): array
-    {
-        $grants = [];
-        /** @var GrantModel $grant */
-        foreach ($this->getGrants() as $grant) {
-            $grants[] = new ContestRole($grant->role->name, $grant->contest);
-        }
-        return $grants;
-    }
-
-    /**
      * @phpstan-return ContestRole[]
      */
     public function createContestRoles(?ContestModel $contest = null): array
     {
         $grants = [];
-        $query = $this->getGrants();
+        $query = $this->related(DbNames::TAB_GRANT, 'login_id');
         if ($contest) {
             $query->where('contest_id', $contest->contest_id);
         }

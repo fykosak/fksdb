@@ -281,6 +281,12 @@ orm:
     grant:
         service: FKSDB\Models\ORM\Services\GrantService
         model: FKSDB\Models\ORM\Models\GrantModel
+    event_grant:
+        service: FKSDB\Models\ORM\Services\EventGrantService
+        model: FKSDB\Models\ORM\Models\EventGrantModel
+    event_role:
+        service: FKSDB\Models\ORM\Services\EventRoleService
+        model: FKSDB\Models\ORM\Models\EventRoleModel
     login:
         service: FKSDB\Models\ORM\Services\LoginService
         model: FKSDB\Models\ORM\Models\LoginModel
