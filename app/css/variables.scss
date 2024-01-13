@@ -4,6 +4,7 @@ $fykos-color: #1175da;
 $dsef-color: #f2b72b;
 $vyfuk-color: #ff4800;
 $ctyrboj-color: #00a6cc;
+$naboj-color: #c22d86;
 
 $contest-colors: (
         "fof": $fof-color,
@@ -12,7 +13,9 @@ $contest-colors: (
         "vyfuk": $vyfuk-color,
         "dsef": $dsef-color,
         "ctyrboj": $ctyrboj-color,
+        "naboj": $naboj-color,
 );
+// from d3
 $other-colors: (
         "color-1": #1f77b4,
         "color-2": #ff7f0e,
@@ -36,6 +39,7 @@ $contest-colors-text-emphasis: (
         "vyfuk": shade-color($vyfuk-color, 60%),
         "dsef": shade-color($dsef-color, 60%),
         "ctyrboj":shade-color($ctyrboj-color, 60%),
+        "naboj":shade-color($naboj-color, 60%),
 );
 
 $contest-colors-bg-subtle: (
@@ -45,6 +49,7 @@ $contest-colors-bg-subtle: (
         "vyfuk": tint-color($vyfuk-color, 80%),
         "dsef": tint-color($dsef-color, 80%),
         "ctyrboj": tint-color($ctyrboj-color, 80%),
+        "naboj":tint-color($naboj-color, 80%),
 );
 
 $contest-colors-border-subtle: (
@@ -54,6 +59,7 @@ $contest-colors-border-subtle: (
         "vyfuk": tint-color($vyfuk-color, 60%),
         "dsef": tint-color($dsef-color, 60%),
         "ctyrboj": tint-color($ctyrboj-color, 60%),
+        "naboj":tint-color($naboj-color, 60%),
 );
 
 $contest-colors-text-dark: (
@@ -63,6 +69,7 @@ $contest-colors-text-dark: (
         "vyfuk": tint-color($vyfuk-color, 40%),
         "dsef": tint-color($dsef-color, 40%),
         "ctyrboj": tint-color($ctyrboj-color, 40%),
+        "naboj":tint-color($naboj-color, 40%),
 );
 
 $contest-colors-bg-subtle-dark: (
@@ -72,6 +79,7 @@ $contest-colors-bg-subtle-dark: (
         "vyfuk": shade-color($vyfuk-color, 80%),
         "dsef": shade-color($dsef-color, 80%),
         "ctyrboj":shade-color($ctyrboj-color, 80%),
+        "naboj":shade-color($naboj-color, 80%),
 );
 
 $contest-colors-border-subtle-dark: (
@@ -81,4 +89,5 @@ $contest-colors-border-subtle-dark: (
         "vyfuk": shade-color($vyfuk-color, 40%),
         "dsef": shade-color($dsef-color, 40%),
         "ctyrboj":shade-color($ctyrboj-color, 40%),
+        "naboj":shade-color($naboj-color, 40%),
 );

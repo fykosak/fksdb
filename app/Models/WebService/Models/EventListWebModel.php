@@ -11,11 +11,10 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-import-type SerializedEventModel from EventModel
- * @phpstan-extends WebModel<array{event_type_ids?:array<int>,eventTypes:array<int>},SerializedEventModel[]>
+ * @phpstan-extends WebModel<array{event_type_ids:array<int>,eventTypes:array<int>},SerializedEventModel[]>
  */
 class EventListWebModel extends WebModel
 {
-
     private EventService $eventService;
 
     public function inject(EventService $eventService): void
