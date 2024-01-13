@@ -51,7 +51,6 @@ use Nette\Security\Resource;
  */
 final class EventParticipantModel extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.participant';
 
     public function getPersonHistory(): ?PersonHistoryModel
@@ -111,7 +110,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, $this->event->getSalt());
+            return MachineCode::createHash($this->person, $this->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }

@@ -137,6 +137,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             ])
         );
         $list->addRoute(
+            'events/<eventId [0-9]+>/organizers',
+            array_merge(self::ROUTER, [
+                'model' => \FKSDB\Models\WebService\Models\Events\OrganizersWebModel::class,
+            ])
+        );
+        $list->addRoute(
             'events/<eventId [0-9]+>/participants',
             array_merge(self::ROUTER, [
                 'model' => ParticipantsWebModel::class,
