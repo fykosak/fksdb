@@ -13,7 +13,7 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId?:int,event_id:int},array<mixed>>
+ * @phpstan-extends WebModel<array{eventId:int,event_id:int},array<mixed>>
  */
 class ParticipantsWebModel extends WebModel
 {
@@ -24,7 +24,7 @@ class ParticipantsWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int'),
@@ -37,7 +37,7 @@ class ParticipantsWebModel extends WebModel
      */
     protected function getJsonResponse(array $params): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId'] ?? $params['event_id']);
+        $event = $this->eventService->findByPrimary($params['eventId'] ?? $params['event_id']); // @phpstan-ignore-line
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
@@ -57,6 +57,7 @@ class ParticipantsWebModel extends WebModel
         }
         return $data;
     }
+
     protected function isAuthorized(array $params): bool
     {
         $event = $this->eventService->findByPrimary($params['eventId']);

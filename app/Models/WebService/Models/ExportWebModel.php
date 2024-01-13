@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
+use Nette\Schema\Elements\Structure;
 
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
@@ -98,8 +100,18 @@ class ExportWebModel extends WebModel
         );
     }
 
-    protected function isAuthorized(array $arguments): bool
+    protected function isAuthorized(array $params): bool
     {
         return false;
+    }
+
+    protected function getExpectedParams(): Structure
+    {
+        throw new NotImplementedException();
+    }
+
+    protected function getJsonResponse(array $params): array
+    {
+        throw new NotImplementedException();
     }
 }

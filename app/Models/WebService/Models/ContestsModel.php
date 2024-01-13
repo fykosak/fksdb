@@ -28,7 +28,7 @@ class ContestsModel extends WebModel
         $this->contestService = $contestService;
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $data = [];
         /** @var ContestModel $contest */
@@ -38,13 +38,13 @@ class ContestsModel extends WebModel
         return $data;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([]);
     }
 
     protected function isAuthorized(array $params): bool
     {
-        return $this->contestAuthorizator->isAllowedContestLess('contest', 'api');
+        return $this->contestAuthorizator->isAllowedAnyContest(ContestModel::RESOURCE_ID, 'api');
     }
 }

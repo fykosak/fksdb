@@ -26,7 +26,7 @@ class ReportsWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
@@ -36,7 +36,7 @@ class ReportsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         set_time_limit(-1);
 
@@ -54,6 +54,7 @@ class ReportsWebModel extends WebModel
             $logger->getMessages()
         );
     }
+
     protected function isAuthorized(array $params): bool
     {
         $event = $this->eventService->findByPrimary($params['eventId']);

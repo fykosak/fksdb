@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
+use Nette\Schema\Elements\Structure;
 use Nette\SmartObject;
 
 /**
@@ -28,7 +30,7 @@ class SignaturesWebModel extends WebModel
      * @throws \SoapFault
      * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    protected function getResponse(\stdClass $args): \SoapVar
     {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
@@ -58,5 +60,10 @@ class SignaturesWebModel extends WebModel
     protected function isAuthorized(array $params): bool
     {
         return false;
+    }
+
+    protected function getExpectedParams(): Structure
+    {
+        throw new GoneException();
     }
 }

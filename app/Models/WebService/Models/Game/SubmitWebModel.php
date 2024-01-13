@@ -28,7 +28,7 @@ class SubmitWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
@@ -42,7 +42,7 @@ class SubmitWebModel extends WebModel
      * @phpstan-return Message[]
      * @throws GoneException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         throw new GoneException();
         /* try {

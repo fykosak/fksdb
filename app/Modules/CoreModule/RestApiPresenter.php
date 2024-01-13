@@ -105,7 +105,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             }
             /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->getContext());
-            $model->setUser($this->getUser());
             return $model;
         }
         throw new \InvalidArgumentException();

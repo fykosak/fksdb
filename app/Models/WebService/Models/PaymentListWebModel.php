@@ -30,7 +30,7 @@ class PaymentListWebModel extends WebModel
     /**
      * @throws \Exception
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['eventId']);
         if (!$event) {
@@ -53,7 +53,7 @@ class PaymentListWebModel extends WebModel
         return $data;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),

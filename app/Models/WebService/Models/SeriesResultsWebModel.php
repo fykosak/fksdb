@@ -29,7 +29,7 @@ class SeriesResultsWebModel extends WebModel
         $this->contestYearService = $contestYearService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'contestId' => Expect::scalar()->castTo('int'),
@@ -41,7 +41,7 @@ class SeriesResultsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear(
             $params['contest_id'] ?? $params['contestId'],

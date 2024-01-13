@@ -110,7 +110,7 @@ class EventWebModel extends WebModel
     /**
      * @throws \DOMException
      */
-    public function createEventDetailNode(\DOMDocument $doc, EventModel $event): \DOMElement
+    private function createEventDetailNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('eventDetail');
         $rootNode->appendChild($event->createXMLNode($doc));
@@ -213,7 +213,7 @@ class EventWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['event_id'] ?? $params['eventId']);
         if (is_null($event)) {
@@ -230,13 +230,14 @@ class EventWebModel extends WebModel
         return $data;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'event_id' => Expect::scalar()->castTo('int'),
             'eventId' => Expect::scalar()->castTo('int'),
         ]);
     }
+
     protected function isAuthorized(array $params): bool
     {
         $event = $this->eventService->findByPrimary($params['eventId']);

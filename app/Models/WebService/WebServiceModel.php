@@ -147,7 +147,6 @@ class WebServiceModel
             }
             /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
             $model = $reflection->newInstance($this->container);
-            $model->setUser($this->user);
             return $model;
         }
         return null;

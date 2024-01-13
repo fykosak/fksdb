@@ -42,7 +42,7 @@ class EventListWebModel extends WebModel
         return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $query = $this->eventService->getTable()->where(
             'event_type_id',
@@ -72,7 +72,7 @@ class EventListWebModel extends WebModel
         return $events;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventTypes' => Expect::listOf(Expect::int()),
@@ -82,10 +82,16 @@ class EventListWebModel extends WebModel
 
     protected function isAuthorized(array $params): bool
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            return false;
+        $query = $this->eventService->getTable()->where(
+            'event_type_id',
+            array_merge($params['event_type_ids'], $params['eventTypes'])
+        );
+        /** @var EventModel $event */
+        foreach ($query as $event) {
+            if ($this->eventAuthorizator->isAllowed($event, 'api', $event)) {
+                return false;
+            }
         }
-        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'api', $event);
+        return true;
     }
 }
