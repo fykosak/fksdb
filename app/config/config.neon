@@ -146,12 +146,10 @@ extensions:
 
 includes:
     - router.neon
-    #- acl.neon
     - orm.neon
     - services.neon
     - forms.neon
     - stalking.neon
-    #- payment.neon
     - applications/payment.neon
     - applications/fof.neon
     - applications/fol.neon

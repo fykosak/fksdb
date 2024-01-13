@@ -47,13 +47,10 @@ final class ConflictRole extends Test
                 || $role instanceof ParticipantRole
             ) {
                 $participantRole = true;
-            } elseif (
-                $role instanceof EventOrganizerRole
-                || $role instanceof ContestOrganizerRole
-            ) {
-                $organizerRole = true;
             } elseif ($role instanceof TeamTeacherRole) {
                 $teacherRole = true;
+            } else{
+                $organizerRole = true;
             }
         }
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {

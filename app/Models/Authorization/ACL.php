@@ -112,7 +112,6 @@ final class ACL
         $service->addResource('aesop');
         $service->addResource('soap');
 
-        $service->addResource('event.dashboard');
 
 // contestatn upload
         $service->allow(ContestRole::Contestant, SubmitModel::RESOURCE_ID, ['list', 'upload']);
@@ -133,7 +132,7 @@ final class ACL
             'edit',
             $selfAssertion
         );
-        $service->allow(ContestRole::Organizer, PersonModel::RESOURCE_ID, 'stalk.search');
+        $service->allow(ContestRole::Organizer, PersonModel::RESOURCE_ID, 'search');
         $service->allow(
             ContestRole::Organizer,
             PersonModel::RESOURCE_ID,
@@ -143,13 +142,13 @@ final class ACL
         $service->allow(
             ContestRole::Organizer,
             PersonModel::RESOURCE_ID,
-            'stalk.basic',
+            'detail.basic',
             fn(...$args) => $ownerAssertion->existsOwnContestant(...$args)
         );
         $service->allow(
             ContestRole::Organizer,
             PersonModel::RESOURCE_ID,
-            'stalk.full',
+            'detail.full',
             $selfAssertion
         );
         $service->allow(ContestRole::Organizer, ContestModel::RESOURCE_ID, 'chart');
@@ -175,7 +174,7 @@ final class ACL
         $service->allow(
             ContestRole::InboxManager,
             PersonModel::RESOURCE_ID,
-            'stalk.restrict',
+            'detail.restrict',
             fn(...$args) => $ownerAssertion->existsOwnContestant(...$args)
         );
         $service->allow(ContestRole::TaskManager, SubmitModel::RESOURCE_ID);
@@ -188,7 +187,7 @@ final class ACL
         $service->allow(ContestRole::SchoolManager, SchoolModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, 'export', 'execute');
-        $service->allow(ContestRole::EventManager, PersonModel::RESOURCE_ID, ['edit', 'stalk.full']);
+        $service->allow(ContestRole::EventManager, PersonModel::RESOURCE_ID, ['edit', 'detail.full']);
         $service->allow(ContestRole::Boss, OrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::Boss, PersonModel::RESOURCE_ID);
         $service->allow(ContestRole::Boss, EmailMessageModel::RESOURCE_ID, 'list');
@@ -230,13 +229,13 @@ final class ACL
         $service->allow(ContestRole::EventManager, ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, PersonScheduleModel::RESOURCE_ID);
 
-        $service->allow(BaseRole::Registered, 'event.dashboard');
+        $service->allow(BaseRole::Registered, EventModel::RESOURCE_ID,'dashboard');
         $service->allow(BaseRole::Registered, PaymentModel::RESOURCE_ID, 'detail', $selfAssertion);
         $service->allow(
             BaseRole::Registered,
             PaymentModel::RESOURCE_ID,
             'edit',
-            new LogicAnd($selfAssertion, $paymentEditableAssertion)
+            new LogicAnd($selfAssertion, $paymentEditableAssertion)// @phpstan-ignore-line
         );
         $service->allow(
             [TeamMemberRole::ROLE_ID, TeamTeacherRole::ROLE_ID],

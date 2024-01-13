@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
+use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
@@ -150,7 +156,7 @@ final class LoginModel extends Model implements IIdentity
             ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new EventRole($grant->event_role->name, $grant->event);
+            $grants[] = new EventRole('event.' . $grant->event_role->name, $grant->event);
         }
         return $grants;
     }
@@ -160,10 +166,37 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getImplicitEventRoles(EventModel $event): array
     {
+        $roles = [];
         if ($this->person) {
-            return $this->person->getEventRoles($event);
+
+            $teachers = $this->person->getTeamTeachers($event);
+            if ($teachers->count('*')) {
+                $teams = [];
+                /** @var TeamTeacherModel $row */
+                foreach ($teachers as $row) {
+                    $teams[] = $row->fyziklani_team;
+                }
+                $roles[] = new TeamTeacherRole($event, $teams);
+            }
+            $eventOrganizer = $this->person->getEventOrganizer($event);
+            if (isset($eventOrganizer)) {
+                $roles[] = new EventOrganizerRole($event, $eventOrganizer);
+            }
+            $eventParticipant = $this->person->getEventParticipant($event);
+            if (isset($eventParticipant)) {
+                $roles[] = new ParticipantRole($event, $eventParticipant);
+            }
+            $teamMember = $this->person->getTeamMember($event);
+            if ($teamMember) {
+                $roles[] = new TeamMemberRole($event, $teamMember);
+            }
+            /** @var OrganizerModel|null $organizer */
+            $organizer = $this->person->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
+            if (isset($organizer)) {
+                $roles[] = new ContestOrganizerRole($event, $organizer);
+            }
         }
-        return [];
+        return $roles;
     }
 
     /**

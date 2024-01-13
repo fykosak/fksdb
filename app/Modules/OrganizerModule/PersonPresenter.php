@@ -57,7 +57,7 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedSearch(): bool
     {
-        return $this->contestAuthorizator->isAllowed('person', 'stalk.search', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'search', $this->getSelectedContest());
     }
 
     /**
@@ -76,13 +76,13 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        $full = $this->contestAuthorizator->isAllowed($this->getEntity(), 'stalk.full', $this->getSelectedContest());
+        $full = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.full', $this->getSelectedContest());
         $restrict = $this->contestAuthorizator->isAllowed(
             $this->getEntity(),
-            'stalk.restrict',
+            'detail.restrict',
             $this->getSelectedContest()
         );
-        $basic = $this->contestAuthorizator->isAllowed($this->getEntity(), 'stalk.basic', $this->getSelectedContest());
+        $basic = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.basic', $this->getSelectedContest());
 
         return $full || $restrict || $basic;
     }
@@ -173,7 +173,7 @@ final class PersonPresenter extends BasePresenter
      * @throws GoneException
      * @throws NoContestAvailable
      */
-    public function createComponentStalkingContainer(): StalkingContainer
+    public function createComponentDetailContainer(): StalkingContainer
     {
         return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
@@ -187,7 +187,7 @@ final class PersonPresenter extends BasePresenter
             'person_id'
         );
 
-        $form->addSubmit('stalk', _('Let\'s stalk'))
+        $form->addSubmit('detail', _('Let\'s stalk'))
             ->onClick[] =
             function (SubmitButton $button) {
                 /** @phpstan-var array{person_id:int} $values */
@@ -257,13 +257,13 @@ final class PersonPresenter extends BasePresenter
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
-                if ($this->contestAuthorizator->isAllowed($person, 'stalk.basic', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed($person, 'detail.basic', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'stalk.restrict', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed($person, 'detail.restrict', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'stalk.full', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed($person, 'detail.full', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
             } catch (ModelNotFoundException $exception) {
