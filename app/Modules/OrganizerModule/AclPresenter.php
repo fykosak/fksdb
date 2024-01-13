@@ -15,7 +15,7 @@ class AclPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed('acl', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($this->getSelectedContest(), 'acl', $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle

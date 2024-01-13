@@ -39,7 +39,7 @@ final class ClosePresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed($this->getModelResource(), 'default');
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'default', $this->getEvent());
     }
 
     /**
@@ -65,7 +65,7 @@ final class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->isAllowed($this->getModelResource(), 'default');
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'default', $this->getEvent());
     }
 
 
@@ -75,7 +75,7 @@ final class ClosePresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**

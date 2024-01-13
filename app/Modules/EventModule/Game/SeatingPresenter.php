@@ -47,7 +47,7 @@ final class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.seating', 'default');
+        return $this->eventAuthorizator->isAllowed('game.seating', 'default', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle

@@ -54,4 +54,9 @@ class SignaturesWebModel extends WebModel
 
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

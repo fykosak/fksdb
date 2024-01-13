@@ -49,16 +49,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @param Resource|string|null $resource
-     * Check if has contest permission or is Event organizer
-     * @throws EventNotFoundException
-     */
-    final public function isAllowed($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
     protected function isEnabled(): bool
     {
         return true;

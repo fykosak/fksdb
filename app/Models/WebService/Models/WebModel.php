@@ -117,5 +117,5 @@ abstract class WebModel
     /**
      * @phpstan-param TParams $params
      */
-    abstract protected function isAuthorized(array $arguments): bool;
+    abstract protected function isAuthorized(array $params): bool;
 }

@@ -29,7 +29,7 @@ final class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed('game.task', 'list');
+        return $this->eventAuthorizator->isAllowed('game.task', 'list', $this->getEvent());
     }
 
     /**
@@ -46,7 +46,7 @@ final class TaskPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**

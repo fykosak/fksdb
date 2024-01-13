@@ -17,7 +17,6 @@ use Nette\Application\BadRequestException;
  */
 class ResultsWebModel extends WebModel
 {
-
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 

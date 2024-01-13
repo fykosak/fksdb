@@ -8,13 +8,16 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $contest_id
  * @property-read string $name
  */
-final class ContestModel extends Model
+final class ContestModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'contest';
+
     public const ID_FYKOS = 1;
     public const ID_VYFUK = 2;
 
@@ -139,5 +142,10 @@ final class ContestModel extends Model
             'firstYear' => $this->getFirstYear(),
             'lastYear' => $this->getLastYear(),
         ];
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
     }
 }

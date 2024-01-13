@@ -195,7 +195,7 @@ final class ApplicationPresenter extends BasePresenter
     private function isRelatedPerson(BaseHolder $holder): bool
     {
         // everyone is related
-        if ($holder->getModelState() === Machine::STATE_INIT) {
+        if ($holder->getModelState()->value === Machine::STATE_INIT) {
             return true;
         }
 

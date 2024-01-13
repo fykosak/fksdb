@@ -20,6 +20,6 @@ final class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.dashboard', 'default');
+        return $this->eventAuthorizator->isAllowed('game.dashboard', 'default', $this->getEvent());
     }
 }

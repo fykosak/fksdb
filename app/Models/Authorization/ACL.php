@@ -16,6 +16,7 @@ use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
 use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
@@ -84,36 +85,35 @@ final class ACL
         $service->addRole(ContestRole::Wiki);
 
         $service->addResource(SubmitModel::RESOURCE_ID);
-        $service->addResource('points');
         $service->addResource(TaskModel::RESOURCE_ID);
         $service->addResource(PersonModel::RESOURCE_ID);
         $service->addResource(ContestantModel::RESOURCE_ID);
         $service->addResource(SchoolModel::RESOURCE_ID);
         $service->addResource(QueryModel::RESOURCE_ID);
-        $service->addResource('export.adhoc');
-        $service->addResource('export');
         $service->addResource(OrganizerModel::RESOURCE_ID);
         $service->addResource(EventModel::RESOURCE_ID);
         $service->addResource(TeacherModel::RESOURCE_ID);
         $service->addResource(EmailMessageModel::RESOURCE_ID);
-        $service->addResource('chart');
-        $service->addResource('webService');
-        $service->addResource('aesop');
-        $service->addResource('soap');
-        $service->addResource('acl');
-
+        $service->addResource(ContestModel::RESOURCE_ID);
         $service->addResource(EventParticipantModel::RESOURCE_ID);
         $service->addResource(TeamModel2::RESOURCE_ID);
-        $service->addResource('event.dashboard');
-        $service->addResource(PaymentModel::RESOURCE_ID);
-        $service->addResource(EventOrganizerModel::RESOURCE_ID);
-        $service->addResource('event.chart');
         $service->addResource(ScheduleGroupModel::RESOURCE_ID);
         $service->addResource(ScheduleItemModel::RESOURCE_ID);
         $service->addResource(PersonScheduleModel::RESOURCE_ID);
         $service->addResource(ProducerModel::RESOURCE_ID);
         $service->addResource(ProductModel::RESOURCE_ID);
         $service->addResource(ItemModel::RESOURCE_ID);
+        $service->addResource(PaymentModel::RESOURCE_ID);
+        $service->addResource(EventOrganizerModel::RESOURCE_ID);
+
+        $service->addResource('export.adhoc');
+        $service->addResource('export');
+        $service->addResource('webService');
+        $service->addResource('aesop');
+        $service->addResource('soap');
+
+        $service->addResource('event.dashboard');
+
 // contestatn upload
         $service->allow(ContestRole::Contestant, SubmitModel::RESOURCE_ID, ['list', 'upload']);
         $service->allow(
@@ -123,7 +123,7 @@ final class ACL
             fn(...$args): bool => $ownerAssertion->isSubmitUploader(...$args)
         );
 // basic for organizer
-        $service->allow(ContestRole::Organizer, 'points', 'entry');
+        $service->allow(ContestRole::Organizer, TaskModel::RESOURCE_ID, 'points');
         $service->allow(ContestRole::Organizer, ContestantModel::RESOURCE_ID, 'list');
         $service->allow(ContestRole::Organizer, SchoolModel::RESOURCE_ID, 'list');
         $service->allow(ContestRole::Organizer, OrganizerModel::RESOURCE_ID, 'list');
@@ -152,7 +152,7 @@ final class ACL
             'stalk.full',
             $selfAssertion
         );
-        $service->allow(ContestRole::Organizer, 'chart');
+        $service->allow(ContestRole::Organizer, ContestModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::Organizer, 'webService', 'default');
 
         $service->allow(ContestRole::InboxManager, 'export', 'execute');
@@ -192,7 +192,7 @@ final class ACL
         $service->allow(ContestRole::Boss, OrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::Boss, PersonModel::RESOURCE_ID);
         $service->allow(ContestRole::Boss, EmailMessageModel::RESOURCE_ID, 'list');
-        $service->allow(ContestRole::Boss, 'acl', 'list');
+        $service->allow(ContestRole::Boss, ContestModel::RESOURCE_ID, 'acl');
         $service->allow(
             ContestRole::Web,
             'export',
@@ -225,7 +225,7 @@ final class ACL
         $service->allow(EventOrganizerRole::ROLE_ID, PersonScheduleModel::RESOURCE_ID, ['list', 'detail']);
         $service->allow(ContestRole::EventManager, EventOrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, EventParticipantModel::RESOURCE_ID);
-        $service->allow(ContestRole::EventManager, 'event.chart');
+        $service->allow(ContestRole::EventManager, EventModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::EventManager, ScheduleGroupModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, PersonScheduleModel::RESOURCE_ID);
