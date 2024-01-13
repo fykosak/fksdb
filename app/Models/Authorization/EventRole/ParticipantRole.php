@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Utils\Html;
 
-class ParticipantRole extends EventRole
+final class ParticipantRole extends EventRole
 {
     public const ROLE_ID = 'event.participant';
     public EventParticipantModel $eventParticipant;

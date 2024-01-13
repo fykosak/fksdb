@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use Nette\Utils\Html;
 
-class ContestOrganizerRole extends EventRole
+final class ContestOrganizerRole extends EventRole
 {
     public const ROLE_ID = 'event.contestOrganizer';
     public OrganizerModel $organizer;

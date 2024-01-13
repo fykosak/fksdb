@@ -37,11 +37,9 @@ final class ContestAuthorizator
         /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         if ($login) {
-            foreach ($login->getRoles() as $role) {
-                if ($role->getContest()->contest_id === $contest->contest_id) {
-                    if ($this->permission->isAllowed($role, $resource, $privilege)) {
-                        return true;
-                    }
+            foreach ($login->getContestRoles($contest) as $role) {
+                if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                    return true;
                 }
             }
         }

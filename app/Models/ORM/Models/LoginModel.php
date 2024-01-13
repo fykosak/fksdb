@@ -48,56 +48,40 @@ final class LoginModel extends Model implements IIdentity
         return $this->login_id;
     }
 
+    /** @var ContestRole[] */
+    private array $allContestRoles;
+
     /**
      * @phpstan-return ContestRole[]
      */
     public function getRoles(): array
     {
-        static $roles;
-        if (!isset($roles)) {
-            $roles = $this->createContestRoles();
-            // roles from other tables
-            $person = $this->person;
-            if ($person) {
-                foreach ($person->getActiveOrganizers() as $organizer) {
-                    $roles[] = new ContestRole(
-                        ContestRole::Organizer,
-                        $organizer->contest,
-                    );
-                }
-                /** @var ContestantModel $contestant */
-                foreach ($person->getContestants() as $contestant) {
-                    $roles[] = new ContestRole(
-                        ContestRole::Contestant,
-                        $contestant->contest,
-                    );
-                }
-            }
+        if (!isset($this->allContestRoles)) {
+            $this->allContestRoles = [... $this->getExplicitContestRoles(), ...$this->getImplicitContestRoles()];
         }
-        return $roles;
+        return $this->allContestRoles;
     }
+
+    /** @var ContestRole[][] */
+    private array $contestRoles;
 
     /**
      * @phpstan-return ContestRole[]
      */
-    public function getEventRoles(EventModel $event): array
+    public function getContestRoles(ContestModel $contest): array
     {
-        static $eventRoles;
-        if (!isset($eventRoles)) {
-            $eventRoles = $this->createEventRoles($event);
-            // roles from other tables
-            $person = $this->person;
-            if ($person) {
-                $eventRoles = $person->getEventRoles($event);
-            }
+        if (!isset($this->contestRoles[$contest->contest_id])) {
+            $this->contestRoles[$contest->contest_id] = [
+                ... $this->getExplicitContestRoles($contest),
+                ...$this->getImplicitContestRoles($contest),
+            ];
         }
-        return $eventRoles;
+        return $this->contestRoles[$contest->contest_id];
     }
-
     /**
      * @phpstan-return ContestRole[]
      */
-    public function createContestRoles(?ContestModel $contest = null): array
+    public function getExplicitContestRoles(?ContestModel $contest = null): array
     {
         $grants = [];
         $query = $this->related(DbNames::TAB_GRANT, 'login_id');
@@ -112,17 +96,74 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
+     * @phpstan-return ContestRole[]
+     */
+    public function getImplicitContestRoles(?ContestModel $contest = null): array
+    {
+        $roles = [];
+        if ($this->person) {
+            foreach ($this->person->getActiveOrganizers() as $organizer) {
+                if (!$contest || $organizer->contest_id === $contest->contest_id) {
+                    $roles[] = new ContestRole(
+                        ContestRole::Organizer,
+                        $organizer->contest,
+                    );
+                }
+            }
+            /** @var ContestantModel $contestant */
+            foreach ($this->person->getContestants() as $contestant) {
+                if (!$contest || $contestant->contest_id === $contest->contest_id) {
+                    $roles[] = new ContestRole(
+                        ContestRole::Contestant,
+                        $contestant->contest,
+                    );
+                }
+            }
+        }
+        return $roles;
+    }
+
+    /** @var EventRole[][] */
+    private array $eventRoles = [];
+
+    /**
      * @phpstan-return EventRole[]
      */
-    public function createEventRoles(EventModel $event): array
+    public function getEventRoles(EventModel $event): array
+    {
+        if (!isset($this->eventRoles[$event->event_id])) {
+            $this->eventRoles[$event->event_id] = [
+                ...$this->getImplicitEventRoles($event),
+                ...$this->getExplicitEventRoles($event),
+            ];
+        }
+        return $this->eventRoles[$event->event_id];
+    }
+
+    /**
+     * @phpstan-return EventRole[]
+     */
+    public function getExplicitEventRoles(EventModel $event): array
     {
         $grants = [];
-        $query = $this->related(DbNames::TAB_EVENT_GRANT, 'login_id')->where('event_id', $event->event_id);
+        $query = $this->related(DbNames::TAB_EVENT_GRANT, 'login_id')
+            ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
             $grants[] = new EventRole($grant->event_role->name, $grant->event);
         }
         return $grants;
+    }
+
+    /**
+     * @phpstan-return EventRole[]
+     */
+    public function getImplicitEventRoles(EventModel $event): array
+    {
+        if ($this->person) {
+            return $this->person->getEventRoles($event);
+        }
+        return [];
     }
 
     /**

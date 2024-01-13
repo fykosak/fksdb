@@ -6,7 +6,7 @@ namespace FKSDB\Models\Authorization;
 
 use Nette\Security\Role;
 
-class BaseRole implements Role
+final class BaseRole implements Role
 {
     // phpcs:disable
     public const Registered = 'registered';

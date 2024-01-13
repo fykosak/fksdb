@@ -11,12 +11,9 @@ use Nette\Utils\Html;
 /**
  * POD for briefer encapsulation of granted roles (instead of ModelMGrant).
  */
-class ContestRole implements Role
+final class ContestRole implements Role
 {
     // phpcs:disable
-    public const Registered = 'registered';
-    public const Guest = 'guest';
-
     public const Webmaster = 'webmaster';
     public const TaskManager = 'taskManager';
     public const Dispatcher = 'dispatcher';

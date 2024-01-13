@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use Nette\Utils\Html;
 
-class TeamMemberRole extends EventRole
+final class TeamMemberRole extends EventRole
 {
     public const ROLE_ID = 'event.fyziklani.member';
     public TeamMemberModel $member;

@@ -59,7 +59,7 @@ final class EventAclGrid extends BaseList
                 $this->container,
                 function (LoginModel $login) {
                     $container = Html::el('span');
-                    foreach ($login->createEventRoles($this->event) as $grant) {
+                    foreach ($login->getExplicitEventRoles($this->event) as $grant) {
                         $container->addHtml($grant->badge());
                     }
                     return $container;

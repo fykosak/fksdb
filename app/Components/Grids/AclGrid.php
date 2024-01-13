@@ -60,7 +60,7 @@ final class AclGrid extends BaseList
                 $this->container,
                 function (LoginModel $login) {
                     $container = Html::el('span');
-                    foreach ($login->createContestRoles($this->contest) as $grant) {
+                    foreach ($login->getExplicitContestRoles($this->contest) as $grant) {
                         $container->addHtml($grant->badge());
                     }
                     return $container;

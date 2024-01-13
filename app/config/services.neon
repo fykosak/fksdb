@@ -35,7 +35,6 @@ services:
     - FKSDB\Models\Authorization\Authorizators\ContestAuthorizator
     - FKSDB\Models\Authorization\Authorizators\EventAuthorizator
     - FKSDB\Models\Authorization\Authorizators\BaseAuthorizator
-    - FKSDB\Models\Authorization\RelatedPersonAuthorizator
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory
