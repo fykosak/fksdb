@@ -95,4 +95,9 @@ class SubmitWebModel extends WebModel
             ];
         }*/
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

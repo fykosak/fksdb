@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\WebService\Models\{ContestsModel,
     EventListWebModel,
@@ -19,10 +19,6 @@ use FKSDB\Models\WebService\Models\{ContestsModel,
     SignaturesWebModel,
     StatsWebModel,
     WebModel};
-use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
-    Schedule\ItemListWebModel,
-    Schedule\PersonListWebModel,
-    TeamsWebModel,};
 use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
@@ -40,8 +36,6 @@ class WebServiceModel
 
     private const WEB_MODELS = [
         'GetFyziklaniResults' => Game\ResultsWebModel::class,
-        // 'game/submit' => Game\SubmitWebModel::class,
-        'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -52,18 +46,6 @@ class WebServiceModel
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
-        // events
-        'events' => EventListWebModel::class,
-        'event/schedule/items' => ItemListWebModel::class,
-        'event/schedule/persons' => PersonListWebModel::class,
-        'event/teams' => TeamsWebModel::class,
-        'event/participants' => ParticipantsWebModel::class,
-        // game
-        'game/results' => Game\ResultsWebModel::class,
-        'game/submit' => Game\SubmitWebModel::class,
-        // contest
-        'contest/organizers' => OrganizersWebModel::class,
-        'contest/stats' => StatsWebModel::class,
     ];
 
     public function __construct(
@@ -95,7 +77,7 @@ class WebServiceModel
             $login = $this->authenticator->authenticate($args->username, $args->password);
             $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
-            if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+            if (!$this->contestAuthorizator->isAllowedAnyContest('soap', 'default')) {
                 $this->log('Unauthorized.');
                 throw new \SoapFault('Sender', 'Unauthorized.');
             }
@@ -134,7 +116,7 @@ class WebServiceModel
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
-        if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+        if (!$this->contestAuthorizator->isAllowedAnyContest('soap', 'default')) {
             $this->log(sprintf('Unauthorized %s ', $nameService));
             throw new \SoapFault('Sender', 'Unauthorized');
         }

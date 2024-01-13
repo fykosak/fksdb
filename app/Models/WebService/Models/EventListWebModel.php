@@ -79,4 +79,13 @@ class EventListWebModel extends WebModel
             'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int')),
         ]);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $event = $this->eventService->findByPrimary($params['eventId']);
+        if (!$event) {
+            return false;
+        }
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'api', $event);
+    }
 }

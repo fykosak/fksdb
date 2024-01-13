@@ -15,7 +15,6 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Authorizator;
 
 final class InboxPresenter extends BasePresenter
 {
@@ -41,7 +40,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedInbox(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed('submit', null, $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle

@@ -22,6 +22,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\Resource;
@@ -51,9 +52,12 @@ final class PersonPresenter extends BasePresenter
         return new PageTitle(null, _('Find person'), 'fas fa-search');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedSearch(): bool
     {
-        return $this->isAnyContestAuthorized('person', 'stalk.search');
+        return $this->contestAuthorizator->isAllowed('person', 'stalk.search', $this->getSelectedContest());
     }
 
     /**
@@ -68,12 +72,17 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function authorizedDetail(): bool
     {
-        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
-        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
-        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
+        $full = $this->contestAuthorizator->isAllowed($this->getEntity(), 'stalk.full', $this->getSelectedContest());
+        $restrict = $this->contestAuthorizator->isAllowed(
+            $this->getEntity(),
+            'stalk.restrict',
+            $this->getSelectedContest()
+        );
+        $basic = $this->contestAuthorizator->isAllowed($this->getEntity(), 'stalk.basic', $this->getSelectedContest());
 
         return $full || $restrict || $basic;
     }
@@ -93,7 +102,7 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedEdit(): bool
     {
-        return $this->isAnyContestAuthorized($this->getEntity(), 'edit');
+        return $this->contestAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getSelectedContest());
     }
 
     public function titleCreate(): PageTitle
@@ -108,7 +117,7 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedPizza(): bool
     {
-        return $this->isAnyContestAuthorized('person', 'pizza');
+        return $this->contestAuthorizator->isAllowed('person', 'pizza', $this->getSelectedContest());
     }
 
     /**
@@ -133,7 +142,11 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedTests(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'data-test');
+        return $this->contestAuthorizator->isAllowed(
+            PersonModel::RESOURCE_ID,
+            'data-test',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleTests(): PageTitle
@@ -143,7 +156,11 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'data-test');
+        return $this->contestAuthorizator->isAllowed(
+            PersonModel::RESOURCE_ID,
+            'data-test',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleList(): PageTitle
@@ -154,6 +171,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     public function createComponentStalkingContainer(): StalkingContainer
     {
@@ -190,6 +208,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     protected function createComponentCreateForm(): PersonFormComponent
     {
@@ -230,6 +249,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     private function getUserPermissions(bool $throw = true): int
     {
@@ -237,13 +257,13 @@ final class PersonPresenter extends BasePresenter
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
-                if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
+                if ($this->contestAuthorizator->isAllowed($person, 'stalk.basic', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
-                if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
+                if ($this->contestAuthorizator->isAllowed($person, 'stalk.restrict', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
+                if ($this->contestAuthorizator->isAllowed($person, 'stalk.full', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
             } catch (ModelNotFoundException $exception) {
@@ -259,6 +279,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NoContestAvailable
      */
     protected function createComponentEditForm(): PersonFormComponent
     {
@@ -296,9 +317,10 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAnyContestAuthorized($resource, $privilege);
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

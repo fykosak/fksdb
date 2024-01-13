@@ -104,10 +104,11 @@ final class SchoolsPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAnyContestAuthorized($resource, $privilege);
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
     protected function getORMService(): SchoolService

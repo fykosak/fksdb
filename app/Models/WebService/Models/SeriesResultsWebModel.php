@@ -111,4 +111,13 @@ class SeriesResultsWebModel extends WebModel
             'submits' => $results,
         ];
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
+        return $this->contestAuthorizator->isAllowed($contestYear->contest, 'api', $contestYear->contest);
+    }
 }

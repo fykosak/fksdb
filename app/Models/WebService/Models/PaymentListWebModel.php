@@ -59,4 +59,9 @@ class PaymentListWebModel extends WebModel
             'eventId' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

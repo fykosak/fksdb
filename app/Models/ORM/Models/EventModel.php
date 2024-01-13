@@ -350,24 +350,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @phpstan-return EventRole[]
-     */
-    public function createEventRoles(?LoginModel $login = null): array
-    {
-        $grants = [];
-        $query = $this->related(DbNames::TAB_EVENT_GRANT, 'event_id');
-        if ($login) {
-            $query->where('login_id', $login->login_id);
-        }
-
-        /** @var EventGrantModel $grant */
-        foreach ($query as $grant) {
-            $grants[] = new EventRole($grant->event_role->name, $grant->event);
-        }
-        return $grants;
-    }
-
-    /**
      * @phpstan-return Test<self>[]
      */
     public static function getTests(Container $container): array

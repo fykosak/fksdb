@@ -35,16 +35,16 @@ class ContestRole implements Role
     public const Cartesian = 'cartesian';
     // phpcs:enable
 
-    private ?ContestModel $contest;
+    private ContestModel $contest;
     private string $roleId;
 
-    public function __construct(string $roleId, ?ContestModel $contest = null)
+    public function __construct(string $roleId, ContestModel $contest)
     {
         $this->roleId = $roleId;
         $this->contest = $contest;
     }
 
-    public function getContest(): ?ContestModel
+    public function getContest(): ContestModel
     {
         return $this->contest;
     }

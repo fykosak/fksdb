@@ -49,4 +49,9 @@ class ItemListWebModel extends WebModel
         }
         return $data;
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

@@ -13,8 +13,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
-use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -62,6 +63,7 @@ abstract class BasePresenter extends Presenter
     protected PasswordAuthenticator $passwordAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
 
     final public function injectBase(
         Container $diContainer,
@@ -71,7 +73,8 @@ abstract class BasePresenter extends Presenter
         TokenAuthenticator $tokenAuthenticator,
         PasswordAuthenticator $passwordAuthenticator,
         ContestAuthorizator $contestAuthorizator,
-        EventAuthorizator $eventAuthorizator
+        EventAuthorizator $eventAuthorizator,
+        BaseAuthorizator $baseAuthorizator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
@@ -81,6 +84,7 @@ abstract class BasePresenter extends Presenter
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
     }
 
     /**

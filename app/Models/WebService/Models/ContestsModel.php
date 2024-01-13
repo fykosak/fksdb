@@ -42,4 +42,9 @@ class ContestsModel extends WebModel
     {
         return Expect::structure([]);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return $this->contestAuthorizator->isAllowedContestLess('contest', 'api');
+    }
 }

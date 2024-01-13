@@ -104,4 +104,10 @@ class OrganizersWebModel extends WebModel
             'year' => Expect::scalar()->castTo('int')->nullable(),
         ]);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
+        return $this->contestAuthorizator->isAllowed($contest, 'api', $contest);
+    }
 }

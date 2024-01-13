@@ -48,37 +48,50 @@ final class LoginModel extends Model implements IIdentity
         return $this->login_id;
     }
 
-    /** @phpstan-var ContestRole[]   cache */
-    private array $roles;
-
     /**
      * @phpstan-return ContestRole[]
      */
     public function getRoles(): array
     {
-        if (!isset($this->roles)) {
-            // explicitly assigned roles
-            $this->roles = [new ContestRole(ContestRole::Registered, null), ...$this->createContestRoles()];
-
+        static $roles;
+        if (!isset($roles)) {
+            $roles = $this->createContestRoles();
             // roles from other tables
             $person = $this->person;
             if ($person) {
                 foreach ($person->getActiveOrganizers() as $organizer) {
-                    $this->roles[] = new ContestRole(
+                    $roles[] = new ContestRole(
                         ContestRole::Organizer,
                         $organizer->contest,
                     );
                 }
                 /** @var ContestantModel $contestant */
                 foreach ($person->getContestants() as $contestant) {
-                    $this->roles[] = new ContestRole(
+                    $roles[] = new ContestRole(
                         ContestRole::Contestant,
                         $contestant->contest,
                     );
                 }
             }
         }
-        return $this->roles;
+        return $roles;
+    }
+
+    /**
+     * @phpstan-return ContestRole[]
+     */
+    public function getEventRoles(EventModel $event): array
+    {
+        static $eventRoles;
+        if (!isset($eventRoles)) {
+            $eventRoles = $this->createEventRoles($event);
+            // roles from other tables
+            $person = $this->person;
+            if ($person) {
+                $eventRoles = $person->getEventRoles($event);
+            }
+        }
+        return $eventRoles;
     }
 
     /**
@@ -94,6 +107,20 @@ final class LoginModel extends Model implements IIdentity
         /** @var GrantModel $grant */
         foreach ($query as $grant) {
             $grants[] = new ContestRole($grant->role->name, $grant->contest);
+        }
+        return $grants;
+    }
+
+    /**
+     * @phpstan-return EventRole[]
+     */
+    public function createEventRoles(EventModel $event): array
+    {
+        $grants = [];
+        $query = $this->related(DbNames::TAB_EVENT_GRANT, 'login_id')->where('event_id', $event->event_id);
+        /** @var EventGrantModel $grant */
+        foreach ($query as $grant) {
+            $grants[] = new EventRole($grant->event_role->name, $grant->event);
         }
         return $grants;
     }

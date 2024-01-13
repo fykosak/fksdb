@@ -35,4 +35,9 @@ class SchoolsReportsWebModel extends WebModel
             $logger->getMessages()
         );
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return true;
+    }
 }

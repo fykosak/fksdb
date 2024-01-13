@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
@@ -17,16 +16,13 @@ use FKSDB\Models\WebService\XMLNodeSerializer;
 class ExportWebModel extends WebModel
 {
     private StoredQueryFactory $storedQueryFactory;
-    private ContestAuthorizator $contestAuthorizator;
     private ContestService $contestService;
 
     public function inject(
         StoredQueryFactory $storedQueryFactory,
-        ContestAuthorizator $contestAuthorizator,
         ContestService $contestService
     ): void {
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->contestAuthorizator = $contestAuthorizator;
         $this->contestService = $contestService;
     }
 
@@ -100,5 +96,10 @@ class ExportWebModel extends WebModel
             /** @phpstan-ignore-next-line */
             $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
+    }
+
+    protected function isAuthorized(array $arguments): bool
+    {
+        return false;
     }
 }

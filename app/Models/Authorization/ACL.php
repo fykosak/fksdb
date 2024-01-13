@@ -52,10 +52,10 @@ final class ACL
         $service->addRole(ContestOrganizerRole::ROLE_ID);
         $service->addRole(ParticipantRole::ROLE_ID);
 
-        $service->addRole(ContestRole::Guest);
-        $service->addRole(ContestRole::Registered, ContestRole::Guest);
-        $service->addRole(ContestRole::Contestant, ContestRole::Registered);
-        $service->addRole(ContestRole::Organizer, ContestRole::Registered);
+        $service->addRole(BaseRole::Guest);
+        $service->addRole(BaseRole::Registered, BaseRole::Guest);
+        $service->addRole(ContestRole::Contestant, BaseRole::Registered);
+        $service->addRole(ContestRole::Organizer, BaseRole::Registered);
         $service->addRole(ContestRole::Webmaster, ContestRole::Organizer);
         $service->addRole(ContestRole::TaskManager, ContestRole::Organizer);
         $service->addRole(ContestRole::InboxManager, ContestRole::Organizer);
@@ -207,7 +207,7 @@ final class ACL
             new StoredQueryTagAssertion(['wiki-safe'])
         );
         $service->allow([ContestRole::Wiki, ContestRole::Web, ContestRole::Organizer], 'soap', 'default');
-        $service->allow(ContestRole::Guest, [TeamModel2::RESOURCE_ID, EventParticipantModel::RESOURCE_ID], 'create');
+        $service->allow(BaseRole::Guest, [TeamModel2::RESOURCE_ID, EventParticipantModel::RESOURCE_ID], 'create');
         $service->allow(
             [TeamTeacherRole::ROLE_ID, TeamMemberRole::ROLE_ID, ParticipantRole::ROLE_ID],
             [TeamModel2::RESOURCE_ID, EventParticipantModel::RESOURCE_ID],
@@ -230,10 +230,10 @@ final class ACL
         $service->allow(ContestRole::EventManager, ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, PersonScheduleModel::RESOURCE_ID);
 
-        $service->allow(ContestRole::Registered, 'event.dashboard');
-        $service->allow(ContestRole::Registered, PaymentModel::RESOURCE_ID, 'detail', $selfAssertion);
+        $service->allow(BaseRole::Registered, 'event.dashboard');
+        $service->allow(BaseRole::Registered, PaymentModel::RESOURCE_ID, 'detail', $selfAssertion);
         $service->allow(
-            ContestRole::Registered,
+            BaseRole::Registered,
             PaymentModel::RESOURCE_ID,
             'edit',
             new LogicAnd($selfAssertion, $paymentEditableAssertion)

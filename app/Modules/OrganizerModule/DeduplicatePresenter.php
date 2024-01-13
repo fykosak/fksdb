@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
 use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
@@ -41,9 +42,12 @@ final class DeduplicatePresenter extends BasePresenter
         $this->personInfoService = $personInfoService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedPerson(): bool
     {
-        return $this->contestAuthorizator->isAllowed('person', 'list');
+        return $this->contestAuthorizator->isAllowed('person', 'list', $this->getSelectedContest());
     }
 
     /**
@@ -66,8 +70,8 @@ final class DeduplicatePresenter extends BasePresenter
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
-            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge');
+        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
+            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
     }
 
     public function titleMerge(): PageTitle

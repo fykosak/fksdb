@@ -69,4 +69,9 @@ class ResultsWebModel extends WebModel
             'lastUpdate' => Expect::string()->nullable(),
         ]);
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\OrganizerService;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -104,8 +103,8 @@ class Authorization extends FyziklaniTestCase
     {
         $params = [
             'lang' => 'cs',
-            'contestId' => "1",
-            'year' => "1",
+            'contestId' => '1',
+            'year' => '1',
             'eventId' => (string)$this->event->event_id,
             'action' => $action,
             'id' => (string)$this->submit->fyziklani_submit_id,
@@ -119,7 +118,6 @@ class Authorization extends FyziklaniTestCase
      */
     public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
-        $results = array_fill(0, count($actions), $results);
         $presenter = $this->createPresenter($presenterName);
         if ($person()) {
             /* Use indirect access because data provider is called before test set up. */
@@ -128,26 +126,21 @@ class Authorization extends FyziklaniTestCase
 
         foreach ($actions as $i => $action) {
             $request = $this->createGetRequest($presenterName, $action);
-            $forbidden = false;
             $response = null;
+
             try {
                 $response = $presenter->run($request);
             } catch (ForbiddenRequestException $e) {
-                $forbidden = true;
-                $response = $e->getCode();
-            } catch (BadRequestException $e) {
-                $forbidden = ($e->getCode() == 403);
-                $response = $e->getCode();
-            }
-            if ($results[$i]) {
-                if (is_object($response)) {
-                    Assert::type(TextResponse::class, $response);
-                } else {
-                    Assert::notSame(403, $response);
+                if (!$results) {
+                    continue;
                 }
-            } elseif (!$forbidden) {
-                Assert::type(RedirectResponse::class, $response);
+                Assert::null($e);
+            }
+            if ($results) {
+                Assert::type(TextResponse::class, $response);
+            } else {
                 /** @var RedirectResponse $response */
+                Assert::type(RedirectResponse::class, $response);
                 $url = $response->getUrl();
                 Assert::contains('login', $url);
             }

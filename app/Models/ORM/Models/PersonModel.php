@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
     EventOrganizerRole,
+    EventRole,
     Fyziklani\TeamMemberRole,
     Fyziklani\TeamTeacherRole,
     ParticipantRole};
@@ -294,7 +295,7 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @phpstan-return EventRoleModel[]
+     * @phpstan-return EventRole[]
      */
     public function getEventRoles(EventModel $event): array
     {
@@ -324,10 +325,6 @@ final class PersonModel extends Model implements Resource
         $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
         if (isset($organizer)) {
             $roles[] = new ContestOrganizerRole($event, $organizer);
-        }
-        $login = $this->getLogin();
-        if ($login) {
-            $roles = [...$roles, ...$event->createEventRoles($login)];
         }
         return $roles;
     }

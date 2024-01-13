@@ -180,4 +180,9 @@ class ResultsWebModel extends WebModel
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
     }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
 }

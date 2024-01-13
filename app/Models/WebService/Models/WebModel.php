@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\Application\Responses\JsonResponse;
@@ -25,6 +28,10 @@ abstract class WebModel
     protected Container $container;
     protected User $user;
 
+    protected EventAuthorizator $eventAuthorizator;
+    protected ContestAuthorizator $contestAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
+
     final public function __construct(Container $container)
     {
         $this->container = $container;
@@ -34,6 +41,16 @@ abstract class WebModel
     final public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    public function injectAuthorizators(
+        EventAuthorizator $eventAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator
+    ): void {
+        $this->eventAuthorizator = $eventAuthorizator;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
     }
 
     /**
@@ -96,4 +113,9 @@ abstract class WebModel
         $schema->otherItems()->castTo('array');
         return $processor->process($schema, $arguments);
     }
+
+    /**
+     * @phpstan-param TParams $params
+     */
+    abstract protected function isAuthorized(array $arguments): bool;
 }
