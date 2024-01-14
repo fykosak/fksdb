@@ -10,6 +10,10 @@ use Nette\Utils\Html;
 
 class EventRole implements Role
 {
+    // phpcs:disable
+    public const GameInserter = 'game.inserter';
+    // phpcs:enable
+
     protected EventModel $event;
     private string $roleId;
 

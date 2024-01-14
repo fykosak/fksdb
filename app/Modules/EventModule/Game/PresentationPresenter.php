@@ -20,7 +20,7 @@ final class PresentationPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game.presentation', 'default', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed('game', 'presentation', $this->getEvent());
     }
 
     /**

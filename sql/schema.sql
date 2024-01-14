@@ -335,18 +335,6 @@ CREATE TABLE IF NOT EXISTS `role`
     DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `event_role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `event_role`
-(
-    `event_role_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`          VARCHAR(32) NOT NULL,
-    `description`   TEXT        NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
 -- Table `grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grant`
@@ -376,27 +364,25 @@ CREATE TABLE IF NOT EXISTS `grant`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8;
-
 -- -----------------------------------------------------
 -- Table `event_grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_grant`
 (
-    `event_grant_id`      INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`      INT NOT NULL,
-    `event_role_id` INT NOT NULL,
-    `event_id`      INT NOT NULL,
-    UNIQUE INDEX `uq__event_grant__role` (`event_role_id` ASC, `login_id` ASC, `event_id` ASC),
+    `event_grant_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`       INT NOT NULL,
+    `role`           ENUM (
+        'game.inserter',
+        'event.medic',
+        'event.cook',
+        'event.boss'
+        )                NOT NULL,
+    `event_id`       INT NOT NULL,
+    UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),
     INDEX `idx__event_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__event_grant__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    INDEX `idx__event_grant__role` (`event_role_id` ASC),
-    CONSTRAINT `fk__event_grant__event_role`
-        FOREIGN KEY (`event_role_id`)
-            REFERENCES `event_role` (`event_role_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
     INDEX `idx__event_grant__event` (`event_id` ASC),

@@ -33,7 +33,9 @@ class ContestsModel extends WebModel
         $data = [];
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
-            $data[] = $contest->__toArray();
+            if ($this->contestAuthorizator->isAllowed($contest, 'api', $contest)) {
+                $data[] = $contest->__toArray();
+            }
         }
         return $data;
     }
@@ -45,6 +47,6 @@ class ContestsModel extends WebModel
 
     protected function isAuthorized(array $params): bool
     {
-        return $this->contestAuthorizator->isAllowedAnyContest(ContestModel::RESOURCE_ID, 'api');
+        return true;
     }
 }

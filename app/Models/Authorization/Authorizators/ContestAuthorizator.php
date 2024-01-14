@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authorization\Authorizators;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\ContestService;
 use Nette\Security\Permission;
 use Nette\Security\Resource;
 use Nette\Security\User;
@@ -18,12 +19,18 @@ final class ContestAuthorizator
     private User $user;
     private Permission $permission;
     private BaseAuthorizator $baseAuthorizator;
+    private ContestService $contestService;
 
-    public function __construct(User $identity, Permission $permission, BaseAuthorizator $baseAuthorizator)
-    {
+    public function __construct(
+        User $identity,
+        Permission $permission,
+        BaseAuthorizator $baseAuthorizator,
+        ContestService $contestService
+    ) {
         $this->user = $identity;
         $this->permission = $permission;
         $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestService = $contestService;
     }
 
     /**
@@ -54,13 +61,10 @@ final class ContestAuthorizator
         if ($this->baseAuthorizator->isAllowed($resource, $privilege)) {
             return true;
         }
-        /** @var LoginModel|null $login */
-        $login = $this->user->getIdentity();
-        if ($login) {
-            foreach ($login->getRoles() as $role) {
-                if ($this->permission->isAllowed($role, $resource, $privilege)) {
-                    return true;
-                }
+        /** @var ContestModel $contest */
+        foreach ($this->contestService->getTable() as $contest) {
+            if ($this->isAllowed($resource, $privilege, $contest)) {
+                return true;
             }
         }
         return false;

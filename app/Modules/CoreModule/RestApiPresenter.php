@@ -47,7 +47,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     /* TODO */
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowedAnyContest('webService', 'default');
+        return $this->contestAuthorizator->isAllowedAnyContest('api', null);
     }
 
     /**

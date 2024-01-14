@@ -7,15 +7,12 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventRoleModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\EventRoleService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
@@ -25,7 +22,6 @@ final class EventAclGrid extends BaseList
 {
     private EventModel $event;
     private LoginService $loginService;
-    private EventRoleService $roleService;
 
     public function __construct(Container $container, EventModel $event)
     {
@@ -33,17 +29,16 @@ final class EventAclGrid extends BaseList
         $this->event = $event;
     }
 
-    public function inject(LoginService $loginService, EventRoleService $roleService): void
+    public function inject(LoginService $loginService): void
     {
         $this->loginService = $loginService;
-        $this->roleService = $roleService;
     }
 
     protected function configure(): void
     {
         $this->paginate = false;
         $this->counter = false;
-        $this->filtered = true;
+        $this->filtered = false;
         $this->mode = self::ModePanel;
         $this->setTitle(
             new RendererItem(
@@ -89,25 +84,11 @@ final class EventAclGrid extends BaseList
         );
     }
 
-    protected function configureForm(Form $form): void
-    {
-        $items = [];
-        /** @var EventRoleModel $role */
-        foreach ($this->roleService->getTable() as $role) {
-            $items[$role->event_role_id] = $role->name;
-        }
-        $form->addSelect('role', _('Role'), $items)->setPrompt(_('Select role'));
-    }
-
     /**
      * @phpstan-return TypedSelection<LoginModel>
      */
     protected function getModels(): TypedSelection
     {
-        $query = $this->loginService->getTable()->where(':event_grant.event_id', $this->event->event_id);
-        if (isset($this->filterParams['role'])) {
-            $query->where(':event_grant.event_role_id', $this->filterParams['role']);
-        }
-        return $query;
+        return $this->loginService->getTable()->where(':event_grant.event_id', $this->event->event_id);
     }
 }
