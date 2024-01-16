@@ -22,7 +22,6 @@ class DbNames
     public const TAB_ROLE = 'role';
     public const TAB_GRANT = 'grant';
     /* event ACL */
-    public const TAB_EVENT_ROLE = 'event_role';
     public const TAB_EVENT_GRANT = 'event_grant';
     /* extended person */
     public const TAB_LOGIN = 'login';
