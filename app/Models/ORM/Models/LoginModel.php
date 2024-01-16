@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\BaseRole;
 use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\ContestYearRole;
 use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
@@ -100,12 +101,12 @@ final class LoginModel extends Model implements IIdentity
     /**
      * @phpstan-return ContestRole[]
      */
-    public function getImplicitContestRoles(?ContestModel $contest = null): array
+    public function getImplicitContestRoles(ContestModel $contest): array
     {
         $roles = [];
         if ($this->person) {
             foreach ($this->person->getActiveOrganizers() as $organizer) {
-                if (!$contest || $organizer->contest_id === $contest->contest_id) {
+                if ($organizer->contest_id === $contest->contest_id) {
                     $roles[] = new ContestRole(
                         ContestRole::Organizer,
                         $organizer->contest,
@@ -114,10 +115,47 @@ final class LoginModel extends Model implements IIdentity
             }
             /** @var ContestantModel $contestant */
             foreach ($this->person->getContestants() as $contestant) {
-                if (!$contest || $contestant->contest_id === $contest->contest_id) {
+                if ($contestant->contest_id === $contest->contest_id) {
                     $roles[] = new ContestRole(
                         ContestRole::Contestant,
                         $contestant->contest,
+                    );
+                }
+            }
+        }
+        return $roles;
+    }
+
+    /** @var ContestYearRole[][][] */
+    private array $contestYearRoles = [];
+
+    /**
+     * @phpstan-return ContestYearRole[]
+     */
+    public function getContestYearRoles(ContestYearModel $contestYear): array
+    {
+        if (!isset($this->contestYearRoles[$contestYear->contest_id][$contestYear->year])) {
+            $this->contestYearRoles[$contestYear->contest_id] = $this->contestYearRoles[$contestYear->contest_id] ?? [];
+            $this->contestYearRoles[$contestYear->contest_id][$contestYear->year] = $this->getImplicitContestYearRoles(
+                $contestYear
+            );
+        }
+        return $this->contestYearRoles[$contestYear->contest_id][$contestYear->year];
+    }
+
+    /**
+     * @phpstan-return ContestYearRole[]
+     */
+    public function getImplicitContestYearRoles(ContestYearModel $contestYear): array
+    {
+        $roles = [];
+        if ($this->person) {
+            /** @var ContestantModel $contestant */
+            foreach ($this->person->getContestants() as $contestant) {
+                if ($contestant->contest_id === $contestYear->contest_id && $contestant->year === $contestYear->year) {
+                    $roles[] = new ContestYearRole(
+                        ContestRole::Contestant,
+                        $contestant->getContestYear(),
                     );
                 }
             }

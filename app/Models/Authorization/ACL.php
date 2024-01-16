@@ -63,7 +63,7 @@ final class ACL
         self::createPerson($service, $selfAssertion, $ownerAssertion);
 // contest
         $service->addResource(Models\ContestModel::RESOURCE_ID);
-        $service->allow(ContestRole::Organizer, Models\ContestModel::RESOURCE_ID, 'chart');
+        $service->allow(ContestRole::Organizer, Models\ContestModel::RESOURCE_ID, ['chart', 'organizerDashboard']);
         $service->allow(ContestRole::Boss, Models\ContestModel::RESOURCE_ID, 'acl');
 
         self::createOrganizer($service, $selfAssertion);
@@ -224,7 +224,7 @@ final class ACL
         Authorization\Assertions\OwnerAssertion $ownerAssertion
     ): void {
         $permission->addRole(ContestRole::Contestant, BaseRole::Registered);
-
+        $permission->allow(ContestRole::Contestant, Models\ContestModel::RESOURCE_ID, ['contestantDashboard']);
         // contestatn upload
         $permission->allow(ContestRole::Contestant, Models\SubmitModel::RESOURCE_ID, ['list', 'upload']);
         $permission->allow(

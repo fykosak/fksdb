@@ -30,7 +30,7 @@ class SignaturesWebModel extends WebModel
      * @throws \SoapFault
      * @throws \DOMException
      */
-    protected function getResponse(\stdClass $args): \SoapVar
+    public function getResponse(\stdClass $args): \SoapVar
     {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
@@ -62,7 +62,18 @@ class SignaturesWebModel extends WebModel
         return false;
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function getExpectedParams(): Structure
+    {
+        throw new GoneException();
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function getJsonResponse(array $params): array
     {
         throw new GoneException();
     }

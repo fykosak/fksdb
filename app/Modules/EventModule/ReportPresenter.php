@@ -22,7 +22,7 @@ final class ReportPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed('event', 'edit', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'report', $this->getEvent());
     }
 
     /**

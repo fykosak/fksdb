@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
@@ -40,7 +41,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedInbox(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, null, $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
@@ -53,7 +54,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, 'list', $this->getSelectedContest());
     }
 
     public function titleCorrected(): PageTitle
@@ -66,7 +67,11 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedCorrected(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            SubmitModel::RESOURCE_ID,
+            'corrected',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleQuizDetail(): PageTitle

@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\MachineCode;
 
-use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;

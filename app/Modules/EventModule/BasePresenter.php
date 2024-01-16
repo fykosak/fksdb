@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\ComponentReflection;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {

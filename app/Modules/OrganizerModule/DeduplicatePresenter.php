@@ -47,10 +47,11 @@ final class DeduplicatePresenter extends BasePresenter
      */
     public function authorizedPerson(): bool
     {
-        return $this->contestAuthorizator->isAllowed('person', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'list', $this->getSelectedContest());
     }
 
     /**
+     * @throws NoContestAvailable
      * @throws NotFoundException
      */
     public function authorizedDontMerge(): bool
@@ -59,6 +60,7 @@ final class DeduplicatePresenter extends BasePresenter
     }
 
     /**
+     * @throws NoContestAvailable
      * @throws NotFoundException
      */
     public function authorizedMerge(): bool

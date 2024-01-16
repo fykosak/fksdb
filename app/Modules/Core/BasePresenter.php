@@ -15,6 +15,7 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
 use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -63,6 +64,7 @@ abstract class BasePresenter extends Presenter
     protected PasswordAuthenticator $passwordAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
+    protected ContestYearAuthorizator $contestYearAuthorizator;
     protected BaseAuthorizator $baseAuthorizator;
 
     final public function injectBase(
@@ -71,10 +73,7 @@ abstract class BasePresenter extends Presenter
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator,
         TokenAuthenticator $tokenAuthenticator,
-        PasswordAuthenticator $passwordAuthenticator,
-        ContestAuthorizator $contestAuthorizator,
-        EventAuthorizator $eventAuthorizator,
-        BaseAuthorizator $baseAuthorizator
+        PasswordAuthenticator $passwordAuthenticator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
@@ -82,9 +81,18 @@ abstract class BasePresenter extends Presenter
         $this->diContainer = $diContainer;
         $this->tokenAuthenticator = $tokenAuthenticator;
         $this->passwordAuthenticator = $passwordAuthenticator;
+    }
+
+    public function injectAuthorizators(
+        EventAuthorizator $eventAuthorizator,
+        ContestYearAuthorizator $contestYearAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
     }
 
     /**

@@ -93,7 +93,7 @@ class Authorization extends FyziklaniTestCase
         return [
             [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
             [fn() => $this->perPerson, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perOrganizer, 'Game:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrganizer, 'Game:Submit', ['create', 'list'], false], # TODO 'edit',
             [fn() => $this->perOrganizerOther, 'Game:Submit', ['create', 'edit', 'list'], false],
             [fn() => $this->perContestant, 'Game:Submit', ['create', 'edit', 'list'], false],
         ];

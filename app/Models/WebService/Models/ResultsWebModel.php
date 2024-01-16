@@ -192,6 +192,9 @@ class ResultsWebModel extends WebModel
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function getJsonResponse(array $params): array
     {
         throw new NotImplementedException();

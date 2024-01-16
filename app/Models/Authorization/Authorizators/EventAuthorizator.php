@@ -17,11 +17,11 @@ final class EventAuthorizator
 
     private User $user;
     private Permission $permission;
-    private ContestAuthorizator $contestAuthorizator;
+    private ContestYearAuthorizator $contestYearAuthorizator;
 
-    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator)
+    public function __construct(User $user, Permission $acl, ContestYearAuthorizator $contestYearAuthorizator)
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
         $this->user = $user;
         $this->permission = $acl;
     }
@@ -40,6 +40,6 @@ final class EventAuthorizator
                 }
             }
         }
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest);
+        return $this->contestYearAuthorizator->isAllowed($resource, $privilege, $event->getContestYear());
     }
 }

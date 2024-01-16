@@ -6,8 +6,6 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
-use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
@@ -49,7 +47,7 @@ final class ConflictRole extends Test
                 $participantRole = true;
             } elseif ($role instanceof TeamTeacherRole) {
                 $teacherRole = true;
-            } else{
+            } else {
                 $organizerRole = true;
             }
         }

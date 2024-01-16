@@ -12,7 +12,6 @@ use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {

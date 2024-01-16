@@ -9,7 +9,6 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
-use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;

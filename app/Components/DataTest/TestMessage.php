@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\DataTest;
 
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class TestMessage
 {

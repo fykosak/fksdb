@@ -115,9 +115,12 @@ final class PersonPresenter extends BasePresenter
         return new PageTitle(null, _('Pizza'), 'fas fa-pizza-slice');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedPizza(): bool
     {
-        return $this->contestAuthorizator->isAllowed('person', 'pizza', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'pizza', $this->getSelectedContest());
     }
 
     /**
@@ -140,6 +143,9 @@ final class PersonPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedTests(): bool
     {
         return $this->contestAuthorizator->isAllowed(

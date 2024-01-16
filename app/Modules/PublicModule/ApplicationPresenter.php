@@ -76,7 +76,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         $event = $this->getEvent();
-        if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
+        if ($this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'edit', $event)) {
             return true;
         }
         if (!$event->isRegistrationOpened()) {
