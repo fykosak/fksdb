@@ -19,9 +19,7 @@ class DbNames
     public const TAB_PERSON_HISTORY = 'person_history';
     public const TAB_PERSON_INFO = 'person_info';
     /* ACL */
-    public const TAB_ROLE = 'role';
-    public const TAB_GRANT = 'grant';
-    /* event ACL */
+    public const TAB_CONTEST_GRANT = 'contest_grant';
     public const TAB_EVENT_GRANT = 'event_grant';
     /* extended person */
     public const TAB_LOGIN = 'login';

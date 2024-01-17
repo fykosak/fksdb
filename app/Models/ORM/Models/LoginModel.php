@@ -87,7 +87,7 @@ final class LoginModel extends Model implements IIdentity
     public function getExplicitContestRoles(?ContestModel $contest = null): array
     {
         $grants = [];
-        $query = $this->related(DbNames::TAB_GRANT, 'login_id');
+        $query = $this->related(DbNames::TAB_CONTEST_GRANT, 'login_id');
         if ($contest) {
             $query->where('contest_id', $contest->contest_id);
         }

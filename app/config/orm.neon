@@ -622,9 +622,6 @@ orm:
     psc_region:
         service: FKSDB\Models\ORM\Services\PSCSubdivisionService
         model: FKSDB\Models\ORM\Models\PSCSubdivisionModel
-    role:
-       service: FKSDB\Models\ORM\Services\RoleService
-       model: FKSDB\Models\ORM\Models\RoleModel
     school:
         service: FKSDB\Models\ORM\Services\SchoolService
         model: FKSDB\Models\ORM\Models\SchoolModel
