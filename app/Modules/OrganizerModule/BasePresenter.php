@@ -12,7 +12,6 @@ use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -99,14 +98,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     */
-    protected function isAnyContestAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege);
     }
 
     protected function getRole(): PresenterRole

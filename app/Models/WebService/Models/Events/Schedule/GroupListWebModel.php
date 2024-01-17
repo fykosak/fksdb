@@ -51,7 +51,7 @@ class GroupListWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
@@ -114,5 +114,14 @@ class GroupListWebModel extends WebModel
             ];
         }
         return $data;
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $event = $this->eventService->findByPrimary($params['eventId']);
+        if (!$event) {
+            return false;
+        }
+        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
     }
 }

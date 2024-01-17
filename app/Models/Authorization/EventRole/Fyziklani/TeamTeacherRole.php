@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\EventRole;
+namespace FKSDB\Models\Authorization\EventRole\Fyziklani;
 
+use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Utils\Html;
 
-class FyziklaniTeamTeacherRole extends EventRole
+final class TeamTeacherRole extends EventRole
 {
+    public const ROLE_ID = 'event.fyziklani.teacher';
     /** @phpstan-var TeamModel2[] */
     public array $teams;
 
@@ -18,7 +20,7 @@ class FyziklaniTeamTeacherRole extends EventRole
      */
     public function __construct(EventModel $event, array $teams)
     {
-        parent::__construct('event.fyziklani.teacher', $event);
+        parent::__construct(self::ROLE_ID, $event);
         $this->teams = $teams;
     }
 

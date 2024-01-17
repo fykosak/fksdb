@@ -52,7 +52,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -115,7 +115,11 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->isOrganizer = $this->isAllowed($this->getModelResource(), 'organizer');
+        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
+            $this->getModelResource(),
+            'organizer',
+            $this->getEvent()
+        );
         switch ($this->getEvent()->event_type_id) {
             case 11:
             case 12:

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Grids\AclGrid;
+use FKSDB\Components\Grids\Acl\ContestAclGrid;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -15,7 +15,7 @@ class AclPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed('acl', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($this->getSelectedContest(), 'acl', $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
@@ -26,8 +26,8 @@ class AclPresenter extends BasePresenter
     /**
      * @throws NoContestAvailable
      */
-    protected function createComponentGrid(): AclGrid
+    protected function createComponentGrid(): ContestAclGrid
     {
-        return new AclGrid($this->getContext(), $this->getSelectedContest());
+        return new ContestAclGrid($this->getContext(), $this->getSelectedContest());
     }
 }

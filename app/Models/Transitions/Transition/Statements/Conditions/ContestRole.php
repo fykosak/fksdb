@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
@@ -33,6 +34,10 @@ class ContestRole implements Statement
     public function __invoke(...$args): bool
     {
         [$holder] = $args;
-        return $this->contestAuthorizator->isAllowed($holder->getModel(), $this->privilege);
+        return $this->contestAuthorizator->isAllowed(
+            $holder->getModel(),
+            $this->privilege,
+            $holder->getModel()->getReferencedModel(ContestModel::class)
+        );
     }
 }

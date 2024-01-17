@@ -47,7 +47,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     /* TODO */
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed('webService', 'default');
+        return $this->contestAuthorizator->isAllowedAnyContest('api', null);
     }
 
     /**
@@ -105,7 +105,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             }
             /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->getContext());
-            $model->setUser($this->getUser());
             return $model;
         }
         throw new \InvalidArgumentException();
@@ -135,6 +134,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             'events/<eventId [0-9]+>/teams',
             array_merge(self::ROUTER, [
                 'model' => TeamsWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            'events/<eventId [0-9]+>/organizers',
+            array_merge(self::ROUTER, [
+                'model' => \FKSDB\Models\WebService\Models\Events\OrganizersWebModel::class,
             ])
         );
         $list->addRoute(

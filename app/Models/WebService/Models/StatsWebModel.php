@@ -23,7 +23,7 @@ class StatsWebModel extends WebModel
         $this->contestYearService = $contestYearService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'contestId' => Expect::scalar()->castTo('int'),
@@ -32,7 +32,7 @@ class StatsWebModel extends WebModel
         ]);
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear(
             $params['contest_id'] ?? $params['contestId'],
@@ -45,5 +45,14 @@ class StatsWebModel extends WebModel
             $result[] = array_merge($task->__toArray(), $task->getTaskStats());
         }
         return $result;
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
+        return $this->contestAuthorizator->isAllowed($contestYear->contest, 'api', $contestYear->contest);
     }
 }
