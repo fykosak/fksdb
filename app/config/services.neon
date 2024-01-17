@@ -18,10 +18,9 @@ services:
     - FKSDB\Models\Router\Router::createRouter
     #ACL
     - FKSDB\Models\Authorization\ACL::create
-    ownerAssertion: FKSDB\Models\Authorization\Assertions\OwnerAssertion
-    selfAssertion: FKSDB\Models\Authorization\Assertions\SelfAssertion
-    paymentEditableAssertion: FKSDB\Models\Authorization\Assertions\PaymentEditableAssertion
-    ownApplicationAssertion: FKSDB\Models\Authorization\Assertions\OwnApplicationAssertion
+    - FKSDB\Models\Authorization\Assertions\OwnSubmitAssertion
+    - FKSDB\Models\Authorization\Assertions\ContestRelatedAssertion
+    - FKSDB\Models\Authorization\Assertions\SelfAssertion
     ## Anonymous
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)

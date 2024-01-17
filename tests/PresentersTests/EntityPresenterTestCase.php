@@ -7,7 +7,7 @@ namespace FKSDB\Tests\PresentersTests;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\ContestGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -64,7 +64,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
-        $this->container->getByType(GrantService::class)->storeModel(
+        $this->container->getByType(ContestGrantService::class)->storeModel(
             ['login_id' => $this->cartesianLogin->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->cartesianLogin, $this->fixture);

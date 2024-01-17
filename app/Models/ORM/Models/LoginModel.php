@@ -91,9 +91,9 @@ final class LoginModel extends Model implements IIdentity
         if ($contest) {
             $query->where('contest_id', $contest->contest_id);
         }
-        /** @var GrantModel $grant */
+        /** @var ContestGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ContestRole($grant->role->name, $grant->contest);
+            $grants[] = new ContestRole($grant->role, $grant->contest);
         }
         return $grants;
     }
@@ -223,8 +223,7 @@ final class LoginModel extends Model implements IIdentity
             if ($teamMember) {
                 $roles[] = new TeamMemberRole($event, $teamMember);
             }
-            /** @var OrganizerModel|null $organizer */
-            $organizer = $this->person->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
+            $organizer = $this->person->getActiveOrganizer($event->event_type->contest);
             if (isset($organizer)) {
                 $roles[] = new ContestOrganizerRole($event, $organizer);
             }

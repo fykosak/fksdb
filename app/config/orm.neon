@@ -278,9 +278,9 @@ orm:
     flag:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
-    grant:
-        service: FKSDB\Models\ORM\Services\GrantService
-        model: FKSDB\Models\ORM\Models\GrantModel
+    contest_grant:
+        service: FKSDB\Models\ORM\Services\ContestGrantService
+        model: FKSDB\Models\ORM\Models\ContestGrantModel
     event_grant:
         service: FKSDB\Models\ORM\Services\EventGrantService
         model: FKSDB\Models\ORM\Models\EventGrantModel

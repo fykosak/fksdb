@@ -36,7 +36,7 @@ class SelfAssertion implements Assertion
         /** @var IIdentity $identity */
         [$state, $identity] = $this->userStorage->getState();
         if (!$state) {
-            throw new InvalidStateException(_('Expecting logged user.'));
+            throw new InvalidStateException('Expecting logged user.');
         }
         /** @var Model $model */
         $model = $acl->getQueriedResource();

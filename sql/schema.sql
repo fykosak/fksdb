@@ -323,40 +323,40 @@ CREATE TABLE IF NOT EXISTS `org`
     DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16) NOT NULL,
-    `description` TEXT        NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
 -- Table `grant`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `grant`
+CREATE TABLE IF NOT EXISTS `contest_grant`
 (
     `grant_id`   INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id`   INT(11) NOT NULL,
-    `role_id`    INT(11) NOT NULL,
+    `role`       ENUM (
+        'webmaster',
+        'taskManager',
+        'dispatcher',
+        'dataManager',
+        'eventManager',
+        'inboxManager',
+        'boss',
+        'organizer',
+        'contestant',
+        'exportDesigner',
+        'aesop',
+        'schoolManager',
+        'web',
+        'wiki',
+        'superuser',
+        'cartesian'
+        )                NOT NULL,
     `contest_id` INT     NOT NULL,
-    INDEX `idx_grant__role_id` (`role_id` ASC),
-    UNIQUE INDEX `uq_grant__role` (`role_id` ASC, `login_id` ASC, `contest_id` ASC),
-    INDEX `idx_grant__contest` (`contest_id` ASC),
-    INDEX `idx_grant__login` (`login_id` ASC),
-    CONSTRAINT `fk_grant__login`
+    UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
+    INDEX `idx__contest_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__contest_grant__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
             ON DELETE CASCADE
             ON UPDATE RESTRICT,
-    CONSTRAINT `fk_grant__role`
-        FOREIGN KEY (`role_id`)
-            REFERENCES `role` (`role_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `fk_grant__contest`
+    INDEX `idx__contest_grant__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contest_grant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
             ON DELETE CASCADE

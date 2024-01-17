@@ -6,7 +6,7 @@ namespace FKSDB\Tests\PresentersTests\OrganizerModule\Stalking;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\ContestGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -66,7 +66,7 @@ abstract class StalkingTestCase extends DatabaseTestCase
         $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->container->getByType(GrantService::class)->storeModel(
+        $this->container->getByType(ContestGrantService::class)->storeModel(
             ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
         );
         $this->fixture = $this->createPresenter('Organizer:Person');

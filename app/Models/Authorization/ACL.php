@@ -12,10 +12,9 @@ use Nette\Security\Permission;
 final class ACL
 {
     public static function create(
-        Authorization\Assertions\OwnerAssertion $ownerAssertion,
+        Authorization\Assertions\ContestRelatedAssertion $ownerAssertion,
         Authorization\Assertions\SelfAssertion $selfAssertion,
-        Authorization\Assertions\PaymentEditableAssertion $paymentEditableAssertion,
-        Authorization\Assertions\OwnApplicationAssertion $ownApplicationAssertion
+        Authorization\Assertions\OwnSubmitAssertion $submitUploaderAssertion
     ): Permission {
         $service = new Permission();
         $service->addRole(Authorization\EventRole\EventOrganizerRole::ROLE_ID);
@@ -59,7 +58,7 @@ final class ACL
         $service->allow(ContestRole::Organizer, Models\TaskModel::RESOURCE_ID, 'points');
         $service->allow([ContestRole::TaskManager, ContestRole::InboxManager], Models\TaskModel::RESOURCE_ID);
 
-        self::createContestant($service, $ownerAssertion);
+        self::createContestant($service);
         self::createPerson($service, $selfAssertion, $ownerAssertion);
 // contest
         $service->addResource(Models\ContestModel::RESOURCE_ID);
@@ -70,7 +69,7 @@ final class ACL
 // submits
         $service->addResource(Models\SubmitModel::RESOURCE_ID);
         $service->allow([ContestRole::TaskManager, ContestRole::InboxManager], Models\SubmitModel::RESOURCE_ID);
-        self::createUpload($service, $ownerAssertion);
+        self::createUpload($service, $submitUploaderAssertion);
 //emails
         $service->addResource(Models\EmailMessageModel::RESOURCE_ID);
         $service->allow([ContestRole::DataManager, ContestRole::Boss], Models\EmailMessageModel::RESOURCE_ID, 'list');
@@ -79,12 +78,13 @@ final class ACL
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::Organizer, Models\EventModel::RESOURCE_ID, 'list');
+        $service->allow(ContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
         $service->allow(BaseRole::Registered, Models\EventModel::RESOURCE_ID, 'dashboard');
 // event organizers
         $service->addResource(Models\EventOrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
 
-        self::createApplications($service, $ownApplicationAssertion);
+        self::createApplications($service);
 // schedule
         $service->addResource(Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
@@ -108,7 +108,7 @@ final class ACL
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
 
-        self::createPayment($service, $paymentEditableAssertion, $selfAssertion);
+        self::createPayment($service, $selfAssertion);
         self::createGame($service);
         self::createWarehouse($service);
 
@@ -119,7 +119,7 @@ final class ACL
     private static function createPerson(
         Permission $permission,
         Authorization\Assertions\SelfAssertion $selfAssertion,
-        Authorization\Assertions\OwnerAssertion $ownerAssertion
+        Authorization\Assertions\ContestRelatedAssertion $ownerAssertion
     ): void {
         $permission->addResource(Models\PersonModel::RESOURCE_ID);
 
@@ -134,13 +134,13 @@ final class ACL
             ContestRole::Organizer,
             Models\PersonModel::RESOURCE_ID,
             'detail.basic',
-            fn(...$args) => $ownerAssertion->existsOwnContestant(...$args)
+            $ownerAssertion
         );
         $permission->allow(
             ContestRole::InboxManager,
             Models\PersonModel::RESOURCE_ID,
             ['detail.restrict', 'edit'],
-            fn(...$args) => $ownerAssertion->existsOwnContestant(...$args)
+            $ownerAssertion
         );
 
         $permission->allow(
@@ -172,10 +172,8 @@ final class ACL
         $permission->allow(ContestRole::SchoolManager, Models\SchoolModel::RESOURCE_ID);
     }
 
-    private static function createContestant(
-        Permission $permission,
-        Authorization\Assertions\OwnerAssertion $ownerAssertion
-    ): void {
+    private static function createContestant(Permission $permission): void
+    {
         $permission->addResource(Models\ContestantModel::RESOURCE_ID);
         $permission->allow(ContestRole::Organizer, Models\ContestantModel::RESOURCE_ID, 'list');
         $permission->allow(ContestRole::InboxManager, Models\ContestantModel::RESOURCE_ID, ['list', 'create']);
@@ -183,14 +181,12 @@ final class ACL
             ContestRole::InboxManager,
             Models\ContestantModel::RESOURCE_ID,
             'edit',
-            fn(...$args) => $ownerAssertion->isOwnContestant(...$args)
+            new Authorization\Assertions\ContestContestantAssertion()
         );
     }
 
-    private static function createApplications(
-        Permission $permission,
-        Authorization\Assertions\OwnApplicationAssertion $ownApplicationAssertion
-    ): void {
+    private static function createApplications(Permission $permission): void
+    {
         $permission->addRole(Authorization\EventRole\Fyziklani\TeamTeacherRole::ROLE_ID);
         $permission->addRole(Authorization\EventRole\Fyziklani\TeamMemberRole::ROLE_ID);
         $permission->addRole(Authorization\EventRole\ParticipantRole::ROLE_ID);
@@ -211,7 +207,7 @@ final class ACL
             ],
             [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
             ['detail', 'edit'],
-            $ownApplicationAssertion
+            new Authorization\Assertions\OwnApplicationAssertion()
         );
         $permission->allow(
             ContestRole::EventManager,
@@ -221,7 +217,7 @@ final class ACL
 
     private static function createUpload(
         Permission $permission,
-        Authorization\Assertions\OwnerAssertion $ownerAssertion
+        Authorization\Assertions\OwnSubmitAssertion $submitUploaderAssertion
     ): void {
         $permission->addRole(ContestRole::Contestant, BaseRole::Registered);
         $permission->allow(ContestRole::Contestant, Models\ContestModel::RESOURCE_ID, ['contestantDashboard']);
@@ -231,7 +227,7 @@ final class ACL
             ContestRole::Contestant,
             Models\SubmitModel::RESOURCE_ID,
             ['revoke', 'download.corrected', 'download.uploaded', 'download'],
-            fn(...$args): bool => $ownerAssertion->isSubmitUploader(...$args)
+            $submitUploaderAssertion
         );
     }
 
@@ -272,7 +268,6 @@ final class ACL
 
     private static function createPayment(
         Permission $permission,
-        Authorization\Assertions\PaymentEditableAssertion $paymentEditableAssertion,
         Authorization\Assertions\SelfAssertion $selfAssertion
     ): void {
         $permission->addResource(Models\PaymentModel::RESOURCE_ID);
@@ -282,7 +277,7 @@ final class ACL
             BaseRole::Registered,
             Models\PaymentModel::RESOURCE_ID,
             'edit',
-            new LogicAnd($selfAssertion, $paymentEditableAssertion)// @phpstan-ignore-line
+            new LogicAnd($selfAssertion, new Authorization\Assertions\PaymentEditableAssertion())// @phpstan-ignore-line
         );
         $permission->allow(
             [

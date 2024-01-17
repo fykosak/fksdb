@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Acl;
 
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Selection\TypedSelection;
@@ -18,15 +19,15 @@ use Nette\Utils\Html;
 /**
  * @phpstan-extends BaseList<LoginModel,array{role?:int|null}>
  */
-final class EventAclGrid extends BaseList
+final class ContestAclGrid extends BaseList
 {
-    private EventModel $event;
+    private ContestModel $contest;
     private LoginService $loginService;
 
-    public function __construct(Container $container, EventModel $event)
+    public function __construct(Container $container, ContestModel $contest)
     {
         parent::__construct($container, 1024);
-        $this->event = $event;
+        $this->contest = $contest;
     }
 
     public function inject(LoginService $loginService): void
@@ -54,7 +55,7 @@ final class EventAclGrid extends BaseList
                 $this->container,
                 function (LoginModel $login) {
                     $container = Html::el('span');
-                    foreach ($login->getExplicitEventRoles($this->event) as $grant) {
+                    foreach ($login->getExplicitContestRoles($this->contest) as $grant) {
                         $container->addHtml($grant->badge());
                     }
                     return $container;
@@ -72,11 +73,11 @@ final class EventAclGrid extends BaseList
                     if (!$person) {
                         return NotSetBadge::getHtml();
                     }
-                    $organizer = $person->getEventOrganizer($this->event);
+                    $organizer = $person->getOrganizer($this->contest);
                     if (!$organizer) {
                         return NotSetBadge::getHtml();
                     }
-                    return $organizer->note ?? NotSetBadge::getHtml();
+                    return $organizer->role ?? NotSetBadge::getHtml();
                 },
                 new Title(null, _('Role'))
             ),
@@ -89,6 +90,6 @@ final class EventAclGrid extends BaseList
      */
     protected function getModels(): TypedSelection
     {
-        return $this->loginService->getTable()->where(':event_grant.event_id', $this->event->event_id);
+        return $this->loginService->getTable()->where(':grant.contest_id', $this->contest->contest_id);
     }
 }

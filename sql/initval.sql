@@ -15,24 +15,6 @@ VALUES (1, 'FYKOS_1', 'Kategorie 1. ročníků', 'Category 1st study year'),
        (9, 'VYFUK_9', 'Kategorie 9. ročníků', 'Category 9th study year'),
        (10, 'ALL', '', '');
 
-INSERT INTO `role` (`role_id`, `name`, `description`)
-VALUES (1, 'webmaster', 'webař'),
-       (2, 'taskManager', 'úlohář'),
-       (3, 'dispatcher', 'koordinátor obálkování'),
-       (4, 'dataManager', 'správce (dat) DB'),
-       (5, 'eventManager', 'správce přihlášek'),
-       (6, 'inboxManager', 'příjemce řešení'),
-       (7, 'boss', 'hlavní organizátor (šéf)'),
-       (8, 'organizer', 'základní role organizátora'),
-       (9, 'contestant', 'řešitel semináře, role je automaticky přiřazována při vytvoření řešitele'),
-       (10, 'exportDesigner', 'tvůrce exportů'),
-       (11, 'aesop', 'oslizávač dat pro AESOP'),
-       (12, 'schoolManager', 'správce dat škol'),
-       (13, 'web', 'Dokuwiki uživatel pro fksdbexport'),
-       (14, 'wiki', 'Uživatel neveřejné Dokuwiki pro fksdbexport'),
-       (100, 'superuser', 'složení všech rolí'),
-       (1000, 'cartesian', 'cokoli s čímkoli');
-
 INSERT INTO `flag` (`flag_id`, `fid`, `name`, `description`, `type`)
 VALUES (1, 'serial_author', 'serial_author', 'Je organizátornizátor autor seriálu', 'contest_year'),
        (2, 'email_invalid', 'Neplatný e-mail',

@@ -119,6 +119,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                     'Schedule:Dashboard:default' => [],
                     'Event:Chart:list' => [],
                     'Event:Dispatch:default' => [],
+                    'Event:Acl:default' => [],
                     'Event:Dashboard:default' => [],
                 ],
             ],
