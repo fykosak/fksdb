@@ -14,7 +14,6 @@ use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @p
  * @phpstan-import-type TSimplePersonArray from PersonModel
  * @phpstan-extends WebModel<array{eventId:int},(array{person:TSimplePersonArray,organizerId:int,note:string|null})[]>
  */
@@ -27,7 +26,7 @@ class OrganizersWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
@@ -37,7 +36,7 @@ class OrganizersWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['eventId']);
         if (!$event) {
@@ -53,5 +52,14 @@ class OrganizersWebModel extends WebModel
             ];
         }
         return $data;
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $event = $this->eventService->findByPrimary($params['eventId']);
+        if (!$event) {
+            return false;
+        }
+        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
     }
 }

@@ -8,6 +8,7 @@ namespace FKSDB\Tests\PresentersTests\OrganizerModule\Stalking;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Models\Authorization\ContestRole;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
@@ -36,9 +37,9 @@ class Display extends StalkingTestCase
         Assert::contains('data-frontend-id="chart.person.detail.timeline"', $html); // timeline working?
     }
 
-    protected function getUserRoleId(): int
+    protected function getUserRoleId(): string
     {
-        return 1000;
+        return ContestRole::Cartesian;
     }
 }
 // phpcs:disable

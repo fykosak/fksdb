@@ -81,7 +81,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isAllowed('event.schedule.person', $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(PersonScheduleModel::RESOURCE_ID, $privilege, $this->getEvent());
     }
 
     protected function getORMService(): PersonScheduleService

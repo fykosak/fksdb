@@ -100,6 +100,7 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_FYZIKLANI_TEAM_MEMBER,
             DbNames::TAB_FYZIKLANI_TEAM,
             DbNames::TAB_FYZIKLANI_GAME_SETUP,
+            DbNames::TAB_EVENT_GRANT,
             DbNames::TAB_EVENT_ORGANIZER,
             DbNames::TAB_EVENT,
 

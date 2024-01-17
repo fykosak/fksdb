@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\EventRole;
+namespace FKSDB\Models\Authorization\EventRole\Fyziklani;
 
+use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use Nette\Utils\Html;
 
-class FyziklaniTeamMemberRole extends EventRole
+final class TeamMemberRole extends EventRole
 {
+    public const ROLE_ID = 'event.fyziklani.member';
     public TeamMemberModel $member;
 
     public function __construct(EventModel $event, TeamMemberModel $member)
     {
-        parent::__construct('event.fyziklani.member', $event);
+        parent::__construct(self::ROLE_ID, $event);
         $this->member = $member;
     }
 

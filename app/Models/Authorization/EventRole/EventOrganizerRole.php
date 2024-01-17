@@ -8,13 +8,14 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use Nette\Utils\Html;
 
-class EventOrganizerRole extends EventRole
+final class EventOrganizerRole extends EventRole
 {
+    public const ROLE_ID = 'event.organizer';
     public EventOrganizerModel $eventOrganizer;
 
     public function __construct(EventModel $event, EventOrganizerModel $eventOrganizer)
     {
-        parent::__construct('event.organizer', $event);
+        parent::__construct(self::ROLE_ID, $event);
         $this->eventOrganizer = $eventOrganizer;
     }
 

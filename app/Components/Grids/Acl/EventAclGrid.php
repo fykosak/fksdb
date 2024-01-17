@@ -2,50 +2,43 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\Acl;
 
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\GrantModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\OrganizerModel;
-use FKSDB\Models\ORM\Models\RoleModel;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\RoleService;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
  * @phpstan-extends BaseList<LoginModel,array{role?:int|null}>
  */
-final class AclGrid extends BaseList
+final class EventAclGrid extends BaseList
 {
-    private ContestModel $contest;
+    private EventModel $event;
     private LoginService $loginService;
-    private RoleService $roleService;
 
-    public function __construct(Container $container, ContestModel $contest)
+    public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container, 1024);
-        $this->contest = $contest;
+        $this->event = $event;
     }
 
-    public function inject(LoginService $loginService, RoleService $roleService): void
+    public function inject(LoginService $loginService): void
     {
         $this->loginService = $loginService;
-        $this->roleService = $roleService;
     }
 
     protected function configure(): void
     {
         $this->paginate = false;
         $this->counter = false;
-        $this->filtered = true;
+        $this->filtered = false;
         $this->mode = self::ModePanel;
         $this->setTitle(
             new RendererItem(
@@ -61,9 +54,8 @@ final class AclGrid extends BaseList
                 $this->container,
                 function (LoginModel $login) {
                     $container = Html::el('span');
-                    /** @var GrantModel $grant */
-                    foreach ($login->getGrants()->where('contest_id', $this->contest->contest_id) as $grant) {
-                        $container->addHtml($grant->role->badge());
+                    foreach ($login->getExplicitEventRoles($this->event) as $grant) {
+                        $container->addHtml($grant->badge());
                     }
                     return $container;
                 },
@@ -80,12 +72,11 @@ final class AclGrid extends BaseList
                     if (!$person) {
                         return NotSetBadge::getHtml();
                     }
-                    /** @var OrganizerModel|null $organizer */
-                    $organizer = $person->getOrganizers($this->contest)->fetch();
+                    $organizer = $person->getEventOrganizer($this->event);
                     if (!$organizer) {
                         return NotSetBadge::getHtml();
                     }
-                    return $organizer->role ?? NotSetBadge::getHtml();
+                    return $organizer->note ?? NotSetBadge::getHtml();
                 },
                 new Title(null, _('Role'))
             ),
@@ -93,25 +84,11 @@ final class AclGrid extends BaseList
         );
     }
 
-    protected function configureForm(Form $form): void
-    {
-        $items = [];
-        /** @var RoleModel $role */
-        foreach ($this->roleService->getTable() as $role) {
-            $items[$role->role_id] = $role->name;
-        }
-        $form->addSelect('role', _('Role'), $items)->setPrompt(_('Select role'));
-    }
-
     /**
      * @phpstan-return TypedSelection<LoginModel>
      */
     protected function getModels(): TypedSelection
     {
-        $query = $this->loginService->getTable()->where(':grant.contest_id', $this->contest->contest_id);
-        if (isset($this->filterParams['role'])) {
-            $query->where(':grant.role_id', $this->filterParams['role']);
-        }
-        return $query;
+        return $this->loginService->getTable()->where(':event_grant.event_id', $this->event->event_id);
     }
 }

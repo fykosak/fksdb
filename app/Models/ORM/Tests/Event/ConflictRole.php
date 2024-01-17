@@ -6,11 +6,9 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
-use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -43,17 +41,14 @@ final class ConflictRole extends Test
         $teacherRole = false;
         foreach ($roles as $role) {
             if (
-                $role instanceof FyziklaniTeamMemberRole
+                $role instanceof TeamMemberRole
                 || $role instanceof ParticipantRole
             ) {
                 $participantRole = true;
-            } elseif (
-                $role instanceof EventOrganizerRole
-                || $role instanceof ContestOrganizerRole
-            ) {
-                $organizerRole = true;
-            } elseif ($role instanceof FyziklaniTeamTeacherRole) {
+            } elseif ($role instanceof TeamTeacherRole) {
                 $teacherRole = true;
+            } else {
+                $organizerRole = true;
             }
         }
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {

@@ -8,7 +8,7 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;

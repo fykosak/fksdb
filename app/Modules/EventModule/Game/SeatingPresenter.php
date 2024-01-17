@@ -9,6 +9,7 @@ use FKSDB\Components\TeamSeating\SeatingForm;
 use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
@@ -47,7 +48,7 @@ final class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.seating', 'default');
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'seating', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle
