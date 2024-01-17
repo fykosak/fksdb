@@ -31,6 +31,7 @@ DELETE FROM fyziklani_team_member;
 DELETE FROM fyziklani_team;
 DELETE FROM fyziklani_game_setup;
 DELETE FROM event_org;
+DELETE FROM event_grant;
 DELETE FROM event;
 
 DELETE FROM org;

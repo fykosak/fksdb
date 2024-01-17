@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\Authorization\Grant;
+use FKSDB\Models\Authorization\ContestRole;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -36,14 +36,14 @@ class SelfAssertion implements Assertion
         /** @var IIdentity $identity */
         [$state, $identity] = $this->userStorage->getState();
         if (!$state) {
-            throw new InvalidStateException(_('Expecting logged user.'));
+            throw new InvalidStateException('Expecting logged user.');
         }
         /** @var Model $model */
         $model = $acl->getQueriedResource();
         try {
             $grant = $acl->getQueriedRole();
             $contest = $model->getReferencedModel(ContestModel::class);
-            if ($grant instanceof Grant) {
+            if ($grant instanceof ContestRole) {
                 if ($contest->contest_id !== $grant->getContest()->contest_id) {
                     return false;
                 }

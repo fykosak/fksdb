@@ -100,7 +100,7 @@ class Handler
                 );
             } elseif (!$group->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
-            };
+            }
             if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
                 throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
             }

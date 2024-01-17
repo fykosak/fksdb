@@ -18,9 +18,9 @@ use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
-use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
+use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -54,7 +54,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -77,11 +77,9 @@ final class TeamPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
+            || ($this->getEvent()->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $this->getEvent())
             );
     }
 

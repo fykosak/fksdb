@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
+use Nette\Schema\Elements\Structure;
 
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
  */
 class ResultsWebModel extends WebModel
 {
-
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 
@@ -179,5 +180,23 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
+    }
+
+    protected function getExpectedParams(): Structure
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getJsonResponse(array $params): array
+    {
+        throw new NotImplementedException();
     }
 }

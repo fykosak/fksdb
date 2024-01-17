@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
