@@ -48,7 +48,10 @@ final class TeamMemberModel extends Model
     {
         $node = $document->createElement('participant');
         $node->setAttribute('eventParticipantId', (string)$this->fyziklani_team_member_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode([
+            'participantId' => $this->fyziklani_team_member_id,
+            'personId' => $this->person_id,
+        ], $document, $node);
         return $node;
     }
 

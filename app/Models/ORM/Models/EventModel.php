@@ -72,7 +72,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     public const RESOURCE_ID = 'event';
     private const POSSIBLY_ATTENDING_STATES = [
         TeamState::Participated,
-        TeamState::Approved,
         TeamState::Spare,
         TeamState::Applied,
         TeamState::Arrived,
@@ -323,9 +322,9 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         switch ($this->event_type_id) {
             case 1:
-                return new FOFHandler($this, $container);
+                return new FOFHandler($container);
             case 17:
-                return new CtyrbojHandler($this, $container);
+                return new CtyrbojHandler($container);
         }
         throw new GameException(_('Game handler does not exist for this event'));
     }

@@ -31,7 +31,7 @@
             <h2>{_'Contests'}</h2>
             <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
                 {foreach $contests as $contest}
-                    {var $years = $contest->getActiveYears()}
+                    {var FKSDB\Models\ORM\Models\ContestModel[] $years = $contest->getActiveYears()}
                     {if count($years)}
                         <div class="col">
                             <div class="card h-100 border-{$contest->getContestSymbol()}">
