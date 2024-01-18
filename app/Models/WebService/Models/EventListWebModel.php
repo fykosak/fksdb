@@ -51,23 +51,25 @@ class EventListWebModel extends WebModel
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
-            $events[$event->event_id] = [
-                'eventId' => $event->event_id,
-                'year' => $event->year,
-                'eventYear' => $event->event_year,
-                'begin' => $event->begin->format('c'),
-                'end' => $event->end->format('c'),
-                'registrationBegin' => $event->registration_begin->format('c'),
-                'registrationEnd' => $event->registration_end->format('c'),
-                'report' => $event->report_cs,
-                'reportNew' => $event->report->__serialize(),
-                'description' => $event->description->__serialize(),
-                'name' => $event->name,
-                'nameNew' => $event->getName()->__serialize(),
-                'eventTypeId' => $event->event_type_id,
-                'place' => $event->place,
-                'contestId' => $event->event_type->contest_id,
-            ];
+            if ($this->contestAuthorizator->isAllowed('api', null, $event->event_type->contest)) {
+                $events[$event->event_id] = [
+                    'eventId' => $event->event_id,
+                    'year' => $event->year,
+                    'eventYear' => $event->event_year,
+                    'begin' => $event->begin->format('c'),
+                    'end' => $event->end->format('c'),
+                    'registrationBegin' => $event->registration_begin->format('c'),
+                    'registrationEnd' => $event->registration_end->format('c'),
+                    'report' => $event->report_cs,
+                    'reportNew' => $event->report->__serialize(),
+                    'description' => $event->description->__serialize(),
+                    'name' => $event->name,
+                    'nameNew' => $event->getName()->__serialize(),
+                    'eventTypeId' => $event->event_type_id,
+                    'place' => $event->place,
+                    'contestId' => $event->event_type->contest_id,
+                ];
+            }
         }
         return $events;
     }
@@ -82,16 +84,6 @@ class EventListWebModel extends WebModel
 
     protected function isAuthorized(array $params): bool
     {
-        $query = $this->eventService->getTable()->where(
-            'event_type_id',
-            array_merge($params['event_type_ids'], $params['eventTypes'])
-        );
-        /** @var EventModel $event */
-        foreach ($query as $event) {
-            if (!$this->eventAuthorizator->isAllowed($event, 'api', $event)) {
-                return false;
-            }
-        }
         return true;
     }
 }
