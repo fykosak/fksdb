@@ -19,6 +19,8 @@ use Nette\Security\Resource;
  * @property-read int $task_id
  * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $checked
  * @property-read \DateTimeInterface $modified
  * @phpstan-type SerializedSubmitModel array{
  *      points:int|null,
