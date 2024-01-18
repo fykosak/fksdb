@@ -44,7 +44,7 @@ abstract class BasePresenter extends EventBasePresenter
                     'Game:Diplomas:results' => [],
                     'Game:Task:list' => [],
                     'Game:GameSetup:default' => [],
-                    'Game:Seating:list' => [],
+                    'Game:Seating:default' => [],
                     'Game:Presentation:default' => [],
                 ],
             ],

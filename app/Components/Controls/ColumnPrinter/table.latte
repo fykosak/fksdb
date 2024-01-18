@@ -6,8 +6,8 @@
     <tbody>
     {foreach $fields as $field}
         <tr>
-            <th>{control printer:templateString '@' . $field . ':title', $model,$userPermission}</th>
-            <td>{control printer:templateString '@' . $field . ':value', $model,$userPermission}</td>
+            <th>{control printer:column '@' . $field . ':title', $model,$userPermission}</th>
+            <td>{control printer:column '@' . $field . ':value', $model,$userPermission}</td>
         </tr>
     {/foreach}
     </tbody>

@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Upload\Quiz\QuizComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\ORM\Services\TaskService;
@@ -35,6 +36,7 @@ final class SubmitPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedLegacy(): bool
     {
@@ -57,10 +59,15 @@ final class SubmitPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest());
+        return $this->contestYearAuthorizator->isAllowed(
+            SubmitModel::RESOURCE_ID,
+            'upload',
+            $this->getSelectedContestYear()
+        );
     }
 
     public function titleDefault(): PageTitle
@@ -79,6 +86,7 @@ final class SubmitPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedQuiz(): bool
     {
@@ -109,7 +117,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, 'list', $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle

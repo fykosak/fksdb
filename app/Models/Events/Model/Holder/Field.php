@@ -122,10 +122,10 @@ class Field
      */
     public function getValue()
     {
-        $model = $this->holder->getModel();
         if (isset($this->holder->data[$this->name])) {
             return $this->holder->data[$this->name];
         }
+        $model = $this->holder->getModel();
         if ($model) {
             if (isset($model[$this->name])) {
                 return $model[$this->name];

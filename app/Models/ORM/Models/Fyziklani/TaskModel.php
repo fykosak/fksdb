@@ -24,6 +24,7 @@ use Nette\Security\Resource;
  */
 final class TaskModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'game.task';
     /**
      * @phpstan-return SerializedTaskModel
      */
@@ -39,6 +40,6 @@ final class TaskModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return 'fyziklani.task';
+        return self::RESOURCE_ID;
     }
 }

@@ -22,7 +22,6 @@ use Nette\Security\Resource;
  */
 final class SubmitModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'submit';
 
     public function getResourceId(): string

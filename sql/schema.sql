@@ -323,43 +323,73 @@ CREATE TABLE IF NOT EXISTS `org`
     DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16) NOT NULL,
-    `description` TEXT        NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
 -- Table `grant`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `grant`
+CREATE TABLE IF NOT EXISTS `contest_grant`
 (
     `grant_id`   INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id`   INT(11) NOT NULL,
-    `role_id`    INT(11) NOT NULL,
+    `role`       ENUM (
+        'webmaster',
+        'taskManager',
+        'dispatcher',
+        'dataManager',
+        'eventManager',
+        'inboxManager',
+        'boss',
+        'organizer',
+        'contestant',
+        'exportDesigner',
+        'aesop',
+        'schoolManager',
+        'web',
+        'wiki',
+        'superuser',
+        'cartesian'
+        )                NOT NULL,
     `contest_id` INT     NOT NULL,
-    INDEX `idx_grant__role_id` (`role_id` ASC),
-    UNIQUE INDEX `uq_grant__role` (`role_id` ASC, `login_id` ASC, `contest_id` ASC),
-    INDEX `idx_grant__contest` (`contest_id` ASC),
-    INDEX `idx_grant__login` (`login_id` ASC),
-    CONSTRAINT `fk_grant__login`
+    UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
+    INDEX `idx__contest_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__contest_grant__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
             ON DELETE CASCADE
             ON UPDATE RESTRICT,
-    CONSTRAINT `fk_grant__role`
-        FOREIGN KEY (`role_id`)
-            REFERENCES `role` (`role_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `fk_grant__contest`
+    INDEX `idx__contest_grant__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contest_grant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
             ON DELETE CASCADE
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8;
+-- -----------------------------------------------------
+-- Table `event_grant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `event_grant`
+(
+    `event_grant_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`       INT NOT NULL,
+    `role`           ENUM (
+        'game.inserter',
+        'event.medic',
+        'event.cook',
+        'event.boss'
+        )                NOT NULL,
+    `event_id`       INT NOT NULL,
+    UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),
+    INDEX `idx__event_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__event_grant__login`
+        FOREIGN KEY (`login_id`)
+            REFERENCES `login` (`login_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__event_grant__event` (`event_id` ASC),
+    CONSTRAINT `fk__event_grant__event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
@@ -625,8 +655,10 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'half',
         'full'
         )                                NOT NULL DEFAULT 'none',
+    `place`             VARCHAR(16)      NULL     DEFAULT NULL,
     INDEX `idx_fyziklani_team__event` (`event_id` ASC),
     UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team__event__place` (`event_id` ASC, `place` ASC),
     CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
@@ -964,59 +996,6 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit`
             ON UPDATE NO ACTION
 )
     ENGINE = 'InnoDB';
-
-
--- -----------------------------------------------------
--- Table `fyziklani_room`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_room`
-(
-    `fyziklani_room_id` INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`              VARCHAR(64) CHARACTER SET 'utf8',
-    `layout`            VARCHAR(256) NULL DEFAULT NULl
-)
-    ENGINE = InnoDB;
--- -----------------------------------------------------
--- Table `fyziklani_room`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_seat`
-(
-    `fyziklani_seat_id` INT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `fyziklani_room_id` INT        NOT NULL,
-    `sector`            VARCHAR(2) NULL DEFAULT NULL,
-    `row`               VARCHAR(2) NULL DEFAULT NULL,
-    `col`               SMALLINT   NULL DEFAULT NULL,
-    `layout_x`          DOUBLE     NOT NULL,
-    `layout_y`          DOUBLE     NOT NULL,
-    CONSTRAINT `fk_fyziklani_seat__fyziklani_seat_room`
-        FOREIGN KEY (`fyziklani_room_id`)
-            REFERENCES `fyziklani_room` (`fyziklani_room_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `brawl_team_position`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
-(
-    `fyziklani_seat_id` INT NOT NULL,
-    `fyziklani_team_id` INT NULL DEFAULT NULL,
-    UNIQUE INDEX `uq_fyziklani_team_seat__team` (`fyziklani_team_id` ASC),
-    INDEX `idx_fyziklani_team_seat__seat` (`fyziklani_seat_id` ASC),
-    CONSTRAINT `fk_fyziklani_team_seat__team`
-        FOREIGN KEY (`fyziklani_team_id`)
-            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_team_seat__seat`
-        FOREIGN KEY (`fyziklani_seat_id`)
-            REFERENCES `fyziklani_seat` (`fyziklani_seat_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `teacher`

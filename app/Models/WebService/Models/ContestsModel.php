@@ -28,18 +28,25 @@ class ContestsModel extends WebModel
         $this->contestService = $contestService;
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $data = [];
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
-            $data[] = $contest->__toArray();
+            if ($this->contestAuthorizator->isAllowed($contest, 'api', $contest)) {
+                $data[] = $contest->__toArray();
+            }
         }
         return $data;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([]);
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return true;
     }
 }

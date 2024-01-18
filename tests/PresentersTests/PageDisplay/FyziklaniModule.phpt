@@ -60,7 +60,7 @@ class FyziklaniModule extends EventModuleTestCase
             ['Game:Submit', 'create'],
             ['Game:Submit', 'list'],
             ['Game:Task', 'list'],
-            ['Game:Seating', 'list'],
+            ['Game:Seating', 'default'],
             ['Game:Seating', 'print'],
         ];
     }

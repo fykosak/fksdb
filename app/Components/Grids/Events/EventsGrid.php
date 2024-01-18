@@ -47,7 +47,7 @@ class EventsGrid extends BaseGrid
         $this->addSimpleReferencedColumns([
             '@event.event_id',
             '@event.event_type',
-            '@event.name',
+            '@event.name_new',
             '@event.year',
             '@event.event_year',
         ]);

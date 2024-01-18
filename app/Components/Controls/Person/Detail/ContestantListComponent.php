@@ -31,8 +31,7 @@ class ContestantListComponent extends DetailComponent
 
     protected function configure(): void
     {
-        $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
-            $contestant->contest->getContestSymbol();
+        $this->classNameCallback = fn(ContestantModel $contestant): string => $contestant->contest->getContestSymbol();
         $this->setTitle(// @phpstan-ignore-line
             new SimpleItem($this->container, '@contest.name')// @phpstan-ignore-line
         );
