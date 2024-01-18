@@ -15,14 +15,13 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
-use Nette\InvalidStateException;
 
 /**
  * @phpstan-extends Test<TeamModel2>
  */
 class TeamsPerSchool extends Test
 {
-    public const TEAM_LIMIT = 4;
+    private const TEAM_LIMIT = 4;
 
     /**
      * @param TeamModel2 $model
@@ -30,7 +29,13 @@ class TeamsPerSchool extends Test
     protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         foreach ($this->getSchoolsFromTeam($model) as $school) {
-            $query = self::getTeamsFromSchool($school, $model->event);
+            $query = $model->event->getTeams()
+                ->where(
+                    ':fyziklani_team_member.person:person_history.ac_year',
+                    $model->event->getContestYear()->ac_year
+                )
+                ->where(':fyziklani_team_member.person:person_history.school_id', $school->school_id)
+                ->order('fyziklani_team.fyziklani_team_id');
             $teamCount = 0;
             /** @var TeamModel2 $team */
             foreach ($query as $team) {
@@ -65,22 +70,6 @@ class TeamsPerSchool extends Test
             $schools[$history->school_id] = $history->school;
         }
         return $schools;
-    }
-
-    public static function getTeamCounter(TeamModel2 $model): int
-    {
-        foreach (self::getSchoolsFromTeam($model) as $school) {
-            $query = self::getTeamsFromSchool($school, $model->event);
-            $teamCount = 0;
-            /** @var TeamModel2 $team */
-            foreach ($query as $team) {
-                $teamCount++;
-                if ($team->fyziklani_team_id === $model->fyziklani_team_id) {
-                    return $teamCount;
-                }
-            }
-        }
-        throw new InvalidStateException();
     }
 
     /**

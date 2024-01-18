@@ -18,9 +18,6 @@
             {include schedule, person:$teacher->person, event: $team->event}
         {/foreach}
     {/if}
-    {var $teamCount = FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool::getTeamCounter($holder->getModel())}
-    {if $teamCount > FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool::TEAM_LIMIT}
-    {/if}
 {/define}
 
 {define schedule, FKSDB\Models\ORM\Models\PersonModel $person,FKSDB\Models\ORM\Models\EventModel $event}

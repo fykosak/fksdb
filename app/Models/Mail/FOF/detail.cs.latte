@@ -8,7 +8,7 @@
             <li>Škola: {$member->getPersonHistory()->school->name_abbrev}</li>
             <li>Ročník: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
-        {include schedule, person:$member->person, event: $team->event}
+        {include  schedule, person:$member->person, event: $team->event}
     {/foreach}
     {if $team->getTeachers()->count('*')}
         <h3>Doprovod</h3>
@@ -17,9 +17,6 @@
             <h4>{$teacher->person->getFullName()}</h4>
             {include schedule, person:$teacher->person, event: $team->event}
         {/foreach}
-    {/if}
-    {var $teamCount = FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool::getTeamCounter($holder->getModel())}
-    {if $teamCount > FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool::TEAM_LIMIT}
     {/if}
 {/define}
 
