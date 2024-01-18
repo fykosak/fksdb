@@ -134,7 +134,7 @@ class AllSubmitsGrid extends BaseGrid
                 case 'warnings':
                     $query->where('TIMESTAMPDIFF(SECOND,fyziklani_submit.modified,NOW()) >600')->where(
                         'fyziklani_submit.state',
-                        SubmitState::NOT_CHECKED
+                        SubmitState::NotChecked
                     );
                     break;
                 case 'task':

@@ -41,13 +41,13 @@ final class SubmitService extends Service
         TaskModel $task,
         TeamModel2 $team,
         int $points,
-        string $newState
+        SubmitState $newState
     ): SubmitModel {
         return $this->storeModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
-            'state' => $newState,
+            'state' => $newState->value,
             'created' => new \DateTimeImmutable(),
         ]);
     }
@@ -61,7 +61,7 @@ final class SubmitService extends Service
         $submit->canRevoke();
         $this->storeModel([
             'points' => null,
-            'state' => SubmitState::NOT_CHECKED,
+            'state' => SubmitState::NotChecked,
             'modified' => new \DateTimeImmutable(),
         ], $submit);
     }
@@ -77,7 +77,7 @@ final class SubmitService extends Service
             throw new PointsMismatchException();
         }
         $this->storeModel([
-            'state' => SubmitState::CHECKED,
+            'state' => SubmitState::Checked,
             'checked' => new \DateTimeImmutable(),
         ], $submit);
     }
@@ -90,7 +90,7 @@ final class SubmitService extends Service
     {
         $this->storeModel([
             'points' => $points,
-            'state' => SubmitState::CHECKED,
+            'state' => SubmitState::Checked,
             'modified' => new \DateTimeImmutable(),
         ], $submit);
     }

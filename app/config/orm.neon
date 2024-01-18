@@ -780,6 +780,14 @@ orm:
                 type: dateTime
                 title: _('Modified')
                 format: 'H:m:s d-M-Y'
+            created:
+                type: dateTime
+                title: _('Created')
+                format: 'H:m:s d-M-Y'
+            checked:
+                type: dateTime
+                title: _('Checked')
+                format: 'H:m:s d-M-Y'
             points:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory

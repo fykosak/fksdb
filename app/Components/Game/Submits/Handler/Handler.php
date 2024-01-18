@@ -47,7 +47,7 @@ abstract class Handler
         TaskModel $task,
         TeamModel2 $team,
         int $points,
-        string $newState = SubmitState::NOT_CHECKED
+        SubmitState $newState
     ): void {
         $this->checkRequirements($team, $task);
         $submit = $this->submitService->create($task, $team, $points, $newState);
@@ -63,7 +63,7 @@ abstract class Handler
                     $team->fyziklani_team_id,
                     $task->label
                 ),
-                $newState === SubmitState::NOT_CHECKED ? Message::LVL_INFO : Message::LVL_SUCCESS
+                $newState->value === SubmitState::NotChecked ? Message::LVL_INFO : Message::LVL_SUCCESS
             )
         );
     }
