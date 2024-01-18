@@ -20,7 +20,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-import-type TSupportedModel from MachineCode
  * @phpstan-template TModel of Model
- * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
  * @phpstan-type TMachine Machine<ModelHolder<TState,TModel>>
  */
 abstract class CodeTransition extends FormComponent

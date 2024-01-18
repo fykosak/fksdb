@@ -8,9 +8,7 @@ use FKSDB\Components\Transitions\Code\CodeTransition;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FakeStringEnum;
@@ -32,7 +30,7 @@ use Nette\Utils\Html;
  */
 final class CodeTransitionComponent extends CodeTransition
 {
-    /** @phpstan-var TModel */
+    /** @phpstan-var TeamModel2|EventParticipantModel */
     private Model $model;
 
     /**
@@ -103,7 +101,7 @@ final class CodeTransitionComponent extends CodeTransition
     private function resolveApplication(Model $model): Model
     {
         if ($model instanceof PersonModel) {
-            return $model->getApplication($this->event);
+            return $model->getApplication($this->model->event);
         } elseif ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
             return $model;
         } else {
@@ -136,16 +134,16 @@ final class CodeTransitionComponent extends CodeTransition
      */
     protected function resolveModel(Model $model): Model
     {
-        if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
-            $application = $model->fyziklani_team;
-        } elseif ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
+        if ($model instanceof TeamModel2) {
             $application = $model;
+        } elseif ($model instanceof PersonModel) {
+            $application = $model->getEventParticipant($this->model->event);
         } else {
             throw new BadRequestException(_('Wrong type of code.'));
         }
-        if ($application->getPrimary() !== $this->model->getPrimary()) {
+        if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
             throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
         }
-        return $application;
+        return $model;
     }
 }
