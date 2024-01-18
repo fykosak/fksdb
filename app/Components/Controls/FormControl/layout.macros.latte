@@ -1,5 +1,5 @@
 {define errors}
-    {var $fieldErrors = []}
+    {var array $fieldErrors = []}
     {foreach $form->getControls() as $cont}
         {foreach $cont->getErrors() as $error}
             {php $fieldErrors[$error] = 1}
@@ -14,7 +14,7 @@
     {foreach $field->getErrors() as $error}
         <div class="invalid-feedback">{$error}</div>
     {/foreach}
-    {var $description = $field->getOption('description')}
+    {var string|Nette\Utils\Html $description = $field->getOption('description')}
     {if $description}
         <span class="form-text">{$description}</span>
     {/if}

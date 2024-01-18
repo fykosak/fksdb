@@ -3,7 +3,7 @@
 {define submit-row}
     <td>
         {if $submit}
-            {var $name = 'submits[' . $submit->submit_id . ']'}
+            {var string $name = 'submits[' . $submit->submit_id . ']'}
             {if ($submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::QUIZ)}
             <span class="input-group-text">{$submit->raw_points ?? "N/A"}<span/>
             {else}
