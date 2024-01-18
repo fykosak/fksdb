@@ -823,7 +823,7 @@ orm:
             refresh_delay:
                 type: int
                 title: _('Refresh delay')
-                numberFormat:
+                format:
                     suffix: ms
             result_hard_display:
                 type: bool
@@ -873,7 +873,8 @@ orm:
                 type: int
                 title: _('Points')
                 omitInputField: true
-                nullValueFormat: notSet
+                format:
+                    nullValue: notSet
 
             game_lang:
                 type: enum
@@ -1033,7 +1034,7 @@ orm:
             capacity:
                 type: int
                 title: _('Total capacity')
-                numberFormat:
+                format:
                     nullValue: infinite
             free_capacity:
                 type: class
@@ -1165,7 +1166,7 @@ orm:
                 title: _('Data')
             purchase_price:
                 type: float
-                numberFormat:
+                format:
                     decimalDigits: 2
                 title: _('Price')
             purchase_currency:

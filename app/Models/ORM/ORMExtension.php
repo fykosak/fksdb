@@ -105,7 +105,7 @@ class ORMExtension extends Extension
                             'class' => Expect::string()->required(),
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('float'), [
-                            'numberFormat' => Expect::structure([
+                            'format' => Expect::structure([
                                 'decimalDigits' => Expect::int()->required(),
                                 'suffix' => Expect::string()->nullable()->default(null),
                                 'prefix' => Expect::string()->nullable()->default(null),
@@ -114,7 +114,7 @@ class ORMExtension extends Extension
 
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('int'), [
-                            'numberFormat' => Expect::structure([
+                            'format' => Expect::structure([
                                 'decimalDigits' => Expect::int()->default(0),
                                 'suffix' => Expect::string()->nullable()->default(null),
                                 'prefix' => Expect::string()->nullable()->default(null),
@@ -173,8 +173,7 @@ class ORMExtension extends Extension
      *     writeOnly:bool,
      *     title:string,
      *     class:class-string<ColumnFactory<M,mixed>>|class-string<FakeStringEnum&EnumColumn>,
-     *     dataFormat?:string,
-     *     numberFormat:array{
+     *     format?:string|array{
      *          decimalDigits:int,
      *          nullValue:string,
      *          prefix:string,
@@ -392,7 +391,7 @@ class ORMExtension extends Extension
      *     writeOnly:bool,
      *     title:string,
      *     dataFormat?:string,
-     *     numberFormat:array{
+     *     format:array{
      *          decimalDigits:int,
      *          nullValue:string,
      *          prefix:string,
@@ -418,7 +417,7 @@ class ORMExtension extends Extension
             $factoryClassName,
             $field
         );
-        $data = $field['numberFormat'];
+        $data = $field['format'];
         $factory->addSetup(
             'setNumberFactory',
             [$data['nullValue'], $data['prefix'], $data['suffix'], $data['decimalDigits']]
