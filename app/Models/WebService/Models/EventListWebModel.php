@@ -88,7 +88,7 @@ class EventListWebModel extends WebModel
         );
         /** @var EventModel $event */
         foreach ($query as $event) {
-            if ($this->eventAuthorizator->isAllowed($event, 'api', $event)) {
+            if (!$this->eventAuthorizator->isAllowed($event, 'api', $event)) {
                 return false;
             }
         }
