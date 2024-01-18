@@ -11,7 +11,7 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-import-type SerializedEventModel from EventModel
- * @phpstan-extends WebModel<array{event_type_ids:array<int>,eventTypes:array<int>},SerializedEventModel[]>
+ * @phpstan-extends WebModel<array{eventTypes:array<int>},SerializedEventModel[]>
  */
 class EventListWebModel extends WebModel
 {
@@ -44,30 +44,29 @@ class EventListWebModel extends WebModel
 
     protected function getJsonResponse(array $params): array
     {
-        $query = $this->eventService->getTable()->where(
-            'event_type_id',
-            array_merge($params['event_type_ids'], $params['eventTypes'])
-        );
+        $query = $this->eventService->getTable()->where('event_type_id', $params['eventTypes']);
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
-            $events[$event->event_id] = [
-                'eventId' => $event->event_id,
-                'year' => $event->year,
-                'eventYear' => $event->event_year,
-                'begin' => $event->begin->format('c'),
-                'end' => $event->end->format('c'),
-                'registrationBegin' => $event->registration_begin->format('c'),
-                'registrationEnd' => $event->registration_end->format('c'),
-                'report' => $event->report_cs,
-                'reportNew' => $event->report->__serialize(),
-                'description' => $event->description->__serialize(),
-                'name' => $event->name,
-                'nameNew' => $event->getName()->__serialize(),
-                'eventTypeId' => $event->event_type_id,
-                'place' => $event->place,
-                'contestId' => $event->event_type->contest_id,
-            ];
+            if ($this->contestAuthorizator->isAllowed('api', null, $event->event_type->contest)) {
+                $events[$event->event_id] = [
+                    'eventId' => $event->event_id,
+                    'year' => $event->year,
+                    'eventYear' => $event->event_year,
+                    'begin' => $event->begin->format('c'),
+                    'end' => $event->end->format('c'),
+                    'registrationBegin' => $event->registration_begin->format('c'),
+                    'registrationEnd' => $event->registration_end->format('c'),
+                    'report' => $event->report_cs,
+                    'reportNew' => $event->report->__serialize(),
+                    'description' => $event->description->__serialize(),
+                    'name' => $event->name,
+                    'nameNew' => $event->getName()->__serialize(),
+                    'eventTypeId' => $event->event_type_id,
+                    'place' => $event->place,
+                    'contestId' => $event->event_type->contest_id,
+                ];
+            }
         }
         return $events;
     }
@@ -75,23 +74,12 @@ class EventListWebModel extends WebModel
     protected function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'eventTypes' => Expect::listOf(Expect::int()),
-            'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int')),
+            'eventTypes' => Expect::listOf(Expect::scalar()->castTo('int')),
         ]);
     }
 
     protected function isAuthorized(array $params): bool
     {
-        $query = $this->eventService->getTable()->where(
-            'event_type_id',
-            array_merge($params['event_type_ids'], $params['eventTypes'])
-        );
-        /** @var EventModel $event */
-        foreach ($query as $event) {
-            if ($this->eventAuthorizator->isAllowed($event, 'api', $event)) {
-                return false;
-            }
-        }
         return true;
     }
 }

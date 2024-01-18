@@ -2,7 +2,7 @@
 {block outerContent}
     <div class="container mb-5">
         {if $control->authorized('create')}
-            {var $pageTitle = $control->titleCreate()}
+            {var Fykosak\Utils\UI\PageTitle $pageTitle = $control->titleCreate()}
             <a href="{plink create}" class="btn btn-outline-primary"><i
                         class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
         {/if}
