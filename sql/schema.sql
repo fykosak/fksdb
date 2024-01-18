@@ -438,8 +438,8 @@ CREATE TABLE IF NOT EXISTS `org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest_grant`
 (
-    `grant_id`   INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`   INT NOT NULL,
+    `grant_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`   INT UNSIGNED NOT NULL,
     `role`       ENUM (
         'webmaster',
         'taskManager',
@@ -457,8 +457,8 @@ CREATE TABLE IF NOT EXISTS `contest_grant`
         'wiki',
         'superuser',
         'cartesian'
-        )            NOT NULL,
-    `contest_id` INT NOT NULL,
+        )                     NOT NULL,
+    `contest_id` INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
     INDEX `idx__contest_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__contest_grant__login`
@@ -481,15 +481,15 @@ CREATE TABLE IF NOT EXISTS `contest_grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_grant`
 (
-    `event_grant_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`       INT NOT NULL,
+    `event_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`       INT UNSIGNED NOT NULL,
     `role`           ENUM (
         'game.inserter',
         'event.medic',
         'event.cook',
         'event.boss'
-        )                NOT NULL,
-    `event_id`       INT NOT NULL,
+        )                         NOT NULL,
+    `event_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),
     INDEX `idx__event_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__event_grant__login`
@@ -607,6 +607,12 @@ CREATE TABLE IF NOT EXISTS `task`
             REFERENCES `contest` (`contest_id`)
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
+    # INDEX `idx__task__contest_year` (`contest_id` ASC, `year` ASC),
+    # CONSTRAINT `fk__task__contest_year`
+    #     FOREIGN KEY (`contest_id`, `year`)
+    #         REFERENCES `contest_year` (`contest_id`, `year`)
+    #         ON UPDATE NO ACTION
+    #         ON DELETE NO ACTION
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1146,7 +1152,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`
     `result_hide`         DATETIME     NULL NULL DEFAULT NULL,
     `refresh_delay`       INT UNSIGNED NOT NULL COMMENT 'in s',
     `result_hard_display` BOOL         NOT NULL,
-    `tasks_on_board`      INT          NULL      DEFAULT NULL,
+    `tasks_on_board`      INT UNSIGNED NULL      DEFAULT NULL,
     `available_points`    VARCHAR(64)  NULL      DEFAULT NULL COMMENT 'comma serialized points',
     CONSTRAINT `fk__fyziklani_game_setup__event`
         FOREIGN KEY (`event_id`)
