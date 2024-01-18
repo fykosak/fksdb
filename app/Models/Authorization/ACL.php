@@ -17,6 +17,9 @@ final class ACL
         Authorization\Assertions\OwnSubmitAssertion $submitUploaderAssertion
     ): Permission {
         $service = new Permission();
+
+        $service->addResource(Models\EventModel::RESOURCE_ID);
+
         $service->addRole(Authorization\EventRole\EventOrganizerRole::ROLE_ID);
         $service->addRole(Authorization\EventRole\ContestOrganizerRole::ROLE_ID);
 
@@ -74,7 +77,6 @@ final class ACL
         $service->addResource(Models\EmailMessageModel::RESOURCE_ID);
         $service->allow([ContestRole::DataManager, ContestRole::Boss], Models\EmailMessageModel::RESOURCE_ID, 'list');
 // events
-        $service->addResource(Models\EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::Organizer, Models\EventModel::RESOURCE_ID, 'list');
@@ -263,7 +265,7 @@ final class ACL
         $permission->allow(ContestRole::DataManager, 'export');
         $permission->allow(ContestRole::DataManager, 'export.adhoc');
         $permission->allow(ContestRole::EventManager, 'export', 'execute');
-        $permission->allow(ContestRole::Organizer, 'api', 'default');
+        $permission->allow(ContestRole::Organizer, 'api');
         $permission->allow(ContestRole::Web, 'api');
     }
 
