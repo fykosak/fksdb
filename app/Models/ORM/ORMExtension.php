@@ -172,7 +172,7 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     class:class-string<ColumnFactory<M,mixed>>|class-string<FakeStringEnum&EnumColumn>,
+     *     class:class-string<ColumnFactory<TModel,mixed>>|class-string<FakeStringEnum&EnumColumn>,
      *     format?:string|array{
      *          decimalDigits:int,
      *          nullValue:string,
@@ -181,7 +181,7 @@ class ORMExtension extends Extension
      *      },
      *     states:array<string,array{badge:string,label:string}>,
      * } $definition
-     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
+     * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
      */
     private function createColumnFactory(
         string $tableName,
@@ -229,7 +229,7 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     DateTimeColumnFactory::class,
-                    $definition
+                    $definition //@phpstan-ignore-line
                 );
                 break;
             case 'date':
@@ -239,7 +239,7 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     DateColumnFactory::class,
-                    $definition
+                    $definition //@phpstan-ignore-line
                 );
                 break;
             case 'time':
@@ -249,7 +249,7 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     TimeColumnFactory::class,
-                    $definition
+                    $definition //@phpstan-ignore-line
                 );
                 break;
             case 'phone':
@@ -289,7 +289,7 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     FloatColumnFactory::class,
-                    $definition
+                    $definition //@phpstan-ignore-line
                 );
                 break;
             case 'int':
@@ -299,7 +299,7 @@ class ORMExtension extends Extension
                     $modelClassName,
                     $fieldName,
                     IntColumnFactory::class,
-                    $definition
+                    $definition //@phpstan-ignore-line
                 );
                 break;
             case 'bool':
@@ -367,9 +367,9 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     class:class-string<ColumnFactory<M,mixed>>,
+     *     class:class-string<ColumnFactory<TModel,mixed>>,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
+     * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
      */
     private function registerClassColumnFactory(
         ServiceDefinition $factory,
@@ -390,15 +390,15 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     format?:string|array{
+     *     format:array{
      *          decimalDigits:int,
      *          nullValue:string,
      *          prefix:string,
      *          suffix:string,
      *      },
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
-     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+     * @phpstan-param class-string<ColumnFactory<TModel,mixed>> $factoryClassName
      */
     private function setUpNumberFactory(
         ServiceDefinition $factory,
@@ -434,8 +434,8 @@ class ORMExtension extends Extension
      *     title:string,
      *     format?:string,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
-     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+     * @phpstan-param class-string<ColumnFactory<TModel,mixed>> $factoryClassName
      */
     private function registerAbstractDateTimeRow(
         ServiceDefinition $factory,
@@ -464,8 +464,8 @@ class ORMExtension extends Extension
 
     /**
      * @phpstan-param TCommonParams $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
-     * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
+     * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+     * @phpstan-param class-string<ColumnFactory<TModel,mixed>> $factoryClassName
      */
     private function setUpDefaultFactory(
         ServiceDefinition $factory,
