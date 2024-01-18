@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\School;
 
-use FKSDB\Models\ORM\Tests\Adapter;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
+use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<never,SchoolModel>
  */
-class SchoolsProviderAdapter extends Adapter
+final class SchoolsProviderAdapter extends Adapter
 {
     private SchoolService $service;
 
@@ -33,6 +33,6 @@ class SchoolsProviderAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'Schools';
+        return 'schools';
     }
 }

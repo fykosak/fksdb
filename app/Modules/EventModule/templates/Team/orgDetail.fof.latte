@@ -25,7 +25,7 @@
     {include rank from './detail.latte', model:$model}
         <div class="panel color-auto">
             <div class="container">
-                {control schoolCheck $model}
+                {control schoolCheck}
             </div>
         </div>
     {var $teacherCounter = 0;}
@@ -44,7 +44,7 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Seating'}</h2>
-            {control seating:preview}
+            {control seating}
         </div>
     </div>
     {include tests from './orgDetail.latte', model:$model}

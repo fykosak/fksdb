@@ -117,12 +117,12 @@ class RankingStrategy
             }
 
             // coefficients
-            $aCoef = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
-            $bCoef = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+            $aCoefficient = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bCoefficient = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
 
-            if ($aCoef < $bCoef) {
+            if ($aCoefficient < $bCoefficient) {
                 return 1;
-            } elseif ($aCoef > $bCoef) {
+            } elseif ($aCoefficient > $bCoefficient) {
                 return -1;
             }
 

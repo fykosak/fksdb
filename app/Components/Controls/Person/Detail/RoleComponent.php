@@ -14,7 +14,7 @@ class RoleComponent extends BaseComponent
         if ($this->beforeRender()) {
             $login = $this->person->getLogin();
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'role.latte', [
-                'roles' => $login ? $login->createGrantModels() : [],
+                'roles' => $login ? $login->getExplicitContestRoles() : [],
             ]);
         }
     }

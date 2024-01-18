@@ -15,16 +15,14 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<ContestYearModel>
  */
-class InActiveContest extends Test
+final class InActiveContest extends Test
 {
-    /**
-     * @param ContestYearModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if (!$model->isActive()) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(_('Contest %s has not open submitting, please upload tasks!'), $model->contest->name),
                     Message::LVL_ERROR
                 )
@@ -39,6 +37,6 @@ class InActiveContest extends Test
 
     public function getId(): string
     {
-        return 'InactiveContest';
+        return 'inactiveContest';
     }
 }

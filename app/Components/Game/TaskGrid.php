@@ -33,6 +33,7 @@ class TaskGrid extends BaseGrid
 
     protected function configure(): void
     {
+        $this->paginate = false;
         $this->addSimpleReferencedColumns([
             '@fyziklani_task.fyziklani_task_id',
             '@fyziklani_task.label',

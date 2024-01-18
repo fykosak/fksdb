@@ -29,8 +29,8 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $c
 @import "callout";
 @import "payment";
 @import "panel";
-@import "../Components/PDFGenerators/TeamSeating/seating";
-@import "../Components/PDFGenerators/Providers/print";
+@import "../Components/TeamSeating/seating";
+@import "../Components/TeamSeating/print";
 
 :root {
   --color-fof-points-5: #{$fyziklaniPoints5};

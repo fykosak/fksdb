@@ -40,7 +40,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedImport(): bool
     {
-        return $this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'insert', $this->getSelectedContest());
     }
 
     public function titleDispatch(): PageTitle
@@ -53,7 +53,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedDispatch(): bool
     {
-        return $this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'dispatch', $this->getSelectedContest());
     }
 
     public function titleList(): PageTitle
@@ -66,7 +66,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed('task', 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'list', $this->getSelectedContest());
     }
 
     /**

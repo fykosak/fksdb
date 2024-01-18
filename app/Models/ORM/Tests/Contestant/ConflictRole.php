@@ -17,15 +17,12 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<ContestantModel>
  */
-class ConflictRole extends Test
+final class ConflictRole extends Test
 {
-    /**
-     * @param ContestantModel $model
-     */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        self::checkEventOrganizer($model, $logger);
-        self::checkOrganizer($model, $logger);
+        self::checkEventOrganizer($model, $logger, $id);
+        self::checkOrganizer($model, $logger, $id);
     }
 
     public function getTitle(): Title
@@ -35,10 +32,10 @@ class ConflictRole extends Test
 
     public function getId(): string
     {
-        return 'ConflictRole';
+        return 'conflictRole';
     }
 
-    private function checkEventOrganizer(ContestantModel $contestant, TestLogger $logger): void
+    private function checkEventOrganizer(ContestantModel $contestant, TestLogger $logger, string $id): void
     {
         $contestYear = $contestant->getContestYear();
         /** @var EventOrganizerModel $eventOrganizer */
@@ -50,6 +47,7 @@ class ConflictRole extends Test
             ) {
                 $logger->log(
                     new TestMessage(
+                        $id,
                         sprintf(
                             _('Conflict role Contestant and EventOrganizer on event %s(%s)'),
                             $eventOrganizer->event->name,
@@ -63,7 +61,7 @@ class ConflictRole extends Test
         }
     }
 
-    private static function checkOrganizer(ContestantModel $contestant, TestLogger $logger): void
+    private static function checkOrganizer(ContestantModel $contestant, TestLogger $logger, string $id): void
     {
         $contestYear = $contestant->getContestYear();
         /** @var OrganizerModel $organizer */
@@ -77,6 +75,7 @@ class ConflictRole extends Test
                 ) {
                     $logger->log(
                         new TestMessage(
+                            $id,
                             _('Conflict role Contestant and Organizer'),
                             Message::LVL_ERROR
                         ),

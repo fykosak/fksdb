@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 /**
  * @phpstan-extends Adapter<ContestantModel,PersonModel>
  */
-class ContestantToPersonAdapter extends Adapter
+final class ContestantToPersonAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -39,6 +39,6 @@ class ContestantToPersonAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'person' . $this->test->getId();
+        return 'contestantToPerson';
     }
 }
