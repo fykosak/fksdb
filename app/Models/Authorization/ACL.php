@@ -80,6 +80,7 @@ final class ACL
         $service->allow(ContestRole::Organizer, Models\EventModel::RESOURCE_ID, 'list');
         $service->allow(ContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
         $service->allow(BaseRole::Registered, Models\EventModel::RESOURCE_ID, 'dashboard');
+        $service->allow(ContestRole::Web, Models\EventModel::RESOURCE_ID); // TODO
 // event organizers
         $service->addResource(Models\EventOrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
