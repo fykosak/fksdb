@@ -25,7 +25,7 @@ abstract class AbstractDateTimeColumnFactory extends ColumnFactory
         $this->printer = new DatePrinter($this->getDefaultFormat());
     }
 
-    final public function setDataFormat(?string $format): void
+    final public function setFormat(?string $format): void
     {
         $this->printer = new DatePrinter($format);
     }

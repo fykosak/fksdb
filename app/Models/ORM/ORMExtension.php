@@ -92,7 +92,7 @@ class ORMExtension extends Extension
                             Expect::anyOf('primaryKey', 'text', 'string', 'bool', 'phone', 'email', 'localizedString')
                         ),
                         $this->createDefaultStructure(Expect::anyOf('dateTime', 'time', 'date'), [
-                            'dateFormat' => Expect::string(),
+                            'format' => Expect::string(),
                         ]),
                         $this->createDefaultStructure(Expect::anyOf('state'), [
                             'states' => Expect::arrayOf(
@@ -390,8 +390,7 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     dataFormat?:string,
-     *     format:array{
+     *     format?:string|array{
      *          decimalDigits:int,
      *          nullValue:string,
      *          prefix:string,
@@ -433,7 +432,7 @@ class ORMExtension extends Extension
      *     description?:string,
      *     writeOnly:bool,
      *     title:string,
-     *     dateFormat?:string,
+     *     format?:string,
      * } $field
      * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
@@ -447,8 +446,8 @@ class ORMExtension extends Extension
         array $field
     ): void {
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, $factoryClassName, $field);
-        if (isset($field['dateFormat'])) {
-            $factory->addSetup('setDateFormat', [$field['dateFormat']]);
+        if (isset($field['format'])) {
+            $factory->addSetup('setFormat', [$field['format']]);
         }
     }
 

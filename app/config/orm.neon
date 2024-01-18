@@ -239,14 +239,14 @@ orm:
             arrival_time:
                 type: time
                 title:  _('Arrival time')
-                dateFormat: %H:%I
+                format: %H:%I
             arrival_destination:
                 type: string
                 title: _('Arrival destination')
             departure_time:
                 type: time
                 title: _('Departure time')
-                dateFormat: %H:%I
+                format: %H:%I
             departure_destination:
                 type: string
                 title: _('Departure destination')
@@ -779,11 +779,11 @@ orm:
             created:
                 type: dateTime
                 title: _('Created')
-                dateFormat: 'H:m:s d-M-Y'
+                format: 'H:m:s d-M-Y'
             modified:
                 type: dateTime
                 title: _('Modified')
-                dateFormat: 'H:m:s d-M-Y'
+                format: 'H:m:s d-M-Y'
             points:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
