@@ -125,7 +125,7 @@ parameters:
                 - event_participant.edit
             rows:
                 - event_participant.event_participant_id
-                - event.name
+                - event.name_new
                 - event_participant.status
         fyziklani_team_member:
             layout: grid
@@ -133,8 +133,8 @@ parameters:
             table: fyziklani_team_member
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
-                - event.name
+                #- fyziklani_team.state
+                - event.name_new
             links:
                 - fyziklani_team.detail
         event_org:
@@ -146,7 +146,7 @@ parameters:
                 - event_org.detail
             rows:
                 - event_org.event_org_id
-                - event.name
+                - event.name_new
                 - contest.contest
                 - event_org.note
         fyziklani_team_teacher:
@@ -157,8 +157,8 @@ parameters:
                 - fyziklani_team.detail
             rows:
                 - fyziklani_team.name
-                - fyziklani_team.state
-                - event.name
+                #- fyziklani_team.state
+                - event.name_new
         schedule_item:
             layout: grid
             minimalPermission: 128
@@ -166,7 +166,7 @@ parameters:
             links: []
             rows:
                 - schedule_item.name
-                - event.name
+                - event.name_new
                 - schedule_group.schedule_group_type
                 - schedule_group.start
                 - schedule_group.end

@@ -10,8 +10,8 @@
             <tbody>
             {foreach $rows as $field}
                 <tr>
-                    <td>{control valuePrinter:templateString '@' . $field . ':title', $model,$userPermission}</td>
-                    <td>{control valuePrinter:templateString '@' . $field . ':value', $model,$userPermission}</td>
+                    <td>{control valuePrinter:column '@' . $field . ':title', $model,$userPermission}</td>
+                    <td>{control valuePrinter:column '@' . $field . ':value', $model,$userPermission}</td>
                 </tr>
             {/foreach}
             </tbody>

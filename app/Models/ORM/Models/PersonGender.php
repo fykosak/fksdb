@@ -6,47 +6,56 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class PersonGender extends FakeStringEnum implements EnumColumn
 {
-    public const MALE = 'M';
-    public const FEMALE = 'F';
+    // phpcs:disable
+    public const Male = 'M';
+    public const Female = 'F';
+
+    // phpcs:enable
 
     public function badge(): Html
     {
+        return Html::el('span')->addAttributes(['class' => $this->iconClassName()]);
+    }
+
+    public function iconClassName(): string
+    {
         switch ($this->value) {
-            case self::FEMALE:
-                return Html::el('span')
-                    ->addAttributes(['class' => 'badge bg-danger'])
-                    ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-venus']));
-            case self::MALE:
-                return Html::el('span')
-                    ->addAttributes(['class' => 'badge bg-primary'])
-                    ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-mars ']));
+            case self::Female:
+                return 'fas fa-venus';
+            case self::Male:
+                return 'fas fa-mars';
             default:
-                return Html::el('span')
-                    ->addAttributes(['class' => 'badge bg-secondary'])
-                    ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-transgender']));
+                return 'fas fa-transgender';
         }
     }
 
     public function label(): string
     {
         switch ($this->value) {
-            case self::FEMALE:
+            case self::Female:
                 return _('Female');
-            case self::MALE:
-            default:
+            case self::Male:
                 return _('Male');
+            default:
+                return _('Other');
         }
     }
 
     public static function cases(): array
     {
         return [
-            new self(self::MALE),
-            new self(self::FEMALE),
+            new self(self::Male),
+            new self(self::Female),
         ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label(), $this->iconClassName());
     }
 }

@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 final class PersonScheduleState extends FakeStringEnum implements EnumColumn
@@ -27,19 +28,26 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
         ];
     }
 
-    public function badge(): Html
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::Participated:
-                return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText($this->label());
+                return 'success';
             case self::Missed:
-                return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($this->label());
+                return 'danger';
             case self::Cancelled:
-                return Html::el('span')->addAttributes(['class' => 'badge bg-secondary'])->addText($this->label());
+                return 'secondary';
             case self::Applied:
-                return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
+            default:
+                return 'primary';
         }
-        return Html::el('span')->addText($this->label());
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
     public function label(): string
@@ -51,9 +59,14 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
                 return _('Missed');
             case self::Cancelled:
                 return _('Cancelled');
+            default:
             case self::Applied:
                 return _('Applied');
         }
-        return '';
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

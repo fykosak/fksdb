@@ -8,8 +8,12 @@ use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\Role;
 use Nette\Utils\Html;
 
-abstract class EventRole implements Role
+class EventRole implements Role
 {
+    // phpcs:disable
+    public const GameInserter = 'game.inserter';
+    // phpcs:enable
+
     protected EventModel $event;
     private string $roleId;
 
@@ -29,5 +33,10 @@ abstract class EventRole implements Role
         return $this->roleId;
     }
 
-    abstract public function badge(): Html;
+    public function badge(): Html
+    {
+        return Html::el('span')->addAttributes([
+            'class' => 'badge bg-primary',
+        ])->addText($this->roleId);
+    }
 }

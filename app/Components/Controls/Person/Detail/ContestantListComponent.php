@@ -31,8 +31,7 @@ class ContestantListComponent extends DetailComponent
 
     protected function configure(): void
     {
-        $this->classNameCallback = fn(ContestantModel $contestant): string => 'alert alert-' .
-            $contestant->contest->getContestSymbol();
+        $this->classNameCallback = fn(ContestantModel $contestant): string => $contestant->contest->getContestSymbol();
         $this->setTitle(// @phpstan-ignore-line
             new SimpleItem($this->container, '@contest.name')// @phpstan-ignore-line
         );
@@ -42,12 +41,17 @@ class ContestantListComponent extends DetailComponent
             'contestant__year'
         );
         if ($this->isOrganizer) {
-            $this->addPresenterButton(':Organizer:Contestant:edit', 'edit', new Title(null, _('button.edit')), false, [
-                'contestId' => 'contest_id',
-                'year' => 'year',
-                'id' => 'contestant_id',
-            ]);
-
+            $this->addPresenterButton(
+                ':Organizer:Contestant:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                [
+                    'contestId' => 'contest_id',
+                    'year' => 'year',
+                    'id' => 'contestant_id',
+                ]
+            );
             $this->addPresenterButton(
                 ':Organizer:Contestant:detail',
                 'detail',

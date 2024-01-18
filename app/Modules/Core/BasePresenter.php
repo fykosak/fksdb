@@ -7,14 +7,16 @@ namespace FKSDB\Modules\Core;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
-use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
-use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -40,6 +42,7 @@ use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
+ * @phpstan-import-type TRootItem from NavigationChooser
  */
 abstract class BasePresenter extends Presenter
 {
@@ -61,6 +64,8 @@ abstract class BasePresenter extends Presenter
     protected PasswordAuthenticator $passwordAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
+    protected ContestYearAuthorizator $contestYearAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
 
     final public function injectBase(
         Container $diContainer,
@@ -68,9 +73,7 @@ abstract class BasePresenter extends Presenter
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator,
         TokenAuthenticator $tokenAuthenticator,
-        PasswordAuthenticator $passwordAuthenticator,
-        ContestAuthorizator $contestAuthorizator,
-        EventAuthorizator $eventAuthorizator
+        PasswordAuthenticator $passwordAuthenticator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
@@ -78,8 +81,18 @@ abstract class BasePresenter extends Presenter
         $this->diContainer = $diContainer;
         $this->tokenAuthenticator = $tokenAuthenticator;
         $this->passwordAuthenticator = $passwordAuthenticator;
+    }
+
+    public function injectAuthorizators(
+        EventAuthorizator $eventAuthorizator,
+        ContestYearAuthorizator $contestYearAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
     }
 
     /**
@@ -348,7 +361,7 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * @phpstan-return string[]
+     * @phpstan-return TRootItem[]
      */
     protected function getNavRoots(): array
     {
@@ -360,9 +373,9 @@ abstract class BasePresenter extends Presenter
         return $this->diContainer;
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooserComponent
+    protected function createComponentNavigationChooser(): NavigationChooser
     {
-        return new NavigationChooserComponent($this->getContext());
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent

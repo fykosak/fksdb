@@ -109,7 +109,7 @@
             </div>
         </div>
     {/if}
-    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Scan and pay'}</h2>
@@ -144,7 +144,7 @@
                 <div class="card text-bg-primary mb-2">
                     <div class="card-body">
                         <div class="row">
-                            <strong class="offset-7 col-3">{_'Total: '}</strong>
+                            <strong class="offset-7 col-3">{_'Total'}: </strong>
                             <strong class="col-2">{$model->getPrice()->__toString()}</strong>
                         </div>
                     </div>

@@ -21,7 +21,7 @@
 {/define}
 
 {define schedule}
-    {if $event->getScheduleGroups()->count()}
+    {if $event->hasSchedule()}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Schedule'}</h2>

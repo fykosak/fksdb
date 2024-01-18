@@ -1,0 +1,24 @@
+{varType array $data}
+{foreach $data as $datum}
+    {var FKSDB\Models\ORM\Tests\Test $test = $datum['test']}
+    {var FKSDB\Components\DataTest\TestMessage[] $messages = $datum[messages]}
+    <h3>{$test->getTitle()->toHtml()}
+        <span class="badge bg-{reset($messages)->level}">
+                    {count($messages)} {php ngettext('Error','Errors',count($messages))}
+                </span>
+    </h3>
+    <p class="text-muted">{$test->getDescription()}</p>
+    <div class="row row row-cols-1 row-cols-md-2 g-4 mb-3">
+        {foreach $messages as $message}
+            <div class="col">
+                {include card from './list.latte' message:$message}
+            </div>
+        {/foreach}
+    </div>
+    <hr/>
+{/foreach}
+{if !count($data)}
+    <h3 class="text-success">{_'No error at all'}</h3>
+{/if}
+
+

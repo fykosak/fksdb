@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PaymentModel;
@@ -27,7 +27,6 @@ class PersonPaymentContainer extends ContainerWithOptions
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
-
     private GettextTranslator $translator;
 
     /**
@@ -67,17 +66,17 @@ class PersonPaymentContainer extends ContainerWithOptions
             $roles = $this->loggedPerson->getEventRoles($this->event);
             $teams = [];
             foreach ($roles as $role) {
-                if ($role instanceof FyziklaniTeamTeacherRole) {
+                if ($role instanceof TeamTeacherRole) {
                     $teams += $role->teams;
                 }
-                if ($role instanceof FyziklaniTeamMemberRole) {
+                if ($role instanceof TeamMemberRole) {
                     $teams[] = $role->member->fyziklani_team;
                 }
             }
             $persons = [];
             /** @var TeamModel2 $team */
             foreach ($teams as $team) {
-                $persons += $team->getPersons();
+                $persons = [...$persons, ...$team->getPersons()];
             }
             $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }

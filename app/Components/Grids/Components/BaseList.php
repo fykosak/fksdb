@@ -16,13 +16,14 @@ abstract class BaseList extends BaseComponent
     // phpcs:disable
     protected const ModeAlert = 'alert';
     protected const ModePanel = 'panel';
+    protected const ModeCard = 'card';
     // phpcs:enable
 
     /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
 
     /** @phpstan-var self::Mode* $mode */
-    protected string $mode = self::ModeAlert;
+    protected string $mode = self::ModePanel;
 
     public function __construct(Container $container, int $userPermission)
     {
@@ -35,11 +36,13 @@ abstract class BaseList extends BaseComponent
     protected function getTemplatePath(): string
     {
         switch ($this->mode) {
+            case self::ModeCard:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.card.latte';
             case self::ModePanel:
                 return __DIR__ . DIRECTORY_SEPARATOR . 'list.panel.latte';
             case self::ModeAlert:
             default:
-                return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.alert.latte';
         }
     }
 

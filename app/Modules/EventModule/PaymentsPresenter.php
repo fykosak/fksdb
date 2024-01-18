@@ -217,7 +217,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     protected function getORMService(): PaymentService
@@ -256,7 +256,7 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->isAllowed(PaymentModel::RESOURCE_ID, 'organizer'),
+            $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'organizer', $this->getEvent()),
             $this->getMachine(),
             null
         );
@@ -273,7 +273,7 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->isAllowed($this->getEntity(), 'organizer'),
+            $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $this->getEvent()),
             $this->getMachine(),
             $this->getEntity()
         );

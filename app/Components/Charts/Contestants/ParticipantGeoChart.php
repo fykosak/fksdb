@@ -39,7 +39,7 @@ class ParticipantGeoChart extends FrontEndComponent implements Chart
         $data = [];
         /** @var ContestantModel $contestant */
         foreach ($this->contestYear->getContestants() as $contestant) {
-            if ($contestant->getSubmits()->count() > 0) {
+            if ($contestant->getSubmits()->count('*') > 0) {
                 $iso = $contestant->getPersonHistory()->school->address->country->alpha_3;
                 if (!isset($data[$iso])) {
                     $data[$iso] = 0;

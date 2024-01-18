@@ -35,14 +35,12 @@ class Handler
         }
         $this->teamService->explorer->beginTransaction();
         $sum = (int)$team->getNonRevokedSubmits()->sum('points');
-        $this->teamService->storeModel([
-            'points' => $sum,
-        ], $team);
+        $this->teamService->storeModel(['points' => $sum,], $team);
         $this->teamService->explorer->commit();
         $this->logger->log(
             new Message(
                 \sprintf(
-                    _('Team "%s" rating was successfully closeded with total %d points.'),
+                    _('Team "%s" rating was successfully closed with total %d points.'),
                     $team->name,
                     $sum
                 ),
@@ -54,7 +52,7 @@ class Handler
     /**
      * @throws NotSetGameParametersException
      */
-    public function getNextTask(TeamModel2 $team): ?TaskModel
+    public static function getNextTask(TeamModel2 $team): ?TaskModel
     {
         $submits = $team->getNonRevokedSubmits()->count('*');
         $tasksOnBoard = $team->event->getGameSetup()->tasks_on_board;

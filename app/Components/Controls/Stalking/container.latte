@@ -1,10 +1,10 @@
 {layout '../@layout.latte'}
 {varType int $userPermission}
 {define person}
-    {control stalkingComponent "base_info"}
-    {control stalkingComponent "extended_info"}
-    {control stalkingComponent "academic_degree"}
-    {control stalkingComponent "login"}
+    {control detailComponent "base_info"}
+    {control detailComponent "extended_info"}
+    {control detailComponent "academic_degree"}
+    {control detailComponent "login"}
     {control flag}
 {/define}
 
@@ -18,8 +18,8 @@
 {/define}
 
 {define contact}
-    {control stalkingComponent "contact_info"}
-    {control stalkingComponent "contact_parents"}
+    {control detailComponent "contact_info"}
+    {control detailComponent "contact_parents"}
     {control deliveryAddress}
     {control permanentAddress}
     <div class="panel color-auto">

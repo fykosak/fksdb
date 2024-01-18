@@ -7,7 +7,7 @@ import {
 import TimePrinter from 'FKSDB/Models/UI/time-printer';
 import DateDisplay from 'FKSDB/Models/UI/date-printer';
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { TranslatorContext } from '@translator/context';
 import { ScheduleItemModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,35 +93,43 @@ interface ItemProps {
 
 function Item({item, params}: ItemProps) {
     const translator = useContext(TranslatorContext);
+    const [visible, setVisible] = useState<boolean>(false);
     const value = useSelector((state: Store) => state.inputConnector.data.data);
     const dispatch = useDispatch();
     const {scheduleItemId, price, name, totalCapacity, usedCapacity, description} = item;
     const isChecked = (value === scheduleItemId);
-    // <i className=""></i>
-    return <div
-        className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : (item.available ? '' : 'text-secondary border-secondary'))}
-        onClick={() => {
-            if (item.available) {
-                if (isChecked) {
-                    dispatch(changeData('data', null));
-                } else {
-                    dispatch(changeData('data', scheduleItemId))
-                }
-            }
-        }}>
 
-        <div className="card-body">
-            <h5 className="card-title">
-                <i className={'me-2 '+(isChecked ? 'fas fa-check-circle' : (item.available ? 'far fa-circle' : 'fas fa-circle-xmark'))}/>
-                {translator.get(name)}
-            </h5>
-            <h6 className="card-subtitle">
-                {translator.get(description)}
-            </h6>
-            <p className="card-text">
-                {params.price && <PriceLabel price={price} translator={translator}/>}
-                {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
-            </p>
-        </div>
-    </div>;
+    if (isChecked || item.available || visible) {
+        if (!visible) {
+            setVisible(true);
+        }
+        return <div
+            className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : (item.available ? '' : 'text-secondary border-secondary'))}
+            onClick={() => {
+                if (item.available) {
+                    if (isChecked) {
+                        dispatch(changeData('data', null));
+                    } else {
+                        dispatch(changeData('data', scheduleItemId))
+                    }
+                }
+            }}>
+
+            <div className="card-body">
+                <h5 className="card-title">
+                    <i className={'me-2 ' + (isChecked ? 'fas fa-check-circle' : (item.available ? 'far fa-circle' : 'fas fa-circle-xmark'))}/>
+                    {translator.get(name)}
+                </h5>
+                <h6 className="card-subtitle">
+                    {translator.get(description)}
+                </h6>
+                <p className="card-text">
+                    {params.price && <PriceLabel price={price} translator={translator}/>}
+                    {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                </p>
+            </div>
+        </div>;
+    } else {
+        return null;
+    }
 }

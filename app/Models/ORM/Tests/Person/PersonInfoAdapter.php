@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Person;
 
-use FKSDB\Models\ORM\Tests\Adapter;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Tests\Adapter;
 use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-extends Adapter<PersonModel,PersonInfoModel>
  */
-class PersonInfoAdapter extends Adapter
+final class PersonInfoAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -30,6 +30,6 @@ class PersonInfoAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'PersonInfo' . $this->test->getId();
+        return 'personToInfo';
     }
 }

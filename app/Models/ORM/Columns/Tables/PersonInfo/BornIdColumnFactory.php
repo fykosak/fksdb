@@ -117,6 +117,6 @@ class BornIdColumnFactory extends ColumnFactory
         if (is_null($control)) {
             throw new OutOfRangeException('Born number before 1954');
         }
-        return +$month > 50 ? PersonGender::from(PersonGender::FEMALE) : PersonGender::from(PersonGender::MALE);
+        return +$month > 50 ? PersonGender::from(PersonGender::Female) : PersonGender::from(PersonGender::Male);
     }
 }

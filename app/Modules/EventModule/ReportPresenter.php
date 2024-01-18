@@ -14,7 +14,7 @@ final class ReportPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Report'), 'fas fa-calendar-alt');
+        return new PageTitle(null, _('Errors & warnings'), 'fas fa-triangle-exclamation');
     }
 
     /**
@@ -22,7 +22,7 @@ final class ReportPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('event', 'edit');
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'report', $this->getEvent());
     }
 
     /**

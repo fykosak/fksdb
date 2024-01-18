@@ -55,7 +55,7 @@ final class PaymentList extends BaseList
             }
             switch ($key) {
                 case 'state':
-                    $query->where('state', $filterParam);
+                    $query->where('payment.state', $filterParam);
                     break;
                 case 'vs':
                     $query->where('variable_symbol', $filterParam);
@@ -76,7 +76,7 @@ final class PaymentList extends BaseList
 
     protected function configure(): void
     {
-        $this->paginate = true;
+        $this->paginate = false;
         $this->filtered = true;
         $this->counter = true;
         $this->mode = self::ModePanel;

@@ -39,7 +39,7 @@ class NewApplicationsGrid extends BaseGrid
     {
         $this->paginate = false;
         $this->addSimpleReferencedColumns([
-            '@event.name',
+            '@event.name_new',
             '@contest.contest',
         ]);
         $button = new Button(

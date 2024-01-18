@@ -23,7 +23,7 @@ final class TeamService2 extends Service
             $query->where('category', $category->value);
         }
         $query->where('points', null);
-        return $query->count() == 0;
+        return $query->count('*') === 0;
     }
 
     /**

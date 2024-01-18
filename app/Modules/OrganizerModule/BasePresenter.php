@@ -9,9 +9,9 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -31,12 +31,55 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->seriesTraitStartup();
     }
 
-    /**
-     * @phpstan-return string[]
-     */
     protected function getNavRoots(): array
     {
-        return ['Organizer.Dashboard.default'];
+        return [
+            [
+                'title' => new Title(null, _('Series')),
+                'items' => [
+                    'Organizer:Inbox:list' => [],
+                    'Organizer:Inbox:inbox' => [],
+                    'Organizer:Inbox:corrected' => [],
+                    'Organizer:Points:preview' => [],
+                    'Organizer:Points:entry' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Tasks')),
+                'items' => [
+                    'Organizer:Tasks:dispatch' => [],
+                    'Organizer:Tasks:import' => [],
+                    'Organizer:Tasks:list' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Persons')),
+                'items' => [
+                    'Organizer:Person:search' => [],
+                    'Organizer:Person:pizza' => [],
+                    'Organizer:Contestant:list' => [],
+                    'Organizer:Organizer:list' => [],
+                    'Organizer:Teacher:list' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Entities')),
+                'items' => [
+                    'Organizer:Report:default' => [],
+                    'Organizer:Event:list' => [],
+                    'Organizer:Schools:default' => [],
+                    'Organizer:StoredQuery:list' => [],
+                    'Organizer:Spam:list' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Others')),
+                'items' => [
+                    'Organizer:Chart:list' => [],
+                    'Organizer:Acl:list' => [],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -55,14 +98,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     */
-    protected function isAnyContestAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege);
     }
 
     protected function getRole(): PresenterRole

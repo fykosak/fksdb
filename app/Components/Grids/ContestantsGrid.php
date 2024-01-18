@@ -67,6 +67,12 @@ final class ContestantsGrid extends BaseGrid
             false,
             ['id' => 'contestant_id']
         );
-        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
+        $this->addPresenterButton(
+            'Contestant:detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'contestant_id']
+        );
     }
 }

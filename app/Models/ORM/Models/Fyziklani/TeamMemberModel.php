@@ -55,7 +55,7 @@ final class TeamMemberModel extends Model
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, $this->fyziklani_team->event->getSalt());
+            return MachineCode::createHash($this->person, $this->fyziklani_team->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }
