@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Edit;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\FlagModel;
 use FKSDB\Models\ORM\Models\PersonHasFlagModel;
@@ -17,6 +16,7 @@ use Nette\Forms\Form;
 
 /**
  * @property PersonHasFlagModel $model
+ * @phpstan-extends EntityFormComponent<PersonHasFlagModel>
  */
 class FlagComponent extends EntityFormComponent
 {
@@ -37,8 +37,14 @@ class FlagComponent extends EntityFormComponent
         }
     }
 
+    public function inject(PersonHasFlagService $personHasFlagService): void
+    {
+        $this->personHasFlagService = $personHasFlagService;
+    }
+
     protected function handleFormSuccess(Form $form): void
     {
+        /** @var array{value:string} $values */
         $values = $form->getValues('array');
         $flagValue = null;
         if ($values['value'] === 'yes') {
@@ -66,10 +72,7 @@ class FlagComponent extends EntityFormComponent
         ])->setPrompt(_('No selected'));
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (!isset($this->model)) {
             $value = null;
