@@ -10,7 +10,6 @@ use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -210,7 +209,6 @@ class ApplicationComponent extends BaseComponent
                     ModelDataConflictException |
                     DuplicateApplicationException |
                     MachineExecutionException |
-                    SubmitProcessingException |
                     FullCapacityException |
                     ExistingPaymentException $exception
                 ) {

@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Model\Model;
 /**
  * @phpstan-extends Adapter<PersonModel,PersonHistoryModel>
  */
-class PersonHistoryAdapter extends Adapter
+final class PersonHistoryAdapter extends Adapter
 {
     protected function getModels(Model $model): iterable
     {
@@ -29,6 +29,6 @@ class PersonHistoryAdapter extends Adapter
 
     public function getId(): string
     {
-        return 'PersonHistory' . $this->test->getId();
+        return 'personToHistories';
     }
 }

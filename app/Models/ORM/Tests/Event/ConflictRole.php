@@ -6,11 +6,9 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
-use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
 use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -24,12 +22,12 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel>
  */
-class ConflictRole extends Test
+final class ConflictRole extends Test
 {
     /**
      * @param TeamMemberModel|TeamTeacherModel|EventParticipantModel|EventOrganizerModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $person = $model->person;
         if ($model instanceof TeamMemberModel || $model instanceof TeamTeacherModel) {
@@ -43,22 +41,20 @@ class ConflictRole extends Test
         $teacherRole = false;
         foreach ($roles as $role) {
             if (
-                $role instanceof FyziklaniTeamMemberRole
+                $role instanceof TeamMemberRole
                 || $role instanceof ParticipantRole
             ) {
                 $participantRole = true;
-            } elseif (
-                $role instanceof EventOrganizerRole
-                || $role instanceof ContestOrganizerRole
-            ) {
-                $organizerRole = true;
-            } elseif ($role instanceof FyziklaniTeamTeacherRole) {
+            } elseif ($role instanceof TeamTeacherRole) {
                 $teacherRole = true;
+            } else {
+                $organizerRole = true;
             }
         }
         if (((int)$participantRole + (int)$teacherRole + (int)$organizerRole) > 1) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(
                         _('Has conflict role %s.'),
                         join(', ', array_map(fn(EventRole $role) => $role->getRoleId(), $roles))
@@ -76,6 +72,6 @@ class ConflictRole extends Test
 
     public function getId(): string
     {
-        return 'ConflictRole';
+        return 'conflictRole';
     }
 }

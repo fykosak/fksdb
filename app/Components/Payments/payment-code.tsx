@@ -23,7 +23,7 @@ export default function PaymentCode({data}: OwnProps) {
     useEffect(function () {
         let text = 'SPD*1.0*';
         if (data.currency === 'CZK') {
-            text += 'ACC:' + data.iban.replace(' ', '') + '*';
+            text += 'ACC:' + data.iban + '*';
             if (data.variableSymbol) {
                 text += 'X-VS:' + data.variableSymbol + '*';
             }
@@ -34,12 +34,13 @@ export default function PaymentCode({data}: OwnProps) {
                 text += 'X-KS:' + data.constantSymbol + '*';
             }
         } else {
-            text += 'ACC:' + data.iban.replace(' ', '') + '+' + data.swift + '*';
+            console.log(data.iban.replace(' ', ''));
+            text += 'ACC:' + data.iban + '+' + data.swift + '*';
         }
         text += 'AM:' + data.price + '*';
         text += 'CC:' + data.currency + '*';
         text += 'RF:' + data.paymentId + '*';
-        text += 'RN:' + data.recipient + '*';
+        text += 'RN:' + data.recipient;
         QRCode.toString(text).then((code) => {
             setQRCode(code);
         });

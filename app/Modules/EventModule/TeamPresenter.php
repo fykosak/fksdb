@@ -10,6 +10,7 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
+use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
 use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
@@ -17,10 +18,9 @@ use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
-use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
+use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -54,7 +54,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -77,11 +77,9 @@ final class TeamPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
+            || ($this->getEvent()->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $this->getEvent())
             );
     }
 
@@ -106,7 +104,6 @@ final class TeamPresenter extends BasePresenter
                 'personSchedule' . $person->person_id
             );
         }
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -386,23 +383,22 @@ final class TeamPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentSeating(): Single
     {
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            [$this->getEntity()],
-            $this->getContext()
-        );
+        return new Single($this->getContext(), $this->getEntity());
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
-        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+        return new SchoolCheckComponent($this->getEntity(), $this->getContext());
     }
 
     /**
@@ -411,5 +407,17 @@ final class TeamPresenter extends BasePresenter
     protected function createComponentTests(): TestsList
     {
         return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     * @throws \ReflectionException
+     */
+    protected function createComponentNoteForm(): NoteForm
+    {
+        return new NoteForm($this->getContext(), $this->getEntity());
     }
 }

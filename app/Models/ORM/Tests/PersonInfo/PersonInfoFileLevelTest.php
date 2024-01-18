@@ -19,7 +19,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends Test<PersonInfoModel>
  */
-class PersonInfoFileLevelTest extends Test
+final class PersonInfoFileLevelTest extends Test
 {
     private string $fieldName;
     private ReflectionFactory $tableReflectionFactory;
@@ -63,13 +63,13 @@ class PersonInfoFileLevelTest extends Test
      * @param PersonInfoModel $model
      * @throws BadTypeException
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        $this->getRowFactory()->runTest($logger, $model);
+        $this->getRowFactory()->runTest($logger, $model, $id);
     }
 
     public function getId(): string
     {
-        return 'PersonInfo' . $this->fieldName;
+        return 'personInfo-' . $this->fieldName;
     }
 }

@@ -22,7 +22,7 @@ use Nette\Forms\Form;
 
 class CodeComponent extends CodeForm
 {
-    protected ScheduleItemModel $item;
+    private ScheduleItemModel $item;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(Container $container, ScheduleItemModel $item)
@@ -50,7 +50,7 @@ class CodeComponent extends CodeForm
             );
             $machine->execute($transition, $holder);
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('Error: ') . $exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage(_('Error') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
 

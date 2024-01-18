@@ -24,7 +24,7 @@ final class BornDateTest extends Test
      * @param PersonModel $model
      * @throws \Exception
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $info = $model->getInfo();
         if (!$info || !$info->born) {
@@ -35,28 +35,32 @@ final class BornDateTest extends Test
             $graduationYear = $history->getGraduationYear();
             if ($graduationYear) {
                 $graduationDate = new \DateTime($graduationYear . '-06-01');
-                $deltaYear = ($graduationDate->getTimestamp() - $info->born->getTimestamp()) / self::UNIX_YEAR;
-                if (abs($deltaYear - 19) > 4) {
+                $graduationAt = ($graduationDate->getTimestamp() - $info->born->getTimestamp()) / self::UNIX_YEAR;
+                $delta = abs($graduationAt - 19);
+                if ($delta > 4) {
                     $logger->log(
                         new TestMessage(
+                            $id,
                             sprintf(
                                 _('Expected graduation at the age of %01.2f'),
-                                $deltaYear
+                                $graduationAt
                             ),
                             Message::LVL_ERROR
                         )
                     );
-                } elseif (abs($deltaYear - 19) > 2) {
+                } elseif ($delta > 2) {
                     $logger->log(
                         new TestMessage(
+                            $id,
                             sprintf(
                                 _('Expected graduation at the age of %01.2f'),
-                                $deltaYear
+                                $graduationAt
                             ),
                             Message::LVL_WARNING
                         )
                     );
                 }
+                return;//run only once
             }
         }
     }

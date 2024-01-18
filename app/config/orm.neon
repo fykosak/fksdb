@@ -109,6 +109,10 @@ orm:
                 title: _('Events name')
                 description: _("For the camps, it is its place.")
                 required: true
+            name_new:
+                type: class
+                title: _('Event')
+                class: FKSDB\Models\ORM\Columns\Tables\Event\EventName
             begin:
                 type: dateTime
                 title: _('Event begin')
@@ -166,10 +170,6 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
                 title: _('Event type id')
-            event_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
-                title: _('Event')
         links: []
     event_org:
         service: FKSDB\Models\ORM\Services\EventOrganizerService
@@ -278,9 +278,12 @@ orm:
     flag:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
-    grant:
-        service: FKSDB\Models\ORM\Services\GrantService
-        model: FKSDB\Models\ORM\Models\GrantModel
+    contest_grant:
+        service: FKSDB\Models\ORM\Services\ContestGrantService
+        model: FKSDB\Models\ORM\Models\ContestGrantModel
+    event_grant:
+        service: FKSDB\Models\ORM\Services\EventGrantService
+        model: FKSDB\Models\ORM\Models\EventGrantModel
     login:
         service: FKSDB\Models\ORM\Services\LoginService
         model: FKSDB\Models\ORM\Models\LoginModel
@@ -619,9 +622,6 @@ orm:
     psc_region:
         service: FKSDB\Models\ORM\Services\PSCSubdivisionService
         model: FKSDB\Models\ORM\Models\PSCSubdivisionModel
-    role:
-       service: FKSDB\Models\ORM\Services\RoleService
-       model: FKSDB\Models\ORM\Models\RoleModel
     school:
         service: FKSDB\Models\ORM\Services\SchoolService
         model: FKSDB\Models\ORM\Models\SchoolModel
@@ -765,15 +765,6 @@ orm:
                 title: _('button.teacher.detail')
                 icon: 'fas fa-pencil'
 #fyziklani
-    fyziklani_room:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel
-    fyziklani_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\SeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel
-    fyziklani_team_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
     fyziklani_submit:
         service: FKSDB\Models\ORM\Services\Fyziklani\SubmitService
         model: FKSDB\Models\ORM\Models\Fyziklani\SubmitModel
@@ -858,7 +849,9 @@ orm:
             note:
                 type: text
                 title: _('Note')
-                omitInputField: true
+            internal_note:
+                type: text
+                title: _('Internal note')
             category:
                 type: enum
                 title: _('Category')
@@ -876,9 +869,11 @@ orm:
                 title: _('Total rank')
                 omitInputField: true
             points:
-                type: string
+                type: int
                 title: _('Points')
                 omitInputField: true
+                nullValueFormat: notSet
+
             game_lang:
                 type: enum
                 class: FKSDB\Models\ORM\Models\Fyziklani\GameLang

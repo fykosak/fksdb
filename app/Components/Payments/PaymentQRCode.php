@@ -41,7 +41,7 @@ class PaymentQRCode extends FrontEndComponent
             'variableSymbol' => $this->payment->variable_symbol,
             'specificSymbol' => $this->payment->specific_symbol,
             'recipient' => $this->payment->recipient,
-            'iban' => $this->payment->iban,
+            'iban' => str_replace(' ', '', $this->payment->iban),
             'swift' => $this->payment->swift,
         ];
     }

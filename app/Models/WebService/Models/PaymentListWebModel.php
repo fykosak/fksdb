@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\BadRequestException;
@@ -31,7 +30,7 @@ class PaymentListWebModel extends WebModel
     /**
      * @throws \Exception
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $event = $this->eventService->findByPrimary($params['eventId']);
         if (!$event) {
@@ -54,10 +53,15 @@ class PaymentListWebModel extends WebModel
         return $data;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
         ]);
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        return false;
     }
 }

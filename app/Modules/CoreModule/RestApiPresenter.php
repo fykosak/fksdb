@@ -8,6 +8,7 @@ use FKSDB\Models\WebService\Models\ContestsModel;
 use FKSDB\Models\WebService\Models\EventListWebModel;
 use FKSDB\Models\WebService\Models\Events\ParticipantsWebModel;
 use FKSDB\Models\WebService\Models\Events\ReportsWebModel;
+use FKSDB\Models\WebService\Models\Events\Schedule\GroupListWebModel;
 use FKSDB\Models\WebService\Models\Events\TeamsWebModel;
 use FKSDB\Models\WebService\Models\EventWebModel;
 use FKSDB\Models\WebService\Models\OrganizersWebModel;
@@ -29,7 +30,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     private const ROUTER = ['module' => 'Core', 'presenter' => 'RestApi', 'action' => 'default'];
     public const WEB_MODELS = [
         'GetFyziklaniResults' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
-        // 'game/submit' => Game\SubmitWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -39,12 +39,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         'GetPaymentList' => PaymentListWebModel::class,
         'GetSeriesResults' => SeriesResultsWebModel::class,
         'GetContests' => ContestsModel::class,
-        // events
-        'events' => EventListWebModel::class,
-
-        // game
-        'game/results' => \FKSDB\Models\WebService\Models\Game\ResultsWebModel::class,
-        //'game/submit' => Game\SubmitWebModel::class,
     ];
 
     /** @persistent */
@@ -53,7 +47,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     /* TODO */
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed('webService', 'default');
+        return $this->contestAuthorizator->isAllowedAnyContest('api', null);
     }
 
     /**
@@ -111,7 +105,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             }
             /** @phpstan-var WebModel<array<string,mixed>,array<string,mixed>> $model */
             $model = $reflection->newInstance($this->getContext());
-            $model->setUser($this->getUser());
             return $model;
         }
         throw new \InvalidArgumentException();
@@ -119,12 +112,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 
     public static function createRouter(RouteList $list): void
     {
-        /*   $list->addRoute(
-               'events/<eventId [0-9]+>/schedule/group',
-               array_merge(self::ROUTER, [
-                   'model' => GroupListWebModel::class,
-               ])
-           );
+        $list->addRoute(
+            'events/<eventId [0-9]+>/schedule',
+            array_merge(self::ROUTER, [
+                'model' => GroupListWebModel::class,
+            ])
+        );/*
            $list->addRoute(
                'events/<eventId [0-9]+>/schedule/group/<groupId [0-9]+>/item',
                array_merge(self::ROUTER, [
@@ -141,6 +134,12 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             'events/<eventId [0-9]+>/teams',
             array_merge(self::ROUTER, [
                 'model' => TeamsWebModel::class,
+            ])
+        );
+        $list->addRoute(
+            'events/<eventId [0-9]+>/organizers',
+            array_merge(self::ROUTER, [
+                'model' => \FKSDB\Models\WebService\Models\Events\OrganizersWebModel::class,
             ])
         );
         $list->addRoute(

@@ -15,7 +15,8 @@ use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends WebModel<array{
- *     contest_id:int,
+ *     contestId:int,
+ *     contest_id?:int,
  *     year:int,
  * },array<string,mixed>>
  */
@@ -28,10 +29,11 @@ class SeriesResultsWebModel extends WebModel
         $this->contestYearService = $contestYearService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contest_id' => Expect::scalar()->castTo('int')->required(),
+            'contestId' => Expect::scalar()->castTo('int'),
+            'contest_id' => Expect::scalar()->castTo('int'),
             'year' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
@@ -39,9 +41,12 @@ class SeriesResultsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
-        $contestYear = $this->contestYearService->findByContestAndYear($params['contest_id'], $params['year']);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
         $tasksData = [];
         /** @var TaskModel $task */
@@ -105,5 +110,14 @@ class SeriesResultsWebModel extends WebModel
             'tasks' => $tasksData,
             'submits' => $results,
         ];
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $params['contest_id'] ?? $params['contestId'],
+            $params['year']
+        );
+        return $this->contestAuthorizator->isAllowed($contestYear->contest, 'api', $contestYear->contest);
     }
 }

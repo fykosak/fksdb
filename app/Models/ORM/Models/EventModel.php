@@ -83,7 +83,6 @@ final class EventModel extends Model implements Resource, NodeCreator
         return $this->event_type->contest->getContestYear($this->year);
     }
 
-
     /**
      * @throws NotSetGameParametersException
      */
@@ -105,6 +104,11 @@ final class EventModel extends Model implements Resource, NodeCreator
         /** @phpstan-var TypedGroupedSelection<ScheduleGroupModel> $selection */
         $selection = $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
         return $selection;
+    }
+
+    public function hasSchedule(): bool
+    {
+        return (bool)$this->getScheduleGroups()->count('*');
     }
 
     /**
