@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Transitions\Code\CodeTransition;
-use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\MachineCode\MachineCodeException;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -68,20 +65,10 @@ class CodeComponent extends CodeTransition
      */
     protected function resolveModel(Model $model): PersonScheduleModel
     {
-        if (
-<<<<<<< HEAD
-            $model instanceof EventParticipantModel
-=======
-            $model instanceof TeamTeacherModel
-            || $model instanceof TeamMemberModel
-            || $model instanceof EventParticipantModel
->>>>>>> 7aa52edab1e99daa7159354f72ae50682bdc4267
-        ) {
-            $person = $model->person;
-        } else {
+        if (!$model instanceof PersonModel) {
             throw new MachineCodeException(_('Unsupported code type'));
         }
-        $personSchedule = $person->getScheduleByItem($this->item);
+        $personSchedule = $model->getScheduleByItem($this->item);
 
         if (!$personSchedule) {
             throw new BadRequestException(_('Person not applied in this schedule'));
