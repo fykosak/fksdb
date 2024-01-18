@@ -79,7 +79,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     protected function getORMService(): EventOrganizerService

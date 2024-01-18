@@ -13,7 +13,7 @@ use Nette\Schema\Expect;
 /**
  * @phpstan-extends WebModel<array{
  *     contest_id?:int,
- *     contestId?:int,
+ *     contestId:int,
  *     year?:int|null,
  * },array<mixed>>
  */
@@ -69,7 +69,7 @@ class OrganizersWebModel extends WebModel
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
         $organizers = $contest->getOrganizers();
@@ -96,12 +96,18 @@ class OrganizersWebModel extends WebModel
         return $items;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'contestId' => Expect::scalar()->castTo('int'),
             'contest_id' => Expect::scalar()->castTo('int'),
             'year' => Expect::scalar()->castTo('int')->nullable(),
         ]);
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
+        return $this->contestAuthorizator->isAllowed($contest, 'api', $contest);
     }
 }

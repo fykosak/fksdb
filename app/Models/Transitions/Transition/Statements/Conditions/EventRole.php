@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 
 /**
- * @phpstan-template ArgType
- * @phpstan-implements Statement<bool,ArgType>
+ * @phpstan-template TModel of (\Nette\Security\Resource&\Fykosak\NetteORM\Model\Model)
+ * @phpstan-implements Statement<bool,ModelHolder<FakeStringEnum&EnumColumn,TModel>>
  */
-abstract class EventRole implements Statement
+class EventRole implements Statement
 {
     protected EventAuthorizator $eventAuthorizator;
     protected ?string $privilege;
@@ -20,5 +25,17 @@ abstract class EventRole implements Statement
     {
         $this->eventAuthorizator = $eventAuthorizator;
         $this->privilege = $privilege;
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     */
+    public function __invoke(...$args): bool
+    {
+        [$holder] = $args;
+        /** @var EventModel $event */
+        $event = $holder->getModel()->getReferencedModel(EventModel::class);
+        return $this->eventAuthorizator->isAllowed($holder->getModel(), $this->privilege, $event);
     }
 }

@@ -239,11 +239,11 @@ class FOFTeamForm extends TeamForm
                 $referencedId->setDefaultValue($teacher->person);
                 $referencedId->referencedContainer->setOption(
                     'label',
-                    self::formatTeacherLabel($index, $teacher)
+                    self::formatTeacherLabel($index + 1, $teacher)
                 );
                 $referencedId->searchContainer->setOption(
                     'label',
-                    self::formatTeacherLabel($index, $teacher)
+                    self::formatTeacherLabel($index + 1, $teacher)
                 );
                 $index++;
             }

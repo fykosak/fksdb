@@ -9,47 +9,145 @@ SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
 
 -- -----------------------------------------------------
--- Schema fksdb
--- -----------------------------------------------------
-
--- -----------------------------------------------------
 -- Table `contest`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest`
 (
-    `contest_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name`       VARCHAR(255) NOT NULL
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'semináře';
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `contest_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `contest_category`
+(
+    `contest_category_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`               VARCHAR(16)  NOT NULL,
+    `name_cs`             VARCHAR(64)  NOT NULL,
+    `name_en`             VARCHAR(64)  NOT NULL
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `contest_year`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `contest_year`
+(
+    `contest_id` INT UNSIGNED NOT NULL,
+    `year`       TINYINT      NOT NULL,
+    `ac_year`    SMALLINT     NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
+    PRIMARY KEY (`contest_id`, `year`),
+    INDEX `idx__contest_year__ac_year` (`ac_year` ASC),
+    INDEX `idx__contest_year__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contest_year__contest`
+        FOREIGN KEY (`contest_id`)
+            REFERENCES `contest` (`contest_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
+    COMMENT = 'mapování ročníků semináře na akademické roky';
+
+-- -----------------------------------------------------
+-- Table `role`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `role`
+(
+    `role_id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`        VARCHAR(16)  NOT NULL,
+    `description` TEXT         NULL DEFAULT NULL
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `country`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `country`
+(
+    `country_id`   INT UNSIGNED NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
+    `name`         VARCHAR(64)  NOT NULL,
+    `alpha_2`      CHAR(2)      NOT NULL,
+    `alpha_3`      CHAR(3)      NOT NULL,
+    `phone_nsn`    INT          NULL DEFAULT NULL,
+    `phone_prefix` VARCHAR(16)  NULL DEFAULT NULL
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `country_subdivision`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `country_subdivision`
+(
+    `country_subdivision_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `code`                   VARCHAR(32)  NOT NULL COMMENT 'ISO 3166-2 code',
+    `name`                   VARCHAR(64)  NOT NULL,
+    `country_id`             INT UNSIGNED NOT NULL,
+    CONSTRAINT `fk_country_subdivision__country`
+        FOREIGN KEY (`country_id`)
+            REFERENCES `country` (`country_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `psc_region`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `psc_region`
+(
+    `psc`                    CHAR(5)      NOT NULL PRIMARY KEY,
+    `country_subdivision_id` INT UNSIGNED NOT NULL,
+    INDEX `idx__psc__country_subdivision` (`country_subdivision_id` ASC),
+    CONSTRAINT `fk__psc__country_subdivision`
+        FOREIGN KEY (`country_subdivision_id`)
+            REFERENCES `country_subdivision` (`country_subdivision_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
+    COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision';
 
 -- -----------------------------------------------------
 -- Table `event_type`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_type`
 (
-    `event_type_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contest_id`    INT(11)     NOT NULL,
-    `name`          VARCHAR(45) NOT NULL,
-    INDEX `idx_event_type__contest` (`contest_id` ASC),
-    CONSTRAINT `fk_event_type__contest`
+    `event_type_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id`    INT UNSIGNED NOT NULL,
+    `name`          VARCHAR(64)  NOT NULL,
+    INDEX `idx__event_type__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__event_type__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `event`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event`
 (
-    `event_id`           INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_type_id`      INT          NOT NULL,
-    `year`               TINYINT(4)   NOT NULL COMMENT 'ročník semináře',
-    `event_year`         TINYINT(4)   NOT NULL COMMENT 'ročník akce',
+    `event_id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_type_id`      INT UNSIGNED NOT NULL,
+    `year`               TINYINT      NOT NULL COMMENT 'ročník semináře',
+    `event_year`         TINYINT      NOT NULL COMMENT 'ročník akce',
     `begin`              DATETIME     NOT NULL COMMENT 'první den akce',
     `end`                DATETIME     NOT NULL COMMENT 'poslední den akce, u jednodenní akce shodný s begin',
     `registration_begin` DATETIME     NOT NULL COMMENT 'případný počátek webové registrace',
@@ -61,305 +159,349 @@ CREATE TABLE IF NOT EXISTS `event`
     `description_en`     TEXT         NULL DEFAULT NULL COMMENT 'Popis aktuálneho ročníku akcie (pred akciou)',
     `place`              VARCHAR(255) NULL DEFAULT NULL COMMENT 'Kde sa akcia uskutočnila (sústredka + tabory + setkani)',
     `parameters`         TEXT         NULL DEFAULT NULL COMMENT 'optional parameters in Neon syntax, scheme is define with action',
-    INDEX `idx_event__event_type1` (`event_type_id` ASC),
-    UNIQUE INDEX `uq_event__event_year__event_type` (`event_year` ASC, `event_type_id` ASC),
+    UNIQUE INDEX `uq__event__event_year__event_type` (`event_year` ASC, `event_type_id` ASC),
+    INDEX `idx__event__year` (`year` ASC),
+    INDEX `idx__event__event_type` (`event_type_id` ASC),
     CONSTRAINT `fk_event__event_type`
         FOREIGN KEY (`event_type_id`)
             REFERENCES `event_type` (`event_type_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person`
 (
-    `person_id`        INT(11)                                                   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`        INT UNSIGNED                                              NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `family_name`      VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Příjmení (nebo více příjmení oddělených jednou mezerou)',
     `other_name`       VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Křestní jména, von, de atd., oddělená jednou mezerou',
     `born_family_name` varchar(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NULL     DEFAULT NULL COMMENT 'Rodné příjmení',
     `display_name`     VARCHAR(511) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NULL     DEFAULT NULL COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>',
-    `gender`           ENUM ('M', 'F') CHARACTER SET 'utf8'                      NOT NULL,
+    `gender`           ENUM ('M', 'F')                                           NOT NULL,
     `created`          TIMESTAMP                                                 NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_czech_ci
-    COMMENT = 'řazení: <family_name><other_name>, zobrazení <other_name>'
-/* comment truncated */ /* <f*/;
-
--- -----------------------------------------------------
--- Table `event_status`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `event_status`
-(
-    `status`      VARCHAR(20) NOT NULL PRIMARY KEY,
-    `description` TEXT        NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    COMMENT = 'list of allowed statuses (for data integrity)';
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `event_participant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_participant`
 (
-    `event_participant_id`  INT(11)       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`              INT(11)       NOT NULL,
-    `person_id`             INT(11)       NOT NULL,
-    `note`                  TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
-    `status`                VARCHAR(20)   NOT NULL DEFAULT '__init',
-    `created`               TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
-    `accomodation`          TINYINT(1)    NULL     DEFAULT NULL,
-    `diet`                  TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',
-    `health_restrictions`   TEXT          NULL     DEFAULT NULL COMMENT 'alergie, léky, úrazy,...',
-    `tshirt_size`           TEXT          NULL     DEFAULT NULL,
-    `tshirt_color`          VARCHAR(20)   NULL     DEFAULT NULL,
-    `jumper_size`           VARCHAR(20)   NULL     DEFAULT NULL,
-    `price`                 DECIMAL(6, 2) NULL     DEFAULT NULL COMMENT 'vypočtená cena',
-    `arrival_time`          TIME          NULL     DEFAULT NULL COMMENT 'Čas příjezdu',
-    `arrival_destination`   VARCHAR(20)   NULL     DEFAULT NULL COMMENT 'Místo prijezdu',
-    `arrival_ticket`        TINYINT(1)    NULL     DEFAULT NULL COMMENT 'společný lístek na cestu tam',
-    `departure_time`        TIME          NULL     DEFAULT NULL COMMENT 'Čas odjezdu',
-    `departure_destination` VARCHAR(20)   NULL     DEFAULT NULL COMMENT 'Místo odjezdu',
-    `departure_ticket`      TINYINT(1)    NULL     DEFAULT NULL COMMENT 'společný lístek na cestu zpět',
-    `swimmer`               TINYINT(1)    NULL     DEFAULT NULL COMMENT 'plavec?',
-    `used_drugs`            TEXT          NULL     DEFAULT NULL COMMENT 'úžívané léky',
-    `schedule`              TEXT          NULL     DEFAULT NULL COMMENT 'serializovaný program',
-    `lunch_count`           TINYINT(2)    NULL     DEFAULT 0,
-    INDEX `idx_event_participant__event_id` (`event_id` ASC),
-    INDEX `idx_event_participant__person_id` (`person_id` ASC),
-    INDEX `idx_event_participant__status` (`status` ASC),
-    CONSTRAINT `fk_event_participant__event`
+    `event_participant_id` INT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`             INT UNSIGNED  NOT NULL,
+    `person_id`            INT UNSIGNED  NOT NULL,
+    `note`                 TEXT          NULL     DEFAULT NULL COMMENT 'poznámka',
+    `status`               ENUM (
+        '__init',
+        'applied',
+        'approved',
+        'auto.invited',
+        'auto.spare',
+        'cancelled',
+        'disqualified',
+        'interested',
+        'invited',
+        'invited1',
+        'invited2',
+        'invited3',
+        'missed',
+        'out_of_db',
+        'paid',
+        'participated',
+        'pending',
+        'rejected',
+        'spare',
+        'spare1',
+        'spare2',
+        'spare3')                        NOT NULL DEFAULT '__init',
+    `created`              TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'čas vytvoření přihlášky',
+    `diet`                 TEXT          NULL     DEFAULT NULL COMMENT 'speciální stravování',
+    `health_restrictions`  TEXT          NULL     DEFAULT NULL COMMENT 'alergie, léky, úrazy,...',
+    `price`                DECIMAL(6, 2) NULL     DEFAULT NULL COMMENT 'vypočtená cena',
+    `arrival_time`         TIME          NULL     DEFAULT NULL COMMENT 'Čas příjezdu',
+    `departure_time`       TIME          NULL     DEFAULT NULL COMMENT 'Čas odjezdu',
+    `swimmer`              BOOL          NULL     DEFAULT NULL COMMENT 'plavec?',
+    `used_drugs`           TEXT          NULL     DEFAULT NULL COMMENT 'úžívané léky',
+    `lunch_count`          TINYINT       NULL     DEFAULT 0,
+    UNIQUE INDEX `uq__event_participant__person_event` (`event_id` ASC, `person_id` ASC),
+    CONSTRAINT `fk__event_participant__event`
         FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`),
-    CONSTRAINT `fk_event_participant__person`
+            REFERENCES `event` (`event_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__event_participant__person` (`person_id` ASC),
+    CONSTRAINT `fk__event_participant__person`
         FOREIGN KEY (`person_id`)
-            REFERENCES `person` (`person_id`),
-    CONSTRAINT `fk_event_participant__event_status`
-        FOREIGN KEY (`status`)
-            REFERENCES `event_status` (`status`)
+            REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `address`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `address`
 (
-    `address_id`             INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `address_id`             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `first_row`              VARCHAR(255) NULL DEFAULT NULL COMMENT 'doplňkový řádek adresy (např. bytem u X Y)',
     `second_row`             VARCHAR(255) NULL DEFAULT NULL COMMENT 'ještě doplňkovější řádek adresy (nikdo neví)',
     `target`                 VARCHAR(255) NOT NULL COMMENT 'ulice č.p./or., vesnice č.p./or., poštovní přihrádka atd.',
     `city`                   VARCHAR(255) NOT NULL COMMENT 'město doručovací pošty',
     `postal_code`            CHAR(5)      NULL DEFAULT NULL COMMENT 'PSČ (pro ČR a SR)',
-    `country_id`             INT          NOT NULL,
-    `country_subdivision_id` INT          NULL DEFAULT NULL,
-    INDEX `idx_address__country_id` (`country_id` ASC),
-    INDEX `idx_address__country_subdivision_id` (`country_subdivision_id` ASC),
+    `country_id`             INT UNSIGNED NOT NULL,
+    `country_subdivision_id` INT UNSIGNED NULL DEFAULT NULL,
+    INDEX `idx__address__city` (`city` ASC),
+    INDEX `idx__address__country` (`country_id` ASC),
     CONSTRAINT `fk_address__country`
         FOREIGN KEY (`country_id`)
-            REFERENCES `country` (`country_id`),
-    CONSTRAINT `fk_address__country_subdivision`
+            REFERENCES `country` (`country_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__address__country_subdivision` (`country_subdivision_id` ASC),
+    CONSTRAINT `fk__address__country_subdivision`
         FOREIGN KEY (`country_subdivision_id`)
             REFERENCES `country_subdivision` (`country_subdivision_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'adresa jako poštovní nikoli územní identifikátor, immut'
-/* comment truncated */ /*able.*/;
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `login`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `login`
 (
-    `login_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`  INT(11)      NULL     DEFAULT NULL,
+    `login_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT UNSIGNED NULL     DEFAULT NULL,
     `login`      VARCHAR(255) NULL     DEFAULT NULL COMMENT 'Login name',
     `hash`       CHAR(40)     NULL     DEFAULT NULL COMMENT 'sha1(login_id . md5(password)) as hexadecimal',
     `created`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `last_login` DATETIME     NULL     DEFAULT NULL,
-    `active`     TINYINT(1)   NOT NULL,
-    UNIQUE INDEX `uq_login__login` (`login` ASC),
-    UNIQUE INDEX `uq_login__person_id` (`person_id` ASC),
-    CONSTRAINT `fk_login__person`
+    `active`     BOOL         NOT NULL,
+    UNIQUE INDEX `uq__login__login` (`login` ASC),
+    UNIQUE INDEX `uq__login__person` (`person_id` ASC),
+    CONSTRAINT `fk__login__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `auth_token`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auth_token`
 (
-    `token_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id` INT(11)      NOT NULL,
+    `token_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id` INT UNSIGNED NOT NULL,
     `token`    VARCHAR(255) NOT NULL,
     `type`     VARCHAR(31)  NOT NULL COMMENT 'type of token (from programmers POV)', # TODO ENUM
     `data`     VARCHAR(255) NULL     DEFAULT NULL COMMENT 'various purpose data',
     `since`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `until`    TIMESTAMP    NULL     DEFAULT NULL,
-    UNIQUE INDEX `uq_token__token` (`token` ASC),
-    INDEX `idx_auth_token__login` (`login_id` ASC),
-    CONSTRAINT `fk_auth_token__login`
+    UNIQUE INDEX `uq__token__token` (`token` ASC),
+    INDEX `idx__auth_token__login` (`login_id` ASC),
+    CONSTRAINT `fk__auth_token__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
-CREATE TABLE IF NOT EXISTS `contest_category`
-(
-    `contest_category_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `label`               VARCHAR(16) NOT NULL,
-    `name_cs`             VARCHAR(64) NOT NULL,
-    `name_en`             VARCHAR(64) NOT NULL
-) ENGINE = InnoDB;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `contestant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contestant`
 (
-    `contestant_id`       INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contest_id`          INT(11)    NOT NULL COMMENT 'seminář',
-    `year`                TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
-    `person_id`           INT(11)    NOT NULL,
-    `contest_category_id` INT        NULL     DEFAULT NULL,
-    `created`             TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE INDEX `uq_contestant__contest_id` (`contest_id` ASC, `year` ASC, `person_id` ASC),
-    INDEX `idx_contestant__person_id` (`person_id` ASC),
-    CONSTRAINT `fk_contestant__person`
+    `contestant_id`       INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id`          INT UNSIGNED NOT NULL COMMENT 'seminář',
+    `year`                TINYINT      NOT NULL COMMENT 'Rocnik semináře',
+    `person_id`           INT UNSIGNED NOT NULL,
+    `contest_category_id` INT UNSIGNED NULL     DEFAULT NULL,
+    `created`             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX `uq__contestant__contest` (`contest_id` ASC, `year` ASC, `person_id` ASC),
+    INDEX `idx__contestant__person` (`person_id` ASC),
+    CONSTRAINT `fk__contestant__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT,
-    CONSTRAINT `fk_contestant__contest`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__contestant__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contestant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT,
-    CONSTRAINT `fk_contestant__contest_category`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__contestant__category` (`contest_category_id` ASC),
+    CONSTRAINT `fk__contestant__contest_category`
         FOREIGN KEY (`contest_category_id`)
             REFERENCES `contest_category` (`contest_category_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `school`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `school`
 (
-    `school_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `school_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name_full`   VARCHAR(255) NULL     DEFAULT NULL COMMENT 'plný název školy',
     `name`        VARCHAR(255) NOT NULL COMMENT 'zkrácený název školy (na obálku)',
     `name_abbrev` VARCHAR(32)  NOT NULL COMMENT 'Zkratka pouzivana napr. ve vysledkove listine',
-    `address_id`  INT(11)      NOT NULL,
+    `address_id`  INT UNSIGNED NOT NULL,
     `email`       VARCHAR(255) NULL     DEFAULT NULL COMMENT 'Kontaktní e-mail',
     `ic`          CHAR(8)      NULL     DEFAULT NULL COMMENT 'IČ (osm číslic)',
     `izo`         VARCHAR(32)  NULL     DEFAULT NULL COMMENT 'IZO kód (norma?)',
-    `active`      TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Platný záznam školy',# TODO
+    `active`      BOOL         NOT NULL DEFAULT TRUE COMMENT 'Platný záznam školy',
     `note`        VARCHAR(255) NULL     DEFAULT NULL,
-    `study_h`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
-    `study_p`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
-    `study_u`     BOOLEAN      NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
-    `verified`    BOOLEAN      NOT NULL DEFAULT TRUE COMMENT 'Overená po publi pridaní',
-    UNIQUE INDEX `uq_school__ic` (`ic` ASC),
-    UNIQUE INDEX `uq_school__izo` (`izo` ASC),
-    INDEX `idx_school__address_id` (`address_id` ASC),
-    CONSTRAINT `fk_school__address`
+    `study_h`     BOOL         NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky H_*',
+    `study_p`     BOOL         NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky P_*',
+    `study_u`     BOOL         NOT NULL DEFAULT FALSE COMMENT 'vyučuje ročniky U_ALL',
+    `verified`    BOOL         NOT NULL DEFAULT TRUE COMMENT 'Overená po publi pridaní',
+    UNIQUE INDEX `uq__school__ic` (`ic` ASC),
+    UNIQUE INDEX `uq__school__izo` (`izo` ASC),
+    INDEX `idx__school__name` (`name` ASC),
+    INDEX `idx__school__abbrev` (`name_abbrev` ASC),
+    INDEX `idx__school__full` (`name_full` ASC),
+    INDEX `idx__school__address` (`address_id` ASC),
+    CONSTRAINT `fk__school__address`
         FOREIGN KEY (`address_id`)
             REFERENCES `address` (`address_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `org`
 (
-    `org_id`        INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`     INT(11)      NOT NULL,
-    `contest_id`    INT(11)      NOT NULL,
-    `since`         TINYINT(4)   NOT NULL COMMENT 'od kterého ročníku orguje',
-    `until`         TINYINT(4)   NULL DEFAULT NULL COMMENT 'v kterém ročníku skončil',
+    `org_id`        INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`     INT UNSIGNED NOT NULL,
+    `contest_id`    INT UNSIGNED NOT NULL,
+    `since`         TINYINT      NOT NULL COMMENT 'od kterého ročníku orguje',
+    `until`         TINYINT      NULL DEFAULT NULL COMMENT 'v kterém ročníku skončil',
     `role`          VARCHAR(255) NULL DEFAULT NULL COMMENT 'hlavní org, úlohář, etc.',
-    `order`         TINYINT(4)   NOT NULL COMMENT 'pořadí pro řazení ve výpisech',
+    `order`         TINYINT      NOT NULL COMMENT 'pořadí pro řazení ve výpisech',
     `contribution`  TEXT         NULL DEFAULT NULL,
     `tex_signature` VARCHAR(32)  NULL DEFAULT NULL COMMENT 'zkratka používaná v TeXových vzorácích',
     `domain_alias`  VARCHAR(32)  NULL DEFAULT NULL COMMENT 'alias v doméně fykos.cz',
-    `allow_wiki`    BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do internej wiki aj po doorgovaní',
-    `allow_pm`      BOOLEAN           DEFAULT FALSE COMMENT 'povolí login do PM aj po doorgovaní',
-    UNIQUE INDEX `uq_org__contest_id` (`contest_id` ASC, `person_id` ASC),
-    UNIQUE INDEX `uq_org__domain_alias` (`contest_id` ASC, `domain_alias` ASC),
-    UNIQUE INDEX `uq_org__tex_signature` (`contest_id` ASC, `tex_signature` ASC),
-    INDEX `idx_org__person_id` (`person_id` ASC),
-    CONSTRAINT `fk_org__person`
+    `allow_wiki`    BOOL              DEFAULT FALSE COMMENT 'povolí login do internej wiki aj po doorgovaní',
+    `allow_pm`      BOOL              DEFAULT FALSE COMMENT 'povolí login do PM aj po doorgovaní',
+    UNIQUE INDEX `uq__org__contest` (`contest_id` ASC, `person_id` ASC),
+    UNIQUE INDEX `uq__org__domain_alias` (`contest_id` ASC, `domain_alias` ASC),
+    UNIQUE INDEX `uq__org__tex_signature` (`contest_id` ASC, `tex_signature` ASC),
+    INDEX `idx__org__person` (`person_id` ASC),
+    CONSTRAINT `fk__org__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT,
-    CONSTRAINT `fk_org__contest`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__org__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__org__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
-            ON DELETE CASCADE
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16) NOT NULL,
-    `description` TEXT        NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `grant`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `grant`
+CREATE TABLE IF NOT EXISTS `contest_grant`
 (
-    `grant_id`   INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`   INT(11) NOT NULL,
-    `role_id`    INT(11) NOT NULL,
-    `contest_id` INT     NOT NULL,
-    INDEX `idx_grant__role_id` (`role_id` ASC),
-    UNIQUE INDEX `uq_grant__role` (`role_id` ASC, `login_id` ASC, `contest_id` ASC),
-    INDEX `idx_grant__contest` (`contest_id` ASC),
-    INDEX `idx_grant__login` (`login_id` ASC),
-    CONSTRAINT `fk_grant__login`
+    `grant_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`   INT UNSIGNED NOT NULL,
+    `role`       ENUM (
+        'webmaster',
+        'taskManager',
+        'dispatcher',
+        'dataManager',
+        'eventManager',
+        'inboxManager',
+        'boss',
+        'organizer',
+        'contestant',
+        'exportDesigner',
+        'aesop',
+        'schoolManager',
+        'web',
+        'wiki',
+        'superuser',
+        'cartesian'
+        )                     NOT NULL,
+    `contest_id` INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
+    INDEX `idx__contest_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__contest_grant__login`
         FOREIGN KEY (`login_id`)
             REFERENCES `login` (`login_id`)
             ON DELETE CASCADE
             ON UPDATE RESTRICT,
-    CONSTRAINT `fk_grant__role`
-        FOREIGN KEY (`role_id`)
-            REFERENCES `role` (`role_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `fk_grant__contest`
+    INDEX `idx__contest_grant__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__contest_grant__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+-- -----------------------------------------------------
+-- Table `event_grant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `event_grant`
+(
+    `event_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`       INT UNSIGNED NOT NULL,
+    `role`           ENUM (
+        'game.inserter',
+        'event.medic',
+        'event.cook',
+        'event.boss'
+        )                         NOT NULL,
+    `event_id`       INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),
+    INDEX `idx__event_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__event_grant__login`
+        FOREIGN KEY (`login_id`)
+            REFERENCES `login` (`login_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__event_grant__event` (`event_id` ASC),
+    CONSTRAINT `fk__event_grant__event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
@@ -370,8 +512,8 @@ CREATE TABLE IF NOT EXISTS `grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info`
 (
-    `person_id`              INT(11)               NOT NULL PRIMARY KEY,
-    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
+    `person_id`              INT UNSIGNED          NOT NULL PRIMARY KEY,
+    `preferred_lang`         ENUM ('cs','en')      NULL DEFAULT NULL COMMENT 'Prefer language code by ISO 639-1',
     `born`                   DATE                  NULL DEFAULT NULL COMMENT 'datum narození',
     `id_number`              VARCHAR(32)           NULL DEFAULT NULL COMMENT 'číslo OP či ekvivalent',
     `born_id`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'rodné číslo (pouze u CZ, SK)',
@@ -383,8 +525,8 @@ CREATE TABLE IF NOT EXISTS `person_info`
     `account`                VARCHAR(32)           NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
     `agreed`                 DATETIME              NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
     `birthplace`             VARCHAR(255)          NULL DEFAULT NULL COMMENT 'název města narození osoby',
-    `citizenship`            CHAR(2)               NULL DEFAULT NULL COMMENT 'Státní příslušnost',
-    `health_insurance`       INT(11)               NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
+    `citizenship`            CHAR(2)               NULL DEFAULT NULL COMMENT 'Státní příslušnost',                # TODO country_id
+    `health_insurance`       INT                   NULL DEFAULT NULL COMMENT 'Zdravotní pojišťovna',
     `employer`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'Zaměstnavatel',
     `academic_degree_prefix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul před jménem',
     `academic_degree_suffix` varchar(64)           NULL DEFAULT NULL COMMENT 'titul za jménem',
@@ -392,8 +534,6 @@ CREATE TABLE IF NOT EXISTS `person_info`
     `origin`                 TEXT                  NULL DEFAULT NULL COMMENT 'Odkud se o nás dozvěděl.',
     `career`                 TEXT                  NULL DEFAULT NULL COMMENT 'co studuje/kde pracuje',
     `homepage`               VARCHAR(255)          NULL DEFAULT NULL COMMENT 'URL osobní homepage',
-    `fb_id`                  VARCHAR(255)          NULL DEFAULT NULL,
-    `linkedin_id`            VARCHAR(255)          NULL DEFAULT NULL,
     `phone_parent_d`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič otec',
     `phone_parent_m`         VARCHAR(32)           NULL DEFAULT NULL COMMENT 'tel. číslo rodič mama',
     `duplicates`             TEXT                  NULL DEFAULT NULL COMMENT 'Označení neduplicitních osob.',
@@ -401,101 +541,38 @@ CREATE TABLE IF NOT EXISTS `person_info`
     `email_parent_m`         VARCHAR(255)          NULL DEFAULT NULL COMMENT 'email rodič mama',
     `pizza`                  VARCHAR(255)          NULL DEFAULT NULL COMMENT 'pizza',
     `theme`                  ENUM ('light','dark') NULL DEFAULT NULL,
-    UNIQUE INDEX `uq_person_info__email` (`email` ASC),
-    UNIQUE INDEX `uq_person_info__uk_login` (`uk_login` ASC),
-    UNIQUE INDEX `uq_person_info__born_id` (`born_id` ASC),
-    UNIQUE INDEX `uq_person_info__fb_id` (`fb_id` ASC),
-    UNIQUE INDEX `uq_person_info__linkedin_id` (`linkedin_id` ASC),
-    CONSTRAINT `fk_person_info__person`
+    UNIQUE INDEX `uq__person_info__email` (`email` ASC),
+    UNIQUE INDEX `uq__person_info__uk_login` (`uk_login` ASC),
+    UNIQUE INDEX `uq__person_info__born_id` (`born_id` ASC),
+    INDEX `idx__person_info__person` (`person_id` ASC),
+    CONSTRAINT `fk__person_info__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE CASCADE
-            ON UPDATE RESTRICT
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'Podrobné informace o osobě, zde jsou všechny osobní úda'
-/* comment truncated */ /*je (t*/;
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `post_contact`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `post_contact`
 (
-    `post_contact_id` INT(11)         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`       INT(11)         NOT NULL,
-    `address_id`      INT(11)         NOT NULL,
+    `post_contact_id` INT UNSIGNED    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`       INT UNSIGNED    NOT NULL,
+    `address_id`      INT UNSIGNED    NOT NULL,
     `type`            ENUM ('P', 'D') NOT NULL COMMENT 'doručovací (Delivery), trvalá (Permanent)',
-    INDEX `idx_post_contact__person_id` (`person_id` ASC),
-    INDEX `idx_post_contact__address_id` (`address_id` ASC),
-    UNIQUE INDEX `uq_post_contact__person_id_type` (`person_id` ASC, `type` ASC),
-    CONSTRAINT `fk_post_contact__person`
+    UNIQUE INDEX `uq__post_contact__person_id_type` (`person_id` ASC, `type` ASC),
+    INDEX `idx__post_contact__person` (`person_id` ASC),
+    CONSTRAINT `fk__post_contact__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `fk_post_contact__address`
-        FOREIGN KEY (`address_id`)
-            REFERENCES `address` (`address_id`)
             ON DELETE CASCADE
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COMMENT = 'Přiřazení adres lidem vztahem M:N';
-
--- -----------------------------------------------------
--- Table `psc_region`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `psc_region`
-(
-    `psc`                    CHAR(5) NOT NULL PRIMARY KEY,
-    `country_subdivision_id` INT     NOT NULL,
-    INDEX `idx_psc__country_subdivision_id` (`country_subdivision_id` ASC),
-    CONSTRAINT `fk_psc__country_subdivision`
-        FOREIGN KEY (`country_subdivision_id`)
-            REFERENCES `country_subdivision` (`country_subdivision_id`)
-            ON DELETE CASCADE
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COMMENT = 'mapování českých a slovenských PSČ na evidovaný subdivision'
-/* comment truncated */ /*n*/;
-# TODO to ORM
-
--- -----------------------------------------------------
--- Table `mail_batch`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mail_batch`
-(
-    `mail_batch_id` INT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `flag_id`       INT(11)   NULL     DEFAULT NULL,
-    `description`   TEXT      NULL     DEFAULT NULL COMMENT 'druh rozesílané pošty (brožurka, pozvánka, etc.)',
-    `ts`            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-)
-    ENGINE = InnoDB;
-# TODO to ORM
--- -----------------------------------------------------
--- Table `mail_log`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mail_log`
-(
-    `person_id`     INT(11)      NOT NULL PRIMARY KEY,
-    `ts`            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `address_id`    INT          NULL     DEFAULT NULL,
-    `email`         VARCHAR(255) NULL     DEFAULT NULL,
-    `mail_batch_id` INT(11)      NOT NULL,
-    INDEX `idx_mail_log__person_id` (`person_id` ASC),
-    INDEX `idx_mail_log__mail_batch` (`mail_batch_id` ASC),
-    INDEX `idx_mail_log__address` (`address_id` ASC),
-    CONSTRAINT `fk_mail_log__person`
-        FOREIGN KEY (`person_id`)
-            REFERENCES `person` (`person_id`)
-            ON DELETE CASCADE,
-    CONSTRAINT `fk_mail_log__mail_batch`
-        FOREIGN KEY (`mail_batch_id`)
-            REFERENCES `mail_batch` (`mail_batch_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_mail_log__address`
+            ON UPDATE CASCADE,
+    INDEX `idx__post_contact__address` (`address_id` ASC),
+    CONSTRAINT `fk__post_contact__address`
         FOREIGN KEY (`address_id`)
             REFERENCES `address` (`address_id`)
             ON DELETE NO ACTION
@@ -503,93 +580,111 @@ CREATE TABLE IF NOT EXISTS `mail_log`
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
-    COMMENT = 'v tabulce se loguje historická hodnota adresy nebo emailu, '
-/* comment truncated */ /*kam se posílalo*/;
-# TODO to ORM
+    COLLATE = utf8_czech_ci
+    COMMENT = 'Přiřazení adres lidem vztahem M:N';
+
 -- -----------------------------------------------------
 -- Table `task`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `task`
 (
-    `task_id`         INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `task_id`         INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `label`           VARCHAR(16)  NOT NULL COMMENT 'Oznaceni ulohy, treba \"23-4-5\"',
     `name_cs`         VARCHAR(255) NULL DEFAULT NULL COMMENT 'Jmeno ulohy',
     `name_en`         VARCHAR(255) NULL DEFAULT NULL,
-    `contest_id`      INT(11)      NOT NULL COMMENT 'seminář',
-    `year`            TINYINT(4)   NOT NULL COMMENT 'Rocnik seminare',
-    `series`          TINYINT(4)   NOT NULL COMMENT 'Serie',
-    `tasknr`          TINYINT(4)   NULL DEFAULT NULL COMMENT 'Uloha',
-    `points`          TINYINT(4)   NULL DEFAULT NULL COMMENT 'Maximalni pocet bodu',
+    `contest_id`      INT UNSIGNED NOT NULL COMMENT 'seminář',
+    `year`            TINYINT      NOT NULL COMMENT 'Rocnik seminare',
+    `series`          TINYINT      NOT NULL COMMENT 'Serie',
+    `tasknr`          TINYINT      NULL DEFAULT NULL COMMENT 'Uloha',
+    `points`          TINYINT      NULL DEFAULT NULL COMMENT 'Maximalni pocet bodu',
     `submit_start`    DATETIME     NULL DEFAULT NULL COMMENT 'Od kdy se smi submitovat',
     `submit_deadline` DATETIME     NULL DEFAULT NULL COMMENT 'Do kdy',
-    INDEX `idx_task__contest_id` (`contest_id` ASC),
-    UNIQUE INDEX `uq_taks__contest_id_year_series_tasknr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC),
-    CONSTRAINT `fk_task__contest`
+    UNIQUE INDEX `uq__task__contest_id_year_series_tasknr` (`contest_id` ASC, `year` ASC, `series` ASC, `tasknr` ASC),
+    INDEX `idx__task__fqn` (`contest_id` ASC, `year` ASC, `series` ASC),
+    INDEX `idx__task__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__task__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+    # INDEX `idx__task__contest_year` (`contest_id` ASC, `year` ASC),
+    # CONSTRAINT `fk__task__contest_year`
+    #     FOREIGN KEY (`contest_id`, `year`)
+    #         REFERENCES `contest_year` (`contest_id`, `year`)
+    #         ON UPDATE NO ACTION
+    #         ON DELETE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit`
 (
-    `submit_id`     INT(11)                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contestant_id` INT(11)                         NOT NULL COMMENT 'Contestant',
-    `task_id`       INT(11)                         NOT NULL COMMENT 'Task',
+    `submit_id`     INT UNSIGNED                    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contestant_id` INT UNSIGNED                    NOT NULL COMMENT 'Contestant',
+    `task_id`       INT UNSIGNED                    NOT NULL COMMENT 'Task',
     `submitted_on`  DATETIME                        NULL     DEFAULT NULL,
     `source`        ENUM ('post', 'upload', 'quiz') NOT NULL COMMENT 'Typ příjmu řešení',
     `note`          VARCHAR(255)                    NULL     DEFAULT NULL COMMENT 'Pocet stranek a jine poznamky',
     `raw_points`    DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Pred prepoctem',
     `calc_points`   DECIMAL(4, 2)                   NULL     DEFAULT NULL COMMENT 'Cache spoctenych bodu.',
-    `corrected`     BOOLEAN                         NOT NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
-    UNIQUE INDEX `uq_submit__contestant_task` (`contestant_id` ASC, `task_id` ASC),
-    INDEX `idx_task__submit` (`task_id` ASC),
-    CONSTRAINT `fk_submit__contestant`
+    `corrected`     BOOL                            NOT NULL DEFAULT FALSE COMMENT 'Má uloha nahrané riešnie?',
+    UNIQUE INDEX `uq__submit__contestant_task` (`contestant_id` ASC, `task_id` ASC),
+    INDEX `idx__submit__contestant` (`contestant_id` ASC),
+    CONSTRAINT `fk__submit__contestant`
         FOREIGN KEY (`contestant_id`)
-            REFERENCES `contestant` (`contestant_id`),
-    CONSTRAINT `fk_submit__task`
+            REFERENCES `contestant` (`contestant_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__submit__task` (`task_id` ASC),
+    CONSTRAINT `fk__submit__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8;
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `task_contribution`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `task_contribution`
 (
-    `contribution_id` INT                                  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `task_id`         INT(11)                              NOT NULL,
-    `person_id`       INT(11)                              NOT NULL,
+    `contribution_id` INT UNSIGNED                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `task_id`         INT UNSIGNED                         NOT NULL,
+    `person_id`       INT UNSIGNED                         NOT NULL,
     `type`            ENUM ('author', 'solution', 'grade') NOT NULL,
-    INDEX `idx_task_contribution__org_task_contribution_task` (`task_id` ASC),
-    INDEX `idx_task_contribution__person` (`person_id` ASC),
-    UNIQUE INDEX `uq_task_contribution__person_id_task_id_type` (`task_id` ASC, `person_id` ASC, `type` ASC),
-    CONSTRAINT `fk_task_contribution__task`
+    UNIQUE INDEX `uq__task_contribution__task` (`task_id` ASC, `person_id` ASC, `type` ASC),
+    INDEX `idx__contribution__task` (`task_id` ASC),
+    CONSTRAINT `fk__contribution__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
             ON DELETE CASCADE
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_task_contribution__person`
+            ON UPDATE CASCADE,
+    INDEX `idx__task_contribution__person` (`person_id` ASC),
+    CONSTRAINT `fk__task_contribution__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_team`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team`
 (
-    `fyziklani_team_id` INT                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`          INT(11)                    NOT NULL,
-    `name`              VARCHAR(30)                NOT NULL,
+    `fyziklani_team_id` INT UNSIGNED     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT UNSIGNED     NOT NULL,
+    `name`              VARCHAR(30)      NOT NULL,
     `state`             ENUM (
         'init', # virtual state for correct ORM
         'applied',
@@ -601,91 +696,112 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'missed',
         'disqualified',
         'cancelled'
-        )                                          NOT NULL DEFAULT 'init',
-    `category`          ENUM ('A','B','C','O','F') NOT NULL,
-    `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
-    `note`              TEXT                       NULL     DEFAULT NULL,
-    `internal_note`     TEXT                       NULL     DEFAULT NULL,
-    `password`          CHAR(40)                   NULL     DEFAULT NULL,
-    `points`            INT(11)                    NULL     DEFAULT NULL,
-    `rank_category`     INT(11)                    NULL     DEFAULT NULL,
-    `rank_total`        INT(11)                    NULL     DEFAULT NULL,
-    `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
-    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL,
-    `origin`            TEXT                       NULL     DEFAULT NULL,
-    INDEX `idx_fyziklani_team__event` (`event_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
-    CONSTRAINT `fk_fyziklani_team__event`
+        )                                NOT NULL DEFAULT 'init',
+    `category`          ENUM (
+        'A',
+        'B',
+        'C',
+        'O',
+        'F'
+        )                                NOT NULL,
+    `created`           TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `phone`             VARCHAR(30)      NULL     DEFAULT NULL,
+    `note`              TEXT             NULL     DEFAULT NULL,
+    `internal_note`     TEXT             NULL     DEFAULT NULL,
+    `password`          CHAR(40)         NULL     DEFAULT NULL,
+    `points`            INT UNSIGNED     NULL     DEFAULT NULL,
+    `rank_category`     INT UNSIGNED     NULL     DEFAULT NULL,
+    `rank_total`        INT UNSIGNED     NULL     DEFAULT NULL,
+    `force_a`           BOOL             NULL     DEFAULT NULL,
+    `game_lang`         ENUM ('cs','en') NULL     DEFAULT NULL,
+    `origin`            TEXT             NULL     DEFAULT NULL,
+    `scholarship`       ENUM (
+        'none',
+        'half',
+        'full'
+        )                                NOT NULL DEFAULT 'none',
+    `place`             VARCHAR(16)      NULL     DEFAULT NULL,
+    UNIQUE INDEX `uq__fyziklani_team__name__event` (`name` ASC, `event_id` ASC),
+    UNIQUE INDEX `uq__fyziklani_team__event__place` (`event_id` ASC, `place` ASC),
+    INDEX `idx__fyziklani_team__event` (`event_id` ASC),
+    CONSTRAINT `fk__fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
-
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_team_member`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
 (
-    `fyziklani_team_member_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `person_id`                INT NOT NULL,
-    `fyziklani_team_id`        INT NOT NULL,
-    INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
-    INDEX `idx_fyziklani_team_member__person` (`person_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
-    CONSTRAINT `fk_fyziklani_team_member__person`
+    `fyziklani_team_member_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`                INT UNSIGNED NOT NULL,
+    `fyziklani_team_id`        INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    INDEX `idx__member__person` (`person_id` ASC),
+    CONSTRAINT `fk__member__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_team_member__team`
+    INDEX `idx__member__team` (`fyziklani_team_id` ASC),
+    CONSTRAINT `fk__member__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE NO ACTION # TODO CASCADE?
+            ON UPDATE NO ACTION # TODO CASCADE?
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `fyziklani_team_teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
 (
-    `fyziklani_team_teacher_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `person_id`                 INT NOT NULL,
-    `fyziklani_team_id`         INT NOT NULL,
-    INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
-    INDEX `idx_fyziklani_team_teacher__person` (`person_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
-    CONSTRAINT `fk_fyziklani_team_teacher__person`
+    `fyziklani_team_teacher_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`                 INT UNSIGNED NOT NULL,
+    `fyziklani_team_id`         INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    INDEX `idx__team_teacher__person` (`person_id` ASC),
+    CONSTRAINT `fk__team_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_team_teacher__team`
+    INDEX `idx__team_teacher__team` (`fyziklani_team_id` ASC),
+    CONSTRAINT `fk__team_teacher__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON DELETE NO ACTION # TODO CASCADE?
+            ON UPDATE NO ACTION # TODO CASCADE?
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `stored_query`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query`
 (
-    `query_id`    INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `qid`         VARCHAR(64) NULL DEFAULT NULL COMMENT 'identifikátor pro URL, práva apod. dotazy s QIDem nelze mazat',
-    `name`        VARCHAR(32) NOT NULL COMMENT 'název dotazu, identifikace pro člověka',
-    `description` TEXT        NULL DEFAULT NULL,
-    `sql`         TEXT        NOT NULL,
-    UNIQUE INDEX `uq_stored_query__name` (`name` ASC),
-    UNIQUE INDEX `uq_stored_query__qid` (`qid` ASC)
+    `query_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `qid`         VARCHAR(64)  NULL DEFAULT NULL COMMENT 'identifikátor pro URL, práva apod. dotazy s QIDem nelze mazat',
+    `name`        VARCHAR(32)  NOT NULL COMMENT 'název dotazu, identifikace pro člověka',
+    `description` TEXT         NULL DEFAULT NULL,
+    `sql`         TEXT         NOT NULL,
+    UNIQUE INDEX `uq__stored_query__name` (`name` ASC),
+    UNIQUE INDEX `uq__stored_query__qid` (`qid` ASC)
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'Uložené SQL dotazy s možností parametrizace z aplikace.';
 
 -- -----------------------------------------------------
@@ -693,98 +809,83 @@ CREATE TABLE IF NOT EXISTS `stored_query`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query_parameter`
 (
-    `parameter_id`    INT                                NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `query_id`        INT                                NOT NULL,
+    `parameter_id`    INT UNSIGNED                       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `query_id`        INT UNSIGNED                       NOT NULL,
     `name`            VARCHAR(16)                        NOT NULL COMMENT 'název parametru pro použití v SQL',
     `description`     TEXT                               NULL DEFAULT NULL,
-    `type`            ENUM ('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ parametru', # TODO to enum
-    `default_integer` INT(11)                            NULL DEFAULT NULL COMMENT 'implicitní hodnota',
+    `type`            ENUM ('integer', 'string', 'bool') NOT NULL COMMENT 'datový typ parametru',
+    `default_integer` INT                                NULL DEFAULT NULL COMMENT 'implicitní hodnota',
     `default_string`  VARCHAR(255)                       NULL DEFAULT NULL COMMENT 'implicitní hodnota',
-    INDEX `idx_stored_query_parameter__stored_query` (`query_id` ASC),
-    UNIQUE INDEX `uq_stored_query_parameter__query_id_name` (`query_id` ASC, `name` ASC),
-    CONSTRAINT `fk_stored_query_parameter__stored_query`
+    INDEX `idx__stored_query_parameter__stored_query` (`query_id` ASC),
+    UNIQUE INDEX `uq__stored_query_parameter__query_id_name` (`query_id` ASC, `name` ASC),
+    CONSTRAINT `fk__stored_query_parameter__stored_query`
         FOREIGN KEY (`query_id`)
             REFERENCES `stored_query` (`query_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `flag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `flag`
 (
-    `flag_id`     INT                                                   NOT NULL PRIMARY KEY,
-    `fid`         VARCHAR(16)                                           NOT NULL,                                  # TODO rename
+    `flag_id`     INT UNSIGNED                                          NOT NULL PRIMARY KEY,
+    `fid`         VARCHAR(16)                                           NOT NULL, # TODO rename
     `name`        VARCHAR(64)                                           NOT NULL,
     `description` TEXT                                                  NULL DEFAULT NULL,
-    `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL COMMENT 'rozsah platnosti flagu', # TODO to enum
-    UNIQUE INDEX `uq_flag__name` (`fid` ASC)
+    `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL COMMENT 'rozsah platnosti flagu',
+    UNIQUE INDEX `uq__flag__name` (`fid` ASC)
 )
     ENGINE = InnoDB
-    COMMENT = 'general purpose flag for the person (for presentation layer)'
-/* comment truncated */ /*
-*/;
-
--- -----------------------------------------------------
--- Table `contest_year`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contest_year`
-(
-    `contest_id` INT         NOT NULL,
-    `year`       TINYINT(4)  NOT NULL,
-    `ac_year`    SMALLINT(4) NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
-    PRIMARY KEY (`contest_id`, `year`),
-    INDEX `idx_contest_year__ac_year` (`ac_year` ASC),
-    CONSTRAINT `fk_contest_year__contest`
-        FOREIGN KEY (`contest_id`)
-            REFERENCES `contest` (`contest_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB
-    COMMENT = 'mapování ročníků semináře na akademické roky';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person_has_flag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_has_flag`
 (
-    `person_flag_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`      INT         NOT NULL,
-    `flag_id`        INT         NOT NULL,
-    `contest_id`     INT         NULL     DEFAULT NULL,
-    `ac_year`        SMALLINT(4) NULL     DEFAULT NULL,
-    `value`          TINYINT     NOT NULL DEFAULT 1,
-    `modified`       TIMESTAMP   NOT NULL DEFAULT '0000-00-00 00:00:00',
-    `created`        TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE INDEX `uq_person_flag__year_ct` (`person_id` ASC, `flag_id` ASC, `contest_id` ASC, `ac_year` ASC),
-    INDEX `idx_person_has_flag__person_flag` (`flag_id` ASC),
-    INDEX `idx_person_has_flag__contest` (`contest_id` ASC),
-    INDEX `idx_person_has_flag__contest_year` (`ac_year` ASC),
-    CONSTRAINT `fk_person_has_flag__person`
+    `person_flag_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`      INT UNSIGNED NOT NULL,
+    `flag_id`        INT UNSIGNED NOT NULL,
+    `contest_id`     INT UNSIGNED NULL     DEFAULT NULL,
+    `ac_year`        SMALLINT     NULL     DEFAULT NULL,
+    `value`          TINYINT      NOT NULL DEFAULT 1,
+    `modified`       TIMESTAMP    NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `created`        TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX `uq__person_flag__year_ct` (`person_id` ASC, `flag_id` ASC, `contest_id` ASC, `ac_year` ASC),
+    INDEX `idx__person_has_flag__person` (`person_id` ASC),
+    CONSTRAINT `fk__person_has_flag__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_has_flag__flag`
+    INDEX `idx__person_has_flag__flag` (`flag_id` ASC),
+    CONSTRAINT `fk__person_has_flag__flag`
         FOREIGN KEY (`flag_id`)
             REFERENCES `flag` (`flag_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_has_flag__contest`
+    INDEX `idx__person_has_flag__contest` (`contest_id` ASC),
+    CONSTRAINT `fk__person_has_flag__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_has_flag__contest_year`
+    INDEX `idx__person_has_flag__contest_year` (`ac_year` ASC),
+    CONSTRAINT `fk__person_has_flag__contest_year`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'persons flags are per year';
 
 -- -----------------------------------------------------
@@ -792,53 +893,63 @@ CREATE TABLE IF NOT EXISTS `person_has_flag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_history`
 (
-    `person_history_id` INT                                                                         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`         INT                                                                         NOT NULL,
-    `ac_year`           SMALLINT(4)                                                                 NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
-    `school_id`         INT                                                                         NULL DEFAULT NULL,
-    `class`             VARCHAR(16)                                                                 NULL DEFAULT NULL COMMENT 'označení třídy',
-    `study_year_new`    ENUM ('P_5','P_6','P_7','P_8','P_9','H_1','H_2','H_3','H_4','U_ALL','NONE') NOT NULL DEFAULT 'NONE',
-    UNIQUE INDEX `uq_person_history__year` (`person_id` ASC, `ac_year` ASC),
-    INDEX `idx_person_history__school` (`school_id` ASC),
-    INDEX `idx_person_history__contest_year` (`ac_year` ASC),
-    CONSTRAINT `fk_person_history__school`
+    `person_history_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`         INT UNSIGNED NOT NULL,
+    `ac_year`           SMALLINT(4)  NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
+    `school_id`         INT UNSIGNED NULL     DEFAULT NULL,
+    `class`             VARCHAR(16)  NULL     DEFAULT NULL COMMENT 'označení třídy',
+    `study_year_new`    ENUM (
+        'P_5','P_6','P_7','P_8','P_9',
+        'H_1','H_2','H_3','H_4',
+        'U_ALL','NONE')              NOT NULL DEFAULT 'NONE',
+    UNIQUE INDEX `uq__person_history__year` (`person_id` ASC, `ac_year` ASC),
+    INDEX `idx__person_history__school` (`school_id` ASC),
+    INDEX `idx__person_history__contest_year` (`ac_year` ASC),
+    CONSTRAINT `fk__person_history__school`
         FOREIGN KEY (`school_id`)
             REFERENCES `school` (`school_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_history__person`
+    CONSTRAINT `fk__person_history__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_person_history__contest_year`
+    CONSTRAINT `fk__person_history__contest_year`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'atributy osoby řezané dle akademického roku';
 
+-- -----------------------------------------------------
+-- Table `task_category`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `task_category`
 (
-    `task_id`             INT(11) NOT NULL,
-    `contest_category_id` INT     NOT NULL,
+    `task_id`             INT UNSIGNED NOT NULL,
+    `contest_category_id` INT UNSIGNED NOT NULL,
     PRIMARY KEY (`contest_category_id`, `task_id`),
-    INDEX `idx_task_category__contest_category` (`contest_category_id` ASC),
-    INDEX `idx_task_category__task` (`task_id` ASC),
-    CONSTRAINT `fk_task_category__task`
+    INDEX `idx__task_category__task` (`task_id` ASC),
+    CONSTRAINT `fk__task_category__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT `fk_task_category__contest_category`
+    INDEX `idx__task_category__contest_category` (`contest_category_id` ASC),
+    CONSTRAINT `fk__task_category__contest_category`
         FOREIGN KEY (`contest_category_id`)
             REFERENCES `contest_category` (`contest_category_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci
     COMMENT = 'specification of allowed category for a task';
 
 -- -----------------------------------------------------
@@ -846,224 +957,189 @@ CREATE TABLE IF NOT EXISTS `task_category`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query_tag_type`
 (
-    `tag_type_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(20) NOT NULL,
-    `description` VARCHAR(45) NULL,
-    `color`       INT         NOT NULL,
-    UNIQUE INDEX `uq_stored_query_tag_type__name` (`name` ASC)
+    `tag_type_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`        VARCHAR(20)  NOT NULL,
+    `description` VARCHAR(45)  NULL,
+    `color`       INT          NOT NULL,
+    UNIQUE INDEX `uq__stored_query_tag_type__name` (`name` ASC)
 )
     ENGINE = InnoDB
-    COMMENT = 'Štítky uložených SQL dotazů.';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `stored_query_tag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `stored_query_tag`
 (
-    `query_id`    INT NOT NULL,
-    `tag_type_id` INT NOT NULL,
-    INDEX `idx_stored_query_tag__query_id` (`query_id` ASC),
-    INDEX `idx_stored_query_tag__tag_type_id` (`tag_type_id` ASC),
-    UNIQUE INDEX `uq_stored_query_tag__query_id_tag_type_id` (`query_id` ASC, `tag_type_id` ASC),
-    CONSTRAINT `fk_stored_query_tag__stored_query`
+    `query_id`    INT UNSIGNED NOT NULL,
+    `tag_type_id` INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__stored_query_tag__query_id_tag_type_id` (`query_id` ASC, `tag_type_id` ASC),
+    INDEX `idx__stored_query_tag__query` (`query_id` ASC),
+    CONSTRAINT `fk__stored_query_tag__query`
         FOREIGN KEY (`query_id`)
             REFERENCES `stored_query` (`query_id`)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT `fk_stored_query_tag__tag_type`
+    INDEX `idx__stored_query_tag__tag_type` (`tag_type_id` ASC),
+    CONSTRAINT `fk__stored_query_tag__tag_type`
         FOREIGN KEY (`tag_type_id`)
             REFERENCES `stored_query_tag_type` (`tag_type_id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB
-    COMMENT = 'M:N párování SQL dotazů se štítky';
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org`
 (
-    `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT, # TODO rename
-    `note`      TEXT(32) NULL DEFAULT NULL,
-    `event_id`  INT(11)  NOT NULL,
-    `person_id` INT(11)  NOT NULL,
-    INDEX `idx_event_org__event_id` (`event_id` ASC),
-    INDEX `idx_event_org__person_id` (`person_id` ASC),
-    UNIQUE INDEX `uq_event_org__event_id_person_id` (`event_id` ASC, `person_id` ASC),
-    CONSTRAINT `fk_event_org__event`
+    `e_org_id`  INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT, # TODO rename
+    `note`      TEXT(32)     NULL DEFAULT NULL,
+    `event_id`  INT UNSIGNED NOT NULL,
+    `person_id` INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__event_org__event_person` (`event_id` ASC, `person_id` ASC),
+    INDEX `idx__event_org__event` (`event_id` ASC),
+    CONSTRAINT `fk__event_org__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_event_org__person`
+    INDEX `idx__event_org__person` (`person_id` ASC),
+    CONSTRAINT `fk__event_org__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_task`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_task`
 (
-    `fyziklani_task_id` INT                                                 NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `event_id`          INT                                                 NOT NULL,
+    `fyziklani_task_id` INT UNSIGNED                                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT UNSIGNED                                        NOT NULL,
     `label`             CHAR(2) CHARACTER SET 'utf8' COLLATE 'utf8_bin'     NOT NULL,
-    `points`            INT                                                 NULL DEFAULT NULL COMMENT 'points for non user points',
+    `points`            INT UNSIGNED                                        NULL DEFAULT NULL COMMENT 'points for non user points',
     `name`              VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_bin' NULL DEFAULT NULL,
-    INDEX `idx_fyziklani_task__event` (`event_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_task__event__label` (`event_id` ASC, `label` ASC),
-    CONSTRAINT `fk_fyziklani_task__event`
+    UNIQUE INDEX `uq__fyziklani_task__event__label` (`event_id` ASC, `label` ASC),
+    INDEX `idx__fyziklani_task__event` (`event_id` ASC),
+    CONSTRAINT `fk__fyziklani_task__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_submit`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_submit`
 (
-    `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `fyziklani_task_id`   INT         NOT NULL,
-    `fyziklani_team_id`   INT         NOT NULL,
-    `points`              TINYINT     NULL     DEFAULT NULL,
-    `skipped`             BOOLEAN     NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
-    `state`               VARCHAR(64) NULL     DEFAULT NULL,
-    `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-    INDEX `idx_fyziklani_submit__task` (`fyziklani_task_id` ASC),
-    INDEX `idx__fyziklani_submit__team` (`fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_submit__task__team` (`fyziklani_task_id` ASC, `fyziklani_team_id` ASC),
-    CONSTRAINT `fk_fyziklani_submit__task`
+    `fyziklani_submit_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `fyziklani_task_id`   INT UNSIGNED NOT NULL,
+    `fyziklani_team_id`   INT UNSIGNED NOT NULL,
+    `points`              TINYINT      NULL     DEFAULT NULL,
+    `skipped`             BOOL         NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
+    `state`               VARCHAR(64)  NULL     DEFAULT NULL,
+    `created`             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `checked`             TIMESTAMP    NULL     DEFAULT NULL,
+    `modified`            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE INDEX `uq__fyziklani_submit__task__team` (`fyziklani_task_id` ASC, `fyziklani_team_id` ASC),
+    INDEX `idx__fyziklani_submit__task` (`fyziklani_task_id` ASC),
+    CONSTRAINT `fk__fyziklani_submit__task`
         FOREIGN KEY (`fyziklani_task_id`)
             REFERENCES `fyziklani_task` (`fyziklani_task_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-
-    CONSTRAINT `fk_fyziklani_submit__team`
+    INDEX `idx__fyziklani_submit__team` (`fyziklani_team_id` ASC),
+    CONSTRAINT `fk__fyziklani_submit__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
-
-
--- -----------------------------------------------------
--- Table `fyziklani_room`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_room`
-(
-    `fyziklani_room_id` INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`              VARCHAR(64) CHARACTER SET 'utf8',
-    `layout`            VARCHAR(256) NULL DEFAULT NULl
-)
-    ENGINE = InnoDB;
--- -----------------------------------------------------
--- Table `fyziklani_room`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_seat`
-(
-    `fyziklani_seat_id` INT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `fyziklani_room_id` INT        NOT NULL,
-    `sector`            VARCHAR(2) NULL DEFAULT NULL,
-    `row`               VARCHAR(2) NULL DEFAULT NULL,
-    `col`               SMALLINT   NULL DEFAULT NULL,
-    `layout_x`          DOUBLE     NOT NULL,
-    `layout_y`          DOUBLE     NOT NULL,
-    CONSTRAINT `fk_fyziklani_seat__fyziklani_seat_room`
-        FOREIGN KEY (`fyziklani_room_id`)
-            REFERENCES `fyziklani_room` (`fyziklani_room_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `brawl_team_position`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
-(
-    `fyziklani_seat_id` INT NOT NULL,
-    `fyziklani_team_id` INT NULL DEFAULT NULL,
-    UNIQUE INDEX `uq_fyziklani_team_seat__team` (`fyziklani_team_id` ASC),
-    INDEX `idx_fyziklani_team_seat__seat` (`fyziklani_seat_id` ASC),
-    CONSTRAINT `fk_fyziklani_team_seat__team`
-        FOREIGN KEY (`fyziklani_team_id`)
-            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_team_seat__seat`
-        FOREIGN KEY (`fyziklani_seat_id`)
-            REFERENCES `fyziklani_seat` (`fyziklani_seat_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `teacher`
 (
-    `teacher_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`  INT(11)      NOT NULL,
-    `school_id`  INT(11)      NULL     DEFAULT NULL,
+    `teacher_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`  INT UNSIGNED NOT NULL,
+    `school_id`  INT UNSIGNED NULL     DEFAULT NULL,
     `note`       TEXT         NULL     DEFAULT NULL,
     `active`     BOOL         NOT NULL DEFAULT FALSE,
     `role`       VARCHAR(256) NULL     DEFAULT NULL,
-    UNIQUE INDEX `uq_teacher__person_id` (`person_id` ASC),
-    CONSTRAINT `fk_teacher__person`
+    UNIQUE INDEX `uq__teacher__person` (`person_id` ASC),
+    INDEX `idx__teacher__person` (`person_id` ASC),
+    CONSTRAINT `fk__teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_teacher__school`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    UNIQUE INDEX `uq__teacher__school` (`school_id` ASC),
+    CONSTRAINT `fk__teacher__school`
         FOREIGN KEY (`school_id`)
             REFERENCES `school` (`school_id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-)
-    ENGINE = 'InnoDB';
-
-CREATE TABLE IF NOT EXISTS `payment`
-(
-    `payment_id`      INT(11)                                                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`       INT(11)                                                     NOT NULL,
-    `event_id`        INT                                                         NOT NULL,
-    `state`           ENUM ('init','in_progress','canceled','received','waiting') NOT NULL DEFAULT 'init',
-    `price`           DECIMAL(11, 2)                                              NULL     DEFAULT NULL,
-    `currency`        VARCHAR(5)                                                  NULL     DEFAULT NULL,
-    `created`         DATETIME                                                    NULL     DEFAULT NULl,
-    `received`        DATETIME                                                    NULL     DEFAULT NULL,
-    `constant_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `variable_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `specific_symbol` VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `bank_account`    VARCHAR(32)                                                 NULL     DEFAULT NULL,
-    `bank_name`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `recipient`       VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `iban`            VARCHAR(256)                                                NULL     DEFAULT NULL,
-    `swift`           VARCHAR(256)                                                NULL     DEFAULT NULL,
-    INDEX `idx_payment__event` (`event_id` ASC),
-    INDEX `idx_payment__person` (`person_id` ASC),
-    CONSTRAINT `fk_payment__person`
-        FOREIGN KEY (`person_id`)
-            REFERENCES `person` (`person_id`)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_payment__event`
-        FOREIGN KEY (`event_id`)
-            REFERENCES `event` (`event_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `payment`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `payment`
+(
+    `payment_id`      INT UNSIGNED   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`       INT UNSIGNED   NOT NULL,
+    `state`           ENUM (
+        'init',
+        'in_progress',
+        'canceled',
+        'received',
+        'waiting'
+        )                            NOT NULL DEFAULT 'init',
+    `price`           DECIMAL(11, 2) NULL     DEFAULT NULL,
+    `currency`        VARCHAR(5)     NULL     DEFAULT NULL,
+    `created`         DATETIME       NULL     DEFAULT NULl,
+    `received`        DATETIME       NULL     DEFAULT NULL,
+    `constant_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
+    `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
+    `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
+    `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
+    `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
+    `want_invoice`    BOOL           NOT NULL DEFAULT FALSE,
+    `invoice_id`      VARCHAR(32)    NULL     DEFAULT NULL,
+    INDEX `idx__payment__person` (`person_id` ASC),
+    CONSTRAINT `fk__payment__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 
 -- -----------------------------------------------------
@@ -1071,29 +1147,31 @@ CREATE TABLE IF NOT EXISTS `payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_game_setup`
 (
-    `event_id`            INT(11)     NOT NULL PRIMARY KEY,
-    `game_start`          DATETIME    NOT NULL,
-    `game_end`            DATETIME    NOT NULL,
-    `result_display`      DATETIME    NULL      DEFAULT NULL,
-    `result_hide`         DATETIME    NULL NULL DEFAULT NULL,
-    `refresh_delay`       INT(11)     NOT NULL COMMENT 'in s',
-    `result_hard_display` BOOLEAN     NOT NULL,
-    `tasks_on_board`      INTEGER     NULL      DEFAULT NULL,
-    `available_points`    VARCHAR(64) NULL      DEFAULT NULL COMMENT 'comma serialized points',
-    CONSTRAINT `fk_fyziklani_game_setup__event`
+    `event_id`            INT UNSIGNED NOT NULL PRIMARY KEY,
+    `game_start`          DATETIME     NOT NULL,
+    `game_end`            DATETIME     NOT NULL,
+    `result_display`      DATETIME     NULL      DEFAULT NULL,
+    `result_hide`         DATETIME     NULL NULL DEFAULT NULL,
+    `refresh_delay`       INT UNSIGNED NOT NULL COMMENT 'in s',
+    `result_hard_display` BOOL         NOT NULL,
+    `tasks_on_board`      INT UNSIGNED NULL      DEFAULT NULL,
+    `available_points`    VARCHAR(64)  NULL      DEFAULT NULL COMMENT 'comma serialized points',
+    CONSTRAINT `fk__fyziklani_game_setup__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `schedule_group`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group`
 (
-    `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `schedule_group_type` ENUM (
         'accommodation',
         'accommodation_gender',
@@ -1112,249 +1190,281 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
-    `event_id`            INT(11)      NOT NULL,
+    `event_id`            INT UNSIGNED NOT NULL,
     `start`               DATETIME     NOT NULL,
     `end`                 DATETIME     NOT NULL,
     `registration_begin`  DATETIME     NULL DEFAULT NULL,
     `registration_end`    DATETIME     NULL DEFAULT NULL,
     `modification_end`    DATETIME     NULL DEFAULT NULL,
-    CONSTRAINT `fk_schedule_group__event`
+    INDEX `idx__schedule_group__type` (`schedule_group_type` ASC),
+    INDEX `idx__schedule_group__event` (`event_id` ASC),
+    CONSTRAINT `fk__schedule_group__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_item`
 (
-    `schedule_item_id`    INT(11)        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_id`   INT(11)        NOT NULL,
+    `schedule_item_id`    INT UNSIGNED   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `schedule_group_id`   INT UNSIGNED   NOT NULL,
     `price_czk`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `price_eur`           DECIMAL(11, 2) NULL     DEFAULT NULL,
     `payable`             BOOL           NOT NULL DEFAULT FALSE,
+    `available`           BOOL           NOT NULL DEFAULT TRUE,
     `name_cs`             VARCHAR(256)   NULL     DEFAULT NULL,
     `name_en`             VARCHAR(256)   NULL     DEFAULT NULL,
-    `capacity`            INT(11)        NULL     DEFAULT NULL,
+    `capacity`            INT UNSIGNED   NULL     DEFAULT NULL,
     `description_cs`      VARCHAR(256)   NULL     DEFAULT NULL,
     `description_en`      VARCHAR(256)   NULL     DEFAULT NULL,
     `long_description_cs` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
     `long_description_en` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
     `begin`               DATETIME       NULL     DEFAULT NULL,
     `end`                 DATETIME       NULL     DEFAULT NULL,
-    CONSTRAINT `fk_schedule_item__group`
+    INDEX `fk__schedule_item__group` (`schedule_group_id` ASC),
+    CONSTRAINT `fk__schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)
             REFERENCES `schedule_group` (`schedule_group_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `person_schedule`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT                            NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT                            NOT NULL,
-    `schedule_item_id`   INT                            NOT NULL,
+    `person_schedule_id` INT UNSIGNED                   NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT UNSIGNED                   NOT NULL,
+    `schedule_item_id`   INT UNSIGNED                   NOT NULL,
     `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
-    INDEX `idx_person_schedule__item` (`schedule_item_id` ASC),
-    INDEX `idx_person_schedule__person` (`person_id` ASC),
-    CONSTRAINT `fk_person_schedule__schedule_item`
+    INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
+    CONSTRAINT `fk__person_schedule__schedule_item`
         FOREIGN KEY (`schedule_item_id`)
             REFERENCES `schedule_item` (`schedule_item_id`)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_person_schedule__person`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__person_schedule__person` (`person_id` ASC),
+    CONSTRAINT `fk__person_schedule__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `schedule_payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_payment`
 (
-    `schedule_payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `payment_id`          INT(11) NOT NULL,
-    `person_schedule_id`  INT(11) NOT NULL,
-    UNIQUE INDEX `uq_schedule_payment__payment__person` (`person_schedule_id`, payment_id),
-    INDEX `idx_schedule_payment__payment_id` (`payment_id` ASC),
-    INDEX `idx_schedule_payment__person_schedule_id` (`person_schedule_id` ASC),
-    CONSTRAINT `fk_schedule_payment__person_schedule`
+    `schedule_payment_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `payment_id`          INT UNSIGNED NOT NULL,
+    `person_schedule_id`  INT UNSIGNED NOT NULL,
+    UNIQUE INDEX `uq__schedule_payment__payment__person` (`person_schedule_id`, payment_id),
+    INDEX `idx__schedule_payment__person_schedule` (`person_schedule_id` ASC),
+    CONSTRAINT `fk__schedule_payment__person_schedule`
         FOREIGN KEY (`person_schedule_id`)
             REFERENCES `person_schedule` (`person_schedule_id`)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE,
-    CONSTRAINT `fk_schedule_payment__payment`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    INDEX `idx__schedule_payment__payment` (`payment_id` ASC),
+    CONSTRAINT `fk__schedule_payment__payment`
         FOREIGN KEY (`payment_id`)
             REFERENCES `payment` (`payment_id`)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `email_message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
-    `email_message_id`    INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `recipient`           VARCHAR(128) NULL                                              DEFAULT NULL,
-    `recipient_person_id` INT(11)      NULl                                              DEFAULT NULL,
-    `sender`              VARCHAR(128) NOT NULL,
-    `reply_to`            VARCHAR(128) NOT NULL,
-    `subject`             VARCHAR(128) NOT NULL,
-    `carbon_copy`         VARCHAR(128) NULL                                              DEFAULT NULL,
-    `blind_carbon_copy`   VARCHAR(128) NULL                                              DEFAULT NULL,
-    `text`                TEXT         NOT NULL,
-    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
-    `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
-    `sent`                DATETIME     NULL                                              DEFAULT NULL,
-    `priority`            BOOLEAN      NOT NULL                                          DEFAULT FALSE,
-    INDEX `idx_email_message__person` (`recipient_person_id` ASC),
-    CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
-    CONSTRAINT `fk_email_message__person`
+    `email_message_id`    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`           VARCHAR(128)    NULL                                           DEFAULT NULL,
+    `recipient_person_id` INT UNSIGNED    NULl                                           DEFAULT NULL,
+    `sender`              VARCHAR(128)    NOT NULL,
+    `reply_to`            VARCHAR(128)    NOT NULL,
+    `subject`             VARCHAR(128)    NOT NULL,
+    `carbon_copy`         VARCHAR(128)    NULL                                           DEFAULT NULL,
+    `blind_carbon_copy`   VARCHAR(128)    NULL                                           DEFAULT NULL,
+    `text`                TEXT            NOT NULL,
+    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
+    `created`             DATETIME        NOT NULL                                       DEFAULT CURRENT_TIMESTAMP,
+    `sent`                DATETIME        NULL                                           DEFAULT NULL,
+    `priority`            BOOL            NOT NULL                                       DEFAULT FALSE,
+    INDEX `idx__email_message__state` (`state` ASC),
+    INDEX `idx__email_message__person` (`recipient_person_id` ASC),
+    CONSTRAINT `fk__email_message__person`
         FOREIGN KEY (`recipient_person_id`)
             REFERENCES `person` (`person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+    CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL )
 )
-    ENGINE = 'InnoDB';
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 -- -----------------------------------------------------
 -- Table `submit_question`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question`
 (
-    `submit_question_id` INT(11)                NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `task_id`            INT(11)                NOT NULL,
+    `submit_question_id` INT UNSIGNED           NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `task_id`            INT UNSIGNED           NOT NULL,
     `label`              VARCHAR(16)            NULL DEFAULT NULL COMMENT 'Cislo otazky',
-    `points`             TINYINT(4)             NULL DEFAULT NULL COMMENT 'Pocet bodu',
+    `points`             TINYINT                NULL DEFAULT NULL COMMENT 'Pocet bodu',
     `answer`             ENUM ('A','B','C','D') NULL DEFAULT NULL COMMENT 'Spravna odpoved',
-    INDEX `idx_quiz__task` (`task_id` ASC),
-    CONSTRAINT `fk_quiz__task`
+    INDEX `idx__quiz__task` (`task_id` ASC),
+    CONSTRAINT `fk__quiz__task`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit_question_answer`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit_question_answer`
 (
-    `answer_id`          INT(11)                NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `contestant_id`      INT(11)                NOT NULL COMMENT 'Resitel',
-    `submit_question_id` INT(11)                NOT NULL COMMENT 'Otazka',
+    `answer_id`          INT UNSIGNED           NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contestant_id`      INT UNSIGNED           NOT NULL COMMENT 'Resitel',
+    `submit_question_id` INT UNSIGNED           NOT NULL COMMENT 'Otazka',
     `submitted_on`       DATETIME               NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `answer`             ENUM ('A','B','C','D') NULL,
-    UNIQUE INDEX `uq_submit_quiz__contestant_question` (`contestant_id` ASC, `submit_question_id` ASC),
-    INDEX `idx_submit_quiz__question_id` (`submit_question_id` ASC),
-    CONSTRAINT `fk_submit_question_answer__contestant`
+    UNIQUE INDEX `uq__submit_quiz__contestant_question` (`contestant_id` ASC, `submit_question_id` ASC),
+    INDEX `idx__submit_quiz__question` (`submit_question_id` ASC),
+    CONSTRAINT `fk__submit_question_answer__contestant`
         FOREIGN KEY (`contestant_id`)
-            REFERENCES `contestant` (`contestant_id`),
-    CONSTRAINT `fk_submit_question_answer__submit_question`
+            REFERENCES `contestant` (`contestant_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+    CONSTRAINT `fk__submit_question_answer__submit_question`
         FOREIGN KEY (`submit_question_id`)
             REFERENCES `submit_question` (`submit_question_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
 )
-    ENGINE = InnoDB;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_producer`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_producer`
 (
-    `producer_id` INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `producer_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name`        VARCHAR(256) NOT NULL
-) ENGINE = InnoDB;
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_product`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_product`
 (
-    `product_id`     INT(11)                                                 NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `producer_id`    INT(11)                                                 NULL DEFAULT NULL,
-    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL, # TODO,
+    `product_id`     INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `producer_id`    INT UNSIGNED                                            NULL DEFAULT NULL,
+    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL,
     `name_cs`        VARCHAR(256)                                            NOT NULL,
     `name_en`        VARCHAR(256)                                            NOT NULL,
     `description_cs` TEXT                                                    NULL DEFAULT NULL,
     `description_en` TEXT                                                    NULL DEFAULT NULL,
     `note`           TEXT                                                    NULL DEFAULT NULL COMMENT 'neverejná poznámka',
     `url`            VARCHAR(256)                                            NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu',
-    CONSTRAINT `fk_warehouse_product__producer`
+    CONSTRAINT `fk__warehouse_product__producer`
         FOREIGN KEY (`producer_id`)
             REFERENCES `warehouse_producer` (`producer_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
-) ENGINE = InnoDB;
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `warehouse_item`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_item`
 (
-    `item_id`           INT(11)                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `product_id`        INT(11)                                  NOT NULL,
-    `contest_id`        INT(11)                                  NOT NULL,
-    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,                                         # TODO to enum
+    `item_id`           INT UNSIGNED                             NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `product_id`        INT UNSIGNED                             NOT NULL,
+    `contest_id`        INT UNSIGNED                             NOT NULL,
+    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,
     `description_cs`    VARCHAR(250)                             NULL     DEFAULT NULL,
     `description_en`    VARCHAR(250)                             NULL     DEFAULT NULL,
     `data`              VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
     `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
-    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna', # TODO to enum
+    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna',
     `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
-    `available`         BOOLEAN                                  NOT NULL DEFAULT FALSE COMMENT 'available in online store',
+    `available`         BOOL                                     NOT NULL DEFAULT FALSE COMMENT 'available in online store',
     `placement`         VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
     `price`             DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'price in FYKOS Coins',
     `note`              TEXT(1024)                               NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
-    INDEX `idx_warehouse_item__finger_print` (`contest_id`, `state`, `description_cs`, `description_en`, `price`,
-                                              `shipped`, `data`),
-    INDEX `idx_warehouse_item__shipped` (`shipped`),
-    CONSTRAINT `fk_warehouse_item__product`
+    INDEX `idx__warehouse_item__finger_print` (
+                                               `contest_id`,
+                                               `state`,
+                                               `description_cs`,
+                                               `description_en`,
+                                               `price`,
+                                               `shipped`,
+                                               `data`
+        ),
+    INDEX `idx__warehouse_item__shipped` (`shipped`),
+    CONSTRAINT `fk__warehouse_item__product`
         FOREIGN KEY (`product_id`)
             REFERENCES `warehouse_product` (`product_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT,
-    CONSTRAINT `fk_warehouse_item__contest`
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk__warehouse_item__contest`
         FOREIGN KEY (`contest_id`)
             REFERENCES `contest` (`contest_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
-) ENGINE = InnoDB;
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
-DROP TABLE IF EXISTS `unsubscribed_email`;
-CREATE TABLE `unsubscribed_email`
+-- -----------------------------------------------------
+-- Table `unsubscribed_email`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `unsubscribed_email`
 (
-    `unsubscribed_email_id` INT(11)  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created`               DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `email_hash`            CHAR(40) NOT NULL COMMENT 'SHA1 hash of the email address in lowercase',
-    `note`                  VARCHAR(255)      DEFAULT NULL,
-    UNIQUE KEY `uq_unsubscribed_email__email_hash` (`email_hash`)
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
-
-DROP TABLE IF EXISTS `country`;
-CREATE TABLE `country`
-(
-    `country_id`   INT         NOT NULL PRIMARY KEY COMMENT 'ISO 3166 num country-code',
-    `name`         VARCHAR(64) NOT NULL,
-    `alpha_2`      CHAR(2)     NOT NULL,
-    `alpha_3`      CHAR(3)     NOT NULL,
-    `phone_nsn`    INT(11)     NULL DEFAULT NULL,
-    `phone_prefix` VARCHAR(16) NULL DEFAULT NULL
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
-
-DROP TABLE IF EXISTS `country_subdivision`;
-CREATE TABLE `country_subdivision`
-(
-    `country_subdivision_id` INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `code`                   VARCHAR(32) NOT NULL COMMENT 'ISO 3166-2 code',
-    `name`                   VARCHAR(64) NOT NULL,
-    `country_id`             INT         NOT NULL,
-    CONSTRAINT `fk_country_subdivision__country`
-        FOREIGN KEY (`country_id`)
-            REFERENCES `country` (`country_id`)
-            ON DELETE RESTRICT
-            ON UPDATE RESTRICT
-) ENGINE = InnoDB
-  COLLATE = utf8_czech_ci;
+    `unsubscribed_email_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `created`               DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `email_hash`            CHAR(40)     NOT NULL COMMENT 'SHA1 hash of the email address in lowercase',
+    `note`                  VARCHAR(255)          DEFAULT NULL,
+    UNIQUE KEY `uq__unsubscribed_email__email_hash` (`email_hash`)
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

@@ -18,13 +18,14 @@
             'fyziklani_team.created',
             'fyziklani_team.game_lang',
             'fyziklani_team.force_a',
+            'fyziklani_team.scholarship',
             ],$model,1024}
         </div>
     </div>
     {include rank from './detail.latte', model:$model}
         <div class="panel color-auto">
             <div class="container">
-                {control schoolCheck $model}
+                {control schoolCheck}
             </div>
         </div>
     {var $teacherCounter = 0;}
@@ -43,8 +44,14 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Seating'}</h2>
-            {control seating:preview}
+            {control seating}
         </div>
     </div>
     {include tests from './orgDetail.latte', model:$model}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Notes'}</h2>
+            {control noteForm}
+        </div>
+    </div>
 {/block}

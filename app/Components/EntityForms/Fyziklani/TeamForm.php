@@ -7,13 +7,14 @@ namespace FKSDB\Components\EntityForms\Fyziklani;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\FOF\MemberInfoMail;
+use FKSDB\Models\Mail\FOF\OrganizerInfoMail;
 use FKSDB\Models\Mail\FOF\TeacherInfoMail;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -22,6 +23,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
@@ -30,6 +32,7 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -42,7 +45,7 @@ use Nette\InvalidStateException;
  */
 abstract class TeamForm extends EntityFormComponent
 {
-    protected SingleReflectionFormFactory $reflectionFormFactory;
+    protected ReflectionFactory $reflectionFormFactory;
     protected TeamMachine $machine;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventModel $event;
@@ -66,7 +69,7 @@ abstract class TeamForm extends EntityFormComponent
     final public function injectPrimary(
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
-        SingleReflectionFormFactory $reflectionFormFactory,
+        ReflectionFactory $reflectionFormFactory,
         ReferencedPersonFactory $referencedPersonFactory
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
@@ -78,15 +81,19 @@ abstract class TeamForm extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      * @note teoreticky by sa nemusela už overwritovať
      */
     final protected function configureForm(Form $form): void
     {
-        $teamContainer = $this->reflectionFormFactory->createContainerWithMetadata(
-            'fyziklani_team',
-            $this->getTeamFieldsDefinition(),
-            new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
-        );
+        $teamContainer = new ModelContainer($this->container, 'fyziklani_team');
+        foreach ($this->getTeamFieldsDefinition() as $field => $metadata) {
+            $teamContainer->addField(
+                $field,
+                $metadata,
+                new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
+            );
+        }
         $form->addComponent($teamContainer, 'team');
         $this->appendPersonsFields($form);
 
@@ -108,9 +115,10 @@ abstract class TeamForm extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
+        $this->teamService->explorer->beginTransaction();
         /** @phpstan-var array{team:array{category:string,name:string}} $values */
         $values = $form->getValues('array');
-        $this->teamService->explorer->beginTransaction();
+
         try {
             $values = array_reduce(
                 $this->getProcessing(),
@@ -151,8 +159,8 @@ abstract class TeamForm extends EntityFormComponent
             if (isset($this->model) && $this->event->event_type_id === 1) {
                 (new TeacherInfoMail($this->container))($holder);
                 (new MemberInfoMail($this->container))($holder);
+                (new OrganizerInfoMail($this->container))($holder);
             }
-
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
                 isset($this->model)

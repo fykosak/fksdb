@@ -36,7 +36,7 @@ class TeamSubmitsGrid extends BaseGrid
      */
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->team->getSubmits()->order('fyziklani_submit.created');
+        return $this->team->getSubmits()->order('fyziklani_submit.modified');
     }
 
     protected function configure(): void
@@ -47,6 +47,8 @@ class TeamSubmitsGrid extends BaseGrid
             '@fyziklani_task.label',
             '@fyziklani_submit.points',
             '@fyziklani_submit.created',
+            '@fyziklani_submit.modified',
+            '@fyziklani_submit.checked',
             '@fyziklani_submit.state',
         ]);
         if ($this->team->event->event_type_id === 1) {

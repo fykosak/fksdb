@@ -19,6 +19,8 @@ use Nette\Security\Resource;
  * @property-read int $task_id
  * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $checked
  * @property-read \DateTimeInterface $modified
  * @phpstan-type SerializedSubmitModel array{
  *      points:int|null,
@@ -41,6 +43,7 @@ final class SubmitModel extends Model implements Resource
             'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
             'modified' => $this->modified->format('c'),
+            'created' => $this->modified->format('c'),
         ];
     }
 

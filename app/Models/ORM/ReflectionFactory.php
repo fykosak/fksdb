@@ -4,14 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Links\Link;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
+ */
 final class ReflectionFactory
 {
     use SmartObject;
@@ -49,5 +56,15 @@ final class ReflectionFactory
             throw new BadTypeException(Link::class, $service);
         }
         return $service;
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     * @phpstan-param mixed $args
+     */
+    public function createField(string $tableName, string $fieldName, ...$args): BaseControl
+    {
+        return $this->loadColumnFactory($tableName, $fieldName)->createField(...$args);
     }
 }

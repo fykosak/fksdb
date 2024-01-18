@@ -10,27 +10,19 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\PageTitle;
 
-class ReportPresenter extends BasePresenter
+final class ReportPresenter extends BasePresenter
 {
-    private DataTestFactory $dataTestFactory;
-
-    public function inject(DataTestFactory $dataTestFactory): void
-    {
-        $this->dataTestFactory = $dataTestFactory;
-    }
-
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Report'), 'fas fa-calendar-alt');
+        return new PageTitle(null, _('Errors & warnings'), 'fas fa-triangle-exclamation');
     }
-
 
     /**
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('event', 'edit');
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'report', $this->getEvent());
     }
 
     /**
@@ -47,6 +39,6 @@ class ReportPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), $this->dataTestFactory->getEventTests());
+        return new TestsList($this->getContext(), DataTestFactory::getEventTests($this->getContext()));
     }
 }

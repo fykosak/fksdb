@@ -1,12 +1,12 @@
 {block outerContent}
     {varType array $logs}
-    {varType FKSDB\Components\DataTest\Tests\Test[] $tests}
+    {varType FKSDB\Models\ORM\Tests\Test[] $tests}
 
     {foreach $logs as $log}
         {varType FKSDB\Models\ORM\Models\SchoolModel[]|Fykosak\Utils\Logging\Message[][][] $log}
         <div class="panel color-auto">
             <div class="container">
-                <h2> {control printer:templateString '@school.school',$log['model'],1024}</h2>
+                <h2> {control printer:column '@school.school',$log['model'],1024}</h2>
                 {control printer:button 'school.edit',$log['model']}
                 {control printer:button 'school.detail',$log['model']}
                 {foreach $log['logs'] as $key => $testLogs}
@@ -16,11 +16,11 @@
             </div>
         </div>
     {/foreach}
-    {define test-results Fykosak\Utils\Logging\Message[] $logs, FKSDB\Components\DataTest\Tests\Test $test}
+    {define test-results FKSDB\Components\DataTest\TestMessage[] $logs, FKSDB\Models\ORM\Tests\Test $test}
         {if count($logs)}
             {foreach $logs as $log}
                 <div class="alert alert-{$log->level}">
-                    {$log->text}
+                    {$log->toText()}
                 </div>
             {/foreach}
         {/if}

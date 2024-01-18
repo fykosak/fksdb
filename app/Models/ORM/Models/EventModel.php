@@ -16,6 +16,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Tests\Event\NoRoleSchedule;
+use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
@@ -70,7 +72,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     public const RESOURCE_ID = 'event';
     private const POSSIBLY_ATTENDING_STATES = [
         TeamState::Participated,
-        TeamState::Approved,
         TeamState::Spare,
         TeamState::Applied,
         TeamState::Arrived,
@@ -80,7 +81,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         return $this->event_type->contest->getContestYear($this->year);
     }
-
 
     /**
      * @throws NotSetGameParametersException
@@ -103,6 +103,11 @@ final class EventModel extends Model implements Resource, NodeCreator
         /** @phpstan-var TypedGroupedSelection<ScheduleGroupModel> $selection */
         $selection = $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
         return $selection;
+    }
+
+    public function hasSchedule(): bool
+    {
+        return (bool)$this->getScheduleGroups()->count('*');
     }
 
     /**
@@ -317,9 +322,9 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         switch ($this->event_type_id) {
             case 1:
-                return new FOFHandler($this, $container);
+                return new FOFHandler($container);
             case 17:
-                return new CtyrbojHandler($this, $container);
+                return new CtyrbojHandler($container);
         }
         throw new GameException(_('Game handler does not exist for this event'));
     }
@@ -340,5 +345,15 @@ final class EventModel extends Model implements Resource, NodeCreator
                 $exception
             );
         }
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new NoRoleSchedule($container),
+        ];
     }
 }

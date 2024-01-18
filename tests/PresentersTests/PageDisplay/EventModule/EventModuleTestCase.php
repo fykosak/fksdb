@@ -10,7 +10,6 @@ use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
 {
-
     protected EventModel $event;
 
     protected function setUp(): void

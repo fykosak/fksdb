@@ -11,13 +11,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 
 class DataTestComponent extends BaseComponent
 {
-    private DataTestFactory $factory;
-
-    final public function injectDataTestFactory(DataTestFactory $factory): void
-    {
-        $this->factory = $factory;
-    }
-
     final public function render(): void
     {
         if ($this->beforeRender()) {
@@ -35,7 +28,7 @@ class DataTestComponent extends BaseComponent
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->container, $this->factory->getPersonTests());
+        return new TestsList($this->container, DataTestFactory::getPersonTests($this->container));
     }
 
     protected function getMinimalPermissions(): int

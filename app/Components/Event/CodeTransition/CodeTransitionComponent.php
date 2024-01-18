@@ -115,7 +115,7 @@ final class CodeTransitionComponent extends CodeTransition
     {
         parent::configureForm($form);
         $el = Html::el('span');
-        $el->addText(_('Processed: '));
+        $el->addText(_('Processed') . ': ');
         $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);//@phpstan-ignore-line
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());

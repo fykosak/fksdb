@@ -30,7 +30,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedCorrelation(): bool
     {
-        return $this->isAllowed('game.statistics', 'correlation');
+        return $this->eventAuthorizator->isAllowed('game', 'statistics.correlation', $this->getEvent());
     }
 
     public function titleTeam(): PageTitle
@@ -43,7 +43,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->isAllowed('game.statistics', 'team');
+        return $this->eventAuthorizator->isAllowed('game', 'statistics.team', $this->getEvent());
     }
 
     public function titleTask(): PageTitle
@@ -56,7 +56,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTask(): bool
     {
-        return $this->isAllowed('game.statistics', 'task');
+        return $this->eventAuthorizator->isAllowed('game', 'statistics.task', $this->getEvent());
     }
 
     public function titleTable(): PageTitle
@@ -69,7 +69,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTable(): bool
     {
-        return $this->isAllowed('game.statistics', 'table');
+        return $this->eventAuthorizator->isAllowed('game', 'statistics.table', $this->getEvent());
     }
 
     /**

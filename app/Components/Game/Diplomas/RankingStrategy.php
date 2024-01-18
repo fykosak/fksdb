@@ -17,14 +17,15 @@ use Nette\Utils\Html;
 
 /**
  * @phpstan-type TeamStats array{
- *      data:array<int,array{
- *          task_id:int,
- *          points:int|null,
- *          time:\DateTimeInterface,
- *      }>,
+ *      data:array<int,SubmitModel>,
  *      sum:int,
  *      count:int,
  *      pointsCount:array<int,int>,
+ * }
+ * @phpstan-type TeamDatum array{
+ *     points:int|null,
+ *     submits:TeamStats,
+ *     team:TeamModel2,
  * }
  */
 class RankingStrategy
@@ -85,6 +86,7 @@ class RankingStrategy
 
     /**
      * @throws NoMemberException
+     * @phpstan-return callable(TeamDatum,TeamDatum): int
      */
     private static function getSortFunction(): callable
     {
@@ -117,12 +119,12 @@ class RankingStrategy
             }
 
             // coefficients
-            $aCoef = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
-            $bCoef = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+            $aCoefficient = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bCoefficient = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
 
-            if ($aCoef < $bCoef) {
+            if ($aCoefficient < $bCoefficient) {
                 return 1;
-            } elseif ($aCoef > $bCoef) {
+            } elseif ($aCoefficient > $bCoefficient) {
                 return -1;
             }
 
@@ -203,11 +205,7 @@ class RankingStrategy
     }
 
     /**
-     * @phpstan-return array<int,array{
-     *     points:int|null,
-     *     submits:TeamStats,
-     *     team:TeamModel2,
-     * }>
+     * @phpstan-return TeamDatum[]
      * @throws NotClosedTeamException
      * @phpstan-param TypedGroupedSelection<TeamModel2> $teams
      */
@@ -235,7 +233,7 @@ class RankingStrategy
      */
     protected function getAllSubmits(TeamModel2 $team): array
     {
-        $arraySubmits = [];
+        $submits = [];
         $sum = 0;
         $count = 0;
 
@@ -254,15 +252,11 @@ class RankingStrategy
             $submitPointsCount[$submit->points]++;
             $sum += $submit->points;
             $count++;
-            $arraySubmits[] = [
-                'task_id' => $submit->fyziklani_task_id,
-                'points' => $submit->points,
-                'time' => $submit->modified,
-            ];
+            $submits[] = $submit;
         }
 
         return [
-            'data' => $arraySubmits,
+            'data' => $submits,
             'sum' => $sum,
             'count' => $count,
             'pointsCount' => $submitPointsCount,

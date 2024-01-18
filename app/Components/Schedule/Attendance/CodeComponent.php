@@ -24,11 +24,42 @@ use Nette\DI\Container;
 class CodeComponent extends CodeTransition
 {
     protected ScheduleItemModel $item;
+    private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(Container $container, ScheduleItemModel $item, PersonScheduleMachine $machine)
     {
         parent::__construct($container, PersonScheduleState::from(PersonScheduleState::Participated), $machine);
         $this->item = $item;
+    }
+
+    public function inject(EventDispatchFactory $eventDispatchFactory): void
+    {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    protected function innerHandleSuccess(Model $model, Form $form): void
+    {
+        try {
+            $machine = $this->eventDispatchFactory->getPersonScheduleMachine();
+            $personSchedule = $this->resolvePersonSchedule($model);
+            $holder = $machine->createHolder($personSchedule);
+            $transition = Machine::selectTransition(
+                Machine::filterByTarget(
+                    Machine::filterAvailable($machine->transitions, $holder),
+                    PersonScheduleState::from(PersonScheduleState::Participated)
+                )
+            );
+            $machine->execute($transition, $holder);
+        } catch (\Throwable $exception) {
+            $this->flashMessage(_('Error') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
+            $this->getPresenter()->redirect('this');
+        }
+
+        $this->flashMessage(
+            sprintf(_('Transition successful for: %s'), $personSchedule->person->getFullName()),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('this');
     }
 
     /**
@@ -38,9 +69,7 @@ class CodeComponent extends CodeTransition
     protected function resolveModel(Model $model): PersonScheduleModel
     {
         if (
-            $model instanceof TeamTeacherModel
-            || $model instanceof TeamMemberModel
-            || $model instanceof EventParticipantModel
+            $model instanceof EventParticipantModel
         ) {
             $person = $model->person;
         } else {

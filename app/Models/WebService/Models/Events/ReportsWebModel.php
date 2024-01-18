@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
-use Fykosak\Utils\Logging\MemoryLogger;
-use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
@@ -20,15 +20,13 @@ use Nette\Schema\Expect;
 class ReportsWebModel extends WebModel
 {
     private EventService $eventService;
-    private DataTestFactory $dataTestFactory;
 
-    public function inject(EventService $eventService, DataTestFactory $dataTestFactory): void
+    public function inject(EventService $eventService): void
     {
         $this->eventService = $eventService;
-        $this->dataTestFactory = $dataTestFactory;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
@@ -38,7 +36,7 @@ class ReportsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(array $params): array
     {
         set_time_limit(-1);
 
@@ -46,11 +44,23 @@ class ReportsWebModel extends WebModel
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
-        $tests = $this->dataTestFactory->getEventTests();
-        $logger = new MemoryLogger();
+        $tests = DataTestFactory::getEventTests($this->container);
+        $logger = new TestLogger();
         foreach ($tests as $test) {
             $test->run($logger, $event);
         }
-        return array_map(fn(Message $message) => $message->__toArray(), $logger->getMessages());
+        return array_map(
+            fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],
+            $logger->getMessages()
+        );
+    }
+
+    protected function isAuthorized(array $params): bool
+    {
+        $event = $this->eventService->findByPrimary($params['eventId']);
+        if (!$event) {
+            return false;
+        }
+        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
     }
 }

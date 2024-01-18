@@ -40,10 +40,12 @@ final class CodeRedirectComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->elementPrototype->target = '_blank';
-        $form->addText('code', _('Code'))->setRequired(true);
-        $form->addSubmit('detail', _('button.detail'))->onClick[] =
+        $form->addText('code', _('Code'))->setRequired();
+        $form->addSubmit('org_detail', _('button.team.orgDetail'))->onClick[] =
+            fn(Button $button) => $this->handleClick($form, 'orgDetail');
+        $form->addSubmit('detail', _('button.team.detail'))->onClick[] =
             fn(Button $button) => $this->handleClick($form, 'detail');
-        $form->addSubmit('edit', _('button.edit'))->onClick[] =
+        $form->addSubmit('edit', _('button.team.edit'))->onClick[] =
             fn(Button $button) => $this->handleClick($form, 'edit');
         return $control;
     }
@@ -78,10 +80,10 @@ final class CodeRedirectComponent extends BaseComponent
      */
     private function resolveApplication(Model $model): Model
     {
-        if ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
+        if ($this->event->isTeamEvent() && $model instanceof TeamModel2) {
             return $model;
-        } elseif ($model instanceof PersonModel) {
-            return $model->getApplication($this->event);
+        } elseif (!$this->event->isTeamEvent() && $model instanceof PersonModel) {
+            return $model->getEventParticipant($this->event);
         }
         throw new BadRequestException(_('Wrong type of code.'));
     }

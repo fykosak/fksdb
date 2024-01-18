@@ -35,10 +35,9 @@ class EventOrganizerListComponent extends DetailComponent
 
     protected function configure(): void
     {
-        $this->classNameCallback = fn(EventOrganizerModel $model) => 'alert alert-' .
-            $model->event->event_type->getSymbol();
+        $this->classNameCallback = fn(EventOrganizerModel $model): string => $model->event->event_type->getSymbol();
         $row0 = $this->createRow();
-        $row0->addComponent(new SimpleItem($this->container, '@event.name'), 'event__name');
+        $row0->addComponent(new SimpleItem($this->container, '@event.name_new'), 'event__name');
         $row0->addComponent(
             new SimpleItem($this->container, '@event.event_type'),
             'event__type'

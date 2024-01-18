@@ -21,30 +21,8 @@
     {var FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel|null $personSchedule = $person->getScheduleByGroup($group)}
     <div>
         <h3 class="{($personSchedule?'':'text-secondary') . ' me-3 d-flex align-items-center my-3'}">
-            <span class="me-3">
-            {$group->name->getText($lang)}
-            </span>
-            <small>
-                {control printer:templateString '@schedule_group.schedule_group_type',$group,1024}
-            </small>
+                {control printer:column '<span class="me-2">@schedule_group.name</span>@schedule_group.schedule_group_type',$group,1024}
             {if $displayTime}
-                <small>
-                    {*if $group->hasEnded()}
-                        <span class="badge bg-secondary">{_'Block ended'}</span>
-                    {elseif $group->hasStarted()}
-                        <span class="badge bg-success">{_'Block is ongoing'}</span>
-                    {else}
-                    {var int $toStart = $group->start->getTimestamp()-time()}
-                        <span class="badge bg-warning">
-                        {if $toStart < 60 * 60}
-                            {var int $minutesUntilStart = floor($toStart / 60)}
-                            {_'Block starts in'} {sprintf(ngettext('%d minute', '%d minutes', $minutesUntilStart), $minutesUntilStart)}
-                        {else}
-                            {_'Block has not started yet'}
-                        {/if}
-                    </span>
-                    {/if*}
-                </small>
                 {* TODO add date for schedule arcross middnight*}
                 {var string $className = 'text-'.$group->event->event_type->getSymbol().' ms-auto'}
                 <small class="{$className}">{$group->start->format(_('__time'))} - {$group->end->format(_('__time'))}</small>
