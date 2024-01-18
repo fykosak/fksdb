@@ -326,7 +326,6 @@ CREATE TABLE IF NOT EXISTS `auth_token`
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
 
-
 -- -----------------------------------------------------
 -- Table `contestant`
 -- -----------------------------------------------------
@@ -439,8 +438,8 @@ CREATE TABLE IF NOT EXISTS `org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest_grant`
 (
-    `grant_id`   INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`   INT(11) NOT NULL,
+    `grant_id`   INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`   INT NOT NULL,
     `role`       ENUM (
         'webmaster',
         'taskManager',
@@ -458,8 +457,8 @@ CREATE TABLE IF NOT EXISTS `contest_grant`
         'wiki',
         'superuser',
         'cartesian'
-        )                NOT NULL,
-    `contest_id` INT     NOT NULL,
+        )            NOT NULL,
+    `contest_id` INT NOT NULL,
     UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
     INDEX `idx__contest_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__contest_grant__login`
