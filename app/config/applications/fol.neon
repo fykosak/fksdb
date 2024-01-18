@@ -8,7 +8,7 @@ transitions:
                 label: _('Register team')
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Fol\TeamMemberMailCallback()
-            pending->approved:
+            pending->applied:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Schválit účast')
@@ -16,13 +16,13 @@ transitions:
                 behaviorType: warning
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Potvrdit jako náhradníka')
-            approved|spare->participated:
+            applied|spare->participated:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
                 label: _('Prezentovat')
-            approved|spare->missed:
+            applied|spare->missed:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
                 label: _('Nepřijel')
-            pending|spare|approved->cancelled:
+            pending|spare|applied->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Zrušit tým')
                 behaviorType: danger

@@ -41,33 +41,6 @@ VALUES (1, 1, 'FYKOSí Fyziklání'),
        (16, 1, 'FYKOSí Online Víkend'),
        (17, 3, 'Vědecký čtyřboj');
 
-INSERT INTO `event_status` (`status`, `description`)
-VALUES ('applied', 'obecně přihlášen'),
-       ('applied.nodsef', 'Přihlášení bez DSEFu.'),
-       ('applied.notsaf', 'Přihlášení vyplynulo z TSAFu, ale tam už není.'),
-       ('applied.tsaf', 'Přihlášení vyplynulo z TSAFu'),
-       ('approved', 'schváleno'),
-       ('auto.invited', 'pozván z dle heuristiky'),
-       ('auto.spare', 'náhradník z heuristiky'),
-       ('cancelled', 'místo smazání'),
-       ('disqualified', NULL),
-       ('interested', 'projevil zájem, chce jet'),
-       ('invited', 'Pozvaný'),
-       ('invited1', 'Pozvaný s jednou upomínkou'),
-       ('invited2', 'Pozvaný se dvěma upomínkami'),
-       ('invited3', 'Pozvaný se třemi upomínkami'),
-       ('missed', 'nepřijel, při prezenci'),
-       ('out_of_db', 'Řeší se mimo FKSDB'),
-       ('paid', 'zaplatil'),
-       ('participated', 'opravdu se zúčastnil'),
-       ('pending', 'čeká na schválení'),
-       ('rejected', 'odmítnul, odmítnut'),
-       ('spare', 'náhradník'),
-       ('spare.tsaf', 'náhradník pro TSAF'),
-       ('spare1', 'Náhradník s jednou upomínkou'),
-       ('spare2', 'Náhradník se dvěma upomínkami'),
-       ('spare3', 'Náhradník se třemi upomínkami');
-
 insert into `country` (country_id, name, alpha_2, alpha_3, phone_prefix, phone_nsn)
 VALUES (004, 'Afghanistan', 'AF', 'AFG', '+93', 9),
        (248, 'Åland Islands', 'AX', 'ALA', '+358', NULL),

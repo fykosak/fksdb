@@ -13,10 +13,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
     public const INIT = '__init';
     public const APPLIED = 'applied';
-    public const APPLIED_NODSEF = 'applied.nodsef';
-    public const APPLIED_NOTSAF = 'applied.notsaf';
-    public const APPLIED_TSAF = 'applied.tsaf';
-    public const APPROVED = 'approved';
     public const AUTO_INVITED = 'auto.invited';
     public const AUTO_SPARE = 'auto.spare';
     public const CANCELLED = 'cancelled';
@@ -33,7 +29,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public const PENDING = 'pending';
     public const REJECTED = 'rejected';
     public const SPARE = 'spare';
-    public const SPARE_TSAF = 'spare.tsaf';
     public const SPARE1 = 'spare1';
     public const SPARE2 = 'spare2';
     public const SPARE3 = 'spare3';
@@ -43,10 +38,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         return [
             new self(self::INIT),
             new self(self::APPLIED),
-            new self(self::APPLIED_NODSEF),
-            new self(self::APPLIED_NOTSAF),
-            new self(self::APPLIED_TSAF),
-            new self(self::APPROVED),
             new self(self::AUTO_INVITED),
             new self(self::AUTO_SPARE),
             new self(self::CANCELLED),
@@ -63,7 +54,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             new self(self::PENDING),
             new self(self::REJECTED),
             new self(self::SPARE),
-            new self(self::SPARE_TSAF),
             new self(self::SPARE1),
             new self(self::SPARE2),
             new self(self::SPARE3),
@@ -75,12 +65,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         $badge = '';
         switch ($this->value) {
             case self::APPLIED:
-            case self::APPLIED_NODSEF:
-            case self::APPLIED_NOTSAF:
-            case self::APPLIED_TSAF:
-            case self::APPROVED:
-                $badge = 'badge bg-color-1';
-                break;
             case self::INTERESTED:
             case self::PENDING:
                 $badge = 'badge bg-color-2';
@@ -108,7 +92,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             case self::SPARE1:
             case self::SPARE2:
             case self::SPARE3:
-            case self::SPARE_TSAF:
             case self::AUTO_SPARE:
                 $badge = 'badge bg-color-9';
                 break;
@@ -128,14 +111,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::APPLIED:
                 return _('Applied');
-            case self::APPLIED_NODSEF:
-                return _('Applied no DSEF');
-            case self::APPLIED_NOTSAF:
-                return _('Applied no TSAF');
-            case self::APPLIED_TSAF:
-                return _('Applied TSAF');
-            case self::APPROVED:
-                return _('Approved');
             case self::AUTO_INVITED:
                 return _('Auto invited');
             case self::AUTO_SPARE:
@@ -168,8 +143,6 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
                 return _('Rejected');
             case self::SPARE:
                 return _('Spare');
-            case self::SPARE_TSAF:
-                return _('Spare TSAF');
             case self::SPARE1:
                 return _('Spare 1');
             case self::SPARE2:

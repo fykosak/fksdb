@@ -44,7 +44,6 @@ events:
                     factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fov.person%, email, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'), false)
             modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy
 
             processings:
