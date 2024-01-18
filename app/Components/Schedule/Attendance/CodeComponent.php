@@ -69,7 +69,13 @@ class CodeComponent extends CodeTransition
     protected function resolveModel(Model $model): PersonScheduleModel
     {
         if (
+<<<<<<< HEAD
             $model instanceof EventParticipantModel
+=======
+            $model instanceof TeamTeacherModel
+            || $model instanceof TeamMemberModel
+            || $model instanceof EventParticipantModel
+>>>>>>> 7aa52edab1e99daa7159354f72ae50682bdc4267
         ) {
             $person = $model->person;
         } else {
