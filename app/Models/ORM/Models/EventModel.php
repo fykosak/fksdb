@@ -322,9 +322,9 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         switch ($this->event_type_id) {
             case 1:
-                return new FOFHandler($this, $container);
+                return new FOFHandler($container);
             case 17:
-                return new CtyrbojHandler($this, $container);
+                return new CtyrbojHandler($container);
         }
         throw new GameException(_('Game handler does not exist for this event'));
     }

@@ -1052,6 +1052,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit`
     `points`              TINYINT      NULL     DEFAULT NULL,
     `skipped`             BOOL         NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
     `state`               VARCHAR(64)  NULL     DEFAULT NULL,
+    `created`             TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `checked`             TIMESTAMP    NULL     DEFAULT NULL,
     `modified`            TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE INDEX `uq__fyziklani_submit__task__team` (`fyziklani_task_id` ASC, `fyziklani_team_id` ASC),
     INDEX `idx__fyziklani_submit__task` (`fyziklani_task_id` ASC),
