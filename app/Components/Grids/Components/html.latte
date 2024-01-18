@@ -1,5 +1,2 @@
 {varType Nette\Utils\Html|string $html}
-{var Fykosak\Utils\UI\Title|null $title = $control->getTitle()}
-<span title="{$title?$title->title:''}">
-        {$html|noescape}
-</span>
+{$html|noescape}
