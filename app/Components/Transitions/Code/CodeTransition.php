@@ -92,7 +92,7 @@ abstract class CodeTransition extends FormComponent
 
     protected function configureForm(Form $form): void
     {
-        $form->addText('code', _('Code'))->setRequired(true);
+        $form->addText('code', _('Code'))->setRequired();
     }
 
     /**

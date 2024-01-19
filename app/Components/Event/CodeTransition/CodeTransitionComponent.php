@@ -79,7 +79,7 @@ final class CodeTransitionComponent extends CodeTransition
         $holder = $this->machine->createHolder($this->model);
         $transition = Machine::selectTransition(
             Machine::filterAvailable(
-                Machine::filterByTarget($this->machine->transitions, $this->targetState), //@phpstan-ignore-line
+                Machine::filterByTarget($this->machine->transitions, $this->targetState),
                 $holder
             )
         );
@@ -114,7 +114,7 @@ final class CodeTransitionComponent extends CodeTransition
         parent::configureForm($form);
         $el = Html::el('span');
         $el->addText(_('Processed') . ': ');
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);//@phpstan-ignore-line
+        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
         }
