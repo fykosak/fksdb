@@ -15,7 +15,9 @@
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
                 <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
-                    {control printer:button 'person.detail', $member}
+                <a class="btn btn-secondary btn-sm"
+                   href="{plink :Organizer:Person:detail id=>$member->person_id,contestId=>$member->fyziklani_team->event->event_type->contest_id}"
+                >{_'button.person.detail'}</a>
                 {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
                 {if $event->hasSchedule()}
                     {include personSchedule, person => $member->person}
