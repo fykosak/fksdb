@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -48,7 +48,7 @@ final class ProductPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      */
     protected function createComponentEditForm(): ProductFormComponent

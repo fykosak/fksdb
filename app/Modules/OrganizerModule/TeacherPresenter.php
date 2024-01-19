@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -29,8 +29,8 @@ final class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -57,8 +57,8 @@ final class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -81,9 +81,9 @@ final class TeacherPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): TeacherFormComponent
     {

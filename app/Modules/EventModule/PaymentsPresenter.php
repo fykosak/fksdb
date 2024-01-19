@@ -8,9 +8,9 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentForm;
 use FKSDB\Components\Payments\PaymentList;
 use FKSDB\Components\Payments\PaymentQRCode;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -109,9 +109,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -120,9 +120,10 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -143,7 +144,8 @@ final class PaymentsPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function authorizedEdit(): bool
     {
@@ -153,9 +155,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderEdit(): void
     {
@@ -163,9 +165,9 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -227,7 +229,7 @@ final class PaymentsPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
@@ -265,7 +267,8 @@ final class PaymentsPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): PaymentForm
     {
@@ -281,7 +284,7 @@ final class PaymentsPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentPaymentQRCode(): PaymentQRCode
     {
