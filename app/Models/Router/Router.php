@@ -90,7 +90,7 @@ class Router
         );
         // phpcs:disable
         $service->addRoute(
-            '<module organizer|public|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>/[series<series [0-9]+>/]]]<presenter>/<action=default>[/<id>]',
+            '<module organizer|public|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>]/[series<series [0-9]+>/]]<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'contestId' => ['filterTable' => self::CONTESTS]]
         );
         // phpcs:enable

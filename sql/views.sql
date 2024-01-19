@@ -215,6 +215,6 @@ create or replace view v_dokuwiki_user_group as
 select login_id, role_id, contest_id
 from (select `role` as 'role_id', contest_id, login_id from `contest_grant`) as cg
 union
-select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
+select l.login_id, 'organizer' as `role_id`, o.contest_id -- hardcoded 'organizer'
 from org o
          inner join login l on l.person_id = o.person_id;
