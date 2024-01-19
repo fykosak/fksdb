@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\UI\NotSetBadge;
 use Fykosak\NetteORM\Selection\TypedSelection;

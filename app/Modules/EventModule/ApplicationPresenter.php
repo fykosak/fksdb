@@ -15,11 +15,11 @@ use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -108,10 +108,10 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function renderDetail(): void
     {
@@ -142,7 +142,6 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -162,8 +161,9 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function authorizedEdit(): bool
     {
@@ -177,8 +177,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -252,8 +252,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): SingleFormComponent
     {
@@ -299,11 +299,11 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -317,11 +317,11 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @phpstan-return CodeTransitionComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentCodeTransition(): CodeTransitionComponent
     {
@@ -346,8 +346,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentRests(): PersonRestComponent
     {
@@ -367,8 +367,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
