@@ -19,7 +19,7 @@ class ContestContestantAssertion implements Assertion
     {
         $contestant = $acl->getQueriedResource();
         if (!$contestant instanceof ContestantModel) {
-            throw new BadTypeException(ContestantModel::class, $contestant);
+           return false;
         }
         $grant = $acl->getQueriedRole();
         if ($grant instanceof ContestRole) {

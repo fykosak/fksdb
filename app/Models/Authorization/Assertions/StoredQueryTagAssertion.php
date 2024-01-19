@@ -26,14 +26,11 @@ class StoredQueryTagAssertion implements Assertion
         $this->tagNames = $tagNames;
     }
 
-    /**
-     * @throws BadTypeException
-     */
     public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
-            throw new BadTypeException(StoredQuery::class, $storedQuery);
+            return false;
         }
         foreach ($storedQuery->queryPattern->getStoredQueryTagTypes() as $tagType) {
             if (in_array($tagType->name, $this->tagNames)) {
