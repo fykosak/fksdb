@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Transitions\Code;
 
-use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -23,7 +23,7 @@ use Nette\Forms\Form;
  * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
  * @phpstan-type TMachine Machine<ModelHolder<TState,TModel>>
  */
-abstract class CodeTransition extends FormComponent
+abstract class CodeTransition extends CodeForm
 {
     /** @phpstan-var TMachine */
     protected Machine $machine;
@@ -46,7 +46,7 @@ abstract class CodeTransition extends FormComponent
     }
 
     /**
-     * @phpstan-return Transition<ModelHolder<TState,TModel>>
+     * @phpstan-return Transition<ModelHolder<TState,TModel>>[]
      */
     protected function getTransitions(): array
     {
@@ -56,16 +56,9 @@ abstract class CodeTransition extends FormComponent
         );
     }
 
-    protected function handleSuccess(Form $form): void
+    protected function innerHandleSuccess(Model $model, Form $form): void
     {
-        /** @phpstan-var array{code:string} $values */
-        $values = $form->getValues('array');
         try {
-            $model = MachineCode::parseHash(
-                $this->container,
-                $values['code'],
-                $this->getSalt()
-            );
             $newModel = $this->resolveModel($model);
             $holder = $this->machine->createHolder($newModel);
 
@@ -87,12 +80,9 @@ abstract class CodeTransition extends FormComponent
     protected function appendSubmitButton(Form $form): SubmitButton
     {
         $transitions = $this->getTransitions();
-        return $form->addSubmit('submit', '');//reset($transitions)->label()
-    }
-
-    protected function configureForm(Form $form): void
-    {
-        $form->addText('code', _('Code'))->setRequired();
+        /** @phpstan-var Transition<ModelHolder<TState,TModel>> $transition */
+        $transition = reset($transitions);
+        return $form->addSubmit('submit', $transition->label()->toHtml());
     }
 
     /**
@@ -100,6 +90,4 @@ abstract class CodeTransition extends FormComponent
      * @phpstan-return TModel
      */
     abstract protected function resolveModel(Model $model): Model;
-
-    abstract protected function getSalt(): string;
 }

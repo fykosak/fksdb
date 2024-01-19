@@ -17,8 +17,9 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
-class CodeComponent extends CodeTransition
+class CodeAttendance extends CodeTransition
 {
     protected ScheduleItemModel $item;
     private EventDispatchFactory $eventDispatchFactory;

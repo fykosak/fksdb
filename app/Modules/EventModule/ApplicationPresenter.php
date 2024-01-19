@@ -9,7 +9,7 @@ use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
+use FKSDB\Components\Event\CodeTransition\CodeAttendance;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
@@ -315,7 +315,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<EventParticipantModel>
+     * @phpstan-return CodeAttendance<EventParticipantModel>
      * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
@@ -323,9 +323,9 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
+    protected function createComponentCodeTransition(): CodeAttendance
     {
-        return new CodeTransitionComponent(
+        return new CodeAttendance(
             $this->getContext(),
             $this->getEntity(),
             EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),

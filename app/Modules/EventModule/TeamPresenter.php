@@ -13,7 +13,7 @@ use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
+use FKSDB\Components\Event\CodeTransition\CodeAttendance;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
@@ -338,7 +338,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeTransitionComponent<TeamModel2>
+     * @phpstan-return CodeAttendance<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
@@ -346,9 +346,9 @@ final class TeamPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
+    protected function createComponentCodeTransition(): CodeAttendance
     {
-        return new CodeTransitionComponent(
+        return new CodeAttendance(
             $this->getContext(),
             $this->getEntity(),
             TeamState::tryFrom(TeamState::Arrived), // TODO

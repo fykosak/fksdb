@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Schedule\Attendance\CodeComponent;
+use FKSDB\Components\Schedule\Attendance\CodeAttendance;
 use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -170,8 +170,8 @@ final class ItemPresenter extends BasePresenter
      * @throws NotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentCode(): CodeComponent
+    protected function createComponentCode(): CodeAttendance
     {
-        return new CodeComponent($this->getContext(), $this->getEntity(),$this->eventDispatchFactory->getPersonScheduleMachine());
+        return new CodeAttendance($this->getContext(), $this->getEntity(),$this->eventDispatchFactory->getPersonScheduleMachine());
     }
 }
