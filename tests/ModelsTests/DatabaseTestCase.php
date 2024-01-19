@@ -111,7 +111,9 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
             DbNames::TAB_AUTH_TOKEN,
+            DbNames::TAB_CONTEST_GRANT,
             DbNames::TAB_LOGIN,
+            DbNames::TAB_PERSON_INFO,
             DbNames::TAB_PERSON,
         ];
         foreach ($tables as $table) {

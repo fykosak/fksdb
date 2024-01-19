@@ -1,7 +1,7 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var $link = $control->link('//:Public:Application:',
+{var string $link = $control->link('//:Public:Application:',
 ['eventId'=> $holder->event->event_id,
 'contestId'=>$holder->event->event_type->contest_id,
 'at'=>$token->token,

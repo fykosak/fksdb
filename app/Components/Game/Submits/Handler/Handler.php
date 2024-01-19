@@ -7,7 +7,6 @@ namespace FKSDB\Components\Game\Submits\Handler;
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use FKSDB\Components\Game\Submits\PointsMismatchException;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
@@ -22,13 +21,11 @@ use Tracy\Debugger;
 abstract class Handler
 {
     protected User $user;
-    protected EventModel $event;
     protected SubmitService $submitService;
     public MemoryLogger $logger;
 
-    public function __construct(EventModel $event, Container $container)
+    public function __construct(Container $container)
     {
-        $this->event = $event;
         $container->callInjects($this);
         $this->logger = new MemoryLogger();
     }
@@ -50,15 +47,11 @@ abstract class Handler
         TaskModel $task,
         TeamModel2 $team,
         int $points,
-        string $newState = SubmitState::NOT_CHECKED
+        SubmitState $newState
     ): void {
         $this->checkRequirements($team, $task);
-        $submit = $this->submitService->storeModel([
-            'points' => $points,
-            'fyziklani_task_id' => $task->fyziklani_task_id,
-            'fyziklani_team_id' => $team->fyziklani_team_id,
-            'state' => $newState,
-        ]);
+        $submit = $this->submitService->create($task, $team, $points, $newState);
+
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 
         $this->logger->log(
@@ -70,7 +63,7 @@ abstract class Handler
                     $team->fyziklani_team_id,
                     $task->label
                 ),
-                $newState === SubmitState::NOT_CHECKED ? Message::LVL_INFO : Message::LVL_SUCCESS
+                $newState->value === SubmitState::NotChecked ? Message::LVL_INFO : Message::LVL_SUCCESS
             )
         );
     }
@@ -83,11 +76,7 @@ abstract class Handler
     {
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         $submit->canRevoke();
-        $this->submitService->storeModel([
-            'points' => null,
-            'state' => SubmitState::NOT_CHECKED,
-            'modified' => new \DateTimeImmutable(),
-        ], $submit);
+        $this->submitService->revoke($submit);
         $this->logEvent($submit, 'revoked');
         $this->logger->log(
             new Message(
@@ -108,9 +97,7 @@ abstract class Handler
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->submitService->storeModel([
-            'state' => SubmitState::CHECKED,
-        ], $submit);
+        $this->submitService->check($submit, $points);
         $this->logEvent($submit, 'checked');
 
         $this->logger->log(
@@ -134,11 +121,7 @@ abstract class Handler
     public function edit(SubmitModel $submit, int $points): void
     {
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
-        $this->submitService->storeModel([
-            'points' => $points,
-            'state' => SubmitState::CHECKED,
-            'modified' => new \DateTimeImmutable(),
-        ], $submit);
+        $this->submitService->edit($submit, $points);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
         $this->logger->log(
             new Message(

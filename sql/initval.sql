@@ -20,9 +20,7 @@ VALUES (1, 'serial_author', 'serial_author', 'Je organizátornizátor autor seri
        (2, 'email_invalid', 'Neplatný e-mail',
         'E-maily zaslané na danou adresu se nám již nekdy vrátily. Zatím sem nepatri adresy, u nichž je hlášen \'mailbox full\'.',
         'global'),
-       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global'),
-       (4, 'send_forum', 'Notifikace ze fóra', 'Ze starého fóra na FYKOSím webu.', 'global'),
-       (5, 'send_forum_dgst', 'Digesty z fóra', 'Posílat digesty ze starého fóra na FYKOSím webu.', 'global');
+       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global');
 
 INSERT INTO `event_type` (`event_type_id`, `contest_id`, `name`)
 VALUES (1, 1, 'FYKOSí Fyziklání'),
@@ -40,33 +38,6 @@ VALUES (1, 1, 'FYKOSí Fyziklání'),
        (15, 2, 'Výfučí Kyberkoncil'),
        (16, 1, 'FYKOSí Online Víkend'),
        (17, 3, 'Vědecký čtyřboj');
-
-INSERT INTO `event_status` (`status`, `description`)
-VALUES ('applied', 'obecně přihlášen'),
-       ('applied.nodsef', 'Přihlášení bez DSEFu.'),
-       ('applied.notsaf', 'Přihlášení vyplynulo z TSAFu, ale tam už není.'),
-       ('applied.tsaf', 'Přihlášení vyplynulo z TSAFu'),
-       ('approved', 'schváleno'),
-       ('auto.invited', 'pozván z dle heuristiky'),
-       ('auto.spare', 'náhradník z heuristiky'),
-       ('cancelled', 'místo smazání'),
-       ('disqualified', NULL),
-       ('interested', 'projevil zájem, chce jet'),
-       ('invited', 'Pozvaný'),
-       ('invited1', 'Pozvaný s jednou upomínkou'),
-       ('invited2', 'Pozvaný se dvěma upomínkami'),
-       ('invited3', 'Pozvaný se třemi upomínkami'),
-       ('missed', 'nepřijel, při prezenci'),
-       ('out_of_db', 'Řeší se mimo FKSDB'),
-       ('paid', 'zaplatil'),
-       ('participated', 'opravdu se zúčastnil'),
-       ('pending', 'čeká na schválení'),
-       ('rejected', 'odmítnul, odmítnut'),
-       ('spare', 'náhradník'),
-       ('spare.tsaf', 'náhradník pro TSAF'),
-       ('spare1', 'Náhradník s jednou upomínkou'),
-       ('spare2', 'Náhradník se dvěma upomínkami'),
-       ('spare3', 'Náhradník se třemi upomínkami');
 
 insert into `country` (country_id, name, alpha_2, alpha_3, phone_prefix, phone_nsn)
 VALUES (004, 'Afghanistan', 'AF', 'AFG', '+93', 9),

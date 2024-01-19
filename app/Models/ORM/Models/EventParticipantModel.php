@@ -58,11 +58,6 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
         return $this->person->getHistory($this->event->getContestYear());
     }
 
-    public function __toString(): string
-    {
-        return $this->person->getFullName();
-    }
-
     /**
      * @throws \Exception
      */
@@ -123,7 +118,14 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     {
         $node = $document->createElement('participant');
         $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode([
+            'participantId' => $this->event_participant_id,
+            'eventId' => $this->event_id,
+            'personId' => $this->person_id,
+            'status' => $this->status->value,
+            'created' => $this->created->format('c'),
+            'lunchCount' => $this->lunch_count,
+        ], $document, $node);
         return $node;
     }
 }
