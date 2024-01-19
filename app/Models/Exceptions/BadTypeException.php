@@ -9,6 +9,9 @@ use Nette\Http\IResponse;
 
 class BadTypeException extends BadRequestException
 {
+    /**
+     * @param mixed $got
+     */
     public function __construct(string $expected, $got, ?\Throwable $previous = null)
     {
         parent::__construct(
