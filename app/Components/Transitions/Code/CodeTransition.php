@@ -87,7 +87,7 @@ abstract class CodeTransition extends FormComponent
     protected function appendSubmitButton(Form $form): SubmitButton
     {
         $transitions = $this->getTransitions();
-        return $form->addSubmit('submit', reset($transitions)->label());
+        return $form->addSubmit('submit', '');//reset($transitions)->label()
     }
 
     protected function configureForm(Form $form): void

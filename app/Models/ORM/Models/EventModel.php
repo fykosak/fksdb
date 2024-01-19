@@ -305,6 +305,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     public function getSalt(): string
     {
         switch ($this->event_type_id) {
+            case 1:
             case 2:
             case 14:
                 $salt = $this->getParameter('hashSalt');

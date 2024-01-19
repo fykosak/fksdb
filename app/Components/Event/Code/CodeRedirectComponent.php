@@ -23,6 +23,8 @@ use Nette\Forms\Form;
 final class CodeRedirectComponent extends BaseComponent
 {
     private EventModel $event;
+    /** @persistent  */
+    private ?Model $model = null;
 
     public function __construct(Container $container, EventModel $event)
     {
@@ -32,25 +34,22 @@ final class CodeRedirectComponent extends BaseComponent
 
     public function render(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
+            'model' => $this->model,
+        ]);
     }
 
     protected function createComponentFormControl(): FormControl
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $form->elementPrototype->target = '_blank';
         $form->addText('code', _('Code'))->setRequired();
-        $form->addSubmit('org_detail', _('button.team.orgDetail'))->onClick[] =
-            fn(Button $button) => $this->handleClick($form, 'orgDetail');
-        $form->addSubmit('detail', _('button.team.detail'))->onClick[] =
-            fn(Button $button) => $this->handleClick($form, 'detail');
-        $form->addSubmit('edit', _('button.team.edit'))->onClick[] =
-            fn(Button $button) => $this->handleClick($form, 'edit');
+        $form->addSubmit('submit', _('button.submit'))->onClick[] =
+            fn(Button $button) => $this->handleClick($form);
         return $control;
     }
 
-    private function handleClick(Form $form, string $action): void
+    private function handleClick(Form $form): void
     {
         /** @phpstan-var array{code:string} $values */
         $values = $form->getValues('array');
@@ -60,11 +59,11 @@ final class CodeRedirectComponent extends BaseComponent
                 $values['code'],
                 $this->event->getSalt()
             );
-            $application = $this->resolveApplication($model);
-            if ($application->event_id !== $this->event->event_id) {
+            $this->model = $this->resolveApplication($model);
+            if ($this->model->event_id !== $this->event->event_id) {
                 throw new BadRequestException(_('Application belongs to another event.'));
             }
-            $this->getPresenter()->redirect($action, ['id' => $application->getPrimary()]);
+            $form->reset();
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {

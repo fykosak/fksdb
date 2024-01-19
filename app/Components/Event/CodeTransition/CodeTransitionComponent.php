@@ -66,6 +66,7 @@ final class CodeTransitionComponent extends CodeTransition
     }
 
     /**
+     * @param TeamModel2|PersonModel $model
      * @throws BadRequestException
      * @throws NotFoundException
      * @throws \Throwable
@@ -94,6 +95,7 @@ final class CodeTransitionComponent extends CodeTransition
     }
 
     /**
+     * @param TeamModel2|PersonModel $model
      * @return TeamModel2|EventParticipantModel
      * @throws BadRequestException
      * @throws NotFoundException
@@ -102,7 +104,7 @@ final class CodeTransitionComponent extends CodeTransition
     {
         if ($model instanceof PersonModel) {
             return $model->getApplication($this->model->event);
-        } elseif ($model instanceof EventParticipantModel || $model instanceof TeamModel2) {
+        } elseif ($model instanceof TeamModel2) {
             return $model;
         } else {
             throw new BadRequestException(_('Wrong type of code.'));
