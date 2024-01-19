@@ -172,6 +172,10 @@ final class ItemPresenter extends BasePresenter
      */
     protected function createComponentCode(): CodeAttendance
     {
-        return new CodeAttendance($this->getContext(), $this->getEntity(),$this->eventDispatchFactory->getPersonScheduleMachine());
+        return new CodeAttendance(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->eventDispatchFactory->getPersonScheduleMachine()
+        );
     }
 }

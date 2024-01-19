@@ -76,14 +76,6 @@ final class CodeAttendance extends CodeTransition
     }
 
     /**
-     * @throws MachineCodeException
-     */
-    protected function getSalt(): string
-    {
-        return $this->model->event->getSalt();
-    }
-
-    /**
      * @throws BadRequestException
      */
     protected function resolveModel(Model $model): Model
@@ -99,5 +91,13 @@ final class CodeAttendance extends CodeTransition
             throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
         }
         return $model;
+    }
+
+    /**
+     * @throws MachineCodeException
+     */
+    protected function getSalt(): string
+    {
+        return $this->model->event->getSalt();
     }
 }
