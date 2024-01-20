@@ -12,7 +12,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -22,6 +21,7 @@ use Nette\Forms\Form;
  * @phpstan-template TModel of Model
  * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
  * @phpstan-type TMachine Machine<ModelHolder<TState,TModel>>
+ * @phpstan-extends CodeForm<TModel>
  */
 abstract class CodeTransition extends CodeForm
 {
@@ -56,33 +56,25 @@ abstract class CodeTransition extends CodeForm
         );
     }
 
-    protected function innerHandleSuccess(Model $model, Form $form): void
+    /**
+     * @throws \Throwable
+     */
+    final protected function innerHandleSuccess(Model $model, Form $form): void
     {
-        try {
-            $newModel = $this->resolveModel($model);
-            $holder = $this->machine->createHolder($newModel);
+        $holder = $this->machine->createHolder($this->resolveModel($model));
 
-            $transition = Machine::selectTransition(
-                Machine::filterAvailable($this->getTransitions(), $holder)
-            );
-            $this->machine->execute($transition, $holder);
+        $transition = Machine::selectTransition(
+            Machine::filterAvailable($this->getTransitions(), $holder)
+        );
+        $this->machine->execute($transition, $holder);
 
-            $this->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('this');
-        } catch (AbortException $exception) {
-            throw $exception;
-        } catch (\Throwable $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $this->getPresenter()->redirect('this');
-        }
+        $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
+        $this->finalRedirect();
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $transitions = $this->getTransitions();
-        /** @phpstan-var Transition<ModelHolder<TState,TModel>> $transition */
-        $transition = reset($transitions);
-        return $form->addSubmit('submit', $transition->label()->toHtml());
+        return $form->addSubmit('submit', _('button.submit'));
     }
 
     /**
@@ -90,4 +82,6 @@ abstract class CodeTransition extends CodeForm
      * @phpstan-return TModel
      */
     abstract protected function resolveModel(Model $model): Model;
+
+    abstract protected function finalRedirect(): void;
 }

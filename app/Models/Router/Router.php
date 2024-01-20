@@ -146,5 +146,12 @@ class Router
                 'presenter' => 'Team',
             ]
         );
+        $list->addRoute(
+            '<eventId [0-9]+>/attendance[/<id [0-9]+>]/<action=default>',
+            [
+                'module' => 'Event',
+                'presenter' => 'Attendance',
+            ]
+        );
     }
 }

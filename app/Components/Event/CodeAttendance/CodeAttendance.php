@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Event\CodeTransition;
+namespace FKSDB\Components\Event\CodeAttendance;
 
 use FKSDB\Components\Transitions\Code\CodeTransition;
 use FKSDB\Models\MachineCode\MachineCodeException;
@@ -25,6 +25,7 @@ use Nette\Utils\Html;
  * @phpstan-type TMachine (TModel is TeamModel2
  *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
  *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+ * @phpstan-extends CodeTransition<TModel>
  */
 final class CodeAttendance extends CodeTransition
 {
@@ -46,11 +47,6 @@ final class CodeAttendance extends CodeTransition
         $this->model = $model;
     }
 
-    protected function getTemplatePath(): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
-    }
-
     public function available(): bool
     {
         $holder = $this->machine->createHolder($this->model);
@@ -61,6 +57,11 @@ final class CodeAttendance extends CodeTransition
             )
         );
         return $hasTransition && $this->model->createMachineCode();
+    }
+
+    protected function finalRedirect(): void
+    {
+        $this->getPresenter()->redirect('search', ['id' => null]);
     }
 
     protected function configureForm(Form $form): void
@@ -77,6 +78,7 @@ final class CodeAttendance extends CodeTransition
 
     /**
      * @throws BadRequestException
+     * @phpstan-return TModel
      */
     protected function resolveModel(Model $model): Model
     {
@@ -90,7 +92,7 @@ final class CodeAttendance extends CodeTransition
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
             throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
         }
-        return $model;
+        return $application;
     }
 
     /**

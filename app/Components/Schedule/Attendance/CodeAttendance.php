@@ -15,7 +15,10 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
-class CodeAttendance extends CodeTransition
+/**
+ * @phpstan-extends CodeTransition<PersonScheduleModel>
+ */
+final class CodeAttendance extends CodeTransition
 {
     protected ScheduleItemModel $item;
 

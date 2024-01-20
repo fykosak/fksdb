@@ -10,9 +10,11 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @phpstan-import-type TSupportedModel from MachineCode
+ * @phpstan-template TModel of Model
  */
 abstract class CodeForm extends FormComponent
 {
@@ -30,6 +32,7 @@ abstract class CodeForm extends FormComponent
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->getPresenter()->redirect('this');
         }
@@ -46,7 +49,7 @@ abstract class CodeForm extends FormComponent
     }
 
     /**
-     * @phpstan-param  TSupportedModel $model
+     * @phpstan-param TSupportedModel $model
      */
     abstract protected function innerHandleSuccess(Model $model, Form $form): void;
 

@@ -1,4 +1,3 @@
-{layout './detail.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
 {block outerContent}
@@ -10,6 +9,15 @@
                 ],$model,1024}
         </div>
     </div>
-    {include rank from './detail.latte', model:$model}
-    {include members from './detail.latte', model:$model}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+        {php $counter++}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+            </div>
+        </div>
+    {/foreach}
 {/block}
