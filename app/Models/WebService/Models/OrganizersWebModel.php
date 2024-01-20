@@ -108,6 +108,6 @@ class OrganizersWebModel extends WebModel
     protected function isAuthorized(array $params): bool
     {
         $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
-        return $this->contestAuthorizator->isAllowed($contest, 'api', $contest);
+        return $this->contestAuthorizator->isAllowed('api', null, $contest);
     }
 }
