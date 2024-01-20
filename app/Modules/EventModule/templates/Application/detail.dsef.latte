@@ -1,6 +1,7 @@
 {layout './detail.latte'}
 
 {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $isOrganizer}
 
 {block titleBody}
@@ -17,7 +18,12 @@
 
 {block outerContent}
     {if $isOrganizer}
-        {include rests from '../AbstractApplication/blocks.latte'}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rests'}</h2>
+                {control rests}
+            </div>
+        </div>
     {/if}
     <div class="panel color-auto">
         <div class="container">
@@ -25,5 +31,12 @@
             {control columnTable ['event_participant.lunch_count'],$model,1024}
         </div>
     </div>
-    {include schedule from './detail.latte'}
+    {if $event->hasSchedule()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid}
+            </div>
+        </div>
+    {/if}
 {/block}

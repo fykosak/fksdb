@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
-use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
@@ -39,7 +38,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected EventParticipantService $eventParticipantService;
 
-    public function injectServiceService(EventParticipantService $service): void
+    public function injectService(EventParticipantService $service): void
     {
         $this->eventParticipantService = $service;
     }
@@ -284,14 +283,6 @@ final class ApplicationPresenter extends BasePresenter
                 );
         }
         throw new InvalidStateException(_('Event type is not supported'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCode(): CodeSearch
-    {
-        return new CodeSearch($this->getContext(), $this->getEvent());
     }
 
     /**

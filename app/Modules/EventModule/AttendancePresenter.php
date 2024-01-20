@@ -130,7 +130,7 @@ class AttendancePresenter extends BasePresenter
             $this->getEvent()->isTeamEvent()
                 ? TeamState::tryFrom(TeamState::Arrived)
                 : EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine()
+            $this->getMachine() //@phpstan-ignore-line
         );
     }
 
@@ -182,7 +182,7 @@ class AttendancePresenter extends BasePresenter
      */
     private function getMachine(): Machine
     {
-        return $this->getEvent()->isTeamEvent()
+        return $this->getEvent()->isTeamEvent() //@phpstan-ignore-line
             ? $this->eventDispatchFactory->getTeamMachine($this->getEvent())
             : $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
     }
@@ -207,14 +207,19 @@ class AttendancePresenter extends BasePresenter
      */
     protected function createComponentSeating(): Single
     {
-        return new Single($this->getContext(), $this->getModel());
+        return new Single($this->getContext(), $this->getModel());//@phpstan-ignore-line
     }
 
     /**
-     * @phpstan-return TestsList<TeamModel2>
+     * @phpstan-return TestsList<TeamModel2>|TestsList<Model>
+     * @throws EventNotFoundException
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+        if ($this->getEvent()->isTeamEvent()) {
+            return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+        } else {
+            return new TestsList($this->getContext(), []);
+        }
     }
 }

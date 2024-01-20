@@ -12,7 +12,12 @@
 {/define}
 
 {block outerContent}
-    {include rests from '../AbstractApplication/blocks.latte'}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests'}</h2>
+            {control rests}
+        </div>
+    </div>
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Info'}</h2>
