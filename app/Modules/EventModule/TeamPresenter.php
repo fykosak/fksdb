@@ -21,9 +21,9 @@ use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Components\TeamSeating\Single;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
@@ -91,7 +91,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -117,7 +117,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -147,7 +147,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -160,7 +160,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \Throwable
      */
     public function titleOrgDetail(): PageTitle
@@ -192,7 +192,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
@@ -207,7 +207,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
@@ -277,7 +277,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentEditForm(): TeamForm
@@ -322,7 +322,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @phpstan-return TransitionButtonsComponent<TeamModel2>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -340,7 +340,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @phpstan-return CodeTransitionComponent<TeamModel2>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -369,7 +369,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentRests(): TeamRestsComponent
@@ -380,7 +380,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      * @throws \ReflectionException
      */
@@ -393,7 +393,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
@@ -413,7 +413,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentNoteForm(): NoteForm

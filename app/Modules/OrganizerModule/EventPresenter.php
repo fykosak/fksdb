@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
@@ -43,10 +43,10 @@ final class EventPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -82,10 +82,10 @@ final class EventPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): EventFormComponent
     {

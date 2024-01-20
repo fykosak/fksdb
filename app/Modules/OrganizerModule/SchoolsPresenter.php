@@ -8,8 +8,8 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -40,8 +40,8 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -49,8 +49,8 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -62,8 +62,8 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -122,8 +122,8 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): SchoolFormComponent
     {
@@ -136,8 +136,8 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid
     {
