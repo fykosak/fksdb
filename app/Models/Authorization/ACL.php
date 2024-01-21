@@ -7,6 +7,9 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\Authorization;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
 use FKSDB\Models\ORM\Models;
+use FKSDB\Models\WebService\WebServiceModel;
+use FKSDB\Modules\CoreModule\AESOPPresenter;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;
 
 final class ACL
@@ -241,9 +244,9 @@ final class ACL
 
         $permission->addResource('export.adhoc');
         $permission->addResource('export');
-        $permission->addResource('api');
-        $permission->addResource('aesop');
-        $permission->addResource('soap');
+        $permission->addResource(RestApiPresenter::RESOURCE_ID);
+        $permission->addResource(AESOPPresenter::AESOP_RESOURCE_ID);
+        $permission->addResource(WebServiceModel::SOAP_RESOURCE_ID);
         $permission->addResource(Models\StoredQuery\QueryModel::RESOURCE_ID);
 
         $permission->allow(
@@ -258,14 +261,15 @@ final class ACL
             'execute',
             new Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe'])
         );
-        $permission->allow([ContestRole::Wiki, ContestRole::Web, ContestRole::Organizer], 'soap', 'default');
-        $permission->allow(ContestRole::InboxManager, 'export', 'execute');
+        $permission->allow(
+            [ContestRole::Wiki, ContestRole::Web, ContestRole::Organizer],
+            WebServiceModel::SOAP_RESOURCE_ID
+        );
+        $permission->allow(ContestRole::Aesop, AESOPPresenter::AESOP_RESOURCE_ID);
+        $permission->allow([ContestRole::InboxManager,ContestRole::EventManager], 'export', 'execute');
         $permission->allow(ContestRole::DataManager, Models\StoredQuery\QueryModel::RESOURCE_ID);
-        $permission->allow(ContestRole::DataManager, 'export');
-        $permission->allow(ContestRole::DataManager, 'export.adhoc');
-        $permission->allow(ContestRole::EventManager, 'export', 'execute');
-        $permission->allow(ContestRole::Organizer, 'api');
-        $permission->allow(ContestRole::Web, 'api');
+        $permission->allow(ContestRole::DataManager, ['export','export.adhoc']);
+        $permission->allow([ContestRole::Organizer, ContestRole::Web], RestApiPresenter::RESOURCE_ID);
     }
 
     private static function createPayment(

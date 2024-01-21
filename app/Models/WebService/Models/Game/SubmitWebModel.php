@@ -42,7 +42,7 @@ class SubmitWebModel extends WebModel
      * @phpstan-return Message[]
      * @throws GoneException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         throw new GoneException();
         /* try {
@@ -96,7 +96,7 @@ class SubmitWebModel extends WebModel
         }*/
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         return false;
     }
