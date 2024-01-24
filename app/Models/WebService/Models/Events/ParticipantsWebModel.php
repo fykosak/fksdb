@@ -7,6 +7,7 @@ namespace FKSDB\Models\WebService\Models\Events;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
@@ -35,9 +36,11 @@ class ParticipantsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId'] ?? $params['event_id']); // @phpstan-ignore-line
+        $event = $this->eventService->findByPrimary(
+            $this->params['eventId'] ?? $this->params['event_id']
+        );
         if (!$event) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
@@ -58,12 +61,12 @@ class ParticipantsWebModel extends WebModel
         return $data;
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
+        $event = $this->eventService->findByPrimary($this->params['eventId'] ?? $this->params['event_id']);
         if (!$event) {
             return false;
         }
-        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
     }
 }

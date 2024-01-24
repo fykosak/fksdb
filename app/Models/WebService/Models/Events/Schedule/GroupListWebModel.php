@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events\Schedule;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\WebService\Models\Events\EventWebModel;
 use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -40,17 +41,10 @@ use Nette\Schema\Expect;
  *      end:string,
  *      items: SerializedScheduleItemModel[],
  * }
- * @phpstan-extends WebModel<array{eventId:int,types:string[]},SerializedScheduleGroupModel[]>
+ * @phpstan-extends EventWebModel<array{eventId:int,types:string[]},SerializedScheduleGroupModel[]>
  */
-class GroupListWebModel extends WebModel
+class GroupListWebModel extends EventWebModel
 {
-    private EventService $eventService;
-
-    public function inject(EventService $eventService): void
-    {
-        $this->eventService = $eventService;
-    }
-
     protected function getExpectedParams(): Structure
     {
         return Expect::structure([
@@ -67,16 +61,12 @@ class GroupListWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
-        }
         $data = [];
-        $query = $event->getScheduleGroups();
-        if (count($params['types'])) {
-            $query->where('schedule_group_type', $params['types']);
+        $query = $this->getEvent()->getScheduleGroups();
+        if (count($this->params['types'])) {
+            $query->where('schedule_group_type', $this->params['types']);
         }
         /** @var ScheduleGroupModel $group */
         foreach ($query as $group) {
@@ -116,12 +106,11 @@ class GroupListWebModel extends WebModel
         return $data;
     }
 
-    protected function isAuthorized(array $params): bool
+    /**
+     * @throws NotFoundException
+     */
+    protected function isAuthorized(): bool
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            return false;
-        }
-        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
     }
 }

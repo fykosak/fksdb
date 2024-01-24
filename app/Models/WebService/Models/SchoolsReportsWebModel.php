@@ -21,7 +21,7 @@ class SchoolsReportsWebModel extends WebModel
         return Expect::structure([]);
     }
 
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         set_time_limit(-1);
 
@@ -36,7 +36,7 @@ class SchoolsReportsWebModel extends WebModel
         );
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         return true;
     }

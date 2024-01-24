@@ -31,9 +31,9 @@ class ResultsWebModel extends WebModel
     /**
      * @throws NotSetGameParametersException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
+        $event = $this->eventService->findByPrimary($this->params['eventId']);
         $gameSetup = $event->getGameSetup();
 
         $result = [
@@ -70,7 +70,7 @@ class ResultsWebModel extends WebModel
         ]);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         return false;
     }

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Contests;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -19,7 +21,7 @@ use Nette\Schema\Expect;
  *      lastYear:int,
  * }>>
  */
-class ContestsModel extends WebModel
+class ContestsWebModel extends WebModel
 {
     private ContestService $contestService;
 
@@ -28,12 +30,12 @@ class ContestsModel extends WebModel
         $this->contestService = $contestService;
     }
 
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         $data = [];
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
-            if ($this->contestAuthorizator->isAllowed($contest, 'api', $contest)) {
+            if ($this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $contest)) {
                 $data[] = $contest->__toArray();
             }
         }
@@ -45,8 +47,8 @@ class ContestsModel extends WebModel
         return Expect::structure([]);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
-        return true;
+        return $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, self::class);
     }
 }
