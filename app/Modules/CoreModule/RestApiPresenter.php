@@ -60,7 +60,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
                 throw new \InvalidArgumentException();
             }
             /** @phpstan-var Models\WebModel<array<string,mixed>,array<string,mixed>> $model */
-            $model = $reflection->newInstance($this->getContext(),array_merge($params, $this->getParameters()));
+            $model = $reflection->newInstance($this->getContext(), array_merge($params, $this->getParameters()));
 
             $response = $model->getApiResponse();
             $this->sendResponse($response);
