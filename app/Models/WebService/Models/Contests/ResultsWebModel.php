@@ -2,38 +2,31 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Contests;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{
+ * @phpstan-extends ContestYearWebModel<array{
  *     contestId:int,
- *     contest_id?:int,
  *     year:int,
  * },array<string,mixed>>
  */
-class SeriesResultsWebModel extends WebModel
+class ResultsWebModel extends ContestYearWebModel
 {
-    private ContestYearService $contestYearService;
-
-    public function inject(ContestYearService $contestYearService): void
-    {
-        $this->contestYearService = $contestYearService;
-    }
-
     protected function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int'),
-            'contest_id' => Expect::scalar()->castTo('int'),
+            'contestId' => Expect::scalar()->castTo('int')->required(),
             'year' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
@@ -41,16 +34,12 @@ class SeriesResultsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $contestYear = $this->contestYearService->findByContestAndYear(
-            $params['contest_id'] ?? $params['contestId'],
-            $params['year']
-        );
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->getContestYear());
         $tasksData = [];
         /** @var TaskModel $task */
-        foreach ($contestYear->getTasks() as $task) {
+        foreach ($this->getContestYear()->getTasks() as $task) {
             foreach ($evaluationStrategy->getCategories() as $category) {
                 $tasksData[$category->label] = $tasksData[$category->label] ?? [];
                 $tasksData[$category->label][$task->series] = $tasksData[$category->label][$task->series] ?? [];
@@ -66,7 +55,7 @@ class SeriesResultsWebModel extends WebModel
         }
         $results = [];
         /** @var ContestantModel $contestant */
-        foreach ($contestYear->getContestants() as $contestant) {
+        foreach ($this->getContestYear()->getContestants() as $contestant) {
             $submitsData = [];
             $sum = 0;
             /** @var SubmitModel $submit */
@@ -112,12 +101,15 @@ class SeriesResultsWebModel extends WebModel
         ];
     }
 
-    protected function isAuthorized(array $params): bool
+    /**
+     * @throws NotFoundException
+     */
+    protected function isAuthorized(): bool
     {
-        $contestYear = $this->contestYearService->findByContestAndYear(
-            $params['contest_id'] ?? $params['contestId'],
-            $params['year']
+        return $this->contestYearAuthorizator->isAllowed(
+            RestApiPresenter::RESOURCE_ID,
+            self::class,
+            $this->getContestYear()
         );
-        return $this->contestAuthorizator->isAllowed($contestYear->contest, 'api', $contestYear->contest);
     }
 }

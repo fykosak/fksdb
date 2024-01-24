@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\ContestRole;
-use FKSDB\Models\Authorization\ContestYearRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use Nette\Security\Permission;

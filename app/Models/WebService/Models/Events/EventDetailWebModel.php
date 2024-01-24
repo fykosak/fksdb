@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -11,7 +11,9 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Models\WebService\XMLHelper;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
@@ -25,7 +27,7 @@ use Nette\Schema\Expect;
  *     personSchedule?:mixed,
  * }>
  */
-class EventWebModel extends WebModel
+class EventDetailWebModel extends WebModel
 {
     private EventService $eventService;
     private PersonScheduleService $personScheduleService;
@@ -152,9 +154,9 @@ class EventWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['event_id'] ?? $params['eventId']);
+        $event = $this->eventService->findByPrimary($this->params['event_id'] ?? $this->params['eventId']);
         if (is_null($event)) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
@@ -172,12 +174,12 @@ class EventWebModel extends WebModel
         ]);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
+        $event = $this->eventService->findByPrimary($this->params['eventId']);
         if (!$event) {
             return false;
         }
-        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
     }
 }

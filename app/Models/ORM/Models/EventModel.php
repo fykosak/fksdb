@@ -171,16 +171,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<PaymentModel>
-     */
-    public function getPayments(): TypedGroupedSelection
-    {
-        /** @phpstan-var TypedGroupedSelection<PaymentModel> $selection */
-        $selection = $this->related(DbNames::TAB_PAYMENT, 'event_id');
-        return $selection;
-    }
-
-    /**
      * @phpstan-return TypedGroupedSelection<\FKSDB\Models\ORM\Models\Fyziklani\TaskModel>
      */
     public function getTasks(): TypedGroupedSelection

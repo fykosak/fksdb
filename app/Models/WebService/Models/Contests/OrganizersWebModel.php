@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Contests;
 
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Models\WebService\XMLHelper;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -69,13 +71,13 @@ class OrganizersWebModel extends WebModel
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
+        $contest = $this->contestService->findByPrimary($this->params['contest_id'] ?? $this->params['contestId']);
         $organizers = $contest->getOrganizers();
-        if (isset($params['year'])) {
-            $organizers->where('since<=?', $params['year'])
-                ->where('until IS NULL OR until >=?', $params['year']);
+        if (isset($this->params['year'])) {
+            $organizers->where('since<=?', $this->params['year'])
+                ->where('until IS NULL OR until >=?', $this->params['year']);
         }
         $items = [];
         /** @var OrganizerModel $organizer */
@@ -105,9 +107,9 @@ class OrganizersWebModel extends WebModel
         ]);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
-        $contest = $this->contestService->findByPrimary($params['contest_id'] ?? $params['contestId']);
-        return $this->contestAuthorizator->isAllowed('api', null, $contest);
+        $contest = $this->contestService->findByPrimary($this->params['contest_id'] ?? $this->params['contestId']);
+        return $this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $contest);
     }
 }

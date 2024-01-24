@@ -4,29 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
  * @phpstan-import-type SerializedTeamModel from TeamModel2
- * @phpstan-extends WebModel<array{eventId:int},(SerializedTeamModel)[]>
+ * @phpstan-extends EventWebModel<array{eventId:int},(SerializedTeamModel)[]>
  */
-class TeamsWebModel extends WebModel
+class TeamsWebModel extends EventWebModel
 {
-    private EventService $eventService;
-
-    public function inject(EventService $eventService): void
-    {
-        $this->eventService = $eventService;
-    }
-
     protected function getExpectedParams(): Structure
     {
         return Expect::structure([
@@ -37,15 +29,11 @@ class TeamsWebModel extends WebModel
     /**
      * @throws BadRequestException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
-        }
         $data = [];
         /** @var TeamModel2 $team */
-        foreach ($event->getTeams() as $team) {
+        foreach ($this->getEvent()->getTeams() as $team) {
             $teamData = [
                 'teamId' => $team->fyziklani_team_id,
                 'name' => $team->name,
@@ -90,12 +78,11 @@ class TeamsWebModel extends WebModel
         return $data;
     }
 
-    protected function isAuthorized(array $params): bool
+    /**
+     * @throws NotFoundException
+     */
+    protected function isAuthorized(): bool
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            return false;
-        }
-        return $this->eventAuthorizator->isAllowed($event, 'api', $event);
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
     }
 }

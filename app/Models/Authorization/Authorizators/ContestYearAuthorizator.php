@@ -13,8 +13,6 @@ use Nette\SmartObject;
 
 class ContestYearAuthorizator
 {
-    use SmartObject;
-
     private User $user;
     private Permission $permission;
     private ContestAuthorizator $contestAuthorizator;

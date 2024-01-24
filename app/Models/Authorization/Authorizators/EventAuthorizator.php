@@ -9,12 +9,9 @@ use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Permission;
 use Nette\Security\Resource;
 use Nette\Security\User;
-use Nette\SmartObject;
 
 final class EventAuthorizator
 {
-    use SmartObject;
-
     private User $user;
     private Permission $permission;
     private ContestYearAuthorizator $contestYearAuthorizator;

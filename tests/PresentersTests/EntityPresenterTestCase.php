@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
