@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -42,13 +44,13 @@ class EventListWebModel extends WebModel
         return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
     }
 
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $query = $this->eventService->getTable()->where('event_type_id', $params['eventTypes']);
+        $query = $this->eventService->getTable()->where('event_type_id', $this->params['eventTypes']);
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
-            if ($this->contestAuthorizator->isAllowed('api', null, $event->event_type->contest)) {
+            if ($this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event)) {
                 $events[$event->event_id] = [
                     'eventId' => $event->event_id,
                     'year' => $event->year,
@@ -78,8 +80,8 @@ class EventListWebModel extends WebModel
         ]);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
-        return true;
+        return $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, self::class);
     }
 }

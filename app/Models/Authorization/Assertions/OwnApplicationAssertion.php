@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
-use FKSDB\Models\Authorization\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;

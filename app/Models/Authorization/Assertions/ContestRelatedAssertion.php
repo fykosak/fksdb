@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\ContestRole;
-use FKSDB\Models\Authorization\ContestYearRole;
-use FKSDB\Models\Authorization\EventRole\EventRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
+use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\InvalidStateException;
 use Nette\Security\Permission;
@@ -55,7 +58,24 @@ class ContestRelatedAssertion implements Assertion
         if ($person->getOrganizer($contest)) {
             return true;
         }
-        // TODO events
+        /** @var EventParticipantModel $participant */
+        foreach ($person->getEventParticipants() as $participant) {
+            if ($participant->event->event_type->contest_id === $contest->contest_id) {
+                return true;
+            }
+        }
+        /** @var TeamMemberModel $member */
+        foreach ($person->getTeamTeachers() as $member) {
+            if ($member->fyziklani_team->event->event_type->contest_id === $contest->contest_id) {
+                return true;
+            }
+        }
+        /** @var TeamTeacherModel $teacher */
+        foreach ($person->getTeamTeachers() as $teacher) {
+            if ($teacher->fyziklani_team->event->event_type->contest_id === $contest->contest_id) {
+                return true;
+            }
+        }
         return false;
     }
 }

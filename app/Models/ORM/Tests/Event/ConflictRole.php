@@ -6,10 +6,10 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
-use FKSDB\Models\Authorization\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\EventRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization;
+namespace FKSDB\Models\Authorization\Roles;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Security\Role;

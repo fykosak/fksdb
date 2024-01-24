@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
 // phpcs:disable
-use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;

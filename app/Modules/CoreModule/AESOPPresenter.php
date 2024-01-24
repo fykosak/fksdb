@@ -21,12 +21,13 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
+    public const AESOP_RESOURCE_ID = 'aesop';
     /**
      * @throws NoContestAvailable
      */
     public function authorizedContestant(): bool
     {
-        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(self::AESOP_RESOURCE_ID, null, $this->getSelectedContest());
     }
 
     /**
@@ -34,7 +35,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     public function authorizedEvent(): bool
     {
-        return $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(self::AESOP_RESOURCE_ID, null, $this->getSelectedContest());
     }
 
     /**

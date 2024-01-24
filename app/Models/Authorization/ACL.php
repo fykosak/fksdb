@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization;
+use FKSDB\Models\Authorization\Roles\BaseRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
 use FKSDB\Models\ORM\Models;
+use FKSDB\Models\WebService\WebServiceModel;
+use FKSDB\Modules\CoreModule\AESOPPresenter;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;
 
 final class ACL
@@ -20,8 +25,8 @@ final class ACL
 
         $service->addResource(Models\EventModel::RESOURCE_ID);
 
-        $service->addRole(Authorization\EventRole\EventOrganizerRole::ROLE_ID);
-        $service->addRole(Authorization\EventRole\ContestOrganizerRole::ROLE_ID);
+        $service->addRole(Authorization\Roles\Events\EventOrganizerRole::ROLE_ID);
+        $service->addRole(Authorization\Roles\Events\ContestOrganizerRole::ROLE_ID);
 
         $service->addRole(BaseRole::Guest);
         $service->addRole(BaseRole::Registered, BaseRole::Guest);
@@ -93,17 +98,17 @@ final class ACL
         $service->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->addResource(Models\Schedule\PersonScheduleModel::RESOURCE_ID);
         $service->allow(
-            Authorization\EventRole\EventOrganizerRole::ROLE_ID,
+            Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\ScheduleGroupModel::RESOURCE_ID,
             ['list', 'detail']
         );// TODO
         $service->allow(
-            Authorization\EventRole\EventOrganizerRole::ROLE_ID,
+            Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\ScheduleItemModel::RESOURCE_ID,
             'detail'
         );// TODO
         $service->allow(
-            Authorization\EventRole\EventOrganizerRole::ROLE_ID,
+            Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\PersonScheduleModel::RESOURCE_ID,
             ['list', 'detail']
         );// TODO
@@ -164,7 +169,7 @@ final class ACL
             'edit',
             $selfAssertion
         );
-        $permission->allow(ContestRole::Boss, Models\OrganizerModel::RESOURCE_ID);
+        $permission->allow([ContestRole::DataManager, ContestRole::Boss], Models\OrganizerModel::RESOURCE_ID);
     }
 
     private static function createSchool(Permission $permission): void
@@ -190,9 +195,9 @@ final class ACL
 
     private static function createApplications(Permission $permission): void
     {
-        $permission->addRole(Authorization\EventRole\Fyziklani\TeamTeacherRole::ROLE_ID);
-        $permission->addRole(Authorization\EventRole\Fyziklani\TeamMemberRole::ROLE_ID);
-        $permission->addRole(Authorization\EventRole\ParticipantRole::ROLE_ID);
+        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID);
+        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID);
+        $permission->addRole(Authorization\Roles\Events\ParticipantRole::ROLE_ID);
 
         $permission->addResource(Models\EventParticipantModel::RESOURCE_ID);
         $permission->addResource(Models\Fyziklani\TeamModel2::RESOURCE_ID);
@@ -204,9 +209,9 @@ final class ACL
         );
         $permission->allow(
             [
-                Authorization\EventRole\Fyziklani\TeamTeacherRole::ROLE_ID,
-                Authorization\EventRole\Fyziklani\TeamMemberRole::ROLE_ID,
-                Authorization\EventRole\ParticipantRole::ROLE_ID,
+                Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID,
+                Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID,
+                Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             ],
             [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
             ['detail', 'edit'],
@@ -242,9 +247,9 @@ final class ACL
 
         $permission->addResource('export.adhoc');
         $permission->addResource('export');
-        $permission->addResource('api');
-        $permission->addResource('aesop');
-        $permission->addResource('soap');
+        $permission->addResource(RestApiPresenter::RESOURCE_ID);
+        $permission->addResource(AESOPPresenter::AESOP_RESOURCE_ID);
+        $permission->addResource(WebServiceModel::SOAP_RESOURCE_ID);
         $permission->addResource(Models\StoredQuery\QueryModel::RESOURCE_ID);
 
         $permission->allow(
@@ -259,14 +264,15 @@ final class ACL
             'execute',
             new Authorization\Assertions\StoredQueryTagAssertion(['wiki-safe'])
         );
-        $permission->allow([ContestRole::Wiki, ContestRole::Web, ContestRole::Organizer], 'soap', 'default');
-        $permission->allow(ContestRole::InboxManager, 'export', 'execute');
+        $permission->allow(
+            [ContestRole::Wiki, ContestRole::Web, ContestRole::Organizer],
+            WebServiceModel::SOAP_RESOURCE_ID
+        );
+        $permission->allow(ContestRole::Aesop, AESOPPresenter::AESOP_RESOURCE_ID);
+        $permission->allow([ContestRole::InboxManager,ContestRole::EventManager], 'export', 'execute');
         $permission->allow(ContestRole::DataManager, Models\StoredQuery\QueryModel::RESOURCE_ID);
-        $permission->allow(ContestRole::DataManager, 'export');
-        $permission->allow(ContestRole::DataManager, 'export.adhoc');
-        $permission->allow(ContestRole::EventManager, 'export', 'execute');
-        $permission->allow(ContestRole::Organizer, 'api');
-        $permission->allow(ContestRole::Web, 'api');
+        $permission->allow(ContestRole::DataManager, ['export','export.adhoc']);
+        $permission->allow([ContestRole::Organizer, ContestRole::Web], RestApiPresenter::RESOURCE_ID);
     }
 
     private static function createPayment(
@@ -284,8 +290,8 @@ final class ACL
         );
         $permission->allow(
             [
-                Authorization\EventRole\Fyziklani\TeamMemberRole::ROLE_ID,
-                Authorization\EventRole\Fyziklani\TeamTeacherRole::ROLE_ID,
+                Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID,
+                Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID,
             ],
             Models\PaymentModel::RESOURCE_ID,
             'create'
@@ -295,21 +301,21 @@ final class ACL
 
     private static function createGame(Permission $permission): void
     {
-        $permission->addRole(Authorization\EventRole\EventRole::GameInserter);
+        $permission->addRole(Authorization\Roles\Events\EventRole::GameInserter);
 
         $permission->addResource('game');
         $permission->addResource(Models\Fyziklani\TaskModel::RESOURCE_ID);
         $permission->addResource(Models\Fyziklani\SubmitModel::RESOURCE_ID);
 
         $permission->allow(
-            Authorization\EventRole\EventRole::GameInserter,
+            Authorization\Roles\Events\EventRole::GameInserter,
             [
                 Models\Fyziklani\SubmitModel::RESOURCE_ID,
                 Models\Fyziklani\TaskModel::RESOURCE_ID,
             ]
         );
         $permission->allow(
-            Authorization\EventRole\EventRole::GameInserter,
+            Authorization\Roles\Events\EventRole::GameInserter,
             'game',
             ['diplomas.results', 'close', 'dashboard']
         );
@@ -326,8 +332,13 @@ final class ACL
         $permission->addResource(Models\Warehouse\ProductModel::RESOURCE_ID);
         $permission->addResource(Models\Warehouse\ItemModel::RESOURCE_ID);
 
-        $permission->allow(ContestRole::Organizer, Models\Warehouse\ProducerModel::RESOURCE_ID);
-        $permission->allow(ContestRole::Organizer, Models\Warehouse\ProductModel::RESOURCE_ID);
-        $permission->allow(ContestRole::Organizer, Models\Warehouse\ItemModel::RESOURCE_ID);
+        $permission->allow(
+            ContestRole::Organizer,
+            [
+                Models\Warehouse\ProducerModel::RESOURCE_ID,
+                Models\Warehouse\ProductModel::RESOURCE_ID,
+                Models\Warehouse\ItemModel::RESOURCE_ID,
+            ]
+        );
     }
 }

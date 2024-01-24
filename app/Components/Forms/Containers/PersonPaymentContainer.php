@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PaymentModel;
