@@ -168,7 +168,7 @@ final class ACL
             'edit',
             $selfAssertion
         );
-        $permission->allow(ContestRole::Boss, Models\OrganizerModel::RESOURCE_ID);
+        $permission->allow([ContestRole::DataManager, ContestRole::Boss], Models\OrganizerModel::RESOURCE_ID);
     }
 
     private static function createSchool(Permission $permission): void
