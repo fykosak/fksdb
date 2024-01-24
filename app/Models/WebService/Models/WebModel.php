@@ -43,14 +43,16 @@ abstract class WebModel
      * @throws NotImplementedException
      * @phpstan-param mixed[] $arguments
      */
-    final public function __construct(Container $container, array $arguments)
+    final public function __construct(Container $container, ?array $arguments)
     {
         $this->container = $container;
         $container->callInjects($this);
-        $processor = new Processor();
-        $schema = $this->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        $this->params = $processor->process($schema, $arguments);
+        if (isset($arguments)) {
+            $processor = new Processor();
+            $schema = $this->getExpectedParams();
+            $schema->otherItems()->castTo('array');
+            $this->params = $processor->process($schema, $arguments);
+        }
     }
 
     public function injectAuthorizators(

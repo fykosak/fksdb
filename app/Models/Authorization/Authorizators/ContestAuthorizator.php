@@ -14,8 +14,6 @@ use Nette\SmartObject;
 
 final class ContestAuthorizator
 {
-    use SmartObject;
-
     private User $user;
     private Permission $permission;
     private BaseAuthorizator $baseAuthorizator;

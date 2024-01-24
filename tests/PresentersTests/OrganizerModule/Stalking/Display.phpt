@@ -8,7 +8,7 @@ namespace FKSDB\Tests\PresentersTests\OrganizerModule\Stalking;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Models\Authorization\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;

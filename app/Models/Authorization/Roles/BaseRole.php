@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization;
+namespace FKSDB\Models\Authorization\Roles;
 
 use Nette\Security\Role;
 
