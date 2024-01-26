@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  fksdb:
+    image: ghcr.io/fykosak/fksdb:web
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: on-failure:3
+    container_name: fksdb
+    environment:
+      TZ: 'Europe/Prague'
+    volumes:
+      - ./config/apache.conf:/etc/apache2/sites-available/000-default.conf # site config
+      - ./config/php.ini:/usr/local/etc/php/php-local.ini # php config
+      - ./config/config.neon:/var/www/fksdb/app/config/config.local.neon # nette config
+      - ./log:/var/www/fksdb/log
+      - ./upload:/var/www/fksdb/upload
+    user: 1000:1000 # expects the main user as uid:pid
+
+  mysql:
+    image: mysql:latest
+    container_name: fksdb_mysql
+    restart: on-failure:3
+    environment:
+      TZ: 'Europe/Prague'
+      MYSQL_DATABASE: 'fksdb'
+      MYSQL_USER: 'fksdb'
+      MYSQL_PASSWORD: '' # CREATE STRONG CUSTOM PASSWORD
+      MYSQL_ROOT_PASSWORD: '' # CREATE STRONG CUSTOM PASSWORD
+    volumes:
+      - ./mysql_data:/var/lib/mysql # path to dir with database data
+      - ./config/mysql.cnf:/etc/mysql/my.cnf # mysql config
