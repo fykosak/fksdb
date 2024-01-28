@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\EventRole\Fyziklani;
+namespace FKSDB\Models\Authorization\Roles\Events\Fyziklani;
 
-use FKSDB\Models\Authorization\EventRole\EventRole;
+use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use Nette\Utils\Html;

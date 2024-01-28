@@ -100,7 +100,7 @@ class ExportWebModel extends WebModel
         );
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         return false;
     }
@@ -113,7 +113,7 @@ class ExportWebModel extends WebModel
     /**
      * @throws NotImplementedException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         throw new NotImplementedException();
     }

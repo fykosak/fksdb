@@ -46,7 +46,9 @@
             </div>
         {/if}
         {if $model instanceof FKSDB\Models\ORM\Models\EventParticipantModel && $isOrganizer}
-            {control printer:button 'person.detail', $model}
+            <a class="btn btn-secondary btn-sm"
+               href="{plink :Organizer:Person:detail id=>$model->person_id,contestId=>$model->event->event_type->contest_id}"
+            >{_'button.person.detail'}</a>
         {/if}
     </div>
 {/define}

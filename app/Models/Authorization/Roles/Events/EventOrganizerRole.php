@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\EventRole;
+namespace FKSDB\Models\Authorization\Roles\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;

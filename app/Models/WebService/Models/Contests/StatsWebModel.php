@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService\Models\Contests;
 
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -32,11 +34,11 @@ class StatsWebModel extends WebModel
         ]);
     }
 
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         $contestYear = $this->contestYearService->findByContestAndYear(
-            $params['contest_id'] ?? $params['contestId'],
-            $params['year']
+            $this->params['contest_id'] ?? $this->params['contestId'],
+            $this->params['year']
         );
         $contestYear->getTasks();
         $result = [];
@@ -47,12 +49,12 @@ class StatsWebModel extends WebModel
         return $result;
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         $contestYear = $this->contestYearService->findByContestAndYear(
-            $params['contest_id'] ?? $params['contestId'],
-            $params['year']
+            $this->params['contest_id'] ?? $this->params['contestId'],
+            $this->params['year']
         );
-        return $this->contestAuthorizator->isAllowed($contestYear->contest, 'api', $contestYear->contest);
+        return $this->contestYearAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $contestYear);
     }
 }
