@@ -29,6 +29,8 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-import-type TSupportedModel from MachineCode
@@ -63,12 +65,23 @@ class AttendancePresenter extends BasePresenter
     public function titleDefault(): PageTitle
     {
         $model = $this->getModel();
-        return new PageTitle(
-            null,
-            '(' . $model->getPrimary() . ') ' .
-            ($model instanceof TeamModel2 ? $model->name : $model->person->getFullName()),
-            'fas fa'
-        );
+        if ($model instanceof TeamModel2) {
+            return new PageTitle(
+                null,
+                Html::el('span')
+                    ->addText(sprintf('(%s) %s', $model->fyziklani_team_id, $model->name))
+                    ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($model->state->badge())),
+                'fas fa'
+            );
+        } else {
+            return new PageTitle(
+                null,
+                Html::el('span')
+                    ->addText(sprintf('(%s) %s', $model->event_participant_id, $model->person->getFullName()))
+                    ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($model->status->badge())),
+                'fas fa'
+            );
+        }
     }
 
     /**
@@ -76,13 +89,19 @@ class AttendancePresenter extends BasePresenter
      */
     public function authorizedSearch(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
-            $this->getEvent()->isTeamEvent()
-                ? TeamModel2::RESOURCE_ID
-                : EventParticipantModel::RESOURCE_ID,
-            'organizer',
-            $this->getEvent()
-        );
+        if ($this->getEvent()->isTeamEvent()) {
+            return $this->eventAuthorizator->isAllowed(
+                TeamModel2::RESOURCE_ID,
+                'organizer',
+                $this->getEvent()
+            );
+        } else {
+            return $this->eventAuthorizator->isAllowed(
+                EventParticipantModel::RESOURCE_ID,
+                'organizer',
+                $this->getEvent()
+            );
+        }
     }
 
     public function titleSearch(): PageTitle
@@ -107,6 +126,9 @@ class AttendancePresenter extends BasePresenter
                 } else {
                     throw new BadRequestException(_('Wrong type of code.'));
                 }
+                if (!$application) {
+                    throw new BadRequestException(_('Application not found.'));
+                }
                 if ($application->event_id !== $this->getEvent()->event_id) {
                     throw new BadRequestException(_('Application belongs to another event.'));
                 }
@@ -117,21 +139,29 @@ class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeAttendance<TeamModel2|EventParticipantModel>
+     * @phpstan-return CodeAttendance<TeamModel2>|CodeAttendance<EventParticipantModel>
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      */
     protected function createComponentAttendance(): CodeAttendance
     {
-        return new CodeAttendance(
-            $this->getContext(),
-            $this->getModel(),
-            $this->getEvent()->isTeamEvent()
-                ? TeamState::tryFrom(TeamState::Arrived)
-                : EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine() //@phpstan-ignore-line
-        );
+        $model = $this->getModel();
+        if ($model instanceof TeamModel2) {
+            return new CodeAttendance(
+                $this->getContext(),
+                $model,
+                TeamState::tryFrom(TeamState::Arrived),
+                $this->getMachine() //@phpstan-ignore-line
+            );
+        } else {
+            return new CodeAttendance(
+                $this->getContext(),
+                $model,
+                EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
+                $this->getMachine() //@phpstan-ignore-line
+            );
+        }
     }
 
     /**
@@ -182,9 +212,7 @@ class AttendancePresenter extends BasePresenter
      */
     private function getMachine(): Machine
     {
-        return $this->getEvent()->isTeamEvent() //@phpstan-ignore-line
-            ? $this->eventDispatchFactory->getTeamMachine($this->getEvent())
-            : $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent());//@phpstan-ignore-line
     }
 
     /**
@@ -207,11 +235,15 @@ class AttendancePresenter extends BasePresenter
      */
     protected function createComponentSeating(): Single
     {
-        return new Single($this->getContext(), $this->getModel());//@phpstan-ignore-line
+        $model = $this->getModel();
+        if ($model instanceof TeamModel2) {
+            return new Single($this->getContext(), $model);
+        }
+        throw new InvalidStateException();
     }
 
     /**
-     * @phpstan-return TestsList<TeamModel2>|TestsList<Model>
+     * @phpstan-return TestsList<TeamModel2>|TestsList<EventParticipantModel>
      * @throws EventNotFoundException
      */
     protected function createComponentTests(): TestsList
@@ -219,7 +251,7 @@ class AttendancePresenter extends BasePresenter
         if ($this->getEvent()->isTeamEvent()) {
             return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
         } else {
-            return new TestsList($this->getContext(), []);
+            return new TestsList($this->getContext(), []);//@phpstan-ignore-line
         }
     }
 }

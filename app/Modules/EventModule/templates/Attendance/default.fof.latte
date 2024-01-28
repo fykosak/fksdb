@@ -24,6 +24,8 @@
             <h2>{_'QR code on envelope'}</h2>
             {if $control->getComponent('attendance')->available()}
                 {control attendance}
+            {else}
+                {_'No transistion available'}
             {/if}
         </div>
     </div>

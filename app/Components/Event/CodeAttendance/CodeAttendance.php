@@ -18,7 +18,7 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of TeamModel2|EventParticipantModel
+ * @phpstan-template TModel of TeamModel2|\FKSDB\Models\ORM\Models\EventParticipantModel
  * @phpstan-type TState (TModel is TeamModel2
  *     ?\FKSDB\Models\ORM\Models\Fyziklani\TeamState
  *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
@@ -29,13 +29,17 @@ use Nette\Utils\Html;
  */
 final class CodeAttendance extends CodeTransition
 {
-    /** @phpstan-var TeamModel2|EventParticipantModel */
+    /**
+     * @phpstan-var TModel
+     * @var EventParticipantModel|TeamModel2
+     */
     private Model $model;
 
     /**
      * @phpstan-param TState $targetState
      * @phpstan-param TMachine $machine
      * @phpstan-param TModel $model
+     * @param EventParticipantModel|TeamModel2 $model
      */
     public function __construct(
         Container $container,
@@ -43,6 +47,7 @@ final class CodeAttendance extends CodeTransition
         FakeStringEnum $targetState,
         Machine $machine
     ) {
+        /** @phpstan-ignore-next-line */
         parent::__construct($container, $targetState, $machine);
         $this->model = $model;
     }
@@ -77,6 +82,7 @@ final class CodeAttendance extends CodeTransition
     }
 
     /**
+     * @return EventParticipantModel|TeamModel2
      * @throws BadRequestException
      * @phpstan-return TModel
      */
@@ -92,7 +98,7 @@ final class CodeAttendance extends CodeTransition
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
             throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
         }
-        return $application;
+        return $application; // @phpstan-ignore-line
     }
 
     /**

@@ -13,7 +13,6 @@ use Nette\Forms\Form;
 
 /**
  * @phpstan-import-type TSupportedModel from MachineCode
- * @phpstan-template TModel of Model
  */
 abstract class CodeForm extends FormComponent
 {

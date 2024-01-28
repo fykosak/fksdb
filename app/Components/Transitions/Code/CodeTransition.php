@@ -21,7 +21,6 @@ use Nette\Forms\Form;
  * @phpstan-template TModel of Model
  * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
  * @phpstan-type TMachine Machine<ModelHolder<TState,TModel>>
- * @phpstan-extends CodeForm<TModel>
  */
 abstract class CodeTransition extends CodeForm
 {

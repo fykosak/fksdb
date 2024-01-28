@@ -24,6 +24,7 @@ final class CodeAttendance extends CodeTransition
 
     public function __construct(Container $container, ScheduleItemModel $item, PersonScheduleMachine $machine)
     {
+        /** @phpstan-ignore-next-line */
         parent::__construct($container, PersonScheduleState::from(PersonScheduleState::Participated), $machine);
         $this->item = $item;
     }
@@ -51,5 +52,9 @@ final class CodeAttendance extends CodeTransition
     protected function getSalt(): string
     {
         return $this->item->schedule_group->event->getSalt();
+    }
+
+    protected function finalRedirect(): void
+    {
     }
 }

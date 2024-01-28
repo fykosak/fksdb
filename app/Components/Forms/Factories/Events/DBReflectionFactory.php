@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -23,7 +24,7 @@ class DBReflectionFactory extends AbstractFactory
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createComponent(Field $field): BaseControl
+    public function createComponent(Field $field, BaseHolder $holder): BaseControl
     {
         $element = $this->tableReflectionFactory->loadColumnFactory('event_participant', $field->name)
             ->createField();
@@ -36,8 +37,8 @@ class DBReflectionFactory extends AbstractFactory
         return $element;
     }
 
-    protected function setDefaultValue(BaseControl $control, Field $field): void
+    protected function setDefaultValue(BaseControl $control, Field $field, BaseHolder $holder): void
     {
-        $control->setDefaultValue($field->getDefault() ?? $field->getValue());
+        $control->setDefaultValue($field->getDefault() ?? $field->getValue($holder));
     }
 }
