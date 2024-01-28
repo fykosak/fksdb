@@ -11,6 +11,7 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -27,7 +28,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     {
         static $contestant;
         if (!isset($contestant)) {
-            $contestant = $this->getLoggedPerson()->getContestantByContestYear($this->getSelectedContestYear());
+            $contestant = $this->getLoggedPerson()->getContestant($this->getSelectedContestYear());
         }
         if (!$contestant) {
             throw new NotFoundException(_('Contestant not found'));
@@ -46,12 +47,31 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         $this->yearTraitStartup();
     }
 
-    /**
-     * @phpstan-return string[]
-     */
     protected function getNavRoots(): array
     {
-        return ['Public.Dashboard.default'];
+        return [
+            [
+                'title' => new Title(null, _('Dashboard')),
+                'items' => [
+                    'Public:Dashboard:default' => [],
+                    'Public:Submit:default' => [],
+                    'Public:Submit:legacy' => [],
+                    'Public:Submit:list' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('My profile')),
+                'items' => [
+                    'Profile:MyApplications:default' => [],
+                    'Profile:MyPayments:default' => [],
+                    'Profile:Email:default' => [],
+                    'Profile:PostContact:default' => [],
+                    'Profile:Lang:default' => [],
+                    'Profile:Login:default' => [],
+                    'Core:Settings:default' => [],
+                ],
+            ],
+        ];
     }
 
     /**

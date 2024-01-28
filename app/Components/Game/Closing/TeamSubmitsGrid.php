@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Closing;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -36,13 +36,9 @@ class TeamSubmitsGrid extends BaseGrid
      */
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->team->getSubmits()->order('fyziklani_submit.created');
+        return $this->team->getSubmits()->order('fyziklani_submit.modified');
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
@@ -51,10 +47,18 @@ class TeamSubmitsGrid extends BaseGrid
             '@fyziklani_task.label',
             '@fyziklani_submit.points',
             '@fyziklani_submit.created',
+            '@fyziklani_submit.modified',
+            '@fyziklani_submit.checked',
             '@fyziklani_submit.state',
         ]);
         if ($this->team->event->event_type_id === 1) {
-            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:edit',
+                'edit',
+                new Title(null, _('button.edit')),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
         }
     }
 }

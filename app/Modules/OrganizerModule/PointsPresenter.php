@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\{TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -41,7 +41,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedEntry(): bool
     {
-        return $this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'points', $this->getSelectedContest());
     }
 
     public function titlePreview(): PageTitle
@@ -54,7 +54,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedPreview(): bool
     {
-        return $this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'points', $this->getSelectedContest());
     }
 
     /**

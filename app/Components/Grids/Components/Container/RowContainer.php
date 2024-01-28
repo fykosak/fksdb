@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Container;
 
 use FKSDB\Components\Grids\Components\BaseItem;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\UI\Title;
+use Fykosak\NetteORM\Model\Model;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class RowContainer extends BaseItem
@@ -25,8 +24,7 @@ class RowContainer extends BaseItem
         );
     }
 
-    public function getTitle(): ?Title
+    public function renderTitle(): void
     {
-        return null;
     }
 }

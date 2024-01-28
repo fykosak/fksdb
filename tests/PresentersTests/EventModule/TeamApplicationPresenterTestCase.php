@@ -103,6 +103,6 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
 
     protected function getPresenterName(): string
     {
-        return 'Event:TeamApplication';
+        return 'Event:Team';
     }
 }

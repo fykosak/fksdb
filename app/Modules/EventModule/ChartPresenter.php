@@ -10,7 +10,6 @@ use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
@@ -26,11 +25,10 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed('event.chart', 'list');
+        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'event.chart', $this->getEvent());
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException
      * @throws NoContestAvailable
@@ -45,7 +43,6 @@ final class ChartPresenter extends BasePresenter
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function getCharts(): array
     {

@@ -8,14 +8,13 @@ use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -48,17 +47,17 @@ class AllSubmitsGrid extends BaseGrid
         $this->submitService = $submitService;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;
         /** @phpstan-ignore-next-line */
         $this->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
+            new TemplateItem(
+                $this->container,
+                '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)',
+                '@fyziklani_team.name:title'
+            ),
             'name_n_id'
         );
         $this->addSimpleReferencedColumns(
@@ -67,7 +66,7 @@ class AllSubmitsGrid extends BaseGrid
                 '@fyziklani_task.label',
                 '@fyziklani_submit.state',
                 '@fyziklani_submit.points',
-                '@fyziklani_submit.modified',
+                '@fyziklani_submit.created',
             ]
                 : [
                 '@fyziklani_task.label',
@@ -75,7 +74,13 @@ class AllSubmitsGrid extends BaseGrid
             ]
         );
         if ($this->event->event_type_id === 1) {
-            $this->addPresenterButton(':Game:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+            $this->addPresenterButton(
+                ':Game:Submit:edit',
+                'edit',
+                new Title(null, _('button.fyziklaniSubmit.edit')),
+                false,
+                ['id' => 'fyziklani_submit_id']
+            );
         }
         $this->addTableButton(
             new Button(
@@ -129,7 +134,7 @@ class AllSubmitsGrid extends BaseGrid
                 case 'warnings':
                     $query->where('TIMESTAMPDIFF(SECOND,fyziklani_submit.modified,NOW()) >600')->where(
                         'fyziklani_submit.state',
-                        SubmitState::NOT_CHECKED
+                        SubmitState::NotChecked
                     );
                     break;
                 case 'task':
@@ -182,10 +187,10 @@ class AllSubmitsGrid extends BaseGrid
             $states[$state->value] = $state->label();
         }
 
-        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
-        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
+        $form->addSelect('team', _('Team'), $teams)->setPrompt(_('Select team'));
+        $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('Select task'));
         $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
-        $form->addSelect('state', _('State'), $states)->setPrompt(_('--Select state--'));
+        $form->addSelect('state', _('State'), $states)->setPrompt(_('Select state'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addCheckbox('warnings', _('Show warnings'))
             ->setOption('description', _('Show unchecked submits inserted more that 10 minutes ago.'));

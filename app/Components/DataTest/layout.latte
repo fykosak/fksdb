@@ -1,5 +1,5 @@
 {varType array $logs}
-{varType FKSDB\Components\DataTest\Test[] $tests}
+{varType FKSDB\Models\ORM\Tests\Test[] $tests}
 <div class="panel color-auto">
     <div class="container">
         {control form}
@@ -7,7 +7,7 @@
 </div>
 
 {foreach $logs as $log}
-    {varType FKSDB\Models\ORM\Models\PersonModel[]|Fykosak\Utils\Logging\Message[][][] $log}
+    {varType FKSDB\Models\ORM\Models\PersonModel[]|FKSDB\Components\DataTest\TestMessage[][][] $log}
     <div class="panel color-auto">
         <div class="container">
             <h2>
@@ -15,7 +15,8 @@
                 <span class="badge bg-secondary">#{$log['model']->person_id}</span>
             </h2>
             {foreach $log['logs'] as $key => $testLogs}
-                {include test-results from './single.latte' logs:$testLogs,test:$tests[$key]}
+                <h3>{$tests[$key]->getTitle()->toHtml()}</h3>
+                {include test-results from './single.latte' logs:$testLogs}
             {/foreach}
         </div>
     </div>

@@ -1,23 +1,47 @@
-{block outerContent}
-    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-    {varType array $groups}
-    {varType bool $hasSchedule}
-    {varType bool $isOrganizer}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Base info'}</h2>
-            {control columnTable $isOrganizer?[
-            'person.person_link',
-            'event_participant.event_participant_id',
-            'event_participant.status',
-            'event_participant.created'
-            ]:[
-            'person.full_name',
-            'event_participant.status',
-            'event_participant.created'
-            ],$model,1024}
+{layout '../@layout.latte'}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $isOrganizer}
+{varType array $groups}
+
+{define baseInfo, FKSDB\Models\ORM\Models\EventParticipantModel $model}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Base info'}</h2>
+                {control columnTable [
+                'person.full_name',
+                'event_participant.event_participant_id',
+                'event_participant.created'
+                ],$model,1024}
+            </div>
         </div>
-    </div>
+    {/if}
+{/define}
+
+{define schedule}
+    {if $event->hasSchedule()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid}
+            </div>
+        </div>
+    {/if}
+{/define}
+
+{block titleBody}
+    {include parent}
+    {include titleButtons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+{/block}
+
+{block outerContent}
+    {include codeTransition from '../AbstractApplication/blocks.latte',isOrganizer:$isOrganizer}
+    {if $isOrganizer}
+        {include rests from '../AbstractApplication/blocks.latte'}
+    {/if}
+    {include baseInfo,model:$model}
 
     {varType string[] $fields}
     {foreach $groups as $groupName=>$fieldDef}
@@ -25,7 +49,7 @@
             <div class="panel color-auto">
                 <div class="container">
                     <h2>{$groupName}</h2>
-                    {var $currentFields = []}
+                    {var string[] $currentFields = []}
                     {foreach $fieldDef as $field}
                         {if in_array($field,$fields)}
                             {php $currentFields[] = 'event_participant.' . $field}
@@ -37,28 +61,5 @@
             </div>
         {/if}
     {/foreach}
-
-    {if $hasSchedule}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Schedule'}</h2>
-                {control personScheduleGrid $model->person,$model->event}
-            </div>
-        </div>
-    {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
-        </div>
-    </div>
-    {if $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Transitions'}</h2>
-                {control applicationTransitions}
-            </div>
-        </div>
-    {/if}
+    {include schedule}
 {/block}

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Choosers\EventChooserComponent;
+use FKSDB\Components\Controls\Choosers\EventChooser;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\ComponentReflection;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -40,13 +40,12 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
-     * Check if has contest permission or is Event organizer
      * @throws EventNotFoundException
      */
-    public function isAllowed($resource, ?string $privilege): bool
+    protected function beforeRender(): void
     {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
+        parent::beforeRender();
+        $this->template->event = $this->getEvent();
     }
 
     protected function isEnabled(): bool
@@ -74,7 +73,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     protected function getSubTitle(): ?string
     {
-        return $this->getEvent()->getName()->getText('cs');//TODO!
+        return $this->getEvent()->getName()->getText($this->translator->lang);// @phpstan-ignore-line
     }
 
     /**
@@ -88,16 +87,56 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentEventChooser(): EventChooserComponent
+    protected function createComponentEventChooser(): EventChooser
     {
-        return new EventChooserComponent($this->getContext(), $this->getEvent());
+        return new EventChooser($this->getContext(), $this->getEvent());
+    }
+
+    protected function getNavRoots(): array
+    {
+        return [
+            [
+                'title' => new Title(null, _('Applications')),
+                'items' => [
+                    'Event:Team:detailedList' => [],
+                    'Event:Team:default' => [],
+                    'Event:Team:mass' => [],
+                    'Event:Team:create' => [],
+                    #single
+                    'Event:Application:default' => [],
+                    'Event:Application:mass' => [],
+                    'Event:Application:import' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('Others')),
+                'items' => [
+                    'Event:Report:default' => [],
+                    'Event:EventOrganizer:list' => [],
+                    'Event:Payments:create' => [],
+                    'Event:Payments:list' => [],
+                    'Game:Dashboard:default' => [],
+                    'Schedule:Dashboard:default' => [],
+                    'Event:Chart:list' => [],
+                    'Event:Dispatch:default' => [],
+                    'Event:Acl:default' => [],
+                    'Event:Dashboard:default' => [],
+                ],
+            ],
+        ];
     }
 
     /**
+     * @throws EventNotFoundException
      * @phpstan-return string[]
      */
-    protected function getNavRoots(): array
+    public function formatTemplateFiles(): array
     {
-        return ['Event.Dashboard.default#application', 'Event.Dashboard.default#other'];
+        $files = parent::formatTemplateFiles();
+
+        return [
+            str_replace('.latte', '.' . $this->getEvent()->event_type->getSymbol() . '.latte', $files[0]),
+            ...$files,
+        ];
     }
 }

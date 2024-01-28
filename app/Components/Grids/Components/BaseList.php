@@ -7,14 +7,23 @@ namespace FKSDB\Components\Grids\Components;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-template TFilterParams of array
  * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */
 abstract class BaseList extends BaseComponent
 {
+    // phpcs:disable
+    protected const ModeAlert = 'alert';
+    protected const ModePanel = 'panel';
+    protected const ModeCard = 'card';
+    // phpcs:enable
+
     /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
+
+    /** @phpstan-var self::Mode* $mode */
+    protected string $mode = self::ModePanel;
 
     public function __construct(Container $container, int $userPermission)
     {
@@ -26,7 +35,15 @@ abstract class BaseList extends BaseComponent
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+        switch ($this->mode) {
+            case self::ModeCard:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.card.latte';
+            case self::ModePanel:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.panel.latte';
+            case self::ModeAlert:
+            default:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.alert.latte';
+        }
     }
 
     public function render(): void
@@ -55,6 +72,7 @@ abstract class BaseList extends BaseComponent
      */
     public function addRow(BaseItem $component, string $name): BaseItem
     {
+        /** @phpstan-ignore-next-line */
         $this->getComponent('rows')->addComponent($component, $name);
         return $component;
     }
@@ -62,7 +80,9 @@ abstract class BaseList extends BaseComponent
     public function createRow(): \Nette\ComponentModel\Container
     {
         $component = new \Nette\ComponentModel\Container();
+        /** @phpstan-ignore-next-line */
         $length = count($this->getComponent('rows')->getComponents());
+        /** @phpstan-ignore-next-line */
         $this->getComponent('rows')->addComponent($component, 'row' . $length);
         return $component;
     }
@@ -74,6 +94,7 @@ abstract class BaseList extends BaseComponent
      */
     public function addButton(BaseItem $component, string $name): BaseItem
     {
+        /** @phpstan-ignore-next-line */
         $this->getComponent('buttons')->addComponent($component, $name);
         return $component;
     }

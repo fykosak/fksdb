@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -33,7 +32,7 @@ class PreferredLangFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('button.save'));
     }
 
     protected function handleSuccess(Form $form): void
@@ -50,7 +49,7 @@ class PreferredLangFormComponent extends FormComponent
             );
             $this->flashMessage(_('Preferred language has been set.'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             $this->flashMessage(_('Error'), Message::LVL_ERROR);
         }
     }

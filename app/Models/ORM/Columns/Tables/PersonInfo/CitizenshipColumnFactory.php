@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\CountryModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\UI\StringPrinter;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;

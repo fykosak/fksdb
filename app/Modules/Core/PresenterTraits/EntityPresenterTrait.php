@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -42,7 +42,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -61,7 +61,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -80,7 +80,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -111,6 +111,21 @@ trait EntityPresenterTrait
     }
 
     /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->traitIsAuthorized($this->getModelResource(), 'list');
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('List of entities'), 'fas fa-table');
+    }
+
+    /**
      * @throws GoneException
      */
     protected function getModelResource(): string
@@ -121,7 +136,7 @@ trait EntityPresenterTrait
     /**
      * @phpstan-return TModel
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     public function getEntity(): Model
     {
@@ -134,7 +149,7 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      * @phpstan-return TModel
      */
@@ -145,7 +160,7 @@ trait EntityPresenterTrait
         if ($candidate) {
             return $candidate;
         } else {
-            throw new ModelNotFoundException(_('Model does not exists'));
+            throw new NotFoundException(_('Model does not exist.'));
         }
     }
 
@@ -153,7 +168,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException

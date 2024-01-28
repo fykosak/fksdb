@@ -3,9 +3,9 @@
 {block titleBody}
     {include parent}
     <p class="mt-3">
-        <i class="fas fa-info-circle me-2"></i>{control printer:templateString '@stored_query.description', $model, 1024}
+        <i class="fas fa-info-circle me-2"></i>{control printer:column '@stored_query.description', $model, 1024}
     </p>
-    <p>{control printer:templateString '@stored_query.tags', $model, 1024}</p>
+    <p>{control printer:column '@stored_query.tags', $model, 1024}</p>
 {/block}
 {block outerContent}
     {if count($model->getQueryParameters())}
@@ -34,14 +34,14 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'SQL'}</h2>
-            {control printer:templateString '@stored_query.sql', $model,1024}
+            {control printer:column '@stored_query.sql', $model,1024}
             <div class="btn-group">
                 <a href="{plink :Organizer:Export:execute ,'id' => $model->getPrimary()}"
                    class="btn btn-outline-primary"
                    title="{_'Execute query'}">{_'Execute'}</a>
                 {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
                     <a href="{plink edit,'id' => $model->getPrimary()}"
-                       class="btn btn-outline-secondary" title="{_'Edit query'}">{_'Edit'}</a>
+                       class="btn btn-outline-secondary" title="{_'Edit query'}">{_'button.edit'}</a>
                 {/if}
             </div>
         </div>

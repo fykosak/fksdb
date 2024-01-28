@@ -1,6 +1,6 @@
 {layout '../@layout.latte'}
-{varType Fykosak\NetteORM\TypedGroupedSelection|FKSDB\Models\ORM\Models\EventModel[] $events}
-{varType Fykosak\NetteORM\TypedGroupedSelection|FKSDB\Models\ORM\Models\ContestModel[] $contests}
+{varType Fykosak\NetteORM\Selection\TypedGroupedSelection|FKSDB\Models\ORM\Models\EventModel[] $events}
+{varType Fykosak\NetteORM\Selection\TypedGroupedSelection|FKSDB\Models\ORM\Models\ContestModel[] $contests}
 {varType string $lang}
 
 {define eventCard FKSDB\Models\ORM\Models\EventModel$event}
@@ -15,7 +15,7 @@
                 <p class="card-text">{$event->description->getText($lang)}</p>
                 {if $event->isTeamEvent()}
                     <a class="btn btn-{$event->event_type->getSymbol()}"
-                       href="{plink ':Event:TeamApplication:create' ,'eventId'=>$event->event_id}">{_'Register team!'}</a>
+                       href="{plink ':Event:Team:create' ,'eventId'=>$event->event_id}">{_'Register team!'}</a>
                 {else}
                     <a class="btn btn-{$event->event_type->getSymbol()}"
                        href="{plink ':Event:Application:create','eventId'=>$event->event_id}">{_'Register!'}</a>
@@ -31,7 +31,7 @@
             <h2>{_'Contests'}</h2>
             <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
                 {foreach $contests as $contest}
-                    {var $years = $contest->getActiveYears()}
+                    {var FKSDB\Models\ORM\Models\ContestModel[] $years = $contest->getActiveYears()}
                     {if count($years)}
                         <div class="col">
                             <div class="card h-100 border-{$contest->getContestSymbol()}">

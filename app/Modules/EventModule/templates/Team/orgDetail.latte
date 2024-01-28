@@ -1,0 +1,60 @@
+{layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+
+{define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
+    <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
+    {control 'personSchedule' . $person->person_id}
+{/define}
+
+{define members, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        <div class="panel color-auto">
+            <div class="container">
+                {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+                {php $counter++}
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                <a class="btn btn-secondary btn-sm"
+                   href="{plink :Organizer:Person:detail id=>$member->person_id,contestId=>$member->fyziklani_team->event->event_type->contest_id}"
+                >{_'button.person.detail'}</a>
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+                {if $event->hasSchedule()}
+                    {include personSchedule, person => $member->person}
+                {/if}
+            </div>
+        </div>
+    {/foreach}
+{/define}
+
+{define rank, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rank & points'}</h2>
+            {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
+        </div>
+    </div>
+{/define}
+{define tests, FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+    {control tests, $model}
+{/define}
+
+{block titleBody}
+    {include parent}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:true}
+{/block}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            ],$model,1024}
+        </div>
+    </div>
+    {include rank, model:$model}
+    {include members, model:$model}
+    {include tests, model:$model}
+{/block}

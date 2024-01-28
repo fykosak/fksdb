@@ -7,12 +7,12 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseGrid<TModel,array{}>
  */
 final class PersonRelatedGrid extends BaseGrid
@@ -46,7 +46,6 @@ final class PersonRelatedGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {
@@ -55,7 +54,7 @@ final class PersonRelatedGrid extends BaseGrid
         $this->filtered = false;
         $this->addSimpleReferencedColumns(array_map(fn($value) => '@' . $value, $this->definition['rows']));
         foreach ($this->definition['links'] as $link) {
-            $this->addORMLink($link);
+            $this->addLink($link);
         }
         // $this->addCSVDownloadButton();
     }

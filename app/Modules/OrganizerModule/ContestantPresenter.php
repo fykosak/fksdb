@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\EntityForms\ContestantFormComponent;
+use FKSDB\Components\Contestants\ContestantForm;
+use FKSDB\Components\Contestants\SubmitsGrid;
+use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -35,10 +38,10 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -49,6 +52,19 @@ final class ContestantPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
+     * @throws NotFoundException
+     */
+    final public function renderDetail(): void
+    {
+        $this->template->model = $this->getEntity();
+    }
+
     public function titleCreate(): PageTitle
     {
         return new PageTitle('contestant-create', _('Create contestant'), 'fas fa-user-plus');
@@ -57,15 +73,6 @@ final class ContestantPresenter extends BasePresenter
     public function titleList(): PageTitle
     {
         return new PageTitle('contestant-list', _('Contestants'), 'fas fa-user-graduate');
-    }
-
-    /**
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     */
-    protected function createComponentGrid(): ContestantsGrid
-    {
-        return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
     protected function getORMService(): ContestantService
@@ -106,21 +113,51 @@ final class ContestantPresenter extends BasePresenter
      * @throws NoContestYearAvailable
      * @throws NoContestAvailable
      */
-    protected function createComponentCreateForm(): ContestantFormComponent
+    protected function createComponentCreateForm(): ContestantForm
     {
-        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
+        return new ContestantForm($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
-    protected function createComponentEditForm(): ContestantFormComponent
+    protected function createComponentEditForm(): ContestantForm
     {
-        return new ContestantFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
+        return new ContestantForm($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    protected function createComponentGrid(): ContestantsGrid
+    {
+        return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws \ReflectionException
+     * @throws NotFoundException
+     */
+    protected function createComponentSubmits(): SubmitsGrid
+    {
+        return new SubmitsGrid($this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @phpstan-return TestsList<ContestantModel>
+     */
+    protected function createComponentTests(): TestsList
+    {
+        return new TestsList($this->getContext(), DataTestFactory::getContestantTests($this->getContext()));
     }
 }

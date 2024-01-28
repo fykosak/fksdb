@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<Model,never>
+ * @phpstan-extends AbstractColumnFactory<Model>
  */
 class LocalizedStringColumnFactory extends AbstractColumnFactory
 {

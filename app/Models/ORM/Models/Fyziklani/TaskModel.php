@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
@@ -24,6 +24,7 @@ use Nette\Security\Resource;
  */
 final class TaskModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'game.task';
     /**
      * @phpstan-return SerializedTaskModel
      */
@@ -39,6 +40,6 @@ final class TaskModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return 'fyziklani.task';
+        return self::RESOURCE_ID;
     }
 }

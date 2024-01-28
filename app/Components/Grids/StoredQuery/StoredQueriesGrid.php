@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -49,10 +49,6 @@ class StoredQueriesGrid extends BaseGrid
         }
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = true;
@@ -70,7 +66,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:edit',
             'edit',
-            _('Edit'),
+            new Title(null, _('button.edit')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-primary'
@@ -78,7 +74,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'StoredQuery:detail',
             'detail',
-            _('Detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-info'
@@ -86,7 +82,7 @@ class StoredQueriesGrid extends BaseGrid
         $this->addPresenterButton(
             'Export:execute',
             'execute',
-            _('Execute export'),
+            new Title(null, _('Execute export')),
             false,
             ['id' => 'query_id'],
             'btn btn-sm btn-outline-success'

@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\UI\NotSetBadge;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 

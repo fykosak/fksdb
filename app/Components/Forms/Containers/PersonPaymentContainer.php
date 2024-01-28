@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\Language;
@@ -28,7 +27,6 @@ class PersonPaymentContainer extends ContainerWithOptions
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
-
     private GettextTranslator $translator;
 
     /**
@@ -68,17 +66,17 @@ class PersonPaymentContainer extends ContainerWithOptions
             $roles = $this->loggedPerson->getEventRoles($this->event);
             $teams = [];
             foreach ($roles as $role) {
-                if ($role instanceof FyziklaniTeamTeacherRole) {
+                if ($role instanceof TeamTeacherRole) {
                     $teams += $role->teams;
                 }
-                if ($role instanceof FyziklaniTeamMemberRole) {
+                if ($role instanceof TeamMemberRole) {
                     $teams[] = $role->member->fyziklani_team;
                 }
             }
             $persons = [];
             /** @var TeamModel2 $team */
             foreach ($teams as $team) {
-                $persons += $team->getPersons();
+                $persons = [...$persons, ...$team->getPersons()];
             }
             $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }
@@ -87,13 +85,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         $container = null;
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
-            if (
-                !$model->schedule_item->isPayable() ||
-                !in_array(
-                    $model->schedule_item->schedule_group->schedule_group_type,
-                    [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND] // TODO to event params
-                )
-            ) {
+            if (!$model->schedule_item->payable) {
                 continue;
             }
             if ($model->person_id !== $lastPersonId) {
@@ -110,10 +102,10 @@ class PersonPaymentContainer extends ContainerWithOptions
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'
             );
+
             if (
                 $model->getPayment()
-                && isset($this->model)
-                && $model->getPayment()->payment_id !== $this->model->payment_id
+                && (!isset($this->model) || $model->getPayment()->payment_id !== $this->model->payment_id)
             ) {
                 $checkBox->setDisabled();
                 $checkBox->setOption(

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestYearService;
-use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\ContestGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -53,7 +54,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(int $roleId = 1000): void
+    protected function loginUser(string $roleId = ContestRole::Cartesian): void
     {
         $this->cartesianPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
@@ -64,8 +65,8 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
-        $this->container->getByType(GrantService::class)->storeModel(
-            ['login_id' => $this->cartesianLogin->login_id, 'role_id' => $roleId, 'contest_id' => 1]
+        $this->container->getByType(ContestGrantService::class)->storeModel(
+            ['login_id' => $this->cartesianLogin->login_id, 'role' => $roleId, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->cartesianLogin, $this->fixture);
     }
@@ -82,6 +83,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         });
         return (string)$source;
     }
+
     /**
      * @phpstan-param array<string,scalar> $params
      * @phpstan-param array<string,mixed> $formData
@@ -102,9 +104,9 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return $this->fixture->run($request);
     }
 
-    public static function personToValues(PersonModel $person): array
+    public static function personToValues(ContestModel $contest, PersonModel $person): array
     {
-        $history = $person->getHistory(ContestYearService::getCurrentAcademicYear());
+        $history = $person->getHistory($contest->getCurrentContestYear());
         return [
             '_c_compact' => $person->getFullName(),
             'person' => [

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use FKSDB\Models\ORM\Tests\ContestYear\InActiveContest;
+use FKSDB\Models\ORM\Tests\Test;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\DI\Container;
 
 /**
  * @property-read int $contest_id
@@ -16,6 +19,7 @@ use Fykosak\NetteORM\TypedGroupedSelection;
  */
 final class ContestYearModel extends Model
 {
+
     /**
      * @phpstan-return TypedGroupedSelection<ContestantModel>
      */
@@ -71,5 +75,15 @@ final class ContestYearModel extends Model
     public function hasHolidaySeries(): bool
     {
         return $this->contest_id === ContestModel::ID_VYFUK && $this->year >= 9;
+    }
+
+    /**
+     * @phpstan-return Test<self>[]
+     */
+    public static function getTests(Container $container): array
+    {
+        return [
+            new InActiveContest($container),
+        ];
     }
 }

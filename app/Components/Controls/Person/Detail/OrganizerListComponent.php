@@ -6,10 +6,9 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\OrganizerModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
@@ -35,13 +34,9 @@ class OrganizerListComponent extends DetailComponent
         return new Title(null, _('Organizers'));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
-        $this->classNameCallback = fn(OrganizerModel $model) => 'alert alert-' . $model->contest->getContestSymbol();
+        $this->classNameCallback = fn(OrganizerModel $model): string => $model->contest->getContestSymbol();
         $row0 = $this->createRow();
         $row0->addComponent(new SimpleItem($this->container, '@contest.name'), 'contest_name');
         $row0->addComponent(
@@ -62,14 +57,14 @@ class OrganizerListComponent extends DetailComponent
             $this->addPresenterButton(
                 ':Organizer:Organizer:edit',
                 'edit',
-                _('Edit'),
+                new Title(null, _('button.edit')),
                 false,
                 ['contestId' => 'contest_id', 'id' => 'org_id']
             );
             $this->addPresenterButton(
                 ':Organizer:Organizer:detail',
                 'detail',
-                _('Detail'),
+                new Title(null, _('button.detail')),
                 false,
                 ['contestId' => 'contest_id', 'id' => 'org_id']
             );

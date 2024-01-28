@@ -2,6 +2,10 @@ orm:
     address:
         service: FKSDB\Models\ORM\Services\AddressService
         model: FKSDB\Models\ORM\Models\AddressModel
+        columns:
+            city:
+                type: string
+                title: _('City')
     auth_token:
         service: FKSDB\Models\ORM\Services\AuthTokenService
         model: FKSDB\Models\ORM\Models\AuthTokenModel
@@ -39,7 +43,7 @@ orm:
                 params:
                    contestId: contest_id
                    id: contestant_id
-                title: _('Edit')
+                title: _('button.contestant.edit')
     contest_year:
         service: FKSDB\Models\ORM\Services\ContestYearService
         model: FKSDB\Models\ORM\Models\ContestYearModel
@@ -105,6 +109,10 @@ orm:
                 title: _('Events name')
                 description: _("For the camps, it is its place.")
                 required: true
+            name_new:
+                type: class
+                title: _('Event')
+                class: FKSDB\Models\ORM\Columns\Tables\Event\EventName
             begin:
                 type: dateTime
                 title: _('Event begin')
@@ -162,10 +170,6 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
                 title: _('Event type id')
-            event_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
-                title: _('Event')
         links: []
     event_org:
         service: FKSDB\Models\ORM\Services\EventOrganizerService
@@ -184,13 +188,13 @@ orm:
                 params:
                     eventId: event_id
                     id: e_org_id
-                title: _('Edit')
+                title: _('button.eventOrg.edit')
             detail:
                 destination: :Event:EventOrganizer:detail
                 params:
                     eventId: event_id
                     id: e_org_id
-                title: _('Detail')
+                title: _('button.eventOrg.detail')
     event_participant:
         service: FKSDB\Models\ORM\Services\EventParticipantService
         model: FKSDB\Models\ORM\Models\EventParticipantModel
@@ -261,22 +265,25 @@ orm:
                 params:
                     eventId: event_id
                     id: event_participant_id
-                title: _('Applications detail')
+                title: _('button.eventParticipant.detail')
             edit:
                 destination: :Public:Application:default
                 params:
                     eventId: event_id
                     id: event_participant_id
-                title: _('Edit application')
+                title: _('button.eventParticipant.edit')
     event_type:
         service: FKSDB\Models\ORM\Services\EventTypeService
         model: FKSDB\Models\ORM\Models\EventTypeModel
     flag:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
-    grant:
-        service: FKSDB\Models\ORM\Services\GrantService
-        model: FKSDB\Models\ORM\Models\GrantModel
+    contest_grant:
+        service: FKSDB\Models\ORM\Services\ContestGrantService
+        model: FKSDB\Models\ORM\Models\ContestGrantModel
+    event_grant:
+        service: FKSDB\Models\ORM\Services\EventGrantService
+        model: FKSDB\Models\ORM\Models\EventGrantModel
     login:
         service: FKSDB\Models\ORM\Services\LoginService
         model: FKSDB\Models\ORM\Models\LoginModel
@@ -345,13 +352,13 @@ orm:
                 params:
                     contestId: contest_id
                     id: org_id
-                title: _('Detail')
+                title: _('button.organizer.detail')
             edit:
                 destination: :Organizer:Organizer:edit
                 params:
                     contestId: contest_id
                     id: org_id
-                title: _('Edit')
+                title: _('button.organizer.edit')
     payment:
         service: FKSDB\Models\ORM\Services\PaymentService
         model: FKSDB\Models\ORM\Models\PaymentModel
@@ -399,21 +406,17 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\PaymentState
-        links:
-            detail:
-                destination: :Event:Payment:detail
-                params:
-                      eventId: event_id
-                      id: payment_id
-                title: _('Detail')
+            want_invoice:
+                type: bool
+                title: _('Want invoice')
+            invoice_id:
+                type: string
+                title: _('Invoice Id')
+        links: []
     person:
         service: FKSDB\Models\ORM\Services\PersonService
         model: FKSDB\Models\ORM\Models\PersonModel
         columns:
-            person_link:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkColumnFactory
-                title: _('Person')
             full_name:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameColumnFactory
@@ -448,6 +451,13 @@ orm:
                 type: string
                 title: _('Other name')
                 permission: BASIC
+        links:
+            detail:
+                destination: :Organizer:Person:detail
+                params:
+                    id: person_id
+                title: _('button.person.detail')
+                icon: 'fas fa-user'
     person_has_flag:
         service: FKSDB\Models\ORM\Services\PersonHasFlagService
         model: FKSDB\Models\ORM\Models\PersonHasFlagModel
@@ -575,15 +585,15 @@ orm:
                 permission: BASIC
             note:
                 type: string
-                title: _('Poznámka')
+                title: _('Note')
                 permission: BASIC
             academic_degree_prefix:
                 type: string
-                title: _('Titul před jménem')
+                title: _('Pre-nominal title')
                 permission: RESTRICT
             academic_degree_suffix:
                 type: string
-                title: _('Titul za jménem')
+                title: _('Post-nominal title')
                 permission: RESTRICT
             pizza:
                 type: string
@@ -598,15 +608,20 @@ orm:
     country:
         service: FKSDB\Models\ORM\Services\CountryService
         model: FKSDB\Models\ORM\Models\CountryModel
+        columns:
+            name:
+                type: string
+                title: _('Country')
+            flag:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Country\FlagColumn
+                title: _('Flag')
     country_subdivision:
         service: FKSDB\Models\ORM\Services\CountrySubdivisionService
         model: FKSDB\Models\ORM\Models\CountrySubdivisionModel
     psc_region:
         service: FKSDB\Models\ORM\Services\PSCSubdivisionService
         model: FKSDB\Models\ORM\Models\PSCSubdivisionModel
-    role:
-       service: FKSDB\Models\ORM\Services\RoleService
-       model: FKSDB\Models\ORM\Models\RoleModel
     school:
         service: FKSDB\Models\ORM\Services\SchoolService
         model: FKSDB\Models\ORM\Models\SchoolModel
@@ -618,12 +633,15 @@ orm:
             name_full:
                 type: string
                 title: _('Full name')
+                description: _('Full name of the school.')
             name:
                 type: string
                 title: _('School name')
+                description: _('Envelope name.')
             name_abbrev:
                 type: string
                 title: _('Abbreviated name')
+                description: _('Very short name.')
             email:
                 type: string
                 title: _('Contact e-mail')
@@ -639,17 +657,31 @@ orm:
             note:
                   type: string
                   title: _('Note')
+            study_h:
+                type: bool
+                title: _('Teach grades H_*?')
+            study_p:
+                type: bool
+                title: _('Teach grades P_*?')
+            study_u:
+                type: bool
+                title: _('Teach grades U_ALL?')
+            verified:
+                type: bool
+                title: _('Verified')
         links:
             edit:
-                  destination: :Organizer:School:edit
+                  destination: :Organizer:Schools:edit
                   params:
                       id: school_id
-                  title: _('Edit')
+                  title: _('button.school.edit')
+                  icon: 'fas fa-pencil'
             detail:
-                  destination: :Organizer:School:detail
+                  destination: :Organizer:Schools:detail
                   params:
                       id: school_id
-                  title: _('Detail')
+                  title: _('button.school.detail')
+                  icon: 'fas fa-school'
     study_year:
         service: FKSDB\Models\ORM\Services\StudyYearService
         model: FKSDB\Models\ORM\Models\StudyYearModel
@@ -724,22 +756,15 @@ orm:
                 destination: :Organizer:Teacher:edit
                 params:
                     id: teacher_id
-                title: _('Edit')
+                title: _('button.teacher.edit')
+                icon: 'fas fa-chalkboard-teacher'
             detail:
                 destination: :Organizer:Teacher:detail
                 params:
                     id: teacher_id
-                title: _('Detail')
+                title: _('button.teacher.detail')
+                icon: 'fas fa-pencil'
 #fyziklani
-    fyziklani_room:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel
-    fyziklani_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\SeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel
-    fyziklani_team_seat:
-        service: FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService
-        model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
     fyziklani_submit:
         service: FKSDB\Models\ORM\Services\Fyziklani\SubmitService
         model: FKSDB\Models\ORM\Models\Fyziklani\SubmitModel
@@ -751,13 +776,17 @@ orm:
                 type: enum
                 title: _('State')
                 class: FKSDB\Models\ORM\Models\Fyziklani\SubmitState
+            modified:
+                type: dateTime
+                title: _('Modified')
+                format: 'H:m:s d-M-Y'
             created:
                 type: dateTime
                 title: _('Created')
                 format: 'H:m:s d-M-Y'
-            modified:
+            checked:
                 type: dateTime
-                title: _('Modified')
+                title: _('Checked')
                 format: 'H:m:s d-M-Y'
             points:
                 type: class
@@ -824,7 +853,9 @@ orm:
             note:
                 type: text
                 title: _('Note')
-                omitInputField: true
+            internal_note:
+                type: text
+                title: _('Internal note')
             category:
                 type: enum
                 title: _('Category')
@@ -842,9 +873,11 @@ orm:
                 title: _('Total rank')
                 omitInputField: true
             points:
-                type: string
+                type: int
                 title: _('Points')
                 omitInputField: true
+                nullValueFormat: notSet
+
             game_lang:
                 type: enum
                 class: FKSDB\Models\ORM\Models\Fyziklani\GameLang
@@ -865,13 +898,21 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                 title: _('Submit opened?')
+            origin:
+                type: text
+                title: _('How did you come to know about us?') # TODO
+            scholarship:
+                type: enum
+                title: _('Scholarship')
+                class: FKSDB\Models\ORM\Models\Fyziklani\TeamScholarship
         links:
             detail:
-                destination: :Event:TeamApplication:detail
+                destination: :Event:Team:detail
                 params:
                     eventId: event_id
                     id: fyziklani_team_id
-                title: _('Detail')
+                title: _('button.team.detail')
+                icon: 'fas fa-users'
     fyziklani_team_member:
         service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
         model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
@@ -923,6 +964,17 @@ orm:
             modification_end:
                 type: dateTime
                 title: _('Modification end')
+        links:
+            detail:
+                destination: :Schedule:Group:detail
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.detail')
+            edit:
+                destination: :Schedule:Group:edit
+                params:
+                    id: schedule_group_id
+                title: _('button.scheduleGroup.edit')
     schedule_item:
         service: FKSDB\Models\ORM\Services\Schedule\ScheduleItemService
         model: FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel
@@ -938,6 +990,12 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
                 title: _('Price EUR')
+            payable:
+                type: bool
+                title: _('Is item payable via FKSDB?')
+            available:
+                type: bool
+                title: _('Is item available via GUI?')
             name_en:
                 type: string
                 title: _('Name en')
@@ -956,6 +1014,25 @@ orm:
             description:
                 type: localizedString
                 title: _('Description')
+            long_description_en:
+                type: text
+                title: _('Long description en')
+                description: _('Allow HTML')
+            long_description_cs:
+                type: text
+                title: _('Long description cs')
+                description: _('Allow HTML')
+            long_description:
+                type: localizedString
+                title: _('Description')
+            begin:
+                type: dateTime
+                title: _('Begin')
+                description: _('Only if is diferent from group time')
+            end:
+                type: dateTime
+                title: _('End')
+                description: _('Only if is diferent from group time')
             capacity:
                 type: int
                 title: _('Total capacity')
@@ -968,6 +1045,23 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                 title: _('Used capacity')
+            capacity_progress:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\CapacityProgress
+                title: _('Progress bar')
+        links:
+            detail:
+                destination: :Schedule:Item:detail
+                params:
+                    groupId: schedule_group_id
+                    id: schedule_item_id
+                title: _('button.scheduleItem.detail')
+            edit:
+                destination: :Schedule:Item:edit
+                params:
+                    groupId: schedule_group_id
+                    id: schedule_item_id
+                title: _('button.scheduleItem.edit')
     schedule_payment:
         service: FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService
         model: FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel

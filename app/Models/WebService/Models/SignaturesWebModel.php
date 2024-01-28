@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
+use Nette\Schema\Elements\Structure;
 use Nette\SmartObject;
 
 /**
@@ -53,5 +55,26 @@ class SignaturesWebModel extends WebModel
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function getExpectedParams(): Structure
+    {
+        throw new GoneException();
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function getJsonResponse(): array
+    {
+        throw new GoneException();
     }
 }

@@ -10,7 +10,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  */
 class UnavailableTransitionException extends InvalidStateException
 {

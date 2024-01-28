@@ -6,8 +6,12 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
+/**
+ * @phpstan-type TItem array{label:string,value:int,description:string|null}
+ * @phpstan-implements FilteredDataProvider<TItem>
+ */
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
     private TagTypeService $storedQueryTagTypeService;
@@ -29,11 +33,15 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string
+    public function getItemLabel(int $id): array
     {
         /** @var TagTypeModel|null $tagType */
         $tagType = $this->storedQueryTagTypeService->findByPrimary($id);
-        return $tagType->name;
+        return [
+            'label' => $tagType->name,
+            'value' => $tagType->tag_type_id,
+            'description' => $tagType->description,
+        ];
     }
 
     public function getItems(): array

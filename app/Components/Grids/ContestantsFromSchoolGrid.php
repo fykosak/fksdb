@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -37,10 +37,6 @@ final class ContestantsFromSchoolGrid extends BaseGrid
         );
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
@@ -55,14 +51,14 @@ final class ContestantsFromSchoolGrid extends BaseGrid
         $this->addPresenterButton(
             ':Organizer:Contestant:edit',
             'edit',
-            _('Edit'),
+            new Title(null, _('button.edit')),
             false,
             ['id' => 'contestant_id']
         );
         $this->addPresenterButton(
             ':Organizer:Contestant:detail',
             'detail',
-            _('Detail'),
+            new Title(null, _('button.detail')),
             false,
             ['id' => 'contestant_id']
         );

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
 // phpcs:disable
+use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -45,7 +46,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -78,7 +79,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -92,21 +93,21 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testCreateOrganizer(): void
     {
-        $this->loginUser(5);
+        $this->loginUser(ContestRole::EventManager);
         $data = [
             'team' => [
                 'name' => 'test team A',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => (string)$this->personB->person_id,
-            'member_1_container' => self::personToValues($this->personB),
+            'member_1_container' => self::personToValues($this->event->event_type->contest, $this->personB),
             'member_2' => (string)$this->personC->person_id,
-            'member_2_container' => self::personToValues($this->personC),
+            'member_2_container' => self::personToValues($this->event->event_type->contest, $this->personC),
             'member_3' => (string)$this->personD->person_id,
-            'member_3_container' => self::personToValues($this->personD),
+            'member_3_container' => self::personToValues($this->event->event_type->contest, $this->personD),
             'member_4' => (string)$this->personE->person_id,
-            'member_4_container' => self::personToValues($this->personE),
+            'member_4_container' => self::personToValues($this->event->event_type->contest, $this->personE),
             'captcha' => 'pqrt',
             'privacy' => '1',
         ];
@@ -163,13 +164,13 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
     public function testCreateOrganizerOutDate(): void
     {
         $this->outDateEvent();
-        $this->loginUser(5);
+        $this->loginUser(ContestRole::EventManager);
         $data = [
             'team' => [
                 'name' => 'test team B',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -216,7 +217,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -262,14 +263,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testEditOrganizer(): void
     {
-        $this->loginUser(5);
+        $this->loginUser(ContestRole::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -297,7 +298,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -318,14 +319,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
     public function testEditOrganizerOutDate(): void
     {
         $this->outDateEvent();
-        $this->loginUser(5);
+        $this->loginUser(ContestRole::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personA->person_id,
-            'member_0_container' => self::personToValues($this->personA),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,
@@ -345,14 +346,14 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testEditReplaceMember(): void
     {
-        $this->loginUser(5);
+        $this->loginUser(ContestRole::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [
                 'name' => 'Edited',
             ],
             'member_0' => (string)$this->personB->person_id,
-            'member_0_container' => self::personToValues($this->personB),
+            'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personB),
             'member_1' => null,
             'member_2' => null,
             'member_3' => null,

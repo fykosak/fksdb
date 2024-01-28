@@ -26,7 +26,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): bool
     {
-        return $this->isAllowed('game.diplomas', 'results');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.results', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle
@@ -39,7 +39,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.diplomas', 'calculate');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.calculate', $this->getEvent());
     }
 
     /**
@@ -53,11 +53,11 @@ final class DiplomasPresenter extends BasePresenter
                 'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NOT NULL')
-                    ->count(),
+                    ->count('*'),
                 'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NULL')
-                    ->count(),
+                    ->count('*'),
             ];
         }
         $this->template->items = $items;

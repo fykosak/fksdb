@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -33,7 +31,6 @@ final class ApplicationPresenter extends BasePresenter
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
     private EventService $eventService;
-    private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
     private EventParticipantService $eventParticipantService;
 
@@ -44,12 +41,10 @@ final class ApplicationPresenter extends BasePresenter
 
     final public function injectTernary(
         EventService $eventService,
-        RelatedPersonAuthorizator $relatedPersonAuthorizator,
         EventDispatchFactory $eventDispatchFactory,
         EventParticipantService $eventParticipantService
     ): void {
         $this->eventService = $eventService;
-        $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->eventParticipantService = $eventParticipantService;
     }
@@ -66,12 +61,12 @@ final class ApplicationPresenter extends BasePresenter
                 \sprintf(
                     _('Application for %s: %s'),
                     $this->getEvent()->name,
-                    $this->getEventApplication()->__toString()
+                    $this->getEventApplication()->person->getFullName()
                 ),
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle(null, $this->getEvent()->__toString(), 'fas fa-calendar-plus');
+            return new PageTitle(null, $this->getEvent()->name, 'fas fa-calendar-plus');
         }
     }
 
@@ -81,7 +76,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         $event = $this->getEvent();
-        if ($this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)) {
+        if ($this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'edit', $event)) {
             return true;
         }
         if (!$event->isRegistrationOpened()) {
@@ -130,7 +125,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \ReflectionException
-     * @throws BadTypeException
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
@@ -173,7 +167,7 @@ final class ApplicationPresenter extends BasePresenter
         }
 
         if (
-            !$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) &&
+            !$this->isRelatedPerson($this->getHolder()) &&
             !$this->eventAuthorizator->isAllowed(
                 $this->getEvent(),
                 'application',
@@ -195,8 +189,28 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
+     * User must posses the role (for the resource:privilege) in the context
+     * of the queried contest.
+     */
+    private function isRelatedPerson(BaseHolder $holder): bool
+    {
+        // everyone is related
+        if ($holder->getModelState()->value === Machine::STATE_INIT) {
+            return true;
+        }
+
+        $person = $this->getLoggedPerson();
+        // further on only logged users can be related person
+        if (!$person) {
+            return false;
+        }
+
+        return $holder->getModel()->person_id === $person->person_id;
+    }
+
+    /**
      * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @phpstan-return EventParticipantMachine<BaseHolder>
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -209,7 +223,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected function startup(): void
     {
-        if (in_array($this->getEvent()->event_type_id, [2, 14])) {
+        if (in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
             if ($this->getEventApplication()) {
                 $this->redirect(
                     ':Event:Application:edit',
@@ -302,7 +316,6 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws ConfigurationNotFoundException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
     protected function createComponentApplication(): ApplicationComponent
     {

@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 class PersonTestComponent extends BaseComponent
@@ -29,12 +29,22 @@ class PersonTestComponent extends BaseComponent
     public ?array $tests = [];
 
     private PersonService $personService;
-    private DataTestFactory $dataTestFactory;
 
-    final public function injectPrimary(PersonService $personService, DataTestFactory $dataTestFactory): void
+    final public function injectPrimary(PersonService $personService): void
     {
         $this->personService = $personService;
-        $this->dataTestFactory = $dataTestFactory;
+    }
+
+    /**
+     * @phpstan-return array<string,Test<PersonModel>>
+     */
+    public function getAllTests(): array
+    {
+        $tests = [];
+        foreach (DataTestFactory::getPersonTests($this->container) as $test) {
+            $tests[$test->getId()] = $test;
+        }
+        return $tests;
     }
 
     protected function createComponentForm(): FormControl
@@ -42,16 +52,16 @@ class PersonTestComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('offset', _('Offset'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->offset);
         $form->addText('limit', _('Limit'))
-            ->addRule(Form::INTEGER, _('Must be a int'))
+            ->addRule(Form::INTEGER, _('Must be an integer'))
             ->setDefaultValue($this->limit);
 
         $testsContainer = new ContainerWithOptions($this->container);
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->dataTestFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->getTitle()->title);
+        foreach (DataTestFactory::getPersonTests($this->container) as $index => $test) {
+            $field = $testsContainer->addCheckbox((string)$index, $test->getTitle()->toHtml());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -71,7 +81,7 @@ class PersonTestComponent extends BaseComponent
             $this->tests = [];
             foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
-                    $this->tests[$testId] = $this->dataTestFactory->getTests('person')[$testId];
+                    $this->tests[$testId] = $this->getAllTests()[$testId];
                 }
             }
             $this->offset = $values['offset'];
@@ -81,7 +91,7 @@ class PersonTestComponent extends BaseComponent
     }
 
     /**
-     * @phpstan-return  array<int,array{model:PersonModel,logs:array<string,Message[]>}>
+     * @phpstan-return  array<int,array{model:PersonModel,logs:array<string,TestMessage[]>}>
      */
     private function calculateProblems(): array
     {
@@ -100,7 +110,7 @@ class PersonTestComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'tests' => $this->dataTestFactory->getTests('person'),
+            'tests' => $this->getAllTests(),
             'logs' => $this->calculateProblems(),
         ]);
     }

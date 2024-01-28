@@ -121,7 +121,6 @@ events:
                     modifiable: false
                     description: "Cena v spočtená dle pravidel (http://fykos.cz/rocnik29/tsaf/pozvanka)."
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
             processings:

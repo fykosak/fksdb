@@ -6,12 +6,11 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\EventTypeService;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 
@@ -49,10 +48,6 @@ final class DispatchGrid extends BaseGrid
         return $query;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->filtered = true;
@@ -74,7 +69,13 @@ final class DispatchGrid extends BaseGrid
             '@event.year',
             '@event.role',
         ]);
-        $this->addPresenterButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+        $this->addPresenterButton(
+            'Dashboard:default',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['eventId' => 'event_id']
+        );
     }
 
     protected function configureForm(Form $form): void
@@ -84,6 +85,6 @@ final class DispatchGrid extends BaseGrid
         foreach ($this->eventTypeService->getTable() as $eventType) {
             $items[(string)$eventType->event_type_id] = $eventType->name;
         }
-        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('-- select event type --'));
+        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('Select event type'));
     }
 }

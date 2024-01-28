@@ -24,10 +24,10 @@ class FOFHandler extends Handler
         }
         $submit = $team->getSubmit($task);
         if (is_null($submit)) { // novo zadaný
-            $this->create($task, $team, $points);
+            $this->create($task, $team, $points, SubmitState::from(SubmitState::NotChecked));
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($submit, $points);
-        } elseif ($submit->state->value !== SubmitState::CHECKED) { // check bodovania
+        } elseif ($submit->state->value !== SubmitState::Checked) { // check bodovania
             $this->check($submit, $points);
         } else {
             throw new GameException(\sprintf(_('Task was already submitted and checked'), $submit->points));

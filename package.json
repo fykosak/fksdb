@@ -30,11 +30,12 @@
     "redux-form": "^8.3.10",
     "redux-logger": "^4.0.0",
     "css-loader": "^6.2.0",
-    "sass": "^1.36.0",
+    "sass": "1.69.7",
     "sass-loader": "^12.1.0",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "flag-icon-css": "^3.5.0",
-    "bootstrap": "^5.3.0"
+    "bootstrap": "^5.3.0",
+    "qrcode": "^1.5.3"
   },
   "devDependencies": {
     "@types/d3-axis": "^3.0.0",
@@ -69,6 +70,7 @@
     "webpack": "^5.82.0",
     "webpack-cli": "^5.0.2",
     "webpack-merge": "latest",
-    "resolve-url-loader": "latest"
+    "resolve-url-loader": "latest",
+    "@types/qrcode": "^1.5.5"
   }
 }

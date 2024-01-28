@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Models\Exceptions\GoneException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
  */
 abstract class BaseItem extends BaseComponent
 {
@@ -20,5 +19,5 @@ abstract class BaseItem extends BaseComponent
      */
     abstract public function render(Model $model, int $userPermission): void;
 
-    abstract public function getTitle(): ?Title;
+    abstract public function renderTitle(): void;
 }

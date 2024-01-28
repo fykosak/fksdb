@@ -124,6 +124,7 @@ class ORMExtension extends Extension
                         'destination' => Expect::string()->required(),
                         'params' => Expect::arrayOf(Expect::string(), Expect::string()),
                         'title' => Expect::type(Statement::class),
+                        'icon' => Expect::string()->required(false),
                     ])->castTo('array')
                 ),
             ])->castTo('array'),
@@ -132,7 +133,7 @@ class ORMExtension extends Extension
     }
 
     /**
-     * @phpstan-param array{destination:string,params:array<string,string>,title:string} $def
+     * @phpstan-param array{destination:string,params:array<string,string>,title:string,icon?:string} $def
      */
     private function createLinkFactory(
         string $tableName,
@@ -144,7 +145,13 @@ class ORMExtension extends Extension
         $factory = $builder->addDefinition($this->prefix($tableName . '.link.' . $linkId));
         $factory->setFactory(
             Link::class,
-            [$def['destination'], $def['params'], $this->translate($def['title']), $modelClassName]
+            [
+                $def['destination'],
+                $def['params'],
+                $this->translate($def['title']),
+                $def['icon'] ?? '',
+                $modelClassName,
+            ]
         );
     }
 
@@ -167,7 +174,7 @@ class ORMExtension extends Extension
      *     suffix:string,
      *     states:array<string,array{badge:string,label:string}>,
      * } $definition
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      */
     private function createColumnFactory(
         string $tableName,
@@ -351,7 +358,7 @@ class ORMExtension extends Extension
      *     title:string,
      *     class:class-string<ColumnFactory<M,mixed>>,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      */
     private function registerClassColumnFactory(
         ServiceDefinition $factory,
@@ -432,7 +439,7 @@ class ORMExtension extends Extension
      *     prefix:string,
      *     suffix:string,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function setUpNumberFactory(
@@ -465,7 +472,7 @@ class ORMExtension extends Extension
      *     title:string,
      *     format?:string,
      * } $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function registerAbstractDateTimeRow(
@@ -495,7 +502,7 @@ class ORMExtension extends Extension
 
     /**
      * @phpstan-param TCommonParams $field
-     * @phpstan-template M of \Fykosak\NetteORM\Model
+     * @phpstan-template M of \Fykosak\NetteORM\Model\Model
      * @phpstan-param class-string<ColumnFactory<M,mixed>> $factoryClassName
      */
     private function setUpDefaultFactory(

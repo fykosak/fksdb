@@ -4,80 +4,91 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use FKSDB\Models\Transitions\Statement;
 use Nette\Http\IResponse;
-use Nette\OutOfRangeException;
 
-class DefaultGenerator extends AbstractSymbolGenerator
+/**
+ * @phpstan-type TInfo array<string,array{
+ *      bank_account?: string,
+ *      bank_name:string,
+ *      recipient:string,
+ *      iban:string,
+ *      constant_symbol?:string,
+ *      swift?: string,
+ * }>
+ * @implements Statement<void,PaymentHolder>
+ */
+class DefaultGenerator implements Statement
 {
 
-    private int $variableSymbolStart;
+    protected PaymentService $paymentService;
 
-    private int $variableSymbolEnd;
+    /** @phpstan-var TInfo $params */
+    private array $params;
+
     /**
-     * @phpstan-var array<string,array<string,int|string>>
+     * @phpstan-param TInfo $params
      */
-    private array $info;
-
-    /**
-     * @phpstan-param array<string,array<string,int|string>> $info
-     */
-    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void
+    public function __construct(array $params, PaymentService $paymentService)
     {
-        $this->variableSymbolEnd = $variableSymbolEnd;
-        $this->variableSymbolStart = $variableSymbolStart;
-        $this->info = $info;
-    }
-
-    protected function getVariableSymbolStart(): int
-    {
-        return $this->variableSymbolStart;
-    }
-
-    protected function getVariableSymbolEnd(): int
-    {
-        return $this->variableSymbolEnd;
+        $this->paymentService = $paymentService;
+        $this->params = $params;
     }
 
     /**
-     * @throws UnsupportedCurrencyException
-     * @throws \Exception
-     * @phpstan-ignore-next-line
-     */
-    protected function createPaymentInfo(PaymentModel $modelPayment, int $variableNumber): array
-    {
-        if (array_key_exists($modelPayment->getCurrency()->value, $this->info)) {
-            $info = $this->info[$modelPayment->getCurrency()->value];
-            $info['variable_symbol'] = $variableNumber;
-            return $info;
-        }
-        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), IResponse::S501_NOT_IMPLEMENTED);
-    }
-
-    /**
+     * @param PaymentHolder $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws BadTypeException
      * @throws \Exception
-     * @phpstan-ignore-next-line
      */
-    protected function create(PaymentModel $modelPayment): array
+    final public function __invoke(...$args): void
     {
-        if ($modelPayment->hasGeneratedSymbols()) {
+        [$holder] = $args;
+        if (!$holder instanceof PaymentHolder) {
+            throw new BadTypeException(PaymentHolder::class, $holder);
+        }
+        $model = $holder->getModel();
+        if ($model->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(
-                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->payment_id)
+                \sprintf(_('Payment #%s has already generated symbols.'), $model->payment_id)
             );
         }
-        $maxVariableSymbol = $modelPayment->event->getPayments()
-            ->where('variable_symbol>=?', $this->getVariableSymbolStart())
-            ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
-            ->max('variable_symbol');
-
-        $variableNumber = ($maxVariableSymbol == 0) ? $this->getVariableSymbolStart() : ($maxVariableSymbol + 1);
-        if ($variableNumber > $this->getVariableSymbolEnd()) {
-            throw new OutOfRangeException(_('variable_symbol overflow'));
+        /** @var SchedulePaymentModel|null $schedule */
+        $schedule = $model->getSchedulePayment()->fetch();
+        $contains = 0;
+        if ($schedule) {
+            $contains += 1;
+        } else {
+            throw new NotImplementedException();
         }
-        return $this->createPaymentInfo($modelPayment, $variableNumber);
+        $variableNumber = $this->createVariableSymbol($contains, $model);
+        if (!isset($this->params[$model->getCurrency()->value])) {
+            throw new UnsupportedCurrencyException($model->getCurrency(), IResponse::S501_NOT_IMPLEMENTED);
+        }
+        $info = $this->params[$model->getCurrency()->value];
+        $info['variable_symbol'] = $variableNumber;
+
+        $this->paymentService->storeModel($info, $model);
+    }
+
+    private function createVariableSymbol(int $contains, PaymentModel $payment): string
+    {
+        $date = new \DateTime();
+        return sprintf(
+            '%02d%02d%01d%05d',
+            $date->format('y'),
+            $date->format('m'),
+            $contains,
+            $payment->payment_id
+        );
     }
 }

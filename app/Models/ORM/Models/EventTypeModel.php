@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 
@@ -50,17 +50,11 @@ final class EventTypeModel extends Model
         switch ($this->event_type_id) {
             default:
                 return Expect::null();
-            case 15:
-                return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.mff.cuni.cz>'),
-                    'capacity' => Expect::int(0),
-                ])->castTo('array');
+            case 1:
             case 2:
             case 14:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vercah@fykos.cz'),
-                    'notifyFrom' => Expect::string('Den s experimentální fyzikou <dsef@fykos.cz>'),
+                    'hashSalt' => Expect::string(),
                 ])->castTo('array');
             case 16:
                 return Expect::structure([
@@ -72,13 +66,6 @@ final class EventTypeModel extends Model
                     'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterResolutionTime' => Expect::string('až naprší a uschne'),
-                ])->castTo('array');
-            case 11:
-            case 12:
-                return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string('Setkáni řešitelů Výfuku <vyfuk@vyfuk.mff.cuni.cz>'),
-                    'capacity' => Expect::int(30),
                 ])->castTo('array');
             case 3:
                 return Expect::structure([
@@ -99,11 +86,22 @@ final class EventTypeModel extends Model
                 ])->castTo('array');
             case 10:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vyfuk@vyfuk.mff.cuni.cz'),
-                    'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.mff.cuni.cz>'),
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.org>'),
                     'capacity' => Expect::int(29),
                     'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
+                ])->castTo('array');
+            case 11:
+            case 12:
+                return Expect::structure([
+                    'capacity' => Expect::int(0),
+                ])->castTo('array');
+            case 15:
+                return Expect::structure([
+                    'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
+                    'notifyFrom' => Expect::string(' Výfučí Kyber Koncil <vyfuk@vyfuk.org>'),
+                    'capacity' => Expect::int(0),
                 ])->castTo('array');
         }
     }

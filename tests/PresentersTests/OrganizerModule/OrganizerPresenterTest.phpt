@@ -9,8 +9,10 @@ $container = require '../../Bootstrap.php';
 
 // phpcs:enable
 use FKSDB\Components\EntityForms\OrganizerFormComponent;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -20,11 +22,13 @@ class OrganizerPresenterTest extends AbstractOrganizerPresenterTestCase
     private PersonModel $person;
     private OrganizerModel $organizer;
     private PersonModel $organizerPerson;
+    private ContestModel $contest;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->loginUser();
+        $this->contest = $this->container->getByType(ContestService::class)->findByPrimary(ContestModel::ID_FYKOS);
         $this->container->getByType(OrganizerService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
@@ -56,7 +60,7 @@ class OrganizerPresenterTest extends AbstractOrganizerPresenterTestCase
         $response = $this->createFormRequest('create', [
             OrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->person->person_id,
-                'person_id_container' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->contest, $this->person),
                 'since' => "1",
                 'order' => "0",
                 'domain_alias' => 't',
@@ -107,7 +111,7 @@ class OrganizerPresenterTest extends AbstractOrganizerPresenterTestCase
         $response = $this->createFormRequest('edit', [
             OrganizerFormComponent::CONTAINER => [
                 'person_id' => (string)$this->organizerPerson->person_id,
-                'person_id_container' => self::personToValues($this->person),
+                'person_id_container' => self::personToValues($this->contest, $this->person),
                 'since' => "1",
                 'order' => "2",
                 'domain_alias' => 'b',

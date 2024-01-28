@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use Nette\DI\Container;
@@ -23,11 +23,7 @@ class PersonSearchContainer extends SearchContainer
     public const SEARCH_ID = 'id';
     public const SEARCH_NONE = 'none';
 
-    protected PersonFactory $personFactory;
-
     private string $searchType;
-
-    protected PersonProvider $personProvider;
 
     protected PersonService $personService;
 
@@ -38,13 +34,9 @@ class PersonSearchContainer extends SearchContainer
     }
 
     final public function injectPrimary(
-        PersonFactory $personFactory,
-        PersonService $personService,
-        PersonProvider $provider
+        PersonService $personService
     ): void {
-        $this->personFactory = $personFactory;
         $this->personService = $personService;
-        $this->personProvider = $provider;
     }
 
     protected function createSearchControl(): ?BaseControl
@@ -62,7 +54,7 @@ class PersonSearchContainer extends SearchContainer
                 $control->setHtmlAttribute('autocomplete', 'email');
                 return $control;
             case self::SEARCH_ID:
-                return $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider);
+                return new PersonSelectBox(true, new PersonProvider($this->container), _('Person'));
             case self::SEARCH_NONE:
                 return null;
             default:

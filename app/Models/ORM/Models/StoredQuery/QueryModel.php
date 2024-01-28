@@ -6,8 +6,8 @@ namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**

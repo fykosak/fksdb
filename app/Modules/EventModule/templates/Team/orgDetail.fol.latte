@@ -1,0 +1,19 @@
+{layout './orgDetail.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{default bool $isOrganizer = true}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.note',
+            'fyziklani_team.category',
+            'fyziklani_team.created',
+            ],$model,1024}
+        </div>
+    </div>
+    {include rank from './orgDetail.latte', model:$model}
+    {include members from './orgDetail.latte', model:$model}
+    {include tests from './orgDetail.latte', model:$model}
+{/block}

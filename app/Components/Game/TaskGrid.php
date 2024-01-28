@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 
 /**
@@ -32,12 +31,9 @@ class TaskGrid extends BaseGrid
         return $this->event->getTasks();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
+        $this->paginate = false;
         $this->addSimpleReferencedColumns([
             '@fyziklani_task.fyziklani_task_id',
             '@fyziklani_task.label',
