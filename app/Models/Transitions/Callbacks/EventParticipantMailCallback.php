@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Events\Transitions;
+namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -25,7 +24,7 @@ use Nette\Utils\Strings;
  * experienced the transition.
  * @phpstan-extends MailCallback<ParticipantHolder>
  */
-class MailSender extends MailCallback
+class EventParticipantMailCallback extends MailCallback
 {
     private string $templateFile;
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\MockEnvironment;
 
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\Core\Language;
 
 class MockPresenter extends BasePresenter
 {
@@ -13,8 +14,8 @@ class MockPresenter extends BasePresenter
         return '';
     }
 
-    public function getLang(): string
+    public function getLang(): Language
     {
-        return 'cs';
+        return Language::tryFrom('cs');
     }
 }

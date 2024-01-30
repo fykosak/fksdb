@@ -38,7 +38,7 @@ events:
                         condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     spare->applied:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Nasadit náhradníka')

@@ -13,6 +13,8 @@ use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
@@ -28,11 +30,16 @@ class ResultsComponent extends BaseComponent
     public ?array $parameters;
     public ?StoredQuery $storedQuery = null;
     private ExportFormatFactory $exportFormatFactory;
-    public bool $showParametrizeForm = true;
+    private bool $showParametrizeForm;
 
-    final public function injectPrimary(
-        ExportFormatFactory $exportFormatFactory
-    ): void {
+    public function __construct(Container $container, bool $showParametrizeForm = true)
+    {
+        parent::__construct($container);
+        $this->showParametrizeForm = $showParametrizeForm;
+    }
+
+    final public function injectPrimary(ExportFormatFactory $exportFormatFactory): void
+    {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
@@ -81,6 +88,10 @@ class ResultsComponent extends BaseComponent
 
     final public function render(): void
     {
+        $error = $this->getSqlError();
+        if ($error) {
+            $this->flashMessage($error->getMessage(), Message::LVL_ERROR);
+        }
         if (isset($this->parameters)) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];

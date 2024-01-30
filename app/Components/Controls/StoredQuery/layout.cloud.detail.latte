@@ -1,0 +1,11 @@
+{layout ../@layout.latte}ň
+{varType Fykosak\NetteORM\TypedSelection|FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel[] $tags}
+{block content}
+    <p>
+        {foreach $tags as $tagType}
+            <span class="badge bg-color-{$tagType->color}" title="{$tagType->description}">
+                {$tagType->name}
+            </span>
+        {/foreach}
+    </p>
+{/block}

@@ -11,22 +11,22 @@ events:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited)
                     __init->spare:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite Spare')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite Spare')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Confirm participation')
@@ -42,32 +42,32 @@ events:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall1')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send first call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare1)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare1)
                     invited->invited1:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall1')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send first call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited1)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited1)
                     spare1->spare2:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall2')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send second call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare2)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare2)
                     invited1->invited2:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCall2')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send second call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited2)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited2)
                     spare2->spare3:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCallLast')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send last call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare3)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/spare3)
                     invited2->invited3:
                         condition: and(after(FKSDB\Models\Events\Semantics\Parameter('deadlineCallLast')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Send last call')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited3)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(sous/invited3)
                     interested->applied:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Validate as a participant')

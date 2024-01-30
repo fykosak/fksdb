@@ -51,7 +51,7 @@ abstract class BasePresenter extends Presenter
      * @internal
      */
     public ?string $lang = null;
-    private string $language;
+    private Language $language;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
@@ -252,14 +252,14 @@ abstract class BasePresenter extends Presenter
         parent::startup();
         if (!isset($this->language)) {
             $this->language = $this->selectLang();
-            $this->translator->setLang($this->language);
+            $this->translator->setLang($this->language->value);
         }
     }
 
     /**
      * @throws UnsupportedLanguageException
      */
-    private function selectLang(): string
+    private function selectLang(): Language
     {
         $candidate = $this->lang ?? $this->getUserPreferredLang();
         $supportedLanguages = $this->translator->getSupportedLanguages();
@@ -273,16 +273,13 @@ abstract class BasePresenter extends Presenter
         if (!in_array($candidate, $supportedLanguages)) {
             throw new UnsupportedLanguageException($candidate);
         }
-        return $candidate;
+        return Language::tryFrom($candidate);
     }
 
-    private function getUserPreferredLang(): ?string
+    private function getUserPreferredLang(): ?Language
     {
         $person = $this->getLoggedPerson();
-        if ($person) {
-            return $person->getPreferredLang();
-        }
-        return null;
+        return $person ? $person->getPreferredLang() : null;
     }
 
 

@@ -21,32 +21,32 @@ events:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                           - FKSDB\Models\Events\Transitions\MailSender(tabor/invited)
+                           - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/invited)
                     __init->spare:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/spare)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/spare)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/spare)
                     invited->applied:
                         condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Potrvrdit učast')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-applied)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/confirm-applied)
                     spare->interested:
                         condition: before(FKSDB\Models\Events\Semantics\Parameter('deadline'))
                         label: _('Chci jet')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-interested)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tabor/confirm-interested)
                     applied->paid:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Zaplatil')
