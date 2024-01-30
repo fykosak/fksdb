@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Models\TaskContributionType;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -114,28 +113,10 @@ final class HandoutFormComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $provider = new PersonProvider($this->container);
-        $organizers = [];
-        /** @var PersonModel $person */
-        foreach (
-            $this->personService->getTable()
-                ->where([
-                    ':org.contest_id' => $this->contestYear->contest_id,
-                    ':org.since <= ?' => $this->contestYear->year,
-                    ':org.until IS NULL OR :org.until <= ?' => $this->contestYear->year,
-                ]) as $person
-        ) {
-            $organizers[$person->person_id] = $person->getFullName();
-        }
-
         $provider->filterOrganizers($this->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->contestYear->getTasks($this->series)->order('tasknr') as $task) {
-            $select = $form->addMultiSelect(
-                self::TASK_PREFIX . $task->task_id . '2',
-                $task->label . ' ' . $task->name->getText($this->translator->lang)
-            );
-            $select->setItems($organizers);
-            $control = $this->personFactory->createPersonSelect(
+            $control = new PersonSelectBox(
                 false,
                 $provider,
                 $task->label . ' ' . $task->name->getText($this->translator->lang)

@@ -6,7 +6,6 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
@@ -25,9 +24,6 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         $this->searchTable = $this->storedQueryTagTypeService->getTable();
     }
 
-    /**
-     * @phpstan-return array<int,TData>
-     */
     public function getFilteredItems(?string $search): array
     {
         $search = trim((string)$search);
@@ -48,32 +44,21 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
         ];
     }
 
-    /**
-     * @phpstan-return array<int,TData>
-     */
     public function getItems(): array
     {
-        $tagTypes = $this->searchTable->order('name');
+        $tagTypes = $this->searchTable
+            ->order('name');
 
         $result = [];
         /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
-            $result[] = $this->serializeItem($tagType);
+            $result[] = [
+                'label' => $tagType->name,
+                'value' => $tagType->tag_type_id,
+                'description' => $tagType->description,
+            ];
         }
         return $result;
-    }
-
-    /**
-     * @param TagTypeModel $model
-     * @phpstan-return TData
-     */
-    public function serializeItem(Model $model): array
-    {
-        return [
-            'label' => $model->name,
-            'value' => $model->tag_type_id,
-            'description' => $model->description,
-        ];
     }
 
     /**

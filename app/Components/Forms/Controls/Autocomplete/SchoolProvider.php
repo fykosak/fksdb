@@ -68,7 +68,7 @@ class SchoolProvider implements FilteredDataProvider
         $result = [];
         /** @var SchoolModel $school */
         foreach ($schools as $school) {
-            $result[] = $this->serializeItem($school);
+            $result[] = $this->getItem($school);
         }
         return $result;
     }
@@ -83,7 +83,6 @@ class SchoolProvider implements FilteredDataProvider
     }
 
     /**
-     * @return never
      * @throws NotImplementedException
      */
     public function getItems(): array
@@ -94,12 +93,12 @@ class SchoolProvider implements FilteredDataProvider
     /**
      * @phpstan-return TItem
      */
-    public function serializeItem(Model $model): array
+    private function getItem(SchoolModel $school): array
     {
         return [
-            'label' => $model->label()->toText(),
-            'html' => $model->label()->toHtml(),
-            'value' => $model->school_id,
+            'label' => $school->label()->toText(),
+            'html' => $school->label()->toHtml(),
+            'value' => $school->school_id,
         ];
     }
 

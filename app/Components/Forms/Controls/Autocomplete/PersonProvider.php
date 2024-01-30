@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\DI\Container;
 
@@ -74,9 +73,6 @@ class PersonProvider implements FilteredDataProvider
         return $this->getItem($person);
     }
 
-    /**
-     * @phpstan-return array<int,TData>
-     */
     public function getItems(): array
     {
         $persons = $this->searchTable
@@ -85,25 +81,28 @@ class PersonProvider implements FilteredDataProvider
         $result = [];
         /** @var PersonModel $person */
         foreach ($persons as $person) {
-            $result[] = $this->serializeItem($person);
+            $result[] = $this->getItem($person);
         }
         return $result;
     }
 
     /**
-     * @phpstan-return TData
-     * @param PersonModel $model
+     * @phpstan-return array{
+     *     label:string,
+     *     value:int,
+     *     place:string|null,
+     * }
      */
-    public function serializeItem(Model $model): array
+    private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $model->getAddress(PostContactType::from(PostContactType::DELIVERY));
+        $address = $person->getAddress(PostContactType::from(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }
         return [
-            'label' => $model->getFullName(),
-            'value' => $model->person_id,
+            'label' => $person->getFullName(),
+            'value' => $person->person_id,
             'place' => $place,
         ];
     }

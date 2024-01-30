@@ -31,11 +31,17 @@ class AutocompleteSelectBox extends TextBase
 
     private string $ajaxUrl;
 
-    private string $renderMethod;
+    /**
+     * Body of JS function(ul, item) returning jQuery element.
+     *
+     * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
+     * @var string|null
+     */
+    private ?string $renderMethod;
 
     private bool $attachedJSON = false;
 
-    public function __construct(bool $ajax, ?string $label, string $renderMethod)
+    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null)
     {
         parent::__construct($label);
 
@@ -59,6 +65,21 @@ class AutocompleteSelectBox extends TextBase
         return $this->dataProvider ?? null;
     }
 
+    public function getRenderMethod(): ?string
+    {
+        return $this->renderMethod;
+    }
+
+    public function isAjax(): bool
+    {
+        return $this->ajax;
+    }
+
+    public function isMultiSelect(): bool
+    {
+        return $this->multiSelect;
+    }
+
     /** @phpstan-param TProvider $dataProvider */
     public function setDataProvider(DataProvider $dataProvider): void
     {
@@ -74,10 +95,10 @@ class AutocompleteSelectBox extends TextBase
         $control = parent::getControl();
         $control->addAttributes([
             'data-ac' => 1,
-            'data-ac-ajax' => (int)$this->ajax,
-            'data-ac-multiselect' => (int)$this->multiSelect,
+            'data-ac-ajax' => (int)$this->isAjax(),
+            'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
-            'data-ac-render-method' => $this->renderMethod,
+            'data-ac-render-method' => $this->getRenderMethod(),
             'class' => self::SELECTOR_CLASS . ' form-control',
         ]);
 
@@ -102,7 +123,7 @@ class AutocompleteSelectBox extends TextBase
             ]);
         }
 
-        if (!$this->ajax) {
+        if (!$this->isAjax()) {
             $control->addAttributes([
                 'data-ac-items' => json_encode($this->getDataProvider()->getItems()),
             ]);
@@ -135,7 +156,7 @@ class AutocompleteSelectBox extends TextBase
      */
     public function setValue($value): self
     {
-        if ($this->multiSelect) {
+        if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
             } elseif ($value === '') {
