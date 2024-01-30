@@ -12,8 +12,6 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
-use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
@@ -25,7 +23,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -312,14 +309,6 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCode(): CodeRedirectComponent
-    {
-        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
      * @phpstan-return TransitionButtonsComponent<TeamModel2>
      * @throws ForbiddenRequestException
      * @throws NotFoundException
@@ -334,25 +323,6 @@ final class TeamPresenter extends BasePresenter
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
             $this->getEntity()
-        );
-    }
-
-    /**
-     * @phpstan-return CodeTransitionComponent<TeamModel2>
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
-    {
-        return new CodeTransitionComponent(
-            $this->getContext(),
-            $this->getEntity(),
-            TeamState::tryFrom(TeamState::Arrived), // TODO
-            $this->getMachine()
         );
     }
 

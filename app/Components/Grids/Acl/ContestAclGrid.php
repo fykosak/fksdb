@@ -89,6 +89,6 @@ final class ContestAclGrid extends BaseList
      */
     protected function getModels(): TypedSelection
     {
-        return $this->loginService->getTable()->where(':grant.contest_id', $this->contest->contest_id);
+        return $this->loginService->getTable()->where(':contest_grant.contest_id', $this->contest->contest_id);
     }
 }

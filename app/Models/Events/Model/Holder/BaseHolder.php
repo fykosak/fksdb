@@ -58,7 +58,6 @@ class BaseHolder implements ModelHolder
 
     public function addField(Field $field): void
     {
-        $field->holder = $this;
         $this->fields[$field->name] = $field;
     }
 
@@ -140,12 +139,12 @@ class BaseHolder implements ModelHolder
         $container->setOption('label', _('Participant'));
 
         foreach ($this->fields as $name => $field) {
-            if (!$field->isVisible()) {
+            if (!$field->isVisible($this)) {
                 continue;
             }
-            $component = $field->createFormComponent();
+            $component = $field->createFormComponent($this);
             $container->addComponent($component, $name);
-            $field->setFieldDefaultValue($component);
+            $field->setFieldDefaultValue($component, $this);
         }
         return $container;
     }

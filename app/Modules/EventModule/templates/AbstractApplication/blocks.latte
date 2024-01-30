@@ -7,17 +7,6 @@
     </div>
 {/define}
 
-{define codeTransition, bool $isOrganizer}
-    {if $control->getComponent('codeTransition')->available() && $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Attendance'}</h2>
-                {control codeTransition}
-            </div>
-        </div>
-    {/if}
-{/define}
-
 {define titleButtons,FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,bool $isOrganizer}
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}

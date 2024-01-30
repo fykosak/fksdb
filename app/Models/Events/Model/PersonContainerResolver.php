@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
@@ -16,7 +15,7 @@ class PersonContainerResolver implements Resolver
 {
     use SmartObject;
 
-    private Field $field;
+    private BaseHolder $holder;
     /** @phpstan-var callable(BaseHolder):bool|bool */
     private $modifiableCondition;
     /** @phpstan-var callable(BaseHolder):bool|bool */
@@ -28,12 +27,12 @@ class PersonContainerResolver implements Resolver
      * @phpstan-param callable(BaseHolder):bool|bool $visibleCondition
      */
     public function __construct(
-        Field $field,
+        BaseHolder $holder,
         $modifiableCondition,
         $visibleCondition,
         SelfResolver $selfResolver
     ) {
-        $this->field = $field;
+        $this->holder = $holder;
         $this->modifiableCondition = $modifiableCondition;
         $this->visibleCondition = $visibleCondition;
         $this->selfResolver = $selfResolver;
@@ -52,7 +51,7 @@ class PersonContainerResolver implements Resolver
     {
         return $this->selfResolver->isModifiable($person) ||
             (is_callable($this->modifiableCondition)
-                ? ($this->modifiableCondition)($this->field->holder)
+                ? ($this->modifiableCondition)($this->holder)
                 : $this->modifiableCondition);
     }
 
@@ -60,7 +59,7 @@ class PersonContainerResolver implements Resolver
     {
         return $this->selfResolver->isVisible($person) ||
             (is_callable($this->visibleCondition)
-                ? ($this->visibleCondition)($this->field->holder)
+                ? ($this->visibleCondition)($this->holder)
                 : $this->visibleCondition);
     }
 }
