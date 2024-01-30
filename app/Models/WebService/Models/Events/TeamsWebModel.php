@@ -53,12 +53,9 @@ class TeamsWebModel extends EventWebModel
             ];
             /** @var TeamTeacherModel $teacher */
             foreach ($team->getTeachers() as $teacher) {
-                $teamData['teachers'][] = array_merge(
-                    $teacher->person->__toArray(),
-                    [
-                        'code' => $teacher->createMachineCode(),
-                    ]
-                );
+                $teamData['teachers'][] = array_merge($teacher->person->__toArray(), [
+                    'code' => $teacher->createMachineCode(),
+                ]);
             }
             /** @var TeamMemberModel $member */
             foreach ($team->getMembers() as $member) {

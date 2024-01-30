@@ -26,6 +26,11 @@ final class ContestantsFromSchoolGrid extends BaseGrid
         $this->school = $school;
     }
 
+    public function inject(ContestantService $service): void
+    {
+        $this->service = $service;
+    }
+
     /**
      * @phpstan-return TypedSelection<ContestantModel>
      */
@@ -62,10 +67,5 @@ final class ContestantsFromSchoolGrid extends BaseGrid
             false,
             ['id' => 'contestant_id']
         );
-    }
-
-    public function inject(ContestantService $service): void
-    {
-        $this->service = $service;
     }
 }

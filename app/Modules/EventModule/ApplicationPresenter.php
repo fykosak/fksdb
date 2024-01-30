@@ -8,8 +8,6 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
-use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
@@ -21,7 +19,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -41,7 +38,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected EventParticipantService $eventParticipantService;
 
-    public function injectServiceService(EventParticipantService $service): void
+    public function injectService(EventParticipantService $service): void
     {
         $this->eventParticipantService = $service;
     }
@@ -289,14 +286,6 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCode(): CodeRedirectComponent
-    {
-        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
      * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
@@ -311,25 +300,6 @@ final class ApplicationPresenter extends BasePresenter
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
             $this->getEntity()
-        );
-    }
-
-    /**
-     * @phpstan-return CodeTransitionComponent<EventParticipantModel>
-     * @throws ForbiddenRequestException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @throws EventNotFoundException
-     * @throws NotFoundException
-     */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
-    {
-        return new CodeTransitionComponent(
-            $this->getContext(),
-            $this->getEntity(),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine(), // @phpstan-ignore-line
         );
     }
 
