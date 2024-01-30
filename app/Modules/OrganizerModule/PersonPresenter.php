@@ -14,8 +14,8 @@ use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -61,8 +61,8 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -70,9 +70,11 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function authorizedDetail(): bool
     {
@@ -88,8 +90,8 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -124,8 +126,8 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -175,9 +177,10 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function createComponentDetailContainer(): StalkingContainer
     {
@@ -212,9 +215,9 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NotFoundException
      */
     protected function createComponentCreateForm(): PersonFormComponent
     {
@@ -223,7 +226,7 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
@@ -232,7 +235,7 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
@@ -241,7 +244,7 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     private function createComponentPostContactForm(PostContactType $type): AddressFormComponent
     {
@@ -253,7 +256,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
      */
@@ -272,7 +275,7 @@ final class PersonPresenter extends BasePresenter
                 if ($this->contestAuthorizator->isAllowed($person, 'detail.full', $this->getSelectedContest())) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
-            } catch (ModelNotFoundException $exception) {
+            } catch (NotFoundException $exception) {
                 if ($throw) {
                     throw $exception;
                 }
@@ -283,9 +286,10 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): PersonFormComponent
     {

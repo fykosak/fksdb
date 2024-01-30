@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\SelectBox;
 
@@ -19,14 +20,14 @@ class ChooserFactory extends AbstractFactory
         $this->optionsProvider = $optionsProvider;
     }
 
-    public function createComponent(Field $field): SelectBox
+    public function createComponent(Field $field, BaseHolder $holder): SelectBox
     {
         $component = new SelectBox($field->label);
         $component->setOption('description', $field->description);
 
         $component->setPrompt($this->prompt);
 
-        $options = $this->optionsProvider->getOptions($field);
+        $options = $this->optionsProvider->getOptions();
         $opts = [];
         foreach ($options as $key => $option) {
             /** @phpstan-ignore-next-line */

@@ -116,7 +116,6 @@ events:
                                     label: _('Ještě něco, co bychom o Tobě měli vědět?')
             modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
 
             processings:

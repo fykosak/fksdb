@@ -69,6 +69,10 @@ final class TeamList extends BaseList
             'lang'
         );
         $row->addComponent(
+            new SimpleItem($this->container, '@fyziklani_team.place'),
+            'place'
+        );
+        $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.phone'),
             'phone'
         );

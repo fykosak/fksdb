@@ -6,33 +6,17 @@ namespace FKSDB\Components\TeamSeating;
 
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\InvalidStateException;
+use Nette\Utils\Html;
 
 final class Place2024 implements Place
 {
     public string $col;
     public int $row;
-    public string $sector;
 
     public function __construct(int $row, string $col)
     {
         $this->row = $row;
         $this->col = $col;
-        $sectors = [['R', 'G', 'B'], ['Y', 'V', 'D']];
-        if ($this->row < 14) {
-            $x = 0;
-        } else {
-            $x = 1;
-        }
-        if (in_array($this->col, ['A', 'B', 'C', 'D'])) {
-            $y = 0;
-        } elseif (in_array($this->col, ['E', 'F', 'G', 'H'])) {
-            $y = 1;
-        } elseif (in_array($this->col, ['I', 'J', 'K', 'L'])) {
-            $y = 2;
-        } else {
-            throw new InvalidStateException();
-        }
-        $this->sector = $sectors[$x][$y];
     }
 
     public static function fromPlace(string $place): self
@@ -101,12 +85,27 @@ final class Place2024 implements Place
 
     public function sector(): string
     {
-        return $this->sector;
+        $sectors = [['R', 'G', 'B'], ['Y', 'V', 'D']];
+        if ($this->row < 14) {
+            $x = 0;
+        } else {
+            $x = 1;
+        }
+        if (in_array($this->col, ['A', 'B', 'C', 'D'])) {
+            $y = 0;
+        } elseif (in_array($this->col, ['E', 'F', 'G', 'H'])) {
+            $y = 1;
+        } elseif (in_array($this->col, ['I', 'J', 'K', 'L'])) {
+            $y = 2;
+        } else {
+            throw new InvalidStateException();
+        }
+        return $sectors[$x][$y];
     }
 
     public function sectorName(string $language): string
     {
-        return self::getSectors()[$this->sector]->getText($language); //@phpstan-ignore-line
+        return self::getSectors()[$this->sector()]->getText($language); //@phpstan-ignore-line
     }
 
     public function layout(): string
@@ -131,5 +130,15 @@ final class Place2024 implements Place
     public function label(): string
     {
         return $this->row . $this->col;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes([
+                'class' => 'badge',
+                'data-sector' => $this->sector(),
+            ])
+            ->addText($this->label());
     }
 }

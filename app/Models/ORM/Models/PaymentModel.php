@@ -31,21 +31,6 @@ use Nette\Security\Resource;
  * @property-read string|null $swift
  * @property-read int $want_invoice
  * @property-read string|null $invoice_id
- * @phpstan-type SerializedPaymentModel array{
- *      personId:int,
- *      paymentId:int,
- *      state:string,
- *      price:float|null,
- *      currency:string|null,
- *      constantSymbol:string|null,
- *      variableSymbol:string|null,
- *      specificSymbol:string|null,
- *      bankAccount:string|null,
- *      bankName:string|null,
- *      recipient:string|null,
- *      iban:string|null,
- *      swift:string|null,
- * }
  */
 final class PaymentModel extends Model implements Resource
 {
@@ -101,28 +86,6 @@ final class PaymentModel extends Model implements Resource
                 break;
         }
         return $value;
-    }
-
-    /**
-     * @phpstan-return SerializedPaymentModel
-     */
-    public function __toArray(): array
-    {
-        return [
-            'personId' => $this->person_id,
-            'paymentId' => $this->payment_id,
-            'state' => $this->state->value,
-            'price' => $this->price,
-            'currency' => $this->currency,
-            'constantSymbol' => $this->constant_symbol,
-            'variableSymbol' => $this->variable_symbol,
-            'specificSymbol' => $this->specific_symbol,
-            'bankAccount' => $this->bank_account,
-            'bankName' => $this->bank_name,
-            'recipient' => $this->recipient,
-            'iban' => $this->iban,
-            'swift' => $this->swift,
-        ];
     }
 
     public function hasGeneratedSymbols(): bool

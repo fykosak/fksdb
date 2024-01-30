@@ -38,10 +38,13 @@ DELETE FROM org;
 DELETE FROM person_history;
 DELETE FROM contestant;
 DELETE FROM contest_year;
+DELETE FROM contest_grant;
 DELETE FROM school;
 DELETE FROM address;
 DELETE FROM auth_token;
+
 DELETE FROM login;
+DELETE FROM person_info;
 DELETE FROM person;
 EOD
 	echo "Cleared $DB_NAME$i"

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\BaseRole;
-use FKSDB\Models\Authorization\ContestRole;
-use FKSDB\Models\Authorization\ContestYearRole;
-use FKSDB\Models\Authorization\EventRole\ContestOrganizerRole;
-use FKSDB\Models\Authorization\EventRole\EventOrganizerRole;
-use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\Fyziklani\TeamTeacherRole;
-use FKSDB\Models\Authorization\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\ContestOrganizerRole;
+use FKSDB\Models\Authorization\Roles\Events\EventOrganizerRole;
+use FKSDB\Models\Authorization\Roles\Events\EventRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\BaseRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;

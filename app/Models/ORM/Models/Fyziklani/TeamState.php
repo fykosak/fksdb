@@ -13,7 +13,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
 {
     // phpcs:disable
     public const Applied = 'applied';
-    public const Approved = 'approved';
     public const Arrived = 'arrived';
     public const Cancelled = 'cancelled';
     public const Disqualified = 'disqualified';
@@ -37,7 +36,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::Pending:
-            case self::Approved:
                 return new self(self::Applied);
             case self::Participated:
                 return new self(self::Participated);
@@ -52,7 +50,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             case self::Arrived:
                 return 'danger';
             case self::Applied:
-            case self::Approved:
                 return 'info';
             case self::Pending:
                 return 'warning';
@@ -79,8 +76,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
                 return _('Applied');
             case self::Pending:
                 return _('Pending');
-            case self::Approved:
-                return _('Approved');
             case self::Spare:
                 return _('Spare');
             case self::Participated:
@@ -104,7 +99,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
             new self(self::Applied),
             new self(self::Arrived),
             new self(self::Pending),
-            new self(self::Approved),
             new self(self::Spare),
             new self(self::Participated),
             new self(self::Missed),

@@ -11,18 +11,20 @@ use Nette\Utils\Html;
 
 final class SubmitState extends FakeStringEnum implements EnumColumn
 {
-    public const NOT_CHECKED = 'not_checked';
-    public const CHECKED = 'checked';
+    // phpcs:disable
+    public const NotChecked = 'not_checked';
+    public const Checked = 'checked';
+    // phpcs:enable
 
     public function badge(): Html
     {
         switch ($this->value) {
-            case self::CHECKED:
+            case self::Checked:
                 return Html::el('span')
                     ->addAttributes(['class' => 'badge bg-success'])
                     ->addText($this->label());
             default:
-            case self::NOT_CHECKED:
+            case self::NotChecked:
                 return Html::el('span')
                     ->addAttributes(['class' => 'badge bg-danger'])
                     ->addText($this->label());
@@ -32,10 +34,10 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
-            case self::CHECKED:
+            case self::Checked:
                 return 'checked';
             default:
-            case self::NOT_CHECKED:
+            case self::NotChecked:
                 return 'not checked';
         }
     }
@@ -43,8 +45,8 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::NOT_CHECKED),
-            new self(self::CHECKED),
+            new self(self::NotChecked),
+            new self(self::Checked),
         ];
     }
 

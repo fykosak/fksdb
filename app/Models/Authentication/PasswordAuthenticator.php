@@ -9,7 +9,6 @@ use FKSDB\Models\Authentication\Exceptions\InvalidCredentialsException;
 use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Security\Authenticator;
@@ -43,11 +42,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         }
         $this->logAuthentication($login);
         return $login;
-    }
-
-    public function findPersonByEmail(string $id): ?PersonModel
-    {
-        return $this->personService->findByEmail($id);
     }
 
     /**

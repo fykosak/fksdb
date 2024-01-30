@@ -8,20 +8,17 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
-use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -41,7 +38,7 @@ final class ApplicationPresenter extends BasePresenter
 
     protected EventParticipantService $eventParticipantService;
 
-    public function injectServiceService(EventParticipantService $service): void
+    public function injectService(EventParticipantService $service): void
     {
         $this->eventParticipantService = $service;
     }
@@ -108,10 +105,10 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function renderDetail(): void
     {
@@ -142,7 +139,6 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -162,8 +158,9 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
+     * @throws NotFoundException
      */
     public function authorizedEdit(): bool
     {
@@ -177,8 +174,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -252,8 +249,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): SingleFormComponent
     {
@@ -289,21 +286,13 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCode(): CodeRedirectComponent
-    {
-        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
      * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -311,25 +300,6 @@ final class ApplicationPresenter extends BasePresenter
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
             $this->getEntity()
-        );
-    }
-
-    /**
-     * @phpstan-return CodeTransitionComponent<EventParticipantModel>
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
-    {
-        return new CodeTransitionComponent(
-            $this->getContext(),
-            $this->getEntity(),
-            EventParticipantStatus::tryFrom(EventParticipantStatus::PARTICIPATED),
-            $this->getMachine(), // @phpstan-ignore-line
         );
     }
 
@@ -346,8 +316,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentRests(): PersonRestComponent
     {
@@ -367,8 +337,8 @@ final class ApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {

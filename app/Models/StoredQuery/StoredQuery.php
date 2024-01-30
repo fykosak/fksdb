@@ -101,7 +101,9 @@ class StoredQuery implements Resource
         }
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @phpstan-return array<string,scalar>
+     */
     public function getParameters(bool $all = false): array
     {
         if ($all) {

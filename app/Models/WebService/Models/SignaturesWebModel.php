@@ -58,7 +58,7 @@ class SignaturesWebModel extends WebModel
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
-    protected function isAuthorized(array $params): bool
+    protected function isAuthorized(): bool
     {
         return false;
     }
@@ -74,7 +74,7 @@ class SignaturesWebModel extends WebModel
     /**
      * @throws GoneException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         throw new GoneException();
     }

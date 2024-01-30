@@ -183,7 +183,6 @@ events:
                         modifiable: false
                         description: _("Price calculated according to the rules on our website.")
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy
 
             processings:

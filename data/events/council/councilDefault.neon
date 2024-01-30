@@ -56,7 +56,6 @@ events:
                 note:
                    label: _('Další poznámky')
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
             processings:

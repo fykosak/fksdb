@@ -120,7 +120,7 @@ final class TeamModel2 extends Model implements Resource
      */
     public function getNonCheckedSubmits(): TypedGroupedSelection
     {
-        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::CHECKED);
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitState::Checked);
     }
 
     public function hasAllSubmitsChecked(): bool

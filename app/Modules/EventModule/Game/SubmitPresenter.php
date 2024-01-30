@@ -7,9 +7,9 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\Form\FormComponent;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -40,7 +40,7 @@ final class SubmitPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -78,7 +78,7 @@ final class SubmitPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException

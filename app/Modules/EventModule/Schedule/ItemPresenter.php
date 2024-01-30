@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\Schedule\Attendance\CodeComponent;
+use FKSDB\Components\Schedule\Attendance\CodeAttendance;
 use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -44,7 +44,7 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -58,7 +58,7 @@ final class ItemPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
@@ -78,7 +78,7 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -131,7 +131,7 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -153,7 +153,7 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -167,11 +167,15 @@ final class ItemPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
-    protected function createComponentCode(): CodeComponent
+    protected function createComponentCode(): CodeAttendance
     {
-        return new CodeComponent($this->getContext(), $this->getEntity());
+        return new CodeAttendance(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->eventDispatchFactory->getPersonScheduleMachine()
+        );
     }
 }

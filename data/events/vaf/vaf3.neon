@@ -82,7 +82,6 @@ events:
                                     label: _('Zdravotní omezení')
                                     description: _('Máš nějaká zdravotní omezení, která by tě mohla omezovat během akce? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže... Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?')
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
                 - @events.privacyPolicy
                 - @events.captcha
             processings:
