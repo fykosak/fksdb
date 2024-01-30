@@ -84,7 +84,6 @@ class GoogleAuthenticator extends AbstractAuthenticator
             default:
                 return null;
         }
-
         /** @var OrganizerModel|null $organizers */
         $organizers = $this->organizerService->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])

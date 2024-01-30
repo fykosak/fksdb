@@ -63,7 +63,7 @@ final class EventParticipantMachine extends Machine
     /**
      * @param EventParticipantModel $model
      */
-    public function createHolder(Model $model): BaseHolder
+    public function createHolder(Model $model): ModelHolder
     {
         switch ($model->event->event_type_id) {
             case 2:

@@ -88,6 +88,7 @@ class MailTemplateFactory
         if (file_exists($filename)) {
             return $filename;
         }
+
         $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
         if (file_exists($filename)) {
             return $filename;

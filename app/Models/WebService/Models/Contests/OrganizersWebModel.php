@@ -47,7 +47,6 @@ class OrganizersWebModel extends WebModel
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
         $doc->appendChild($rootNode);
-
         /** @var OrganizerModel $organizer */
         foreach ($organizers as $organizer) {
             $organizerNode = $doc->createElement('org');

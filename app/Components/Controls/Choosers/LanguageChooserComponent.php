@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Modules\Core\Language;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;

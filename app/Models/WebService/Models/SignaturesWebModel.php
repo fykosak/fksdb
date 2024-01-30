@@ -40,7 +40,6 @@ class SignaturesWebModel extends WebModel
         $doc = new \DOMDocument();
 
         $rootNode = $doc->createElement('signatures');
-
         $organizers = $contest->getOrganizers();
         /** @var OrganizerModel $organizer */
         foreach ($organizers as $organizer) {

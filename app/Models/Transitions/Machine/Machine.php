@@ -145,8 +145,6 @@ abstract class Machine
         );
     }
 
-    /* ********** execution ******** */
-
     /**
      * @template SHolder of ModelHolder
      * @phpstan-param Transition<SHolder>[] $transitions
