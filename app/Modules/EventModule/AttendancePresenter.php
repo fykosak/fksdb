@@ -44,7 +44,7 @@ class AttendancePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
-    public function authorizedDefault(): bool
+    public function authorizedDetail(): bool
     {
         return $this->eventAuthorizator->isAllowed($this->getModel(), 'organizer', $this->getEvent());
     }
@@ -53,7 +53,7 @@ class AttendancePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
-    public function renderDefault(): void
+    public function renderDetail(): void
     {
         $this->template->model = $this->getModel();
     }
@@ -62,7 +62,7 @@ class AttendancePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
-    public function titleDefault(): PageTitle
+    public function titleDetail(): PageTitle
     {
         $model = $this->getModel();
         if ($model instanceof TeamModel2) {
@@ -71,7 +71,7 @@ class AttendancePresenter extends BasePresenter
                 Html::el('span')
                     ->addText(sprintf('(%s) %s', $model->fyziklani_team_id, $model->name))
                     ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($model->state->badge())),
-                'fas fa'
+                'fas fa-door-open'
             );
         } else {
             return new PageTitle(
@@ -79,7 +79,7 @@ class AttendancePresenter extends BasePresenter
                 Html::el('span')
                     ->addText(sprintf('(%s) %s', $model->event_participant_id, $model->person->getFullName()))
                     ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($model->status->badge())),
-                'fas fa'
+                'fas fa-door-open'
             );
         }
     }
@@ -106,7 +106,7 @@ class AttendancePresenter extends BasePresenter
 
     public function titleSearch(): PageTitle
     {
-        return new PageTitle(null, _('Search by code'), 'fas fa');
+        return new PageTitle(null, 'Prezence', 'fas fa-door-open');
     }
 
     /**
@@ -132,7 +132,7 @@ class AttendancePresenter extends BasePresenter
                 if ($application->event_id !== $this->getEvent()->event_id) {
                     throw new BadRequestException(_('Application belongs to another event.'));
                 }
-                $this->redirect('default', ['id' => $application->getPrimary()]);
+                $this->redirect('detail', ['id' => $application->getPrimary()]);
             },
             $this->getEvent()->getSalt()
         );

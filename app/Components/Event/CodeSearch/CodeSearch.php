@@ -32,6 +32,12 @@ final class CodeSearch extends CodeForm
         ($this->callback)($model);
     }
 
+    protected function configureForm(Form $form): void
+    {
+        parent::configureForm($form);
+        $form->getComponent('code')->setHtmlAttribute('autofocus', '1');//@phpstan-ignore-line
+    }
+
     protected function getSalt(): string
     {
         return $this->salt;
