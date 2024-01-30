@@ -53,6 +53,9 @@ class FormComponent extends AjaxComponent
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
+            if (!$data['code']) {
+                throw new GameException(_('Submitted code cannot be empty.'));
+            }
             $task = $codeProcessor->getTask($data['code']);
             $team = $codeProcessor->getTeam($data['code']);
             $handler = $this->event->createGameHandler($this->getContext());
