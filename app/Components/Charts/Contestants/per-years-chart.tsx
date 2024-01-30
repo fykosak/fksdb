@@ -2,12 +2,11 @@ import Ordinal from '@translator/ordinal';
 import { scaleLinear } from 'd3-scale';
 import { curveCatmullRom } from 'd3-shape';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
+import Legend, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesColor, getSeriesLabel, parseData, YearsData } from './contestants-data';
 import { Translator } from '@translator/translator';
-import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
 export interface OwnProps {
     data: YearsData;
