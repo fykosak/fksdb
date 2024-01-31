@@ -1,15 +1,15 @@
-import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/nette-fetch';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { Action, Dispatch } from 'redux';
 import { focus, reset } from 'redux-form';
-import { FORM_NAME } from './Components/MainForm';
+import { FORM_NAME } from './Components/main-form';
 
 export interface SubmitFormRequest {
     code: string;
     points: number;
 }
 
-export const submitStart = async (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest>> => {
+export const submitStart = async (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url: string): Promise<DataResponse<SubmitFormRequest>> => {
     const data = {
         ...values,
         code: values.code,

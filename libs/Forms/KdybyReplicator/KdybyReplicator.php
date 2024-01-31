@@ -7,12 +7,13 @@ namespace Kdyby\Extension\Forms\Replicator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
+use Nette\Forms\Control;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\IControl;
 use Nette\Forms\ISubmitterControl;
 use Nette\InvalidArgumentException;
 use Nette\MemberAccessException;
@@ -37,8 +38,9 @@ class Replicator extends Container
     /** @var callable */
     protected $factoryCallback;
     private bool $submittedBy = false;
+    /** @var ContainerWithOptions[] */
     private array $created = [];
-    private array $httpPost;
+    private array $httpPost; // @phpstan-ignore-line
     private \Nette\DI\Container $container;
 
     /**
@@ -105,7 +107,8 @@ class Replicator extends Container
 
     private function getFirstControlName(): ?string
     {
-        $controls = iterator_to_array($this->getComponents(false, IControl::class));
+        /** @var Component[] $controls */
+        $controls = iterator_to_array($this->getComponents(false, Control::class));
         $firstControl = reset($controls);
         return $firstControl ? $firstControl->name : null;
     }
@@ -142,7 +145,7 @@ class Replicator extends Container
             throw new InvalidArgumentException("Container with name '$name' already exists.");
         }
 
-        return $this->getComponent($name);
+        return $this->getComponent($name); // @phpstan-ignore-line
     }
 
 
@@ -150,7 +153,7 @@ class Replicator extends Container
      * @param array|\Traversable $values
      * @return Container|Replicator
      */
-    public function setValues($values, bool $erase = false)
+    public function setValues($values, bool $erase = false) // @phpstan-ignore-line
     {
         foreach ($values as $name => $value) {
             if ((is_array($value) || $value instanceof \Traversable) && !$this->getComponent((string)$name, false)) {
@@ -179,7 +182,7 @@ class Replicator extends Container
      * Creates default containers
      * @internal
      */
-    protected function createDefault()
+    protected function createDefault() // @phpstan-ignore-line
     {
         if (!$this->createDefault) {
             return;
@@ -200,7 +203,7 @@ class Replicator extends Container
     {
         if (!isset($this->httpPost)) {
             $path = explode(self::NAME_SEPARATOR, $this->lookupPath(\Nette\Forms\Form::class));
-            $this->httpPost = Arrays::get($this->getForm()->getHttpData(), $path, null);
+            $this->httpPost = Arrays::get($this->getForm()->getHttpData(), $path, null); // @phpstan-ignore-line
         }
         return $this->httpPost;
     }
@@ -210,7 +213,7 @@ class Replicator extends Container
      */
     public function remove(Container $container, bool $cleanUpGroups = false): void
     {
-        if (!$container->parent === $this) {
+        if (!$container->parent === $this) { // @phpstan-ignore-line
             throw new InvalidArgumentException(
                 'Given component ' . $container->name . ' is not children of ' . $this->getName() . '.'
             );
@@ -238,7 +241,7 @@ class Replicator extends Container
         $affected = [];
         foreach ($this->getForm()->getGroups() as $group) {
             /** @var \SplObjectStorage $groupControls */
-            $groupControls = $controlsProperty->getValue($group);
+            $groupControls = $controlsProperty->getValue($group); // @phpstan-ignore-line
 
             foreach ($components as $control) {
                 if ($groupControls->contains($control)) {
@@ -254,7 +257,7 @@ class Replicator extends Container
         // remove affected & empty groups
         if ($cleanUpGroups && $affected) {
             foreach ($this->getForm()->getComponents(false, Container::class) as $container) {
-                if ($index = array_search($container->currentGroup, $affected, true)) {
+                if ($index = array_search($container->currentGroup, $affected, true)) { // @phpstan-ignore-line
                     unset($affected[$index]);
                 }
             }
@@ -291,7 +294,7 @@ class Replicator extends Container
     public function isAllFilled(array $exceptChildren = []): bool
     {
         $components = [];
-        foreach ($this->getComponents(false, IControl::class) as $control) {
+        foreach ($this->getComponents(false, Control::class) as $control) {
             /** @var BaseControl $control */
             $components[] = $control->getName();
         }
@@ -309,7 +312,7 @@ class Replicator extends Container
 
     private static ?string $registered = null;
 
-    public static function register(string $methodName = 'addDynamic'): void
+    public static function register(\Nette\DI\Container $diContainer, string $methodName = 'addDynamic'): void
     {
         if (self::$registered) {
             Container::extensionMethod(self::$registered, function () {
@@ -317,9 +320,12 @@ class Replicator extends Container
             });
         }
 
-        Container::extensionMethod($methodName, function (Container $container, $name, $factory, $createDefault = 0) {
-            return $container[$name] = new Replicator($factory, $this->container, $createDefault);
-        });
+        Container::extensionMethod(
+            $methodName,
+            function (Container $container, $name, $factory, $createDefault = 0) use ($diContainer) {
+                return $container[$name] = new Replicator($factory, $diContainer, $createDefault);
+            }
+        );
 
         if (self::$registered) {
             return;
@@ -333,7 +339,7 @@ class Replicator extends Container
                 if (is_callable($callback)) {
                     $callback($replicator, $button->parent);
                 }
-                $replicator->remove($button->parent);
+                $replicator->remove($button->parent); // @phpstan-ignore-line
             };
             return $button;
         });
@@ -363,5 +369,3 @@ class Replicator extends Container
         self::$registered = $methodName;
     }
 }
-
-Replicator::register();

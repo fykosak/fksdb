@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $answer_id
@@ -15,6 +15,6 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface $submitted_on
  * @property-read string $answer
  */
-class SubmitQuestionAnswerModel extends Model
+final class SubmitQuestionAnswerModel extends Model
 {
 }

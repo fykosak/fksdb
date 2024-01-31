@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 enum EmailMessageState: string implements EnumColumn
@@ -45,5 +46,10 @@ enum EmailMessageState: string implements EnumColumn
             self::Sent => _('Sent'),
             self::Waiting => _('Waiting'),
         };
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

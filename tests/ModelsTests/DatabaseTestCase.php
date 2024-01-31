@@ -6,6 +6,7 @@ namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
@@ -49,6 +50,7 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, \FKSDB\Tests\TEMP_DIR);
+        /** @var AddressModel $address */
         $address = $this->container->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );
@@ -93,24 +95,25 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SCHEDULE_ITEM,
             DbNames::TAB_SCHEDULE_GROUP,
 
-            DbNames::TAB_E_FYZIKLANI_PARTICIPANT,
             DbNames::TAB_EVENT_PARTICIPANT,
             DbNames::TAB_FYZIKLANI_TEAM_TEACHER,
             DbNames::TAB_FYZIKLANI_TEAM_MEMBER,
             DbNames::TAB_FYZIKLANI_TEAM,
-            DbNames::TAB_E_FYZIKLANI_TEAM,
             DbNames::TAB_FYZIKLANI_GAME_SETUP,
-            DbNames::TAB_EVENT_ORG,
+            DbNames::TAB_EVENT_GRANT,
+            DbNames::TAB_EVENT_ORGANIZER,
             DbNames::TAB_EVENT,
 
-            DbNames::TAB_ORG,
+            DbNames::TAB_ORGANIZER,
             DbNames::TAB_PERSON_HISTORY,
             DbNames::TAB_CONTESTANT,
             DbNames::TAB_CONTEST_YEAR,
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
             DbNames::TAB_AUTH_TOKEN,
+            DbNames::TAB_CONTEST_GRANT,
             DbNames::TAB_LOGIN,
+            DbNames::TAB_PERSON_INFO,
             DbNames::TAB_PERSON,
         ];
         foreach ($tables as $table) {
@@ -162,7 +165,7 @@ abstract class DatabaseTestCase extends TestCase
         PersonModel $person,
         int $acYear,
         ?SchoolModel $school = null,
-        ?int $studyYear = null,
+        string $studyYear = null,
         ?string $class = null
     ): PersonHistoryModel {
         return $this->container->getByType(PersonHistoryService::class)->storeModel([
@@ -170,7 +173,7 @@ abstract class DatabaseTestCase extends TestCase
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,
             'class' => $class,
-            'study_year' => $studyYear,
+            'study_year_new' => $studyYear,
         ]);
     }
 

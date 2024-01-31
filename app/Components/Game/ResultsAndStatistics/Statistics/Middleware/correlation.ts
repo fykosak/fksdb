@@ -1,8 +1,5 @@
-import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/SubmitModel';
-import {
-    getAverageNStandardDeviation,
-    StdDevOutput,
-} from './stdDev';
+import { SubmitModel } from 'FKSDB/Models/ORM/Models/Fyziklani/submit-model';
+import { getAverageNStandardDeviation, StdDevOutput } from './std-dev';
 
 export interface PreprocessedSubmit extends SubmitModel {
     timestamp: number;

@@ -1,13 +1,20 @@
 @import "variables";
 @import "colors";
-@import "mixins/navigation-item";
+@import "navigation-item";
 
 [data-bs-theme="light"][data-style-id~="default"] {
-  @include page-theme($body-color);
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
 [data-bs-theme="dark"][data-style-id~="default"] {
+  --fks-page-theme-color: #{$body-color-dark};
   @include page-theme($body-color-dark, #000);
+}
+
+[data-style-id~="login"] {
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
 [data-style-id="contest-fykos"],
@@ -17,7 +24,14 @@
 [data-style-id="event-type-6"],
 [data-style-id="event-type-7"],
 [data-style-id="event-type-16"] {
+  --fks-page-theme-color: #{$fykos-color};
   @include page-theme($fykos-color);
+
+  main {
+   // background-image: url(./../../www/images/contests/fykos.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
 
 [data-style-id="contest-vyfuk"],
@@ -25,27 +39,33 @@
 [data-style-id="event-type-11"],
 [data-style-id="event-type-12"],
 [data-style-id="event-type-15"] {
+  --fks-page-theme-color: #{$vyfuk-color};
   @include page-theme($vyfuk-color);
 }
 
 [data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
+  --fks-page-theme-color: #{$ctyrboj-color};
   @include page-theme($ctyrboj-color);
 }
 
 [data-style-id="event-type-1"] {
+  --fks-page-theme-color: #{$fof-color};
   @include page-theme($fof-color);
 }
 
 [data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
+  --fks-page-theme-color: #{$dsef-color};
   @include page-theme($dsef-color);
 }
 
 [data-style-id="event-type-9"] {
+  --fks-page-theme-color: #{$fol-color};
   @include page-theme($fol-color);
 }
 
 [data-style-id="error"] {
-  @include page-theme(map-get($other-colors, "error"));
+  --fks-page-theme-color: #{$danger};
+  @include page-theme($danger);
 }
 
 .icon {
@@ -57,7 +77,6 @@
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: 1em 1em;
-    // content: url(./../../www/images/contests/fykos.svg);
   }
 
   &.icon-fykos {

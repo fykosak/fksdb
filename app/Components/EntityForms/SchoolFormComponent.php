@@ -4,53 +4,101 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
 /**
- * @property SchoolModel|null $model
+ * @phpstan-extends EntityFormComponent<SchoolModel>
  */
 class SchoolFormComponent extends EntityFormComponent
 {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 
     private SchoolService $schoolService;
-    private SchoolFactory $schoolFactory;
+    private AddressService $addressService;
 
     final public function injectPrimary(
-        SchoolFactory $schoolFactory,
+        AddressService $addressService,
         SchoolService $schoolService
     ): void {
-        $this->schoolFactory = $schoolFactory;
+        $this->addressService = $addressService;
         $this->schoolService = $schoolService;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     * @throws ForbiddenRequestException
+     */
     protected function configureForm(Form $form): void
     {
-        $form->addComponent($this->schoolFactory->createContainer(), self::CONT_SCHOOL);
+        $container = new ModelContainer($this->container, 'school');
+        $container->addField('name_full', ['required' => false]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('name_abbrev', ['required' => true]);
+        $container->addField('email', ['required' => false]);
+        $container->addField('ic', ['required' => false]);
+        $container->addField('izo', ['required' => false]);
+        $container->addField('note', ['required' => false]);
+        $container->addField('active', ['required' => false]);
+        $container->addField('study_h', ['required' => false]);
+        $container->addField('study_p', ['required' => false]);
+        $container->addField('study_u', ['required' => false]);
+        $container->addField('verified', ['required' => false]);
+        $address = new ReferencedId(
+            new AddressSearchContainer($this->container),
+            new AddressDataContainer($this->container, false, true),
+            $this->addressService,
+            new AddressHandler($this->container)
+        );
+        $container->addComponent($address, 'address_id');
+        $form->addComponent($container, self::CONT_SCHOOL);
+    }
+
+    protected function getTemplatePath(): string
+    {
+        return __DIR__ . '/school.latte';
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     protected function handleFormSuccess(Form $form): void
     {
+        /** @phpstan-var array{school:array{
+         *     name_full:string,
+         *     name:string,
+         *     name_abbrev:string,
+         *     description:string,
+         *     email:string,
+         *     ic:string,
+         *     izo:string,
+         *     active:bool,
+         *     note:string,
+         *     address_id:int,
+         * }} $values
+         */
         $values = $form->getValues('array');
         $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
-        $this->schoolService->storeModel($schoolData, $this->model ?? null);
+        $this->schoolService->storeModel($schoolData, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS
         );
-        $this->getPresenter()->redirect('list');
+        $this->getPresenter()->redirect('default');
     }
 
     protected function setDefaults(Form $form): void

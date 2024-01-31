@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\SchoolModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method SchoolModel storeModel(array $data, ?SchoolModel $model = null)
- * @method SchoolModel findByPrimary($key)
+ * @phpstan-extends Service<SchoolModel>
  */
-class SchoolService extends Service
+final class SchoolService extends Service
 {
 
     public function isCzSkSchool(?int $schoolId): bool

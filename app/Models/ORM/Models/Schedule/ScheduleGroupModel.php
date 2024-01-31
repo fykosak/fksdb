@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\LocalizedString;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\Model;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
 
 /**
@@ -22,38 +22,45 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface $end
  * @property-read string $name_cs
  * @property-read string $name_en
+ * @property-read LocalizedString $name
  * @property-read \DateTimeInterface|null $registration_begin
  * @property-read \DateTimeInterface|null $registration_end
- * @property-read \DateTimeInterface|null $modification_end
+ * @phpstan-type SerializedScheduleGroupModel array{
+ *      scheduleGroupId:int,
+ *      scheduleGroupType:string,
+ *      registrationBegin:string|null,
+ *      registrationEnd:string|null,
+ *      name:array<string, string>,
+ *      eventId:int,
+ *      start:string,
+ *      end:string,
+ * }
  */
-class ScheduleGroupModel extends Model implements Resource, NodeCreator
+final class ScheduleGroupModel extends Model implements Resource, NodeCreator
 {
+    public const RESOURCE_ID = 'event.schedule.group';
 
-    public const RESOURCE_ID = 'event.scheduleGroup';
-
+    /**
+     * @phpstan-return TypedGroupedSelection<ScheduleItemModel>
+     */
     public function getItems(): TypedGroupedSelection
     {
-        return $this->related(DbNames::TAB_SCHEDULE_ITEM);
+        /** @phpstan-var TypedGroupedSelection<ScheduleItemModel> $selection */
+        $selection = $this->related(DbNames::TAB_SCHEDULE_ITEM);
+        return $selection;
     }
 
-    public function getName(): LocalizedString
-    {
-        return new LocalizedString([
-            'cs' => $this->name_cs,
-            'en' => $this->name_en,
-        ]);
-    }
-
+    /**
+     * @phpstan-return SerializedScheduleGroupModel
+     */
     public function __toArray(): array
     {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
-            'registrationBegin' => $this->getRegistrationBegin(),
-            'registrationEnd' => $this->getRegistrationEnd(),
-            'modificationEnd' => $this->getModificationEnd(),
-            'label' => $this->getName()->__serialize(),
-            'name' => $this->getName()->__serialize(),
+            'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
+            'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
+            'name' => $this->name->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
@@ -65,18 +72,11 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return self::RESOURCE_ID;
     }
 
-    public function canCreate(): bool
+    public function isModifiable(): bool
     {
-        $begin = $this->getRegistrationBegin();
-        $end = $this->getRegistrationEnd();
-        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
-    }
-
-    public function canEdit(): bool
-    {
-        $begin = $this->getRegistrationBegin();
-        $end = $this->getModificationEnd();
-        return ($begin && $begin->getTimestamp() <= time()) && ($end && $end->getTimestamp() >= time());
+        $begin = $this->registration_begin ?? $this->event->registration_begin;
+        $end = $this->registration_end ?? $this->event->registration_end;
+        return ($begin->getTimestamp() <= time()) && ($end->getTimestamp() >= time());
     }
 
     public function hasFreeCapacity(): bool
@@ -94,42 +94,24 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         return $available > 0;
     }
 
-    public function getRegistrationBegin(): ?\DateTimeInterface
-    {
-        return $this->registration_begin ?? $this->event->registration_begin;
-    }
-
-    public function getRegistrationEnd(): ?\DateTimeInterface
-    {
-        return $this->registration_end ?? $this->event->registration_end;
-    }
-
-    public function getModificationEnd(): ?\DateTimeInterface
-    {
-        return $this->modification_end ?? $this->registration_end ?? $this->event->registration_end;
-    }
-
-    public function hasStarted(): bool
-    {
-        return $this->start->getTimestamp() < time();
-    }
-
-    public function hasEnded(): bool
-    {
-        return $this->end->getTimestamp() < time();
-    }
-
     /**
      * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
     {
-        $value = parent::__get($key);
         switch ($key) {
             case 'schedule_group_type':
-                $value = ScheduleGroupType::tryFrom($value);
+                $value = ScheduleGroupType::tryFrom(parent::__get($key));
                 break;
+            case 'name':
+                $value = new LocalizedString([
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ]);
+                break;
+            default:
+                $value = parent::__get($key);
         }
         return $value;
     }
@@ -142,14 +124,14 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
         $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupId' => (string)$this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type->value,
-            'eventId' => $this->event_id,
+            'eventId' => (string)$this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => $this->getName()->__serialize(),
+            'name' => $this->name->__serialize(),
         ], $document, $node);
         return $node;
     }

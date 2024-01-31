@@ -6,19 +6,28 @@ namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\PresenterButton;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
-use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-extends BaseGrid<PersonModel,array{}>
+ */
 class PersonsGrid extends BaseGrid
 {
-    /** @var PersonModel[] trunkId => ModelPerson */
+    /** @phpstan-var PersonModel[] trunkId => ModelPerson */
     private array $pairs;
+    /** @phpstan-var TypedSelection<PersonModel> $data */
     private TypedSelection $data;
 
+    /**
+     * @phpstan-param TypedSelection<PersonModel> $trunkPersons
+     * @phpstan-param PersonModel[] $pairs
+     */
     public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
         parent::__construct($container);
@@ -26,6 +35,9 @@ class PersonsGrid extends BaseGrid
         $this->pairs = $pairs;
     }
 
+    /**
+     * @phpstan-return TypedSelection<PersonModel>
+     */
     protected function getModels(): TypedSelection
     {
         return $this->data;
@@ -33,38 +45,39 @@ class PersonsGrid extends BaseGrid
 
     protected function configure(): void
     {
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson($row),
-                new Title(null, _('Person A')),
+                new Title(null, _('Person A'))
             ),
             'display_name_a'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => $this->renderPerson(
                     $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]
                 ),
-                new Title(null, _('Person B')),
+                new Title(null, _('Person B'))
             ),
             'display_name_b'
         );
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
                 fn(PersonModel $row): string => sprintf(
                     '%0.2f',
                     $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]
                 ),
-                new Title(null, _('Similarity'))
+                new Title(null, _('Score'))
             ),
             'score'
         );
-        $this->addButton(
-            new PresenterButton(
+        $this->addTableButton(
+            new Button(
                 $this->container,
+                $this->getPresenter(),
                 new Title(null, _('Merge A<-B')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -77,9 +90,10 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeAB'
         );
-        $this->addButton(
-            new PresenterButton(
+        $this->addTableButton(
+            new Button(
                 $this->container,
+                $this->getPresenter(),
                 new Title(null, _('Merge B<-A')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:merge',
@@ -91,9 +105,10 @@ class PersonsGrid extends BaseGrid
             ),
             'mergeBA'
         );
-        $this->addButton(
-            new PresenterButton(
+        $this->addTableButton(
+            new Button(
                 $this->container,
+                $this->getPresenter(),
                 new Title(null, _('It\'s not a duplicity')),
                 fn(PersonModel $row): array => [
                     'Deduplicate:dontMerge',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
@@ -82,7 +81,7 @@ class SubmitHandlerFactory
     /**
      * @throws ForbiddenRequestException
      * @throws StorageException
-     * @throws ModelException
+     * @throws \PDOException
      */
     public function handleRevoke(SubmitModel $submit): void
     {
@@ -96,7 +95,7 @@ class SubmitHandlerFactory
 
     public function handleSave(FileUpload $file, TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        $submit = $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::UPLOAD));
+        $submit = $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::UPLOAD));
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
@@ -104,12 +103,13 @@ class SubmitHandlerFactory
 
     public function handleQuizSubmit(TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        return $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::QUIZ));
+        return $this->storeSubmit($task, $contestant, SubmitSource::from(SubmitSource::QUIZ));
     }
 
     private function storeSubmit(TaskModel $task, ContestantModel $contestant, SubmitSource $source): SubmitModel
     {
-        $submit = $this->submitService->findByContestant($contestant, $task);
+        /** @var SubmitModel|null $submit */
+        $submit = $contestant->getSubmits()->where('task_id', $task)->fetch();
         $data = [
             'submitted_on' => new DateTime(),
             'source' => $source->value,

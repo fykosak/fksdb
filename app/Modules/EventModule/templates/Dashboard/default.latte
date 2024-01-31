@@ -1,36 +1,42 @@
+{varType string $lang}
+{varType bool $isOrganizer}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType Fykosak\Utils\UI\Navigation\NavItem|null $applicationNav}
 {block outerContent}
-    {varType FKSDB\Models\ORM\Models\EventModel $event}
-    {varType string $webUrl}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Info'}</h2>
-            <p>{$event->report}</p>
-            {control columnTable [
-            'event.event_type',
-            'event.year',
-            'event.event_year',
-            'event.begin',
-            'event.end',
-            'event.registration_begin',
-            'event.registration_end',
-            ], $event, 1024}
-            {*<div class="row">
-                <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">
-                    {_'Event web-site'}
-                </b>
-                <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-                    <a href="{$webUrl}">{$webUrl}</a>
-                </span>
-            </div>*}
-            <a class="btn btn-outline-secondary mt-3"
-               href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit'}</a>
-        </div>
 
-    </div>
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            {control navigationChooser:board 'Event.Dashboard.default'}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Info'}</h2>
+                <p>{$event->report->getText($lang)}</p>
+                {control columnTable [
+                'event.event_type',
+                'event.year',
+                'event.event_year',
+                'event.begin',
+                'event.end',
+                'event.registration_begin',
+                'event.registration_end',
+                ], $event, 1024}
+                <a class="btn btn-outline-secondary mt-3"
+                   href="{plink :Organizer:Event:edit id=>$event->event_id ,contestId => $event->event_type->contest_id, year=>$event->year}">{_'Edit event'}</a>
+            </div>
         </div>
-    </div>
+    {/if}
+    {if $applicationNav}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Application'}</h2>
+                {control navigationChooser:boardInline [$applicationNav]}
+            </div>
+        </div>
+    {/if}
+    {foreach $navRoots as $root}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{$root['title']->toHtml()}</h2>
+                {control navigationChooser:board $root}
+            </div>
+        </div>
+    {/foreach}
 {/block}

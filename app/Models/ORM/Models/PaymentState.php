@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 enum PaymentState: string implements EnumColumn
@@ -15,7 +16,14 @@ enum PaymentState: string implements EnumColumn
     case InProgress = 'in_progress'; // new payment
     case Init = 'init'; // virtual state for correct ORM
 
-    public function getBehaviorType(): string
+    public function badge(): Html
+    {
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])->addText(
+            $this->label()
+        );
+    }
+
+    public function behaviorType(): string
     {
         return match ($this) {
             self::InProgress => 'primary',
@@ -23,13 +31,6 @@ enum PaymentState: string implements EnumColumn
             self::Received => 'success',
             self::Canceled, self::Init => 'secondary',
         };
-    }
-
-    public function badge(): Html
-    {
-        return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
-            ->addText($this->label());
     }
 
     public function label(): string
@@ -41,5 +42,15 @@ enum PaymentState: string implements EnumColumn
             self::Canceled => _('Payment canceled'),
             self::Init => _('Init'),
         };
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
+    }
+
+    public function getBehaviorType(): string
+    {
+        return $this->behaviorType();
     }
 }

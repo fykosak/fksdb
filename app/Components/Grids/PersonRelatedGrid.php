@@ -9,12 +9,17 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 
-class PersonRelatedGrid extends BaseGrid
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-extends BaseGrid<TModel,array{}>
+ */
+final class PersonRelatedGrid extends BaseGrid
 {
     protected PersonModel $person;
+    /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
     protected array $definition;
     protected FieldLevelPermissionValue $userPermissions;
 
@@ -30,8 +35,12 @@ class PersonRelatedGrid extends BaseGrid
         $this->userPermissions = $userPermissions;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<TModel> $query */
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions->value) {
             $query->where('1=0');
@@ -42,15 +51,15 @@ class PersonRelatedGrid extends BaseGrid
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
     protected function configure(): void
     {
-
         $this->paginate = false;
-        $this->addColumns($this->definition['rows']);
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns(array_map(fn($value) => '@' . $value, $this->definition['rows']));
         foreach ($this->definition['links'] as $link) {
-            $this->addORMLink($link);
+            $this->addLink($link);
         }
         // $this->addCSVDownloadButton();
     }

@@ -7,9 +7,12 @@ namespace FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
+/**
+ * @phpstan-extends Machine<PaymentHolder>
+ */
 final class PaymentMachine extends Machine
 {
     private PaymentService $paymentService;
@@ -21,7 +24,7 @@ final class PaymentMachine extends Machine
     }
 
     /**
-     * @param PaymentModel|null $model
+     * @param PaymentModel $model
      */
     public function createHolder(Model $model): PaymentHolder
     {

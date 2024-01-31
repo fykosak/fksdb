@@ -6,8 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
-use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
 use Nette\Security\Resource;
@@ -26,8 +25,9 @@ use Nette\Security\Resource;
  * @property-read EmailMessageState $state
  * @property-read \DateTimeInterface $created
  * @property-read \DateTimeInterface $sent
+ * @property-read bool|int $priority
  */
-class EmailMessageModel extends Model implements Resource
+final class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
 
@@ -46,7 +46,7 @@ class EmailMessageModel extends Model implements Resource
         } elseif (isset($this->recipient)) {
             $mail = $this->recipient;
         } else {
-            throw new InvalidStateException('Recipient org person_id is required');
+            throw new InvalidStateException('Recipient organizer person_id is required');
         }
         $unsubscribedEmailService->checkEmail($mail);
         $message->addTo($mail);
@@ -66,11 +66,11 @@ class EmailMessageModel extends Model implements Resource
 
     public function getResourceId(): string
     {
-        return static::RESOURCE_ID;
+        return self::RESOURCE_ID;
     }
 
     /**
-     * @return EmailMessageState|FakeStringEnum|mixed|null
+     * @return EmailMessageState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
@@ -78,7 +78,7 @@ class EmailMessageModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = EmailMessageState::tryFrom($value);
+                $value = EmailMessageState::from($value);
                 break;
         }
         return $value;

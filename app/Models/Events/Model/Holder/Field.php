@@ -12,15 +12,14 @@ class Field
     public string $name;
     public ?string $label;
     public ?string $description;
-    public BaseHolder $holder;
     private FieldFactory $factory;
     /** @var mixed */
     private $default;
-    /** @var bool|callable */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $required;
-    /** @var bool|callable */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $modifiable;
-    /** @var bool|callable */
+    /** @phpstan-var bool|(callable(BaseHolder):bool) */
     private $visible;
 
     public function __construct(string $name, ?string $label)
@@ -56,25 +55,25 @@ class Field
     /*
      * Forms
      */
-    public function createFormComponent(): BaseControl
+    public function createFormComponent(BaseHolder $holder): BaseControl
     {
-        return $this->factory->createComponent($this);
+        return $this->factory->createComponent($this, $holder);
     }
 
-    public function setFieldDefaultValue(BaseControl $control): void
+    public function setFieldDefaultValue(BaseControl $control, BaseHolder $holder): void
     {
-        $this->factory->setFieldDefaultValue($control, $this);
+        $this->factory->setFieldDefaultValue($control, $this, $holder);
     }
 
-    public function isRequired(): bool
+    public function isRequired(BaseHolder $holder): bool
     {
         if (is_callable($this->required)) {
-            return ($this->required)($this->holder);
+            return ($this->required)($holder);
         }
         return (bool)$this->required;
     }
 
-    /** @param bool|callable $required */
+    /** @phpstan-param bool|(callable(BaseHolder):bool) $required */
     public function setRequired($required): void
     {
         $this->required = $required;
@@ -82,18 +81,18 @@ class Field
 
     /* ** MODIFIABLE ** */
 
-    public function isModifiable(): bool
+    public function isModifiable(BaseHolder $holder): bool
     {
-        if (!$this->holder->isModifiable()) {
+        if (!$holder->isModifiable()) {
             return false;
         }
         if (is_callable($this->modifiable)) {
-            return ($this->modifiable)($this->holder);
+            return ($this->modifiable)($holder);
         }
         return (bool)$this->modifiable;
     }
 
-    /** @param bool|callable $modifiable */
+    /** @phpstan-param bool|(callable(BaseHolder):bool) $modifiable */
     public function setModifiable($modifiable): void
     {
         $this->modifiable = $modifiable;
@@ -101,16 +100,16 @@ class Field
 
     /* ** VISIBLE ** */
 
-    public function isVisible(): bool
+    public function isVisible(BaseHolder $holder): bool
     {
         if (is_callable($this->visible)) {
-            return ($this->visible)($this->holder);
+            return ($this->visible)($holder);
         }
         return $this->visible;
     }
 
     /**
-     * @param callable|bool $visible
+     * @phpstan-param bool|(callable(BaseHolder):bool) $visible
      */
     public function setVisible($visible): void
     {
@@ -120,12 +119,12 @@ class Field
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getValue(BaseHolder $holder)
     {
-        $model = $this->holder->getModel();
-        if (isset($this->holder->data[$this->name])) {
-            return $this->holder->data[$this->name];
+        if (isset($holder->data[$this->name])) {
+            return $holder->data[$this->name];
         }
+        $model = $holder->getModel();
         if ($model) {
             if (isset($model[$this->name])) {
                 return $model[$this->name];
@@ -134,10 +133,5 @@ class Field
             return $this->getDefault();
         }
         return null;
-    }
-
-    public function __toString(): string
-    {
-        return "$this->holder.$this->name";
     }
 }

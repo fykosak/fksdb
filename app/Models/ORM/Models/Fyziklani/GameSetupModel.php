@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $event_id
@@ -17,15 +17,15 @@ use Fykosak\NetteORM\Model;
  * @property-read int $tasks_on_board
  * @property-read string $available_points
  */
-class GameSetupModel extends Model
+final class GameSetupModel extends Model
 {
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getAvailablePoints(): array
     {
         return $this->available_points ? \array_map(
-            fn(string $value): int => +trim($value),
+            fn(string $value): int => (int)trim($value),
             \explode(',', $this->available_points)
         )
         : [];

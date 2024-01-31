@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
- * @property-read AddressModel $address
+ * @property-read int $post_contact_id
+ * @property-read int $person_id
+ * @property-read PersonModel $person
  * @property-read int $address_id
+ * @property-read AddressModel $address
  * @property-read string $type
+ * TODO to enum!!
  */
-class PostContactModel extends Model
+final class PostContactModel extends Model
 {
 }

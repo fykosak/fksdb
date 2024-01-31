@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
+/**
+ * @implements Statement<mixed,BaseHolder|ParticipantHolder>
+ */
 class Parameter implements Statement
 {
     use SmartObject;
@@ -24,8 +28,8 @@ class Parameter implements Statement
      */
     public function __invoke(...$args)
     {
-        /** @var BaseHolder $holder */
+        /** @var BaseHolder|ParticipantHolder $holder */
         [$holder] = $args;
-        return $holder->event->getParameter($this->parameter);
+        return $holder->getModel()->event->getParameter($this->parameter);
     }
 }

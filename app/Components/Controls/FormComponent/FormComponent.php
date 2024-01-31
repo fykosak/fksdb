@@ -11,7 +11,6 @@ use Nette\Forms\Form;
 
 abstract class FormComponent extends BaseComponent
 {
-
     public function render(): void
     {
         $this->template->render($this->getTemplatePath());
@@ -38,14 +37,14 @@ abstract class FormComponent extends BaseComponent
     {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
-        $this->appendSubmitButton($control->getForm());
-        $control->getForm()->onSuccess[] = fn(Form $form) => $this->handleSuccess($form);
+        $this->appendSubmitButton($control->getForm())
+            ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button->getForm());
         return $control;
     }
 
     abstract protected function handleSuccess(Form $form): void;
 
-    abstract protected function appendSubmitButton(Form $form): void;
+    abstract protected function appendSubmitButton(Form $form): SubmitButton;
 
     abstract protected function configureForm(Form $form): void;
 }

@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
+use Nette\Schema\Elements\Structure;
 
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
 class ResultsWebModel extends WebModel
 {
-
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 
@@ -54,7 +58,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setSeries(+$seriesSingle);
+                $resultsModel->setSeries((int)$seriesSingle);
                 $resultsNode->appendChild($this->createDetailNode($resultsModel, $doc));
             }
         }
@@ -128,7 +132,7 @@ class ResultsWebModel extends WebModel
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $detailNode = $doc->createElement('detail');
-        $detailNode->setAttribute('series', (string)$resultsModel->getSeries());
+        $detailNode->setAttribute('series', (string)$resultsModel->getSeries()); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
@@ -142,7 +146,7 @@ class ResultsWebModel extends WebModel
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $cumulativeNode = $doc->createElement('cumulative');
-        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
@@ -156,7 +160,7 @@ class ResultsWebModel extends WebModel
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $schoolNode = $doc->createElement('school-cumulative');
-        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $schoolNode;
@@ -176,5 +180,23 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
+    }
+
+    protected function getExpectedParams(): Structure
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getJsonResponse(): array
+    {
+        throw new NotImplementedException();
     }
 }

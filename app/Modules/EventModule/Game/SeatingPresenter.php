@@ -4,31 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
-use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Components\TeamSeating\AllPlaces;
+use FKSDB\Components\TeamSeating\SeatingForm;
+use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
-use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
-use Nette\Security\Resource;
+use Nette\ComponentModel\Container;
 
-/**
- * @method RoomModel getEntity(bool $throw = true)
- */
-class SeatingPresenter extends BasePresenter
+final class SeatingPresenter extends BasePresenter
 {
-    use EntityPresenterTrait;
-
-    private RoomService $roomService;
-
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
@@ -42,14 +30,9 @@ class SeatingPresenter extends BasePresenter
         }
     }
 
-    public function injectRoomService(RoomService $roomService): void
-    {
-        $this->roomService = $roomService;
-    }
-
     public function titlePrint(): PageTitle
     {
-        return new PageTitle(null, _('Print'), 'fas fa-map-marked-alt');
+        return new PageTitle(null, _('Seating - print'), 'fas fa-map-marked-alt');
     }
 
     /**
@@ -57,107 +40,51 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedPrint(): bool
     {
-        return $this->authorizedList();
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('List of rooms'), 'fas fa-print');
+        return $this->authorizedDefault();
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): bool
+    public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.seating', 'default');
+        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'seating', $this->getEvent());
     }
 
-    public function titlePreview(): PageTitle
+    public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Preview'), 'fas fa-search');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedPreview(): bool
-    {
-        return $this->authorizedList();
-    }
-
-    final public function renderList(): void
-    {
-        $this->template->rooms = $this->roomService->getTable();
+        return new PageTitle(null, _('Seating'), 'fas fa-search');
     }
 
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentSeatingList(): ProviderComponent
+    protected function createComponentTeamList(): Container
     {
         $limit = $this->getParameter('limit', 1000);
         $offset = $this->getParameter('offset', 0);
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
-            $this->getContext()
-        );
+        $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
+        $container = new Container();
+        /** @var TeamModel2 $team */
+        foreach ($teams as $team) {
+            $container->addComponent(new Single($this->getContext(), $team), 'team' . $team->fyziklani_team_id);
+        }
+        return $container;
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws ModelNotFoundException
-     * @throws GoneException
      */
-    protected function createComponentSeatingPreview(): ProviderComponent
+    protected function createComponentPreview(): AllPlaces
     {
-        return new ProviderComponent(
-            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent(
-                $this->getEvent(),
-                $this->getEntity(),
-                $this->getContext()
-            ),
-            [null],
-            $this->getContext()
-        );
+        return new AllPlaces($this->getContext(), $this->getEvent());
     }
 
     /**
-     * @param Resource|string|null $resource
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    protected function createComponentForm(): SeatingForm
     {
-        return $this->isAllowed($resource, $privilege);
-    }
-
-    protected function getORMService(): Service
-    {
-        return $this->roomService;
-    }
-
-    /**
-     * @throws GoneException
-     */
-    protected function createComponentCreateForm(): Control
-    {
-        throw new GoneException();
-    }
-
-    /**
-     * @throws GoneException
-     */
-    protected function createComponentEditForm(): Control
-    {
-        throw new GoneException();
-    }
-
-    /**
-     * @throws GoneException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new GoneException();
+        return new SeatingForm($this->getContext(), $this->getEvent());
     }
 }

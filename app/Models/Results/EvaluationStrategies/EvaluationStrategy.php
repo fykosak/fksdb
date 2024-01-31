@@ -53,7 +53,7 @@ abstract class EvaluationStrategy
     abstract public function getSumColumn(): string;
 
     /**
-     * @return array of int (study years of students with category)
+     * @phpstan-return array<int,string|null>
      */
     final public function categoryToStudyYears(ContestCategoryModel $category): array
     {
@@ -64,19 +64,19 @@ abstract class EvaluationStrategy
         throw new InvalidArgumentException('Invalid category ' . $category->label);
     }
 
-    private function studyYearsToCategory(PersonModel $person): ContestCategoryModel
+    final public function studyYearsToCategory(PersonModel $person): ContestCategoryModel
     {
         $map = $this->getCategoryMap();
-        $personHistory = $person->getHistoryByContestYear($this->contestYear);
+        $personHistory = $person->getHistory($this->contestYear);
         foreach ($map as $key => $values) {
-            if (in_array($personHistory->study_year, $values, true)) {
+            if (in_array($personHistory->study_year_new->value, $values, true)) {
                 return $this->contestCategoryService->findByLabel((string)$key);
             }
         }
         throw new InvalidArgumentException(
             sprintf(
-                _('Invalid studyYear %i for person %s.'),
-                $personHistory->study_year,
+                _('Invalid studyYear %d for person %s.'),
+                $personHistory->study_year_new->label(),
                 $person->getFullName()
             )
         );
@@ -110,10 +110,13 @@ abstract class EvaluationStrategy
 
     abstract public function getSubmitPoints(SubmitModel $submit): ?float;
 
+    /**
+     * @phpstan-return array<string,array<int,string>>
+     */
     abstract protected function getCategoryMap(): array;
 
     /**
-     * @return ContestCategoryModel[]
+     * @phpstan-return ContestCategoryModel[]
      */
     final public function getCategories(): array
     {

@@ -27,6 +27,12 @@ class UploadedStorage implements SubmitStorage
      *         It's a bit dangerous that only supported filetype is hard-coded in this class
      */
     public const FINAL_EXT = '.pdf';
+    /**
+     * @phpstan-var array<int,array{
+     *     file:string,
+     *     submit:SubmitModel
+     * }>
+     */
     private ?array $todo = null;
     /** @var string  Absolute path to (existing) directory of the storage. */
     private string $root;
@@ -42,7 +48,7 @@ class UploadedStorage implements SubmitStorage
      * @var string
      */
     private string $filenameMask;
-    /** @var StorageProcessing[] */
+    /** @phpstan-var StorageProcessing[] */
     private array $processings = [];
 
     public function __construct(string $root, string $directoryMask, string $filenameMask)
@@ -190,7 +196,7 @@ class UploadedStorage implements SubmitStorage
     }
 
     /**
-     * @return \SplFileInfo[]
+     * @phpstan-return \SplFileInfo[]
      */
     private function retrieveFiles(SubmitModel $submit): array
     {

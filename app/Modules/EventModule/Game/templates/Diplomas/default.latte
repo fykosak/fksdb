@@ -2,12 +2,12 @@
 {varType array $items}
 
 {define card, $header, $opened, $closed, $link, $category, $accessibleButton, $inaccessibleButton}
-    {var $teamCategory = FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category)}
+    {var FKSDB\Models\ORM\Models\Fyziklani\TeamCategory $teamCategory = FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category)}
     <div class="col">
         <div class="card">
-            {var $cardClass = "bg-danger text-white"}
+            {var string $cardClass = 'bg-danger text-white'}
             {if $presenter->isReadyAllToCalculate($teamCategory)}
-                {var $cardClass = "bg-secondary text-white"}
+                {var string $cardClass = 'bg-secondary text-white'}
             {/if}
             <h5 class="card-header {$cardClass}">{$header}</h5>
             <div class="card-body">
@@ -46,7 +46,7 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
-            <h2>{_'Data validation'}</h2>
+            <h2>{_'Data tests'}</h2>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
                 {foreach $items as $category=>$stats}

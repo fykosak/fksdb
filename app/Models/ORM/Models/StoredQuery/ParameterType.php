@@ -7,17 +7,15 @@ namespace FKSDB\Models\ORM\Models\StoredQuery;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-class ParameterType extends FakeStringEnum implements EnumColumn
+final class ParameterType extends FakeStringEnum implements EnumColumn
 {
     public const INT = 'integer';
     public const STRING = 'string';
     public const BOOL = 'bool';
-
-    public string $value;
-
 
     public function badge(): Html
     {
@@ -32,9 +30,9 @@ class ParameterType extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new static(self::BOOL),
-            new static(self::STRING),
-            new static(self::INT),
+            new self(self::BOOL),
+            new self(self::STRING),
+            new self(self::INT),
         ];
     }
 
@@ -55,5 +53,9 @@ class ParameterType extends FakeStringEnum implements EnumColumn
     public function getBehaviorType(): string
     {
         throw new NotImplementedException();
+}
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

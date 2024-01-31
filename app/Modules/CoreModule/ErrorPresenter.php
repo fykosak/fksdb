@@ -10,12 +10,17 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-class ErrorPresenter extends BasePresenter
+final class ErrorPresenter extends BasePresenter
 {
 
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Error'), 'fas fa-triangle-exclamation');
+    }
+
+    public function authorizedDefault(): bool
+    {
+        return true;
     }
 
     final public function renderDefault(?\Throwable $exception): void
@@ -52,10 +57,5 @@ class ErrorPresenter extends BasePresenter
     protected function getStyleId(): string
     {
         return 'error';
-    }
-
-    protected function putIntoBreadcrumbs(): void
-    {
-        /* empty */
     }
 }

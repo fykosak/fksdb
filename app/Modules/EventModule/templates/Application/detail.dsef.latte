@@ -1,0 +1,42 @@
+{layout './detail.latte'}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $isOrganizer}
+
+{block titleBody}
+    {include titleBody from './detail.latte'}
+    {if $isOrganizer}
+        {var FKSDB\Models\ORM\Models\ContestantModel|null $contestant = $model->person->getContestant($model->event->getContestYear())}
+        {if $contestant}
+            <span class="badge bg-success mt-3">{_'Is contestant'}</span>
+        {else}
+            <span class="badge bg-danger mt-3">{_'Is not contestant'}</span>
+        {/if}
+    {/if}
+{/block}
+
+{block outerContent}
+    {if $isOrganizer}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rests'}</h2>
+                {control rests}
+            </div>
+        </div>
+    {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Food'}</h2>
+            {control columnTable ['event_participant.lunch_count'],$model,1024}
+        </div>
+    </div>
+    {if $event->hasSchedule()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid}
+            </div>
+        </div>
+    {/if}
+{/block}

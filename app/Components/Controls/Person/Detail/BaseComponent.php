@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\ReflectionFactory;
 use Nette\DI\Container;
 
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
-    protected ORMFactory $tableReflectionFactory;
+    protected ReflectionFactory $tableReflectionFactory;
 
     public function __construct(
         Container $container,
@@ -25,7 +23,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         parent::__construct($container);
     }
 
-    final public function injectPrimary(ORMFactory $tableReflectionFactory): void
+    final public function injectPrimary(ReflectionFactory $tableReflectionFactory): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -35,8 +33,9 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         $this->template->person = $this->person;
         $this->template->isOrg = $this->isOrg;
         $this->template->userPermission = $this->userPermission;
-        if ($this->userPermission < $this->getMinimalPermission()) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+        if ($this->userPermission->value < $this->getMinimalPermission()) {
+            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte');
+
             return false;
         }
         return true;
@@ -44,18 +43,8 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 
     abstract protected function getMinimalPermission(): FieldLevelPermissionValue;
 
-    protected function createComponentContestBadge(): ContestBadge
-    {
-        return new ContestBadge($this->getContext());
-    }
-
     protected function createComponentValuePrinter(): ColumnRendererComponent
     {
         return new ColumnRendererComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
     }
 }

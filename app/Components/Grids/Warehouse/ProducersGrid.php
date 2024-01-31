@@ -4,25 +4,36 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Warehouse;
 
-use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Fykosak\NetteORM\TypedSelection;
-use Nette\DI\Container;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
-class ProducersGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<ProducerModel,array{}>
+ */
+class ProducersGrid extends BaseGrid
 {
-    public function __construct(Container $container)
+    private ProducerService $service;
+
+    public function inject(ProducerService $service): void
     {
-        parent::__construct($container, ProducerService::class, [
-            'warehouse_producer.producer_id',
-            'warehouse_producer.name',
-        ]);
+        $this->service = $service;
     }
 
+    /**
+     * @phpstan-return TypedSelection<ProducerModel>
+     */
     protected function getModels(): TypedSelection
     {
-        $query = parent::getModels();
-        $query->order('name');
-        return $query;
+        return $this->service->getTable()->order('name');
+    }
+
+    protected function configure(): void
+    {
+        $this->addSimpleReferencedColumns([
+            '@warehouse_producer.producer_id',
+            '@warehouse_producer.name',
+        ]);
     }
 }

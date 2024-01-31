@@ -7,8 +7,7 @@ namespace FKSDB\Modules\Core;
 use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
-enum Language: string
-{
+enum Language: string {
     case Cs = 'cs';
     case En = 'en';
 

@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\Services\ContestYearService;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use FKSDB\Models\ORM\Services\ContestYearService;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Nette\Security\Resource;
 
 /**
  * @property-read int $contest_id
  * @property-read string $name
  */
-class ContestModel extends Model
+final class ContestModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'contest';
+
     public const ID_FYKOS = 1;
     public const ID_VYFUK = 2;
 
@@ -31,14 +34,73 @@ class ContestModel extends Model
         throw new \InvalidArgumentException();
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
+     */
+    public function getOrganizers(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<OrganizerModel> $selection */
+        $selection = $this->related(DbNames::TAB_ORGANIZER, 'contest_id');
+        return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
+    public function getTasks(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<TaskModel> $selection */
+        $selection = $this->related(DbNames::TAB_TASK, 'contest_id');
+        return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<EventTypeModel>
+     */
+    public function getEventTypes(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<EventTypeModel> $selection */
+        $selection = $this->related(DbNames::TAB_EVENT_TYPE, 'contest_id');
+        return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<ContestYearModel>
+     */
+    public function getContestYears(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<ContestYearModel> $selection */
+        $selection = $this->related(DbNames::TAB_CONTEST_YEAR, 'contest_id');
+        return $selection;
+    }
+
     public function getContestYear(?int $year): ?ContestYearModel
     {
-        return $this->getContestYears()->where('year', $year)->fetch();
+        /** @var ContestYearModel|null $contestYear */
+        $contestYear = $this->getContestYears()->where('year', $year)->fetch();
+        return $contestYear;
+    }
+
+    /**
+     * @phpstan-return ContestYearModel[]
+     */
+    public function getActiveYears(): array
+    {
+        $years = [];
+        /** @var ContestYearModel $contestYear */
+        foreach ($this->getContestYears() as $contestYear) {
+            if ($contestYear->isActive()) {
+                $years[] = $contestYear;
+            }
+        }
+        return $years;
     }
 
     public function getContestYearByAcYear(?int $acYear): ?ContestYearModel
     {
-        return $this->getContestYears()->where('ac_year', $acYear)->fetch();
+        /** @var ContestYearModel|null $contestYear */
+        $contestYear = $this->getContestYears()->where('ac_year', $acYear)->fetch();
+        return $contestYear;
     }
 
     public function getFirstYear(): int
@@ -51,33 +113,39 @@ class ContestModel extends Model
         return $this->getContestYears()->max('year');
     }
 
-    public function getContestYears(): TypedGroupedSelection
+    public function getCurrentContestYear(): ?ContestYearModel
     {
-        return $this->related(DbNames::TAB_CONTEST_YEAR, 'contest_id');
+        /** @var ContestYearModel|null $contestYear */
+        $contestYear = $this->getContestYears()
+            ->where('ac_year', ContestYearService::getCurrentAcademicYear())
+            ->fetch();
+        return $contestYear;
     }
 
-    public function getForwardedYear(): ?ContestYearModel
+    /**
+     * @phpstan-return array{
+     *      contestId:int,
+     *      contest:string,
+     *      name:string,
+     *      currentYear:int,
+     *      firstYear:int,
+     *      lastYear:int,
+     * }
+     */
+    public function __toArray(): array
     {
-        return $this->getContestYears()->where('ac_year > ?', ContestYearService::getCurrentAcademicYear())->fetch();
+        return [
+            'contestId' => $this->contest_id,
+            'contest' => $this->getContestSymbol(),
+            'name' => $this->name,
+            'currentYear' => $this->getCurrentContestYear()->year,
+            'firstYear' => $this->getFirstYear(),
+            'lastYear' => $this->getLastYear(),
+        ];
     }
 
-    public function getCurrentContestYear(): ContestYearModel
+    public function getResourceId(): string
     {
-        return $this->getContestYears()->where('ac_year', ContestYearService::getCurrentAcademicYear())->fetch();
-    }
-
-    public function getOrganisers(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_ORG, 'contest_id');
-    }
-
-    public function getTasks(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_TASK, 'contest_id');
-    }
-
-    public function getEventTypes(): TypedGroupedSelection
-    {
-        return $this->related(DbNames::TAB_EVENT_TYPE, 'contest_id');
+        return self::RESOURCE_ID;
     }
 }

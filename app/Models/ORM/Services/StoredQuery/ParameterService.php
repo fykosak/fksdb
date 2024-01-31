@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use Fykosak\NetteORM\Service\Service;
 
-class ParameterService extends Service
+/**
+ * @phpstan-extends Service<ParameterModel>
+ */
+final class ParameterService extends Service
 {
 }

@@ -22,8 +22,30 @@ enum TeamState: string implements EnumColumn
     public function badge(): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
             ->addText($this->label());
+    }
+
+    public function pseudoState(): self
+    {
+        return match ($this) {
+            self::Pending => self::Applied,
+            self::Participated => self::Participated,
+            default => $this,
+        };
+    }
+
+    public function behaviorType(): string
+    {
+        return match ($this) {
+            self::Arrived => 'danger',
+            self::Applied => 'info',
+            self::Pending => 'warning',
+            self::Spare => 'primary',
+            self::Participated => 'success',
+            self::Missed, self::Cancelled, self::Init => 'secondary',
+            default => 'dark',
+        };
     }
 
     public function label(): string
@@ -51,5 +73,10 @@ enum TeamState: string implements EnumColumn
             self::Missed, self::Cancelled, self::Init => 'secondary',
             self::Disqualified => 'danger',
         };
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

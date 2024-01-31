@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $flag_id
@@ -14,6 +14,6 @@ use Fykosak\NetteORM\Model;
  * @property-read string $type
  * TODO
  */
-class FlagModel extends Model
+final class FlagModel extends Model
 {
 }

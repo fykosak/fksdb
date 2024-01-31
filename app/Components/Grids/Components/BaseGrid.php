@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
-use FKSDB\Components\Grids\Components\Button\PresenterButton;
-use FKSDB\Components\Grids\Components\Container\TableRow;
-use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
+use FKSDB\Components\Grids\Components\Table\TableTrait;
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use FKSDB\Models\ORM\ORMFactory;
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\UI\Title;
-use Nette\DI\Container as DIContainer;
-use Nette\Utils\Paginator as NettePaginator;
+use Nette\DI\Container;
 
 /**
  * Combination od old NiftyGrid - Base grid from Michal Koutny
@@ -21,38 +15,21 @@ use Nette\Utils\Paginator as NettePaginator;
  * @author    Jakub Holub
  * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseComponent<TModel,TFilterParams>
  */
 abstract class BaseGrid extends BaseComponent
 {
-    public bool $paginate = true;
-    public bool $counter = true;
-    protected ORMFactory $tableReflectionFactory;
-    public TableRow $tableRow;
+    /** @phpstan-use TableTrait<TModel> */
+    use TableTrait;
 
     public function __construct(
-        DIContainer $container,
+        Container $container,
         FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
     ) {
         parent::__construct($container, $userPermission);
-        $this->tableRow = new TableRow($this->container, new Title(null, ''));
-        $this->addComponent($this->tableRow, 'row');
-    }
-
-    final public function injectBase(ORMFactory $tableReflectionFactory): void
-    {
-        $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    protected function createComponentPaginator(): Paginator
-    {
-        return new Paginator($this->container);
-    }
-
-    public function getPaginator(): NettePaginator
-    {
-        /** @var Paginator $control */
-        $control = $this->getComponent('paginator');
-        return $control->paginator;
+        $this->registerTable($container);
     }
 
     protected function getTemplatePath(): string
@@ -60,84 +37,30 @@ abstract class BaseGrid extends BaseComponent
         return __DIR__ . DIRECTORY_SEPARATOR . 'grid.latte';
     }
 
-    public function render(): void
-    {
-        $this->template->paginate = $this->paginate;
-        $this->template->counter = $this->counter;
-        parent::render();
-    }
-
     /**
-     * @throws BadTypeException|\ReflectionException
+     * @phpstan-param string[] $fields
      */
-    protected function addColumns(array $fields): void
+    protected function addSimpleReferencedColumns(array $fields): void
     {
         foreach ($fields as $name) {
-            $this->addColumn(
-                new TemplateItem($this->container, '@' . $name . ':value', '@' . $name . ':title'),
-                str_replace('.', '__', $name)
+            /** @phpstan-ignore-next-line */
+            $this->addTableColumn(
+            /** @phpstan-ignore-next-line */
+                new SimpleItem($this->container, $name),
+                str_replace(['.', '@'], '__', $name)
             );
         }
     }
 
-    protected function addColumn(BaseItem $component, string $name): void
-    {
-        $this->tableRow->addComponent($component, $name);
-    }
-
-    protected function addButton(BaseItem $component, string $name): void
-    {
-        $this->tableRow->addButton($component, $name);
-    }
-
     /**
-     * @throws BadTypeException
-     * @deprecated
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
+     * @internal
      */
-    protected function addORMLink(string $linkId, bool $checkACL = false, ?string $className = null): PresenterButton
+    protected function addButton(BaseItem $component, string $name): BaseItem
     {
-        $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
-
-        $button = new PresenterButton(
-            $this->container,
-            new Title(null, $factory->getText()),
-            fn(Model $model): array => $factory->createLinkParameters($model),
-            $className,
-            fn(Model $model): bool => $checkACL
-                ? $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
-                : true
-        );
-        $this->addButton($button, str_replace('.', '_', $linkId));
-        return $button;
+        $this->addTableButton($component, $name);
+        return $component;
     }
-
-    /* protected function addCSVDownloadButton(): GlobalButton
-     {
-        // return $this->addGlobalButton('csv', new Title(null, _('Download as csv')), 'csv!');
-     }*/
-
-    /* public function handleCsv(): void
-     {
-         $columns = $this->tableRow->components;
-         $rows = $this->getModels();
-         $data = [];
-         foreach ($rows as $row) {
-             $datum = [];
-             foreach ($columns as $column) {
-                 //$column->render($row, 1024);
-                 // TODO
-                 //  $item = $column->prepareValue($row);
-                 // if ($item instanceof Html) {
-                 //    $item = $item->getText();
-                 //}
-                 //$datum[$column->name] = $item;
-             }
-             $data[] = $datum;
-         }
-         $response = new CSVResponse($data, 'test.csv');
-         $response->setAddHeading(true);
-         $response->setQuotes(true);
-         $response->setGlue(',');
-         $this->getPresenter()->sendResponse($response);
-     }*/
 }

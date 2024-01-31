@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
-use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -15,13 +15,15 @@ use Nette\Forms\Form;
 
 class CorrectedFormComponent extends FormComponent
 {
-    private SeriesTable $seriesTable;
     private SubmitService $submitService;
+    private ContestYearModel $contestYear;
+    private int $series;
 
-    public function __construct(Container $context, SeriesTable $seriesTable)
+    public function __construct(Container $context, ContestYearModel $contestYear, int $series)
     {
         parent::__construct($context);
-        $this->seriesTable = $seriesTable;
+        $this->contestYear = $contestYear;
+        $this->series = $series;
     }
 
     public function inject(SubmitService $submitService): void
@@ -31,7 +33,8 @@ class CorrectedFormComponent extends FormComponent
 
     protected function handleSuccess(Form $form): void
     {
-        $values = $form->getValues();
+        /** @phpstan-var array{submits:string} $values */
+        $values = $form->getValues('array');
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {
             $ids[] = trim($value);
@@ -39,7 +42,11 @@ class CorrectedFormComponent extends FormComponent
         try {
             $updated = 0;
             /** @var SubmitModel $submit */
-            foreach ($this->seriesTable->getSubmits()->where('submit_id', $ids) as $submit) {
+            foreach (
+                $this->submitService
+                    ->getForContestYear($this->contestYear, $this->series)
+                    ->where('submit_id', $ids) as $submit
+            ) {
                 $this->submitService->storeModel(['corrected' => 1], $submit);
                 $updated++;
             }
@@ -52,7 +59,7 @@ class CorrectedFormComponent extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Save'));
+        return $form->addSubmit('submit', _('button.save'));
     }
 
     protected function configureForm(Form $form): void

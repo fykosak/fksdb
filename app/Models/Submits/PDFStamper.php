@@ -7,6 +7,12 @@ namespace FKSDB\Models\Submits;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\CrossReference\CrossReferenceException;
+use setasign\Fpdi\PdfParser\Filter\FilterException;
+use setasign\Fpdi\PdfParser\PdfParserException;
+use setasign\Fpdi\PdfParser\Type\PdfTypeException;
+use setasign\Fpdi\PdfReader\PdfReaderException;
 
 class PDFStamper implements StorageProcessing
 {
@@ -15,14 +21,8 @@ class PDFStamper implements StorageProcessing
 
     private string $outputFile;
 
-    /** @var int used font size in pt */
+    /** @var int used font size in pt, currently set at app/config/config.neon */
     private int $fontSize;
-
-    /**
-     * @var string printf mask for arguments: series, label, contestant's name
-     */
-    private const STAMP_MASK = 'S%dU%s, %s, %s';
-
     public function __construct(int $fontSize)
     {
         $this->fontSize = $fontSize;
@@ -53,11 +53,6 @@ class PDFStamper implements StorageProcessing
         return $this->fontSize;
     }
 
-    public function getStampMask(): string
-    {
-        return self::STAMP_MASK;
-    }
-
     /**
      * @throws ProcessingException
      */
@@ -75,7 +70,7 @@ class PDFStamper implements StorageProcessing
         $label = $submit->task->label;
         $person = $submit->contestant->person;
 
-        $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
+        $stampText = sprintf('S%dU%s, %s, %s', $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
         } catch (\Throwable $exception) {
@@ -83,22 +78,30 @@ class PDFStamper implements StorageProcessing
         }
     }
 
+    /**
+     * @throws CrossReferenceException
+     * @throws FilterException
+     * @throws PdfParserException
+     * @throws PdfTypeException
+     * @throws PdfReaderException
+     */
     private function stampText(string $text): void
     {
-        $pdf = new \FPDI();
+        $pdf = new Fpdi();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 
         for ($page = 1; $page <= $pageCount; ++$page) {
             $tpl = $pdf->importPage($page);
             $actText = $text . ' page ' . $page . '/' . $pageCount;
             $specs = $pdf->getTemplateSize($tpl);
-            $orientation = $specs['h'] > $specs['w'] ? 'P' : 'L';
+
+            $orientation = $specs['orientation']; // @phpstan-ignore-line
             $pdf->AddPage($orientation);
-            $pdf->useTemplate($tpl, 1, 1, 0, 0, true);
+            $pdf->useTemplate($tpl, 1, 1, null, null, true);
 
             // calculate size of the stamp
             $pdf->SetFont('Courier', 'b', $this->getFontSize());
-            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetDrawColor(0, 0, 0);
             $pw = 210; // pagewidth, A4 210 mm
             $offset = 7; // vertical offset
             $tw = $pdf->GetStringWidth($actText);
@@ -108,7 +111,13 @@ class PDFStamper implements StorageProcessing
             // stamp background
             $margin = 2;
             $pdf->SetFillColor(240, 240, 240);
-            $pdf->Rect($x - $margin, $y - $th - $margin, $tw + 2 * $margin, ($th + 2 * $margin), 'F');
+            $pdf->Rect(
+                $x - $margin,
+                $y - $th - $margin,
+                $tw + 2 * $margin,
+                ($th + 2 * $margin),
+                'F'
+            );
 
             $stampText = Strings::webalize($actText, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Text($x, $y, $stampText);

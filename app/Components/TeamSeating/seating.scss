@@ -1,0 +1,133 @@
+$map: (
+        "R": var(--bs-fof),
+        "G": var(--bs-fol),
+        "B": var(--bs-fykos),
+        "Y": var(--bs-dsef),
+        "V": #C22D86,
+        "D": #222,
+);
+
+@each $key, $value in $map {
+  .seating-layout {
+    .seat {
+
+      &[data-sector="#{$key}"] {
+        &.seat-occupied {
+          --seat-fill: $value;
+        }
+      }
+    }
+  }
+  .badge[data-sector="#{$key}"] {
+    background-color: $value;
+  }
+}
+
+.seating-layout {
+  .seat {
+    --seat-fill: none;
+
+    &.seat-dev-category {
+      &[data-category="A"] {
+        --seat-fill: var(--bs-danger);
+      }
+
+      &[data-category="B"] {
+        --seat-fill: var(--bs-warning);
+      }
+
+      &[data-category="C"] {
+        --seat-fill: var(--bs-success);
+      }
+    }
+
+    &.seat-dev-lang {
+      &[data-lang="cs"] {
+        --seat-fill: var(--bs-success);
+      }
+
+      &[data-lang="en"] {
+        --seat-fill: var(--bs-danger);
+      }
+    }
+
+    rect {
+      fill: var(--seat-fill);
+      stroke-width: 1px;
+      stroke: #ccc;
+    }
+
+    text {
+      text-anchor: middle;
+      alignment-baseline: central;
+    }
+
+    &.seat-occupied {
+      font-weight: bold;
+      fill: white;
+      font-size: 1.5rem;
+    }
+  }
+
+  text {
+    text-anchor: middle;
+  }
+
+  .wall.wall-outer {
+    &, * {
+      stroke-dasharray: 5 5;
+      stroke: black;
+      fill: none;
+    }
+  }
+
+  .stage {
+    &, * {
+      fill: none;
+      stroke: black;
+    }
+
+    text {
+      alignment-baseline: center;
+    }
+  }
+
+  .team-seat {
+    text {
+      text-anchor: middle;
+      alignment-baseline: baseline;
+    }
+
+    &.free {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 3px;
+      stroke-dasharray: 4 4;
+    }
+
+    &.occupied {
+      fill: black;
+      stroke: none;
+    }
+
+    &.game-lang-cs {
+      stroke: black !important;
+      stroke-dasharray: 10 10 !important;
+      stroke-width: 3px !important;
+    }
+
+    &.game-lang-en {
+      stroke: black !important;
+      stroke-dasharray: 3 3 !important;
+      stroke-width: 3px !important;
+    }
+  }
+
+  .sectors .sector text {
+    font-size: 1.8rem;
+
+    tspan {
+      alignment-baseline: middle;
+    }
+  }
+}

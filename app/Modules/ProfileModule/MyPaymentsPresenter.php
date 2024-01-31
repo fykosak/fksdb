@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Components\Payments\MyPaymentList;
 use Fykosak\Utils\UI\PageTitle;
 
-class MyPaymentsPresenter extends BasePresenter
+final class MyPaymentsPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -20,13 +19,8 @@ class MyPaymentsPresenter extends BasePresenter
         return true;
     }
 
-    protected function createComponentMyPaymentGrid(): PersonRelatedGrid
+    protected function createComponentMyPaymentGrid(): MyPaymentList
     {
-        return new PersonRelatedGrid(
-            'payment',
-            $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
-            $this->getContext()
-        );
+        return new MyPaymentList($this->getContext(), $this->getLoggedPerson());
     }
 }

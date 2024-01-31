@@ -4,17 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\EntityForms\Fyziklani\FOFCategoryProcessing;
 use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-type TeamStats array{
+ *      data:array<int,SubmitModel>,
+ *      sum:int,
+ *      count:int,
+ *      pointsCount:array<int,int>,
+ * }
+ * @phpstan-type TeamDatum array{
+ *     points:int|null,
+ *     submits:TeamStats,
+ *     team:TeamModel2,
+ * }
+ */
 class RankingStrategy
 {
     use SmartObject;
@@ -49,12 +62,14 @@ class RankingStrategy
         return $log;
     }
 
+    /**
+     * @phpstan-param array<int,array{team:TeamModel2}> $data
+     */
     private function saveResults(array $data, bool $total): Html
     {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
             $rank = $index + 1;
-            /** @var TeamModel2 $team */
             $team = $teamData['team'];
             if ($total) {
                 $this->teamService->storeModel(['rank_total' => $rank], $team);
@@ -71,6 +86,7 @@ class RankingStrategy
 
     /**
      * @throws NoMemberException
+     * @phpstan-return callable(TeamDatum,TeamDatum): int
      */
     private static function getSortFunction(): callable
     {
@@ -103,12 +119,12 @@ class RankingStrategy
             }
 
             // coefficients
-            $aCoef = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
-            $bCoef = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
+            $aCoefficient = FOFCategoryProcessing::getCoefficientAvg($a['team']->getPersons(), $a['team']->event);
+            $bCoefficient = FOFCategoryProcessing::getCoefficientAvg($b['team']->getPersons(), $b['team']->event);
 
-            if ($aCoef < $bCoef) {
+            if ($aCoefficient < $bCoefficient) {
                 return 1;
-            } elseif ($aCoef > $bCoef) {
+            } elseif ($aCoefficient > $bCoefficient) {
                 return -1;
             }
 
@@ -117,6 +133,9 @@ class RankingStrategy
         };
     }
 
+    /**
+     * @phpstan-return TeamModel2[]
+     */
     public function getInvalidTeamsPoints(?TeamCategory $category = null): array
     {
         $invalidTeams = [];
@@ -134,6 +153,7 @@ class RankingStrategy
 
     /**
      * Validate ranking of teams
+     * @phpstan-return TeamModel2[]
      * @throws NoMemberException
      */
     public function getInvalidTeamsRank(?TeamCategory $category = null): array
@@ -172,7 +192,9 @@ class RankingStrategy
         return $invalidTeams;
     }
 
-
+    /**
+     * @phpstan-return TypedGroupedSelection<TeamModel2>
+     */
     private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
     {
         $query = $this->event->getParticipatingTeams();
@@ -183,8 +205,9 @@ class RankingStrategy
     }
 
     /**
-     * @return array[]
+     * @phpstan-return TeamDatum[]
      * @throws NotClosedTeamException
+     * @phpstan-param TypedGroupedSelection<TeamModel2> $teams
      */
     private function getTeamsStats(TypedGroupedSelection $teams): array
     {
@@ -206,11 +229,11 @@ class RankingStrategy
     }
 
     /**
-     * @return array[]|int[]
+     * @phpstan-return TeamStats
      */
     protected function getAllSubmits(TeamModel2 $team): array
     {
-        $arraySubmits = [];
+        $submits = [];
         $sum = 0;
         $count = 0;
 
@@ -229,15 +252,11 @@ class RankingStrategy
             $submitPointsCount[$submit->points]++;
             $sum += $submit->points;
             $count++;
-            $arraySubmits[] = [
-                'task_id' => $submit->fyziklani_task_id,
-                'points' => $submit->points,
-                'time' => $submit->modified,
-            ];
+            $submits[] = $submit;
         }
 
         return [
-            'data' => $arraySubmits,
+            'data' => $submits,
             'sum' => $sum,
             'count' => $count,
             'pointsCount' => $submitPointsCount,

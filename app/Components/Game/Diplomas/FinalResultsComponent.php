@@ -25,7 +25,7 @@ class FinalResultsComponent extends BaseComponent
         $count = $this->event->getParticipatingTeams()
             ->where('category', $category->value)
             ->where('rank_category IS NULL')
-            ->count();
+            ->count('*');
         return $count === 0;
     }
 
@@ -33,23 +33,23 @@ class FinalResultsComponent extends BaseComponent
     {
         $count = $this->event->getParticipatingTeams()
             ->where('rank_total IS NULL')
-            ->count();
+            ->count('*');
         return $count === 0;
     }
 
     protected function createComponentResultsCategoryAGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('A'), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::A), $this->getContext());
     }
 
     protected function createComponentResultsCategoryBGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('B'), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::B), $this->getContext());
     }
 
     protected function createComponentResultsCategoryCGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('C'), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::C), $this->getContext());
     }
 
     protected function createComponentResultsTotalGrid(): ResultsTotalGrid

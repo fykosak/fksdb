@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $submit_question_id
@@ -14,7 +14,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $points
  * @property-read string $answer
  */
-class SubmitQuestionModel extends Model
+final class SubmitQuestionModel extends Model
 {
     public function getFQName(): string
     {

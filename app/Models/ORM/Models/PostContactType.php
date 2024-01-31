@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 enum PostContactType: string implements EnumColumn
@@ -28,5 +29,10 @@ enum PostContactType: string implements EnumColumn
     public function getBehaviorType(): string
     {
         return 'badge bg-primary';
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

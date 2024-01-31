@@ -18,11 +18,13 @@ use Nette\SmartObject;
  * @see http://tools.ietf.org/html/rfc4180 (not fully implemented)
  *
  * @package Nette\Application\Responses
+ * @template TData
  */
 class CSVResponse implements IResponse
 {
     use SmartObject;
 
+    /** @phpstan-var iterable<TData> */
     private iterable $data;
 
     private ?string $name;
@@ -37,6 +39,9 @@ class CSVResponse implements IResponse
 
     private bool $quotes;
 
+    /**
+     * @phpstan-param iterable<TData> $data
+     */
     public function __construct(
         iterable $data,
         string $name = null,
@@ -53,7 +58,6 @@ class CSVResponse implements IResponse
 
     /**
      * Returns the file name.
-     * @return string
      */
     final public function getName(): ?string
     {
@@ -63,7 +67,6 @@ class CSVResponse implements IResponse
 
     /**
      * Returns the MIME content type of a downloaded content.
-     * @return string
      */
     final public function getContentType(): string
     {
@@ -103,9 +106,6 @@ class CSVResponse implements IResponse
 
     /**
      * Sends response to output.
-     * @param IRequest $httpRequest
-     * @param IHttpResponse $httpResponse
-     * @return void
      */
     public function send(IRequest $httpRequest, IHttpResponse $httpResponse): void
     {
@@ -145,7 +145,7 @@ class CSVResponse implements IResponse
 
         if ($this->addHeading) {
             if (!is_array($firstRow)) {
-                $firstRow = iterator_to_array($firstRow);
+                $firstRow = iterator_to_array($firstRow); //@phpstan-ignore-line
             }
 
             $labels = array_keys($firstRow);

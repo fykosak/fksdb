@@ -1,0 +1,8 @@
+{define seats FKSDB\Components\TeamSeating\Place[] $places}
+    {foreach $places as $place}
+        {var $cor = 'translate(' . $place->x() . ',' . $place->y() . ')'}
+        <g transform="{$cor}">
+            {include seat 'seat'=>$place}
+        </g>
+    {/foreach}
+{/define}

@@ -4,24 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ValuePrinters\EventRolePrinter;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\UI\EventRolePrinter;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\User;
 use Nette\Utils\Html;
 
-class EventRole extends ColumnFactory
+/**
+ * @phpstan-extends AbstractColumnFactory<Model>
+ */
+class EventRole extends AbstractColumnFactory
 {
     private User $user;
 
-    public function __construct(User $user, MetaDataFactory $metaDataFactory)
+    final public function injectUser(User $user): void
     {
-        parent::__construct($metaDataFactory);
         $this->user = $user;
     }
 
@@ -34,13 +35,13 @@ class EventRole extends ColumnFactory
         try {
             $person = $model->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException$exception) {
-            /** @var LoginModel $login */
+            /** @var LoginModel|null $login */
             $login = $this->user->getIdentity();
             $person = $login->person;
         }
         /** @var EventModel $event */
         $event = $model->getReferencedModel(EventModel::class);
-        return (new EventRolePrinter())($person, $event);
+        return EventRolePrinter::getHtml($person, $event);
     }
 
     protected function resolveModel(Model $modelSingle): ?Model

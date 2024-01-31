@@ -5,31 +5,28 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Security\User;
 use Nette\Utils\Html;
 
 class PersonPaymentContainer extends ContainerWithOptions
 {
     private PersonScheduleService $personScheduleService;
-    private User $user;
-    private bool $isOrg;
+    private bool $isOrganizer;
     private ?PaymentModel $model;
     private EventModel $event;
-
+    private PersonModel $loggedPerson;
     private GettextTranslator $translator;
 
     /**
@@ -38,22 +35,22 @@ class PersonPaymentContainer extends ContainerWithOptions
     public function __construct(
         Container $container,
         EventModel $event,
-        bool $isOrg,
+        PersonModel $loggedPerson,
+        bool $isOrganizer,
         ?PaymentModel $model
     ) {
         parent::__construct($container);
-        $this->isOrg = $isOrg;
+        $this->isOrganizer = $isOrganizer;
         $this->event = $event;
+        $this->loggedPerson = $loggedPerson;
         $this->model = $model;
         $this->configure();
     }
 
     final public function injectServicePersonSchedule(
-        User $user,
         PersonScheduleService $personScheduleService,
         GettextTranslator $translator
     ): void {
-        $this->user = $user;
         $this->personScheduleService = $personScheduleService;
         $this->translator = $translator;
     }
@@ -65,23 +62,21 @@ class PersonPaymentContainer extends ContainerWithOptions
     {
         $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
-        if (!$this->isOrg) {
-            /** @var LoginModel $login */
-            $login = $this->user->getIdentity();
-            $roles = $login->person->getEventRoles($this->event);
+        if (!$this->isOrganizer) {
+            $roles = $this->loggedPerson->getEventRoles($this->event);
             $teams = [];
             foreach ($roles as $role) {
-                if ($role instanceof FyziklaniTeamTeacherRole) {
+                if ($role instanceof TeamTeacherRole) {
                     $teams += $role->teams;
                 }
-                if ($role instanceof FyziklaniTeamMemberRole) {
+                if ($role instanceof TeamMemberRole) {
                     $teams[] = $role->member->fyziklani_team;
                 }
             }
             $persons = [];
             /** @var TeamModel2 $team */
             foreach ($teams as $team) {
-                $persons += $team->getPersons();
+                $persons = [...$persons, ...$team->getPersons()];
             }
             $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }
@@ -90,13 +85,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         $container = null;
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
-            if (
-                !$model->schedule_item->isPayable() ||
-                !in_array(
-                    $model->schedule_item->schedule_group->schedule_group_type,
-                    [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND] // TODO to event params
-                )
-            ) {
+            if (!$model->schedule_item->payable) {
                 continue;
             }
             if ($model->person_id !== $lastPersonId) {
@@ -108,15 +97,15 @@ class PersonPaymentContainer extends ContainerWithOptions
 
             $checkBox = $container->addCheckbox(
                 (string)$model->person_schedule_id,
-                $model->getLabel($this->translator->lang)
+                $model->getLabel(Language::from($this->translator->lang))
                 . ' ('
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'
             );
+
             if (
                 $model->getPayment()
-                && isset($this->model)
-                && $model->getPayment()->payment_id !== $this->model->payment_id
+                && (!isset($this->model) || $model->getPayment()->payment_id !== $this->model->payment_id)
             ) {
                 $checkBox->setDisabled();
                 $checkBox->setOption(
@@ -136,6 +125,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         /** @var SchedulePaymentModel $row */
         foreach ($payment->getSchedulePayment() as $row) {
             /** @var Checkbox $component */
+            /** @phpstan-ignore-next-line */
             $component = $this['person' . $row->person_schedule->person_id][$row->person_schedule_id];
             $component->setDefaultValue(true);
         }

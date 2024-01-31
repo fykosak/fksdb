@@ -13,7 +13,7 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
-class DiplomasPresenter extends BasePresenter
+final class DiplomasPresenter extends BasePresenter
 {
 
     public function titleResults(): PageTitle
@@ -26,7 +26,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): bool
     {
-        return $this->isAllowed('game.diplomas', 'results');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.results', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle
@@ -39,7 +39,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.diplomas', 'calculate');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.calculate', $this->getEvent());
     }
 
     /**
@@ -53,11 +53,11 @@ class DiplomasPresenter extends BasePresenter
                 'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NOT NULL')
-                    ->count(),
+                    ->count('*'),
                 'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category->value)
                     ->where('points IS NULL')
-                    ->count(),
+                    ->count('*'),
             ];
         }
         $this->template->items = $items;
@@ -70,7 +70,7 @@ class DiplomasPresenter extends BasePresenter
     public function handleCalculate(?string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy($category ? TeamCategory::tryFrom($category) : null);
+        $log = $closeStrategy(TeamCategory::tryFrom($category));
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)

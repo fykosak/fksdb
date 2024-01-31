@@ -14,6 +14,9 @@ use FKSDB\Models\WebService\Models\WebModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{eventId:int,lastUpdate?:string|null},array<string,mixed>>
+ */
 class ResultsWebModel extends WebModel
 {
     private EventService $eventService;
@@ -28,9 +31,9 @@ class ResultsWebModel extends WebModel
     /**
      * @throws NotSetGameParametersException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($this->params['eventId']);
         $gameSetup = $event->getGameSetup();
 
         $result = [
@@ -59,11 +62,16 @@ class ResultsWebModel extends WebModel
         return $result;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_id' => Expect::scalar()->castTo('int')->required(),
-            'last_update' => Expect::string()->nullable(),
+            'eventId' => Expect::scalar()->castTo('int')->required(),
+            'lastUpdate' => Expect::string()->nullable(),
         ]);
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

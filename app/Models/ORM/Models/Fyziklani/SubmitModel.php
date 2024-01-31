@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
@@ -17,14 +17,25 @@ use Nette\Security\Resource;
  * @property-read int $fyziklani_task_id
  * @property-read int $fyziklani_submit_id
  * @property-read int $task_id
- * @property-read TeamModel2 fyziklani_team
+ * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
+ * @property-read \DateTimeInterface $created
+ * @property-read \DateTimeInterface $checked
  * @property-read \DateTimeInterface $modified
+ * @phpstan-type SerializedSubmitModel array{
+ *      points:int|null,
+ *      teamId:int,
+ *      taskId:int,
+ *      modified:string,
+ * }
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'game.submit';
 
+    /**
+     * @phpstan-return SerializedSubmitModel
+     */
     public function __toArray(): array
     {
         return [
@@ -32,6 +43,7 @@ class SubmitModel extends Model implements Resource
             'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
             'modified' => $this->modified->format('c'),
+            'created' => $this->modified->format('c'),
         ];
     }
 
@@ -49,8 +61,7 @@ class SubmitModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
-     * @return SubmitState|mixed|null
+     * @return SubmitState|null|int|string
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore

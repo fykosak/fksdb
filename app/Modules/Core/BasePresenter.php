@@ -6,18 +6,19 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnTableComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
-use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestService;
@@ -30,6 +31,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
+use Nette\Application\UI\ComponentReflection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
@@ -40,8 +42,9 @@ use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
+ * @phpstan-import-type TRootItem from NavigationChooser
  */
-abstract class BasePresenter extends Presenter implements AutocompleteJSONProvider
+abstract class BasePresenter extends Presenter
 {
     /**
      * @persistent
@@ -53,6 +56,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     protected bool $authorized = true;
+    /** @phpstan-var array<string,bool> */
     private array $authorizedCache = [];
     private Container $diContainer;
 
@@ -60,6 +64,8 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     protected PasswordAuthenticator $passwordAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
+    protected ContestYearAuthorizator $contestYearAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
 
     final public function injectBase(
         Container $diContainer,
@@ -67,9 +73,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator,
         TokenAuthenticator $tokenAuthenticator,
-        PasswordAuthenticator $passwordAuthenticator,
-        ContestAuthorizator $contestAuthorizator,
-        EventAuthorizator $eventAuthorizator
+        PasswordAuthenticator $passwordAuthenticator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
@@ -77,12 +81,22 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         $this->diContainer = $diContainer;
         $this->tokenAuthenticator = $tokenAuthenticator;
         $this->passwordAuthenticator = $passwordAuthenticator;
+    }
+
+    public function injectAuthorizators(
+        EventAuthorizator $eventAuthorizator,
+        ContestYearAuthorizator $contestYearAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
     }
 
     /**
-     * @param \ReflectionMethod|\ReflectionClass $element
+     * @param \ReflectionMethod|ComponentReflection $element
      * @throws \ReflectionException
      * @throws \Exception
      */
@@ -90,13 +104,13 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::TOKEN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::HTTP))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
                 $this->tryHttpAuth();
             }
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::tryFrom(AuthMethod::LOGIN))) {
+            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::LOGIN))) {
                 $this->optionalLoginRedirect();
             }
             $method = $this->formatAuthorizedMethod();
@@ -107,12 +121,15 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         }
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function formatAuthorizedMethod(): \ReflectionMethod
     {
         $method = 'authorized' . $this->getAction();
         try {
             $reflectionMethod = new \ReflectionMethod($this, $method);
-            if ($reflectionMethod->getReturnType()->getName() !== 'bool') {
+            if ($reflectionMethod->getReturnType()->getName() !== 'bool') { // @phpstan-ignore-line
                 throw new InvalidStateException(
                     sprintf('Method %s of %s should return bool.', $reflectionMethod->getName(), get_class($this))
                 );
@@ -127,7 +144,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
                 );
             }
         } catch (\ReflectionException $exception) {
-            throw new InvalidStateException(
+            throw new NotFoundException(
                 sprintf('Presenter %s has not implemented method %s.', get_class($this), $method)
             );
         }
@@ -171,6 +188,7 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @phpstan-param array<string,scalar>|null $args
      */
     public function authorized(string $destination, ?array $args = null): bool
     {
@@ -209,7 +227,12 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
-            $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
+            $testedPresenter = $this->presenterBuilder->preparePresenter(
+                (string)$presenter,
+                $action,
+                $args,
+                $baseParams
+            );
 
             try {
                 $testedPresenter->checkRequirements($testedPresenter->getReflection());
@@ -238,10 +261,10 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
      */
     private function selectLang(): string
     {
-        $candidate = $this->getUserPreferredLang() ?? $this->lang;
+        $candidate = $this->lang ?? $this->getUserPreferredLang();
         $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
-            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages); // @phpstan-ignore-line
         }
         if (!$candidate) {
             $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
@@ -265,13 +288,14 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
 
     protected function getLoggedPerson(): ?PersonModel
     {
-        /**@var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->getUser()->getIdentity();
         return $this->getUser()->isLoggedIn() ? $login->person : null;
     }
 
     protected function createTemplate(): Template
     {
+        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -295,10 +319,11 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         parent::beforeRender();
 
         $this->template->pageTitle = $this->getTitle();
-        $this->template->lang = $this->getLang();
+        $this->template->lang = $this->translator->lang;
         $this->template->navRoots = $this->getNavRoots();
         $this->template->styleId = $this->getStyleId();
         $this->template->theme = $this->getTheme();
+        $this->template->loggedPerson = $this->getLoggedPerson();
     }
 
     public function getTitle(): PageTitle
@@ -335,11 +360,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return 'default';
     }
 
-    public function getLang(): string
-    {
-        return $this->language;
-    }
-
+    /**
+     * @phpstan-return TRootItem[]
+     */
     protected function getNavRoots(): array
     {
         return [];
@@ -350,9 +373,9 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return $this->diContainer;
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooserComponent
+    protected function createComponentNavigationChooser(): NavigationChooser
     {
-        return new NavigationChooserComponent($this->getContext());
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentPrinter(): ColumnRendererComponent
@@ -360,19 +383,14 @@ abstract class BasePresenter extends Presenter implements AutocompleteJSONProvid
         return new ColumnRendererComponent($this->getContext());
     }
 
-    protected function createComponentColumnTable(): ColumnTableComponent
+    protected function createComponentColumnTable(): ColumnTable
     {
-        return new ColumnTableComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
+        return new ColumnTable($this->getContext());
     }
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
-        return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
+        return new LanguageChooserComponent($this->getContext());
     }
 
     /**

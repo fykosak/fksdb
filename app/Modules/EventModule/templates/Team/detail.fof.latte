@@ -1,0 +1,64 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType bool $rankVisible}
+
+{block titleBody}
+    {include parent}
+    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:false}
+{/block}
+
+{define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
+    <h3 class="mt-5 pull-left">{_'Schedule'}</h3>
+    {control 'personSchedule' . $person->person_id}
+{/define}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests'}</h2>
+            {control rests}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+            {control columnTable [
+            'fyziklani_team.name',
+            'fyziklani_team.phone',
+            'fyziklani_team.note',
+            'fyziklani_team.category',
+            'fyziklani_team.game_lang',
+            ],$model,1024}
+        </div>
+    </div>
+    {if $rankVisible}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rank & points'}</h2>
+                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
+            </div>
+        </div>
+    {/if}
+    {var $teacherCounter = 0;}
+    {foreach $model->getTeachers() as $teacher}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
+        {php $teacherCounter++}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm::formatTeacherLabel($teacherCounter,$teacher)}</h2>
+                {include personSchedule, person => $teacher->person}
+            </div>
+        </div>
+    {/foreach}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+        {php $counter++}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+                {include personSchedule, person => $member->person}
+            </div>
+        </div>
+    {/foreach}
+{/block}

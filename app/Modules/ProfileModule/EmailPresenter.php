@@ -5,18 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ProfileModule;
 
 use FKSDB\Components\Controls\Person\Edit\ChangeEmailComponent;
-use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 
-class EmailPresenter extends BasePresenter
+final class EmailPresenter extends BasePresenter
 {
-    private AccountManager $accountManager;
+    private PersonInfoService $personInfoService;
 
-    public function injectAccountManager(AccountManager $accountManager): void
+    public function injectAccountManager(PersonInfoService $personInfoService): void
     {
-        $this->accountManager = $accountManager;
+        $this->personInfoService = $personInfoService;
     }
 
     public function titleDefault(): PageTitle
@@ -42,12 +46,36 @@ class EmailPresenter extends BasePresenter
     public function actionConfirm(): void
     {
         $logger = new MemoryLogger();
-        $this->accountManager->handleChangeEmail($this->getLoggedPerson(), $logger);
+        $this->handleChangeEmail($this->getLoggedPerson(), $logger);
         FlashMessageDump::dump($logger, $this);
     }
 
     protected function createComponentChangeEmailForm(): ChangeEmailComponent
     {
-        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson(), $this->getLang());
+        return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson());
+    }
+
+    private function handleChangeEmail(PersonModel $person, Logger $logger): void
+    {
+        if (
+            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch()
+            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))
+        ) {
+            $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
+            // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.
+            //Možné príčiny: neskoro kliknutie na link; nebolo o zmenu vôbec požiuadané a nejak sa dostal sem.
+            return;
+        }
+        try {
+            $newEmail = $this->tokenAuthenticator->getTokenData();
+            ChangeEmailComponent::logEmailChange($person, $newEmail, false);
+            $this->personInfoService->storeModel([
+                'email' => $this->tokenAuthenticator->getTokenData(),
+            ], $person->getInfo());
+            $logger->log(new Message(_('Email has been changed.'), Message::LVL_SUCCESS));
+            $this->tokenAuthenticator->disposeAuthToken();
+        } catch (\Throwable $exception) {
+            $logger->log(new Message(_('Some error occurred! Please contact system admins.'), Message::LVL_ERROR));
+        }
     }
 }

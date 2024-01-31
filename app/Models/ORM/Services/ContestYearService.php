@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
-class ContestYearService extends Service
+/**
+ * @phpstan-extends Service<ContestYearModel>
+ */
+final class ContestYearService extends Service
 {
 
     /**
@@ -30,6 +33,8 @@ class ContestYearService extends Service
 
     public function findByContestAndYear(int $contestId, int $year): ?ContestYearModel
     {
-        return $this->getTable()->where('contest_id', $contestId)->where('year', $year)->fetch();
+        /** @var ContestYearModel|null $contestYear */
+        $contestYear = $this->getTable()->where('contest_id', $contestId)->where('year', $year)->fetch();
+        return $contestYear;
     }
 }

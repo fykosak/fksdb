@@ -5,28 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\Exceptions\GoneException;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ */
 abstract class BaseItem extends BaseComponent
 {
-    public ?Title $title;
+    /**
+     * @phpstan-param TModel $model
+     * @throws GoneException
+     */
+    abstract public function render(Model $model, int $userPermission): void;
 
-    public function __construct(Container $container, ?Title $title = null)
-    {
-        parent::__construct($container);
-        $this->title = $title;
-    }
-
-    abstract protected function getTemplatePath(): string;
-
-    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
-    {
-        $this->template->model = $model;
-        $this->template->title = $this->title;
-        $this->template->userPermission = $userPermission;
-        $this->template->render($this->getTemplatePath());
-    }
+    abstract public function renderTitle(): void;
 }

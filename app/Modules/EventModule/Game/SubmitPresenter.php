@@ -7,9 +7,9 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\Form\FormComponent;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -18,11 +18,9 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @method SubmitModel getEntity()
- */
-class SubmitPresenter extends BasePresenter
+final class SubmitPresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<SubmitModel> */
     use EventEntityPresenterTrait;
 
     public function titleCreate(): PageTitle
@@ -42,7 +40,7 @@ class SubmitPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -58,7 +56,7 @@ class SubmitPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -80,7 +78,7 @@ class SubmitPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException

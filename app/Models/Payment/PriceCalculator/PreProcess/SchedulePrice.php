@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 
@@ -16,8 +17,9 @@ class SchedulePrice implements Preprocess
     public static function calculate(PaymentModel $modelPayment): MultiCurrencyPrice
     {
         $price = MultiCurrencyPrice::createFromCurrencies([$modelPayment->getCurrency()]);
-        foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
-            $modelPrice = $model->schedule_item->getPrice();
+        /** @var SchedulePaymentModel $model */
+        foreach ($modelPayment->getSchedulePayment() as $model) {
+            $modelPrice = $model->person_schedule->schedule_item->getPrice();
             $price->add($modelPrice);
         }
         return $price;

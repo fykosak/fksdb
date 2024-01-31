@@ -1,0 +1,14 @@
+{varType FKSDB\Models\ORM\Models\TeacherModel $model}
+{block outerContent}
+    <div class="container">
+        {control columnTable [
+        'person.full_name',
+        'teacher.since',
+        'teacher.until',
+        'teacher.note',
+        'teacher.number_brochures',
+        'teacher.state'
+        ], $model, 1024}
+        {control printer:button 'person.detail', $model}
+    </div>
+{/block}

@@ -1,0 +1,137 @@
+{layout '../@layout.latte'}
+{varType int $userPermission}
+{define person}
+    {control detailComponent "base_info"}
+    {control detailComponent "extended_info"}
+    {control detailComponent "academic_degree"}
+    {control detailComponent "login"}
+    {control flag}
+{/define}
+
+{define personHistory}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Person history'}</h2>
+            {control personHistoryGrid}
+        </div>
+    </div>
+{/define}
+
+{define contact}
+    {control detailComponent "contact_info"}
+    {control detailComponent "contact_parents"}
+    {control deliveryAddress}
+    {control permanentAddress}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Emails'}</h2>
+            {control emailMessageGrid}
+        </div>
+    </div>
+{/define}
+
+{define contests}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Task contribution'}</h2>
+            {control taskContributionsGrid}
+        </div>
+    </div>
+    {control organizerList}
+    {control role}
+    {control contestantBasesGrid}
+{/define}
+
+{define events}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Event participants'}</h2>
+            {control eventParticipantsGrid}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Team members'}</h2>
+            {control teamMembersGrid}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payments'}</h2>
+            {control paymentsGrid}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Event organizers'}</h2>
+            {control eventOrganizerGrid}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Event teachers'}</h2>
+            {control eventTeachersGrid}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Schedule'}</h2>
+            {control eventScheduleGrid}
+        </div>
+    </div>
+{/define}
+
+{block content}
+    <div class="panel color-auto">
+        <div class="container">
+            <div class="nav nav-pills" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-person"
+                   role="tab"><i class="fas fa-user me-1"></i>{_'Person'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-person-history"
+                   role="tab"><i class="fas fa-university me-1"></i>{_'Person history'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contact"
+                   role="tab"><i class="fas fa-phone me-1"></i>{_'Contact'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contests"
+                   role="tab"><i class="fas fa-trophy me-1"></i>{_'Contests'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-events"
+                   role="tab"><i class="fas fa-calendar me-1"></i>{_'Events'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-data-tests"
+                   role="tab"><i class="fas fa-check me-1"></i>{_'Data tests'}</a>
+                <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-timeline"
+                   role="tab"><i class="fas fa-clock-o me-1"></i>{_'Timeline'}</a>
+            </div>
+        </div>
+    </div>
+    <div class="tab-content mt-3" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-person" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include person}
+        </div>
+        <div class="tab-pane fade show" id="nav-person-history" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include personHistory}
+        </div>
+        <div class="tab-pane fade show" id="nav-contact" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include contact}
+        </div>
+        <div class="tab-pane fade show" id="nav-contests" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include contests}
+        </div>
+        <div class="tab-pane fade show" id="nav-events" role="tabpanel" aria-labelledby="nav-home-tab">
+            {include events}
+        </div>
+        <div class="tab-pane fade show" id="nav-data-tests" role="tabpanel" aria-labelledby="nav-home-tab">
+            {control dataTest}
+        </div>
+        <div class="tab-pane fade show" id="nav-timeline" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="panel color-auto">
+                <div class="container">
+                    {if $userPermission < FKSDB\Models\ORM\FieldLevelPermission::ALLOW_RESTRICT}
+                        {FKSDB\Models\UI\PermissionDeniedBadge::getHtml()}
+                    {else}
+                        <h2>{_'Timeline'}</h2>
+                        {control timeline}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

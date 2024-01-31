@@ -6,18 +6,20 @@ namespace FKSDB\Components\Schedule\Rests;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Nette\DI\Container;
 
 class TeamRestsComponent extends BaseComponent
 {
-    final public function render(TeamModel2 $team): void
+    private TeamModel2 $team;
+
+    public function __construct(Container $container, TeamModel2 $team)
     {
-        $this->template->event = $team->event;
-        $this->template->persons = $team->getPersons();
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'team.latte');
+        parent::__construct($container);
+        $this->team = $team;
     }
 
-    protected function createComponentSingleRestControl(): PersonRestComponent
+    final public function render(): void
     {
-        return new PersonRestComponent($this->getContext());
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'team.latte', ['team' => $this->team]);
     }
 }

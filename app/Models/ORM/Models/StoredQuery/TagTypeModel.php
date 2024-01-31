@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @todo Better (general) support for related collection setter.
@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string $description
  * @property-read int $color
  */
-class TagTypeModel extends Model
+final class TagTypeModel extends Model
 {
     public function getColor(): string
     {

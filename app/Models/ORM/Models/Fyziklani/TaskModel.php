@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
+use Nette\Security\Resource;
 
 /**
  * @property-read string $name
@@ -14,9 +15,19 @@ use Fykosak\NetteORM\Model;
  * @property-read int $points
  * @property-read int $event_id
  * @property-read EventModel $event
+ * @phpstan-type SerializedTaskModel array{
+ *     label:string,
+ *     points:int,
+ *     taskId:int,
+ *     name:string|null,
+ * }
  */
-class TaskModel extends Model
+final class TaskModel extends Model implements Resource
 {
+    public const RESOURCE_ID = 'game.task';
+    /**
+     * @phpstan-return SerializedTaskModel
+     */
     public function __toArray(bool $hideName = false): array
     {
         return [
@@ -25,5 +36,10 @@ class TaskModel extends Model
             'taskId' => $this->fyziklani_task_id,
             'name' => $hideName ? null : $this->name,
         ];
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
     }
 }

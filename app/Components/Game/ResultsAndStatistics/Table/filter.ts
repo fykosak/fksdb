@@ -1,14 +1,12 @@
 import { Translator } from '@translator/translator';
-import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/TeamModel';
+import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 
 export class Filter {
     public name: string;
-    public category: string;
-    public roomId: number;
+    public category: string | null;
 
-    constructor({roomId, category, name}) {
+    constructor({category, name}: { category: string | null, name: string }) {
         this.category = category;
-        this.roomId = roomId;
         this.name = name;
     }
 
@@ -18,7 +16,7 @@ export class Filter {
     }
 
     public same(filter: Filter | null): boolean {
-        return (filter) && (filter.roomId === this.roomId) && (filter.category === this.category) && (filter.name === this.name);
+        return (filter) && (filter.category === this.category) && (filter.name === this.name);
     }
 
     public getHeadline(): string {
@@ -26,8 +24,8 @@ export class Filter {
     }
 }
 
-export const createFilters = (categories: string[] = [], translator: Translator<string>): Filter[] => {
+export const createFilters = (categories: string[] = [], translator: Translator): Filter[] => {
     return categories.map((category: string) => {
-        return new Filter({roomId: null, category, name: translator.getText('Category') + ' ' + category});
+        return new Filter({category, name: translator.getText('Category') + ' ' + category});
     });
 };

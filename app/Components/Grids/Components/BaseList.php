@@ -11,49 +11,96 @@ use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseComponent<TModel,TFilterParams>
+ */
 abstract class BaseList extends BaseComponent
 {
-    protected ORMFactory $reflectionFactory;
-    public ButtonGroup $buttons;
-    public ListRows $rows;
-    /** @var callable */
+    // phpcs:disable
+    protected const ModeAlert = 'alert';
+    protected const ModePanel = 'panel';
+    protected const ModeCard = 'card';
+    // phpcs:enable
+
+    /** @phpstan-var callable(TModel):string */
     protected $classNameCallback = null;
 
-    public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
+    /** @phpstan-var self::Mode* $mode */
+    protected string $mode = self::ModePanel;
+
+    public function __construct(Container $container, int $userPermission)
     {
         parent::__construct($container, $userPermission);
-        $this->buttons = new ButtonGroup($this->container, new Title(null, ''));
-        $this->rows = new ListRows($this->container, new Title(null, ''));
-        $this->addComponent($this->buttons, 'buttons');
-        $this->addComponent($this->rows, 'rows');
+        $this->addComponent(new \Nette\ComponentModel\Container(), 'buttons');
+        $this->addComponent(new \Nette\ComponentModel\Container(), 'rows');
+        $this->paginate = false;
     }
 
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
+        switch ($this->mode) {
+            case self::ModeCard:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.card.latte';
+            case self::ModePanel:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.panel.latte';
+            case self::ModeAlert:
+            default:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'list.alert.latte';
+        }
     }
 
     public function render(): void
     {
         $this->template->classNameCallback = $this->classNameCallback;
-        $this->template->title = $this->getComponent('title', false);
         parent::render();
     }
 
     abstract protected function configure(): void;
 
-    protected function setTitle(BaseItem $title): void
+    /**
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
+     */
+    protected function setTitle(BaseItem $component): BaseItem
     {
-        $this->addComponent($title, 'title');
+        $this->addComponent($component, 'title');
+        return $component;
     }
 
-    public function addRow(BaseItem $component, string $name): void
+    /**
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
+     */
+    public function addRow(BaseItem $component, string $name): BaseItem
     {
-        $this->rows->addComponent($component, $name);
+        /** @phpstan-ignore-next-line */
+        $this->getComponent('rows')->addComponent($component, $name);
+        return $component;
     }
 
-    public function addButton(BaseItem $component, string $name): void
+    public function createRow(): \Nette\ComponentModel\Container
     {
-        $this->buttons->addComponent($component, $name);
+        $component = new \Nette\ComponentModel\Container();
+        /** @phpstan-ignore-next-line */
+        $length = count($this->getComponent('rows')->getComponents());
+        /** @phpstan-ignore-next-line */
+        $this->getComponent('rows')->addComponent($component, 'row' . $length);
+        return $component;
+    }
+
+    /**
+     * @phpstan-template TComponent of BaseItem<TModel>
+     * @phpstan-param TComponent $component
+     * @phpstan-return TComponent
+     */
+    public function addButton(BaseItem $component, string $name): BaseItem
+    {
+        /** @phpstan-ignore-next-line */
+        $this->getComponent('buttons')->addComponent($component, $name);
+        return $component;
     }
 }

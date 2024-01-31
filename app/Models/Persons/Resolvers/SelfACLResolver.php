@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -59,15 +59,15 @@ class SelfACLResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
             $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
             || $this->isSelf($person)
         ) {
-            return ResolutionMode::tryFrom(ResolutionMode::OVERWRITE);
+            return ResolutionMode::from(ResolutionMode::OVERWRITE);
         }
-        return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+        return ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool
@@ -89,7 +89,7 @@ class SelfACLResolver implements Resolver
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-        /** @var LoginModel $login */
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;

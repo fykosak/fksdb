@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
 enum AuthTokenType: string implements EnumColumn
@@ -38,8 +39,21 @@ enum AuthTokenType: string implements EnumColumn
     /**
      * @throws NotImplementedException
      */
-    public function getBehaviorType(): string
+    public function behaviorType(): string
     {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
+    }
+
+    public function getBehaviorType(): string
+    {
+        return $this->behaviorType();
     }
 }

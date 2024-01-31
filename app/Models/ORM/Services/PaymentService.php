@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method PaymentModel storeModel(array $data, ?PaymentModel $model = null)
+ * @phpstan-extends Service<PaymentModel>
  */
-class PaymentService extends Service
+final class PaymentService extends Service
 {
 }

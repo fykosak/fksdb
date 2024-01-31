@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\UI\StringPrinter;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
+ */
 class IdNumberColumnFactory extends ColumnFactory
 {
     protected function createFormControl(...$args): BaseControl
@@ -22,8 +26,11 @@ class IdNumberColumnFactory extends ColumnFactory
         return $control;
     }
 
+    /**
+     * @param PersonInfoModel $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new StringPrinter())($model->{$this->modelAccessKey});
+        return StringPrinter::getHtml($model->id_number);
     }
 }

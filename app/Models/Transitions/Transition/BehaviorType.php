@@ -19,11 +19,11 @@ final class BehaviorType extends FakeStringEnum
     public static function cases(): array
     {
         return [
-            self::SUCCESS,
-            self::WARNING,
-            self::DANGEROUS,
-            self::DEFAULT,
-            self::PRIMARY,
+            new self(self::SUCCESS),
+            new self(self::WARNING),
+            new self(self::DANGEROUS),
+            new self(self::DEFAULT),
+            new self(self::PRIMARY),
         ];
     }
 }

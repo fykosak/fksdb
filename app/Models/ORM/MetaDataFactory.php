@@ -6,9 +6,25 @@ namespace FKSDB\Models\ORM;
 
 use Nette\Database\Connection;
 
+/**
+ * @phpstan-type TMetaData array{
+ * name:string,
+ * table:string,
+ * nativetype:string,
+ * size:int|null,
+ * unsigned:bool,
+ * nullable:bool,
+ * default:string|null,
+ * autoincrement:bool,
+ * primary:bool,
+ * vendor:array<string,mixed>,
+ * }
+ */
 class MetaDataFactory
 {
-
+    /**
+     * @phpstan-var array<string,array<string,TMetaData>>
+     */
     private array $metadata = [];
     private Connection $connection;
 
@@ -17,6 +33,9 @@ class MetaDataFactory
         $this->connection = $connection;
     }
 
+    /**
+     * @phpstan-return TMetaData
+     */
     public function getMetaData(string $table, string $field): array
     {
         if (!isset($this->metadata[$table])) {
@@ -29,7 +48,7 @@ class MetaDataFactory
     {
         $this->metadata[$tableName] = [];
         foreach ($this->connection->getDriver()->getColumns($tableName) as $columnMeta) {
-            $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;
+            $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;//@phpstan-ignore-line
         }
     }
 }

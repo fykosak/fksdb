@@ -8,12 +8,13 @@ use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
- */
 class ContainerWithOptions extends Container
 {
+    /** @phpstan-var array<string,mixed> */
     private array $options = [];
+
+    public bool $collapse = false;
+
     protected DIContainer $container;
 
     public function __construct(DIContainer $container)
@@ -27,7 +28,8 @@ class ContainerWithOptions extends Container
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @param mixed $value
+     * @phpstan-template TNewValue
+     * @phpstan-param TNewValue $value
      * @return static
      */
     public function setOption(string $key, $value): self
@@ -41,9 +43,10 @@ class ContainerWithOptions extends Container
     }
 
     /**
-     * Returns user-specific option.
-     * @param mixed $default value
-     * @return mixed
+     * Returns user-specific option
+     * @phpstan-template TDefaultValue of mixed
+     * @phpstan-param TDefaultValue $default
+     * @phpstan-return TDefaultValue
      */
     final public function getOption(string $key, $default = null)
     {
@@ -52,6 +55,7 @@ class ContainerWithOptions extends Container
 
     /**
      * Returns user-specific options.
+     * @phpstan-return array<string,mixed>
      */
     final public function getOptions(): array
     {
@@ -60,7 +64,7 @@ class ContainerWithOptions extends Container
 
     public function setDisabled(bool $value = true): void
     {
-        /** @var BaseControl $component */
+        /** @var self|BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
         }
@@ -68,9 +72,11 @@ class ContainerWithOptions extends Container
 
     /**
      * @param mixed $value
+     * @phpstan-return static
      */
     public function setHtmlAttribute(string $name, $value = true): self
     {
+        /** @var self|BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setHtmlAttribute($name, $value);
         }

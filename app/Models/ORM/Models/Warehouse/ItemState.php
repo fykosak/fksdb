@@ -7,9 +7,10 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class ItemState extends FakeStringEnum implements EnumColumn
+final class ItemState extends FakeStringEnum implements EnumColumn
 {
     public const NEW = 'new';
     public const USED = 'used';
@@ -53,7 +54,7 @@ class ItemState extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {
@@ -68,5 +69,9 @@ class ItemState extends FakeStringEnum implements EnumColumn
     public function getBehaviorType(): string
     {
         throw new NotImplementedException();
+}
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

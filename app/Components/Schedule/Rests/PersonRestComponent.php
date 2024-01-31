@@ -4,17 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Rests;
 
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Nette\DI\Container;
 
-class PersonRestComponent extends BaseComponent
+final class PersonRestComponent extends BaseComponent
 {
+    private EventParticipantModel $eventParticipant;
 
-    final public function render(PersonModel $person, EventModel $event): void
+    public function __construct(Container $container, EventParticipantModel $eventParticipant)
     {
-        $this->template->rests = $person->getScheduleRests($event);
-        $this->template->person = $person;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');
+        parent::__construct($container);
+        $this->eventParticipant = $eventParticipant;
+    }
+
+    public function render(): void
+    {
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'person.latte',
+            [
+                'rests' => $this->eventParticipant->person->getScheduleRests($this->eventParticipant->event),
+                'person' => $this->eventParticipant->person,
+            ]
+        );
     }
 }

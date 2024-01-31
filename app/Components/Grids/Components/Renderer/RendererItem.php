@@ -5,30 +5,53 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Renderer;
 
 use FKSDB\Components\Grids\Components\BaseItem;
-use FKSDB\Models\ORM\FieldLevelPermissionValue;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-extends BaseItem<TModel>
+ */
 class RendererItem extends BaseItem
 {
-    /** @var callable */
+    /**
+     * @phpstan-var callable(TModel,int):(string|Html) $renderer
+     */
     protected $renderer;
+    public Title $title;
 
+    /**
+     * @phpstan-param callable(TModel,int):(string|Html) $renderer
+     */
     public function __construct(Container $container, callable $renderer, Title $title)
     {
-        parent::__construct($container, $title);
+        parent::__construct($container);
+        $this->title = $title;
         $this->renderer = $renderer;
     }
 
-    public function render(?Model $model, ?FieldLevelPermissionValue $userPermission): void
+    /**
+     * @phpstan-param TModel $model
+     */
+    public function render(Model $model, int $userPermission): void
     {
-        $this->template->renderer = $this->renderer;
-        parent::render($model, $userPermission);
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . '../html.latte',
+            [
+                'html' => ($this->renderer)($model, $userPermission),
+            ]
+        );
     }
 
-    protected function getTemplatePath(): string
+    public function renderTitle(): void
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'renderer.latte';
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . '../html.latte',
+            [
+                'html' => $this->title->toHtml(),
+            ]
+        );
     }
 }

@@ -82,29 +82,7 @@ class Utils
         } else {
             try {
                 return (string)$object;
-            } catch (\Error$error) {
-                return $error->__toString();
-            }
-        }
-    }
-
-    /**
-     * Returns string representation of iterable objects.
-     */
-    public static function getRepresentation(mixed $object): string
-    {
-        if (is_iterable($object)) {
-            $items = [];
-            foreach ($object as $key => $item) {
-                $items[] = "$key: " . self::getRepresentation($item);
-            }
-            return '{' . implode(', ', $items) . '}';
-        } elseif ($object instanceof \DateTimeInterface) {
-            return $object->format('c');
-        } else {
-            try {
-                return (string)$object;
-            } catch (\Error$error) {
+            } catch (\Error $error) { // @phpstan-ignore-line
                 return $error->__toString();
             }
         }

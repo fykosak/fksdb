@@ -5,17 +5,23 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 final class YearChooserComponent extends ChooserComponent
 {
-    private ?ContestYearModel $contestYear;
+    private ContestYearModel $contestYear;
+    /**
+     * @phpstan-var TypedGroupedSelection<ContestYearModel> $availableYears
+     */
     private TypedGroupedSelection $availableYears;
 
-    public function __construct(Container $container, ?ContestYearModel $urlYear, TypedGroupedSelection $availableYears)
+    /**
+     * @phpstan-param  TypedGroupedSelection<ContestYearModel> $availableYears
+     */
+    public function __construct(Container $container, ContestYearModel $urlYear, TypedGroupedSelection $availableYears)
     {
         parent::__construct($container);
         $this->contestYear = $urlYear;

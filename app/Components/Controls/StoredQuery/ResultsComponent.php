@@ -23,6 +23,7 @@ class ResultsComponent extends BaseComponent
     public const PARAMETER_URL_PREFIX = 'p_';
     /**
      * @persistent
+     * @phpstan-var array<string,scalar>|null
      */
     public ?array $parameters;
     public ?StoredQuery $storedQuery = null;
@@ -51,7 +52,11 @@ class ResultsComponent extends BaseComponent
         $form->addSubmit('execute', _('Execute'));
         $form->onSuccess[] = function (Form $form) {
             $this->parameters = [];
-            $values = $form->getValues();
+            /** @phpstan-var array{params:array<string,array{value:scalar}>} $values */
+            $values = $form->getValues('array');
+            /**
+             * @var string $key
+             */
             foreach ($values[self::CONT_PARAMS] as $key => $values) {
                 $this->parameters[$key] = $values['value'];
             }
@@ -86,14 +91,17 @@ class ResultsComponent extends BaseComponent
             $formControl = $this->getComponent('parametrizeForm');
             $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
-        $this->template->error = $this->getSqlError();
-        $this->template->hasParameters = $this->showParametrizeForm &&
-            count($this->storedQuery->getQueryParameters());
-        $this->template->showParametrizeForm = $this->showParametrizeForm;
-        $this->template->hasStoredQuery = isset($this->storedQuery);
-        $this->template->storedQuery = $this->storedQuery ?? null;
-        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
+        $this->template->render(
+            __DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte',
+            [
+                'error' => $this->getSqlError(),
+                'hasParameters' => $this->showParametrizeForm && count($this->storedQuery->getQueryParameters()),
+                'showParametrizeForm' => $this->showParametrizeForm,
+                'hasStoredQuery' => isset($this->storedQuery),
+                'storedQuery' => $this->storedQuery ?? null,
+                'formats' => $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [],
+            ]
+        );
     }
 
     /**
@@ -113,8 +121,7 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @param ParameterModel[] $queryParameters
-     * TODO
+     * @phpstan-param ParameterModel[] $queryParameters
      */
     private function createParametersValues(array $queryParameters): ContainerWithOptions
     {

@@ -84,7 +84,7 @@ WHERE
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
-        return $sum;
+        return (int)$sum;
     }
 
     /**
@@ -154,11 +154,11 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
+    private function studyYearToGraduation(?string $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;
         }
-        return $contestYear->getGraduationYear(StudyYear::tryFromLegacy($studyYear));
+        return StudyYear::from($studyYear)->getGraduationYear($contestYear->ac_year);
     }
 }

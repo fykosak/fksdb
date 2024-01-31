@@ -4,58 +4,37 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 
 class SchoolCheckComponent extends BaseComponent
 {
+    private TeamModel2 $team;
 
-    private EventModel $event;
-
-    public function __construct(EventModel $event, Container $container)
+    public function __construct(TeamModel2 $team, Container $container)
     {
         parent::__construct($container);
-        $this->event = $event;
+        $this->team = $team;
     }
 
-    final public function render(TeamModel2 $currentTeam): void
+    final public function render(): void
     {
         $schools = [];
-        foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
-            $schools[$schoolId] = [
+        foreach (TeamsPerSchool::getSchoolsFromTeam($this->team) as $school) {
+            $schools[$school->school_id] = [
                 'school' => $school,
             ];
-            $query = $this->event->getTeams()
-                ->where(
-                    ':fyziklani_team_member.person:person_history.ac_year',
-                    $this->event->getContestYear()->ac_year
-                )
-                ->where(':fyziklani_team_member.person:person_history.school_id', $schoolId);
+            $query = TeamsPerSchool::getTeamsFromSchool($school, $this->team->event);
             foreach ($query as $team) {
-                $schools[$schoolId][] = $team;
+                $schools[$school->school_id][] = $team;
             }
         }
-        $this->template->schools = $schools;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
-    }
-
-    /**
-     * @return SchoolModel[]
-     */
-    private function getSchoolsFromTeam(TeamModel2 $team): array
-    {
-        $schools = [];
-        /** @var TeamMemberModel $member */
-        foreach ($team->getMembers() as $member) {
-            $history = $member->getPersonHistory();
-            $schools[$history->school_id] = $history->school;
-        }
-        return $schools;
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte', [
+            'schools' => $schools,
+        ]);
     }
 
     protected function createComponentValuePrinter(): ColumnRendererComponent

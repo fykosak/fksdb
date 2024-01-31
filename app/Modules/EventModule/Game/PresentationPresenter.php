@@ -8,7 +8,7 @@ use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class PresentationPresenter extends BasePresenter
+final class PresentationPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
@@ -20,7 +20,7 @@ class PresentationPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.presentation', 'default');
+        return $this->eventAuthorizator->isAllowed('game', 'presentation', $this->getEvent());
     }
 
     /**

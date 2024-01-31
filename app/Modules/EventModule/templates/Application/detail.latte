@@ -1,59 +1,68 @@
-{block outerContent}
-    {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-    {varType array $groups}
-    {varType bool $hasSchedule}
-    {varType bool $isOrg}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Base info'}</h2>
-            {control columnTable [
-            'person.person_link',
-            'event_participant.event_participant_id',
-            'event_participant.status',
-            'event_participant.price',
-            'event_participant.created'
-            ],$model,1024}
-        </div>
-    </div>
+{layout '../@layout.latte'}
 
-    {foreach $groups as $groupName=>$fieldDef}
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $isOrganizer}
+{varType array $groups}
+
+{define baseInfo, FKSDB\Models\ORM\Models\EventParticipantModel $model}
+    {if $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{$groupName}</h2>
-                {var $curentFields = []}
-                {foreach $fieldDef as $field}
-                    {varType array $fields}
-                    {if array_key_exists($field,$fields)}
-                        {php $curentFields[] = 'event_participant.' . $field}
-                    {/if}
-                {/foreach}
-                {control columnTable $curentFields,$model,1024}
-                {php $curentFields=[]}
+                <h2>{_'Base info'}</h2>
+                {control columnTable [
+                'person.full_name',
+                'event_participant.event_participant_id',
+                'event_participant.created'
+                ],$model,1024}
             </div>
         </div>
-    {/foreach}
+    {/if}
+{/define}
 
-    {if $hasSchedule}
+{define schedule}
+    {if $event->hasSchedule()}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Schedule'}</h2>
-                {control personScheduleGrid $model->person,$model->event}
+                {control personScheduleGrid}
             </div>
         </div>
     {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Actions'}</h2>
-            <a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $model->event->event_id}"
-               class="btn btn-xs btn-sm btn-outline-primary">{_'Edit'}</a>
-        </div>
-    </div>
-    {if $isOrg}
+{/define}
+
+{block titleBody}
+    {include parent}
+    {include titleButtons  from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:$isOrganizer}
+{/block}
+
+{block outerContent}
+    {if $isOrganizer}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{_'Transitions'}</h2>
-                {control applicationTransitions}
+                <h2>{_'Rests'}</h2>
+                {control rests}
             </div>
         </div>
     {/if}
+    {include baseInfo,model:$model}
+
+    {varType string[] $fields}
+    {foreach $groups as $groupName=>$fieldDef}
+        {if count(array_intersect($fieldDef, $fields)) > 0}
+            <div class="panel color-auto">
+                <div class="container">
+                    <h2>{$groupName}</h2>
+                    {var string[] $currentFields = []}
+                    {foreach $fieldDef as $field}
+                        {if in_array($field,$fields)}
+                            {php $currentFields[] = 'event_participant.' . $field}
+                        {/if}
+                    {/foreach}
+                    {control columnTable $currentFields,$model,1024}
+                    {php $currentFields = []}
+                </div>
+            </div>
+        {/if}
+    {/foreach}
 {/block}

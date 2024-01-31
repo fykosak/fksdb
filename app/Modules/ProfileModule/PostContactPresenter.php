@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Modules\CoreModule\BasePresenter;
 use Fykosak\Utils\UI\PageTitle;
 
-class PostContactPresenter extends BasePresenter
+final class PostContactPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {

@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\Charts\Event\Applications\ApplicationRationGeoChart;
-use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
-use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
-use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
-use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
+use FKSDB\Components\Charts\Event\Applications\ProgressComponent;
+use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
+use Nette\ComponentModel\IComponent;
 
-class ChartPresenter extends BasePresenter
+final class ChartPresenter extends BasePresenter
 {
     use ChartPresenterTrait;
 
@@ -29,59 +25,40 @@ class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed('event.chart', 'list');
+        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'event.chart', $this->getEvent());
     }
 
     /**
      * @throws EventNotFoundException
-     */
-    public function authorizedChart(): bool
-    {
-        return $this->isAllowed('event.chart', 'chart');
-    }
-
-
-    /**
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws NotImplementedException
-     * @throws BadRequestException
      * @throws UnsupportedLanguageException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function startup(): void
     {
         parent::startup();
-        $this->selectChart();
+        $this->registerCharts();
     }
 
     /**
-     * @return Chart[]
+     * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
-    protected function registerCharts(): array
+    protected function getCharts(): array
     {
-        if ($this->getEvent()->isTeamEvent()) {
-            return [
-                'teamApplicationProgress' => new TeamComponent($this->getContext(), $this->getEvent()),
-                'teamsPerCountry' => new TeamsGeoChart($this->getContext(), $this->getEvent()),
-                'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
-                'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
-                'model' => new GraphComponent(
-                    $this->getContext(),
-                    $this->eventDispatchFactory->getEventMachine($this->getEvent())
-                ),
-            ];
-        } else {
-            return [
-                'participantAcquaintance' => new ParticipantAcquaintanceChart($this->getContext(), $this->getEvent()),
-                'singleApplicationProgress' => new SingleComponent($this->getContext(), $this->getEvent()),
-                'model' => new GraphComponent(
-                    $this->getContext(),
-                    $this->eventDispatchFactory->getEventMachine($this->getEvent())
-                ),
-            ];
+        $charts = [
+            'timeProgress' => new ProgressComponent($this->getContext(), $this->getEvent(), 'time-progress'),
+            'barProgress' => new ProgressComponent($this->getContext(), $this->getEvent(), 'bar-progress'),
+            'timeGeo' => new TimeGeoChart($this->getContext(), $this->getEvent()),
+            'model' => new GraphComponent(
+                $this->getContext(),
+                $this->eventDispatchFactory->getEventMachine($this->getEvent())
+            ),
+        ];
+
+        if (!$this->getEvent()->isTeamEvent()) {
+            $charts['acquaintance'] = new ParticipantAcquaintanceChart($this->getContext(), $this->getEvent());
         }
+        return $charts;
     }
 }

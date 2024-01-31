@@ -6,16 +6,13 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class EventParticipantStatus extends FakeStringEnum implements EnumColumn
+final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 {
-
+    public const INIT = '__init';
     public const APPLIED = 'applied';
-    public const APPLIED_NODSEF = 'applied.nodsef';
-    public const APPLIED_NOTSAF = 'applied.notsaf';
-    public const APPLIED_TSAF = 'applied.tsaf';
-    public const APPROVED = 'approved';
     public const AUTO_INVITED = 'auto.invited';
     public const AUTO_SPARE = 'auto.spare';
     public const CANCELLED = 'cancelled';
@@ -32,7 +29,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public const PENDING = 'pending';
     public const REJECTED = 'rejected';
     public const SPARE = 'spare';
-    public const SPARE_TSAF = 'spare.tsaf';
     public const SPARE1 = 'spare1';
     public const SPARE2 = 'spare2';
     public const SPARE3 = 'spare3';
@@ -40,11 +36,8 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
+            new self(self::INIT),
             new self(self::APPLIED),
-            new self(self::APPLIED_NODSEF),
-            new self(self::APPLIED_NOTSAF),
-            new self(self::APPLIED_TSAF),
-            new self(self::APPROVED),
             new self(self::AUTO_INVITED),
             new self(self::AUTO_SPARE),
             new self(self::CANCELLED),
@@ -61,7 +54,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             new self(self::PENDING),
             new self(self::REJECTED),
             new self(self::SPARE),
-            new self(self::SPARE_TSAF),
             new self(self::SPARE1),
             new self(self::SPARE2),
             new self(self::SPARE3),
@@ -70,9 +62,48 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->getBehaviorType()])
-            ->addText($this->label());
+        $badge = '';
+        switch ($this->value) {
+            case self::APPLIED:
+            case self::INTERESTED:
+            case self::PENDING:
+                $badge = 'badge bg-color-2';
+                break;
+            case self::PARTICIPATED:
+                $badge = 'badge bg-color-3';
+                break;
+            case self::MISSED:
+                $badge = 'badge bg-color-4';
+                break;
+            case self::DISQUALIFIED:
+                $badge = 'badge bg-color-5';
+                break;
+            case self::REJECTED:
+            case self::CANCELLED:
+                $badge = 'badge bg-color-6';
+                break;
+            case self::PAID:
+                $badge = 'badge bg-color-7';
+                break;
+            case self::OUT_OF_DB:
+                $badge = 'badge bg-color-8';
+                break;
+            case self::SPARE:
+            case self::SPARE1:
+            case self::SPARE2:
+            case self::SPARE3:
+            case self::AUTO_SPARE:
+                $badge = 'badge bg-color-9';
+                break;
+            case self::INVITED:
+            case self::INVITED1:
+            case self::INVITED2:
+            case self::INVITED3:
+            case self::AUTO_INVITED:
+                $badge = 'badge bg-color-10';
+                break;
+        }
+        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
     public function label(): string
@@ -80,14 +111,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::APPLIED:
                 return _('Applied');
-            case self::APPLIED_NODSEF:
-                return _('Applied no DSEF');
-            case self::APPLIED_NOTSAF:
-                return _('Applied no TSAF');
-            case self::APPLIED_TSAF:
-                return _('Applied TSAF');
-            case self::APPROVED:
-                return _('Approved');
             case self::AUTO_INVITED:
                 return _('Auto invited');
             case self::AUTO_SPARE:
@@ -120,8 +143,6 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
                 return _('Rejected');
             case self::SPARE:
                 return _('Spare');
-            case self::SPARE_TSAF:
-                return _('Spare TSAF');
             case self::SPARE1:
                 return _('Spare 1');
             case self::SPARE2:
@@ -171,5 +192,9 @@ class EventParticipantStatus extends FakeStringEnum implements EnumColumn
             case self::AUTO_INVITED:
                 return 'color-10';
         }
+    }
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

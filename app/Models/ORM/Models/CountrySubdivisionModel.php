@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $country_subdivision_id
@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int $country_id
  * @property-read CountryModel $country
  */
-class CountrySubdivisionModel extends Model
+final class CountrySubdivisionModel extends Model
 {
 
 }

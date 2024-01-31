@@ -15,7 +15,7 @@ class BrojureResultsModel extends AbstractResultsModel
 {
 
     public const COL_SERIES_PREFIX = 's';
-    /** @var int[] */
+    /** @phpstan-var int[] */
     protected array $series;
     /**
      * Number of (single) series that is listed in detail
@@ -23,13 +23,13 @@ class BrojureResultsModel extends AbstractResultsModel
      */
     protected int $listedSeries;
     /**
-     * Cache
-     * @var array
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
      */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
     public function getDataColumns(ContestCategoryModel $category): array
     {
@@ -48,6 +48,7 @@ class BrojureResultsModel extends AbstractResultsModel
 
             foreach ($this->getSeries() as $series) {
                 $points = null;
+                /** @var TaskModel $task */
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
@@ -77,13 +78,16 @@ class BrojureResultsModel extends AbstractResultsModel
         return $this->dataColumns[$category->label];
     }
 
+    /**
+     * @phpstan-return int[]
+     */
     public function getSeries(): array
     {
         return $this->series;
     }
 
     /**
-     * @param int[] $series
+     * @phpstan-param int[] $series
      */
     public function setSeries(array $series): void
     {
@@ -104,6 +108,9 @@ class BrojureResultsModel extends AbstractResultsModel
         $this->dataColumns = [];
     }
 
+    /**
+     * @return literal-string
+     */
     protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
@@ -160,7 +167,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
             'ct.year' => $this->contestYear->year,
             'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
+            'ct.study_year_new' => $this->evaluationStrategy->categoryToStudyYears($category),
         ]);
         $query .= " where $where";
 
@@ -168,6 +175,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
+        /** @phpstan-ignore-next-line */
         return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias."
             . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM
             . ' is null and @prevSum is null), @rank, @rownum) AS `' . self::DATA_RANK_FROM

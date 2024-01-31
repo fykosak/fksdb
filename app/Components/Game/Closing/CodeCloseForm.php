@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 class CodeCloseForm extends FormComponent
@@ -30,44 +31,45 @@ class CodeCloseForm extends FormComponent
     {
         $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
-            $code = $form->getValues('array')['code'];
+            /** @phpstan-var array{code:string} $values */
+            $values = $form->getValues('array');
+            $code = $values['code'];
             $team = $codeProcessor->getTeam($code);
-            $expectedTask = $this->handler->getNextTask($team);
+            $expectedTask = Handler::getNextTask($team);
             try {
                 $givenTask = $codeProcessor->getTask($code);
-                if (!$expectedTask) {
-                    throw new GameException(
-                        _('Final task mismatch: ') .
-                        _('system expect no task left')
-                    );
-                }
-                if ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
-                    throw new GameException(
-                        _('Final task mismatch: ') .
-                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
-                    );
-                }
             } catch (NoTaskLeftException $exception) {
-                if ($expectedTask) {
-                    throw new GameException(
-                        _('Final task mismatch: ') .
-                        sprintf(_('system expect task %s on top.'), $expectedTask->label)
-                    );
-                }
+                $givenTask = null;
+            }
+            if ($expectedTask && !$givenTask) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    sprintf(_('system expected task %s on top.'), $expectedTask->label)
+                );
+            } elseif (!$expectedTask && $givenTask) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    _('system expected no task left.')
+                );
+            } elseif ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    sprintf(_('system expected task %s on top.'), $expectedTask->label)
+                );
             }
             $this->handler->close($team);
             FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
             $this->getPresenter()->redirect('list', ['id' => null]);
-        } catch (GameException$exception) {
+        } catch (GameException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        } catch (\Throwable$exception) {
+        } catch (\Throwable $exception) {
             $this->flashMessage('Undefined error', Message::LVL_ERROR);
         }
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('submit', _('Close submitting!'));
+        return $form->addSubmit('submit', _('Close submitting!'));
     }
 
     protected function configureForm(Form $form): void

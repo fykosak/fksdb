@@ -6,10 +6,10 @@ namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\PreviewComponent;
-use FKSDB\Components\Game\Closing\TeamListComponent;
-use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Components\Game\Closing\TeamList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
@@ -23,8 +23,9 @@ use Nette\Security\Resource;
 /**
  * @method TeamModel2 getEntity()
  */
-class ClosePresenter extends BasePresenter
+final class ClosePresenter extends BasePresenter
 {
+    /** @phpstan-use EventEntityPresenterTrait<TeamModel2> */
     use EventEntityPresenterTrait;
 
     public function titleList(): PageTitle
@@ -38,13 +39,13 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->isAllowed($this->getModelResource(), 'default');
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'close', $this->getEvent());
     }
 
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -64,7 +65,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->isAllowed($this->getModelResource(), 'default');
+        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'close', $this->getEvent());
     }
 
 
@@ -74,13 +75,13 @@ class ClosePresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -98,9 +99,9 @@ class ClosePresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): TeamListComponent
+    protected function createComponentGrid(): TeamList
     {
-        return new TeamListComponent($this->getContext(), $this->getEvent());
+        return new TeamList($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -129,6 +130,6 @@ class ClosePresenter extends BasePresenter
 
     protected function getModelResource(): string
     {
-        return 'game.close';
+        return 'game';
     }
 }

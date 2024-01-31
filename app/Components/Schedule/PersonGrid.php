@@ -6,60 +6,53 @@ namespace FKSDB\Components\Schedule;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Renderer\RendererItem;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
+use Nette\DI\Container;
 
-class PersonGrid extends BaseGrid
+/**
+ * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
+ */
+final class PersonGrid extends BaseGrid
 {
-    private EventModel $event;
-    private PersonModel $person;
+    private ScheduleItemModel $item;
 
-    /**
-     * @throws \InvalidArgumentException
-     */
-    final public function render(?PersonModel $person = null, ?EventModel $event = null): void
+    public function __construct(Container $container, ScheduleItemModel $item)
     {
-        $this->event = $event;
-        $this->person = $person;
-        parent::render();
+        parent::__construct($container);
+        $this->item = $item;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->person->getScheduleForEvent($this->event);
+        return $this->item->getInterested();
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     */
     protected function configure(): void
     {
         $this->paginate = false;
-        $this->counter = false;
-
-        $this->addColumn(
+        $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(PersonScheduleModel $model) => $model->person_schedule_id,
-                new Title(null, _('#'))
+                fn(PersonScheduleModel $model) => (string)$model->person_schedule_id,
+                new Title(null, _('Person schedule Id'))
             ),
             'person_schedule_id'
         );
-        $this->addColumns([
-            'schedule_group.name',
-            'schedule_item.name',
-            'schedule_item.price_czk',
-            'schedule_item.price_eur',
-            'payment.payment',
+        $this->addSimpleReferencedColumns([
+            '@person.full_name',
+            '@person_info.phone',
+            '@event.role',
+            '@payment.payment',
+            '@person_schedule.state',
         ]);
-    }
-
-    protected function getData(): void
-    {
+        $this->addPresenterButton(':Schedule:Person:detail', 'detail', new Title(null, _('Detail')), false, [
+            'id' => 'person_schedule_id',
+        ]);
     }
 }

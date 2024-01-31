@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Game;
 
-use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
-use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\BadRequestException;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
+/**
+ * @phpstan-extends WebModel<array{
+ *     method:string,
+ *     eventId:int,
+ *     code:string,
+ *     points:int,
+ * },array<mixed>>
+ */
 class SubmitWebModel extends WebModel
 {
     protected EventService $eventService;
@@ -23,21 +28,26 @@ class SubmitWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
-            'event_id' => Expect::scalar()->castTo('int')->required(),
+            'eventId' => Expect::scalar()->castTo('int')->required(),
             'code' => Expect::string()->pattern('^[0-9]{4,6}[a-hA-H]{2}[0-9]$')->required(),
             'points' => Expect::scalar()->castTo('int'),
         ]);
     }
 
-    public function getJsonResponse(array $params): array
+    /**
+     * @phpstan-return Message[]
+     * @throws GoneException
+     */
+    protected function getJsonResponse(): array
     {
-        try {
-            /** @var EventModel $event */
-            $event = $this->eventService->findByPrimary($params['event_id']);
+        throw new GoneException();
+        /* try {
+            /** @var EventModel|null $event
+            $event = $this->eventService->findByPrimary($params['eventId']);
             if (!$event) {
                 throw new BadRequestException();
             }
@@ -83,6 +93,11 @@ class SubmitWebModel extends WebModel
             return [
                 new Message(_('Undefined error'), Message::LVL_ERROR),
             ];
-        }
+        }*/
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

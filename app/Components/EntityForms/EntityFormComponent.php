@@ -5,18 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class EntityFormComponent extends FormComponent
 {
-    public function __construct(Container $container, protected readonly ?Model $model)
+    /**
+     * @phpstan-param TModel|null $model
+     */
+    public function __construct(Container $container,protected ?Model $model)
     {
         parent::__construct($container);
     }
@@ -31,7 +37,7 @@ abstract class EntityFormComponent extends FormComponent
     {
         try {
             $this->handleFormSuccess($form);
-        } catch (ModelException $exception) {
+        } catch (\PDOException $exception) {
             Debugger::log($exception);
             $previous = $exception->getPrevious();
             // catch NotNull|ForeignKey|Unique
@@ -40,7 +46,7 @@ abstract class EntityFormComponent extends FormComponent
             } else {
                 $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
-        } catch (AbortException $exception) {
+        } catch (AbortException $exception) {// @phpstan-ignore-line
             throw $exception;
         } catch (\Throwable $exception) {
             Debugger::log($exception);
@@ -48,9 +54,9 @@ abstract class EntityFormComponent extends FormComponent
         }
     }
 
-    protected function appendSubmitButton(Form $form): void
+    protected function appendSubmitButton(Form $form): SubmitButton
     {
-        $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
+        return $form->addSubmit('send', isset($this->model) ? _('Save') : _('Create'));
     }
 
     protected function configureForm(Form $form): void
@@ -58,7 +64,7 @@ abstract class EntityFormComponent extends FormComponent
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      */
     abstract protected function handleFormSuccess(Form $form): void;
 

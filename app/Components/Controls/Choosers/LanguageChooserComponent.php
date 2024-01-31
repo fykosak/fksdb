@@ -4,51 +4,38 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
-use Nette\DI\Container;
 
+/**
+ * @property GettextTranslator $translator
+ */
 final class LanguageChooserComponent extends ChooserComponent
 {
-
-    private array $supportedLanguages = [];
-    public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
-
-    private string $lang;
-    private bool $modifiable;
-
-
-    public function __construct(Container $container, string $lang, bool $modifiable)
-    {
-        parent::__construct($container);
-        $this->lang = $lang;
-        $this->modifiable = $modifiable;
-    }
-
+    /**
+     * @throws NotImplementedException
+     */
     protected function getItem(): NavItem
     {
-        if ($this->modifiable) {
-            if (!count($this->supportedLanguages)) {
-                $this->supportedLanguages = $this->translator->getSupportedLanguages();
-            }
-            $items = [];
-            foreach ($this->supportedLanguages as $language) {
-                $items[] = new NavItem(
-                    new Title(null, self::$languageNames[$language]),
-                    'this',
-                    ['lang' => $language],
-                    [],
-                    $language === $this->lang
-                );
-            }
-
-            return new NavItem(
-                new Title(null, self::$languageNames[$this->lang] ?? _('Language'), 'fas fa-language'),
-                '#',
+        $items = [];
+        foreach (Language::cases() as $language) {
+            $items[] = new NavItem(
+                new Title(null, $language->label()),
+                'this',
+                ['lang' => $language->value],
                 [],
-                $items
+                $language->value === $this->translator->lang
             );
         }
-        return new NavItem(new Title(null, self::$languageNames[$this->lang]));
+
+        return new NavItem(
+            new Title(null, Language::tryFrom($this->translator->lang)->label(), 'fas fa-language'),
+            '#',
+            [],
+            $items
+        );
     }
 }

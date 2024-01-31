@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -16,6 +17,9 @@ use FKSDB\Models\Persons\Resolvers\Resolver;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ */
 class ReferencedPersonFactory
 {
     use SmartObject;
@@ -31,9 +35,13 @@ class ReferencedPersonFactory
         $this->context = $context;
     }
 
+    /**
+     * @phpstan-return ReferencedId<PersonModel>
+     * @phpstan-param EvaluatedFieldsDefinition $fieldsDefinition
+     */
     public function createReferencedPerson(
         array $fieldsDefinition,
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear,
         string $searchType,
         bool $allowClear,
         Resolver $resolver,
@@ -56,13 +64,13 @@ class ReferencedPersonFactory
     }
 
     protected function createHandler(
-        ContestYearModel $contestYear,
+        ?ContestYearModel $contestYear,
         ?ResolutionMode $resolution,
         ?EventModel $event = null
     ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $contestYear,
-            $resolution ?? ResolutionMode::tryFrom(ResolutionMode::EXCEPTION)
+            $resolution ?? ResolutionMode::from(ResolutionMode::EXCEPTION)
         );
         if ($event) {
             $handler->setEvent($event);

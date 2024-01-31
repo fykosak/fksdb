@@ -6,13 +6,13 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ContestCategoryService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ResultsModelFactory;
-use Fykosak\NetteORM\TypedGroupedSelection;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
-use Nette\Database\Row;
 use Nette\DI\Container;
 
 /**
@@ -62,8 +62,8 @@ abstract class AbstractResultsModel
     }
 
     /**
-     * @return Row[]
      * @throws \PDOException
+     * @phpstan-ignore-next-line
      */
     public function getData(ContestCategoryModel $category): array
     {
@@ -86,12 +86,16 @@ abstract class AbstractResultsModel
         return $result;
     }
 
+    /**
+     * @phpstan-return literal-string
+     */
     abstract protected function composeQuery(ContestCategoryModel $category): string;
 
     /**
      * @note Work only with numeric types.
+     * @phpstan-param array<string,int|null|array<int,string|int|null>> $conditions
      */
-    protected function conditionsToWhere(iterable $conditions): string
+    protected function conditionsToWhere(array $conditions): string
     {
         $where = [];
         foreach ($conditions as $col => $value) {
@@ -102,10 +106,11 @@ abstract class AbstractResultsModel
                     if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subValue;
+                        $set[] = is_string($subValue) ? ('"' . $subValue . '"') : $subValue;
                     }
                 }
-                $inClause = "$col IN (" . implode(',', $set) . ')';
+                $inClause = $col . ' IN (' .
+                    implode(',', $set) . ')';
                 if ($hasNull) {
                     $where[] = "$inClause OR $col IS NULL";
                 } else {
@@ -120,18 +125,25 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<TaskModel>
+     */
     protected function getTasks(int $series): TypedGroupedSelection
     {
         return $this->contestYear->getTasks($series)->order('tasknr');
     }
 
     /**
-     * @return ContestCategoryModel[]
+     * @phpstan-return ContestCategoryModel[]
      */
     public function getCategories(): array
     {
         return $this->evaluationStrategy->getCategories();
     }
 
+    /**
+     * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
+     */
     abstract public function getDataColumns(ContestCategoryModel $category): array;
 }

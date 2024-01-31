@@ -7,22 +7,26 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class SubmitState extends FakeStringEnum implements EnumColumn
+final class SubmitState extends FakeStringEnum implements EnumColumn
 {
-    public const NOT_CHECKED = 'not_checked';
-    public const CHECKED = 'checked';
+    // phpcs:disable
+    public const NotChecked = 'not_checked';
+    public const Checked = 'checked';
+
+    // phpcs:enable
 
     public function badge(): Html
     {
         switch ($this->value) {
-            case self::CHECKED:
+            case self::Checked:
                 return Html::el('span')
                     ->addAttributes(['class' => 'badge bg-success'])
                     ->addText($this->label());
             default:
-            case self::NOT_CHECKED:
+            case self::NotChecked:
                 return Html::el('span')
                     ->addAttributes(['class' => 'badge bg-danger'])
                     ->addText($this->label());
@@ -32,10 +36,10 @@ class SubmitState extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
-            case self::CHECKED:
+            case self::Checked:
                 return 'checked';
             default:
-            case self::NOT_CHECKED:
+            case self::NotChecked:
                 return 'not checked';
         }
     }
@@ -43,13 +47,18 @@ class SubmitState extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::NOT_CHECKED),
-            new self(self::CHECKED),
+            new self(self::NotChecked),
+            new self(self::Checked),
         ];
     }
 
     public function getBehaviorType(): string
     {
         throw new NotImplementedException();
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

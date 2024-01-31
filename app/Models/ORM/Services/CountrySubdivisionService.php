@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\CountrySubdivisionModel;
+use Fykosak\NetteORM\Service\Service;
 
-class CountrySubdivisionService extends Service
+/**
+ * @phpstan-extends Service<CountrySubdivisionModel>
+ */
+final class CountrySubdivisionService extends Service
 {
 }

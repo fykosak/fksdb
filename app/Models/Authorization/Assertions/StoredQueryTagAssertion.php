@@ -9,13 +9,18 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-// TODO isnt used anymore
 class StoredQueryTagAssertion implements Assertion
 {
     use SmartObject;
 
+    /**
+     * @phpstan-var string[]
+     */
     private array $tagNames;
 
+    /**
+     * @phpstan-param string[] $tagNames
+     */
     public function __construct(array $tagNames)
     {
         $this->tagNames = $tagNames;

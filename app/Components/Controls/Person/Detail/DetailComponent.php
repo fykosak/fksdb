@@ -11,20 +11,20 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TFilterParams of array
+ * @phpstan-extends BaseList<TModel,TFilterParams>
+ */
 abstract class DetailComponent extends BaseList
 {
-    protected PersonModel $person;
-    protected bool $isOrg;
-
     public function __construct(
         Container $container,
-        PersonModel $person,
+        protected PersonModel $person,
         FieldLevelPermissionValue $userPermission,
-        bool $isOrg
+        protected bool $isOrganizer
     ) {
         parent::__construct($container, $userPermission);
-        $this->isOrg = $isOrg;
-        $this->person = $person;
     }
 
     final public function render(): void
@@ -35,11 +35,13 @@ abstract class DetailComponent extends BaseList
 
     protected function getTemplatePath(): string
     {
-        if ($this->userPermission < $this->getMinimalPermission()) {
+        if ($this->userPermission->value < $this->getMinimalPermission()) {
             return __DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte';
         }
         return __DIR__ . DIRECTORY_SEPARATOR . 'list.latte';
     }
 
     abstract protected function getHeadline(): Title;
+
+    abstract protected function getMinimalPermissions(): int;
 }

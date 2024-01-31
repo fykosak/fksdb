@@ -1,30 +1,24 @@
 {varType bool $hasTasks}
-{varType bool $canRegister}
-{varType bool $hasForward}
-{varType FKSDB\Modules\PublicModule\SubmitPresenter $presenter}
+{block titleBody}
+    {include parent}
+    <a class="btn btn-outline-secondary" href="{plink legacy}">{_'Go to the legacy submit system'}</a>
+{/block}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            <a class="btn btn-outline-success" href="{plink ajax}">{_'New submit system'}</a>
-            <a class="btn btn-outline-info" href="{plink list}">{_'Submitted solutions'}</a>
-        </div>
-        <div class="container">
             {if $hasTasks}
-                {control uploadForm}
+                {control submitContainer}
             {else}
                 <p class="alert alert-info">
                     {_'No tasks available to submit.'}
                 </p>
-                {if $canRegister}
-                    <p>
-                        <a class="btn btn-outline-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Register for the next year'}</a>
-                    </p>
-                {elseif $hasForward}
-                    <p>
-                        <a class="btn btn-outline-primary" n:href="this, year => $presenter->year + 1">{_'Next year'}</a>
-                    </p>
-                {/if}
             {/if}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Submitted solutions'}</h2>
+            {control submitsGrid}
         </div>
     </div>
 {/block}

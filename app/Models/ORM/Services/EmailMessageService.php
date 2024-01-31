@@ -4,27 +4,47 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
-use Fykosak\NetteORM\TypedSelection;
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\EmailMessageState;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @method EmailMessageModel storeModel(array $data)
+ * @phpstan-extends Service<EmailMessageModel>
  */
-class EmailMessageService extends Service
+final class EmailMessageService extends Service
 {
-
+    /**
+     * @phpstan-return TypedSelection<EmailMessageModel>
+     */
     public function getMessagesToSend(int $limit): TypedSelection
     {
-        return $this->getTable()->where('state', EmailMessageState::Waiting)->limit($limit);
+        return $this->getTable()->where('state', EmailMessageState::Waiting)
+            ->order('priority DESC')
+            ->limit($limit);
     }
 
+    /**
+     * @phpstan-param array{
+     *     recipient_person_id?:int,
+     *     recipient?:string,
+     *     sender:string,
+     *     reply_to?:string,
+     *     subject:string,
+     *     carbon_copy?:string,
+     *     blind_carbon_copy?:string,
+     *     text:string,
+     *     priority?:int|bool
+     * } $data
+     */
     public function addMessageToSend(array $data): EmailMessageModel
     {
         $data['state'] = EmailMessageState::Waiting;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];
+        }
+        if (!isset($data['priority'])) {
+            $data['priority'] = 1;
         }
         return $this->storeModel($data);
     }

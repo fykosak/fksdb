@@ -1,26 +1,53 @@
 {layout '@layout.latte'}
-{varType FKSDB\Models\ORM\Models\PersonModel $person}
-{block card-title}{_'Flags'}{/block}
-{block card-body}
-    {var FKSDB\Models\ORM\Models\PersonHasFlagModel[] $flags = $person->getFlags()}
+{varType FKSDB\Models\ORM\Models\PersonHasFlagModel[] $flags}
+{block headline}{_'Flags'}{/block}
+{block content}
     {if count($flags)}
         {foreach $flags as $flag}
-            <div class="alert alert-secondary">
-                <div class="row">
-                    <div class="col">
-                        <div><strong>{$flag->flag->name}</strong></div>
-                        {if $flag->contest_id}
-                            {control contestBadge $flag->contest_id}
-                        {/if}
+            <h3 class="card-header">{$flag->flag->name}</h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">{_'Value'}</span>
+                        <div class="col-7">
+                            {if $flag->value == 1}
+                                <span class="badge bg-success">1</span>
+                            {elseif $flag->value == 0}
+                                <span class="badge bg-danger">0</span>
+                            {else}
+                                <span class="badge bg-warning">{$flag->value}</span>
+                            {/if}
+                        </div>
                     </div>
-                    <div class="col">
-                        <div>{_'Value'}: {$flag->value}</div>
-                        <div>{$flag->modified}</div>
+                </li>
+                {if $flag->flag->type == 'contest' || $flag->flag->type == 'contest_year'}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <span class="col-5">{_'Contest'}</span>
+                            <div class="col-7">
+                                {FKSDB\Models\UI\ContestBadge::getHtml($flag->contest)}
+                            </div>
+                        </div>
+                    </li>
+                {/if}
+
+                {if $flag->flag->type == 'ac_year' || $flag->flag->type == 'contest_year'}
+                    {$flag->ac_year}
+                {/if}
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-5">{_'Modified'}</span>
+                        <div class="col-7">
+                            {$flag->modified}
+                        </div>
                     </div>
-                </div>
-            </div>
+                </li>
+
+            </ul>
         {/foreach}
     {else}
-        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+        <div class="card-body">
+            {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+        </div>
     {/if}
 {/block}
