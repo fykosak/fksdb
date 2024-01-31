@@ -7,8 +7,7 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\WebService\Models\{Contests\ContestsWebModel,
-    AuthWebModel,
+use FKSDB\Models\WebService\Models\{Contests\AuthWebModel,
     Contests\OrganizersWebModel,
     Contests\StatsWebModel,
     Events\EventDetailWebModel,
