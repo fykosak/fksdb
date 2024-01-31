@@ -12,11 +12,9 @@ use Nette\Forms\Controls\BaseControl;
 class UniqueLogin
 {
     private LoginService $loginService;
-    private ?LoginModel $ignoredLogin;
 
-    public function __construct(Container $container, ?LoginModel $ignoredLogin = null)
+    public function __construct(Container $container, private readonly ?LoginModel $ignoredLogin = null)
     {
-        $this->ignoredLogin = $ignoredLogin;
         $container->callInjects($this);
     }
 

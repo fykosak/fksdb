@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
@@ -14,6 +15,7 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
     // phpcs:disable
     public const NotChecked = 'not_checked';
     public const Checked = 'checked';
+
     // phpcs:enable
 
     public function badge(): Html
@@ -48,6 +50,11 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
             new self(self::NotChecked),
             new self(self::Checked),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 
     public function title(): Title

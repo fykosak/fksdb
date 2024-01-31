@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class PaymentState extends FakeStringEnum implements EnumColumn
+enum PaymentState: string implements EnumColumn
 {
-    public const WAITING = 'waiting'; // waiting for confirm payment
-    public const RECEIVED = 'received'; // payment received
-    public const CANCELED = 'canceled'; // payment canceled
-    public const IN_PROGRESS = 'in_progress';
-    public const INIT = 'init'; // virtual state for correct ORM
+    case Waiting = 'waiting'; // waiting for confirm payment
+    case Received = 'received'; // payment received
+    case Canceled = 'canceled'; // payment canceled
+    case InProgress = 'in_progress'; // new payment
+    case Init = 'init'; // virtual state for correct ORM
 
     public function badge(): Html
     {
@@ -24,49 +23,34 @@ final class PaymentState extends FakeStringEnum implements EnumColumn
         );
     }
 
-    public function label(): string
-    {
-        switch ($this->value) {
-            case self::IN_PROGRESS:
-                return _('In progress');
-            case self::WAITING:
-                return _('Waiting for paying');
-            case self::RECEIVED:
-                return _('Payment received');
-            default:
-            case self::CANCELED:
-                return _('Payment canceled');
-        }
-    }
-
     public function behaviorType(): string
     {
-        switch ($this->value) {
-            case self::IN_PROGRESS:
-                return 'primary';
-            case self::WAITING:
-                return 'warning';
-            case self::RECEIVED:
-                return 'success';
-            default:
-            case self::CANCELED:
-                return 'secondary';
-        }
+        return match ($this) {
+            self::InProgress => 'primary',
+            self::Waiting => 'warning',
+            self::Received => 'success',
+            self::Canceled, self::Init => 'secondary',
+        };
     }
 
-    public static function cases(): array
+    public function label(): string
     {
-        return [
-            new self(self::WAITING),
-            new self(self::RECEIVED),
-            new self(self::CANCELED),
-            new self(self::IN_PROGRESS),
-            new self(self::INIT),
-        ];
+        return match ($this) {
+            self::InProgress => _('New payment'),
+            self::Waiting => _('Waiting for paying'),
+            self::Received => _('Payment received'),
+            self::Canceled => _('Payment canceled'),
+            self::Init => _('Init'),
+        };
     }
 
     public function title(): Title
     {
         return new Title(null, $this->label());
+    }
+
+    public function getBehaviorType(): string
+    {
+        return $this->behaviorType();
     }
 }

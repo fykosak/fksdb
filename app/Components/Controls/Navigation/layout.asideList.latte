@@ -1,0 +1,16 @@
+{varType Fykosak\Utils\UI\Navigation\NavItem $item}
+{varType bool $subTitle}
+{block content}
+    {foreach $item->children as $subItem}
+        {if $subItem->active}
+            <span class="list-group-item-action list-group-item active">
+                {$subItem->title->toHtml($subTitle)}
+            </span>
+        {else}
+            <a href="{$control->getPresenter()->link($subItem->destination,$subItem->linkParams)}"
+               class="list-group-item-action list-group-item">
+                {$subItem->title->toHtml($subTitle)}
+            </a>
+        {/if}
+    {/foreach}
+{/block}

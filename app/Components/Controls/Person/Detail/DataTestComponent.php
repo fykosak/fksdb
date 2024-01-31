@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
 
 class DataTestComponent extends BaseComponent
@@ -31,8 +31,8 @@ class DataTestComponent extends BaseComponent
         return new TestsList($this->container, DataTestFactory::getPersonTests($this->container));
     }
 
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermission(): int
     {
-        return FieldLevelPermission::ALLOW_FULL;
+        return FieldLevelPermissionValue::Full;
     }
 }

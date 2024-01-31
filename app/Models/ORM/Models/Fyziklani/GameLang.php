@@ -34,13 +34,11 @@ final class GameLang extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::CS:
-                return _('Czech');
-            case self::EN:
-                return _('English');
-        }
-        return ''; // TODO remove on PHP8.1
+        return match ($this->value) {
+            self::CS => _('Czech'),
+            self::EN => _('English'),
+            default => '',
+        };
     }
 
     /**
@@ -52,6 +50,11 @@ final class GameLang extends FakeStringEnum implements EnumColumn
             new self(self::EN),
             new self(self::CS),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        return 'badge bg-primary';
     }
 
     public function title(): Title

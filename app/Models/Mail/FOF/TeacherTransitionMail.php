@@ -61,7 +61,7 @@ class TeacherTransitionMail extends MailCallback
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
+            AuthTokenType::EventNotify,
             $holder->getModel()->event->registration_end,
             null,
             true

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 
 class Component extends BaseComponent
 {
-    private int $minimalPermissions = FieldLevelPermission::ALLOW_FULL;
+    private FieldLevelPermissionValue $minimalPermissions = FieldLevelPermissionValue::Full;
 
     /**
      * @throws NotImplementedException
@@ -53,7 +53,7 @@ class Component extends BaseComponent
         );
     }
 
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
         return $this->minimalPermissions;
     }

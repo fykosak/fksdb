@@ -199,8 +199,9 @@ final class PersonModel extends Model implements Resource
 
     public function getActivePostContact(): ?PostContactModel
     {
-        return $this->getPostContact(PostContactType::from(PostContactType::PERMANENT)) ??
-            $this->getPostContact(PostContactType::from(PostContactType::DELIVERY));
+
+        return $this->getPostContact(PostContactType::Permanent) ??
+            $this->getPostContact(PostContactType::Delivery);
     }
     /**
      * @phpstan-return TypedGroupedSelection<PaymentModel>
@@ -259,11 +260,18 @@ final class PersonModel extends Model implements Resource
         return $member;
     }
 
+
+    public function getMessages(): TypedGroupedSelection
+    {
+        return $this->related(DbNames::TAB_EMAIL_MESSAGE, 'recipient_person_id');
+    }
+
     /**
      * @return TeamModel2|EventParticipantModel
      * @throws NotFoundException
      */
     public function getApplication(EventModel $event): Model
+
     {
         /** @var TeamMemberModel|null $member */
         $member = $this->getTeamMember($event);
@@ -443,7 +451,7 @@ final class PersonModel extends Model implements Resource
         /** @var PersonScheduleModel $pSchedule */
         foreach ($schedule as $pSchedule) {
             $payment = $pSchedule->getPayment();
-            if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
+            if (!$payment || $payment->state !== PaymentState::Received) {
                 $toPay[] = $pSchedule;
             }
         }

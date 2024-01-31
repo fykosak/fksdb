@@ -75,7 +75,7 @@ class ORMExtension extends Extension
                 'required' => Expect::bool(false),
                 'omitInputField' => Expect::bool(false),
                 'writeOnly' => Expect::bool(false),
-                'permission' => Expect::anyOf('ANYBODY', 'BASIC', 'RESTRICT', 'FULL')->firstIsDefault(),
+                'permission' => Expect::anyOf('NoAccess', 'Basic', 'Restrict', 'Full')->firstIsDefault(),
             ], $items)
         )->castTo('array');
     }
@@ -483,7 +483,8 @@ class ORMExtension extends Extension
             $this->translate($field['title']),
             isset($field['description']) ? $this->translate($field['description']) : null,
         ]);
-        $factory->addSetup('setPermissionValue', [$field['permission']]);
+        $reflection = new \ReflectionEnum(FieldLevelPermissionValue::class);
+        $factory->addSetup('setPermissionValue', [$reflection->getCase($field['permission'])->getValue()]);
         $factory->addSetup('setOmitInputField', [$field['omitInputField']]);
         $factory->addSetup('setRequired', [$field['required']]);
         $factory->addSetup('setWriteOnly', [$field['writeOnly']]);

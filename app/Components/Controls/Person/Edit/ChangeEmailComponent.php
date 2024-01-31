@@ -18,6 +18,7 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -33,6 +34,13 @@ class ChangeEmailComponent extends EntityFormComponent
     private LoginService $loginService;
     private AuthTokenService $authTokenService;
     private EmailMessageService $emailMessageService;
+
+    public function __construct(
+        Container $container,
+        PersonModel $person
+    ) {
+        parent::__construct($container, $person);
+    }
 
     public function inject(
         ReflectionFactory $reflectionFormFactory,
@@ -51,9 +59,9 @@ class ChangeEmailComponent extends EntityFormComponent
     public function render(): void
     {
         $login = $this->model->getLogin();
+        $this->template->lang = $this->translator->lang;
+        $this->template->changeActive = $login && $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         $this->template->lang = Language::tryFrom($this->translator->lang);
-        $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         parent::render();
     }
 
@@ -95,6 +103,7 @@ class ChangeEmailComponent extends EntityFormComponent
             $values['new_email'],
             Language::tryFrom($this->translator->lang)
         );
+
         $this->getPresenter()->flashMessage(
             _(
                 'Email with a verification link has been sent to the new email address,' .
@@ -107,7 +116,7 @@ class ChangeEmailComponent extends EntityFormComponent
 
     protected function setDefaults(Form $form): void
     {
-        $form->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
+        $form->setDefaults(['new_email' => $this->model->getInfo()?->email]);
     }
 
     /**
@@ -121,13 +130,13 @@ class ChangeEmailComponent extends EntityFormComponent
         if (!$login) {
             $this->loginService->createLogin($person);
         }
-        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
+        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch();
         if ($token) {
             throw new ChangeInProgressException();
         }
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::from(AuthTokenType::CHANGE_EMAIL),
+            AuthTokenType::from(AuthTokenType::ChangeEmail),
             (new \DateTime())->modify('+20 minutes'),
             $newEmail
         );

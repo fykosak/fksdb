@@ -251,14 +251,11 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     public static function mapAddressContainerNameToType(string $containerName): PostContactType
     {
-        switch ($containerName) {
-            case self::POST_CONTACT_PERMANENT:
-                return PostContactType::from(PostContactType::PERMANENT);
-            case self::POST_CONTACT_DELIVERY:
-                return PostContactType::from(PostContactType::DELIVERY);
-            default:
-                throw new InvalidArgumentException();
-        }
+        return match ($containerName) {
+            self::POST_CONTACT_PERMANENT => PostContactType::Permanent,
+            self::POST_CONTACT_DELIVERY => PostContactType::Delivery,
+            default => throw new InvalidArgumentException(),
+        };
     }
 
     /**

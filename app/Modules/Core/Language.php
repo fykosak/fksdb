@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Utils\FakeStringEnum;
+use Nette\NotImplementedException;
 use Nette\Utils\Html;
 
-final class Language extends FakeStringEnum
-{
-    public const CS = 'cs';
-    public const EN = 'en';
+enum Language: string {
+    case Cs = 'cs';
+    case En = 'en';
 
     /**
      * @throws NotImplementedException
@@ -26,13 +24,10 @@ final class Language extends FakeStringEnum
      */
     public function label(): string
     {
-        switch ($this->value) {
-            case self::CS:
-                return _('Czech');
-            case self::EN:
-                return _('English');
-        }
-        throw new NotImplementedException();
+        return match ($this) {
+            self::Cs => _('Czech'),
+            self::En => _('English'),
+        };
     }
 
     /**
@@ -40,23 +35,9 @@ final class Language extends FakeStringEnum
      */
     public function locales(): string
     {
-        switch ($this->value) {
-            case self::CS:
-                return 'cs_CZ.utf-8';
-            case self::EN:
-                return 'en_US.utf-8';
-        }
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @phpstan-return self[]
-     */
-    public static function cases(): array
-    {
-        return [
-            new self(self::EN),
-            new self(self::CS),
-        ];
+        return match ($this) {
+            self::Cs => 'cs_CZ.utf-8',
+            self::En => 'en_US.utf-8',
+        };
     }
 }

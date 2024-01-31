@@ -18,6 +18,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $login_id
@@ -239,7 +240,7 @@ final class LoginModel extends Model implements IIdentity
         /** @phpstan-var TypedGroupedSelection<AuthTokenModel> $query */
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
         if (isset($type)) {
-            $query->where('type', $type);
+            $query->where('type', $type->value);
         }
         return $query;
     }
