@@ -46,7 +46,7 @@ abstract class CodeForm extends FormComponent
     }
 
     /**
-     * @phpstan-param  TSupportedModel $model
+     * @phpstan-param TSupportedModel $model
      */
     abstract protected function innerHandleSuccess(Model $model, Form $form): void;
 

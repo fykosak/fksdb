@@ -21,7 +21,7 @@
     {var FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel|null $personSchedule = $person->getScheduleByGroup($group)}
     <div>
         <h3 class="{($personSchedule?'':'text-secondary') . ' me-3 d-flex align-items-center my-3'}">
-                {control printer:templateString '<span class="me-2">@schedule_group.name</span>@schedule_group.schedule_group_type',$group,1024}
+                {control printer:column '<span class="me-2">@schedule_group.name</span>@schedule_group.schedule_group_type',$group,1024}
             {if $displayTime}
                 {* TODO add date for schedule arcross middnight*}
                 {var string $className = 'text-'.$group->event->event_type->getSymbol().' ms-auto'}

@@ -12,21 +12,17 @@ use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
 use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
 use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
-use FKSDB\Components\Event\Code\CodeRedirectComponent;
-use FKSDB\Components\Event\CodeTransition\CodeTransitionComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;
 use FKSDB\Components\Grids\Application\TeamList;
-use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -55,7 +51,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -78,11 +74,9 @@ final class TeamPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        return
-            $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $event)
+        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
+            || ($this->getEvent()->isRegistrationOpened()
+                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $this->getEvent())
             );
     }
 
@@ -94,7 +88,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -107,7 +101,6 @@ final class TeamPresenter extends BasePresenter
                 'personSchedule' . $person->person_id
             );
         }
-        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
         try {
             $setup = $this->getEvent()->getGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -121,7 +114,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -151,7 +144,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -164,7 +157,7 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \Throwable
      */
     public function titleOrgDetail(): PageTitle
@@ -196,7 +189,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
@@ -211,7 +204,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
@@ -281,7 +274,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentEditForm(): TeamForm
@@ -316,17 +309,9 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCode(): CodeRedirectComponent
-    {
-        return new CodeRedirectComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
      * @phpstan-return TransitionButtonsComponent<TeamModel2>
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -338,25 +323,6 @@ final class TeamPresenter extends BasePresenter
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
             $this->getEntity()
-        );
-    }
-
-    /**
-     * @phpstan-return CodeTransitionComponent<TeamModel2>
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     * @throws GoneException
-     * @throws \ReflectionException
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCodeTransition(): CodeTransitionComponent
-    {
-        return new CodeTransitionComponent(
-            $this->getContext(),
-            $this->getEntity(),
-            TeamState::tryFrom(TeamState::Arrived), // TODO
-            $this->getMachine()
         );
     }
 
@@ -373,7 +339,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentRests(): TeamRestsComponent
@@ -384,26 +350,25 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      * @throws \ReflectionException
-     * @phpstan-return ProviderComponent<TeamModel2,array<never>>
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentSeating(): Single
     {
-        return new ProviderComponent(
-            new PageComponent($this->getContext()),
-            [$this->getEntity()],
-            $this->getContext()
-        );
+        return new Single($this->getContext(), $this->getEntity());
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
-        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+        return new SchoolCheckComponent($this->getEntity(), $this->getContext());
     }
 
     /**
@@ -418,7 +383,7 @@ final class TeamPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws \ReflectionException
      */
     protected function createComponentNoteForm(): NoteForm

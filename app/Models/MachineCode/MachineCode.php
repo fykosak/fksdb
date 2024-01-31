@@ -12,9 +12,7 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-type TSupportedModel (
- *     \FKSDB\Models\ORM\Models\EventParticipantModel
- *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
- *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
+ *     \FKSDB\Models\ORM\Models\PersonModel
  *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2)
  */
 final class MachineCode

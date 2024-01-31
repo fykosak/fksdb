@@ -25,7 +25,7 @@ class ItemListWebModel extends WebModel
         $this->scheduleGroupService = $scheduleGroupService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'groupId' => Expect::scalar()->castTo('int')->required(),
@@ -36,9 +36,9 @@ class ItemListWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $group = $this->scheduleGroupService->findByPrimary($params['groupId']);
+        $group = $this->scheduleGroupService->findByPrimary($this->params['groupId']);
         if (!$group) {
             throw new BadRequestException('Unknown group.', IResponse::S404_NOT_FOUND);
         }
@@ -48,5 +48,10 @@ class ItemListWebModel extends WebModel
             $data[] = $item->__toArray();
         }
         return $data;
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

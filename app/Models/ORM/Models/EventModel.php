@@ -72,7 +72,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     public const RESOURCE_ID = 'event';
     private const POSSIBLY_ATTENDING_STATES = [
         TeamState::Participated,
-        TeamState::Approved,
         TeamState::Spare,
         TeamState::Applied,
         TeamState::Arrived,
@@ -82,7 +81,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         return $this->event_type->contest->getContestYear($this->year);
     }
-
 
     /**
      * @throws NotSetGameParametersException
@@ -105,6 +103,11 @@ final class EventModel extends Model implements Resource, NodeCreator
         /** @phpstan-var TypedGroupedSelection<ScheduleGroupModel> $selection */
         $selection = $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
         return $selection;
+    }
+
+    public function hasSchedule(): bool
+    {
+        return (bool)$this->getScheduleGroups()->count('*');
     }
 
     /**
@@ -164,16 +167,6 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         /** @phpstan-var TypedGroupedSelection<EventOrganizerModel> $selection */
         $selection = $this->related(DbNames::TAB_EVENT_ORGANIZER, 'event_id');
-        return $selection;
-    }
-
-    /**
-     * @phpstan-return TypedGroupedSelection<PaymentModel>
-     */
-    public function getPayments(): TypedGroupedSelection
-    {
-        /** @phpstan-var TypedGroupedSelection<PaymentModel> $selection */
-        $selection = $this->related(DbNames::TAB_PAYMENT, 'event_id');
         return $selection;
     }
 
@@ -302,6 +295,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     public function getSalt(): string
     {
         switch ($this->event_type_id) {
+            case 1:
             case 2:
             case 14:
                 $salt = $this->getParameter('hashSalt');
@@ -319,9 +313,9 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         switch ($this->event_type_id) {
             case 1:
-                return new FOFHandler($this, $container);
+                return new FOFHandler($container);
             case 17:
-                return new CtyrbojHandler($this, $container);
+                return new CtyrbojHandler($container);
         }
         throw new GameException(_('Game handler does not exist for this event'));
     }

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -29,8 +30,8 @@ final class SpamPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -67,8 +68,8 @@ final class SpamPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -92,9 +93,10 @@ final class SpamPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
+     * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAnyContestAuthorized($resource, $privilege);
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

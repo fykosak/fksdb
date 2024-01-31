@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\SmartObject;
 
 class ArrayOptions implements OptionsProvider
@@ -29,7 +28,7 @@ class ArrayOptions implements OptionsProvider
     /**
      * @phpstan-return array<string,string>
      */
-    public function getOptions(Field $field): array
+    public function getOptions(): array
     {
         return $this->options;
     }

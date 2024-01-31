@@ -7,9 +7,9 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\Forms\PersonScheduleForm;
 use FKSDB\Components\Schedule\PersonScheduleList;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -43,7 +43,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      */
     public function renderDetail(): void
@@ -53,7 +53,7 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -81,7 +81,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isAllowed('event.schedule.person', $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(PersonScheduleModel::RESOURCE_ID, $privilege, $this->getEvent());
     }
 
     protected function getORMService(): PersonScheduleService
@@ -91,7 +91,7 @@ final class PersonPresenter extends BasePresenter
 
     /**
      * @phpstan-return TransitionButtonsComponent<PersonScheduleModel>
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      */
@@ -123,7 +123,7 @@ final class PersonPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): PersonScheduleForm
     {

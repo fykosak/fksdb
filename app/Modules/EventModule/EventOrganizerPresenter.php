@@ -6,9 +6,9 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
 use FKSDB\Components\Grids\EventOrganizer\EventOrganizersGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -44,10 +44,10 @@ final class EventOrganizerPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -79,7 +79,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     protected function getORMService(): EventOrganizerService
@@ -106,10 +106,10 @@ final class EventOrganizerPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): EventOrganizerFormComponent
     {

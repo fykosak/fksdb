@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
+use FKSDB\Models\UI\NumberPrinter;
+
 trait NumberFactoryTrait
 {
-    private string $nullValue;
-    private ?string $prefix;
-    private ?string $suffix;
+    protected NumberPrinter $printer;
 
-    public function setNumberFactory(string $nullValue, ?string $prefix, ?string $suffix): void
-    {
-        $this->nullValue = $nullValue;
-        $this->prefix = $prefix;
-        $this->suffix = $suffix;
+    /**
+     * @phpstan-param NumberPrinter::NULL_* $nullValue
+     */
+    public function setNumberFactory(
+        string $nullValue,
+        ?string $prefix,
+        ?string $suffix,
+        int $decimalDigitsCount = 0
+    ): void {
+        $this->printer = new NumberPrinter($prefix, $suffix, $decimalDigitsCount, $nullValue);
     }
 }

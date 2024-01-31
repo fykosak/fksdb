@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\UI\NumberPrinter;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -21,18 +20,9 @@ class FloatColumnFactory extends ColumnFactory
 {
     use NumberFactoryTrait;
 
-    private int $decimalDigitsCount;
-
-    public function setDecimalDigitsCount(int $count): void
-    {
-        $this->decimalDigitsCount = $count;
-    }
-
     protected function createHtmlValue(Model $model): Html
     {
-        return (new NumberPrinter($this->prefix, $this->suffix, $this->decimalDigitsCount, $this->nullValue))(
-            (float)$model->{$this->modelAccessKey}
-        );
+        return ($this->printer)((float)$model->{$this->modelAccessKey});
     }
 
     protected function createFormControl(...$args): BaseControl

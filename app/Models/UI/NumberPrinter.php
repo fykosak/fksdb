@@ -17,11 +17,14 @@ class NumberPrinter
     private ?string $suffix;
     private int $decimal;
 
+    /**
+     * @phpstan-param self::NULL_* $nullValueMode
+     */
     public function __construct(
         ?string $prefix,
         ?string $suffix,
-        int $decimal = 0,
-        ?string $nullValueMode = null
+        int $decimal,
+        string $nullValueMode
     ) {
         $this->nullValueMode = $nullValueMode;
         $this->prefix = $prefix;
@@ -45,10 +48,13 @@ class NumberPrinter
                     return Html::el('span')->addHtml($this->format(0.0));
             }
         }
-        return Html::el('span')->addHtml($this->format((float)$value));
+        return Html::el('span')->addHtml($this->format($value));
     }
 
-    private function format(float $number): string
+    /**
+     * @param int|float $number
+     */
+    private function format($number): string
     {
         $text = isset($this->prefix) ? ($this->prefix . '&#8287;') : '';
         $text .= number_format(

@@ -35,28 +35,27 @@ class CodeCloseForm extends FormComponent
             $values = $form->getValues('array');
             $code = $values['code'];
             $team = $codeProcessor->getTeam($code);
-            $expectedTask = $this->handler->getNextTask($team);
+            $expectedTask = Handler::getNextTask($team);
             try {
                 $givenTask = $codeProcessor->getTask($code);
-                if (!$expectedTask) {
-                    throw new GameException(
-                        _('Final task mismatch') . ': ' .
-                        _('system expected no task left.')
-                    );
-                }
-                if ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
-                    throw new GameException(
-                        _('Final task mismatch') . ': ' .
-                        sprintf(_('system expected task %s on top.'), $expectedTask->label)
-                    );
-                }
             } catch (NoTaskLeftException $exception) {
-                if ($expectedTask) {
-                    throw new GameException(
-                        _('Final task mismatch') . ': ' .
-                        sprintf(_('system expected task %s on top.'), $expectedTask->label)
-                    );
-                }
+                $givenTask = null;
+            }
+            if ($expectedTask && !$givenTask) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    sprintf(_('system expected task %s on top.'), $expectedTask->label)
+                );
+            } elseif (!$expectedTask && $givenTask) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    _('system expected no task left.')
+                );
+            } elseif ($givenTask->getPrimary() !== $expectedTask->getPrimary()) {
+                throw new GameException(
+                    _('Final task mismatch') . ': ' .
+                    sprintf(_('system expected task %s on top.'), $expectedTask->label)
+                );
             }
             $this->handler->close($team);
             FlashMessageDump::dump($this->handler->logger, $this->getPresenter());

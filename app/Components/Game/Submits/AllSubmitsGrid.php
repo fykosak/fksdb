@@ -53,7 +53,11 @@ class AllSubmitsGrid extends BaseGrid
         /** @phpstan-ignore-next-line */
         $this->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new TemplateItem($this->container, '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)'),
+            new TemplateItem(
+                $this->container,
+                '@fyziklani_team.name (@fyziklani_team.fyziklani_team_id)',
+                '@fyziklani_team.name:title'
+            ),
             'name_n_id'
         );
         $this->addSimpleReferencedColumns(
@@ -62,7 +66,7 @@ class AllSubmitsGrid extends BaseGrid
                 '@fyziklani_task.label',
                 '@fyziklani_submit.state',
                 '@fyziklani_submit.points',
-                '@fyziklani_submit.modified',
+                '@fyziklani_submit.created',
             ]
                 : [
                 '@fyziklani_task.label',
@@ -73,7 +77,7 @@ class AllSubmitsGrid extends BaseGrid
             $this->addPresenterButton(
                 ':Game:Submit:edit',
                 'edit',
-                new Title(null, _('button.edit')),
+                new Title(null, _('button.fyziklaniSubmit.edit')),
                 false,
                 ['id' => 'fyziklani_submit_id']
             );
@@ -130,7 +134,7 @@ class AllSubmitsGrid extends BaseGrid
                 case 'warnings':
                     $query->where('TIMESTAMPDIFF(SECOND,fyziklani_submit.modified,NOW()) >600')->where(
                         'fyziklani_submit.state',
-                        SubmitState::NOT_CHECKED
+                        SubmitState::NotChecked
                     );
                     break;
                 case 'task':

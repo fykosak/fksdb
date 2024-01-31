@@ -2,7 +2,7 @@
 
 {block titleBody}
     {include parent}
-    {control printer:templateString '@schedule_item.capacity_progress', $model,1024}
+    {control printer:column '@schedule_item.capacity_progress', $model,1024}
 
 {/block}
 {block outerContent}

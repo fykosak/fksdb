@@ -56,7 +56,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
     /**
      * @phpstan-param TModel $model
      */
-    final public function runTest(TestLogger $logger, Model $model): void
+    final public function runTest(TestLogger $logger, Model $model, string $id): void
     {
 
         $value = $model->{$this->modelAccessKey};
@@ -66,6 +66,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         if (!$this->phoneNumberFactory->isValid($value)) {
             $logger->log(
                 new TestMessage(
+                    $id,
                     \sprintf(_('%s number (%s) is not valid'), $this->getTitle(), $value),
                     Message::LVL_ERROR
                 )

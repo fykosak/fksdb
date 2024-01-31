@@ -12,7 +12,6 @@ class Field
     public string $name;
     public ?string $label;
     public ?string $description;
-    public BaseHolder $holder;
     private FieldFactory $factory;
     /** @var mixed */
     private $default;
@@ -56,20 +55,20 @@ class Field
     /*
      * Forms
      */
-    public function createFormComponent(): BaseControl
+    public function createFormComponent(BaseHolder $holder): BaseControl
     {
-        return $this->factory->createComponent($this);
+        return $this->factory->createComponent($this, $holder);
     }
 
-    public function setFieldDefaultValue(BaseControl $control): void
+    public function setFieldDefaultValue(BaseControl $control, BaseHolder $holder): void
     {
-        $this->factory->setFieldDefaultValue($control, $this);
+        $this->factory->setFieldDefaultValue($control, $this, $holder);
     }
 
-    public function isRequired(): bool
+    public function isRequired(BaseHolder $holder): bool
     {
         if (is_callable($this->required)) {
-            return ($this->required)($this->holder);
+            return ($this->required)($holder);
         }
         return (bool)$this->required;
     }
@@ -82,13 +81,13 @@ class Field
 
     /* ** MODIFIABLE ** */
 
-    public function isModifiable(): bool
+    public function isModifiable(BaseHolder $holder): bool
     {
-        if (!$this->holder->isModifiable()) {
+        if (!$holder->isModifiable()) {
             return false;
         }
         if (is_callable($this->modifiable)) {
-            return ($this->modifiable)($this->holder);
+            return ($this->modifiable)($holder);
         }
         return (bool)$this->modifiable;
     }
@@ -101,10 +100,10 @@ class Field
 
     /* ** VISIBLE ** */
 
-    public function isVisible(): bool
+    public function isVisible(BaseHolder $holder): bool
     {
         if (is_callable($this->visible)) {
-            return ($this->visible)($this->holder);
+            return ($this->visible)($holder);
         }
         return $this->visible;
     }
@@ -120,12 +119,12 @@ class Field
     /**
      * @return mixed
      */
-    public function getValue()
+    public function getValue(BaseHolder $holder)
     {
-        $model = $this->holder->getModel();
-        if (isset($this->holder->data[$this->name])) {
-            return $this->holder->data[$this->name];
+        if (isset($holder->data[$this->name])) {
+            return $holder->data[$this->name];
         }
+        $model = $holder->getModel();
         if ($model) {
             if (isset($model[$this->name])) {
                 return $model[$this->name];

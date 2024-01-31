@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Tests\Event;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
-use FKSDB\Models\Authorization\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -20,7 +20,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<EventModel>
  */
-class NoRoleSchedule extends Test
+final class NoRoleSchedule extends Test
 {
     private PersonService $personService;
 
@@ -32,7 +32,7 @@ class NoRoleSchedule extends Test
     /**
      * @param EventModel $model
      */
-    public function run(TestLogger $logger, Model $model): void
+    protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         $query = $this->personService->getTable()
             ->where(':person_schedule.schedule_item.schedule_group.event_id', $model->event_id)
@@ -41,8 +41,8 @@ class NoRoleSchedule extends Test
         foreach ($query as $person) {
             foreach ($person->getEventRoles($model) as $role) {
                 if (
-                    $role instanceof FyziklaniTeamMemberRole
-                    || $role instanceof FyziklaniTeamTeacherRole
+                    $role instanceof TeamMemberRole
+                    || $role instanceof TeamTeacherRole
                     || $role instanceof ParticipantRole
                 ) {
                     continue 2;
@@ -50,6 +50,7 @@ class NoRoleSchedule extends Test
             }
             $logger->log(
                 new TestMessage(
+                    $id,
                     sprintf(
                         _('Detect person "%s"(%d) in schedule without any role.'),
                         $person->getFullName(),
@@ -68,6 +69,6 @@ class NoRoleSchedule extends Test
 
     public function getId(): string
     {
-        return 'EventScheduleNoRole';
+        return 'eventScheduleNoRole';
     }
 }

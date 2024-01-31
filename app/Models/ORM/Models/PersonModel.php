@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\EventRole\{ContestOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
-    FyziklaniTeamMemberRole,
-    FyziklaniTeamTeacherRole,
+    Fyziklani\TeamMemberRole,
+    Fyziklani\TeamTeacherRole,
     ParticipantRole
 };
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -308,7 +308,7 @@ final class PersonModel extends Model implements Resource
             foreach ($teachers as $row) {
                 $teams[] = $row->fyziklani_team;
             }
-            $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
+            $roles[] = new TeamTeacherRole($event, $teams);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
@@ -320,10 +320,9 @@ final class PersonModel extends Model implements Resource
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new FyziklaniTeamMemberRole($event, $teamMember);
+            $roles[] = new TeamMemberRole($event, $teamMember);
         }
-        /** @var OrganizerModel|null $organizer */
-        $organizer = $this->getActiveOrganizersAsQuery($event->event_type->contest)->fetch();
+        $organizer = $this->getActiveOrganizer($event->event_type->contest);
         if (isset($organizer)) {
             $roles[] = new ContestOrganizerRole($event, $organizer);
         }
@@ -349,25 +348,29 @@ final class PersonModel extends Model implements Resource
     /**
      * @phpstan-return TypedGroupedSelection<OrganizerModel>
      */
-    public function getOrganizers(?ContestModel $contest = null): TypedGroupedSelection
+    public function getOrganizers(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<OrganizerModel> $selection */
         $selection = $this->related(DbNames::TAB_ORGANIZER, 'person_id');
-        if ($contest) {
-            $selection->where('contest_id', $contest->contest_id);
-        }
         return $selection;
     }
 
-    /**
-     * @phpstan-return TypedGroupedSelection<OrganizerModel>
-     */
-    public function getActiveOrganizersAsQuery(ContestModel $contest): TypedGroupedSelection
+    public function getOrganizer(ContestModel $contest): ?OrganizerModel
     {
-        $year = $contest->getCurrentContestYear()->year;
-        return $this->getOrganizers($contest)
-            ->where('since<=?', $year)
-            ->where('until IS NULL OR until >=?', $year);
+        /** @phpstan-var OrganizerModel|null $organizer */
+        $organizer = $this->getOrganizers()
+            ->where('contest_id', $contest->contest_id)
+            ->fetch();
+        return $organizer;
+    }
+
+    public function getActiveOrganizer(ContestModel $contest): ?OrganizerModel
+    {
+        $organizer = $this->getOrganizer($contest);
+        if ($organizer && $organizer->isActive($contest->getCurrentContestYear())) {
+            return $organizer;
+        }
+        return null;
     }
 
 

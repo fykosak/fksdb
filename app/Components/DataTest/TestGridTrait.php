@@ -21,7 +21,7 @@ trait TestGridTrait
      */
     protected function addTests(array $tests): void
     {
-        foreach ($tests as $test) {
+        foreach ($tests as $index => $test) {
             /** @phpstan-var RendererItem<TModel> $item */
             $item = new RendererItem(
                 $this->container,
@@ -33,7 +33,7 @@ trait TestGridTrait
                 },
                 $test->getTitle()
             );
-            $this->addTableColumn($item, 'test_' . $test->getId());
+            $this->addTableColumn($item, 'test_' . $index);
         }
     }
 

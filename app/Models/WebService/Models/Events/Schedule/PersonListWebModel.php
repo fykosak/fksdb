@@ -25,7 +25,7 @@ class PersonListWebModel extends WebModel
         $this->scheduleItemService = $scheduleItemService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'itemId' => Expect::scalar()->castTo('int')->required(),
@@ -36,9 +36,9 @@ class PersonListWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $item = $this->scheduleItemService->findByPrimary($params['itemId']);
+        $item = $this->scheduleItemService->findByPrimary($this->params['itemId']);
         if (!$item) {
             throw new BadRequestException('Unknown item.', IResponse::S404_NOT_FOUND);
         }
@@ -51,5 +51,10 @@ class PersonListWebModel extends WebModel
             ];
         }
         return $data;
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

@@ -7,8 +7,8 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -31,8 +31,8 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -50,8 +50,8 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -65,8 +65,8 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -79,8 +79,8 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): StoredQueryFormComponent
     {

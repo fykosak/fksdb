@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
@@ -25,15 +30,43 @@ abstract class WebModel
     protected Container $container;
     protected User $user;
 
-    final public function __construct(Container $container)
+    protected EventAuthorizator $eventAuthorizator;
+    protected ContestAuthorizator $contestAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
+    protected ContestYearAuthorizator $contestYearAuthorizator;
+    /**
+     * @phpstan-var TParams
+     */
+    protected array $params;
+
+    /**
+     * @throws NotImplementedException
+     * @phpstan-param mixed[] $arguments
+     */
+    final public function __construct(Container $container, ?array $arguments)
     {
         $this->container = $container;
         $container->callInjects($this);
+        if (isset($arguments)) {
+            $processor = new Processor();
+            $schema = $this->getExpectedParams();
+            $schema->otherItems()->castTo('array');
+            $this->params = $processor->process($schema, $arguments);
+        }
     }
 
-    final public function setUser(User $user): void
-    {
+    public function injectAuthorizators(
+        User $user,
+        EventAuthorizator $eventAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator,
+        ContestYearAuthorizator $contestYearAuthorizator
+    ): void {
         $this->user = $user;
+        $this->eventAuthorizator = $eventAuthorizator;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
     }
 
     /**
@@ -55,45 +88,29 @@ abstract class WebModel
         Debugger::log($message, 'soap');
     }
 
+
     /**
      * @throws GoneException
-     * @phpstan-param TParams $params
+     * @throws ForbiddenRequestException
+     */
+    final public function getApiResponse(): JsonResponse
+    {
+        if (!$this->isAuthorized()) {
+            throw new ForbiddenRequestException();
+        }
+        return new JsonResponse($this->getJsonResponse());
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    abstract protected function getExpectedParams(): Structure;
+
+    /**
+     * @throws GoneException
      * @phpstan-return TReturn
      */
-    protected function getJsonResponse(array $params): array
-    {
-        throw new GoneException();
-    }
+    abstract protected function getJsonResponse(): array;
 
-    /**
-     * @phpstan-param TParams $arguments
-     * @throws GoneException
-     * @throws NotImplementedException
-     */
-    final public function getApiResponse(array $arguments): JsonResponse
-    {
-        $arguments = $this->processArguments($arguments);
-        return new JsonResponse($this->getJsonResponse($arguments));
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): Structure
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     * @phpstan-param TParams $arguments
-     * @phpstan-return TParams
-     */
-    final public function processArguments(array $arguments): array
-    {
-        $processor = new Processor();
-        $schema = $this->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        return $processor->process($schema, $arguments);
-    }
+    abstract protected function isAuthorized(): bool;
 }

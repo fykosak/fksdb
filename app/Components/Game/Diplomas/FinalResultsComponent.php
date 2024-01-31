@@ -25,7 +25,7 @@ class FinalResultsComponent extends BaseComponent
         $count = $this->event->getParticipatingTeams()
             ->where('category', $category->value)
             ->where('rank_category IS NULL')
-            ->count();
+            ->count('*');
         return $count === 0;
     }
 
@@ -33,7 +33,7 @@ class FinalResultsComponent extends BaseComponent
     {
         $count = $this->event->getParticipatingTeams()
             ->where('rank_total IS NULL')
-            ->count();
+            ->count('*');
         return $count === 0;
     }
 

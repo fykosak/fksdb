@@ -73,10 +73,9 @@ export default function InnerComponent() {
             case 1:
                 resultsItems.push(<div className="col-10" key={col}>{table}</div>);
         }
-
     }
     return <div className="p-3 h-100 bg-white">
         <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
         <div className="row justify-content-around">{resultsItems}</div>
     </div>;
-};
+}

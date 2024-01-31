@@ -4,29 +4,48 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events\Schedule;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\WebService\Models\Events\EventWebModel;
 use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
- * @phpstan-extends WebModel<array{eventId:int,types:string[]},SerializedScheduleGroupModel[]>
+ * @phpstan-type SerializedScheduleItemModel array{
+ *      groupId:int,
+ *      itemId:int,
+ *      price:array<string, string>,
+ *      capacity:array{
+ *          total:int|null,
+ *          used:int|null,
+ *      },
+ *      name:array<string, string>,
+ *      begin:\DateTimeInterface,
+ *      end:\DateTimeInterface,
+ *      available: bool,
+ *      description:array<string, string>,
+ *      longDescription:array<string, string>,
+ * }
+ * @phpstan-type SerializedScheduleGroupModel array{
+ *      groupId:int,
+ *      type:string,
+ *      registration:array{begin:string|null,end:string|null,},
+ *      name:array<string, string>,
+ *      eventId:int,
+ *      start:string,
+ *      end:string,
+ *      items: SerializedScheduleItemModel[],
+ * }
+ * @phpstan-extends EventWebModel<array{eventId:int,types:string[]},SerializedScheduleGroupModel[]>
  */
-class GroupListWebModel extends WebModel
+class GroupListWebModel extends EventWebModel
 {
-    private EventService $eventService;
-
-    public function inject(EventService $eventService): void
-    {
-        $this->eventService = $eventService;
-    }
-
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
@@ -42,21 +61,56 @@ class GroupListWebModel extends WebModel
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
-        if (!$event) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
-        }
         $data = [];
-        $query = $event->getScheduleGroups();
-        if (count($params['types'])) {
-            $query->where('schedule_group_type', $params['types']);
+        $query = $this->getEvent()->getScheduleGroups();
+        if (count($this->params['types'])) {
+            $query->where('schedule_group_type', $this->params['types']);
         }
         /** @var ScheduleGroupModel $group */
         foreach ($query as $group) {
-            $data[] = $group->__toArray();
+            $items = [];
+            /** @var ScheduleItemModel $item */
+            foreach ($group->getItems() as $item) {
+                $items[$item->schedule_item_id] = [
+                    'groupId' => $item->schedule_group_id,
+                    'itemId' => $item->schedule_item_id,
+                    'price' => $item->getPrice()->__serialize(),
+                    'capacity' => [
+                        'total' => $item->capacity,
+                        'used' => $item->getUsedCapacity(),
+                    ],
+                    'name' => $item->name->__serialize(),
+                    'begin' => $item->getBegin(),
+                    'end' => $item->getEnd(),
+                    'description' => $item->description->__serialize(),
+                    'longDescription' => $item->long_description->__serialize(),
+                    'available' => (bool)$item->available,
+                ];
+            }
+            $data[$group->schedule_group_id] = [
+                'groupId' => $group->schedule_group_id,
+                'type' => $group->schedule_group_type->value,
+                'registration' => [
+                    'begin' => $group->registration_begin ? $group->registration_begin->format('c') : null,
+                    'end' => $group->registration_end ? $group->registration_end->format('c') : null,
+                ],
+                'name' => $group->name->__serialize(),
+                'eventId' => $group->event_id,
+                'start' => $group->start->format('c'),
+                'end' => $group->end->format('c'),
+                'items' => $items,
+            ];
         }
         return $data;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function isAuthorized(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
     }
 }

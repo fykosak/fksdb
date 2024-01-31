@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
@@ -45,7 +45,7 @@ final class ProducerPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      */
     final public function renderDetail(): void
@@ -74,7 +74,7 @@ final class ProducerPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      */
     protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid

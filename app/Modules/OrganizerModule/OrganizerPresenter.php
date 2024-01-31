@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\OrganizerFormComponent;
 use FKSDB\Components\Grids\OrganizersGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Modules\Core\PresenterTraits\ContestEntityTrait;
@@ -31,9 +31,9 @@ final class OrganizerPresenter extends BasePresenter
 
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException|\ReflectionException
      * @throws NoContestAvailable
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -46,9 +46,10 @@ final class OrganizerPresenter extends BasePresenter
 
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException|\ReflectionException
+     * @throws GoneException
+     * @throws \ReflectionException
      * @throws NoContestAvailable
+     * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
     {
@@ -71,9 +72,10 @@ final class OrganizerPresenter extends BasePresenter
 
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws GoneException|\ReflectionException
+     * @throws GoneException
+     * @throws \ReflectionException
      * @throws NoContestAvailable
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -96,11 +98,11 @@ final class OrganizerPresenter extends BasePresenter
 
     /**
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws GoneException
      * @throws \ReflectionException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): OrganizerFormComponent
     {

@@ -93,7 +93,6 @@ select p.other_name                                                             
        coalesce(
                if(sac.alpha_2 = 'cz', concat('red-izo:', s.izo), null),
                if(sac.alpha_2 = 'sk', concat('sk:', s.izo), null),
-               null, -- TODO AESOP id
                if(s.school_id is null, null, 'ufo')
            )                                                                                         as school,
        s.name_abbrev                                                                                 as `school-name`,
@@ -178,15 +177,44 @@ where exists(
 
 create or replace view v_dokuwiki_group as
 (
-select role_id, name
-from role
+SELECT T.role_id, T.role_id as name
+from (SELECT 'webmaster' as role_id
+      UNION
+      SELECT 'taskManager'
+      UNION
+      SELECT 'dispatcher'
+      UNION
+      SELECT 'dataManager'
+      UNION
+      SELECT 'eventManager'
+      UNION
+      SELECT 'inboxManager'
+      UNION
+      SELECT 'boss'
+      UNION
+      SELECT 'organizer'
+      UNION
+      SELECT 'contestant'
+      UNION
+      SELECT 'exportDesigner'
+      UNION
+      SELECT 'aesop'
+      UNION
+      SELECT 'schoolManager'
+      UNION
+      SELECT 'web'
+      UNION
+      SELECT 'wiki'
+      UNION
+      SELECT 'superuser'
+      UNION
+      SELECT 'cartesian') as T
     );
 
 create or replace view v_dokuwiki_user_group as
 select login_id, role_id, contest_id
-from `grant`
+from (select `role` as 'role_id', contest_id, login_id from `contest_grant`) as cg
 union
-select l.login_id, 8 as `role_id`, o.contest_id -- hardcoded 8 is 'org'
+select l.login_id, 'organizer' as `role_id`, o.contest_id -- hardcoded 'organizer'
 from org o
-         inner join login l on l.person_id = o.person_id
-;
+         inner join login l on l.person_id = o.person_id;

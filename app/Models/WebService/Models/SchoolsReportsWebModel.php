@@ -16,12 +16,12 @@ use Nette\Schema\Expect;
 class SchoolsReportsWebModel extends WebModel
 {
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([]);
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         set_time_limit(-1);
 
@@ -34,5 +34,10 @@ class SchoolsReportsWebModel extends WebModel
             fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],
             $logger->getMessages()
         );
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return true;
     }
 }

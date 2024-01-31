@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Statement;

@@ -41,7 +41,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedEntry(): bool
     {
-        return $this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'points', $this->getSelectedContest());
     }
 
     public function titlePreview(): PageTitle
@@ -54,7 +54,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedPreview(): bool
     {
-        return $this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'points', $this->getSelectedContest());
     }
 
     /**

@@ -31,9 +31,9 @@ class ResultsWebModel extends WebModel
     /**
      * @throws NotSetGameParametersException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId']);
+        $event = $this->eventService->findByPrimary($this->params['eventId']);
         $gameSetup = $event->getGameSetup();
 
         $result = [
@@ -62,11 +62,16 @@ class ResultsWebModel extends WebModel
         return $result;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): Structure
     {
         return Expect::structure([
             'eventId' => Expect::scalar()->castTo('int')->required(),
             'lastUpdate' => Expect::string()->nullable(),
         ]);
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

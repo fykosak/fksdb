@@ -15,10 +15,13 @@ use Nette\DI\Container;
 abstract class Test
 {
     protected Container $container;
+    /** @var string[] */
+    protected array $skippedTests;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
+        $this->skippedTests = $this->container->getParameters()['skippedTests'] ?? [];
         $container->callInjects($this);
     }
 
@@ -30,7 +33,19 @@ abstract class Test
     /**
      * @phpstan-param TModel $model
      */
-    abstract public function run(TestLogger $logger, Model $model): void;
+    final public function run(TestLogger $logger, Model $model): void
+    {
+        $id = $this->getId() . '(' . $model->getPrimary() . ')';
+        if (in_array($id, $this->skippedTests, true)) {
+            return;
+        }
+        $this->innerRun($logger, $model, $id);
+    }
+
+    /**
+     * @phpstan-param TModel $model
+     */
+    abstract protected function innerRun(TestLogger $logger, Model $model, string $id): void;
 
     abstract public function getTitle(): Title;
 
