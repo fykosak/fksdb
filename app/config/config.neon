@@ -58,13 +58,6 @@ parameters:
 
     # Transport XML (from Astrid)
     tasks:
-        # List of study years that are used for imported tasks when no explicit
-        # study years are specified.
-        defaultStudyYears:
-            # FYKOS
-            1: [8,9,1,2,3,4]
-            # Výfuk
-            2: [6,7,8,9]
         defaultCategories:
             1: [1,2,3,4]
             2: [6,7,8,9]
