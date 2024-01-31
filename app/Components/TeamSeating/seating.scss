@@ -1,43 +1,31 @@
-.seating-layout {
+$map: (
+        "R": var(--bs-fof),
+        "G": var(--bs-fol),
+        "B": var(--bs-fykos),
+        "Y": var(--bs-dsef),
+        "V": #C22D86,
+        "D": #222,
+);
 
+@each $key, $value in $map {
+  .seating-layout {
+    .seat {
+
+      &[data-sector="#{$key}"] {
+        &.seat-occupied {
+          --seat-fill: $value;
+        }
+      }
+    }
+  }
+  .badge[data-sector="#{$key}"] {
+    background-color: $value;
+  }
+}
+
+.seating-layout {
   .seat {
     --seat-fill: none;
-
-    &[data-sector="R"] {
-      &.seat-occupied {
-        --seat-fill: var(--bs-fof);
-      }
-    }
-
-    &[data-sector="G"] {
-      &.seat-occupied {
-        --seat-fill: var(--bs-fol);
-      }
-    }
-
-    &[data-sector="B"] {
-      &.seat-occupied {
-        --seat-fill: var(--bs-fykos);
-      }
-    }
-
-    &[data-sector="Y"] {
-      &.seat-occupied {
-        --seat-fill: var(--bs-dsef);
-      }
-    }
-
-    &[data-sector="V"] {
-      &.seat-occupied {
-        --seat-fill: #C22D86;
-      }
-    }
-
-    &[data-sector="D"] {
-      &.seat-occupied {
-        --seat-fill: #222;
-      }
-    }
 
     &.seat-dev-category {
       &[data-category="A"] {

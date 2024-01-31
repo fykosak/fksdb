@@ -106,6 +106,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                     'Event:Application:default' => [],
                     'Event:Application:mass' => [],
                     'Event:Application:import' => [],
+                    'Event:Attendance:search' => [],
                 ],
             ],
             [

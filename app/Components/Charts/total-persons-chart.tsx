@@ -4,7 +4,7 @@ import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { Translator } from '@translator/translator';
-import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
+import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend';
 
 interface Data {
     created: string;

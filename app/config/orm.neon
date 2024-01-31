@@ -827,7 +827,8 @@ orm:
             refresh_delay:
                 type: int
                 title: _('Refresh delay')
-                suffix: ms
+                format:
+                    suffix: ms
             result_hard_display:
                 type: bool
                 title: _('Hard display')
@@ -876,7 +877,8 @@ orm:
                 type: int
                 title: _('Points')
                 omitInputField: true
-                nullValueFormat: notSet
+                format:
+                    nullValue: notSet
 
             game_lang:
                 type: enum
@@ -905,6 +907,10 @@ orm:
                 type: enum
                 title: _('Scholarship')
                 class: FKSDB\Models\ORM\Models\Fyziklani\TeamScholarship
+            place:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PlaceColumnFactory
+                title: _('Place')
         links:
             detail:
                 destination: :Event:Team:detail
@@ -1036,7 +1042,8 @@ orm:
             capacity:
                 type: int
                 title: _('Total capacity')
-                nullValueFormat: infinite
+                format:
+                    nullValue: infinite
             free_capacity:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
@@ -1167,7 +1174,8 @@ orm:
                 title: _('Data')
             purchase_price:
                 type: float
-                decimalDigitsCount: 2
+                format:
+                    decimalDigits: 2
                 title: _('Price')
             purchase_currency:
                 type: class
