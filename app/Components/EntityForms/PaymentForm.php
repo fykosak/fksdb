@@ -91,7 +91,7 @@ class PaymentForm extends EntityFormComponent
         // $currencyField->setItems($this->machine->priceCalculator->getAllowedCurrencies());
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
+       // $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
         foreach ($this->sources as $source) {
             if ($source instanceof EventModel) {
                 $form->addComponent(
