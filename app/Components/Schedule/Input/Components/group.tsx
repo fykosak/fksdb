@@ -26,6 +26,9 @@ export default function Group({group}: OwnProps) {
     if (group.scheduleGroupType === 'weekend_info') {
         return <GroupInfo group={group}/>;
     }
+    if (group.items.every(item => !item.available)) {
+        return null;
+    }
     return <div className="ms-3">
         <h5 className="mb-3">
             {translator.get(group.name)}
