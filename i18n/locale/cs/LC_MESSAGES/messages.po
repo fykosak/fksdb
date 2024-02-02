@@ -150,8 +150,9 @@ msgstr ""
 #: i18n/../app/config/orm.neon.neon2php:712
 #: i18n/../app/config/orm.neon.neon2php:799
 #: i18n/../app/config/orm.neon.neon2php:882
+#: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx
 msgid "Points"
-msgstr "Bodů"
+msgstr "Body"
 
 #: i18n/../app/Components/Controls/Choosers/SeriesChooserComponent.php:33
 #: i18n/../app/Components/Controls/Choosers/SeriesChooserComponent.php:40

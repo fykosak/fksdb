@@ -1,5 +1,4 @@
 import { SubmitFormRequest, submitStart } from 'FKSDB/Components/Game/Submits/Form/actions';
-import Buttons from './buttons';
 import Code from './code';
 import ValueDisplay from './preview';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
@@ -10,7 +9,6 @@ import { Fragment, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm, change } from 'redux-form';
 import { validate } from '../middleware';
-import AutoButton from 'FKSDB/Components/Game/Submits/Form/Components/auto-button';
 import { TranslatorContext } from '@translator/context';
 import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
 
@@ -22,7 +20,6 @@ export interface OwnProps {
 }
 
 function MainForm({
-                      valid,
                       submitting,
                       handleSubmit,
                       tasks,
@@ -49,6 +46,7 @@ function MainForm({
                 id={'radio-' + index}
                 value={value.toString()}
                 checked={value == points}
+                onChange={() => document.getElementById('codeInput').focus()}
                 />
             <label className={'btn btn-lg ' + (points != null ? 'btn-outline-success' : 'btn-outline-secondary')} htmlFor={'radio-' + index}>
                 {submitting

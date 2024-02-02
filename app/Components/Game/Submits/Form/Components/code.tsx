@@ -20,6 +20,7 @@ export default function Code(props: WrappedFieldProps) {
             maxLength={9}
             className={'form-control-lg form-control ' + (valid ? 'is-valid' : 'is-invalid')}
             placeholder="XXXXXXYYX"
+            id='codeInput'
             autoFocus
         />
     </span>;
