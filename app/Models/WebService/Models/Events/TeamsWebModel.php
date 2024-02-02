@@ -25,6 +25,7 @@ use Nette\Schema\Expect;
  *      points:int|null,
  *      rankCategory:int|null,
  *      rankTotal:int|null,
+ *      rank:array{total:int|null,category:int|null},
  *      forceA:int|null,
  *      gameLang:string|null,
  *      place:array{sector:string,label:string}|null,
@@ -61,6 +62,10 @@ class TeamsWebModel extends EventWebModel
                 'points' => $team->points,
                 'rankCategory' => $team->rank_category,
                 'rankTotal' => $team->rank_total,
+                'rank' => [
+                    'category' => $team->rank_category,
+                    'total' => $team->rank_total,
+                ],
                 'forceA' => $team->force_a,
                 'gameLang' => $team->game_lang->value,
                 'place' => $team->getPlace() ? $team->getPlace()->__serialize() : null,
