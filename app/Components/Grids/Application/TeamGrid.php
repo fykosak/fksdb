@@ -45,6 +45,7 @@ final class TeamGrid extends BaseGrid
                 '@fyziklani_team.scholarship',
                 '@fyziklani_team.game_lang',
                 '@fyziklani_team.category',
+                '@fyziklani_team.place',
                 '@fyziklani_team.phone',
             ]
         );

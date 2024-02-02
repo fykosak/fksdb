@@ -4,9 +4,8 @@ import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
 import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { EventModel } from 'FKSDB/Models/ORM/Models/event-model';
 import * as React from 'react';
-import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
+import Legend, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { Translator } from '@translator/translator';
-import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 
 export interface Data {
     events: {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\TeamSeating;
 
 use Fykosak\Utils\Localization\LocalizedString;
+use Nette\Utils\Html;
 
 final class Place2022 implements Place
 {
@@ -70,5 +71,10 @@ final class Place2022 implements Place
     public function label(): string
     {
         return $this->row . $this->col;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span');
     }
 }
