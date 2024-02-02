@@ -38,7 +38,7 @@ final class Place2024 implements Place
             'B' => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
             'Y' => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
             'V' => new LocalizedString(['en' => 'Violet', 'cs' => 'Fialový']),
-            'D' => new LocalizedString(['en' => 'Dark', 'cs' => 'Tmavý']),
+            'D' => new LocalizedString(['en' => 'Black', 'cs' => 'Červný']),
         ];
     }
 
@@ -140,5 +140,13 @@ final class Place2024 implements Place
                 'data-sector' => $this->sector(),
             ])
             ->addText($this->label());
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'sector' => $this->sector(),
+            'label' => $this->label(),
+        ];
     }
 }

@@ -77,4 +77,12 @@ final class Place2022 implements Place
     {
         return Html::el('span');
     }
+
+    public function __serialize(): array
+    {
+        return [
+            'sector' => $this->sector(),
+            'label' => $this->label(),
+        ];
+    }
 }

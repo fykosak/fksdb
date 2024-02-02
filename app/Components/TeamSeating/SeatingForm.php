@@ -59,10 +59,13 @@ class SeatingForm extends FormComponent
         foreach ($this->event->getTeams()->order('fyziklani_team_id') as $team) {
             $form->addText(
                 (string)$team->fyziklani_team_id,
-                '(' . $team->fyziklani_team_id . ') "'
-                . $team->name . '" - '
-                . $team->game_lang->value . ' - '
-                . $team->category->value
+                sprintf(
+                    '(%d) %s - %s - %s',
+                    $team->fyziklani_team_id,
+                    $team->name,
+                    $team->game_lang->value,
+                    $team->category->value
+                )
             );
         }
     }

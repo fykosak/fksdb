@@ -1,7 +1,6 @@
 {varType string|null $lang}
-{varType string|null $sector}
 <div class="seating-layout seating-layout-pva">
-    <svg viewBox="-1100 -400 2200 1000" style="overflow: visible">
+    <svg viewBox="-1100 -400 2200 1000">
         <g class="wall wall-outer">
             <polyline points="-1025,70 -1000,70 -1000,480 910,480 910,-350 -1000,-350 -1000,-10 -1025,-10"/>
         </g>
@@ -25,59 +24,14 @@
             </text>
             <rect x="-60" y="0" height="80" width="120"/>
         </g>
-        <g class="sectors">
-            {if is_null($sector) || $sector === 'A'}
-                <g class="sector" transform="translate(60,-60) rotate(45)">
-                    <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,-30)">
-                        <tspan>
-                            {switch $lang}
-                                {case 'cs'}Vaši opravovatelé
-                                {default}Your correctors
-                            {/switch}
-                        </tspan>
-                    </text>
-                </g>
-            {/if}
-                    {if is_null($sector) || $sector === 'D'}
-                <g class="sector" transform="translate(60,60) rotate(-45)">
-                    <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,50)">
-                        <tspan>
-                            {switch $lang}
-                                {case 'cs'}Vaši opravovatelé
-                                {default}Your correctors
-                            {/switch}
-                        </tspan>
-                    </text>
-                </g>
-            {/if}
-                    {if is_null($sector) || $sector === 'C'}
-                <g class="sector" transform="translate(-60,60) rotate(45)">
-                    <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,50)">
-                        <tspan>
-                            {switch $lang}
-                                {case 'cs'}Vaši opravovatelé
-                                {default}Your correctors
-                            {/switch}
-                        </tspan>
-                    </text>
-                </g>
-            {/if}
-                    {if is_null($sector) || $sector === 'B'}
-                <g class="sector" transform="translate(-60,-60) rotate(-45)">
-                    <rect x="-50" width="100" y="-8" height="16"></rect>
-                    <text transform="translate(0,-30)">
-                        <tspan>
-                            {switch $lang}
-                                {case 'cs'}Vaši opravovatelé
-                                {default}Your correctors
-                            {/switch}
-                        </tspan>
-                    </text>
-                </g>
-            {/if}
+        <g class="central" transform="rotate(90)">
+            <rect x="-250" width="500" y="-50" height="100" fill="#ccc" stroke-width="1"></rect>
+            <text transform="translate(0,0)">
+                    {switch $lang}
+                        {case 'cs'}Opravovatelé
+                        {default}Correctors
+                    {/switch}
+            </text>
         </g>
         <g class=" seats">
             {include seats,places:FKSDB\Components\TeamSeating\Place2024::getAll()}
