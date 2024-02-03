@@ -37,11 +37,20 @@ function MainForm({
     const messages = useSelector((state: Store) => state.fetch.messages);
 
     const hasButtons = availablePoints.length;
+
     return <Form
         onSubmit={handleSubmit(onSubmit)}
         onKeyPress={(event) => {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && hasButtons) {
                 event.preventDefault();
+            }
+
+            if (valid && hasButtons) {
+                const selectedPoints: number = parseInt(event.key);
+                if (!isNaN(selectedPoints) && availablePoints.includes(selectedPoints)) {
+                    event.preventDefault();
+                    document.getElementById("pointsButton-" + selectedPoints).click();
+                }
             }
         }}>
         {messages.map((message, key) => {

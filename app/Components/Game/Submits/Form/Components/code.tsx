@@ -6,11 +6,13 @@ export default function Code(props: WrappedFieldProps) {
 
     const {meta: {valid, active}, input} = props;
     const inputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         if (active) {
             inputRef.current?.focus();
         }
     }, [active, inputRef]);
+
     return <span className={'form-group ' + (valid ? 'has-success' : 'has-error')}>
         <input
             ref={inputRef}

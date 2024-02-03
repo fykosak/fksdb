@@ -53,8 +53,9 @@ class FormComponent extends AjaxComponent
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         $codeProcessor = new TaskCodePreprocessor($this->event);
         try {
-            $task = $codeProcessor->getTask($data['code']);
-            $team = $codeProcessor->getTeam($data['code']);
+            $code = strtoupper($data['code']);
+            $task = $codeProcessor->getTask($code);
+            $team = $codeProcessor->getTeam($code);
             $handler = $this->event->createGameHandler($this->getContext());
             $handler->handle($team, $task, $data['points'] ? (int)$data['points'] : null);
             foreach ($handler->logger->getMessages() as $message) {

@@ -16,6 +16,7 @@ export default function Buttons({valid, submitting, handleSubmit, onSubmit, avai
     const buttons = availablePoints.map((value, index) => {
         return <button
             className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
+            id={"pointsButton-" + value}
             key={index}
             type="button"
             disabled={!valid || submitting}
