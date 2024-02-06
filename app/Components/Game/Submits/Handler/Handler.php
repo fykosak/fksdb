@@ -25,7 +25,7 @@ abstract class Handler
     protected User $user;
     protected SubmitService $submitService;
     public MemoryLogger $logger;
-	protected LinkGenerator $linkGenerator; 
+    protected LinkGenerator $linkGenerator;
 
     public function __construct(Container $container)
     {
@@ -159,7 +159,13 @@ abstract class Handler
 
     protected function getTaskEditLink(SubmitModel $submit): string
     {
-        $link = $this->linkGenerator->link('Game:Submit:edit', ['eventId' => $submit->fyziklani_task->event_id, 'id' => $submit->fyziklani_submit_id]);
+        $link = $this->linkGenerator->link(
+            'Game:Submit:edit',
+            [
+                'eventId' => $submit->fyziklani_task->event_id,
+                'id' => $submit->fyziklani_submit_id
+            ]
+        );
         return sprintf('<a href="%s" target="_blank">%s</a>', $link, $link);
     }
 
