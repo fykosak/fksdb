@@ -1769,6 +1769,10 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
+#: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:80
+msgid "button.fyziklaniSubmit.edit"
+msgstr "Edit submit"
+
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:152
 msgid "Submit does not exists."
 msgstr ""
@@ -1846,7 +1850,7 @@ msgstr ""
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:67
 #, php-format
-msgid "Points saved; %d points, team: \"%s\" (%d), task: %s"
+msgid "Points saved; points: %d, team: \"%s\" (%d), task: %s, edit: %s."
 msgstr ""
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:94
@@ -1856,12 +1860,12 @@ msgstr ""
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:119
 #, php-format
-msgid "Scoring has been checked. %d points, team \"%s\" (%d), task %s."
+msgid "Scoring has been checked; points: %d, team \"%s\" (%d), task %s, edit: %s."
 msgstr ""
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:146
 #, php-format
-msgid "Points edited. %d points, team: \"%s\" (%d), task: %s"
+msgid "Points edited; points: %d, team: \"%s\" (%d), task: %s, edit: %s."
 msgstr ""
 
 #: i18n/../app/Components/Game/Submits/NoTaskLeftException.php:13

@@ -14,8 +14,10 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\LinkGenerator;
 use Nette\DI\Container;
 use Nette\Security\User;
+use Nette\Utils\Html;
 use Tracy\Debugger;
 
 abstract class Handler
@@ -23,6 +25,7 @@ abstract class Handler
     protected User $user;
     protected SubmitService $submitService;
     public MemoryLogger $logger;
+	protected LinkGenerator $linkGenerator; 
 
     public function __construct(Container $container)
     {
@@ -30,10 +33,11 @@ abstract class Handler
         $this->logger = new MemoryLogger();
     }
 
-    public function inject(SubmitService $submitService, User $user): void
+    public function inject(SubmitService $submitService, User $user, LinkGenerator $linkGenerator): void
     {
         $this->user = $user;
         $this->submitService = $submitService;
+        $this->linkGenerator = $linkGenerator;
     }
 
     protected function checkRequirements(TeamModel2 $team, TaskModel $task): void
@@ -57,11 +61,12 @@ abstract class Handler
         $this->logger->log(
             new Message(
                 \sprintf(
-                    _('Points saved; %d points, team: "%s" (%d), task: %s'),
+                    _('Points saved; points: %d, team: "%s" (%d), task: %s, edit: %s.'),
                     $points,
                     $team->name,
                     $team->fyziklani_team_id,
-                    $task->label
+                    $task->label,
+                    $this->getTaskEditLink($submit)
                 ),
                 $newState->value === SubmitState::NotChecked ? Message::LVL_INFO : Message::LVL_SUCCESS
             )
@@ -103,11 +108,12 @@ abstract class Handler
         $this->logger->log(
             new Message(
                 \sprintf(
-                    _('Scoring has been checked. %d points, team "%s" (%d), task %s.'),
+                    _('Scoring has been checked; points: %d, team "%s" (%d), task %s, edit: %s.'),
                     $points,
                     $submit->fyziklani_team->name,
                     $submit->fyziklani_team->fyziklani_team_id,
-                    $submit->fyziklani_task->label
+                    $submit->fyziklani_task->label,
+                    $this->getTaskEditLink($submit)
                 ),
                 Message::LVL_SUCCESS
             )
@@ -126,11 +132,12 @@ abstract class Handler
         $this->logger->log(
             new Message(
                 \sprintf(
-                    _('Points edited. %d points, team: "%s" (%d), task: %s'),
+                    _('Points edited; points: %d, team: "%s" (%d), task: %s, edit: %s.'),
                     $points,
                     $submit->fyziklani_team->name,
                     $submit->fyziklani_team->fyziklani_team_id,
-                    $submit->fyziklani_task->label
+                    $submit->fyziklani_task->label,
+                    $this->getTaskEditLink($submit)
                 ),
                 Message::LVL_SUCCESS
             )
@@ -148,6 +155,12 @@ abstract class Handler
             ),
             $this->logPriority()
         );
+    }
+
+    protected function getTaskEditLink(SubmitModel $submit): string
+    {
+        $link = $this->linkGenerator->link('Game:Submit:edit', ['eventId' => $submit->fyziklani_task->event_id, 'id' => $submit->fyziklani_submit_id]);
+        return sprintf('<a href="%s" target="_blank">%s</a>', $link, $link);
     }
 
     abstract public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void;

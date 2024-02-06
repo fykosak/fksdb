@@ -54,7 +54,7 @@ function MainForm({
             }
         }}>
         {messages.map((message, key) => {
-            return <div key={key} className={'alert alert-' + message.level}> {message.text}</div>;
+            return <div key={key} className={'alert alert-' + message.level} dangerouslySetInnerHTML={{__html: message.text}}/>;
         })}
         <div className="offset-lg-3 col-lg-6 col-md-12">
             <div className="row mb-3">
