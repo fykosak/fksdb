@@ -33,7 +33,6 @@ class ReminderMailCallback extends EventParticipantCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Letní tábor Výfuku',
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
         ];
     }

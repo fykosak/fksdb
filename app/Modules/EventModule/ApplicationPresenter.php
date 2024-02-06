@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
 use FKSDB\Components\EntityForms\Single\SingleFormComponent;
+use FKSDB\Components\EntityForms\Single\TaborFormComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
@@ -77,7 +78,7 @@ final class ApplicationPresenter extends BasePresenter
     protected function startup(): void
     {
         if (in_array($this->getAction(), ['create', 'edit'])) {
-            if (!in_array($this->getEvent()->event_type_id, [2, 14, 11, 12])) {
+            if (!in_array($this->getEvent()->event_type_id, [2, 14, 10, 11, 12])) {
                 $this->redirect(
                     ':Public:Application:default',
                     array_merge(['eventId' => $this->eventId], $this->getParameters())
@@ -90,6 +91,9 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
+        if ($event->event_type_id === 10) {
+            return $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event);
+        }
         return
             $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event) || (
                 $event->isRegistrationOpened()
@@ -148,6 +152,7 @@ final class ApplicationPresenter extends BasePresenter
             null,
             Html::el('span')
                 ->addText(sprintf(_('Application: %s'), $entity->person->getFullName()))
+                ->addText(' ')
                 ->addHtml(Html::el('small')->addAttributes(['class' => 'ms-2'])->addHtml($entity->status->badge())),
             'fas fa-user'
         );
@@ -266,6 +271,14 @@ final class ApplicationPresenter extends BasePresenter
             case 2:
             case 14:
                 return new DsefFormComponent(
+                    $this->getContext(),
+                    $model,
+                    $this->getEvent(),
+                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getLoggedPerson()
+                );
+            case 10:
+                return new TaborFormComponent(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),

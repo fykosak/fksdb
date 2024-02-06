@@ -68,6 +68,7 @@ final class EventParticipantMachine extends Machine
         switch ($model->event->event_type_id) {
             case 2:
             case 14:
+            case 10:
             case 11:
             case 12:
                 return new ParticipantHolder($model, $this->eventParticipantService);
