@@ -85,7 +85,7 @@ final class Place2024 implements Place
 
     public function sector(): string
     {
-        $sectors = [['R', 'G', 'B'], ['Y', 'V', 'D']];
+        $sectors = [['B', 'Y', 'R'], ['D', 'V', 'G']];
         if ($this->row < 14) {
             $x = 0;
         } else {

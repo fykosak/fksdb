@@ -56,7 +56,7 @@ class ScheduleGroupForm extends EntityFormComponent
         $data['event_id'] = $this->event->event_id;
         $model = $this->scheduleGroupService->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Group "#%d" has been saved.'), $model->schedule_group_id), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
+        $this->getPresenter()->redirect('detail', ['id' => $model->getPrimary()]);
     }
 
     protected function setDefaults(Form $form): void

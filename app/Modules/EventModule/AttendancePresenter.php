@@ -21,9 +21,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\PageTitle;
@@ -33,9 +31,10 @@ use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 /**
+ * @phpstan-template TTeamEvent of bool
  * @phpstan-import-type TSupportedModel from MachineCode
  */
-class AttendancePresenter extends BasePresenter
+final class AttendancePresenter extends BasePresenter
 {
     /** @persistent */
     public ?int $id = null;
@@ -139,7 +138,7 @@ class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return CodeAttendance<TeamModel2>|CodeAttendance<EventParticipantModel>
+     * @phpstan-return (TTeamEvent is true?CodeAttendance<TeamModel2>:CodeAttendance<EventParticipantModel>)
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
@@ -165,7 +164,7 @@ class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @return TeamModel2|EventParticipantModel
+     * @phpstan-return (TTeamEvent is true?TeamModel2:EventParticipantModel)
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
@@ -192,7 +191,10 @@ class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TransitionButtonsComponent<TeamModel2|EventParticipantModel>
+     * @phpstan-return (TTeamEvent is true
+     * ?TransitionButtonsComponent<TeamModel2>
+     * :TransitionButtonsComponent<EventParticipantModel>
+     * )
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
@@ -208,7 +210,9 @@ class AttendancePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return TeamMachine|Machine<ParticipantHolder>
+     * @phpstan-return (TTeamEvent is true
+     * ?\FKSDB\Models\Transitions\Machine\TeamMachine
+     * :Machine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
      */
     private function getMachine(): Machine
     {
@@ -243,7 +247,9 @@ class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return TestsList<TeamModel2>|TestsList<EventParticipantModel>
+     * @phpstan-return (TTeamEvent is true?
+     * TestsList<TeamModel2>:
+     * TestsList<never>)
      * @throws EventNotFoundException
      */
     protected function createComponentTests(): TestsList
@@ -251,7 +257,7 @@ class AttendancePresenter extends BasePresenter
         if ($this->getEvent()->isTeamEvent()) {
             return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
         } else {
-            return new TestsList($this->getContext(), []);//@phpstan-ignore-line
+            return new TestsList($this->getContext(), []);
         }
     }
 }
