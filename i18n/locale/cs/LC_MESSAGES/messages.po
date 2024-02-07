@@ -1865,8 +1865,8 @@ msgstr "Úloha už byla zadána i zkontrolována"
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:67
 #, php-format
-msgid "Points saved; points: %d, team: \"%s\" (%d), task: %s, edit: %s."
-msgstr "Body byly uloženy; body: %d, tým: \"%s\" (%d), úloha: %s, upravit: %s."
+msgid "Points saved; points: %d, team: \"%s\" (%d), task: %s."
+msgstr "Body byly uloženy; body: %d, tým: \"%s\" (%d), úloha: %s."
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:94
 #, php-format
@@ -1875,13 +1875,13 @@ msgstr "Odevzdání %d bylo smazáno."
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:119
 #, php-format
-msgid "Scoring has been checked; points: %d, team \"%s\" (%d), task %s, edit: %s."
-msgstr "Bodování bylo ověřeno; body: %d, tým: \"%s\" (%d), úloha: %s, upravit: %s."
+msgid "Scoring has been checked; points: %d, team \"%s\" (%d), task %s."
+msgstr "Bodování bylo ověřeno; body: %d, tým: \"%s\" (%d), úloha: %s."
 
 #: i18n/../app/Components/Game/Submits/Handler/Handler.php:146
 #, php-format
 msgid "Points edited; points: %d, team: \"%s\" (%d), task: %s, edit: %s."
-msgstr "Bodování bylo upravené; body: %d, tým: \"%s\" (%d), úloha: %s, upravit: %s."
+msgstr "Bodování bylo upravené; body: %d, tým: \"%s\" (%d), úloha: %s."
 
 #: i18n/../app/Components/Game/Submits/NoTaskLeftException.php:13
 msgid "No task left on board"

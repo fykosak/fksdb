@@ -60,14 +60,18 @@ abstract class Handler
 
         $this->logger->log(
             new Message(
-                \sprintf(
-                    _('Points saved; points: %d, team: "%s" (%d), task: %s, edit: %s.'),
-                    $points,
-                    $team->name,
-                    $team->fyziklani_team_id,
-                    $task->label,
-                    $this->getTaskEditLink($submit)
-                ),
+                Html::el('span')
+                    ->addText(
+                        \sprintf(
+                            _('Points saved; points: %d, team: "%s" (%d), task: %s.'),
+                            $points,
+                            $submit->fyziklani_team->name,
+                            $submit->fyziklani_team->fyziklani_team_id,
+                            $submit->fyziklani_task->label
+                        )
+                    )
+                    ->addText(' ')
+                    ->addHtml($this->getTaskEditLink($submit)),
                 $newState->value === SubmitState::NotChecked ? Message::LVL_INFO : Message::LVL_SUCCESS
             )
         );
@@ -106,15 +110,18 @@ abstract class Handler
         $this->logEvent($submit, 'checked');
 
         $this->logger->log(
-            new Message(
-                \sprintf(
-                    _('Scoring has been checked; points: %d, team "%s" (%d), task %s, edit: %s.'),
-                    $points,
-                    $submit->fyziklani_team->name,
-                    $submit->fyziklani_team->fyziklani_team_id,
-                    $submit->fyziklani_task->label,
-                    $this->getTaskEditLink($submit)
-                ),
+            new Message(Html::el('span')
+                    ->addText(
+                        \sprintf(
+                            _('Scoring has been checked; points: %d, team "%s" (%d), task %s.'),
+                            $points,
+                            $submit->fyziklani_team->name,
+                            $submit->fyziklani_team->fyziklani_team_id,
+                            $submit->fyziklani_task->label
+                        )
+                    )
+                    ->addText(' ')
+                    ->addHtml($this->getTaskEditLink($submit)),
                 Message::LVL_SUCCESS
             )
         );
@@ -129,16 +136,21 @@ abstract class Handler
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         $this->submitService->edit($submit, $points);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
+        $editLink = $this->getTaskEditLink($submit);
         $this->logger->log(
             new Message(
-                \sprintf(
-                    _('Points edited; points: %d, team: "%s" (%d), task: %s, edit: %s.'),
-                    $points,
-                    $submit->fyziklani_team->name,
-                    $submit->fyziklani_team->fyziklani_team_id,
-                    $submit->fyziklani_task->label,
-                    $this->getTaskEditLink($submit)
-                ),
+                Html::el('span')
+                    ->addText(
+                        \sprintf(
+                            _('Points edited; points: %d, team: "%s" (%d), task: %s.'),
+                            $points,
+                            $submit->fyziklani_team->name,
+                            $submit->fyziklani_team->fyziklani_team_id,
+                            $submit->fyziklani_task->label
+                        )
+                    )
+                    ->addText(' ')
+                    ->addHtml($this->getTaskEditLink($submit)),
                 Message::LVL_SUCCESS
             )
         );
@@ -157,7 +169,7 @@ abstract class Handler
         );
     }
 
-    protected function getTaskEditLink(SubmitModel $submit): string
+    protected function getTaskEditLink(SubmitModel $submit): Html
     {
         $link = $this->linkGenerator->link(
             'Game:Submit:edit',
@@ -166,7 +178,14 @@ abstract class Handler
                 'id' => $submit->fyziklani_submit_id
             ]
         );
-        return sprintf('<a href="%s" target="_blank">%s</a>', $link, $link);
+
+        $element = Html::el('a')
+            ->setAttribute('target', '_blank')
+            ->href($link)
+            ->setText(_('Edit'));
+        bdump($element);
+
+        return $element;
     }
 
     abstract public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void;
