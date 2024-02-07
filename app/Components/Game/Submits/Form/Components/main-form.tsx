@@ -6,7 +6,7 @@ import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteA
 import { TaskModel } from 'FKSDB/Models/ORM/Models/Fyziklani/task-model';
 import { TeamModel } from 'FKSDB/Models/ORM/Models/Fyziklani/team-model';
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import { validate } from '../middleware';
@@ -38,6 +38,26 @@ function MainForm({
 
     const hasButtons = availablePoints.length;
 
+    const buttonRef = useRef(null);
+
+    function getButtonMap(): Map<number, HTMLElement> {
+        if (!buttonRef.current) {
+            // initialize map on first usage
+            buttonRef.current = new Map()
+        }
+
+        return buttonRef.current;
+    }
+
+    function addButtonRefToMap(index: number, node: HTMLElement) {
+        const map: Map<number, HTMLElement> = getButtonMap();
+        if (node) {
+            map.set(index, node);
+        } else {
+            map.delete(index);
+        }
+    }
+
     return <Form
         onSubmit={handleSubmit(onSubmit)}
         onKeyPress={(event) => {
@@ -50,6 +70,9 @@ function MainForm({
                 if (!isNaN(selectedPoints) && availablePoints.includes(selectedPoints)) {
                     event.preventDefault();
                     document.getElementById("pointsButton-" + selectedPoints).click();
+                    const map = getButtonMap();
+                    const buttonNode = map.get(selectedPoints);
+                    buttonNode.click();
                 }
             }
         }}>
@@ -71,6 +94,7 @@ function MainForm({
                         submitting={submitting}
                         handleSubmit={handleSubmit}
                         onSubmit={onSubmit}
+                        refCallback={addButtonRefToMap}
                     /> :
                     <AutoButton
                         valid={valid}

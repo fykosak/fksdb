@@ -10,9 +10,10 @@ interface OwnProps {
     handleSubmit: SubmitHandler<{ code: string }>;
 
     onSubmit?(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
+    refCallback(index: number, node: HTMLElement): void;
 }
 
-export default function Buttons({valid, submitting, handleSubmit, onSubmit, availablePoints}: OwnProps) {
+export default function Buttons({valid, submitting, handleSubmit, onSubmit, refCallback, availablePoints}: OwnProps) {
     const buttons = availablePoints.map((value, index) => {
         return <button
             className={'btn btn-lg ' + (valid ? 'btn-outline-success' : 'btn-outline-secondary')}
@@ -20,6 +21,7 @@ export default function Buttons({valid, submitting, handleSubmit, onSubmit, avai
             key={index}
             type="button"
             disabled={!valid || submitting}
+            ref={node => refCallback(value, node)}
             onClick={handleSubmit((values: { code: string }) =>
                 onSubmit({
                     ...values,
