@@ -41,6 +41,6 @@ class ResultsWinnersGrid extends BaseGrid
     {
         return $this->event->getParticipatingTeams()
             ->where('rank_category <= ?', 5)
-            ->order('category, name');
+            ->order('category, fyziklani_team_id');
     }
 }

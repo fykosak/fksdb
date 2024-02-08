@@ -55,9 +55,7 @@ abstract class Handler
     ): void {
         $this->checkRequirements($team, $task);
         $submit = $this->submitService->create($task, $team, $points, $newState);
-
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
-
         $this->logger->log(
             new Message(
                 Html::el('span')
@@ -108,7 +106,6 @@ abstract class Handler
         }
         $this->submitService->check($submit, $points);
         $this->logEvent($submit, 'checked');
-
         $this->logger->log(
             new Message(
                 Html::el('span')
@@ -137,7 +134,6 @@ abstract class Handler
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         $this->submitService->edit($submit, $points);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
-        $editLink = $this->getTaskEditLink($submit);
         $this->logger->log(
             new Message(
                 Html::el('span')

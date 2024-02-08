@@ -38,6 +38,6 @@ class ResultsTotalGrid extends BaseGrid
      */
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->event->getParticipatingTeams()->order('name');
+        return $this->event->getParticipatingTeams()->order('fyziklani_team_id');
     }
 }
