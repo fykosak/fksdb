@@ -1,9 +1,12 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Letní tábor Výfuku – potvrzení účasti{/define}
+
 <p>
     Ahoj,<br/>
-    s radostí ti oznamujeme, že jsi {if $holder->getPerson()->gender->value == 'F'}byla vybrána{else}byl vybrán{/if}
-    jako {if $holder->getPerson()->gender->value == 'F'}účastnice{else}účastník{/if} na Letní tábor
+    s radostí ti oznamujeme, že jsi {if $holder->getModel()->person->gender->value == 'F'}byla vybrána{else}byl vybrán{/if}
+    jako {if $holder->getModel()->person->gender->value  == 'F'}účastnice{else}účastník{/if} na Letní tábor
     Výfuku a jsme rádi, že máš zájem se této akce účastnit.
 </p>
 <p>
@@ -11,5 +14,5 @@
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

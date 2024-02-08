@@ -1,22 +1,38 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 
-{define subject}Letní tábor Výfuku – pozvánka na účasti{/define}
+{define subject}Letní tábor Výfuku – pozvánka k účasti{/define}
 
 <p>
     {if $holder->getModel()->person->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
     jelikož jsi byl{if $holder->getModel()->person->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if},
-    je nám ctí tě pozvat na Letní tábor Výfuku, který se tentokrát koná
-    {$holder->event->begin|date:'j. n. Y'} – {$holder->event->end|date:'j. n. Y'} {$holder->event->getParameter('letterWhere')}.
+    je nám ctí Tě pozvat na Letní tábor Výfuku, který se tentokrát koná
+    {$holder->getModel()->event->begin|date:'j. n. Y'} – {$holder->getModel()->event->end|date:'j. n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
-    her v přírodě.
+    her v přírodě. Na konci tábora proběhne slavnostní vyhlášení vítězů letošního ročníku Výfuku.
 </p>
-
-{include 'decision.latte'}
-
 <p>
-    Za organizátory Výfuku se na tebe těší<br/>
+    Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
+    aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
+    {var string $link = $control->link('//:Event:Application:Edit',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a><br/>
+</p>
+<p>
+    Aktuálně máš díky svému umístění tři týdny na potvrzení zájmu. Po uplynutí
+    této doby rozešleme pozvánku dalším řešitelům a dáme k dispozici všechna
+    nepotvrzená místa, přičemž o přijetí bude rozhodovat jen čas odeslání
+    přihlášky. Pokud Tě tedy tábor zaujal, neváhej využít třítýdenní lhůtu, kdy
+    máš své místo jisté!
+</p>
+<p>
+    Další pokyny a podrobnosti Ti přijdou později v jiné
+    zprávě. V případě, že máte Ty nebo Tví rodiče jakékoliv otázky, neváhejte
+    nás kotaktovat na <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
+</p>
+<p>
+    Za organizátory Výfuku se na Tebe těší <br/>
     {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
-
-

@@ -5,9 +5,8 @@
 <p>
     Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
     aplikace FKSDB po přihlášení, nebo pomocí odkazu<br/>
-    {var string $link = $control->link('//:Public:Application:',
-    ['eventId'=> $holder->event->event_id,
-    'contestId'=>$holder->event->event_type->contest_id,
+    {var string $link = $control->link('//:Event:Application:Edit',
+    ['eventId'=> $holder->getModel()->event->event_id,
     'at'=>$token->token,
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.<br/>

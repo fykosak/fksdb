@@ -25,8 +25,6 @@ class ReminderMailCallback extends EventParticipantCallback
 
     /**
      * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      * }
      */

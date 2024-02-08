@@ -8,13 +8,26 @@
     jelikož jsi byl{if $holder->getModel()->person->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if},
     je nám ctí tě pozvat jako <b>{if $holder->getModel()->person->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b>
     na Letní tábor Výfuku, který se tentokrát koná
-    {$holder->event->begin|date:'j.n. Y'} – {$holder->event->end|date:'j.n. Y'} {$holder->event->getParameter('letterWhere')}.
+	{$holder->getModel()->event->begin|date:'j.n. Y'} – {$holder->getModel()->event->end|date:'j.n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
-    her v přírodě.
+    her v přírodě. Na konci tábora proběhne slavnostní vyhlášení vítězů letošního ročníku Výfuku.
 </p>
-
-{include 'decision.latte'}
-
+<p>
+    Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
+    aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
+    {var string $link = $control->link('//:Event:Application:Edit',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a><br/>
+</p>
+<p>
+    Jelikož se již zbylá volná místa neobsazují podle pořadí v soutěži, nýbrž
+    podle času zaslání přihlášky, s rozhodnutím neotálej, ať Tě ostatní
+    nepředstihnou! V případě, že máte Ty nebo Tví rodiče jakékoliv otázky,
+    neváhejte nás kotaktovat
+    na <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
+</p>
 <p>
     Za organizátory Výfuku se na Tebe těší <br/>
     {$holder->getModel()->event->getParameter('letterSignature')}
