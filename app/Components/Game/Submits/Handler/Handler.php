@@ -110,7 +110,8 @@ abstract class Handler
         $this->logEvent($submit, 'checked');
 
         $this->logger->log(
-            new Message(Html::el('span')
+            new Message(
+                Html::el('span')
                     ->addText(
                         \sprintf(
                             _('Scoring has been checked; points: %d, team "%s" (%d), task %s.'),
@@ -183,7 +184,6 @@ abstract class Handler
             ->setAttribute('target', '_blank')
             ->href($link)
             ->setText(_('Edit'));
-        bdump($element);
 
         return $element;
     }

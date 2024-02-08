@@ -13,9 +13,9 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseGrid<TeamModel2,array{}>
  */
-class ResultsTotalGrid extends BaseGrid
+class ResultsWinnersGrid extends BaseGrid
 {
-    private EventModel $event;
+    protected EventModel $event;
 
     public function __construct(EventModel $event, Container $container)
     {
@@ -29,7 +29,8 @@ class ResultsTotalGrid extends BaseGrid
         $this->addSimpleReferencedColumns([
             '@fyziklani_team.fyziklani_team_id',
             '@fyziklani_team.name',
-            '@fyziklani_team.rank_total',
+            '@fyziklani_team.category',
+            '@fyziklani_team.rank_category',
         ]);
     }
 
@@ -38,6 +39,8 @@ class ResultsTotalGrid extends BaseGrid
      */
     protected function getModels(): TypedGroupedSelection
     {
-        return $this->event->getParticipatingTeams()->order('name');
+        return $this->event->getParticipatingTeams()
+            ->where('rank_category <= ?', 5)
+            ->order('category, name');
     }
 }

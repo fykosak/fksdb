@@ -6,6 +6,8 @@
             <button class="nav-link" data-bs-toggle="tab"
                     data-bs-target="{('#category' . $category)}">{\sprintf(_('Category %s'),$category)}</button>
         {/foreach}
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#winners">{_('Winners')}</button>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#announcement">{_('Announcement')}</button>
     </div>
 </nav>
 <div class="tab-content">
@@ -27,4 +29,20 @@
             {/if}
         </div>
     {/foreach}
+    <div class="tab-pane fade" id="winners">
+        <h2>{_('Winners')}</h2>
+        {if $control->isClosedTotal()}
+            {control resultsWinnersGrid}
+        {else}
+            <p class="alert-warning alert">{_'Results for some teams are not closed yet'}</p>
+        {/if}
+    </div>
+    <div class="tab-pane fade" id="announcement">
+        <h2>{_('Announcement')}</h2>
+        {if $control->isClosedTotal()}
+            {control resultsAnnouncementGrid}
+        {else}
+            <p class="alert-warning alert">{_'Results for some teams are not closed yet'}</p>
+        {/if}
+    </div>
 </div>
