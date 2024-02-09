@@ -1,12 +1,15 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Letní tábor Výfuku – odmítnutí z důvodu kapacity{/define}
+
 <p>
     Ahoj,<br/>
     s lítostí ti oznamujeme, že jsi z kapacitních důvodů
-    <b>{if $holder->getPerson()->gender->value == 'F'}nebyla vybrána{else}nebyl vybrán{/if}</b>
-    jako {if $holder->getPerson()->gender->value == 'F'}účastnice{else}účastník{/if} na Letní tábor Výfuku.
+    <b>{if $holder->getModel()->person->gender->value == 'F'}nebyla vybrána{else}nebyl vybrán{/if}</b>
+    jako {if $holder->getModel()->person->gender->value == 'F'}účastnice{else}účastník{/if} na Letní tábor Výfuku.
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
