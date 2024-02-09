@@ -4,13 +4,12 @@
 
 <p>
     Své rozhodnutí, zda přijedeš, nám prosím co nejrychleji sděl prostřednictvím
-    aplikace FKSDB po přihlášení, nebo pomocí odkazu<br/>
+    aplikace FKSDB po přihlášení<br> nebo pomocí odkazu
     {var string $link = $control->link('//:Event:Application:Edit',
     ['eventId'=> $holder->getModel()->event->event_id,
     'at'=>$token->token,
     'id'=>$holder->getModel()->getPrimary()])}
-    <a href="{$link}">{$link}</a>.<br/>
-    Nejlépe ihned, nejpozději však do {$holder->event->registration_end|date:'j. n. Y'}.
+    <a href="{$link}">{$link}</a>.<br>
     Další pokyny a podrobnosti ti přijdou později v jiné zprávě či můžeš rozšiřující
     informace najít na našem webu v <a href="https://vyfuk.org/akce/tabor">sekci akcí</a><br/>
     V případě, že máte ty nebo tví rodiče jakékoliv otázky, neváhejte nás kotaktovat

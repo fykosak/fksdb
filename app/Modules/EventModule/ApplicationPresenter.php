@@ -122,6 +122,9 @@ final class ApplicationPresenter extends BasePresenter
             $this->getEvent()
         );
         switch ($this->getEvent()->event_type_id) {
+            case 10:
+                $this->template->fields = ['diet', 'health_restrictions', 'used_drugs', 'note', 'swimmer'];
+                break;
             case 11:
             case 12:
                 $this->template->fields = ['diet', 'health_restrictions', 'note'];
@@ -173,6 +176,24 @@ final class ApplicationPresenter extends BasePresenter
         return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
                 $event->isRegistrationOpened()
                 && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws NotFoundException
+     */
+    public function renderEdit(): void
+    {
+        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
+            $this->getModelResource(),
+            'organizer',
+            $this->getEvent()
+        );
+        $this->template->model = $this->getEntity();
     }
 
     /**

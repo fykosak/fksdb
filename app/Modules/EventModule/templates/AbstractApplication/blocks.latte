@@ -20,7 +20,7 @@
                 {/if}
             </a>
         {/if}
-        {if (in_array($model->event->event_type_id, [10]) && $model->event->isRegistrationOpened()) || $isOrganizer}
+        {if $isOrganizer}
             {control buttonTransition false}
         {/if}
         {var $machineCode = $model->createMachineCode()}

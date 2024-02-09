@@ -73,7 +73,7 @@ transitions:
                 validation: false
                 behaviorType: danger
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\NoConfirmMailCallback()
 
             # rejected
             invited|invited1|invited2->rejected:
