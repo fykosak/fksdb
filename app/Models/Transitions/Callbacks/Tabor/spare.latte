@@ -20,10 +20,11 @@
     ['eventId'=> $holder->getModel()->event->event_id,
     'at'=>$token->token,
     'id'=>$holder->getModel()->getPrimary()])}
-    <a href="{$link}">{$link}</a><br>
+    <a href="{$link}">{$link}</a>.<br>
     Zájem můžeš vyjádřit pomocí tlačítek pod přihláškou. Pokud máš zájem jet,
-    tak zároveň vyplň a ulož svoji<br> přihlášku. Po uložení důsledně zkontroluj,
-    že jsi vyplnil všechny políčka a přihláška se uložila.
+    tak zároveň vyplň{if $holder->getModel()->person->gender->value == 'F'}a{/if}
+    a ulož{if $holder->getModel()->person->gender->value == 'F'}a{/if} svoji<br>
+    přihlášku. Po uložení důsledně zkontroluj, že jsi vyplnil všechny políčka a přihláška se uložila.
 </p>
 <p>
     Jelikož se již zbylá volná místa neobsazují podle pořadí v soutěži, nýbrž podle času zaslání přihlášky,<br>
