@@ -59,6 +59,9 @@ export default function Group({group}: OwnProps) {
 
 function GroupInfo({group}: OwnProps) {
     const translator = useContext(TranslatorContext);
+    if (group.items.every(item => !item.available)) {
+        return null;
+    }
     return <div className="ms-3">
         <h5 className="mb-3">
             {translator.get(group.name)}
@@ -73,7 +76,7 @@ function GroupInfo({group}: OwnProps) {
             </small>
         </h5>
         <div>
-            {group.items.map((item) => {
+            {group.items.filter(item => item.available).map((item) => {
                 return <div key={item.scheduleItemId} className="alert alert-info">
                     <i className="fas fa-info me-2"/>{translator.get(item.name)}
                 </div>;
