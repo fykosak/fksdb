@@ -13,6 +13,16 @@ final class Place2024 implements Place
     public string $col;
     public int $row;
 
+    // phpcs:disable
+    private const SectorRed = 'R';
+    private const SectorGreen = 'G';
+    private const SectorBlue = 'B';
+    private const SectorDark = 'D';
+    private const SectorMagenta = 'M';
+    private const SectorYellow = 'Y';
+
+    // phpcs:enable
+
     public function __construct(int $row, string $col)
     {
         $this->row = $row;
@@ -28,25 +38,25 @@ final class Place2024 implements Place
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>[]
+     * @phpstan-return array<self::Sector*,LocalizedString<'cs'|'en'>>
      */
     public static function getSectors(): array
     {
         return [
-            'R' => new LocalizedString(['en' => 'Red', 'cs' => 'Červený']),
-            'G' => new LocalizedString(['en' => 'Green', 'cs' => 'Zelený']),
-            'B' => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
-            'Y' => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
-            'V' => new LocalizedString(['en' => 'Violet', 'cs' => 'Fialový']),
-            'D' => new LocalizedString(['en' => 'Black', 'cs' => 'Červný']),
+            self::SectorRed => new LocalizedString(['en' => 'Red', 'cs' => 'Červený']),
+            self::SectorGreen => new LocalizedString(['en' => 'Green', 'cs' => 'Zelený']),
+            self::SectorBlue => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
+            self::SectorYellow => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
+            self::SectorMagenta => new LocalizedString(['en' => 'Magenta', 'cs' => 'Purpurová']),
+            self::SectorDark => new LocalizedString(['en' => 'Black', 'cs' => 'Červný']),
         ];
     }
 
     public function x(): float
     {
-        $x = -800;
+        $x = -750;
         $x += $this->row * 50;
-        if ($this->row > 13) {
+        if ($this->row > 12) {
             $x += 250;
         }
         return $x;
@@ -83,10 +93,16 @@ final class Place2024 implements Place
         return 0;
     }
 
+    /**
+     * @phpstan-return self::Sector*
+     */
     public function sector(): string
     {
-        $sectors = [['B', 'Y', 'R'], ['D', 'V', 'G']];
-        if ($this->row < 14) {
+        $sectors = [
+            [self::SectorRed, self::SectorYellow, self::SectorBlue],
+            [self::SectorGreen, self::SectorMagenta, self::SectorDark],
+        ];
+        if ($this->row < 13) {
             $x = 0;
         } else {
             $x = 1;
@@ -120,7 +136,7 @@ final class Place2024 implements Place
     {
         $places = [];
         foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] as $col) {
-            for ($row = 1; $row <= 26; $row++) {
+            for ($row = 1; $row <= 24; $row++) {
                 $places[] = new self($row, $col);
             }
         }

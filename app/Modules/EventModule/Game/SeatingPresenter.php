@@ -30,17 +30,17 @@ final class SeatingPresenter extends BasePresenter
         }
     }
 
-    public function titlePrint(): PageTitle
-    {
-        return new PageTitle(null, _('Seating - print'), 'fas fa-map-marked-alt');
-    }
-
     /**
      * @throws EventNotFoundException
      */
     public function authorizedPrint(): bool
     {
         return $this->authorizedDefault();
+    }
+
+    public function titlePrint(): PageTitle
+    {
+        return new PageTitle(null, _('Seating - print'), 'fas fa-map-marked-alt');
     }
 
     /**
@@ -61,7 +61,7 @@ final class SeatingPresenter extends BasePresenter
      */
     protected function createComponentTeamList(): Container
     {
-        $limit = $this->getParameter('limit', 1000);
+        $limit = $this->getParameter('limit', 500);
         $offset = $this->getParameter('offset', 0);
         $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
         $container = new Container();

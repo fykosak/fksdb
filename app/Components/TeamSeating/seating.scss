@@ -3,8 +3,8 @@ $map: (
         "G": var(--bs-fol),
         "B": var(--bs-fykos),
         "Y": var(--bs-dsef),
-        "V": #C22D86,
-        "D": #6c12b0,
+        "M": #C22D86,
+        "D": #222222,
 );
 
 @each $key, $value in $map {
