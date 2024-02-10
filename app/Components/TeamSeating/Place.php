@@ -23,4 +23,7 @@ interface Place
     public function layout(): string;
 
     public function badge(): Html;
+
+    /** @phpstan-return array{label:string,sector:string} */
+    public function __serialize(): array;
 }
