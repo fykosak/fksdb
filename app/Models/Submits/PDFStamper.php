@@ -122,13 +122,13 @@ class PDFStamper implements StorageProcessing
             // stamp background
             $margin = 2;
             $pdf->SetFillColor(240, 240, 240); // @phpstan-ignore-line
-            $pdf->Rect( // @phpstan-ignore-line
+            /**$pdf->Rect( // @phpstan-ignore-line
                 $x - $margin,
                 $y - $th - $margin,
                 $bcw + 2 * $margin,
                 ($bch + 2 * $margin),
                 'F'
-            );
+            );**/
             Debugger::log($x);
             //stampText = Strings::webalize($actText, ' ,.', false); // FPDF has only ASCII encoded fonts
             $pdf->Image('barcode.jpg', $x, $y);// @phpstan-ignore-line
