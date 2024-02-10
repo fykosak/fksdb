@@ -45,7 +45,7 @@ final class AttendancePresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModel(), 'organizer', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getModel(), 'attendance', $this->getEvent());
     }
 
     /**
@@ -91,13 +91,13 @@ final class AttendancePresenter extends BasePresenter
         if ($this->getEvent()->isTeamEvent()) {
             return $this->eventAuthorizator->isAllowed(
                 TeamModel2::RESOURCE_ID,
-                'organizer',
+                'attendance',
                 $this->getEvent()
             );
         } else {
             return $this->eventAuthorizator->isAllowed(
                 EventParticipantModel::RESOURCE_ID,
-                'organizer',
+                'attendance',
                 $this->getEvent()
             );
         }
@@ -118,9 +118,9 @@ final class AttendancePresenter extends BasePresenter
             $this->getContext(),
             /** @phpstan-param TSupportedModel $model */
             function (Model $model): void {
-                if ($model instanceof TeamModel2) {
+                if ($model instanceof TeamModel2 && $this->getEvent()->isTeamEvent()) {
                     $application = $model;
-                } elseif ($model instanceof PersonModel) {
+                } elseif ($model instanceof PersonModel && !$this->getEvent()->isTeamEvent()) {
                     $application = $model->getEventParticipant($this->getEvent());
                 } else {
                     throw new BadRequestException(_('Wrong type of code.'));
@@ -201,7 +201,7 @@ final class AttendancePresenter extends BasePresenter
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
-        return new TransitionButtonsComponent(
+        return new TransitionButtonsComponent(// @phpstan-ignore-line
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
             $this->getModel()
@@ -257,7 +257,7 @@ final class AttendancePresenter extends BasePresenter
         if ($this->getEvent()->isTeamEvent()) {
             return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
         } else {
-            return new TestsList($this->getContext(), []);
+            return new TestsList($this->getContext(), []); // @phpstan-ignore-line
         }
     }
 }

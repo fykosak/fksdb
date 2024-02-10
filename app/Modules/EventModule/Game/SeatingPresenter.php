@@ -8,26 +8,16 @@ use FKSDB\Components\TeamSeating\AllPlaces;
 use FKSDB\Components\TeamSeating\SeatingForm;
 use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\ComponentModel\Container;
 
 final class SeatingPresenter extends BasePresenter
 {
-    /**
-     * @throws EventNotFoundException
-     * @throws NotImplementedException
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
+    protected function isEnabled(): bool
     {
-        parent::startup();
-        if ($this->getEvent()->event_type_id !== 1) {
-            throw new NotImplementedException();
-        }
+        return $this->getEvent()->event_type_id === 1;
     }
 
     /**
