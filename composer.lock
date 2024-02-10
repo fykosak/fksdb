@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26acef59f7c82fc4427db7e5165cbc90",
+    "content-hash": "fd3cf07904272b5397fed659fe19d4bc",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -2701,6 +2701,58 @@
                 "source": "https://github.com/nette/tracy/tree/v2.9.7"
             },
             "time": "2023-02-28T13:01:54+00:00"
+        },
+        {
+            "name": "z38/metzli",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/z38/metzli.git",
+                "reference": "ff8e22c492d02ba33dce8c039ffc6733cb877f63"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/z38/metzli/zipball/ff8e22c492d02ba33dce8c039ffc6733cb877f63",
+                "reference": "ff8e22c492d02ba33dce8c039ffc6733cb877f63",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5 || ~7",
+                "setasign/fpdf": "^1.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Metzli": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "z38",
+                    "homepage": "https://github.com/z38",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP library to generate Aztec barcodes",
+            "homepage": "https://github.com/z38/metzli",
+            "keywords": [
+                "2d-barcode",
+                "aztec",
+                "barcode",
+                "library"
+            ],
+            "support": {
+                "issues": "https://github.com/z38/metzli/issues",
+                "source": "https://github.com/z38/metzli/tree/master"
+            },
+            "time": "2018-05-14T08:34:22+00:00"
         }
     ],
     "packages-dev": [

@@ -3,7 +3,6 @@
 {varType string $lang}
 {embed
     './Rooms/pva24.latte'
-    sector:null,
     lang:$lang}
     {block seats}
         {foreach FKSDB\Components\TeamSeating\Place2024::getAll() as $place}
@@ -12,9 +11,9 @@
             {var $className = 'seat'}
             {if $dev}
                 {var $team = $teams[$place->label()]??null}
-                {do $className .= ' seat-dev-' . $dev}
                 <g transform="{$cor}"
-                   class="{$className}"
+                   class="seat"
+                   data-dev="{$dev}"
                    data-sector="{$place->sector()}"
                    data-category="{$team?$team->category->value:null}"
                    data-lang="{$team?$team->game_lang->value:null}"

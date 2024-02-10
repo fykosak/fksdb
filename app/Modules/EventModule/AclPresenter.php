@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Acl\EventAclGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
-class AclPresenter extends BasePresenter
+final class AclPresenter extends BasePresenter
 {
     /**
      * @throws EventNotFoundException
