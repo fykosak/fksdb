@@ -1,0 +1,113 @@
+transitions:
+    tabor:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        transitions:
+            __init->pending:
+                label: _('Create application')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+
+            # create appliction
+            pending|auto.invited->invited:
+                label: _('Pozvat účastníka')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
+            pending|auto.spare->spare:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Pozvat náhradníka')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
+
+            # reminders
+            invited->invited1:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send first call')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+            invited1->invited2:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send second call')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+            spare->spare1:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send first call')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+            spare1->spare2:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send second call')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+
+            # apply
+            invited|invited1|invited2->applied:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Potrvrdit učast')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+            spare|spare1|spare2->interested:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Chci jet')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+            interested->applied:
+                condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
+                label: _('Schválit jako účastníka')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+            applied->paid:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Zaplatil')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
+
+            # person didn't confirm
+            invited|invited1|invited2->spare:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Move to spare')
+                validation: false
+                behaviorType: danger
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\NoConfirmMailCallback()
+
+            # rejected
+            invited|invited1|invited2->rejected:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Odmítnout účast')
+                validation: false
+                behaviorType: danger
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+            spare|spare1|spare2->rejected:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Odmítnout účast')
+                validation: false
+                behaviorType: warning
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+            interested->rejected:
+                condition: FKSDB\Models\Events\Semantics\Role('admin')
+                label: _('Odmítnout jako účastníka')
+                behaviorType: warning
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\RejectedMailCallback()
+                    - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
+
+            # after event
+            applied|paid->participated:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Zúčastnil se')
+            applied|paid->missed:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Nepřijel')
+
+            # cancel
+            invited|invited1|invited2|auto.invited|spare|spare1|spare2|auto.spare|applied|interested|paid->cancelled:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Zrušit přihlášku')
+                behaviorType: danger

@@ -1947,6 +1947,10 @@ msgstr "Organizátorský detail týmu"
 msgid "button.team.edit"
 msgstr "Upravit tým"
 
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
+msgid "button.participant.edit"
+msgstr "Upravit účastníka"
+
 #: i18n/../app/Components/Grids/Application/TeamList.php:90
 msgid "Members"
 msgstr "Členové"

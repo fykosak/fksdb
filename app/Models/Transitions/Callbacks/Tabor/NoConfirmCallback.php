@@ -12,7 +12,7 @@ use FKSDB\Models\Transitions\Transition\Transition;
 /**
  * @phpstan-extends EventParticipantCallback<BaseHolder>
  */
-class InterestedMailCallback extends EventParticipantCallback
+class NoConfirmMailCallback extends EventParticipantCallback
 {
     /**
      * @param BaseHolder $holder
@@ -20,7 +20,7 @@ class InterestedMailCallback extends EventParticipantCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'interested.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'no_confirm.latte';
     }
 
     /**

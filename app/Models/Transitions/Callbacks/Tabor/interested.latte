@@ -1,12 +1,15 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Letní tábor Výfuku – potvrzení přihlášky{/define}
+
 <p>
     Ahoj,<br/>
     tvou přihlášku jsme zaevidovali. Rozhodnutí o tom, zda budeš na tábor vybrán,
-    budeme rozesílat okolo {$holder->event->registration_end|date:'j. n. Y'}.
+	budeme rozesílat okolo {$holder->getModel()->event->registration_end|date:'j. n. Y'}.
     Připomínáme, že o tvé účasti na táboře rozhoduje tvé pořadí v soutěži.
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
