@@ -22,7 +22,7 @@ class Single extends BaseComponent
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '@layout.latte', [
             'lang' => $this->team->game_lang->value,
-            'places' => $this->template->places = Place2024::getAll(),
+            'places' => Place2024::getAll(),
             'teams' => $this->team->getPlace() ? [$this->team->getPlace()->label() => $this->team] : [],
         ]);
     }

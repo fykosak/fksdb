@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -38,6 +39,7 @@ class OrganizerMailCallback extends MailCallback
     /**
      * @phpstan-param BaseHolder|Transition<BaseHolder> $args
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __invoke(...$args): void
     {

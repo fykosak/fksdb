@@ -12,10 +12,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\PaymentState;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -47,65 +43,6 @@ final class PaymentsPresenter extends BasePresenter
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create payment'), 'fas fa-credit-card');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDashboard(): bool
-    {
-        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'dashboard', $this->getEvent());
-    }
-
-    public function titleDashboard(): PageTitle
-    {
-        return new PageTitle(null, _('Payment dashboard'), 'fas fa-dashboard');
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    public function renderDashboard(): void
-    {
-        $data = [];
-        $paidCount = 0;
-        $waitingCount = 0;
-        $inProgressCount = 0;
-        $noPaymentCount = 0;
-        /** @var ScheduleGroupModel $group */
-        foreach ($this->getEvent()->getScheduleGroups() as $group) {
-            /** @var ScheduleItemModel $item */
-            foreach ($group->getItems() as $item) {
-                if ($item->payable) {
-                    /** @var PersonScheduleModel $personSchedule */
-                    foreach ($item->getInterested() as $personSchedule) {
-                        if (!$personSchedule->isPaid()) {
-                            $data[] = $personSchedule;
-                        }
-                        $payment = $personSchedule->getPayment();
-                        if ($payment) {
-                            switch ($payment->state->value) {
-                                case PaymentState::RECEIVED:
-                                    $paidCount++;
-                                    break;
-                                case PaymentState::WAITING:
-                                    $waitingCount++;
-                                    break;
-                                case PaymentState::IN_PROGRESS:
-                                    $inProgressCount++;
-                            }
-                        } else {
-                            $noPaymentCount++;
-                        }
-                    }
-                }
-            }
-        }
-        $this->template->paidCount = $paidCount;
-        $this->template->waitingCount = $waitingCount;
-        $this->template->noPaymentCount = $noPaymentCount;
-        $this->template->inProgressCount = $inProgressCount;
-        $this->template->rests = $data;
     }
 
     /**
