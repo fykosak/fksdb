@@ -82,7 +82,7 @@ final class CodeCloseForm extends FormComponent
         $codeInput = $form->addText('code', _('Task code'));
         $codeInput->setOption(
             'description',
-            _('Kód z úlohy ktorá ostala ako daľšia na vydavanie, prip. posledný papierik') // TODO preklad
+            _('Code from the top most paper on the table.')
         );
     }
 }
