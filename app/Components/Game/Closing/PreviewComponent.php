@@ -10,9 +10,10 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\DI\Container;
 
-class PreviewComponent extends BaseComponent
+final class PreviewComponent extends BaseComponent
 {
     protected TeamModel2 $team;
     protected Handler $handler;
@@ -26,8 +27,9 @@ class PreviewComponent extends BaseComponent
 
     final public function handleClose(): void
     {
-        $this->handler->close($this->team, false);
-        FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
+        $logger = new MemoryLogger();
+        $this->handler->close($logger, $this->team, false);
+        FlashMessageDump::dump($logger, $this->getPresenter());
         $this->getPresenter()->redirect('list', ['id' => null]);
     }
 

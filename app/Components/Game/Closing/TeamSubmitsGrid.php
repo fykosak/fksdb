@@ -15,7 +15,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
-class TeamSubmitsGrid extends BaseGrid
+final class TeamSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
     private TeamModel2 $team;

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Game\Closing;
 use FKSDB\Components\Game\GameException;
 use Nette\Http\IResponse;
 
-class GameNotFinishedException extends GameException
+final class GameNotFinishedException extends GameException
 {
 
     public function __construct(?\Throwable $previous = null)
