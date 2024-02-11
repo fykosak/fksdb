@@ -31,6 +31,9 @@ class Handler
     public function close(TeamModel2 $team, bool $checkRequirements = true): void
     {
         if ($checkRequirements) {
+            if (time() < $team->event->getGameSetup()->game_end->getTimestamp()) {
+                throw new GameNotFinishedException();
+            }
             $team->canClose();
         }
         $this->teamService->explorer->beginTransaction();
