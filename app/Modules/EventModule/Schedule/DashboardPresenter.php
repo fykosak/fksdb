@@ -12,7 +12,7 @@ use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
 
-class DashboardPresenter extends BasePresenter
+final class DashboardPresenter extends BasePresenter
 {
     protected PersonScheduleService $personScheduleService;
 

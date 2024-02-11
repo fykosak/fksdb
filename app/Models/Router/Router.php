@@ -112,6 +112,14 @@ class Router
             ]
         );
         $list->addRoute(
+            '<eventId [0-9]+>/schedule/feedback/<id [0-9]+>',
+            [
+                'module' => 'Schedule',
+                'presenter' => 'Feedback',
+                'action' => 'default',
+            ]
+        );
+        $list->addRoute(
             '<eventId [0-9]+>/schedule/groups[/<id [0-9]+>]/<action>',
             [
                 'module' => 'Schedule',
