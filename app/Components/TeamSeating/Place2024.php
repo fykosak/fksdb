@@ -102,6 +102,7 @@ final class Place2024 implements Place
                 'transform' => 'translate(' . $this->x() . ',' . $this->y() . ')',
                 'data-sector' => $this->sector(),
             ]);
+        $outerContainer->addHtml($container);
         $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
         if ($dev) {
             $container->addAttributes([
@@ -113,9 +114,6 @@ final class Place2024 implements Place
 
             $container->addHtml(Html::el('text')->setText($team ? $team->fyziklani_team_id : $this->label()));
         } else {
-            if ($team) {
-                $outerContainer->addHtml($this->arrow());
-            }
             $container->addAttributes([
                 'class' => $team ? 'seat seat-occupied' : 'seat',
             ]);
@@ -125,8 +123,11 @@ final class Place2024 implements Place
                     ->setText($this->label())
                     ->setAttribute('transform', $team ? 'translate(0,7)' : 'translate(0,5)')
             );
+            if ($team) {
+                $outerContainer->addHtml($this->arrow());
+            }
         }
-        $outerContainer->addHtml($container);
+
         return $outerContainer;
     }
 
@@ -158,6 +159,11 @@ final class Place2024 implements Place
             $polyline[] = [100, $y];
         }
         $polyline[] = [$this->x(), $y];
+        if ($y > $this->y()) {
+            $polyline[] = [$this->x(), $y - 5];
+        } else {
+            $polyline[] = [$this->x(), $y + 5];
+        }
 
         $polylineHtml = Html::el('polyline')->addAttributes([
             'class' => 'direction-line',

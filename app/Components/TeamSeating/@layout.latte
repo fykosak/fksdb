@@ -6,7 +6,6 @@
     lang:$lang}
     {block seats}
         {foreach FKSDB\Components\TeamSeating\Place2024::getAll() as $place}
-            {varType FKSDB\Components\TeamSeating\Place2024 $place}
             {$place->html($teams[$place->label()]??null,$dev)}
         {/foreach}
     {/block}
