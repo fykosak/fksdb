@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Acl\ContestAclGrid;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
-class AclPresenter extends BasePresenter
+final class AclPresenter extends BasePresenter
 {
     /**
      * @throws NoContestAvailable

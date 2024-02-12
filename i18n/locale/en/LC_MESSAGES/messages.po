@@ -1924,6 +1924,10 @@ msgstr "Team detail for organizer"
 msgid "button.team.edit"
 msgstr "Edit team"
 
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
+msgid "button.participant.edit"
+msgstr "Edit participant"
+
 #: i18n/../app/Components/Grids/Application/TeamList.php:94
 msgid "Members"
 msgstr ""
