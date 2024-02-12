@@ -1248,6 +1248,7 @@ CREATE TABLE IF NOT EXISTS `person_schedule`
     `person_id`          INT UNSIGNED                   NOT NULL,
     `schedule_item_id`   INT UNSIGNED                   NOT NULL,
     `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
+    UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
     CONSTRAINT `fk__person_schedule__schedule_item`
         FOREIGN KEY (`schedule_item_id`)
