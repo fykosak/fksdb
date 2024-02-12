@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
@@ -72,6 +73,10 @@ class ResultsWebModel extends WebModel
 
     protected function isAuthorized(): bool
     {
-        return false;
+        $event = $this->eventService->findByPrimary($this->params['eventId']);
+        if (!$event) {
+            return false;
+        }
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
     }
 }
