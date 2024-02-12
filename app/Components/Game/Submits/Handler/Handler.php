@@ -102,7 +102,7 @@ abstract class Handler
     {
         $this->checkRequirements($submit->fyziklani_team, $submit->fyziklani_task);
         if ($submit->points != $points) {
-            throw new PointsMismatchException();
+            throw new PointsMismatchException(' ' . $this->getTaskEditLink($submit)->toHtml());
         }
         $this->submitService->check($submit, $points);
         $this->logEvent($submit, 'checked');

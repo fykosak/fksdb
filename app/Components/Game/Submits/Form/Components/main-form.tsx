@@ -58,6 +58,11 @@ function MainForm({
         }
     }
 
+    const charToIntMap = {
+        '+': 1, 'ě': 2, 'š': 3, 'č': 4, 'ř': 5, 'ž': 6, 'ý': 7, 'á': 8, 'í': 9, 'é': 0, // czech keyboard map
+        'ľ': 2, 'ť': 5 // slovak extension
+    }
+
     return <Form
         onSubmit={handleSubmit(onSubmit)}
         onKeyPress={(event) => {
@@ -66,8 +71,13 @@ function MainForm({
             }
 
             if (valid && hasButtons) {
-                const selectedPoints: number = parseInt(event.key);
-                if (!isNaN(selectedPoints) && availablePoints.includes(selectedPoints)) {
+                let selectedPoints: number = null;
+                if ('0' <= event.key && event.key <= '9') {
+                    selectedPoints = parseInt(event.key);
+                } else if (event.key in charToIntMap) {
+                    selectedPoints = charToIntMap[event.key];
+                }
+                if (!(isNaN(selectedPoints) || selectedPoints === null) && availablePoints.includes(selectedPoints)) {
                     event.preventDefault();
                     document.getElementById("pointsButton-" + selectedPoints).click();
                     const map = getButtonMap();
