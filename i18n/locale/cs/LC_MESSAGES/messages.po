@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-11 23:02+0100\n"
+"POT-Creation-Date: 2024-02-12 09:07+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: David Škrob <david.skrob@fykos.cz>\n"
 "Language-Team: \n"
@@ -1828,11 +1828,6 @@ msgstr "Tým %s má už uzavřené bodování."
 msgid "Wrong code."
 msgstr "Špatný kód úlohy"
 
-#: i18n/../app/Components/Game/Submits/GameNotStarted.php:16
-#, php-format
-msgid "Game has not started yet."
-msgstr "Hra ještě nezačala."
-
 #: i18n/../app/Components/Game/Submits/Handler/CtyrbojHandler.php:30
 #, php-format
 msgid "Task was already submitted"
@@ -1876,6 +1871,11 @@ msgstr "Upravit"
 #: i18n/../app/Components/Game/Submits/NoTaskLeftException.php:13
 msgid "No task left on board"
 msgstr "Žádné úlohy na stole"
+
+#: i18n/../app/Components/Game/Submits/OutOfGameTimeException.php:16
+#, php-format
+msgid "It's too early before or too late after the game."
+msgstr "Je moc brzo před nebo moc pozdě po soutěži."
 
 #: i18n/../app/Components/Game/Submits/PointsMismatchException.php:11
 msgid "Points mismatch"
@@ -4175,26 +4175,6 @@ msgstr ""
 #, fuzzy
 msgid "By category"
 msgstr "Kategorie"
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:9
-msgid "Instructions"
-msgstr "Instrukce"
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:11
-msgid "Enter the task code either with or without the first two zeros."
-msgstr "Zadejte číslo úlohy s či bez prvních dvou nul."
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:12
-msgid ""
-"If the input field is not green and points are not highlighted, the entered "
-"code is not valid."
-msgstr ""
-"Pokud není zadaný kód zelený a body nejsou zvýrazněny, je zadaný kód "
-"neplatný."
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:13
-msgid "Select the number of points given."
-msgstr "Vyberte udělený počet bodů"
 
 #: i18n/../app/Modules/EventModule/PaymentsPresenter.php:49
 msgid "Create payment"
@@ -6892,6 +6872,9 @@ msgstr ""
 #~ msgid "Empty"
 #~ msgstr "Prázdný"
 
+#~ msgid "Enter the task code either with or without the first two zeros."
+#~ msgstr "Zadejte číslo úlohy s či bez prvních dvou nul."
+
 #~ msgid "Entrance"
 #~ msgstr "Vchod"
 
@@ -6917,6 +6900,10 @@ msgstr ""
 #~ msgid "Format"
 #~ msgstr "Formát"
 
+#, php-format
+#~ msgid "Game has not started yet."
+#~ msgstr "Hra ještě nezačala."
+
 #~ msgid "Global results"
 #~ msgstr "Celkové výsledky"
 
@@ -6938,6 +6925,13 @@ msgstr ""
 #~ msgid "Id"
 #~ msgstr "Id"
 
+#~ msgid ""
+#~ "If the input field is not green and points are not highlighted, the "
+#~ "entered code is not valid."
+#~ msgstr ""
+#~ "Pokud není zadaný kód zelený a body nejsou zvýrazněny, je zadaný kód "
+#~ "neplatný."
+
 #~ msgid "Ignore."
 #~ msgstr "Ignorovat"
 
@@ -6952,6 +6946,9 @@ msgstr ""
 
 #~ msgid "In team \"%s\"(%d): "
 #~ msgstr "V týmu \"%s\"(%d): "
+
+#~ msgid "Instructions"
+#~ msgstr "Instrukce"
 
 #~ msgid "Invalid task"
 #~ msgstr "Neplatná úloha"
@@ -7096,6 +7093,9 @@ msgstr ""
 
 #~ msgid "Select test"
 #~ msgstr "Vybrat test"
+
+#~ msgid "Select the number of points given."
+#~ msgstr "Vyberte udělený počet bodů"
 
 #~ msgid "Set new game password."
 #~ msgstr "Nastavit nové herní heslo"

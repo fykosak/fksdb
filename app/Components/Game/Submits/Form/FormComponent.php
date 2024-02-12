@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Submits\Form;
 
 use FKSDB\Components\Game\GameException;
-use FKSDB\Components\Game\Submits\GameNotStartedException;
+use FKSDB\Components\Game\Submits\OutOfGameTimeException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
@@ -56,8 +56,8 @@ class FormComponent extends AjaxComponent
         try {
             $code = strtoupper($data['code']);
             $task = $codeProcessor->getTask($code);
-            if (time() < $task->event->getGameSetup()->game_start->getTimestamp()) {
-                throw new GameNotStartedException();
+            if (!$task->event->getGameSetup()->isGameTimeRange()) {
+                throw new OutOfGameTimeException();
             }
             $team = $codeProcessor->getTeam($code);
             $handler = $this->event->createGameHandler($this->getContext());

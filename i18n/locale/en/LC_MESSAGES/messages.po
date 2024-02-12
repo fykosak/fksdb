@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-11 23:02+0100\n"
+"POT-Creation-Date: 2024-02-12 09:07+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -1810,11 +1810,6 @@ msgstr ""
 msgid "Wrong code."
 msgstr ""
 
-#: i18n/../app/Components/Game/Submits/GameNotStarted.php:16
-#, php-format
-msgid "Game has not started yet."
-msgstr ""
-
 #: i18n/../app/Components/Game/Submits/Handler/CtyrbojHandler.php:30
 #, php-format
 msgid "Task was already submitted"
@@ -1857,6 +1852,11 @@ msgstr ""
 
 #: i18n/../app/Components/Game/Submits/NoTaskLeftException.php:13
 msgid "No task left on board"
+msgstr ""
+
+#: i18n/../app/Components/Game/Submits/OutOfGameTimeException.php:16
+#, php-format
+msgid "It's too early before or too late after the game."
 msgstr ""
 
 #: i18n/../app/Components/Game/Submits/PointsMismatchException.php:11
@@ -4130,24 +4130,6 @@ msgstr ""
 
 #: i18n/../app/Modules/EventModule/Game/templates/Seating/default.latte.latte2php:13
 msgid "By category"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:9
-msgid "Instructions"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:11
-msgid "Enter the task code either with or without the first two zeros."
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:12
-msgid ""
-"If the input field is not green and points are not highlighted, the entered "
-"code is not valid."
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/Game/templates/Submit/create.latte.latte2php:13
-msgid "Select the number of points given."
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/PaymentsPresenter.php:49
