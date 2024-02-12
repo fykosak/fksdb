@@ -102,15 +102,15 @@ final class Place2024 implements Place
                 'transform' => 'translate(' . $this->x() . ',' . $this->y() . ')',
                 'data-sector' => $this->sector(),
             ]);
+        $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
         if ($dev) {
             $container->addAttributes([
                 'class' => 'seat',
                 'data-dev' => $dev,
-
                 'data-category' => $team ? $team->category->value : null,
                 'data-lang' => $team ? $team->game_lang->value : null,
             ]);
-            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+
             $container->addHtml(Html::el('text')->setText($team ? $team->fyziklani_team_id : $this->label()));
         } else {
             if ($team) {
@@ -119,7 +119,6 @@ final class Place2024 implements Place
             $container->addAttributes([
                 'class' => $team ? 'seat seat-occupied' : 'seat',
             ]);
-            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
             $container->addHtml(Html::el('text')->setText($this->label()));
         }
         $outerContainer->addHtml($container);
