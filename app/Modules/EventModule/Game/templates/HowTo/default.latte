@@ -1,2 +1,94 @@
 {block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Základy herního systému</h2>
+            <p>Celé fyziklání je spravováno pomocí <a n:href="Dashboard:default" >herního systému</a> ve FKSDB.
+            Primárně s ním interagují zadavači, kteří v průběhu hry zadávají body úloh jednotlivých úloh, kontrolují je
+            a na konci hry uzavírají bodování.</p>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Zadávání do systému</h2>
+            <p>
+                Zadávání bodů probíhá na dvakrát: poprvé proběhne prvotní zadání bodů (vypíše se modrá hláška)
+                a podruhé se zkontroluje, že body byly zadány správně (vypíše se zelená hláška). Pokud se při zadání
+                vypíše hláška červená, nastala někde chyba a je potřeba ji vyřešit. Typicky to nastane při kontrole
+                bodů, kdy se při prvním nebo druhém zadání zadali špatně body. V takovém případě nejdříve zkontrolujte,
+                že vámi zadané body byly správně (tedy zadejte úlohu znovu se správným počtem bodů). Pokud chyba
+                přetrvává, upravte body úlohy pomocí odkazu v chybové hlášce. V takovém případně je automaticky úloha
+                vedena jako zkontrolována.
+            </p>
+            <p>
+                Úlohy a jejich body se zadávají na stránce <a n:href="Submit:create" >Hra->Bodování</a>. Zadávání se
+                skládá ze dvou částí: zadání kódu a zadání bodů.
+            </p>
+            <h3>Zadávání kódu</h3>
+            <p>
+                Kód zadávaný do systému se skládá ze 3 částí: prvních 6 čísel reprezentující ID týmu, následují
+                2 písmena označující úlohu a poslední kontrolní číslice. Kód je potřeba zadat <strong>celý</strong>.
+                Kód je možno zadat ručně (nepreferované), ale primární a preferovanou metodou je zadávání pomocí čtečky
+                naskenováním QR kódu, který se nachází vedle kódu úlohy. Automaticky to vyplní celý kód a je možné ihned
+                zadat body.
+            </p>
+             <figure class="figure text-center">
+              <img src="{$basePath}/images/fyziklani/task.png" class="figure-img img-fluid rounded w-75">
+              <figcaption class="figure-caption">Jak vypadá úloha.</figcaption>
+            </figure> 
+            <p>
+                Kód se během zadávání zároveň ihned kontroluje, tedy pokud zadaný kód je špatně, systém vás nepustí
+                zadat body a je potřeba kód upravit. Abyste věděli, kde máte chybu, pomůže vám chybová hláška pod polem
+                pod polem na zadávání kódu. Pokud je zadaný kód správně, vypíše se jméno týmu a úlohy, podle kterých
+                lze úlohu zkontrolovat.
+            </p>
+            <h3>Zadávání bodů</h3>
+            <p>
+                Jakmile je zadaný kód správně, je možné zadat body, které jsou na odevzdané úloze vyznačeny
+                zakroužkováním. To lze provést kliknutím na tlačítka bodů (nepreferované), nebo zmáčknutím čísla bodů
+                na numerické klávesnici.
+            <p>
+                Příklad: odevzdaná úloha má hodnocení 5 bodů. Po načtení kódu tedy zmáčknu na klávesnici numerickou "5",
+                což označí úlohu jako pětibodovou a zadání uloží. Pokud na svém notebooku nemáte numerickou klávesnici,
+                nastavte si klávesnici anglickou pro jednodušší zadávání.
+            </p>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Uzavírání</h2>
+            <p>
+                Na konci soutěže je potřeba všem týmům uzavřít bodování. Aby se mohl tým uzavřít, musí mít všechny úlohy
+                zadané a zkontrolované všechny úlohy, tedy je potřeba dbát na zadávání již během soutěže. Pokud na
+                konci soutěže nejsou všechny úlohy zkontrolované, je potřeba úlohu zpětně dohledat a zkontrolovat.
+            </p>
+            <p>
+                Jakmile jsou všechny úlohy zadané, je možné tým uzavřít. To se provádí na
+                stránce <a n:href="Close:list" >Hra->Uzavřít bodování</a>. Zde se naskenuje kód poslední úlohy, která
+                nebyla vydána, nebo posledního papírku. Automaticky se najde tým a pokud nejsou žádné problémy, provede
+                se uzavření.
+            </p>
+            <p>
+                V případě, že po konci hry na stole zadavačů již nejsou žádné úlohy na zadání a uzavření týmu se
+                vyhodnotí jako chybné z libovolného důvodu, ihned kontaktujte vedoucího haly nebo IT, aby se mohla
+                začit hledat případně chybějící úloha.
+            </p>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Výsledky a vypisování diplomů</h2>
+            <p>
+                Jakmile jsou všechny týmy uzavřeny a je vygenerované pořadí, může se přistoupit na vypisování diplomů.
+                Data k vypisování lze nalézt na stránce <a n:href="Diplomas:results" >Hra->Výsledky na diplomy</a>.
+                Jednotlivé seznamy jsou seřazeny dle Id týmu, tedy stejně jako diplomy (na kterých se Id nachází
+                v pravém dolním rohu). Výjimkou jsou výsledky pro vyhlašování, které jsou seřazeny dle místa umístění.
+            </p>
+            <p>
+                Jako první je potřeba vypsat diplomy pro vítězné týmy, tedy prvních 5 z kategorie. Pro jednoduchost lze
+                tyto statistiky nalézt v záložce tomu určené seřazené dle Id týmu pro jednoduché hledání diplomů.
+                Jakmile jsou tyto diplomy vypsány, předají se pro vyhlášení a přechází se k vypsání zbytku diplomů dle
+                výsledkových listin jednotlivých kategorií.
+            </p>
+        </div>
+    </div>
 {/block}
