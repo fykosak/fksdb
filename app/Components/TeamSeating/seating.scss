@@ -79,7 +79,7 @@ $map: (
     }
 
     .direction-line {
-      stroke-width: 2;
+      stroke-width: 4;
       stroke: #222;
       fill: none;
       stroke-dasharray: 15, 15;
@@ -105,6 +105,7 @@ $map: (
     }
 
     text {
+      fill: black;
       alignment-baseline: center;
     }
   }
