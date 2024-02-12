@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\TeamSeating;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -91,6 +92,77 @@ final class Place2024 implements Place
                 return -325;
         }
         return 0;
+    }
+
+    public function html(?TeamModel2 $team, ?string $dev): Html
+    {
+        $outerContainer = Html::el('g');
+        $container = Html::el('g')
+            ->addAttributes([
+                'transform' => 'translate(' . $this->x() . ',' . $this->y() . ')',
+                'data-sector' => $this->sector(),
+            ]);
+        if ($dev) {
+            $container->addAttributes([
+                'class' => 'seat',
+                'data-dev' => $dev,
+
+                'data-category' => $team ? $team->category->value : null,
+                'data-lang' => $team ? $team->game_lang->value : null,
+            ]);
+            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+            $container->addHtml(Html::el('text')->setText($team ? $team->fyziklani_team_id : $this->label()));
+        } else {
+            if ($team) {
+                $outerContainer->addHtml($this->arrow());
+            }
+            $container->addAttributes([
+                'class' => $team ? 'seat seat-occupied' : 'seat',
+            ]);
+            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+            $container->addHtml(Html::el('text')->setText($this->label()));
+        }
+        $outerContainer->addHtml($container);
+        return $outerContainer;
+    }
+
+    public function arrow(): Html
+    {
+        $polyline = [];
+        if ($this->y() > 0) {
+            $y = 125;
+        } else {
+            $y = -125;
+        }
+        $endArrow = Html::el('polyline')->addAttributes([
+            'class' => 'end-arrow',
+        ]);
+        if ($y > $this->y()) {
+            $endArrow->addAttributes([
+                'points' => '-10,-5 10,-5 0,-30',
+            ]);
+        } else {
+            $endArrow->addAttributes([
+                'points' => '-10,5 10,5 0,30',
+            ]);
+        }
+        $polyline[] = [-850, $y];
+        if ($this->row > 12) {
+            $polyline[] = [-100, $y];
+            $polyline[] = [-100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y];
+        }
+        $polyline[] = [$this->x(), $y];
+
+        $polylineHtml = Html::el('polyline')->addAttributes([
+            'class' => 'direction-line',
+            'points' => join(" ", array_map(fn($point) => join(',', $point), $polyline)),
+        ]);
+        return Html::el('g')
+            ->setAttribute('class', 'direction-arrow')
+            ->addHtml($polylineHtml)
+            ->addHtml($endArrow->setAttribute('transform', 'translate(' . $this->x() . ',' . $y . ')'));
     }
 
     /**

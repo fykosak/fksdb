@@ -6,38 +6,8 @@
     lang:$lang}
     {block seats}
         {foreach FKSDB\Components\TeamSeating\Place2024::getAll() as $place}
-            {varType FKSDB\Components\TeamSeating\Place $place}
-            {var $cor = 'translate(' . $place->x() . ',' . $place->y() . ')'}
-            {var $className = 'seat'}
-            {if $dev}
-                {var $team = $teams[$place->label()]??null}
-                <g transform="{$cor}"
-                   class="seat"
-                   data-dev="{$dev}"
-                   data-sector="{$place->sector()}"
-                   data-category="{$team?$team->category->value:null}"
-                   data-lang="{$team?$team->game_lang->value:null}"
-                >
-                    <rect height="50" width="50" x="-25" y="-25"/>
-                    <text>
-                        {if $team}
-                            {$team->fyziklani_team_id}
-                        {else}
-                            {$place->label()}
-                        {/if}
-                    </text>
-                </g>
-            {else}
-                {if isset($teams[$place->label()])}
-                    {do $className .= ' seat-occupied'}
-                {/if}
-                <g transform="{$cor}" class="{$className}" data-sector="{$place->sector()}">
-                    <rect height="50" width="50" x="-25" y="-25"/>
-                    <text>
-                        {$place->label()}
-                    </text>
-                </g>
-            {/if}
+            {varType FKSDB\Components\TeamSeating\Place2024 $place}
+            {$place->html($teams[$place->label()]??null,$dev)}
         {/foreach}
     {/block}
 {/embed}
