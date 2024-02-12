@@ -219,6 +219,21 @@ final class Place2024 implements Place
                 if ($col === 'A' && $row > 12) {
                     continue;
                 }
+                if ($col === 'G' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'G' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'L' && $row === 6) {
+                    continue;
+                }
                 $places[] = new self($row, $col);
             }
         }
