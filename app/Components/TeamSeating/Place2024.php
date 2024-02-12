@@ -120,11 +120,7 @@ final class Place2024 implements Place
                 'class' => $team ? 'seat seat-occupied' : 'seat',
             ]);
             $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
-            $container->addHtml(
-                Html::el('text')
-                    ->setText($this->label())
-                    ->setAttribute('transform', $team ? 'translate(0,7)' : 'translate(0,5)')
-            );
+            $container->addHtml(Html::el('text')->setText($this->label()));
         }
         $outerContainer->addHtml($container);
         return $outerContainer;
