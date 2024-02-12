@@ -19,6 +19,6 @@ final class HowToPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('How to'), 'fas fa-');
+        return new PageTitle(null, _('How to'), 'fas fa-file-circle-question');
     }
 }
