@@ -216,6 +216,9 @@ final class Place2024 implements Place
         $places = [];
         foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] as $col) {
             for ($row = 1; $row <= 24; $row++) {
+                if ($col === 'A' && $row > 12) {
+                    continue;
+                }
                 $places[] = new self($row, $col);
             }
         }
