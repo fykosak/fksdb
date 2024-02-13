@@ -10,8 +10,8 @@
 {foreach $control->getComponent('teamList')->getComponents() as $teamComponent}
     {varType FKSDB\Components\TeamSeating\Single $teamComponent}
     <div class="page page-a5-landscape" style="position: relative">
-        <div class="row">
-            <span class="col-6">
+        <div class="row mt-3">
+            <span class="col-6 text-center">
         {var $team = $teamComponent->team}
         ({$team->fyziklani_team_id}) {$team->name}
         {var $place = $team->getPlace()}
@@ -19,7 +19,7 @@
                     {$place->badge()}
                 {/if}
                 </span>
-            <div class="col-5 offset-1">
+            <div class="col-6 text-center">
                 <img
                         src="{$basePath}/images/fyziklani/fyziklani_{$teamComponent->team->event->begin->format('Y')}_logo.svg"
                         style="height: 2rem"
