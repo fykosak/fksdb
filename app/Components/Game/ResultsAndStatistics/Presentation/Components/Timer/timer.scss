@@ -22,7 +22,7 @@
   }
 
   &.timer-small {
-    font-size: 200%;
+    font-size: 6rem;
     display: flex;
     justify-content: center;
     //background: white;
@@ -46,7 +46,7 @@
     position: relative;
 
     .time-value {
-      font-size: 8rem;
+      font-size: 18rem;
     }
 
     .time-label {
@@ -64,5 +64,5 @@
 }
 
 .logo-sponsors {
-  width: 60%;
+  width: 70%;
 }
