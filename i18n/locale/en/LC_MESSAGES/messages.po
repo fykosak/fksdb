@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 09:07+0100\n"
+"POT-Creation-Date: 2024-02-13 08:12+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -208,7 +208,7 @@ msgstr "Submit"
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:192
 #: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx.tsx2php:84
 #: i18n/../app/Components/Schedule/PersonScheduleList.php:51
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:31
 msgid "Code"
 msgstr ""
 
@@ -357,9 +357,9 @@ msgstr ""
 #: i18n/../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:57
 #: i18n/../app/Components/Forms/Controls/Autocomplete/PersonSelectBox.php:14
 #: i18n/../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:15
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:62
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:136
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:195
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:70
 #: i18n/../app/config/orm.neon.neon2php:423
 #: i18n/../data/events/council/council1.neon.neon2php:8
 #: i18n/../data/events/council/councilDefault.neon.neon2php:51
@@ -620,6 +620,7 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/Schedule/PersonPresenter.php:75
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:37
 #: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:27
+#: i18n/../app/Modules/EventModule/templates/Application/detail.vyfuk.latte.latte2php:16
 #: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:10
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:10
 msgid "Schedule"
@@ -976,12 +977,12 @@ msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:167
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:157
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:160
 msgid "Application has been updated"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:168
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:158
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:161
 msgid "Application has been created"
 msgstr ""
 
@@ -1076,20 +1077,24 @@ msgid "School has been updated"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:33
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:41
 msgid "Číslo OP/pasu, pokud máš"
 msgstr "Number of identity card or passport"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:43
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:57
 #: i18n/../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:154
 #: i18n/../app/Models/ORM/Models/Warehouse/ProductCategory.php:46
 msgid "Apparel"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:48
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:62
 msgid "Transport & Ticket"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:62
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:76
 msgid ""
 "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
 "…?\n"
@@ -1101,6 +1106,7 @@ msgstr ""
 "(especially in the case of vegans)?"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:67
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:81
 msgid ""
 "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
 "setkání?\n"
@@ -1115,11 +1121,20 @@ msgstr ""
 "longer-term problems... Do you take any medication? What are they? Are there "
 "any other information about your health condition, what should we know?"
 
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:92
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:93
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:94
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:95
 #: i18n/../app/Models/Events/Model/Holder/BaseHolder.php:139
 msgid "Participant"
 msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:37
+msgid "Město a okres"
+msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:45
+#: i18n/../data/events/vaf/vaf3.neon.neon2php:27
+msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
+msgstr "The phone number (with the country code) that you will have with you."
 
 #: i18n/../app/Components/EntityForms/StoredQueryFormComponent.php:82
 msgid "Query has been created"
@@ -1249,7 +1264,7 @@ msgstr ""
 
 #: i18n/../app/Components/Event/CodeAttendance/CodeAttendance.php:96
 #: i18n/../app/Models/MachineCode/MachineCodeType.php:62
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:127
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:126
 msgid "Wrong type of code."
 msgstr ""
 
@@ -1769,6 +1784,7 @@ msgstr ""
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 #: i18n/../app/Components/Grids/Application/SingleApplicationsGrid.php:114
 #: i18n/../app/Components/Grids/Application/TeamTrait.php:72
+#: i18n/../app/Components/Payments/AllPaymentList.php:61
 #: i18n/../app/Components/Payments/PaymentList.php:73
 msgid "Select state"
 msgstr ""
@@ -1896,7 +1912,8 @@ msgid "Role"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Application/Person/NewApplicationsGrid.php:48
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:102
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:106
+#: i18n/../app/config/applications/tabor.neon.neon2php:7
 msgid "Create application"
 msgstr ""
 
@@ -1919,14 +1936,16 @@ msgstr "Team detail for organizer"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:69
 #: i18n/../app/Components/Grids/Application/TeamList.php:136
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:16
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:17
 #: i18n/../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:39
 msgid "button.team.edit"
 msgstr "Edit team"
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
-msgid "button.participant.edit"
-msgstr "Edit participant"
+#: i18n/../app/Components/Grids/Application/TeamGrid.php:76
+#: i18n/../app/Components/Grids/Application/TeamList.php:143
+#, fuzzy
+msgid "button.team.attendance"
+msgstr "Edit team"
 
 #: i18n/../app/Components/Grids/Application/TeamList.php:94
 msgid "Members"
@@ -2098,6 +2117,7 @@ msgstr ""
 msgid "There was an error during the deletion of task %s."
 msgstr ""
 
+#: i18n/../app/Components/Payments/AllPaymentList.php:62
 #: i18n/../app/Components/Payments/PaymentList.php:74
 #: i18n/../app/config/orm.neon.neon2php:393
 msgid "Variable symbol"
@@ -2130,7 +2150,7 @@ msgstr ""
 #: i18n/../app/Components/Schedule/Input/Components/price-label.tsx.tsx2php:13
 #: i18n/../app/Components/Schedule/ItemGrid.php:64
 #: i18n/../app/Components/Schedule/PersonScheduleList.php:124
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:135
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:142
 #: i18n/../app/config/orm.neon.neon2php:215
 #: i18n/../app/config/orm.neon.neon2php:400
 #: i18n/../app/config/orm.neon.neon2php:1179
@@ -2303,7 +2323,7 @@ msgstr ""
 #: i18n/../app/Components/TeamSeating/Rooms/pva22.latte.latte2php:9
 #: i18n/../app/Components/TeamSeating/Rooms/pva22.latte.latte2php:12
 #: i18n/../app/Components/TeamSeating/Rooms/pva23.latte.latte2php:9
-#: i18n/../app/Components/TeamSeating/Rooms/pva24.latte.latte2php:9
+#: i18n/../app/Components/TeamSeating/Rooms/pva24.latte.latte2php:8
 msgid "WC"
 msgstr ""
 
@@ -3894,23 +3914,23 @@ msgstr "Year"
 msgid "ACL list"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:130
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:137
 msgid "Health & food"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:131
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:138
 msgid "T-shirt"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:132
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:139
 msgid "Arrival"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:133
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:140
 msgid "Departure"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:134
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:141
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:30
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:166
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:157
@@ -3923,47 +3943,47 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:150
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:157
 #, php-format
 msgid "Application: %s"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:184
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:210
 #, php-format
 msgid "Edit application: %s"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:200
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:226
 msgid "Application import"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:205
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:231
 #: i18n/../app/Modules/EventModule/BasePresenter.php:99
 #: i18n/../app/Modules/OrganizerModule/Warehouse/BasePresenter.php:28
 msgid "Applications"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:219
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:245
 #: i18n/../app/Modules/EventModule/TeamPresenter.php:239
 #: i18n/../app/Modules/EventModule/templates/Team/detailedList.latte.latte2php:5
 msgid "Mass transitions"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:285
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:319
 #: i18n/../app/Modules/EventModule/TeamPresenter.php:308
 msgid "Event type is not supported"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:130
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:129
 msgid "Application not found."
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:133
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:132
 msgid "Application belongs to another event."
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/BasePresenter.php:113
-#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:76
+#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:77
 msgid "Others"
 msgstr ""
 
@@ -4035,15 +4055,19 @@ msgstr ""
 msgid "Fyziklani game setup"
 msgstr ""
 
+#: i18n/../app/Modules/EventModule/Game/HowToPresenter.php:22
+msgid "How to"
+msgstr ""
+
 #: i18n/../app/Modules/EventModule/Game/PresentationPresenter.php:15
 msgid "Results presentation"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:35
+#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:33
 msgid "Seating - print"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:56
+#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:46
 #: i18n/../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:5
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:83
 msgid "Seating"
@@ -4136,25 +4160,22 @@ msgstr ""
 msgid "By category"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:49
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:45
 msgid "Create payment"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:62
-msgid "Payment dashboard"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:133
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:70
 #, php-format
 msgid "Detail of the payment %s"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:178
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:115
 #, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:185
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:122
+#: i18n/../app/Modules/OrganizerModule/PaymentsPresenter.php:104
 msgid "List of payments"
 msgstr ""
 
@@ -4263,11 +4284,15 @@ msgstr ""
 msgid "Rests"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:31
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:19
+msgid "button.participant.edit"
+msgstr "Edit participant"
+
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:35
 msgid "Application code"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:40
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:44
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:60
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:75
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fol.latte.latte2php:35
@@ -4317,16 +4342,6 @@ msgstr ""
 msgid "Application"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:57
-#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:131
-msgid "Block"
-msgstr ""
-
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:60
-#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:134
-msgid "Variant"
-msgstr ""
-
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:17
 msgid "Select items"
 msgstr ""
@@ -4350,6 +4365,16 @@ msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:122
 msgid "Payments contains"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:131
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:65
+msgid "Block"
+msgstr ""
+
+#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:134
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:68
+msgid "Variant"
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:147
@@ -4384,7 +4409,7 @@ msgstr ""
 msgid "Entities"
 msgstr ""
 
-#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:100
+#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:101
 #, php-format
 msgid "%d. year, %s. series"
 msgstr ""
@@ -4469,6 +4494,10 @@ msgstr ""
 
 #: i18n/../app/Modules/OrganizerModule/OrganizerPresenter.php:65
 msgid "Create an organizer"
+msgstr ""
+
+#: i18n/../app/Modules/OrganizerModule/PaymentsPresenter.php:49
+msgid "Payment dashboard"
 msgstr ""
 
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:52
@@ -4849,6 +4878,7 @@ msgstr "Present"
 #: i18n/../app/config/applications/dsef.neon.neon2php:18
 #: i18n/../app/config/applications/fol.neon.neon2php:24
 #: i18n/../app/config/applications/setkani.neon.neon2php:33
+#: i18n/../app/config/applications/tabor.neon.neon2php:107
 #: i18n/../data/events/council/councilDefault.neon.neon2php:41
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:117
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:72
@@ -4865,6 +4895,7 @@ msgstr "Did not come"
 #: i18n/../app/config/applications/dsef.neon.neon2php:23
 #: i18n/../app/config/applications/setkani.neon.neon2php:37
 #: i18n/../app/config/applications/setkani.neon.neon2php:40
+#: i18n/../app/config/applications/tabor.neon.neon2php:112
 #: i18n/../data/events/council/councilDefault.neon.neon2php:45
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:120
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:76
@@ -4890,6 +4921,7 @@ msgid "Move to applied"
 msgstr ""
 
 #: i18n/../app/config/applications/fof.neon.neon2php:20
+#: i18n/../app/config/applications/tabor.neon.neon2php:72
 msgid "Move to spare"
 msgstr ""
 
@@ -4937,6 +4969,161 @@ msgstr ""
 #: i18n/../data/events/tsaf/tsaf8.neon.neon2php:66
 msgid "Přihlásit účastníka"
 msgstr "Register contestant"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:12
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:51
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:56
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:21
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:26
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:24
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:29
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:21
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:26
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:22
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:27
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:49
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:54
+msgid "Pozvat účastníka"
+msgstr "Invite participant"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:18
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:61
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:77
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:82
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:31
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:36
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:34
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:39
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:31
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:36
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:32
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:37
+msgid "Pozvat náhradníka"
+msgstr "Invite spare"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:25
+#: i18n/../app/config/applications/tabor.neon.neon2php:35
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:44
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:49
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:82
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:87
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:79
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:84
+msgid "Send first call"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:30
+#: i18n/../app/config/applications/tabor.neon.neon2php:40
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:54
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:59
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:92
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:97
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:90
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:95
+msgid "Send second call"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:47
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:87
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:41
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:101
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:44
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:41
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:42
+msgid "Potrvrdit učast"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:70
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:92
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:46
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:106
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:49
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:46
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:47
+msgid "Chci jet"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:59
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:108
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:116
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:65
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:63
+msgid "Schválit jako účastníka"
+msgstr "Approve participation"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:65
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:97
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:51
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:122
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:51
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:52
+msgid "Zaplatil"
+msgstr "Payed"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:81
+#: i18n/../app/config/applications/tabor.neon.neon2php:88
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:73
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:113
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:100
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:104
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:58
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:128
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:133
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:57
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:61
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:58
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:55
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:59
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:89
+msgid "Odmítnout účast"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:95
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:138
+msgid "Odmítnout jako účastníka"
+msgstr "Decline as a participant"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:104
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:114
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:69
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:144
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:69
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:70
+msgid "Zúčastnil se"
+msgstr "Participated"
 
 #: i18n/../app/config/orm.neon.neon2php:21
 msgid "Contest name"
@@ -5879,44 +6066,6 @@ msgstr ""
 msgid "I want to go"
 msgstr ""
 
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:44
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:49
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:82
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:87
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:79
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:84
-msgid "Send first call"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:54
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:59
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:92
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:97
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:90
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:95
-msgid "Send second call"
-msgstr ""
-
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:63
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:68
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:63
@@ -6321,78 +6470,6 @@ msgstr ""
 msgid "XL women"
 msgstr ""
 
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:51
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:56
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:21
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:26
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:24
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:29
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:21
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:26
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:22
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:27
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:49
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:54
-msgid "Pozvat účastníka"
-msgstr "Invite participant"
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:61
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:77
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:82
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:31
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:36
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:34
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:39
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:31
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:36
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:32
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:37
-msgid "Pozvat náhradníka"
-msgstr "Invite spare"
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:87
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:41
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:101
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:44
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:41
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:42
-msgid "Potrvrdit učast"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:70
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:92
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:46
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:106
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:49
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:46
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:47
-msgid "Chci jet"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:73
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:113
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:100
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:104
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:58
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:128
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:133
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:57
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:61
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:58
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:55
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:59
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:89
-msgid "Odmítnout účast"
-msgstr ""
-
 #: i18n/../data/events/soustredeni/sous37p.neon.neon2php:79
 #: i18n/../data/events/soustredeni/sous37p.neon.neon2php:84
 msgid "Poslat první upomínku"
@@ -6413,24 +6490,6 @@ msgstr ""
 msgid "Potvrdit účast"
 msgstr "Confirm participation"
 
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:97
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:51
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:122
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:51
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:52
-msgid "Zaplatil"
-msgstr "Payed"
-
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:108
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:116
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:65
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:63
-msgid "Schválit jako účastníka"
-msgstr "Approve participation"
-
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:111
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:65
 #: i18n/../data/events/tabor/tabor12.neon.neon2php:112
@@ -6439,15 +6498,6 @@ msgstr "Approve participation"
 #: i18n/../data/events/tabor/tabor9.neon.neon2php:66
 msgid "Pozvat jako účastníka"
 msgstr "Confirm as a participant"
-
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:114
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:69
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:144
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:69
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:70
-msgid "Zúčastnil se"
-msgstr "Participated"
 
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:130
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:88
@@ -6540,10 +6590,6 @@ msgstr ""
 msgid "Mám zájem o společnou jízdenku z tábora"
 msgstr ""
 
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:138
-msgid "Odmítnout jako účastníka"
-msgstr "Decline as a participant"
-
 #: i18n/../data/events/tabor/tabor7.neon.neon2php:105
 msgid "Mám zájem o svozy"
 msgstr ""
@@ -6578,10 +6624,6 @@ msgstr "Reserve player plays"
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:24
 msgid "Kvůli pojišťovně."
 msgstr "Because of the insurance company."
-
-#: i18n/../data/events/vaf/vaf3.neon.neon2php:27
-msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
-msgstr "The phone number (with the country code) that you will have with you."
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:77
 msgid "Zvolit velikost"

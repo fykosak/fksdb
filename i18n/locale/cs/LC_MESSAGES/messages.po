@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 09:07+0100\n"
+"POT-Creation-Date: 2024-02-13 08:12+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: David Škrob <david.skrob@fykos.cz>\n"
 "Language-Team: \n"
@@ -208,7 +208,7 @@ msgstr "Odeslat"
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:192
 #: i18n/../app/Components/Game/Submits/Form/Components/main-form.tsx.tsx2php:84
 #: i18n/../app/Components/Schedule/PersonScheduleList.php:51
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:31
 msgid "Code"
 msgstr "Kód"
 
@@ -358,9 +358,9 @@ msgstr "XML soubor"
 #: i18n/../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:57
 #: i18n/../app/Components/Forms/Controls/Autocomplete/PersonSelectBox.php:14
 #: i18n/../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:15
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:62
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:136
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:195
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:70
 #: i18n/../app/config/orm.neon.neon2php:423
 #: i18n/../data/events/council/council1.neon.neon2php:8
 #: i18n/../data/events/council/councilDefault.neon.neon2php:51
@@ -514,9 +514,8 @@ msgstr ""
 "minut."
 
 #: i18n/../app/Components/Controls/Person/Edit/FlagComponent.php:64
-#, fuzzy
 msgid "Flag setting has been saved"
-msgstr "Informace byly uloženy."
+msgstr "Nastavení flagů bylo uloženo."
 
 #: i18n/../app/Components/Controls/Person/Edit/FlagComponent.php:70
 #: i18n/../app/Components/Forms/Controls/CaptchaBox.php:19
@@ -531,9 +530,8 @@ msgid "No"
 msgstr "Ne"
 
 #: i18n/../app/Components/Controls/Person/Edit/FlagComponent.php:72
-#, fuzzy
 msgid "No selected"
-msgstr "Nebyla vybraná žádná položka"
+msgstr "Nevybráno"
 
 #: i18n/../app/Components/Controls/Person/Edit/email.new.latte.latte2php:7
 msgid "Confirm your email"
@@ -628,6 +626,7 @@ msgstr "Učitel akcí"
 #: i18n/../app/Modules/EventModule/Schedule/PersonPresenter.php:75
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:37
 #: i18n/../app/Modules/EventModule/templates/Application/detail.latte.latte2php:27
+#: i18n/../app/Modules/EventModule/templates/Application/detail.vyfuk.latte.latte2php:16
 #: i18n/../app/Modules/EventModule/templates/Team/detail.fof.latte.latte2php:10
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:10
 msgid "Schedule"
@@ -824,7 +823,6 @@ msgid "No errors found"
 msgstr "Žádné chyby nebyly nalezeny"
 
 #: i18n/../app/Components/DataTest/list.latte.latte2php:17
-#, fuzzy
 msgid "Warning"
 msgid_plural "Warnings"
 msgstr[0] "Varování"
@@ -967,9 +965,8 @@ msgid "Application must have at least one member"
 msgstr "Přihláška musí obsahovat alespoň jednoho člena týmu"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/NoteForm.php:57
-#, fuzzy
 msgid "Notes has been updated"
-msgstr "Položka byla aktualizována."
+msgstr "Poznámky byly aktualizovány."
 
 #: i18n/../app/Components/EntityForms/Fyziklani/Processing/Category/OldMemberException.php:13
 msgid "Found old member"
@@ -993,12 +990,12 @@ msgid "You have to agree with the privacy policy before submitting."
 msgstr "Před vložením musíte souhlasit s podmínkami ochrany osobních údajů"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:167
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:157
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:160
 msgid "Application has been updated"
 msgstr "Přihláška byla úspěšně upravena"
 
 #: i18n/../app/Components/EntityForms/Fyziklani/TeamForm.php:168
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:158
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:161
 msgid "Application has been created"
 msgstr "Přihláška byla vytvořena"
 
@@ -1093,20 +1090,24 @@ msgid "School has been updated"
 msgstr "Škola byla aktualizována."
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:33
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:41
 msgid "Číslo OP/pasu, pokud máš"
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:43
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:57
 #: i18n/../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:154
 #: i18n/../app/Models/ORM/Models/Warehouse/ProductCategory.php:46
 msgid "Apparel"
 msgstr "Oblečení a doplňky"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:48
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:62
 msgid "Transport & Ticket"
 msgstr "Přeprava & Jízdenky"
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:62
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:76
 msgid ""
 "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, "
 "…?\n"
@@ -1115,6 +1116,7 @@ msgid ""
 msgstr ""
 
 #: i18n/../app/Components/EntityForms/Single/SetkaniFormComponent.php:67
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:81
 msgid ""
 "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
 "setkání?\n"
@@ -1125,11 +1127,20 @@ msgid ""
 "                ohledně tvého zdravotního stavu, co bychom měli vědět?"
 msgstr ""
 
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:92
-#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:93
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:94
+#: i18n/../app/Components/EntityForms/Single/SingleFormComponent.php:95
 #: i18n/../app/Models/Events/Model/Holder/BaseHolder.php:139
 msgid "Participant"
 msgstr "Účastník"
+
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:37
+msgid "Město a okres"
+msgstr ""
+
+#: i18n/../app/Components/EntityForms/Single/TaborFormComponent.php:45
+#: i18n/../data/events/vaf/vaf3.neon.neon2php:27
+msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
+msgstr ""
 
 #: i18n/../app/Components/EntityForms/StoredQueryFormComponent.php:82
 msgid "Query has been created"
@@ -1259,13 +1270,12 @@ msgid "Remove delivery address"
 msgstr "Odstranit doručovací adresu"
 
 #: i18n/../app/Components/Event/CodeAttendance/CodeAttendance.php:76
-#, fuzzy
 msgid "Processed"
-msgstr "Zpracováno: "
+msgstr "Zpracováno"
 
 #: i18n/../app/Components/Event/CodeAttendance/CodeAttendance.php:96
 #: i18n/../app/Models/MachineCode/MachineCodeType.php:62
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:127
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:126
 msgid "Wrong type of code."
 msgstr "Špatný typ kódu"
 
@@ -1286,7 +1296,7 @@ msgid "Import completed with errors."
 msgstr "Import proběhl s chybami."
 
 #: i18n/../app/Components/Event/MassTransition/MassTransitionComponent.php:62
-#, fuzzy, php-format
+#, php-format
 msgid "Total %d applications, state changed %d, unavailable %d."
 msgstr "Celkem %d přihlášek, stav změněn %d, nedostupné %d."
 
@@ -1383,9 +1393,8 @@ msgid "School"
 msgstr "Škola"
 
 #: i18n/../app/Components/Forms/Factories/SchoolSelectField.php:29
-#, fuzzy
 msgid "If you cannot find the school, you can add it on "
-msgstr "Pokud nemůžete školu najít, kontaktujte nás na %s."
+msgstr "Pokud nemůžete školu najít, kontaktujte nás na "
 
 #: i18n/../app/Components/Forms/OptimisticForm.php:69
 msgid "There has been a change in the data of this form since it was shown."
@@ -1592,12 +1601,12 @@ msgstr "Kategorie %s"
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:9
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:33
 msgid "Winners"
-msgstr ""
+msgstr "Vítězové"
 
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:10
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:41
 msgid "Announcement"
-msgstr ""
+msgstr "Vyhlášení"
 
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:19
 #: i18n/../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:37
@@ -1787,6 +1796,7 @@ msgstr "vyber úlohu"
 #: i18n/../app/Components/Game/Submits/AllSubmitsGrid.php:193
 #: i18n/../app/Components/Grids/Application/SingleApplicationsGrid.php:114
 #: i18n/../app/Components/Grids/Application/TeamTrait.php:72
+#: i18n/../app/Components/Payments/AllPaymentList.php:61
 #: i18n/../app/Components/Payments/PaymentList.php:73
 msgid "Select state"
 msgstr "Vyberte stav"
@@ -1914,7 +1924,8 @@ msgid "Role"
 msgstr "Role"
 
 #: i18n/../app/Components/Grids/Application/Person/NewApplicationsGrid.php:48
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:102
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:106
+#: i18n/../app/config/applications/tabor.neon.neon2php:7
 msgid "Create application"
 msgstr "Vytvořit přihlášku"
 
@@ -1937,16 +1948,17 @@ msgstr "Organizátorský detail týmu"
 
 #: i18n/../app/Components/Grids/Application/TeamGrid.php:69
 #: i18n/../app/Components/Grids/Application/TeamList.php:136
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:16
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:17
 #: i18n/../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:39
 msgid "button.team.edit"
 msgstr "Upravit tým"
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:27
-msgid "button.participant.edit"
-msgstr "Upravit účastníka"
+#: i18n/../app/Components/Grids/Application/TeamGrid.php:76
+#: i18n/../app/Components/Grids/Application/TeamList.php:143
+msgid "button.team.attendance"
+msgstr "Prezence týmu"
 
-#: i18n/../app/Components/Grids/Application/TeamList.php:90
+#: i18n/../app/Components/Grids/Application/TeamList.php:94
 msgid "Members"
 msgstr "Členové"
 
@@ -2117,6 +2129,7 @@ msgstr "Odevzdání úlohy %s zrušeno."
 msgid "There was an error during the deletion of task %s."
 msgstr "Během mazání úlohy %s došlo k chybě."
 
+#: i18n/../app/Components/Payments/AllPaymentList.php:62
 #: i18n/../app/Components/Payments/PaymentList.php:74
 #: i18n/../app/config/orm.neon.neon2php:393
 msgid "Variable symbol"
@@ -2149,7 +2162,7 @@ msgstr "Pro"
 #: i18n/../app/Components/Schedule/Input/Components/price-label.tsx.tsx2php:13
 #: i18n/../app/Components/Schedule/ItemGrid.php:64
 #: i18n/../app/Components/Schedule/PersonScheduleList.php:124
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:135
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:142
 #: i18n/../app/config/orm.neon.neon2php:215
 #: i18n/../app/config/orm.neon.neon2php:400
 #: i18n/../app/config/orm.neon.neon2php:1179
@@ -2322,7 +2335,7 @@ msgstr "Sektor E"
 #: i18n/../app/Components/TeamSeating/Rooms/pva22.latte.latte2php:9
 #: i18n/../app/Components/TeamSeating/Rooms/pva22.latte.latte2php:12
 #: i18n/../app/Components/TeamSeating/Rooms/pva23.latte.latte2php:9
-#: i18n/../app/Components/TeamSeating/Rooms/pva24.latte.latte2php:9
+#: i18n/../app/Components/TeamSeating/Rooms/pva24.latte.latte2php:8
 msgid "WC"
 msgstr ""
 
@@ -3050,9 +3063,9 @@ msgid "Item \"%s\" has already another payment."
 msgstr "Položka \"%s\" má již vygenerovanou platbu."
 
 #: i18n/../app/Models/ORM/Tests/ContestYear/ContestYearToContestantsAdapter.php:24
-#, fuzzy, php-format
+#, php-format
 msgid "In contestant %s"
-msgstr "Je soutěžící"
+msgstr "V soutěžící %s"
 
 #: i18n/../app/Models/ORM/Tests/ContestYear/InActiveContest.php:26
 #, php-format
@@ -3060,15 +3073,13 @@ msgid "Contest %s has not open submitting, please upload tasks!"
 msgstr "Soutěž %s nemá otevřené odevzdávání, prosim nahrajte úlohy!"
 
 #: i18n/../app/Models/ORM/Tests/ContestYear/InActiveContest.php:35
-#, fuzzy
 msgid "Inactive contest year"
-msgstr "Neaktivní účet."
+msgstr "Neaktivní rok soutěže"
 
 #: i18n/../app/Models/ORM/Tests/Contestant/ConflictRole.php:30
 #: i18n/../app/Models/ORM/Tests/Event/ConflictRole.php:70
-#, fuzzy
 msgid "Conflict role"
-msgstr "Role vůči akci"
+msgstr "Konfliktní role"
 
 #: i18n/../app/Models/ORM/Tests/Contestant/ConflictRole.php:52
 #, php-format
@@ -3082,14 +3093,12 @@ msgstr ""
 #: i18n/../app/Models/ORM/Tests/Contestant/ContestantToPersonAdapter.php:30
 #: i18n/../app/Models/ORM/Tests/Event/Team/TeamToPersonAdapter.php:30
 #: i18n/../app/Models/ORM/Tests/Event/Team/TeamToPersonHistoryAdapter.php:40
-#, fuzzy
 msgid "In person "
-msgstr "Hledání osob"
+msgstr "V osobě"
 
 #: i18n/../app/Models/ORM/Tests/Contestant/ContestantToPersonHistoryAdapter.php:25
-#, fuzzy
 msgid "In person related history"
-msgstr "Historie osoby"
+msgstr "V historii osob"
 
 #: i18n/../app/Models/ORM/Tests/Contestant/InvalidCategory.php:36
 #, php-format
@@ -3101,9 +3110,8 @@ msgid "Invalid category, check study year!"
 msgstr "Neplatná kategorie, zkontroluj studijní ročník"
 
 #: i18n/../app/Models/ORM/Tests/Contestant/InvalidCategory.php:57
-#, fuzzy
 msgid "Invalid category"
-msgstr "Validovat kategorii %s"
+msgstr "Invalidovat kategorii"
 
 #: i18n/../app/Models/ORM/Tests/Event/ConflictRole.php:59
 #, php-format
@@ -3125,7 +3133,7 @@ msgid "People without role"
 msgstr "Osoby bez přidělené role"
 
 #: i18n/../app/Models/ORM/Tests/Event/Schedule/ItemAdapter.php:24
-#, fuzzy, php-format
+#, php-format
 msgid "In schedule item \"%s\"(%d)"
 msgstr "V bodě programu \"%s\"(%d):"
 
@@ -3139,7 +3147,7 @@ msgid "Run out of capacity"
 msgstr "Došla kapacita"
 
 #: i18n/../app/Models/ORM/Tests/Event/ScheduleGroupAdapter.php:24
-#, fuzzy, php-format
+#, php-format
 msgid "In schedule group \"%s\"(%d)"
 msgstr "Ve skupině programu \"%s\"(%d):"
 
@@ -3163,24 +3171,22 @@ msgid "Team \"%s\"(%d) is still pending! Do something about it!"
 msgstr "Tým  \"%s\"(%d)  je stále na čekací listíně! Udělej s tím něco."
 
 #: i18n/../app/Models/ORM/Tests/Event/Team/PendingTeams.php:43
-#, fuzzy
 msgid "Pending teams"
-msgstr "Čekající"
+msgstr "Čekající týmy"
 
 #: i18n/../app/Models/ORM/Tests/Event/Team/TeamsPerSchool.php:45
-#, fuzzy, php-format
+#, php-format
 msgid "%dth team per school"
-msgstr "Týmy na školu"
+msgstr "%d. tým na školu"
 
 #: i18n/../app/Models/ORM/Tests/Event/Team/TeamsPerSchool.php:53
-#, fuzzy, php-format
+#, php-format
 msgid "School %s has total %d teams"
-msgstr "Škola \"%s\" nevyučuje ročník %s"
+msgstr "Škola %s má celkem %d týmů"
 
 #: i18n/../app/Models/ORM/Tests/Event/TeamAdapter.php:30
-#, fuzzy
 msgid "In team "
-msgstr "Neplatný tým"
+msgstr "V týmu "
 
 #: i18n/../app/Models/ORM/Tests/Person/BornDateTest.php:45
 #: i18n/../app/Models/ORM/Tests/Person/BornDateTest.php:56
@@ -3193,14 +3199,12 @@ msgid "Born date"
 msgstr ""
 
 #: i18n/../app/Models/ORM/Tests/Person/EmptyPerson.php:76
-#, fuzzy
 msgid "Person is empty!"
-msgstr "Historie osoby"
+msgstr "Osoba je prázdná!"
 
 #: i18n/../app/Models/ORM/Tests/Person/EmptyPerson.php:81
-#, fuzzy
 msgid "Empty person"
-msgstr "Upravit osobu \"%s\""
+msgstr "Prázdná osoba"
 
 #: i18n/../app/Models/ORM/Tests/Person/GenderFromBornNumberTest.php:23
 msgid "Gender from born Id"
@@ -3294,9 +3298,9 @@ msgid "School \"%s\" does not teach %s study year."
 msgstr "Škola \"%s\" nevyučuje ročník %s"
 
 #: i18n/../app/Models/ORM/Tests/School/SchoolsProviderAdapter.php:31
-#, fuzzy, php-format
+#, php-format
 msgid "In school %s(%d): "
-msgstr "V osobě \"%s\"(%d): "
+msgstr "Ve škole %s(%d): "
 
 #: i18n/../app/Models/ORM/Tests/School/StudyYearFillTest.php:22
 msgid "Filled study years"
@@ -3312,19 +3316,16 @@ msgid "Missing study years"
 msgstr "Chybějící studijní ročníky"
 
 #: i18n/../app/Models/ORM/Tests/School/VerifiedSchoolTest.php:22
-#, fuzzy
 msgid "Verified school"
-msgstr "Vytvořit školu"
+msgstr "Verifikovaná škola"
 
 #: i18n/../app/Models/ORM/Tests/School/VerifiedSchoolTest.php:27
-#, fuzzy
 msgid "Check if school is verified."
-msgstr "Kontroluje že když je vyplněn studijní ročník, je vyplněná i škola."
+msgstr "Zkontrolovat, jestli je škola verifikována"
 
 #: i18n/../app/Models/ORM/Tests/School/VerifiedSchoolTest.php:33
-#, fuzzy
 msgid "School is no verified"
-msgstr "Škola byla vytvořena."
+msgstr "Škola není verifikována"
 
 #: i18n/../app/Models/Payment/PriceCalculator/UnsupportedCurrencyException.php:14
 #, php-format
@@ -3773,9 +3774,8 @@ msgid "Contest not found!"
 msgstr "Soutěž nenalezena!"
 
 #: i18n/../app/Modules/CoreModule/SchoolPresenter.php:34
-#, fuzzy
 msgid "Your school has been successfully added!"
-msgstr "Škola byla vytvořena."
+msgstr "Tvá škola byla úspěšně přidána!"
 
 #: i18n/../app/Modules/CoreModule/SettingsPresenter.php:32
 msgid "Change password"
@@ -3934,23 +3934,23 @@ msgstr "Ročník"
 msgid "ACL list"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:130
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:137
 msgid "Health & food"
 msgstr "Zdraví a potravinová omezení"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:131
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:138
 msgid "T-shirt"
 msgstr "Triko"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:132
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:139
 msgid "Arrival"
 msgstr "Příjezd"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:133
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:140
 msgid "Departure"
 msgstr "Odjezd"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:134
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:141
 #: i18n/../app/Modules/EventModule/templates/Application/detail.dsef.latte.latte2php:30
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:166
 #: i18n/../data/events/soustredeni/sous34p.neon.neon2php:157
@@ -3963,48 +3963,47 @@ msgstr "Odjezd"
 msgid "Food"
 msgstr "Jídlo"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:150
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:157
 #, php-format
 msgid "Application: %s"
 msgstr "Přihláška: %s"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:184
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:210
 #, php-format
 msgid "Edit application: %s"
 msgstr "Upravit přihlášku: %s"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:200
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:226
 msgid "Application import"
 msgstr "Import přihlášky"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:205
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:231
 #: i18n/../app/Modules/EventModule/BasePresenter.php:99
 #: i18n/../app/Modules/OrganizerModule/Warehouse/BasePresenter.php:28
 msgid "Applications"
 msgstr "Přihlášky"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:219
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:245
 #: i18n/../app/Modules/EventModule/TeamPresenter.php:239
 #: i18n/../app/Modules/EventModule/templates/Team/detailedList.latte.latte2php:5
 msgid "Mass transitions"
 msgstr "Hromadné přechody"
 
-#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:285
+#: i18n/../app/Modules/EventModule/ApplicationPresenter.php:319
 #: i18n/../app/Modules/EventModule/TeamPresenter.php:308
 msgid "Event type is not supported"
 msgstr "Vybraný typ akce není podporován"
 
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:130
-#, fuzzy
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:129
 msgid "Application not found."
 msgstr "Přihláška nenalezena"
 
-#: i18n/../app/Modules/EventModule/AttendancePresenter.php:133
+#: i18n/../app/Modules/EventModule/AttendancePresenter.php:132
 msgid "Application belongs to another event."
 msgstr "Přihláška patří k jiné akci"
 
 #: i18n/../app/Modules/EventModule/BasePresenter.php:113
-#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:76
+#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:77
 msgid "Others"
 msgstr "Ostatní"
 
@@ -4044,9 +4043,8 @@ msgid "Error during deleting"
 msgstr "Chyba při mazání"
 
 #: i18n/../app/Modules/EventModule/Game/BasePresenter.php:52
-#, fuzzy
 msgid "Graphs & Statistics"
-msgstr "Statistiky týmů"
+msgstr "Grafy & Statistiky"
 
 #: i18n/../app/Modules/EventModule/Game/ClosePresenter.php:33
 msgid "Close scoring"
@@ -4077,16 +4075,19 @@ msgstr ""
 msgid "Fyziklani game setup"
 msgstr "Základní nastavení Fyziklání"
 
+#: i18n/../app/Modules/EventModule/Game/HowToPresenter.php:22
+msgid "How to"
+msgstr "Jak na to"
+
 #: i18n/../app/Modules/EventModule/Game/PresentationPresenter.php:15
 msgid "Results presentation"
 msgstr "Prezentace výsledků"
 
-#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:35
-#, fuzzy
+#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:33
 msgid "Seating - print"
-msgstr "Rozsazení"
+msgstr "Rozsazení - tisk"
 
-#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:56
+#: i18n/../app/Modules/EventModule/Game/SeatingPresenter.php:46
 #: i18n/../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:5
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:83
 msgid "Seating"
@@ -4176,38 +4177,32 @@ msgid "By lang"
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/Game/templates/Seating/default.latte.latte2php:13
-#, fuzzy
 msgid "By category"
-msgstr "Kategorie"
+msgstr "Podle kategorie"
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:49
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:45
 msgid "Create payment"
 msgstr "Vygenerovat platbu"
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:62
-#, fuzzy
-msgid "Payment dashboard"
-msgstr "Platby"
-
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:133
-#, fuzzy, php-format
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:70
+#, php-format
 msgid "Detail of the payment %s"
-msgstr "Podrobnosti platby #%s"
+msgstr "Podrobnosti platby %s"
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:178
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:115
 #, php-format
 msgid "Edit payment #%s"
 msgstr "Upravit platbu #%s"
 
-#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:185
+#: i18n/../app/Modules/EventModule/PaymentsPresenter.php:122
+#: i18n/../app/Modules/OrganizerModule/PaymentsPresenter.php:104
 msgid "List of payments"
 msgstr "Seznam plateb"
 
 #: i18n/../app/Modules/EventModule/ReportPresenter.php:17
 #: i18n/../app/Modules/OrganizerModule/ReportPresenter.php:18
-#, fuzzy
 msgid "Errors & warnings"
-msgstr "Ukázat varování"
+msgstr "Chyby & varování"
 
 #: i18n/../app/Modules/EventModule/Schedule/BasePresenter.php:16
 msgid "Schedule of event"
@@ -4274,9 +4269,8 @@ msgid "Others group"
 msgstr "Ostatní skupiny"
 
 #: i18n/../app/Modules/EventModule/Schedule/templates/Person/list.latte.latte2php:5
-#, fuzzy
 msgid "Create person schedule"
-msgstr "Vytvořit osobu"
+msgstr "Vytvořit program osoby"
 
 #: i18n/../app/Modules/EventModule/TeamPresenter.php:85
 msgid "Create team"
@@ -4310,11 +4304,15 @@ msgstr "Týmy"
 msgid "Rests"
 msgstr "Resty"
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:31
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:19
+msgid "button.participant.edit"
+msgstr "Upravit účastníka"
+
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:35
 msgid "Application code"
 msgstr "Kód přihlášky"
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:40
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/blocks.latte.latte2php:44
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:60
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:75
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fol.latte.latte2php:35
@@ -4349,7 +4347,6 @@ msgid "QR code on envelope"
 msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:28
-#, fuzzy
 msgid "No transistion available"
 msgstr "Žádné dostupné přechody"
 
@@ -4364,17 +4361,6 @@ msgstr "Upravit akci"
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:29
 msgid "Application"
 msgstr "Přihlášky"
-
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:57
-#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:131
-#, fuzzy
-msgid "Block"
-msgstr "Blok skončil"
-
-#: i18n/../app/Modules/EventModule/templates/Payments/dashboard.latte.latte2php:60
-#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:134
-msgid "Variant"
-msgstr "Varianta"
 
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:17
 msgid "Select items"
@@ -4401,6 +4387,16 @@ msgstr "Naskenuj a zaplať"
 msgid "Payments contains"
 msgstr "Platba obsahuje"
 
+#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:131
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:65
+msgid "Block"
+msgstr "Blok"
+
+#: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:134
+#: i18n/../app/Modules/OrganizerModule/templates/Payments/dashboard.latte.latte2php:68
+msgid "Variant"
+msgstr "Varianta"
+
 #: i18n/../app/Modules/EventModule/templates/Payments/detail.latte.latte2php:147
 msgid "Total"
 msgstr "Celkově"
@@ -4426,15 +4422,14 @@ msgid "Rank & points"
 msgstr "Pořadí a body"
 
 #: i18n/../app/Modules/EventModule/templates/Team/orgDetail.fof.latte.latte2php:90
-#, fuzzy
 msgid "Notes"
-msgstr "Poznámka"
+msgstr "Poznámky"
 
 #: i18n/../app/Modules/OrganizerModule/BasePresenter.php:66
 msgid "Entities"
 msgstr "Entity"
 
-#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:100
+#: i18n/../app/Modules/OrganizerModule/BasePresenter.php:101
 #, php-format
 msgid "%d. year, %s. series"
 msgstr "%d. ročník, %s. série"
@@ -4520,6 +4515,10 @@ msgstr "Upravit organizátora %s"
 #: i18n/../app/Modules/OrganizerModule/OrganizerPresenter.php:65
 msgid "Create an organizer"
 msgstr "Založit organizátora"
+
+#: i18n/../app/Modules/OrganizerModule/PaymentsPresenter.php:49
+msgid "Payment dashboard"
+msgstr "Dashboard plateb"
 
 #: i18n/../app/Modules/OrganizerModule/PersonPresenter.php:52
 msgid "Find person"
@@ -4899,6 +4898,7 @@ msgstr ""
 #: i18n/../app/config/applications/dsef.neon.neon2php:18
 #: i18n/../app/config/applications/fol.neon.neon2php:24
 #: i18n/../app/config/applications/setkani.neon.neon2php:33
+#: i18n/../app/config/applications/tabor.neon.neon2php:107
 #: i18n/../data/events/council/councilDefault.neon.neon2php:41
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:117
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:72
@@ -4915,6 +4915,7 @@ msgstr ""
 #: i18n/../app/config/applications/dsef.neon.neon2php:23
 #: i18n/../app/config/applications/setkani.neon.neon2php:37
 #: i18n/../app/config/applications/setkani.neon.neon2php:40
+#: i18n/../app/config/applications/tabor.neon.neon2php:112
 #: i18n/../data/events/council/councilDefault.neon.neon2php:45
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:120
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:76
@@ -4940,6 +4941,7 @@ msgid "Move to applied"
 msgstr "Přesunout do Přihlášených"
 
 #: i18n/../app/config/applications/fof.neon.neon2php:20
+#: i18n/../app/config/applications/tabor.neon.neon2php:72
 msgid "Move to spare"
 msgstr "Přesunout do náhradníků"
 
@@ -4975,9 +4977,8 @@ msgid "Add to card"
 msgstr "Přidat do košíku"
 
 #: i18n/../app/config/applications/payment.neon.neon2php:29
-#, fuzzy
 msgid "Payment information has been succefully created"
-msgstr "Informace byly uloženy."
+msgstr "Informace platby byly úspěšně uloženy"
 
 #: i18n/../app/config/applications/payment.neon.neon2php:36
 msgid "Cancel payment"
@@ -4987,6 +4988,161 @@ msgstr "Zrušit platbu"
 #: i18n/../data/events/council/councilDefault.neon.neon2php:33
 #: i18n/../data/events/tsaf/tsaf8.neon.neon2php:66
 msgid "Přihlásit účastníka"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:12
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:51
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:56
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:21
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:26
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:24
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:29
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:21
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:26
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:22
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:27
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:49
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:54
+msgid "Pozvat účastníka"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:18
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:61
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:77
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:82
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:31
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:36
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:34
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:39
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:31
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:36
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:32
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:37
+msgid "Pozvat náhradníka"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:25
+#: i18n/../app/config/applications/tabor.neon.neon2php:35
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:44
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:49
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:43
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:48
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:82
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:87
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:79
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:84
+msgid "Send first call"
+msgstr "Poslat I. upomínku"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:30
+#: i18n/../app/config/applications/tabor.neon.neon2php:40
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:54
+#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:59
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:58
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:92
+#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:97
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:90
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:95
+msgid "Send second call"
+msgstr "Poslat II. upomínku"
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:47
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:67
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:87
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:41
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:101
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:44
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:41
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:42
+msgid "Potrvrdit učast"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:53
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:70
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:92
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:46
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:106
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:49
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:46
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:47
+msgid "Chci jet"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:59
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:108
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:116
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:65
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:62
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:63
+msgid "Schválit jako účastníka"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:65
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:97
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:51
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:122
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:51
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:52
+msgid "Zaplatil"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:81
+#: i18n/../app/config/applications/tabor.neon.neon2php:88
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:73
+#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:113
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:100
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:104
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:58
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:128
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:133
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:57
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:61
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:54
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:58
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:55
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:59
+#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:89
+msgid "Odmítnout účast"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:95
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:138
+msgid "Odmítnout jako účastníka"
+msgstr ""
+
+#: i18n/../app/config/applications/tabor.neon.neon2php:104
+#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:114
+#: i18n/../data/events/tabor/tabor10.neon.neon2php:69
+#: i18n/../data/events/tabor/tabor12.neon.neon2php:144
+#: i18n/../data/events/tabor/tabor7.neon.neon2php:72
+#: i18n/../data/events/tabor/tabor8.neon.neon2php:69
+#: i18n/../data/events/tabor/tabor9.neon.neon2php:70
+msgid "Zúčastnil se"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:21
@@ -5482,9 +5638,8 @@ msgid "Post-nominal title"
 msgstr "Titul za jménem"
 
 #: i18n/../app/config/orm.neon.neon2php:618
-#, fuzzy
 msgid "Flag"
-msgstr "Flagy"
+msgstr "Flag"
 
 #: i18n/../app/config/orm.neon.neon2php:635
 msgid "Full name"
@@ -5539,9 +5694,8 @@ msgid "Teach grades U_ALL?"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:671
-#, fuzzy
 msgid "Verified"
-msgstr "Změněno"
+msgstr "Verifikováno"
 
 #: i18n/../app/config/orm.neon.neon2php:677
 msgid "button.school.edit"
@@ -5598,9 +5752,8 @@ msgid "Submit Id"
 msgstr "Id odevzdání"
 
 #: i18n/../app/config/orm.neon.neon2php:789
-#, fuzzy
 msgid "Checked"
-msgstr "Zkontrolovat"
+msgstr "Zkontrolováno"
 
 #: i18n/../app/config/orm.neon.neon2php:814
 msgid "Tasks on board"
@@ -5635,9 +5788,8 @@ msgid "Available points"
 msgstr "Dostupné body"
 
 #: i18n/../app/config/orm.neon.neon2php:859
-#, fuzzy
 msgid "Internal note"
-msgstr "Chce jet"
+msgstr "Interní poznámka"
 
 #: i18n/../app/config/orm.neon.neon2php:870
 msgid "Rank in category"
@@ -5743,9 +5895,8 @@ msgid "Description cs"
 msgstr "Popisek"
 
 #: i18n/../app/config/orm.neon.neon2php:1025
-#, fuzzy
 msgid "Long description en"
-msgstr "Popisek en"
+msgstr "Dlouhý popisek en"
 
 #: i18n/../app/config/orm.neon.neon2php:1026
 #: i18n/../app/config/orm.neon.neon2php:1030
@@ -5753,9 +5904,8 @@ msgid "Allow HTML"
 msgstr "Povolit HTML"
 
 #: i18n/../app/config/orm.neon.neon2php:1029
-#, fuzzy
 msgid "Long description cs"
-msgstr "Popisek"
+msgstr "Dlouhý popisek cs"
 
 #: i18n/../app/config/orm.neon.neon2php:1036
 msgid "Begin"
@@ -5763,9 +5913,8 @@ msgstr "Začít"
 
 #: i18n/../app/config/orm.neon.neon2php:1037
 #: i18n/../app/config/orm.neon.neon2php:1041
-#, fuzzy
 msgid "Only if is diferent from group time"
-msgstr "Pouze pokud je odlišné od přijmení"
+msgstr "Pouze pokud je odlišné od času skupiny"
 
 #: i18n/../app/config/orm.neon.neon2php:1040
 msgid "End"
@@ -5934,44 +6083,6 @@ msgstr "Pozvat náhradníka"
 #: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:74
 msgid "I want to go"
 msgstr "Chci jet"
-
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:44
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:49
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:43
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:48
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:82
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:87
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:79
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:84
-msgid "Send first call"
-msgstr "Poslat I. upomínku"
-
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous34j.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous34p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous35j.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous35p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:54
-#: i18n/../data/events/soustredeni/sous36j.neon.neon2php:59
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:53
-#: i18n/../data/events/soustredeni/sous36p.neon.neon2php:58
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:92
-#: i18n/../data/events/soustredeni/soustredeni.neon.neon2php:97
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:90
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:95
-msgid "Send second call"
-msgstr "Poslat II. upomínku"
 
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:63
 #: i18n/../data/events/soustredeni/sous34j.neon.neon2php:68
@@ -6391,78 +6502,6 @@ msgstr "L dámské"
 msgid "XL women"
 msgstr "XL dámské"
 
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:51
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:56
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:21
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:26
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:24
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:29
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:21
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:26
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:22
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:27
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:49
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:54
-msgid "Pozvat účastníka"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:61
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:77
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:82
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:31
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:36
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:34
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:39
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:31
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:36
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:32
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:37
-msgid "Pozvat náhradníka"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:67
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:87
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:41
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:101
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:44
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:41
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:42
-msgid "Potrvrdit učast"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:70
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:92
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:46
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:106
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:49
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:46
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:47
-msgid "Chci jet"
-msgstr ""
-
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:73
-#: i18n/../data/events/soustredeni/sous37p.neon.neon2php:113
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:100
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:104
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:58
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:128
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:133
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:57
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:61
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:58
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:55
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:59
-#: i18n/../data/events/tsaf/tsaf8.neon.neon2php:89
-msgid "Odmítnout účast"
-msgstr ""
-
 #: i18n/../data/events/soustredeni/sous37p.neon.neon2php:79
 #: i18n/../data/events/soustredeni/sous37p.neon.neon2php:84
 msgid "Poslat první upomínku"
@@ -6483,24 +6522,6 @@ msgstr ""
 msgid "Potvrdit účast"
 msgstr ""
 
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:97
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:51
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:122
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:54
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:51
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:52
-msgid "Zaplatil"
-msgstr ""
-
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:108
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:116
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:65
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:62
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:63
-msgid "Schválit jako účastníka"
-msgstr ""
-
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:111
 #: i18n/../data/events/tabor/tabor10.neon.neon2php:65
 #: i18n/../data/events/tabor/tabor12.neon.neon2php:112
@@ -6508,15 +6529,6 @@ msgstr ""
 #: i18n/../data/events/tabor/tabor8.neon.neon2php:65
 #: i18n/../data/events/tabor/tabor9.neon.neon2php:66
 msgid "Pozvat jako účastníka"
-msgstr ""
-
-#: i18n/../data/events/tabor/tabor1-6.neon.neon2php:114
-#: i18n/../data/events/tabor/tabor10.neon.neon2php:69
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:144
-#: i18n/../data/events/tabor/tabor7.neon.neon2php:72
-#: i18n/../data/events/tabor/tabor8.neon.neon2php:69
-#: i18n/../data/events/tabor/tabor9.neon.neon2php:70
-msgid "Zúčastnil se"
 msgstr ""
 
 #: i18n/../data/events/tabor/tabor1-6.neon.neon2php:130
@@ -6610,10 +6622,6 @@ msgstr ""
 msgid "Mám zájem o společnou jízdenku z tábora"
 msgstr ""
 
-#: i18n/../data/events/tabor/tabor12.neon.neon2php:138
-msgid "Odmítnout jako účastníka"
-msgstr ""
-
 #: i18n/../data/events/tabor/tabor7.neon.neon2php:105
 msgid "Mám zájem o svozy"
 msgstr ""
@@ -6647,10 +6655,6 @@ msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:24
 msgid "Kvůli pojišťovně."
-msgstr ""
-
-#: i18n/../data/events/vaf/vaf3.neon.neon2php:27
-msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr ""
 
 #: i18n/../data/events/vaf/vaf3.neon.neon2php:77
