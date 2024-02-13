@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\TeamSeating;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -93,6 +94,84 @@ final class Place2024 implements Place
         return 0;
     }
 
+    public function html(?TeamModel2 $team, ?string $dev): Html
+    {
+        $outerContainer = Html::el('g');
+        $container = Html::el('g')
+            ->addAttributes([
+                'transform' => 'translate(' . $this->x() . ',' . $this->y() . ')',
+                'data-sector' => $this->sector(),
+            ]);
+        $outerContainer->addHtml($container);
+        $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+        if ($dev) {
+            $container->addAttributes([
+                'class' => 'seat',
+                'data-dev' => $dev,
+                'data-category' => $team ? $team->category->value : null,
+                'data-lang' => $team ? $team->game_lang->value : null,
+            ]);
+
+            $container->addHtml(Html::el('text')->setText($team ? $team->fyziklani_team_id : $this->label()));
+        } else {
+            $container->addAttributes([
+                'class' => $team ? 'seat seat-occupied' : 'seat',
+            ]);
+            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+
+            if ($team) {
+                $outerContainer->addHtml($this->arrow());
+            }
+            $container->addHtml(Html::el('text')->setText($this->label()));
+        }
+
+        return $outerContainer;
+    }
+
+    public function arrow(): Html
+    {
+        $polyline = [];
+        if ($this->y() > 0) {
+            $y = 125;
+        } else {
+            $y = -125;
+        }
+        $endArrow = Html::el('polyline')->addAttributes([
+            'class' => 'end-arrow',
+        ]);
+        if ($y > $this->y()) {
+            $endArrow->addAttributes([
+                'points' => '-10,-5 10,-5 0,-30',
+            ]);
+        } else {
+            $endArrow->addAttributes([
+                'points' => '-10,5 10,5 0,30',
+            ]);
+        }
+        $polyline[] = [-850, $y];
+        if ($this->row > 12) {
+            $polyline[] = [-100, $y];
+            $polyline[] = [-100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y];
+        }
+        $polyline[] = [$this->x(), $y];
+        if ($y > $this->y()) {
+            $polyline[] = [$this->x(), $y - 5];
+        } else {
+            $polyline[] = [$this->x(), $y + 5];
+        }
+
+        $polylineHtml = Html::el('polyline')->addAttributes([
+            'class' => 'direction-line',
+            'points' => join(" ", array_map(fn($point) => join(',', $point), $polyline)),
+        ]);
+        return Html::el('g')
+            ->setAttribute('class', 'direction-arrow')
+            ->addHtml($polylineHtml)
+            ->addHtml($endArrow->setAttribute('transform', 'translate(' . $this->x() . ',' . $y . ')'));
+    }
+
     /**
      * @phpstan-return self::Sector*
      */
@@ -137,6 +216,24 @@ final class Place2024 implements Place
         $places = [];
         foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] as $col) {
             for ($row = 1; $row <= 24; $row++) {
+                if ($col === 'A' && $row > 12) {
+                    continue;
+                }
+                if ($col === 'G' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'G' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'L' && $row === 6) {
+                    continue;
+                }
                 $places[] = new self($row, $col);
             }
         }

@@ -28,7 +28,7 @@ use Nette\Utils\Html;
  *     team:TeamModel2,
  * }
  */
-class RankingStrategy
+final class RankingStrategy
 {
     use SmartObject;
 

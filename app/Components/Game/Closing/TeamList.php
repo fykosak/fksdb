@@ -24,7 +24,7 @@ use Nette\Forms\Form;
  *     name?:string,
  * }>
  */
-class TeamList extends BaseList
+final class TeamList extends BaseList
 {
     private EventModel $event;
 

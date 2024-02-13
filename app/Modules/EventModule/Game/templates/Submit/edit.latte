@@ -1,5 +1,13 @@
 {block outerContent}
     <div class="container">
+        {control columnTable [
+        'fyziklani_submit.fyziklani_submit_id',
+        'fyziklani_team.name',
+        'fyziklani_team.fyziklani_team_id',
+        'fyziklani_task.name',
+        'fyziklani_task.label',
+        'fyziklani_submit.state',
+        ], $model, 1024}
         {control editForm}
     </div>
 {/block}

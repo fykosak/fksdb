@@ -5,35 +5,35 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Models\WebService\Models\Events\EventWebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId:int,lastUpdate?:string|null},array<string,mixed>>
+ * @phpstan-extends EventWebModel<array{eventId:int,lastUpdate?:string|null},array<string,mixed>>
  */
-class ResultsWebModel extends WebModel
+class ResultsWebModel extends EventWebModel
 {
-    private EventService $eventService;
-    private SubmitService $submitService;
+    protected SubmitService $submitService;
 
-    public function injectServices(EventService $eventService, SubmitService $submitService): void
+    public function injectServices(SubmitService $submitService): void
     {
-        $this->eventService = $eventService;
         $this->submitService = $submitService;
     }
 
     /**
      * @throws NotSetGameParametersException
+     * @throws NotFoundException
      */
     protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($this->params['eventId']);
+        $event = $this->getEvent();
         $gameSetup = $event->getGameSetup();
 
         $result = [
@@ -70,8 +70,12 @@ class ResultsWebModel extends WebModel
         ]);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     protected function isAuthorized(): bool
     {
-        return false;
+        $event = $this->getEvent();
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
     }
 }

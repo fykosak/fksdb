@@ -11,6 +11,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * @phpstan-extends EntityFormComponent<SubmitModel>
@@ -44,7 +45,11 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         try {
             $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
             $handler->edit($this->model, (int)$values['points']);
-            FlashMessageDump::dump($handler->logger, $this->getPresenter());
+            foreach ($handler->logger->getMessages() as $message) {
+                // interpret html edit links
+                $this->getPresenter()->flashMessage(Html::el()->setHtml($message->text), $message->level);
+            }
+            $handler->logger->clear();
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
