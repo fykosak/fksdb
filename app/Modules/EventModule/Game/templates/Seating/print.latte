@@ -10,29 +10,37 @@
 {foreach $control->getComponent('teamList')->getComponents() as $teamComponent}
     {varType FKSDB\Components\TeamSeating\Single $teamComponent}
     <div class="page page-a5-landscape" style="position: relative">
+        <div class="row">
+            <span class="col-6">
         {var $team = $teamComponent->team}
         ({$team->fyziklani_team_id}) {$team->name}
         {var $place = $team->getPlace()}
         {if $place}
-            {$place->badge()}
-        {/if}
+                    {$place->badge()}
+                {/if}
+                </span>
+            <div class="col-3 offset-3">
+                <img
+                        src="{$basePath}/images/fyziklani/fyziklani_{$teamComponent->team->event->begin->format('Y')}_logo.png"
+                        style="height: 2rem"
+                        alt=""/>
+            </div>
+        </div>
         {control $teamComponent}
         <div class="row">
-            <div class="col-4 text-center">
+            <div class="col-3 text-center">
                 {var $machineCode = $team->createMachineCode()}
             {if $machineCode}
                     {var $aztec = \Metzli\Encoder\Encoder::encode($machineCode)}
                     <img src="data:image/jpeg;base64,{base64_encode($renderer->render($aztec))}" alt=""/>
                 {/if}
             </div>
-            <div class="col-8">
+            <div class="col-9">
                 {var $rests = $team->getScheduleRest()}
-        {if count($rests)}
+                {if count($rests)}
                     <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
                 {/if}
-                <img src="{$basePath}/images/fyziklani/fyziklani_{$teamComponent->team->event->begin->format('Y')}_logo.png"
-                     alt=""
-                     style="float:right;max-width: 25%"/>
+
                 <div style="columns: 2;font-size: .6rem">
                     {foreach $rests as $personRest}
                         {foreach $personRest as $rest}

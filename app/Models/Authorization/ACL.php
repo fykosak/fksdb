@@ -324,6 +324,15 @@ final class ACL
             'game',
             ['gameSetup', 'statistics', 'presentation', 'seating', 'diplomas']
         );
+        $permission->allow(
+            [
+                ContestRole::Organizer,
+                Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
+                Authorization\Roles\Events\EventRole::GameInserter,
+            ],
+            'game',
+            'howTo'
+        );
     }
 
     private static function createWarehouse(Permission $permission): void

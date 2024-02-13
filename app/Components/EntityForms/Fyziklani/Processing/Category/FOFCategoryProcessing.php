@@ -51,15 +51,20 @@ class FOFCategoryProcessing extends FormProcessing
         foreach ($members as $member) {
             $history = $member->getHistory($event->getContestYear());
             $studyYear = $history->study_year_new;
-            if (
-                $studyYear->value === StudyYear::None
-                || $studyYear->value === StudyYear::UniversityAll
-            ) {
-                $olds += 1;
-            } elseif ($studyYear->isHighSchool()) {
-                $years[$studyYear->value] += 1;
-            } elseif ($studyYear->isPrimarySchool()) {
-                $years['P'] += 1;
+            switch ($studyYear->value) {
+                case StudyYear::None:
+                case StudyYear::UniversityAll:
+                    $olds += 1;
+                    break;
+                case StudyYear::High1:
+                case StudyYear::High2:
+                case StudyYear::High3:
+                case StudyYear::High4:
+                    $years[$studyYear->value] += 1;
+                    break;
+                default:
+                    $years['P'] += 1;
+                    break;
             }
         }
 
