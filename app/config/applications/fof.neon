@@ -38,9 +38,6 @@ transitions:
                 label: _('Arrived')
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                afterExecute:
-                    - FKSDB\Models\Mail\FOF\MemberTransitionMail()
-                    - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
             arrived->participated:
                 label: _('Present')
                 behaviorType: success
