@@ -22,7 +22,7 @@
   }
 
   &.timer-small {
-    font-size: 200%;
+    font-size: 3.5vw;
     display: flex;
     justify-content: center;
     //background: white;
@@ -34,9 +34,13 @@
       flex-grow: initial;
     }
 
+    .time-value {
+      line-height: 110%;
+    }
+
     .time-label {
       width: 100%;
-      font-size: .75rem;
+      font-size: .7vw;
     }
   }
 
@@ -46,11 +50,12 @@
     position: relative;
 
     .time-value {
-      font-size: 8rem;
+      font-size: 12vw;
+      line-height: 110%;
     }
 
     .time-label {
-      font-size: 2rem;
+      font-size: 1.8vw;
     }
   }
 }
@@ -64,5 +69,5 @@
 }
 
 .logo-sponsors {
-  width: 60%;
+  width: 70%;
 }
