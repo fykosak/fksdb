@@ -29,9 +29,9 @@ export default function Images() {
             return null;
         }
         if (toEnd > -240 * 1000) {
-            return 'Ended / Skončilo';
+            return 'The End / Konec';
         }
-        return 'Waiting for results / Čeká na výsledky';
+        return 'Waiting for results / Čekání na výsledky';
     }
 
     if (toStart === 0 || toEnd === 0) {
