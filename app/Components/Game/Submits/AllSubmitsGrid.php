@@ -65,6 +65,7 @@ class AllSubmitsGrid extends BaseGrid
                 ? [
                 '@fyziklani_task.label',
                 '@fyziklani_submit.state',
+                '@fyziklani_team.place',
                 '@fyziklani_submit.points',
                 '@fyziklani_submit.created',
             ]
@@ -99,6 +100,13 @@ class AllSubmitsGrid extends BaseGrid
                 }
             ),
             'revoke'
+        );
+        $this->addPresenterButton(
+            ':Event:Team:orgDetail',
+            'detail',
+            new Title(null, _('button.team.orgDetail')),
+            false,
+            ['id' => 'fyziklani_team_id']
         );
     }
 
