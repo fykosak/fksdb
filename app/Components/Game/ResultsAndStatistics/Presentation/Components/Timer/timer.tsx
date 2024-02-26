@@ -51,15 +51,15 @@ export default function Timer({mode}: OwnProps) {
     const m = date.getUTCMinutes();
     const s = date.getUTCSeconds();
     return <div className={'row presentation-timer timer-' + mode}>
-        <span className="col">
+        <span className={mode == "big" ? 'col-4' : 'col-1'}>
                     <span className="time-value">{(h < 10 ? '0' + h : '' + h)}</span>
                     <span className="time-label">Hours/Hodin</span>
                 </span>
-        <span className="col">
+        <span className={mode == "big" ? 'col-4' : 'col-1'}>
                     <span className="time-value">{(m < 10 ? '0' + m : '' + m)}</span>
                     <span className="time-label">Minutes/Minut</span>
                 </span>
-        <span className="col">
+        <span className={mode == "big" ? 'col-4' : 'col-1'}>
                     <span className="time-value">{(s < 10 ? '0' + s : '' + s)}</span>
                     <span className="time-label">Seconds/Sekund</span>
         </span>

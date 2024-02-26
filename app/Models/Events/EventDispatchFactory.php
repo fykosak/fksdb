@@ -68,6 +68,8 @@ class EventDispatchFactory
             case 2:
             case 14:
                 return $this->container->getService('transitions.dsef.machine'); //@phpstan-ignore-line
+            case 10:
+                return $this->container->getService('transitions.tabor.machine'); //@phpstan-ignore-line
             case 11:
             case 12:
                 return $this->container->getService('transitions.setkani.machine'); //@phpstan-ignore-line

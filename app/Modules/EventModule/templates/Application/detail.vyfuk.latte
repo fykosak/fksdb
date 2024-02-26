@@ -1,0 +1,21 @@
+{layout './detail.latte'}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
+{varType bool $isOrganizer}
+
+{block titleBody}
+    {include titleBody from './detail.latte'}
+{/block}
+
+{block outerContent}
+    {include outerContent from './detail.latte'}
+    {if $event->hasSchedule()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Schedule'}</h2>
+                {control personScheduleGrid}
+            </div>
+        </div>
+    {/if}
+{/block}

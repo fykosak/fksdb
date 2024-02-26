@@ -20,6 +20,7 @@ export default function Preview({code: value, tasks, teams}: OwnProps) {
         const preprocessor = new TaskCodePreprocessor(teams, tasks);
         const team = preprocessor.getTeam(value);
         const task = preprocessor.getTask(value);
+        preprocessor.getSum(value);
         return <div className="container">
             <div className="row row-cols-1 row-cols-sm-2">
                 {team && <div className="col">

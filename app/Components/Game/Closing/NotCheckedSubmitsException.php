@@ -8,7 +8,7 @@ use FKSDB\Components\Game\GameException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Http\IResponse;
 
-class NotCheckedSubmitsException extends GameException
+final class NotCheckedSubmitsException extends GameException
 {
     public function __construct(TeamModel2 $team, ?\Throwable $previous = null)
     {

@@ -76,6 +76,8 @@ abstract class SingleFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
+        $container = new ModelContainer($this->container, 'event_participant');
+
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getPersonFieldsDefinition(),
             $this->event->getContestYear(),
@@ -91,8 +93,8 @@ abstract class SingleFormComponent extends EntityFormComponent
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));
-        $form->addComponent($personContainer, 'person_id');
-        $container = new ModelContainer($this->container, 'event_participant');
+        $container->addComponent($personContainer, 'person_id');
+
         foreach ($this->getParticipantFieldsDefinition() as $field => $metadata) {
             $container->addField(
                 $field,
@@ -100,6 +102,7 @@ abstract class SingleFormComponent extends EntityFormComponent
                 new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
             );
         }
+
         $form->addComponent($container, 'event_participant');
     }
 

@@ -25,16 +25,12 @@ class AppliedMailCallback extends EventParticipantCallback
 
     /**
      * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      * }
      */
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Letní tábor Výfuku',
-            'blind_carbon_copy' => 'Letní tábor Výfuku <vyfuk@vyfuk.org>',
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
         ];
     }

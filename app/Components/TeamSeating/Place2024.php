@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\TeamSeating;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -12,6 +13,16 @@ final class Place2024 implements Place
 {
     public string $col;
     public int $row;
+
+    // phpcs:disable
+    private const SectorRed = 'R';
+    private const SectorGreen = 'G';
+    private const SectorBlue = 'B';
+    private const SectorDark = 'D';
+    private const SectorMagenta = 'M';
+    private const SectorYellow = 'Y';
+
+    // phpcs:enable
 
     public function __construct(int $row, string $col)
     {
@@ -28,25 +39,25 @@ final class Place2024 implements Place
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>[]
+     * @phpstan-return array<self::Sector*,LocalizedString<'cs'|'en'>>
      */
     public static function getSectors(): array
     {
         return [
-            'R' => new LocalizedString(['en' => 'Red', 'cs' => 'Červený']),
-            'G' => new LocalizedString(['en' => 'Green', 'cs' => 'Zelený']),
-            'B' => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
-            'Y' => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
-            'V' => new LocalizedString(['en' => 'Violet', 'cs' => 'Fialový']),
-            'D' => new LocalizedString(['en' => 'Dark', 'cs' => 'Tmavý']),
+            self::SectorRed => new LocalizedString(['en' => 'Red', 'cs' => 'Červený']),
+            self::SectorGreen => new LocalizedString(['en' => 'Green', 'cs' => 'Zelený']),
+            self::SectorBlue => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
+            self::SectorYellow => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
+            self::SectorMagenta => new LocalizedString(['en' => 'Magenta', 'cs' => 'Purpurová']),
+            self::SectorDark => new LocalizedString(['en' => 'Black', 'cs' => 'Červný']),
         ];
     }
 
     public function x(): float
     {
-        $x = -800;
+        $x = -750;
         $x += $this->row * 50;
-        if ($this->row > 13) {
+        if ($this->row > 12) {
             $x += 250;
         }
         return $x;
@@ -83,10 +94,94 @@ final class Place2024 implements Place
         return 0;
     }
 
+    public function html(?TeamModel2 $team, ?string $dev): Html
+    {
+        $outerContainer = Html::el('g');
+        $container = Html::el('g')
+            ->addAttributes([
+                'transform' => 'translate(' . $this->x() . ',' . $this->y() . ')',
+                'data-sector' => $this->sector(),
+            ]);
+        $outerContainer->addHtml($container);
+        $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+        if ($dev) {
+            $container->addAttributes([
+                'class' => 'seat',
+                'data-dev' => $dev,
+                'data-category' => $team ? $team->category->value : null,
+                'data-lang' => $team ? $team->game_lang->value : null,
+            ]);
+
+            $container->addHtml(Html::el('text')->setText($team ? $team->fyziklani_team_id : $this->label()));
+        } else {
+            $container->addAttributes([
+                'class' => $team ? 'seat seat-occupied' : 'seat',
+            ]);
+            $container->addHtml('<rect height="50" width="50" x="-25" y="-25"/>');
+
+            if ($team) {
+                $outerContainer->addHtml($this->arrow());
+            }
+            $container->addHtml(Html::el('text')->setText($this->label()));
+        }
+
+        return $outerContainer;
+    }
+
+    public function arrow(): Html
+    {
+        $polyline = [];
+        if ($this->y() > 0) {
+            $y = 125;
+        } else {
+            $y = -125;
+        }
+        $endArrow = Html::el('polyline')->addAttributes([
+            'class' => 'end-arrow',
+        ]);
+        if ($y > $this->y()) {
+            $endArrow->addAttributes([
+                'points' => '-10,-5 10,-5 0,-30',
+            ]);
+        } else {
+            $endArrow->addAttributes([
+                'points' => '-10,5 10,5 0,30',
+            ]);
+        }
+        $polyline[] = [-850, $y];
+        if ($this->row > 12) {
+            $polyline[] = [-100, $y];
+            $polyline[] = [-100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y < 0 ? -300 : 300];
+            $polyline[] = [100, $y];
+        }
+        $polyline[] = [$this->x(), $y];
+        if ($y > $this->y()) {
+            $polyline[] = [$this->x(), $y - 5];
+        } else {
+            $polyline[] = [$this->x(), $y + 5];
+        }
+
+        $polylineHtml = Html::el('polyline')->addAttributes([
+            'class' => 'direction-line',
+            'points' => join(" ", array_map(fn($point) => join(',', $point), $polyline)),
+        ]);
+        return Html::el('g')
+            ->setAttribute('class', 'direction-arrow')
+            ->addHtml($polylineHtml)
+            ->addHtml($endArrow->setAttribute('transform', 'translate(' . $this->x() . ',' . $y . ')'));
+    }
+
+    /**
+     * @phpstan-return self::Sector*
+     */
     public function sector(): string
     {
-        $sectors = [['R', 'G', 'B'], ['Y', 'V', 'D']];
-        if ($this->row < 14) {
+        $sectors = [
+            [self::SectorRed, self::SectorYellow, self::SectorBlue],
+            [self::SectorGreen, self::SectorMagenta, self::SectorDark],
+        ];
+        if ($this->row < 13) {
             $x = 0;
         } else {
             $x = 1;
@@ -120,7 +215,25 @@ final class Place2024 implements Place
     {
         $places = [];
         foreach (['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'] as $col) {
-            for ($row = 1; $row <= 26; $row++) {
+            for ($row = 1; $row <= 24; $row++) {
+                if ($col === 'A' && $row > 12) {
+                    continue;
+                }
+                if ($col === 'G' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'G' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 23) {
+                    continue;
+                }
+                if ($col === 'F' && $row === 24) {
+                    continue;
+                }
+                if ($col === 'L' && $row === 6) {
+                    continue;
+                }
                 $places[] = new self($row, $col);
             }
         }
@@ -140,5 +253,13 @@ final class Place2024 implements Place
                 'data-sector' => $this->sector(),
             ])
             ->addText($this->label());
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'sector' => $this->sector(),
+            'label' => $this->label(),
+        ];
     }
 }

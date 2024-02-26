@@ -8,31 +8,16 @@ use FKSDB\Components\TeamSeating\AllPlaces;
 use FKSDB\Components\TeamSeating\SeatingForm;
 use FKSDB\Components\TeamSeating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\ComponentModel\Container;
 
 final class SeatingPresenter extends BasePresenter
 {
-    /**
-     * @throws EventNotFoundException
-     * @throws NotImplementedException
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
+    protected function isEnabled(): bool
     {
-        parent::startup();
-        if ($this->getEvent()->event_type_id !== 1) {
-            throw new NotImplementedException();
-        }
-    }
-
-    public function titlePrint(): PageTitle
-    {
-        return new PageTitle(null, _('Seating - print'), 'fas fa-map-marked-alt');
+        return $this->getEvent()->event_type_id === 1;
     }
 
     /**
@@ -41,6 +26,11 @@ final class SeatingPresenter extends BasePresenter
     public function authorizedPrint(): bool
     {
         return $this->authorizedDefault();
+    }
+
+    public function titlePrint(): PageTitle
+    {
+        return new PageTitle(null, _('Seating - print'), 'fas fa-map-marked-alt');
     }
 
     /**
@@ -61,7 +51,7 @@ final class SeatingPresenter extends BasePresenter
      */
     protected function createComponentTeamList(): Container
     {
-        $limit = $this->getParameter('limit', 1000);
+        $limit = $this->getParameter('limit', 500);
         $offset = $this->getParameter('offset', 0);
         $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
         $container = new Container();
