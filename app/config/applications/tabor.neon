@@ -55,7 +55,7 @@ transitions:
                     - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
                     - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
             interested->applied:
-                condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Schválit jako účastníka')
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
