@@ -91,7 +91,7 @@ transitions:
                 afterExecute:
                     - FKSDB\Models\Transitions\Callbacks\Tabor\OrganizerMailCallback()
             interested->rejected:
-                condition: FKSDB\Models\Events\Semantics\Role('admin')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Odmítnout jako účastníka')
                 behaviorType: warning
                 afterExecute:
