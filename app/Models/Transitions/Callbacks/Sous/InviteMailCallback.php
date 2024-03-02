@@ -34,7 +34,7 @@ class InviteMailCallback extends EventParticipantCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Podzimní soustředění FYKOSu',
+            'subject' => 'Pozvánka na jarní soustředění FYKOSu',
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
         ];

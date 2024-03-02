@@ -29,7 +29,7 @@ class Reminder2MailCallback extends EventParticipantCallback
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Podzimní soustředění FYKOSu',
+            'subject' => 'Pozvánka na jarní soustředění FYKOSu',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
         ];
     }
