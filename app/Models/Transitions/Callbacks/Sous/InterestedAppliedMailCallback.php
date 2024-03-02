@@ -12,11 +12,11 @@ use FKSDB\Models\Transitions\Transition\Transition;
 /**
  * @phpstan-extends EventParticipantCallback<BaseHolder>
  */
-class AppliedInterestedMailCallback extends EventParticipantCallback
+class InterestedAppliedMailCallback extends EventParticipantCallback
 {
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'applied_interested.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'interested_applied.latte';
     }
 
     /**
