@@ -1,5 +1,9 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Pozvánka na jarní soustředění FYKOSu{/define}
+
+{block body}
 <p>Ahoj,<br>
 protože ses zatím nijak neozval{if $holder->getPerson()->gender->value == 'F'}a{/if},
 tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdříve.
@@ -7,3 +11,4 @@ tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdř�
 <p>Níže přikládáme zvací e-mail.</p>
 <p>______</p>
 {include invite.latte}
+{/block}
