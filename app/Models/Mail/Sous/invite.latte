@@ -7,6 +7,8 @@
 'at'=>$token->token,
 'id'=>$holder->getModel()->getPrimary()])}
 
+{block subject}Pozvánka na jarní soustředění FYKOSu{/block}
+
 <p>
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu, je nám ctí Tě pozvat{if strpos($holder->getModelState(), 'spare') === 0}
