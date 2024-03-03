@@ -13,7 +13,7 @@
 <p>
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu, je nám ctí Tě pozvat{if strpos($holder->getModelState(), 'spare') === 0}
-    <strong>{if $holder->getPerson()->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}{/if} na {$holder->event->event_type->name}, které se bude konat v obci
+    {if $holder->getPerson()->gender == 'F'}<strong>jako náhradnici</strong>{else}<strong>jako náhradníka</strong>{/if}{/if} na {$holder->event->event_type->name}, které se bude konat v obci
     <strong>{$holder->event->getParameter('letterWhere')}</strong> od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
     <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
 </p>
@@ -39,8 +39,7 @@
 </p>
 
 <p n:if="strpos($holder->getModelState(), 'spare') === 0">
-    O Tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}
-    .
+    O Tvé účasti na soustředění bude rozhodnuto po {$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}, dáme Ti pak vědět e-mailem.
 </p>
 
 <p>
