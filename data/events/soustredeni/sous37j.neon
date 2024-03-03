@@ -32,7 +32,7 @@ parameters:
 
 events:
     soustredeni37j:
-        eventTypeIds: [4] # jarní i podzimní sous jsou stejná (?)
+        eventTypeIds: [4] # jarní je 4, podzimní 5
         eventYears: [37] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
         machine:
