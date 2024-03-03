@@ -25,11 +25,14 @@ parameters:
                     school_id:
                         required: FKSDB\Models\Events\Semantics\State('participated')
                         description: _("If you cannot find your school, e-mail the webmaster.")
-
+                person_schedele:
+                    types: [ 'apparel' ]
+                    collapseChild: false
+                    groupBy: none
 
 events:
     soustredeni37j:
-        eventTypeIds: [5] # jarní i podzimní sous jsou stejná (?)
+        eventTypeIds: [4] # jarní i podzimní sous jsou stejná (?)
         eventYears: [37] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
         machine:
@@ -207,14 +210,14 @@ events:
                 health_restrictions:
                     label: _('Health restrictions')
                     description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
-                tshirt_size:
-                    label: _('What size of T-shirt do you wear?')
-                    required: %events.soustredeni.requiredCond%
-                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_("Choose a size"), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
-                price:
-                    label: _('Price of camp (CZK)')
-                    modifiable: false
-                    description: _("Price calculated according to the rules on our website.")
+                #tshirt_size:
+                #    label: _('What size of T-shirt do you wear?')
+                #    required: %events.soustredeni.requiredCond%
+                #    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_("Choose a size"), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
+                #price:
+                #    label: _('Price of camp (CZK)')
+                #    modifiable: false
+                #    description: _("Price calculated according to the rules on our website.")
             modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
                 - @events.privacyPolicy
