@@ -1,7 +1,8 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
-{block subject}Pozvánka na jarní soustředění FYKOSu{/block}
+{define subject}Pozvánka na jarní soustředění FYKOSu{/define}
 
+{block body}
 <p>
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     protože se uvolnilo místo a Ty jsi projevil{if $holder->getPerson()->gender->value == 'F'}a{/if} zájem o {$holder->event->event_type->name} v obci
@@ -18,3 +19,4 @@
     Za organizátory<br>
     {$holder->event->getParameter('letterSignature')}
 </p>
+{/block}

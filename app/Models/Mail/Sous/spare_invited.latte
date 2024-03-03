@@ -1,8 +1,9 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 
-{block subject}Pozvánka na jarní soustředění FYKOS{/block}
+{define subject}Pozvánka na jarní soustředění FYKOSu{/define}
 
+{block body}
 <p>
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     protože se uvolnilo místo na akci {$holder->event->event_type->name} v obci {$holder->event->getParameter('letterWhere')} v termínu od {$holder->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
@@ -16,3 +17,4 @@
     Moc se na Tebe těší <br>
     organizátoři soustředění
 </p>
+{/block}
