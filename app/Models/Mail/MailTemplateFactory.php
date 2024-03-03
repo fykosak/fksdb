@@ -112,7 +112,7 @@ class MailTemplateFactory
         }
         $template->getLatte()->addProvider('uiControl', $presenter);
         $template->control = $presenter;
-        $template->baseUri = $this->request->getUrl()->getBaseUrl();
+        $template->baseUrl = $this->request->getUrl()->getBaseUrl();
         $template->setTranslator($this->translator, $lang->value);
         return $template;
     }

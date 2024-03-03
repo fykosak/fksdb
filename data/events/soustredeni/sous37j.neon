@@ -1,98 +1,139 @@
+parameters:
+    events:
+        soustredeni37j:
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            requiredCond: or(and(neg(FKSDB\Models\Events\Semantics\Role('admin')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('interested'))), FKSDB\Models\Events\Semantics\State('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    born_id:
+                        required: %events.soustredeni.requiredCond%
+                        description: _("For the insurance company.")
+                    birthplace:
+                        required: FKSDB\Models\Events\Semantics\State('participated')
+                    phone:
+                        required: %events.soustredeni.requiredCond%
+                        description: _("Telephone number (including state prefix), that you will carry with you.")
+                post_contact_p:
+                    address:
+                        required: %events.soustredeni.requiredCond%
+                person_history:
+                    school_id:
+                        required: FKSDB\Models\Events\Semantics\State('participated')
+                        description: _("If you cannot find your school, e-mail the webmaster.")
+                person_schedele:
+                    types: [ 'apparel' ]
+                    collapseChild: false
+                    groupBy: none
+
 events:
-    soustredeni34j:
-        eventTypeIds: [4] # jarní i podzimní sous. nejsou různá
-        eventYears: [34]
+    soustredeni37j:
+        eventTypeIds: [4] # jarní je 4, podzimní 5
+        eventYears: [37] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
         machine:
                 machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
                 stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
+                    # init application
                     __init->invited:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite participant')
+                        label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite participant')
+                        label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
-                    __init->spare:
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    __init|auto.spare->spare:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite Spare')
+                        label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
-                    auto.spare->spare: # this must be duplicate of __init->spare
-                        condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite Spare')
-                        afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j)
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                     # participant decides
                     invited|invited1|invited2|invited3->applied:
-                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
-                        label: _('Confirm participation')
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
+                        label: _('Potrvrdit učast')
                     spare|spare1|spare2|spare3->interested:
-                        condition: before(FKSDB\Models\Events\Semantics\Parameter('deadline'))
-                        label: _('I want to go')
-                    invited|invited1|invited2|invited3|spare|spare1|spare2|spare3->rejected:
-                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
-                        label: _('Decline participation')
-                        behaviorType: warning
-
+                        condition: FKSDB\Models\Events\Semantics\RegOpen()
+                        label: _('Chci jet')
+                    invited|invited1|invited2|invited3->rejected:
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
+                        label: _('Odmítnout účast')
+                        behaviorType: danger
+                    # reminders
+                    # 1. reminder
                     spare->spare1:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send first call')
+                        label: _('Poslat první upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
                     invited->invited1:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send first call')
+                        label: _('Poslat první upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
+                    # 2. reminder
                     spare1->spare2:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send second call')
+                        label: _('Poslat druhou upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
                     invited1->invited2:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send second call')
+                        label: _('Poslat druhou upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
+                    # 3. reminder
                     spare2->spare3:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send last call')
+                        label: _('Poslat třetí upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
                     invited2->invited3:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Send last call')
+                        label: _('Poslat třetí upomínku')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call)
+                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
+
+                    # spare reject
+                    spare|spare1|spare2|spare3->rejected:
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
+                        label: _('Odmítnout účast')
+                        behaviorType: danger
+                    # confirm participation
                     interested->applied:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Validate as a participant')
+                        label: _('Potvrdit účast')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied)
+                            - FKSDB\Models\Mail\Sous\InterestedAppliedMailCallback()
+                    # invite spare
                     spare->invited:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite as a participant')
+                        label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
                     spare1->invited1:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite as a participant')
+                        label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
                     spare2->invited2:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite as a participant')
+                        label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
                     spare3->invited3:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Invite as a participant')
+                        label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited)
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    # after sous
                     applied->participated:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Participated')
@@ -100,9 +141,10 @@ events:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Missed')
 
+                    # used in special cases, when it's undesirable to send reminders (e.g. I'll know at later date, will let you know)
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Cancel the application')
+                        label: _('Cancel application')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Deal with outside FKSDB')
@@ -150,10 +192,10 @@ events:
                         label: _('Return to DB as Rejected')
                     out_of_db->missed:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Return to DB as Missed')
+                        label: _('Return to DB as missed')
                     out_of_db->cancelled:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
-                        label: _('Return to DB as Cancelled')
+                        label: _('Return to DB as cancelled')
         holder:
             fields:
                 person_id:
@@ -161,21 +203,21 @@ events:
                     required: true
                     modifiable: %events.soustredeni.appCond%
                     default: null
-                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.soustredeni.person%, email, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.soustredeni.person%, email, false, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'))
                 diet:
                     label: _('Food')
                     description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
                 health_restrictions:
                     label: _('Health restrictions')
                     description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
-                tshirt_size:
-                    label: _('What t-shirt size do you wear?')
-                    required: %events.soustredeni.requiredCond%
-                    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_("Choose a size"), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
-                price:
-                    label: _('Price of camp (CZK)')
-                    modifiable: false
-                    description: _("Price calculated according to the rules on our website.")
+                #tshirt_size:
+                #    label: _('What size of T-shirt do you wear?')
+                #    required: %events.soustredeni.requiredCond%
+                #    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_("Choose a size"), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
+                #price:
+                #    label: _('Price of camp (CZK)')
+                #    modifiable: false
+                #    description: _("Price calculated according to the rules on our website.")
             modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
                 - @events.privacyPolicy
