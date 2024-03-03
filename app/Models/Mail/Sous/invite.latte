@@ -2,8 +2,8 @@
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {var string $link = $control->link('//:Public:Application:',
-['eventId'=> $holder->event->event_id,
-'contestId'=>$holder->event->event_type->contest_id,
+['eventId'=> $holder->getModel()->event->event_id,
+'contestId'=>$holder->getModel()->event->event_type->contest_id,
 'at'=>$token->token,
 'id'=>$holder->getModel()->getPrimary()])}
 
@@ -13,9 +13,9 @@
 <p>
     {if $holder->getPerson()->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu, je nám ctí Tě pozvat <strong>{if strpos($holder->getModelState(), 'spare') === 0}
-    {if $holder->getPerson()->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}{/if}</strong> na {$holder->event->event_type->name}, které se bude konat v obci
-    <strong>{$holder->event->getParameter('letterWhere')}</strong> od <strong>{$holder->event->begin|date:'j. n.'}</strong> do
-    <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
+    {if $holder->getPerson()->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}{/if}</strong> na {$holder->getModel()->event->event_type->name}, které se bude konat v obci
+    <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong> od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do
+    <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>
@@ -30,7 +30,7 @@
     Své rozhodnutí, zda bys
     chtěl{if $holder->getPerson()->gender == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$holder->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
+    <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
     <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender == 'F'}á{else}ý{/if},
     jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své
     účasti nám pak můžeš dát vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s
@@ -39,7 +39,7 @@
 </p>
 
 <p n:if="strpos($holder->getModelState(), 'spare') === 0">
-    O Tvé účasti na soustředění bude rozhodnuto po {$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}, dáme Ti pak vědět e-mailem.
+    O Tvé účasti na soustředění bude rozhodnuto po {$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j. n.'}, dáme Ti pak vědět e-mailem.
 </p>
 
 <p>

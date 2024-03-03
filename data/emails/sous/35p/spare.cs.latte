@@ -5,9 +5,9 @@
 <p>
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} dobrý výkon v uplynulých sériích FYKOSu,
-    zveme Tě jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->event->event_type->name},
-    které se bude konat v obci <strong>{$holder->event->getParameter('letterWhere')}</strong>
-    od <strong>{$holder->event->begin|date:'j. n.'}</strong> do <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
+    zveme Tě jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name},
+    které se bude konat v obci <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong>
+    od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
 </p>
 <p>
     Podzimní soustředění pořádáme primárně pro nejúspěšnější řešitele posledních tří sérií, ale protože jarní
@@ -31,7 +31,7 @@
 <p>
     Své rozhodnutí, zda bys chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$holder->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+    <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
     odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
     jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
     své {if strpos($holder->getModelState(), 'spare') === 0}případné {/if}účasti nám pak dej vědět
@@ -41,7 +41,7 @@
 </p>
 <p>
     O Tvé účasti na soustředění rozhodneme do
-    <strong>{$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
+    <strong>{$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
 </p>
 <p>
     Pokud bys měl{if $holder->getPerson()->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit
@@ -49,5 +49,5 @@
 </p>
 <p>
     Za organizátory se na Tebe moc těší<br>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

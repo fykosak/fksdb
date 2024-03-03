@@ -9,7 +9,7 @@
     Ušetříš si tím práci při vyplňování formuláře.
 </p>
 <p>
-    Registrace končí <strong>{$holder->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+    Registrace končí <strong>{$holder->getModel()->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
 </p>
 
 {control form}

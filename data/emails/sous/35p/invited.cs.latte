@@ -6,8 +6,8 @@
     {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích FYKOSu, je nám
     ctí Tě pozvat{if strpos($holder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na
-    {$holder->event->event_type->name}, které se bude konat v obci <strong>{$holder->event->getParameter('letterWhere')}</strong>
-    od <strong>{$holder->event->begin|date:'j. n.'}</strong> do <strong>{$holder->event->end|date:'j. n. Y'}</strong>.
+    {$holder->getModel()->event->event_type->name}, které se bude konat v obci <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong>
+    od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>
@@ -33,7 +33,7 @@
 <p>
     Své rozhodnutí, zda bys chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$holder->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+    <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
 odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
     jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
     své účasti nám pak dej vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny
@@ -42,7 +42,7 @@ odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{
 </p>
 
 <p n:if="strpos($holder->getModelState(), 'spare') === 0">
-    O tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->event->getParameter('letterResolutionTime')|date:'j. n.'}.
+    O tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j. n.'}.
 </p>
 
 <p>
@@ -52,5 +52,5 @@ odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{
 
 <p>
     Za organizátory se na Tebe moc těší<br>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

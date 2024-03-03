@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Database\Explorer;
 
@@ -73,19 +72,6 @@ final class EventParticipantMachine extends Machine
             case 12:
                 return new ParticipantHolder($model, $this->eventParticipantService);
         }
-        $holder = $this->eventDispatchFactory->getDummyHolder($model->event);
-        $holder->setModel($model);
-        return $holder;
-    }
-
-    /**
-     * @phpstan-param Transition<BaseHolder> $transition
-     */
-    final public function execute2(Transition $transition, BaseHolder $holder): void
-    {
-        if (!$transition->canExecute($holder)) {
-            throw new UnavailableTransitionsException();
-        }
-        $holder->setModelState($transition->target);
+        return new BaseHolder($this->eventParticipantService, $model);
     }
 }

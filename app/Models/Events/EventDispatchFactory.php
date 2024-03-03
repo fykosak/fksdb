@@ -151,18 +151,6 @@ class EventDispatchFactory
         throw new ConfigurationNotFoundException($event);
     }
 
-    /**
-     * @throws ConfigurationNotFoundException
-     */
-    public function getDummyHolder(EventModel $event): BaseHolder
-    {
-        $definition = $this->findDefinition($event);
-        /** @var BaseHolder $holder */
-        $holder = $this->container->{$definition['holderMethod']}();
-        $holder->setEvent($event);
-        return $holder;
-    }
-
     private function createKey(EventModel $event): string
     {
         return $event->event_type_id . '-' . $event->event_year;

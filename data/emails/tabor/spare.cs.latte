@@ -4,7 +4,7 @@
     jelikož jsi byl{if $holder->getPerson()->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
     je nám ctí Tě pozvat jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b>
     na Letní tábor Výfuku, který se tentokrát koná
-    {$holder->event->begin|date:'j.n. Y'}–{$holder->event->end|date:'j.n. Y'} {$holder->event->getParameter('letterWhere')}
+    {$holder->getModel()->event->begin|date:'j.n. Y'}–{$holder->getModel()->event->end|date:'j.n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}
     .
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
     her v přírodě. Na konci tábora proběhne slavnostní vyhlášení vítězů letošního ročníku Výfuku.
@@ -14,7 +14,7 @@
     Své rozhodnutí, zda se chceš zúčastnit,
     nám prosím sděl co nejrychleji prostřednictvím aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
     <a n:href="//:Public:Application:, at => $token->token">{link //:Public:Application:, at => $token->token}</a><br/>
-    Nejlépe ihned, nejpozději však do {$holder->event->getParameter('deadline')|date:'j.n. Y'}.
+    Nejlépe ihned, nejpozději však do {$holder->getModel()->event->getParameter('deadline')|date:'j.n. Y'}.
     Další pokyny a podrobnosti Ti přijdou později v jiné zprávě.
     Pokud budeš na tábor vybrán (rozhodnuto bude po uzavření přihlašování a důležité bude aktuální pořadí),
     dozvíš se v ní další detaily.
@@ -23,6 +23,6 @@
 </p>
 <p>
     Za organizátory Výfuku se na Tebe těší <br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
 

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Components\Controls\Events\SousApplicationForm;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -101,7 +103,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         static $holder;
         if (!isset($holder) || $holder->event->event_id !== $this->getEvent()->event_id) {
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
+            $holder = new BaseHolder($this->eventParticipantService);
         }
         return $holder;
     }
@@ -319,7 +321,13 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function createComponentApplication(): ApplicationComponent
     {
-        return new ApplicationComponent($this->getContext(), $this->getHolder(), $this->getMachine());
+        switch ($this->getEvent()->event_type_id) {
+            case 4:
+            case 5:
+                return new SousApplicationForm($this->getContext(), $this->getHolder(), $this->getMachine());
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     protected function beforeRender(): void

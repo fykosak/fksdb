@@ -2,10 +2,10 @@
 <p>
     Ahoj,<br/>
     Tvou přihlášku jsme zaevidovali. Rozhodnutí o tom, zda budeš na tábor vybrán,
-    budeme rozesílat okolo {$holder->event->getParameter('letterResolutionTime')|date:'j.n.'}.
+    budeme rozesílat okolo {$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j.n.'}.
     Připomínáme, že o Tvé účasti na táboře rozhoduje Tvé pořadí v soutěži.
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

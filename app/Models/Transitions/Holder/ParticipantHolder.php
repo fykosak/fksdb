@@ -23,7 +23,7 @@ class ParticipantHolder implements ModelHolder
         $this->model = $model;
     }
 
-    public function getModel(): ?EventParticipantModel
+    public function getModel(): EventParticipantModel
     {
         return $this->model;
     }

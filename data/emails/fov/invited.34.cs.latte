@@ -7,7 +7,7 @@
     jak jsme Tě informovali v předchozím emailu, jarní soustředění v Sedloňově
     jsme museli zrušit. Nezoufej však, místo klasického FYKOSího soustředění jsme
     přichystali online víkendovou akci – FYKOSí Online Víkend, který se bude konat
-    <b>od {$holder->event->begin|date:'j. n. Y'} do {$holder->event->end|date:'j. n. Y'}</b>.
+    <b>od {$holder->getModel()->event->begin|date:'j. n. Y'} do {$holder->getModel()->event->end|date:'j. n. Y'}</b>.
 </p>
 <p>
     Můžeš se těšit jak na odborný program (přednášky (nejen) z fyziky a matematiky),
@@ -17,7 +17,7 @@
     Účast na FYKOSím Online Víkendu je zcela <b>zdarma</b>. Své rozhodnutí, zda přijedeš, nám prosím
     co nejrychleji oznam prostřednictvím aplikace FKSDB po přihlášení nebo pomocí odkazu <br/>
     <a href="{$link}">{$link}</a><br/>
-    <b>do {$holder->event->getParameter('deadline')|date:'j.n. Y'}</b>. Detaily programu akce a odkazy na videohovory Ti zašleme později.
+    <b>do {$holder->getModel()->event->getParameter('deadline')|date:'j.n. Y'}</b>. Detaily programu akce a odkazy na videohovory Ti zašleme později.
 </p>
 <p>
     Pokud bys {if $holder->getPerson()->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej
@@ -25,5 +25,5 @@
 </p>
 <p>
     Za organizátory se na Tebe moc těší <br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

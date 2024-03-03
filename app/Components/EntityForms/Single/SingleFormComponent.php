@@ -8,6 +8,7 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -77,11 +78,10 @@ abstract class SingleFormComponent extends EntityFormComponent
     protected function configureForm(Form $form): void
     {
         $container = new ModelContainer($this->container, 'event_participant');
-
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getPersonFieldsDefinition(),
             $this->event->getContestYear(),
-            'email',
+            PersonSearchContainer::SEARCH_EMAIL,
             true,
             new SelfACLResolver(
                 $this->model ?? EventParticipantModel::RESOURCE_ID,

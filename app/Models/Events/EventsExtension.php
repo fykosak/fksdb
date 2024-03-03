@@ -94,7 +94,7 @@ class EventsExtension extends CompilerExtension
      */
     private function createFieldService(string $name, array $fieldDefinition): ServiceDefinition
     {
-        $field = $this->getContainerBuilder()
+       /* $field = $this->getContainerBuilder()
             ->addDefinition($this->prefix(uniqid('Field_')))
             ->setFactory(Field::class, [$name, $fieldDefinition['label']]);
         foreach ($fieldDefinition as $key => $parameter) {
@@ -106,7 +106,7 @@ class EventsExtension extends CompilerExtension
                     $field->addSetup('set' . ucfirst($key), [$parameter]);
             }
         }
-        return $field;
+        return $field;*/
     }
 
     /**
@@ -138,7 +138,7 @@ class EventsExtension extends CompilerExtension
             ->addSetup('setModifiable', [$this->getConfig()[$eventName]['holder']['modifiable']]);
         /** @phpstan-ignore-next-line */
         foreach ($this->getConfig()[$eventName]['holder']['fields'] as $name => $fieldDef) {
-            $factory->addSetup('addField', [new Statement($this->createFieldService($name, $fieldDef))]);
+          //  $factory->addSetup('addField', [new Statement($this->createFieldService($name, $fieldDef))]);
         }
         /** @phpstan-ignore-next-line */
         foreach ($this->getConfig()[$eventName]['holder']['processings'] as $processing) {
