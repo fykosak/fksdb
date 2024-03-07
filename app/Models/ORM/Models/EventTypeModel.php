@@ -96,6 +96,7 @@ final class EventTypeModel extends Model
             case 12:
                 return Expect::structure([
                     'capacity' => Expect::int(0),
+                    'letterSignature' => Expect::string('Student Pilný'),
                 ])->castTo('array');
             case 15:
                 return Expect::structure([
