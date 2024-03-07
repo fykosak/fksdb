@@ -17,7 +17,6 @@ use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -70,23 +69,6 @@ final class ApplicationPresenter extends BasePresenter
     protected function getORMService(): EventParticipantService
     {
         return $this->eventParticipantService;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
-    {
-        if (in_array($this->getAction(), ['create', 'edit'])) {
-            if (!in_array($this->getEvent()->event_type_id, [2, 14, 10, 11, 12])) {
-                $this->redirect(
-                    ':Public:Application:default',
-                    array_merge(['eventId' => $this->eventId], $this->getParameters())
-                );
-            }
-        }
-        parent::startup();
     }
 
     public function authorizedCreate(): bool
@@ -267,6 +249,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): BaseComponent
     {
@@ -279,6 +262,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentEditForm(): BaseComponent
     {

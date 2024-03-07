@@ -87,6 +87,7 @@ abstract class ApplicationComponent extends BaseComponent
      */
     final public function render(): void
     {
+        $this->setDefault();
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'layout.application.form.latte',
             [
@@ -135,10 +136,6 @@ abstract class ApplicationComponent extends BaseComponent
             }
         }
 
-
-        /*
-         * Custom adjustments
-         */
         foreach ($this->getFormAdjustment() as $adjustment) {
             $adjustment->adjust($form, $this->machine->createHolder($this->model));
         }
@@ -229,7 +226,7 @@ abstract class ApplicationComponent extends BaseComponent
 
                     /** @var EventParticipantModel $model */
                     $model = $this->eventParticipantService->storeModel(
-                        $values['participant'],
+                        $values['event_participant'],
                         $this->model
                     );
                     $holder = $this->machine->createHolder($model);
@@ -282,6 +279,18 @@ abstract class ApplicationComponent extends BaseComponent
             );
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
+        }
+    }
+
+    private function setDefault(): void
+    {
+        /** @var FormControl $control */
+        $control = $this->getComponent('form');
+        $form = $control->getForm();
+        if (isset($this->model)) {
+            $form->setDefaults(['event_participant' => $this->model->toArray()]);
+        } elseif (isset($this->loggedPerson)) {
+            $form->setDefaults(['event_participant' => ['person_id' => $this->loggedPerson->person_id]]);
         }
     }
 }

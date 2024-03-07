@@ -140,7 +140,7 @@ session:
 extensions:
     #fksrouter: FKSDB\Models\Router\RouterExtension
     #acl: FKSDB\Models\Authorization\ACLExtension
-    events: FKSDB\Models\Events\EventsExtension()
+    #events: FKSDB\Models\Events\EventsExtension()
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
@@ -157,3 +157,4 @@ includes:
     - applications/setkani.neon
     - applications/tabor.neon
     - applications/personSchedule.neon
+    - applications/sous.neon

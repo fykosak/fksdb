@@ -19,9 +19,8 @@
     po <a n:href="//:Core:Authentication:login">přihlášení</a>
     v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
     nebo využitím soukromého odkazu níže:<br/>
-    {var string $link = $control->link('//:Public:Application:',
+    {var string $link = $control->link('//:Event:Application:edit',
     ['eventId'=> $holder->getModel()->event->event_id,
-    'contestId'=>$holder->getModel()->event->event_type->contest_id,
     'at'=>$token->token,
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.

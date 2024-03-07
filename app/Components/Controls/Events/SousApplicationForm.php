@@ -74,11 +74,11 @@ class SousApplicationForm extends ApplicationComponent
 
     protected function getFormAdjustment(): array
     {
-        // TODO: Implement getFormAdjustment() method.
+        return [];
     }
 
     protected function getProcessing(): array
     {
-        // TODO: Implement getProcessing() method.
+        return [];
     }
 }

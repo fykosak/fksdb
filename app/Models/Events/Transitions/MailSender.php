@@ -14,7 +14,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
@@ -115,10 +114,10 @@ class MailSender extends MailCallback
     {
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
         return [
-            '//:Public:Application:',
+            '//:Event:Application:edit',
             [
                 'eventId' => $event->event_id,
-                'contestId' => $event->event_type->contest_id,
+                'id' => $holder->getModel()->getPrimary(),
                 'at' => $token->token,
             ],
         ];

@@ -267,7 +267,7 @@ orm:
                     id: event_participant_id
                 title: _('button.eventParticipant.detail')
             edit:
-                destination: :Public:Application:default
+                destination: :Event:Application:edit
                 params:
                     eventId: event_id
                     id: event_participant_id

@@ -7,7 +7,7 @@
         {foreach $transitions as $transition}
             {var string $className = 'btn btn-outline-' . $transition->behaviorType->value}
             {if $transition->isCreating()}
-                <a href="{plink :Public:Application:default eventId => $holder->event->event_id}"
+                <a href="{plink :Event:Application:default eventId => $holder->event->event_id}"
                    class="{$className}">{$transition->label()->toHtml()}</a>
             {else}
                 <a n:href="transition! $transition->getId()" class="{$className}">{$transition->label()->toHtml()}</a>
