@@ -1,14 +1,13 @@
 {layout none}
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+
+{define subject}Výfučí setkání – uvolnění kapacity a přijetí přihlášky{/define}
+
 <p>
-    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-	potvrzujeme tvé přijetí na akci <em>{$holder->getModel()->event->getName()->getText('cs')}</em>,
-    která se koná
-    {if $holder->getModel()->event->end && $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
-        {$holder->getModel()->event->begin|date:'j.n. Y'}–{$holder->getModel()->event->end|date:'j.n. Y'}.
-    {else}
-        {$holder->getModel()->event->begin|date:'j.n. Y'}.
-    {/if}
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br />
+    jelikož se na akci <em>{$holder->getModel()->event->getName()->getText('cs')}</em> uvolnilo místo a ty jsi
+    {if $holder->getModel()->person->gender->value == 'F'}projevila{else}projevil{/if}
+    zájem o účast, přijali jsme tě mezi účastníky.
 </p>
 <p>
     Případné změny v přihlášce lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
@@ -21,6 +20,6 @@
     V případě jakéhokoliv dotazu se na nás můžeš obrátit na adrese <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
 </p>
 <p>
-    S pozdravem,<br/>
-    FKSDB
+    Za organizátory<br />
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>

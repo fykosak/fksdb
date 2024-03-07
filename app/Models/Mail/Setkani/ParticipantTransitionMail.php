@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Transitions\Callbacks\Setkani;
+namespace FKSDB\Models\Mail\Setkani;
 
-use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
+use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
- * @phpstan-extends EventParticipantCallback<ParticipantHolder>
+ * @phpstan-extends MailCallback<ParticipantHolder>
  */
-class SpareAppliedMailCallback extends EventParticipantCallback
+class ParticipantTransitionMail extends MailCallback
 {
     /**
      * @param ParticipantHolder $holder
@@ -20,23 +20,20 @@ class SpareAppliedMailCallback extends EventParticipantCallback
      */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'spareApplied.latte';
+        $transitionId = self::resolveLayoutName($transition);
+        return __DIR__ . DIRECTORY_SEPARATOR . "$transitionId.latte";
     }
 
     /**
      * @param ParticipantHolder $holder
      * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     subject:string,
      *     sender:string,
      * }
      */
     protected function getData(ModelHolder $holder): array
     {
         return [
-            'subject' => 'Výfučí setkání',
-            'blind_carbon_copy' => 'Výfučí setkání <vyfuk@vyfuk.org>',
-            'sender' => 'Výfučí setkání <vyfuk@vyfuk.org>',
+            'sender' => 'Výfuk <vyfuk@vyfuk.org>',
         ];
     }
 }

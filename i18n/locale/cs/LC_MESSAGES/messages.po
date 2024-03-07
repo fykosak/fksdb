@@ -2152,7 +2152,7 @@ msgstr "Program \"%s\" není aktuálně povolen"
 #: ../app/Components/Schedule/Input/Handler.php:97
 #, php-format
 msgid "Schedule \"%s\" is not available at this time"
-msgstr "Program \"%s\" není aktálně dostupný"
+msgstr "Program \"%s\" není aktuálně dostupný"
 
 #: ../app/Components/Schedule/Input/Handler.php:114
 msgid "Modification of this item is not allowed at this time"
