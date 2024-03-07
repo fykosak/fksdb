@@ -122,6 +122,5 @@ events:
                     description: "Cena v spočtená dle pravidel (http://fykos.cz/rocnik29/tsaf/pozvanka)."
             formAdjustments:
                 - @events.privacyPolicy
-                - @events.captcha
             processings:
                 - @events.privacyPolicy

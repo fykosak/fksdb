@@ -1,9 +1,9 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType string[]|string[][] $linkArgs}
 {var $link= $control->link(...$linkArgs)}
 
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
     jak jsme Tě informovali v předchozím emailu, jarní soustředění v Sedloňově
     jsme museli zrušit. Nezoufej však, místo klasického FYKOSího soustředění jsme
     přichystali online víkendovou akci – FYKOSí Online Víkend, který se bude konat
@@ -20,7 +20,7 @@
     <b>do {$holder->getModel()->event->getParameter('deadline')|date:'j.n. Y'}</b>. Detaily programu akce a odkazy na videohovory Ti zašleme později.
 </p>
 <p>
-    Pokud bys {if $holder->getPerson()->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej
+    Pokud bys {if $holder->getModel()->person->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej
     se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>

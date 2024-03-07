@@ -24,7 +24,7 @@ use Nette\Utils\Html;
  *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
  * @phpstan-type TMachine (TModel is TeamModel2
  *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
- *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+ *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine)
  * @phpstan-extends CodeTransition<TModel>
  */
 final class CodeAttendance extends CodeTransition

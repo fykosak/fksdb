@@ -1,7 +1,7 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-<p>{if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    jelikož jsi byl{if $holder->getPerson()->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
+<p>{if $holder->getModel()->person->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    jelikož jsi byl{if $holder->getModel()->person->gender->value == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if},
     je nám ctí Tě pozvat na Letní tábor Výfuku, který se tentokrát koná
     {$holder->getModel()->event->begin|date:'j.n. Y'}–{$holder->getModel()->event->end|date:'j.n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých

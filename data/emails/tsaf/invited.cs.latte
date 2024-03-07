@@ -1,7 +1,7 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-<p>{if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    zveme Tě jako {if $holder->getPerson()->gender->value == 'F'}účastnici{else}účastníka{/if} FYKOSu k účasti na Týdnu s aplikovanou fyzikou,
+<p>{if $holder->getModel()->person->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    zveme Tě jako {if $holder->getModel()->person->gender->value == 'F'}účastnici{else}účastníka{/if} FYKOSu k účasti na Týdnu s aplikovanou fyzikou,
     který letos bude probíhat formou poznávacího zájezdu do zahraničí ve dnech {$holder->getModel()->event->begin|date:'j.n. Y'}–{$holder->getModel()->event->end|date:'j.n. Y'}.
     Podrobnosti o akci nalezneš na webu akce<br/>
     <a href="https://tsaf.cz/">https://tsaf.cz/</a>.

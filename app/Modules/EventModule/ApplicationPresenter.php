@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Events\SousApplicationForm;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Single\DsefFormComponent;
 use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
-use FKSDB\Components\EntityForms\Single\SingleFormComponent;
 use FKSDB\Components\EntityForms\Single\TaborFormComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
@@ -16,15 +16,16 @@ use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -247,7 +248,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
+     * @throws NotImplementedException
+     * @phpstan-return EventParticipantMachine
      */
     private function getMachine(): EventParticipantMachine
     {
@@ -266,7 +268,7 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): SingleFormComponent
+    protected function createComponentCreateForm(): BaseComponent
     {
         return $this->createForm(null);
     }
@@ -278,24 +280,34 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws NotFoundException
      */
-    protected function createComponentEditForm(): SingleFormComponent
+    protected function createComponentEditForm(): BaseComponent
     {
         return $this->createForm($this->getEntity());
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
-    private function createForm(?EventParticipantModel $model): SingleFormComponent
+    private function createForm(?EventParticipantModel $model): BaseComponent
     {
         switch ($this->getEvent()->event_type_id) {
+            case 4:
+            case 5:
+                return new SousApplicationForm(
+                    $this->getContext(),
+                    $model,
+                    $this->getEvent(),
+                    $this->getMachine(),
+                    $this->getLoggedPerson()
+                );
             case 2:
             case 14:
                 return new DsefFormComponent(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
             case 10:
@@ -303,7 +315,7 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
             case 11:
@@ -312,7 +324,7 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
         }
@@ -327,6 +339,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -339,7 +352,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return MassTransitionComponent<EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>>
+     * @throws NotImplementedException
+     * @phpstan-return MassTransitionComponent<EventParticipantMachine>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {

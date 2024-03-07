@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;

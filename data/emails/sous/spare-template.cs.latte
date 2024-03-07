@@ -1,8 +1,8 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType string[]|string[][] $linkArgs}
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
-    za úspěšnou účast v našem semináři bychom tě rádi pozvali jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name}, které se letos koná od
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
+    za úspěšnou účast v našem semináři bychom tě rádi pozvali jako <b>{if $holder->getModel()->person->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name}, které se letos koná od
     {$holder->getModel()->event->begin|date:'j. n. Y'} do {$holder->getModel()->event->end|date:'j. n. Y'} v {$holder->getModel()->event->getParameter('letterWhere')}.
 </p>
 <p>
@@ -17,12 +17,12 @@
 </p>
 <p>
     Každé soustředění má nějaké téma, kterému říkáme legenda. V minulých letech jsme například cestovali do Bradavic,
-    přežívali v Černobylu, řídili velkou korporaci, nebo jsme se stali agenty 007. Pokud bys chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} vidět fotky z
+    přežívali v Černobylu, řídili velkou korporaci, nebo jsme se stali agenty 007. Pokud bys chtěl{if $holder->getModel()->person->gender->value == 'F'}a{/if} vidět fotky z
     předešlých soustředění, najdeš je na <a href="https://fykos.cz/akce/soustredeni/start">našem webu</a>.
 </p>
 {include inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
-    Své rozhodnutí, zdali bys chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet, nám co nejrychleji oznam prostřednictvím
+    Své rozhodnutí, zdali bys chtěl{if $holder->getModel()->person->gender->value == 'F'}a{/if} přijet, nám co nejrychleji oznam prostřednictvím
     aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
     {var $link = $control->link(...$linkArgs)}
     <a href="{$link}">{$link}</a><br/>
@@ -41,5 +41,5 @@
     {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
 <p>
-    P.S.: Pokud bys {if $holder->getPerson()->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej se obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a> .
+    P.S.: Pokud bys {if $holder->getModel()->person->gender->value == 'F'}měla{else}měl{/if} jakýkoliv dotaz, neváhej se obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a> .
 </p>

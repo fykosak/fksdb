@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Statement;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
- * @implements Statement<bool,BaseHolder>
+ * @implements Statement<bool,ParticipantHolder>
  */
 class Role implements Statement
 {
@@ -31,7 +30,7 @@ class Role implements Statement
 
     public function __invoke(...$args): bool
     {
-        /** @var BaseHolder|ParticipantHolder $holder */
+        /** @var ParticipantHolder $holder */
         [$holder] = $args;
         switch ($this->role) {
             case self::ADMIN:

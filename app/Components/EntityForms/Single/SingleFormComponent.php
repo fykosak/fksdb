@@ -39,16 +39,10 @@ abstract class SingleFormComponent extends EntityFormComponent
 {
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
-    /**
-     * @phpstan-var EventParticipantMachine<ParticipantHolder> $machine
-     */
     protected EventParticipantMachine $machine;
     protected ?PersonModel $loggedPerson;
     protected EventModel $event;
 
-    /**
-     * @phpstan-param EventParticipantMachine<ParticipantHolder> $machine
-     */
     public function __construct(
         Container $container,
         ?Model $model,

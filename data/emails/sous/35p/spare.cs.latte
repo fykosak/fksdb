@@ -1,11 +1,11 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType string[]|string[][] $linkArgs}
 {var $link = $control->link(...$linkArgs)}
 
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
-    gratulujeme! Jelikož jsi předvedl{if $holder->getPerson()->gender->value == 'F'}a{/if} dobrý výkon v uplynulých sériích FYKOSu,
-    zveme Tě jako <b>{if $holder->getPerson()->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name},
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
+    gratulujeme! Jelikož jsi předvedl{if $holder->getModel()->person->gender->value == 'F'}a{/if} dobrý výkon v uplynulých sériích FYKOSu,
+    zveme Tě jako <b>{if $holder->getModel()->person->gender->value == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name},
     které se bude konat v obci <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong>
     od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
 </p>
@@ -29,12 +29,12 @@
 {include ../inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
 <p>
-    Své rozhodnutí, zda bys chtěl{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getModelState(), 'spare') === 0}
+    Své rozhodnutí, zda bys chtěl{if $holder->getModel()->person->gender->value == 'F'}a{/if} přijet,{if strpos($holder->getState(), 'spare') === 0}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
     <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
-    odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getPerson()->gender->value == 'F'}á{else}ý{/if},
+    odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if},
     jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
-    své {if strpos($holder->getModelState(), 'spare') === 0}případné {/if}účasti nám pak dej vědět
+    své {if strpos($holder->getState(), 'spare') === 0}případné {/if}účasti nám pak dej vědět
     na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny
     s Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře
     je dole tlačítko na odmítnutí účasti). Alespoň Ti pak nebudou chodit upomínky.
@@ -44,7 +44,7 @@
     <strong>{$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
 </p>
 <p>
-    Pokud bys měl{if $holder->getPerson()->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit
+    Pokud bys měl{if $holder->getModel()->person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit
     na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>

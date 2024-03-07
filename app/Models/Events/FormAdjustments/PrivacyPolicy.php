@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 use Nette\SmartObject;
-use Nette\Utils\ArrayHash;
 
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
- * @phpstan-implements FormAdjustment<BaseHolder>
+ * @phpstan-implements FormAdjustment<ParticipantHolder>
  */
 class PrivacyPolicy implements Processing, FormAdjustment
 {
@@ -39,13 +38,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      * @throws OmittedControlException
      * @throws BadTypeException
      */
     public function adjust(Form $form, ModelHolder $holder): void
     {
-        if ($holder->getModelState() != Machine::STATE_INIT) {
+        if ($holder->getState() != Machine::STATE_INIT) {
             return;
         }
 
@@ -56,31 +55,28 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    /**
-     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
-     */
-    public function process(ArrayHash $values): void
+    public function process(array $values): array
     {
-        $this->trySetAgreed($values);
+        return $this->trySetAgreed($values);
     }
 
-    /**
-     * @phpstan-param ArrayHash<ArrayHash<mixed>|mixed> $values
-     */
-    private function trySetAgreed(ArrayHash $values): void
+    private function trySetAgreed(array $values): array
     {
+        $newValues = [];
         foreach ($values as $key => $value) {
-            if ($value instanceof ArrayHash) {
-                $this->trySetAgreed($value);
+            if (is_array($value)) {
+                $newValues[$key] = $this->trySetAgreed($value);
             } elseif (isset($values[$key . '_container']) && isset($values[$key . '_container']['person_info'])) {
+                $newValues = $values;
                 $personId = $value;
                 $personInfo = $this->personInfoService->findByPrimary($personId);
                 if ($personInfo) {
                     $this->personInfoService->storeModel(['agreed' => 1], $personInfo);
 
-                    $values[$key . '_container']['person_info']['agreed'] = 1;
+                    $newValues[$key . '_container']['person_info']['agreed'] = 1;
                 }
             }
         }
+        return $newValues;
     }
 }

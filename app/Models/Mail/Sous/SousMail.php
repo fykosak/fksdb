@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\Sous;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 /**
- * @phpstan-extends EventParticipantCallback<BaseHolder>
+ * @phpstan-extends EventParticipantCallback<ParticipantHolder>
  */
 abstract class SousMail extends EventParticipantCallback
 {

@@ -1,6 +1,6 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    We confirm receiving {$holder->getPerson()->getFullName()}'s application for event <em>{$holder->getModel()->event}</em>
+    We confirm receiving {$holder->getModel()->person->getFullName()}'s application for event <em>{$holder->getModel()->event}</em>
     that takes place
     {if $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
         from {$holder->getModel()->event->begin|date:'M d'} to {$holder->getModel()->event->end|date:'M d, Y'}.

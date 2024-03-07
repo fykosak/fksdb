@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -17,54 +17,26 @@ use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
-/**
- * @phpstan-type TDefinition array{
- *      keys:string[],
- *      holderMethod:string,
- *      machineName:string,
- *      formLayout:string
- * }
- */
 class EventDispatchFactory
 {
-    /**
-     * @phpstan-var array<int,TDefinition>
-     */
-    private array $definitions = [];
     private Container $container;
-    private string $templateDir;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function setTemplateDir(string $templateDir): void
-    {
-        $this->templateDir = $templateDir;
-    }
-
-    /**
-     * @phpstan-param string[] $key
-     */
-    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
-    {
-        $this->definitions[] = [
-            'keys' => $key,
-            'holderMethod' => $holderMethodName,
-            'machineName' => $machineName,
-            'formLayout' => $formLayout,
-        ];
-    }
-
     /**
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
-     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
+     * @throws NotImplementedException
      */
     public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
         switch ($event->event_type_id) {
+            case 4:
+            case 5:
+                return $this->container->getService('transitions.sous.machine'); //@phpstan-ignore-line
             case 2:
             case 14:
                 return $this->container->getService('transitions.dsef.machine'); //@phpstan-ignore-line
@@ -73,11 +45,9 @@ class EventDispatchFactory
             case 11:
             case 12:
                 return $this->container->getService('transitions.setkani.machine'); //@phpstan-ignore-line
+            default:
+                throw new NotImplementedException();
         }
-        $definition = $this->findDefinition($event);
-        /** @var EventParticipantMachine<BaseHolder> $machine */
-        $machine = $this->container->getService($definition['machineName']);
-        return $machine;
     }
 
     public function getPaymentMachine(): PaymentMachine
@@ -111,7 +81,7 @@ class EventDispatchFactory
     }
 
     /**
-     * @phpstan-return EventParticipantMachine<ParticipantHolder>|TeamMachine|EventParticipantMachine<BaseHolder>
+     * @phpstan-return EventParticipantMachine|TeamMachine
      */
     public function getEventMachine(EventModel $event): Machine
     {
@@ -120,39 +90,5 @@ class EventDispatchFactory
         } else {
             return $this->getParticipantMachine($event);
         }
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     */
-    public function getFormLayout(EventModel $event): string
-    {
-        $definition = $this->findDefinition($event);
-        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     * @phpstan-return TDefinition
-     */
-    private function findDefinition(EventModel $event): array
-    {
-        $key = $this->createKey($event);
-        foreach ($this->definitions as $definition) {
-            if (in_array($key, $definition['keys'])) {
-                return $definition;
-            }
-        }
-        foreach ($this->definitions as $definition) {
-            if (in_array((string)$event->event_type_id, $definition['keys'])) {
-                return $definition;
-            }
-        }
-        throw new ConfigurationNotFoundException($event);
-    }
-
-    private function createKey(EventModel $event): string
-    {
-        return $event->event_type_id . '-' . $event->event_year;
     }
 }

@@ -1,17 +1,18 @@
 {layout none}
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {define subject}Pozvánka na jarní soustředění FYKOSu{/define}
 
 {block body}
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo a Ty jsi projevil{if $holder->getPerson()->gender->value == 'F'}a{/if} zájem o {$holder->getModel()->event->event_type->name} v obci
+    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo a Ty jsi projevil{if $holder->getModel()->person->gender->value == 'F'}a{/if} zájem o {$holder->getModel()->event->event_type->name} v obci
     {$holder->getModel()->event->getParameter('letterWhere')} od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->getModel()->event->end|date:'j. n. Y'}
     , jsi nyní mezi pozvanými. Gratulujeme.
 </p>
 
 <p>
-    Brzy dostaneš další info. Pokud bys měl{if $holder->getPerson()->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás
+    Brzy dostaneš další info. Pokud bys měl{if $holder->getModel()->person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás
     obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 

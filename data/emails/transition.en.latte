@@ -1,7 +1,7 @@
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    {$holder->getPerson()->getFullName()}'s application for <em>{$holder->getModel()->event}</em> state has been updated.
-    New state is <em>{$holder->getModelState()->label()}</em>.
+    {$holder->getModel()->person->getFullName()}'s application for <em>{$holder->getModel()->event}</em> state has been updated.
+    New state is <em>{$holder->getState()->label()}</em>.
 </p>
 {include 'inc/eventEdit.en.latte'}
 {include 'inc/closing.en.latte'}

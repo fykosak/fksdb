@@ -57,9 +57,13 @@ class MailSender extends MailCallback
             $this->resolveLogin($person),
             AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $event->registration_end ?? $event->end,
-            ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
+            self::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
+    }
+    public static function encodeParameters(int $eventId, int $id): string
+    {
+        return "$eventId:$id";
     }
 
     /**
