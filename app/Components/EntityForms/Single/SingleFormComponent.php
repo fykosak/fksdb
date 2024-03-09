@@ -10,7 +10,9 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -47,21 +49,24 @@ abstract class SingleFormComponent extends EntityFormComponent
         Container $container,
         ?Model $model,
         EventModel $event,
-        EventParticipantMachine $machine,
         ?PersonModel $loggedPerson
     ) {
         parent::__construct($container, $model);
         $this->event = $event;
-        $this->machine = $machine;
         $this->loggedPerson = $loggedPerson;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
-        EventParticipantService $eventParticipantService
+        EventParticipantService $eventParticipantService,
+        EventDispatchFactory $eventDispatchFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->eventParticipantService = $eventParticipantService;
+        $this->machine = $eventDispatchFactory->getParticipantMachine($this->event);
     }
 
     /**

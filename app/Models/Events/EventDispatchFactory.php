@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
@@ -27,7 +25,6 @@ class EventDispatchFactory
     }
 
     /**
-     * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      * @throws NotImplementedException
      */

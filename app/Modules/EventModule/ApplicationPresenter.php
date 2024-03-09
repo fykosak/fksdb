@@ -14,18 +14,16 @@ use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -230,17 +228,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NotImplementedException
-     * @phpstan-return EventParticipantMachine
-     */
-    private function getMachine(): EventParticipantMachine
-    {
-        return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
      */
     protected function createComponentGrid(): SingleApplicationsGrid
     {
@@ -249,7 +236,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): BaseComponent
     {
@@ -262,7 +248,6 @@ final class ApplicationPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     protected function createComponentEditForm(): BaseComponent
     {
@@ -271,7 +256,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      */
     private function createForm(?EventParticipantModel $model): BaseComponent
     {
@@ -282,7 +266,6 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
             case 2:
@@ -291,7 +274,6 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
             case 10:
@@ -299,7 +281,6 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
             case 11:
@@ -308,7 +289,6 @@ final class ApplicationPresenter extends BasePresenter
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(),
                     $this->getLoggedPerson()
                 );
         }
@@ -329,7 +309,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(), // @phpstan-ignore-line
+            $this->eventDispatchFactory->getParticipantMachine($this->getEvent()), // @phpstan-ignore-line
             $this->getEntity()
         );
     }
@@ -341,7 +321,11 @@ final class ApplicationPresenter extends BasePresenter
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
-        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent(
+            $this->getContext(),
+            $this->eventDispatchFactory->getParticipantMachine($this->getEvent()),
+            $this->getEvent()
+        );
     }
 
     /**
@@ -358,7 +342,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
      */
     protected function createComponentImport(): ImportComponent
     {

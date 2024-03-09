@@ -12,10 +12,8 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
-use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -23,6 +21,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
@@ -35,8 +34,8 @@ use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -49,37 +48,39 @@ use Tracy\Debugger;
 abstract class ApplicationComponent extends BaseComponent
 {
     private ?EventParticipantModel $model;
-    private Connection $connection;
     private EventModel $event;
     private PersonModel $loggedPerson;
+    private EventParticipantMachine $machine;
 
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
-
-    private EventParticipantMachine $machine;
+    protected ReflectionFactory $reflectionFactory;
 
     public function __construct(
         Container $container,
         ?EventParticipantModel $model,
         EventModel $event,
-        EventParticipantMachine $machine,
         PersonModel $loggedPerson
     ) {
         parent::__construct($container);
         $this->model = $model;
-        $this->machine = $machine;
         $this->event = $event;
         $this->loggedPerson = $loggedPerson;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function inject(
-        Connection $connection,
         ReferencedPersonFactory $referencedPersonFactory,
-        EventParticipantService $eventParticipantService
+        EventParticipantService $eventParticipantService,
+        EventDispatchFactory $eventDispatchFactory,
+        ReflectionFactory $reflectionFactory
     ): void {
-        $this->connection = $connection;
         $this->referencedPersonFactory = $referencedPersonFactory;
+        $this->reflectionFactory = $reflectionFactory;
         $this->eventParticipantService = $eventParticipantService;
+        $this->machine = $eventDispatchFactory->getParticipantMachine($this->event);
     }
 
     /**
@@ -89,7 +90,7 @@ abstract class ApplicationComponent extends BaseComponent
     {
         $this->setDefault();
         $this->template->render(
-            __DIR__ . DIRECTORY_SEPARATOR . 'layout.application.form.latte',
+            __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte',
             [
                 'model' => $this->model,
                 'holder' => $this->model ? $this->machine->createHolder($this->model) : null,
@@ -109,6 +110,8 @@ abstract class ApplicationComponent extends BaseComponent
         $form = $result->getForm();
 
         $this->createFormContainer($form);
+        $control = $this->reflectionFactory->createField('person_info', 'agreed');
+        $control->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
         /*
          * Create save (no transition) button
          */
@@ -123,30 +126,17 @@ abstract class ApplicationComponent extends BaseComponent
                 ) as $transition
             ) {
                 $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
-
                 if (!$transition->getValidation()) {
                     $submit->setValidationScope([]);
                 }
-
                 $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
-
                 $submit->getControlPrototype()->addAttributes(
                     ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
                 );
             }
         }
-
-        foreach ($this->getFormAdjustment() as $adjustment) {
-            $adjustment->adjust($form, $this->machine->createHolder($this->model));
-        }
-
         return $result;
     }
-
-    /**
-     * @phpstan-return FormAdjustment<ParticipantHolder>[]
-     */
-    abstract protected function getFormAdjustment(): array;
 
     /**
      * @throws ForbiddenRequestException
@@ -185,21 +175,6 @@ abstract class ApplicationComponent extends BaseComponent
     }
 
     /**
-     * @phpstan-return EvaluatedFieldsDefinition
-     */
-    abstract protected function getPersonFieldsDefinition(): array;
-
-    /**
-     * @phpstan-return array<string, array<string, mixed>>
-     */
-    abstract protected function getParticipantFieldsDefinition(): array;
-
-    /**
-     * @return Processing[]
-     */
-    abstract protected function getProcessing(): array;
-
-    /**
      * @throws \Throwable
      * @phpstan-param Transition<ParticipantHolder>|null $transition
      */
@@ -211,74 +186,77 @@ abstract class ApplicationComponent extends BaseComponent
                 $this->machine->execute($transition, $holder);
                 $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             } else {
-                try {
-                    $this->connection->beginTransaction();
-                    $values = $form->getValues('array');
-                    $values = FormUtils::emptyStrToNull2($values);
-                    Debugger::log(json_encode((array)$values), 'app-form');
-                    $values = array_reduce(
-                        $this->getProcessing(),
-                        function (array $data, Processing $processing) {
-                            return $processing->process($data);
-                        },
-                        $values
-                    );
+                $this->eventParticipantService->explorer->beginTransaction();
+                /** @phpstan-var array{event_participant:array{person_id:int}} $values */
+                $values = $form->getValues('array');
 
-                    /** @var EventParticipantModel $model */
-                    $model = $this->eventParticipantService->storeModel(
-                        $values['event_participant'],
-                        $this->model
-                    );
-                    $holder = $this->machine->createHolder($model);
-                    if (!$this->model) { // new model select implicit
-                        $transition = Machine::selectTransition(
-                            Machine::filterAvailable($this->machine->transitions, $holder)
-                        );
-                    }
-                    if ($transition) {
-                        $this->machine->execute($transition, $holder);
-                    }
-                    if (isset($this->model)) {
-                        $this->getPresenter()->flashMessage(
-                            sprintf(
-                                _('Application "%s" updated.'),
-                                $this->model->person->getFullName()
-                            ),
-                            Message::LVL_INFO
-                        );
-                    } else {
-                        $this->getPresenter()->flashMessage(
-                            sprintf(_('Application "%s" created.'), $this->model->person->getFullName()),
-                            Message::LVL_SUCCESS
-                        );
-                    }
+                $values = FormUtils::emptyStrToNull2($values);
+                $values['event_participant']['person_container']['person_info']['agreed'] = 1;
+                Debugger::log(json_encode((array)$values), 'app-form');
+                /* $values = array_reduce(
+                     $this->getProcessing(),
+                     function (array $data, Processing $processing) {
+                         return $processing->process($data);
+                     },
+                     $values
+                 );/*
 
-                    $this->connection->commit();
-                } catch (
-                    ModelDataConflictException |
-                    DuplicateApplicationException |
-                    MachineExecutionException |
-                    FullCapacityException |
-                    ExistingPaymentException $exception
-                ) {
-                    $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-                    /** @phpstan-var ReferencedId<PersonModel> $referencedId */
-                    foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
-                        $referencedId->rollback();
-                    }
-                    $this->connection->rollBack();
-                    throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $exception);
+                 /** @var EventParticipantModel $model */
+                $model = $this->eventParticipantService->storeModel(
+                    $values['event_participant'],
+                    $this->model
+                );
+                $holder = $this->machine->createHolder($model);
+                if (!$this->model) { // new model select implicit
+                    $transition = Machine::selectTransition(
+                        Machine::filterAvailable($this->machine->transitions, $holder)
+                    );
                 }
+                if ($transition) {
+                    $this->machine->execute($transition, $holder);
+                }
+                if (isset($this->model)) {
+                    $this->getPresenter()->flashMessage(
+                        sprintf(
+                            _('Application "%s" updated.'),
+                            $model->person->getFullName()
+                        ),
+                        Message::LVL_INFO
+                    );
+                } else {
+                    $this->getPresenter()->flashMessage(
+                        sprintf(_('Application "%s" created.'), $model->person->getFullName()),
+                        Message::LVL_SUCCESS
+                    );
+                }
+
+                $this->eventParticipantService->explorer->commit();
+                $this->getPresenter()->redirect(
+                    ':Event:Application:detail',
+                    [
+                        'eventId' => $this->event->event_id,
+                        'id' => $this->model->getPrimary(),
+                    ]
+                );
             }
-            $this->getPresenter()->redirect(
-                ':Event:Application:detail',
-                [
-                    'eventId' => $this->event->event_id,
-                    'id' => $this->model->getPrimary(),
-                ]
-            );
-        } catch (ApplicationHandlerException $exception) {
-            /* handled elsewhere, here it's to just prevent redirect */
+        } catch (AbortException $exception) {
+            throw $exception;
+        } catch (
+            ModelDataConflictException |
+            DuplicateApplicationException |
+            MachineExecutionException |
+            FullCapacityException |
+            ExistingPaymentException $exception
+        ) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
+                $referencedId->rollback();
+            }
+            $this->eventParticipantService->explorer->rollBack();
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (\Throwable $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -293,4 +271,14 @@ abstract class ApplicationComponent extends BaseComponent
             $form->setDefaults(['event_participant' => ['person_id' => $this->loggedPerson->person_id]]);
         }
     }
+
+    /**
+     * @phpstan-return EvaluatedFieldsDefinition
+     */
+    abstract protected function getPersonFieldsDefinition(): array;
+
+    /**
+     * @phpstan-return array<string, array<string, mixed>>
+     */
+    abstract protected function getParticipantFieldsDefinition(): array;
 }
