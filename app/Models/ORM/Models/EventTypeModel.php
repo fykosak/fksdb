@@ -31,6 +31,9 @@ final class EventTypeModel extends Model
     public function getSymbol(): string
     {
         switch ($this->event_type_id) {
+            case 4:
+            case 5:
+                return 'sous';
             case 1:
                 return 'fof';
             case 9:
@@ -76,8 +79,6 @@ final class EventTypeModel extends Model
             case 4:
             case 5:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('soustredeni@fykos.cz'),
-                    'notifyFrom' => Expect::string('FYKOSí soustředění <soustredeni@fykos.cz>'),
                     'letterWhere' => Expect::string('nikde'),
                     'deadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09'),
                     'letterSignature' => Expect::string('Student Pilný'),

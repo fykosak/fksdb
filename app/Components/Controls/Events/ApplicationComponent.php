@@ -62,9 +62,9 @@ abstract class ApplicationComponent extends BaseComponent
         EventModel $event,
         PersonModel $loggedPerson
     ) {
+        $this->event = $event; // must be set before call parent and inject
         parent::__construct($container);
         $this->model = $model;
-        $this->event = $event;
         $this->loggedPerson = $loggedPerson;
     }
 

@@ -38,8 +38,6 @@ services:
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory
-    # Events
-    events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization

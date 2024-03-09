@@ -216,6 +216,12 @@ final class EventModel extends Model implements Resource, NodeCreator
     public function getName(): LocalizedString
     {
         switch ($this->event_type_id) {
+            case 4:
+            case 5:
+                return new LocalizedString([
+                    'cs' => $this->event_type->name . ' ' . $this->place,
+                    'en' => $this->event_type->name . ' ' . $this->place,
+                ]);
             case 1:
                 return new LocalizedString([
                     'cs' => 'Fyziklání ' . $this->begin->format('Y'),
