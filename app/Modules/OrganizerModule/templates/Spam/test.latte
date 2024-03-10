@@ -1,7 +1,23 @@
+{varType FKSDB\Models\Mail\MailSource[] $sources}
+{varType FKSDB\Models\Mail\MailSource|null $source}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
+            <ul>
+                {foreach $sources as $key=> $value}
+                    <li><a href="{plink this source=>$key}">{get_class($value)}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            {if $source}
+                <h2>{get_class($source)}</h2>
             {control testForm}
+            {else}
+                <h2>No source selected</h2>
+            {/if}
         </div>
     </div>
 {/block}

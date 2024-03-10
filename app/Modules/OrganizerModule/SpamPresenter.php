@@ -9,7 +9,10 @@ use FKSDB\Components\Mail\MailProviderForm;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Mail\MailSource;
 use FKSDB\Models\Mail\Sous\Reminder1Mail;
+use FKSDB\Models\Mail\Sous\Reminder2Mail;
+use FKSDB\Models\Mail\Sous\Reminder3Mail;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -26,9 +29,32 @@ final class SpamPresenter extends BasePresenter
 
     private EmailMessageService $emailMessageService;
 
+    /** @persistent */
+    public ?int $source;
+
     final public function injectServiceEmailMessage(EmailMessageService $emailMessageService): void
     {
         $this->emailMessageService = $emailMessageService;
+    }
+
+    /**
+     * @return MailSource[]
+     */
+    protected function getMailSources(): array
+    {
+        return [
+            new Reminder1Mail($this->getContext()),
+            new Reminder2Mail($this->getContext()),
+            new Reminder3Mail($this->getContext()),
+        ];
+    }
+
+    protected function getMailSource(): ?MailSource
+    {
+        if (!isset($this->source)) {
+            return null;
+        }
+        return $this->getMailSources()[$this->source] ?? null;
     }
 
     /**
@@ -74,6 +100,12 @@ final class SpamPresenter extends BasePresenter
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
     }
 
+    public function renderTest(): void
+    {
+        $this->template->sources = $this->getMailSources();
+        $this->template->source = $this->getMailSource();
+    }
+
     protected function getORMService(): EmailMessageService
     {
         return $this->emailMessageService;
@@ -105,7 +137,7 @@ final class SpamPresenter extends BasePresenter
 
     protected function createComponentTestForm(): MailProviderForm
     {
-        return new MailProviderForm($this->getContext(), new Reminder1Mail($this->getContext()));
+        return new MailProviderForm($this->getContext(), $this->getMailSource());
     }
 
     /**
