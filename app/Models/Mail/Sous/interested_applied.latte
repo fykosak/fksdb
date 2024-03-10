@@ -7,7 +7,7 @@
 <p>
     {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     protože se uvolnilo místo a Ty jsi projevil{if $holder->getModel()->person->gender->value == 'F'}a{/if} zájem o {$holder->getModel()->event->event_type->name} v obci
-    {$holder->getModel()->event->getParameter('letterWhere')} od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->getModel()->event->end|date:'j. n. Y'}
+    {$holder->getModel()->event->getParameter('letterWhere')}{* TODO use place *} od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->getModel()->event->end|date:'j. n. Y'}
     , jsi nyní mezi pozvanými. Gratulujeme.
 </p>
 
@@ -18,6 +18,6 @@
 
 <p>
     Za organizátory<br>
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')} {* TODO to template *}
 </p>
 {/block}

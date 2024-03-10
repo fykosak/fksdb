@@ -6,7 +6,7 @@
 {block body}
 <p>
     {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo na akci {$holder->getModel()->event->event_type->name} v obci {$holder->getModel()->event->getParameter('letterWhere')} v termínu od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
+    protože se uvolnilo místo na akci {$holder->getModel()->event->event_type->name} v obci {$holder->getModel()->event->getParameter('letterWhere')}{* TODO use place *} v termínu od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->event->end|date:'j. n. Y'}
     , jsi nyní mezi pozvanými. Gratulujeme.
 </p>
 <p>

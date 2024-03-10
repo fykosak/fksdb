@@ -219,8 +219,8 @@ final class EventModel extends Model implements Resource, NodeCreator
             case 4:
             case 5:
                 return new LocalizedString([
-                    'cs' => $this->event_type->name . ' ' . $this->place,
-                    'en' => $this->event_type->name . ' ' . $this->place,
+                    'cs' => $this->event_type->name . ' ' . $this->place, // TODO
+                    'en' => $this->event_type->name . ' ' . $this->place, // TODO
                 ]);
             case 1:
                 return new LocalizedString([

@@ -8,7 +8,7 @@
     jelikož jsi byl{if $holder->getModel()->person->gender->value == 'F'}a{/if} při řešení našeho semináře
     velmi úspěšn{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if},
     je nám ctí tě pozvat na Letní tábor Výfuku,<br>
-    který se tentokrát koná {$holder->getModel()->event->begin|date:'j. n. Y'} – {$holder->getModel()->event->end|date:'j. n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}.
+    který se tentokrát koná {$holder->getModel()->event->begin|date:'j. n. Y'} – {$holder->getModel()->event->end|date:'j. n. Y'} {$holder->getModel()->event->getParameter('letterWhere')}{* TODO use place *}.
     Můžeš se těšit na další řešitele Výfuku,<br>
     přednášky z fyziky či matematiky a spoustu zajímavých her v přírodě. Na konci tábora proběhne slavnostní<br>
     vyhlášení vítězů letošního ročníku Výfuku.

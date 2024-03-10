@@ -13,7 +13,7 @@
     Případné změny v přihlášce lze provádět až do {$holder->getModel()->event->registration_end|date:'j. n. Y, H:i'}
     v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
     či na odkazu
-    {var $link = $control->link('//:Event:Application:Detail',
+    {var $link = $control->link('//:Event:Application:detail',
     ['eventId'=> $holder->getModel()->event->event_id,
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.
@@ -21,5 +21,5 @@
 </p>
 <p>
     Za organizátory<br />
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')} {* TODO to template *}
 </p>

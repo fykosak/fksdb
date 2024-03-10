@@ -31,16 +31,21 @@ final class EventTypeModel extends Model
     public function getSymbol(): string
     {
         switch ($this->event_type_id) {
-            case 4:
-            case 5:
-                return 'sous';
             case 1:
                 return 'fof';
-            case 9:
-                return 'fol';
             case 2:
             case 14:
                 return 'dsef';
+            case 3:
+                return 'fav';
+            case 4:
+            case 5:
+                return 'sous';
+            case 6:
+            case 7:
+                return 'tsaf';
+            case 9:
+                return 'fol';
             case 16:
                 return 'fov';
             default:
@@ -66,7 +71,6 @@ final class EventTypeModel extends Model
                     'deadline' => Expect::type(\DateTimeInterface::class)->default(
                         new \DateTime('2021-05-09 23:59:00')
                     ),
-                    'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterResolutionTime' => Expect::string('až naprší a uschne'),
                 ])->castTo('array');
@@ -79,7 +83,6 @@ final class EventTypeModel extends Model
             case 4:
             case 5:
                 return Expect::structure([
-                    'letterWhere' => Expect::string('nikde'),
                     'deadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09'),
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09 00:00:00'),
@@ -90,7 +93,6 @@ final class EventTypeModel extends Model
                     'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
                     'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.org>'),
                     'capacity' => Expect::int(29),
-                    'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                 ])->castTo('array');
             case 11:
