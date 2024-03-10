@@ -1,7 +1,7 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    pouze Ti připomínáme pozvánku na {$holder->getModel()->event->event_type->name}. Pokud víš, že nepojedeš, budeme rádi, pokud v přihlášce
+    {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    pouze Ti připomínáme pozvánku na {$model->event->event_type->name}. Pokud víš, že nepojedeš, budeme rádi, pokud v přihlášce
     odmítneš účast. V takovém případě místo tebe pozveme{if strpos($holder->getState(), 'spare') === 0} další{/if}
     náhradníky.
 </p>

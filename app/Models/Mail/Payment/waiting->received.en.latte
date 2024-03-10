@@ -1,6 +1,5 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\PaymentHolder $holder}
-{var FKSDB\Models\ORM\Models\PaymentModel $model = $holder->getModel()}
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
 
 {define subject}Payment received{/define}
 

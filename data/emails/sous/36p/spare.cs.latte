@@ -3,11 +3,11 @@
 {var $link = $control->link(...$linkArgs)}
 
 <p>
-    {if $holder->getModel()->person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    gratulujeme! Jelikož jsi předvedl{if $holder->getModel()->person->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu (nebo Výfuku), zveme Tě jako
-    <b>{if $holder->getModel()->person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$holder->getModel()->event->event_type->name}, které se bude konat
-    v obci <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong> od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do
-    <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
+    {if $model->person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
+    gratulujeme! Jelikož jsi předvedl{if $model->person->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu (nebo Výfuku), zveme Tě jako
+    <b>{if $model->person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$model->event->event_type->name}, které se bude konat
+    v obci <strong>{$model->event->getParameter('letterWhere')}</strong> od <strong>{$model->event->begin|date:'j. n.'}</strong> do
+    <strong>{$model->event->end|date:'j. n. Y'}</strong>.
 </p>
 <p>
     A co že to soustředění vlastně je? Jedná se o týdenní akci, kde se můžeš těšit jak na odborný program (přednášky z
@@ -20,17 +20,17 @@
 <p>
 <p>
     Své rozhodnutí, zda bys
-    chtěl{if $holder->getModel()->person->gender == 'F'}a{/if} přijet,{if strpos($holder->getState(), 'spare') === 0} kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+    chtěl{if $model->person->gender == 'F'}a{/if} přijet,{if strpos($holder->getState(), 'spare') === 0} kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
+    <strong>{$model->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
 odkazu
-    <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getModel()->person->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své {if strpos($holder->getState(), 'spare') === 0}případné {/if}
+    <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $model->person->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své {if strpos($holder->getState(), 'spare') === 0}případné {/if}
     účasti nám pak můžeš dát vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s
     Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře je dole
     tlačítko na odmítnutí účasti). Alespoň Ti pak nebudou chodit upomínky.
 </p>
 <p>
     O Tvé účasti na soustředění rozhodneme do
-    <strong>{$holder->getModel()->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
+    <strong>{$model->event->getParameter('letterResolutionTime')|date:'j. n.'}</strong> a dáme Ti vědět.
 </p>
 
 <p>
@@ -47,11 +47,11 @@ odkazu
 </p>
 
 <p>
-    Pokud bys měl{if $holder->getModel()->person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit
+    Pokud bys měl{if $model->person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit
     na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 
 <p>
     Za organizátory se na Tebe moc těší<br>
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$model->event->getParameter('letterSignature')}
 </p>

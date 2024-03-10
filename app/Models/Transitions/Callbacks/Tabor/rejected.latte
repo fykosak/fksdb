@@ -1,5 +1,5 @@
 {layout none}
-{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
 
 {define subject}Letní tábor Výfuku – odmítnutí z důvodu kapacity{/define}
 
@@ -11,5 +11,5 @@
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$model->event->getParameter('letterSignature')}
 </p>

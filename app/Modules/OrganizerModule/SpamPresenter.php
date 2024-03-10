@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Components\Mail\MailProviderForm;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Mail\Sous\Reminder1Mail;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -42,6 +44,11 @@ final class SpamPresenter extends BasePresenter
         );
     }
 
+    public function titleTest(): PageTitle
+    {
+        return new PageTitle(null, '', '');
+    }
+
     public function authorizedDetail(): bool
     {
         $authorized = true;
@@ -55,6 +62,11 @@ final class SpamPresenter extends BasePresenter
                 );
         }
         return $authorized;
+    }
+
+    public function authorizedTest(): bool
+    {
+        return true;
     }
 
     public function titleList(): PageTitle
@@ -89,6 +101,11 @@ final class SpamPresenter extends BasePresenter
     protected function createComponentGrid(): EmailsGrid
     {
         return new EmailsGrid($this->getContext());
+    }
+
+    protected function createComponentTestForm(): MailProviderForm
+    {
+        return new MailProviderForm($this->getContext(), new Reminder1Mail($this->getContext()));
     }
 
     /**

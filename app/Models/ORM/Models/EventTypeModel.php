@@ -87,7 +87,7 @@ final class EventTypeModel extends Model
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09 00:00:00'),
                     'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('1990-19-09 00:00:00'),
-                ])->castTo('array');
+                ])->castTo('array')->otherItems(Expect::mixed());
             case 10:
                 return Expect::structure([
                     'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),

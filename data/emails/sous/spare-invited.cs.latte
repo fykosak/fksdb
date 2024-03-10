@@ -1,16 +1,16 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 
 <p>
-    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo na {$holder->getModel()->event->event_type->name} v obci {$holder->getModel()->event->getParameter('letterWhere')} v termínu od {$holder->getModel()->event->begin|date:'j. n.'} do {$holder->getModel()->event->end|date:'j. n. Y'}
+    {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo na {$model->event->event_type->name} v obci {$model->event->getParameter('letterWhere')} v termínu od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'}
     , jsi
     nyní mezi pozvanými. Gratulujeme.
 </p>
 <p>
-    Připomínáme, že stále čekáme na Tvou odpověď. Pokud bys měl{if $holder->getModel()->person->gender->value == 'F'}a{/if} jakýkoliv dotaz,
+    Připomínáme, že stále čekáme na Tvou odpověď. Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz,
     neváhej se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>
     Za organizátory<br>
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$model->event->getParameter('letterSignature')}
 </p>

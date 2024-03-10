@@ -73,7 +73,7 @@ orm:
                 type: email
                 title: _('Bcc')
             text:
-                type: string
+                type: text
                 title: _('Text')
             state:
                 type: enum

@@ -1,11 +1,11 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    Potvrzujeme přijetí přihlášky osoby {$holder->getModel()->person->getFullName()} na akci <em>{$holder->getModel()->event}</em>,
+    Potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci <em>{$model->event}</em>,
     která se koná
-    {if $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
-        {$holder->getModel()->event->begin|date:'j. n. Y'}–{$holder->getModel()->event->end|date:'j. n. Y'}.
+    {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
+        {$model->event->begin|date:'j. n. Y'}–{$model->event->end|date:'j. n. Y'}.
     {else}
-        {$holder->getModel()->event->begin|date:'j. n. Y'}.
+        {$model->event->begin|date:'j. n. Y'}.
     {/if}
 </p>
 {include 'inc/eventEdit.cs.latte'}

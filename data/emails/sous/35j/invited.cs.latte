@@ -3,11 +3,11 @@
 {var $link = $control->link(...$linkArgs)}
 
 <p>
-    {if $holder->getModel()->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} FYKOSu,<br/>
-    gratulujeme! Jelikož jsi předvedl{if $holder->getModel()->person->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích, je nám
-        ctí Tě pozvat na {$holder->getModel()->event->event_type->name}, které se bude konat v obci
-    <strong>{$holder->getModel()->event->getParameter('letterWhere')}</strong>
-    od <strong>{$holder->getModel()->event->begin|date:'j. n.'}</strong> do <strong>{$holder->getModel()->event->end|date:'j. n. Y'}</strong>.
+    {if $model->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if} FYKOSu,<br/>
+    gratulujeme! Jelikož jsi předvedl{if $model->person->gender->value == 'F'}a{/if} skvělý výkon v uplynulých sériích, je nám
+        ctí Tě pozvat na {$model->event->event_type->name}, které se bude konat v obci
+    <strong>{$model->event->getParameter('letterWhere')}</strong>
+    od <strong>{$model->event->begin|date:'j. n.'}</strong> do <strong>{$model->event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>
@@ -26,10 +26,10 @@
 {include ../inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
     Své rozhodnutí, zda bys
-    chtěl{if $holder->getModel()->person->gender->value == 'F'}a{/if} přijet, nám dej vědět co nejdříve, nejpozději však do
-    <strong>{$holder->getModel()->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím <a
+    chtěl{if $model->person->gender->value == 'F'}a{/if} přijet, nám dej vědět co nejdříve, nejpozději však do
+    <strong>{$model->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím <a
             href="https://db.fykos.cz/">FKSDB</a>, nebo pomocí odkazu <a
-            href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $holder->getModel()->person->gender->value == 'F'}á{else}ý{/if}
+            href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $model->person->gender->value == 'F'}á{else}ý{/if}
     , jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
     své účasti nám pak dej vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s
     Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře je dole
@@ -43,12 +43,12 @@
 </p>
 
 <p>
-    Pokud bys měl{if $holder->getModel()->person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
+    Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
     <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 
 <p>
     Těšíme se na Tebe!<br>
     Za organizátory<br>
-    {$holder->getModel()->event->getParameter('letterSignature')}
+    {$model->event->getParameter('letterSignature')}
 </p>

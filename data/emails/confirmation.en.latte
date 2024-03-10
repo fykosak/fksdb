@@ -1,11 +1,11 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    We confirm receiving {$holder->getModel()->person->getFullName()}'s application for event <em>{$holder->getModel()->event}</em>
+    We confirm receiving {$model->person->getFullName()}'s application for event <em>{$model->event}</em>
     that takes place
-    {if $holder->getModel()->event->end->getTimestamp() !== $holder->getModel()->event->begin->getTimestamp()}
-        from {$holder->getModel()->event->begin|date:'M d'} to {$holder->getModel()->event->end|date:'M d, Y'}.
+    {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
+        from {$model->event->begin|date:'M d'} to {$model->event->end|date:'M d, Y'}.
     {else}
-        on {$holder->getModel()->event->begin|date:'M d, Y'}.
+        on {$model->event->begin|date:'M d, Y'}.
     {/if}
 </p>
 {include 'inc/eventEdit.en.latte'}

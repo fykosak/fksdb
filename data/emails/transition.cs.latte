@@ -1,6 +1,6 @@
 {varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    Změna stavu přihlášky osoby {$holder->getModel()->person->getFullName()} na akci <em>participant</em>.
+    Změna stavu přihlášky osoby {$model->person->getFullName()} na akci <em>participant</em>.
     Nový stav <em>{$state = $holder->getState()->label()}</em>.
 </p>
 {include 'inc/eventEdit.cs.latte'}

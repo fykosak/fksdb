@@ -4,12 +4,7 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
         transitions:
             # init application
-            __init->invited:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Pozvat účastníka')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\InviteMailCallback()
-            auto.invited->invited: # this must be duplicate of __init->invited
+            __init|auto.invited->invited:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Pozvat účastníka')
                 afterExecute:
@@ -20,53 +15,19 @@ transitions:
                 afterExecute:
                     - FKSDB\Models\Mail\Sous\InviteMailCallback()
              # participant decides
-            invited|invited1|invited2|invited3->applied:
+            invited->applied:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
                 label: _('Potrvrdit učast')
-            spare|spare1|spare2|spare3->interested:
+            spare->interested:
                 condition: FKSDB\Models\Events\Semantics\RegOpen()
                 label: _('Chci jet')
-            invited|invited1|invited2|invited3->rejected:
+            invited->rejected:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
                 label: _('Odmítnout účast')
                 behaviorType: danger
-            # reminders
-            # 1. reminder
-            spare->spare1:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat první upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
-            invited->invited1:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat první upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
-            # 2. reminder
-            spare1->spare2:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat druhou upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
-            invited1->invited2:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat druhou upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
-            # 3. reminder
-            spare2->spare3:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat třetí upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
-            invited2->invited3:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Poslat třetí upomínku')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
 
             # spare reject
-            spare|spare1|spare2|spare3->rejected:
+            spare->rejected:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
                 label: _('Odmítnout účast')
                 behaviorType: danger
@@ -82,21 +43,6 @@ transitions:
                 label: _('Invite as participant')
                 afterExecute:
                     - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
-            spare1->invited1:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Invite as participant')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
-            spare2->invited2:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Invite as participant')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
-            spare3->invited3:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Invite as participant')
-                afterExecute:
-                    - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
             # after sous
             applied->participated:
                 condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
@@ -106,57 +52,39 @@ transitions:
                 label: _('Missed')
 
             # used in special cases, when it's undesirable to send reminders (e.g. I'll know at later date, will let you know)
-            invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
+            invited|auto.invited|spare|auto.spare|applied|interested->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Cancel application')
-            invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
+            invited|spare|applied|interested->outOfDB:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Deal with outside FKSDB')
-            out_of_db->invited:
+            outOfDB->invited:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Invited')
-            out_of_db->invited1:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Invited, first call')
-            out_of_db->invited2:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Invited, second call')
-            out_of_db->invited3:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Invited, last call')
-            out_of_db->auto.invited:
+            outOfDB->auto.invited:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Invited (auto)')
-            out_of_db->spare:
+            outOfDB->spare:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Spare')
-            out_of_db->spare1:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Spare, first call')
-            out_of_db->spare2:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Spare, second call')
-            out_of_db->spare3:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
-                label: _('Return to DB as Spare, last call')
-            out_of_db->auto.spare:
+            outOfDB->auto.spare:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Spare (auto)')
-            out_of_db->applied:
+            outOfDB->applied:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Applied')
-            out_of_db->interested:
+            outOfDB->interested:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Interested')
-            out_of_db->participated:
+            outOfDB->participated:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Participated')
-            out_of_db->rejected:
+            outOfDB->rejected:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as Rejected')
-            out_of_db->missed:
+            outOfDB->missed:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as missed')
-            out_of_db->cancelled:
+            outOfDB->cancelled:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Return to DB as cancelled')

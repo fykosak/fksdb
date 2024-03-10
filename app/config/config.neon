@@ -6,9 +6,6 @@ parameters:
     # Various logs
     logDir: %appDir%/../log
 
-    # Auxiliar data (templates etc.)
-    dataDir: %appDir%/../data
-
     # WDSL file defining provided services.
     wsdlUrl: https://db.fykos.cz/FKSDBWebServices.wsdl
 
@@ -24,7 +21,6 @@ parameters:
 
     # Configuration of sent emails.
     email:
-        templatesDir: %dataDir%/emails
         from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
@@ -95,11 +91,6 @@ parameters:
 
         # default language when not set explicitly
         defaultLanguage: cs
-
-    # Events
-    events:
-        # where locale files are stored
-        templateDir: %dataDir%/events
 
     # Parameters used for automated testing
     tester: []
