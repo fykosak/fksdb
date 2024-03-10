@@ -1,7 +1,7 @@
 {block titleBody}
     {include parent}
     {varType FKSDB\Models\ORM\Models\EventModel $event}
-    <a n:href=":Public:Application:default eventId => $event->getPrimary()"
+    <a n:href=":Event:Application:create eventId => $event->getPrimary()"
             class="btn btn-outline-primary"><i class="fas fa-plus me-2"></i>{_'New application'}</a>
 {/block}
 

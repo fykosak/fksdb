@@ -13,7 +13,7 @@ use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
- * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Transitions\Holder\ParticipantHolder
  * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
  * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
  *     ? \FKSDB\Models\ORM\Models\PaymentState

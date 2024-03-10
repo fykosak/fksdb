@@ -23,7 +23,7 @@ class PersonScheduleHolder implements ModelHolder
         $this->model = $model;
     }
 
-    public function getModel(): ?PersonScheduleModel
+    public function getModel(): PersonScheduleModel
     {
         return $this->model;
     }

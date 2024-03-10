@@ -1,5 +1,5 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 {varType FKSDB\Components\Controls\Events\ApplicationComponent $control}
 {block content}
 <ul>
@@ -13,7 +13,7 @@
         Ušetříš si tím práci při vyplňování formuláře.
     </li>
     <li>
-        Registrace končí <strong>{$holder->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+        Registrace končí <strong>{$model->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
 

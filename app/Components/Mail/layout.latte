@@ -1,0 +1,26 @@
+{varType array[]|null $previewMails}
+{control form}
+{if isset($previewMails)}
+    <h2>Preview</h2>
+    {foreach $previewMails as $email}
+        <table class="table table-striped">
+            <tbody>
+            {foreach $email as $key=>$value}
+                {continueIf $key === 'text'}
+                <tr>
+                    <th>{$key}</th>
+                    <td>{$value}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <div class="embed-responsive embed-responsive-1by1">
+            <iframe
+                    class="embed-responsive-item w-100"
+                    style="min-height: 30rem"
+                    srcdoc="{$email['text']}"
+            ></iframe>
+        </div>
+        <hr/>
+    {/foreach}
+{/if}

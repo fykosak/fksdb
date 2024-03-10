@@ -216,7 +216,7 @@ final class AttendancePresenter extends BasePresenter
      */
     private function getMachine(): Machine
     {
-        return $this->eventDispatchFactory->getEventMachine($this->getEvent());//@phpstan-ignore-line
+        return $this->eventDispatchFactory->getEventMachine($this->getEvent());
     }
 
     /**

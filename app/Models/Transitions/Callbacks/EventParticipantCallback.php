@@ -9,7 +9,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 //phpcs:disable
 /**
- * @phpstan-template THolder of \FKSDB\Models\Events\Model\Holder\BaseHolder|\FKSDB\Models\Transitions\Holder\ParticipantHolder
+ * @phpstan-template THolder of \FKSDB\Models\Transitions\Holder\ParticipantHolder|\FKSDB\Models\Transitions\Holder\ParticipantHolder
  * @phpstan-extends MailCallback<THolder>
  */
 // phpcs:enable

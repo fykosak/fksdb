@@ -24,7 +24,7 @@ interface ModelHolder
     public function getState(): EnumColumn;
 
     /**
-     * @phpstan-return TModel|null
+     * @phpstan-return TModel
      */
-    public function getModel(): ?Model;
+    public function getModel(): Model;
 }

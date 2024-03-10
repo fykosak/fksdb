@@ -82,6 +82,7 @@ abstract class MailCallback implements Statement
             [
                 'person' => $person,
                 'holder' => $holder,
+                'model' => $holder->getModel(),
                 'token' => $this->createToken($person, $holder),
             ],
             Language::tryFrom($person->getPreferredLang())

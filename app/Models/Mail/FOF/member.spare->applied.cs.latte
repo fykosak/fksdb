@@ -1,10 +1,7 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
-{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
-{var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
-{define subject}Změna stavu - {$holder->getModel()->name}{/define}
+{define subject}Změna stavu - {$model->name}{/define}
 
 {block body}
     <p>
