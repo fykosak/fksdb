@@ -16,20 +16,11 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     public const RESOURCE_ID = 'api';
 
     private const ROUTER = ['module' => 'Core', 'presenter' => 'RestApi', 'action' => 'default'];
-    public const WEB_MODELS = [
-        'GetFyziklaniResults' => Models\Game\ResultsWebModel::class,
-        'GetOrganizers' => Models\Contests\OrganizersWebModel::class,
-        'GetEventList' => Models\Events\EventListWebModel::class,
-        'GetEvent' => Models\Events\EventDetailWebModel::class,
-        'GetSignatures' => Models\SignaturesWebModel::class,
-        'GetResults' => Models\ResultsWebModel::class,
-        'GetStats' => Models\Contests\StatsWebModel::class,
-        'GetPaymentList' => Models\PaymentListWebModel::class,
-        'GetSeriesResults' => Models\ResultsWebModel::class,
-        'GetContests' => Models\Contests\ContestsWebModel::class,
-    ];
 
-    /** @persistent */
+    /**
+     * @persistent
+     * @phpstan-var class-string<Models\WebModel>
+     */
     public string $model;
 
     public function authorizedDefault(): bool
@@ -49,13 +40,10 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             $params = (array)json_decode($this->getHttpRequest()->getRawBody(), true);
         }
         try {
-            $webModelClass = class_exists($this->model)
-                ? $this->model
-                : (self::WEB_MODELS[$this->model] ?? self::WEB_MODELS[ucfirst($this->model)] ?? null);
-            if (!$webModelClass) {
+            if (!class_exists($this->model)) {
                 throw new \InvalidArgumentException();
             }
-            $reflection = new \ReflectionClass($webModelClass);
+            $reflection = new \ReflectionClass($this->model);
             if (!$reflection->isSubclassOf(Models\WebModel::class)) {
                 throw new \InvalidArgumentException();
             }

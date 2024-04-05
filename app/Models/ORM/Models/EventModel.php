@@ -62,7 +62,15 @@ use Nette\Security\Resource;
  *    name:string,
  *    nameNew:array<string,string>,
  *    eventTypeId:int,
+ *    place:string|null,
  *    contestId:int,
+ *    game?:array{
+ *        availablePoints: int[],
+ *        tasksOnBoard: int,
+ *        hardVisible: bool,
+ *        begin:string,
+ *        end:string
+ *    }
  * }
  */
 final class EventModel extends Model implements Resource, NodeCreator
@@ -254,7 +262,7 @@ final class EventModel extends Model implements Resource, NodeCreator
      */
     public function __toArray(): array
     {
-        return [
+        $data = [
             'eventId' => $this->event_id,
             'year' => $this->year,
             'eventYear' => $this->event_year,
@@ -262,14 +270,31 @@ final class EventModel extends Model implements Resource, NodeCreator
             'end' => $this->end->format('c'),
             'registrationBegin' => $this->registration_begin->format('c'),
             'registrationEnd' => $this->registration_end->format('c'),
+            'registration' => [
+                'begin' => $this->registration_begin->format('c'),
+                'end' => $this->registration_end->format('c'),
+            ],
             'report' => $this->report_cs,
             'reportNew' => $this->report->__serialize(),
             'description' => $this->description->__serialize(),
             'name' => $this->name,
             'nameNew' => $this->getName()->__serialize(),
             'eventTypeId' => $this->event_type_id,
+            'place' => $this->place,
             'contestId' => $this->event_type->contest_id,
         ];
+        try {
+            $gameSetup = $this->getGameSetup();
+            $data['game'] = [
+                'availablePoints' => $gameSetup->getAvailablePoints(),
+                'tasksOnBoard' => $gameSetup->tasks_on_board,
+                'hardVisible' => (bool)$gameSetup->result_hard_display,
+                'begin' => $gameSetup->game_start->format('c'),
+                'end' => $gameSetup->game_end->format('c'),
+            ];
+        } catch (NotSetGameParametersException $exception) {
+        }
+        return $data;
     }
 
     /**

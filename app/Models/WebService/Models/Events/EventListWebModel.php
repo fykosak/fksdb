@@ -51,23 +51,7 @@ class EventListWebModel extends WebModel
         /** @var EventModel $event */
         foreach ($query as $event) {
             if ($this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event)) {
-                $events[$event->event_id] = [
-                    'eventId' => $event->event_id,
-                    'year' => $event->year,
-                    'eventYear' => $event->event_year,
-                    'begin' => $event->begin->format('c'),
-                    'end' => $event->end->format('c'),
-                    'registrationBegin' => $event->registration_begin->format('c'),
-                    'registrationEnd' => $event->registration_end->format('c'),
-                    'report' => $event->report_cs,
-                    'reportNew' => $event->report->__serialize(),
-                    'description' => $event->description->__serialize(),
-                    'name' => $event->name,
-                    'nameNew' => $event->getName()->__serialize(),
-                    'eventTypeId' => $event->event_type_id,
-                    'place' => $event->place,
-                    'contestId' => $event->event_type->contest_id,
-                ];
+                $events[$event->event_id] = $event->__toArray();
             }
         }
         return $events;

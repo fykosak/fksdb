@@ -47,12 +47,13 @@ final class GameSetupModel extends Model
     /**
      * @note Check if current time is in between the midnight before game_start
      * and midnight after game_end.
+     * @throws \Exception
      */
     public function isGameTimeRange(): bool
     {
-        $startMidnight = new \DateTime($this->game_start->format("Y-m-d"));
+        $startMidnight = new \DateTimeImmutable($this->game_start->format('Y-m-d'));
         $afterStartMidnight = ($startMidnight->getTimestamp() < time());
-        $endMidnight = \DateTime::createFromInterface($this->game_end)->add(new \DateInterval("P1D"));
+        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D'));
         $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
         return ($afterStartMidnight && $beforeEndMidnight);
     }
