@@ -7,8 +7,6 @@ namespace FKSDB\Models\WebService\Models\Events;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends EventWebModel<array{eventId:int},array{
@@ -27,13 +25,6 @@ class EventDetailWebModel extends EventWebModel
     protected function getJsonResponse(): array
     {
         return $this->getEvent()->__toArray();
-    }
-
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int'),
-        ]);
     }
 
     /**

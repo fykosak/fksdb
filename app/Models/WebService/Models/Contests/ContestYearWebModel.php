@@ -8,6 +8,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\WebService\Models\WebModel;
+use Nette\Schema\Expect;
 
 /**
  * @phpstan-template TParams of array{contestId:int,year:int}
@@ -40,5 +41,12 @@ abstract class ContestYearWebModel extends WebModel
             $this->contestYear = $contestYear;
         }
         return $this->contestYear;
+    }
+    protected function getInnerStructure(): array
+    {
+        return [
+            'contestId' => Expect::scalar()->castTo('int'),
+            'year' => Expect::scalar()->castTo('int')->nullable(),
+        ];
     }
 }

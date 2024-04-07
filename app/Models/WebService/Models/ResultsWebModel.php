@@ -17,7 +17,7 @@ use Nette\Schema\Elements\Structure;
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
  */
-class ResultsWebModel extends WebModel
+class ResultsWebModel extends WebModel implements SoapWebModel
 {
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
@@ -187,7 +187,7 @@ class ResultsWebModel extends WebModel
         return false;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
         throw new NotImplementedException();
     }

@@ -7,7 +7,6 @@ namespace FKSDB\Models\WebService\Models\Contests;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
@@ -25,10 +24,14 @@ class OrganizersWebModel extends ContestWebModel
     protected function getJsonResponse(): array
     {
         $contest = $this->getContest();
-        $organizers = $contest->getOrganizers();
         if (isset($this->params['year'])) {
-            $organizers->where('since<=?', $this->params['year'])
-                ->where('until IS NULL OR until >=?', $this->params['year']);
+            $contestYear = $contest->getContestYear($this->params['year']);
+            if (!$contestYear) {
+                throw new NotFoundException();
+            }
+            $organizers = $contestYear->getOrganizers();
+        } else {
+            $organizers = $contest->getOrganizers();
         }
         $items = [];
         /** @var OrganizerModel $organizer */
@@ -49,12 +52,14 @@ class OrganizersWebModel extends ContestWebModel
         return $items;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
-        return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int'),
-            'year' => Expect::scalar()->castTo('int')->nullable(),
-        ]);
+        return array_merge(
+            parent::getInnerStructure(),
+            [
+                'year' => Expect::scalar()->castTo('int')->nullable(),
+            ]
+        );
     }
 
     /**

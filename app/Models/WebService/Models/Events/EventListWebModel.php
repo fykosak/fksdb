@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
@@ -24,26 +23,6 @@ class EventListWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    /**
-     * @throws \SoapFault
-     * @throws \DOMException
-     */
-    public function getResponse(\stdClass $args): \SoapVar
-    {
-        if (!isset($args->eventTypeIds)) {
-            throw new \SoapFault('Sender', 'Unknown eventType.');
-        }
-        $query = $this->eventService->getTable()->where('event_type_id', (array)$args->eventTypeIds);
-        $document = new \DOMDocument();
-        $document->formatOutput = true;
-        $rootNode = $document->createElement('events');
-        /** @var EventModel $event */
-        foreach ($query as $event) {
-            $rootNode->appendChild($event->createXMLNode($document));
-        }
-        return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
-    }
-
     protected function getJsonResponse(): array
     {
         $query = $this->eventService->getTable()->where('event_type_id', $this->params['eventTypes']);
@@ -57,11 +36,11 @@ class EventListWebModel extends WebModel
         return $events;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
-        return Expect::structure([
+        return [
             'eventTypes' => Expect::listOf(Expect::scalar()->castTo('int')),
-        ]);
+        ];
     }
 
     protected function isAuthorized(): bool

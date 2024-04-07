@@ -8,6 +8,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\Models\WebModel;
+use Nette\Schema\Expect;
 
 /**
  * @phpstan-template TParams of array{contestId:int}
@@ -37,5 +38,11 @@ abstract class ContestWebModel extends WebModel
             $this->contest = $contest;
         }
         return $this->contest;
+    }
+    protected function getInnerStructure(): array
+    {
+        return [
+            'contestId' => Expect::scalar()->castTo('int'),
+        ];
     }
 }

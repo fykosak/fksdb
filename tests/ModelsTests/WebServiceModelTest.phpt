@@ -10,7 +10,7 @@ $container = require '../Bootstrap.php';
 // phpcs:enable
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\OrganizerService;
-use FKSDB\Models\WebService\WebServiceModel;
+use FKSDB\Models\WebService\Models\WebServiceModel;
 use Tester\Assert;
 
 class WebServiceModelTest extends DatabaseTestCase

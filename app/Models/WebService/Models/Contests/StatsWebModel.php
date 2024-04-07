@@ -7,8 +7,6 @@ namespace FKSDB\Models\WebService\Models\Contests;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends ContestYearWebModel<array{contestId:int,year:int},(SerializedTaskModel&TaskStatsType)[]>
@@ -17,14 +15,6 @@ use Nette\Schema\Expect;
  */
 class StatsWebModel extends ContestYearWebModel
 {
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int'),
-            'year' => Expect::scalar()->castTo('int')->required(),
-        ]);
-    }
-
     /**
      * @throws NotFoundException
      */

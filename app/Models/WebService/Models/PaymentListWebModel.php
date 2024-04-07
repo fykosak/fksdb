@@ -75,9 +75,9 @@ class PaymentListWebModel extends WebModel
         return $data;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
-        return Expect::structure([]);
+        return [];
     }
 
     protected function isAuthorized(): bool

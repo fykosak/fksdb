@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\WebService\Models\Events\EventWebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
@@ -44,16 +43,18 @@ use Nette\Schema\Expect;
  */
 class GroupListWebModel extends EventWebModel
 {
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
-            'types' => Expect::listOf(
-                Expect::anyOf(
-                    ...array_map(fn(ScheduleGroupType $type): string => $type->value, ScheduleGroupType::cases())
-                )
-            )->default([])->required(false),
-        ]);
+        return array_merge(
+            parent::getInnerStructure(),
+            [
+                'types' => Expect::listOf(
+                    Expect::anyOf(
+                        ...array_map(fn(ScheduleGroupType $type): string => $type->value, ScheduleGroupType::cases())
+                    )
+                )->default([])->required(false),
+            ]
+        );
     }
 
     /**

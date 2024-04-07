@@ -8,8 +8,6 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends WebModel<array<never>,array<int,array{
@@ -42,9 +40,9 @@ class ContestsWebModel extends WebModel
         return $data;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getInnerStructure(): array
     {
-        return Expect::structure([]);
+        return [];
     }
 
     protected function isAuthorized(): bool
