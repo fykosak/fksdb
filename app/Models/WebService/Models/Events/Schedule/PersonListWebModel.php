@@ -24,7 +24,7 @@ class PersonListWebModel extends WebModel
         $this->scheduleItemService = $scheduleItemService;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return [
             'itemId' => Expect::scalar()->castTo('int')->required(),

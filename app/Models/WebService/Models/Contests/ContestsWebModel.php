@@ -40,7 +40,7 @@ class ContestsWebModel extends WebModel
         return $data;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return [];
     }

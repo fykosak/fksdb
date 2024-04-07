@@ -47,7 +47,7 @@ abstract class WebModel
         $container->callInjects($this);
         if (isset($arguments)) {
             $processor = new Processor();
-            $schema = new Structure($this->getInnerStructure());
+            $schema = new Structure($this->getInnerExpectedStructure());
             $schema->otherItems()->castTo('array');
             $this->params = $processor->process($schema, $arguments);
         }
@@ -82,7 +82,7 @@ abstract class WebModel
      * @throws NotImplementedException
      * @phpstan-return Schema[]
      */
-    abstract protected function getInnerStructure(): array;
+    abstract protected function getInnerExpectedStructure(): array;
 
     /**
      * @throws GoneException

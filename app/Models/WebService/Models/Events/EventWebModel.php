@@ -25,7 +25,7 @@ abstract class EventWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return [
             'eventId' => Expect::scalar()->castTo('int')->required(),

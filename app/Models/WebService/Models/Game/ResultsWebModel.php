@@ -61,10 +61,10 @@ class ResultsWebModel extends EventWebModel
         return $result;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return array_merge(
-            parent::getInnerStructure(),
+            parent::getInnerExpectedStructure(),
             [
             'lastUpdate' => Expect::string()->nullable(),
             ]

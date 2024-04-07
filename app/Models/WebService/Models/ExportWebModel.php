@@ -120,7 +120,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
         return false;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         throw new NotImplementedException();
     }

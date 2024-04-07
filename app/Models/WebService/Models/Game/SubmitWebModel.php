@@ -28,7 +28,7 @@ class SubmitWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return [
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),

@@ -36,7 +36,7 @@ class EventListWebModel extends WebModel
         return $events;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return [
             'eventTypes' => Expect::listOf(Expect::scalar()->castTo('int')),

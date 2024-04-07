@@ -52,10 +52,10 @@ class OrganizersWebModel extends ContestWebModel
         return $items;
     }
 
-    protected function getInnerStructure(): array
+    protected function getInnerExpectedStructure(): array
     {
         return array_merge(
-            parent::getInnerStructure(),
+            parent::getInnerExpectedStructure(),
             [
                 'year' => Expect::scalar()->castTo('int')->nullable(),
             ]
