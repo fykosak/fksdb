@@ -9,7 +9,7 @@ use FKSDB\Models\Authorization\Roles\BaseRole;
 use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
 use FKSDB\Models\ORM\Models;
-use FKSDB\Models\WebService\Models\WebServiceModel;
+use FKSDB\Models\WebService\WebServiceModel;
 use FKSDB\Modules\CoreModule\AESOPPresenter;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;

@@ -2,11 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\WebService\Models;
+namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\WebService\Models\ExportWebModel;
+use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SoapWebModel;
+use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
