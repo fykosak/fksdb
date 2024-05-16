@@ -20,8 +20,11 @@ use Nette\Security\Resource;
  */
 trait EntityPresenterTrait
 {
-    /** @persistent */
-    public ?int $id = null;
+    /**
+     * @persistent
+     * @var int|string|null $id
+     */
+    public $id = null;
 
     /**
      * @throws EventNotFoundException

@@ -7,6 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\Spam\SpamPersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
@@ -113,7 +114,7 @@ class StudyYearNewColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param PersonHistoryModel $model
+     * @param PersonHistoryModel|SpamPersonModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

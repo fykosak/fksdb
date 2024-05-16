@@ -114,6 +114,11 @@ final class ACL
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+// spam
+        $service->addResource(Models\Spam\SpamPersonModel::RESOURCE_ID);
+        $service->addResource(Models\Spam\SpamSchoolModel::RESOURCE_ID);
+        $service->allow(ContestRole::Organizer, Models\Spam\SpamPersonModel::RESOURCE_ID);
+        $service->allow(ContestRole::Organizer, Models\Spam\SpamSchoolModel::RESOURCE_ID);
 
         self::createPayment($service, $selfAssertion);
         self::createGame($service);

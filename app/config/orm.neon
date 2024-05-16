@@ -1190,3 +1190,37 @@ orm:
     unsubscribed_email:
         model: Fykosak\NetteORM\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
+    # spam
+    spam_person:
+        service: FKSDB\Models\ORM\Services\Spam\SpamPersonService
+        model: FKSDB\Models\ORM\Models\Spam\SpamPersonModel
+        columns:
+            spam_person_id:
+                type: primaryKey
+                title: _('Spam Person Id')
+            family_name:
+                type: string
+                title: _('Family name')
+            other_name:
+                type: string
+                title: _('Other name')
+            created:
+                type: dateTime
+                title: _('Created')
+            study_year_new:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory
+                title: _('Study year')
+            spam_school_label:
+                type: string
+                title: _('School label')
+    spam_school:
+        service: FKSDB\Models\ORM\Services\Spam\SpamSchoolService
+        model: FKSDB\Models\ORM\Models\Spam\SpamSchoolModel
+        columns:
+            #spam_school_id:
+            #    type: primaryKey
+            #    title: _('Spam school Id')
+            spam_school_label:
+                type: string
+                title: _('School label')

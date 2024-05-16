@@ -71,4 +71,7 @@ class DbNames
     public const TAB_WAREHOUSE_PRODUCER = 'warehouse_producer';
     public const TAB_WAREHOUSE_PRODUCT = 'warehouse_product';
     public const TAB_WAREHOUSE_ITEM = 'warehouse_item';
+    /* spam */
+    public const TAB_SPAM_PERSON = 'spam_person';
+    public const TAB_SPAM_SCHOOL = 'spam_school';
 }

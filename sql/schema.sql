@@ -1467,8 +1467,49 @@ CREATE TABLE IF NOT EXISTS `unsubscribed_email`
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `spam_school`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `spam_school`
+(
+    `spam_school_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `spam_school_label` VARCHAR(255) NOT NULL,
+    `school_id`         INT          NULL,
+    UNIQUE INDEX `uq__spam_school__label` (`spam_school_label`),
+    CONSTRAINT `fk__spam_school__school_id`
+        FOREIGN KEY (`school_id`)
+        REFERENCES `school` (`school_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
+-- Table `spam_person`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `spam_person`
+(
+    `spam_person_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `other_name`        VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Křestní jména',
+    `family_name`       VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Příjmení',
+    `created`           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `study_year_new`     ENUM (
+        'P_5','P_6','P_7','P_8','P_9',
+        'H_1','H_2','H_3','H_4',
+        'U_ALL','NONE')              NOT NULL DEFAULT 'NONE',
+    `spam_school_label` VARCHAR(255) NOT NULL,
+    CONSTRAINT `fk__spam_person__school`
+        FOREIGN KEY (`spam_school_label`)
+        REFERENCES `spam_school` (`spam_school_label`)
+            ON DELETE RESTRICT
+            ON UPDATE CASCADE
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
-
-
