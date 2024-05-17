@@ -9,7 +9,6 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 
 /**
- * @property-read int $spam_school_id
  * @property-read string $spam_school_label
  * @property-read int|null $school_id
  * @property-read SchoolModel|null $school

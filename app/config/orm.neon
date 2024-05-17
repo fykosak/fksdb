@@ -1204,16 +1204,22 @@ orm:
             other_name:
                 type: string
                 title: _('Other name')
-            created:
-                type: dateTime
-                title: _('Created')
+            spam_school_label:
+                type: string
+                title: _('School label')
             study_year_new:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory
                 title: _('Study year')
-            spam_school_label:
+            ac_year:
                 type: string
-                title: _('School label')
+                title: _('Academic year')
+            created:
+                type: dateTime
+                title: _('Created')
+            note:
+                type: string
+                title: _('Note')
     spam_school:
         service: FKSDB\Models\ORM\Services\Spam\SpamSchoolService
         model: FKSDB\Models\ORM\Models\Spam\SpamSchoolModel

@@ -39,6 +39,11 @@ final class SpamPersonModel extends Model implements Resource
         return $value;
     }
 
+    public function getFullName(): string
+    {
+        return $this->other_name . " " . $this->family_name;
+    }
+
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;

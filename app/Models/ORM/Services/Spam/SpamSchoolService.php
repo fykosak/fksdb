@@ -12,5 +12,8 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class SpamSchoolService extends Service
 {
-
+    public function exists(string $label): bool
+    {
+        return $this->getTable()->wherePrimary($label)->count() > 0;
+    }
 }

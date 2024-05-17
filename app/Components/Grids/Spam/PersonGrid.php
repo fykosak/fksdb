@@ -57,8 +57,8 @@ final class PersonGrid extends BaseGrid
 
     protected function configureForm(Form $form): void
     {
-        $form->addText('name')->setHtmlAttribute('placeholder', _('Name'));
-        $form->addText('school')->setHtmlAttribute('placeholder', _('School'));
+        $form->addText('name', _('Name'))->setHtmlAttribute('placeholder', _('Name'));
+        $form->addText('school', _('School'))->setHtmlAttribute('placeholder', _('School'));
     }
 
     protected function configure(): void
@@ -70,8 +70,9 @@ final class PersonGrid extends BaseGrid
             '@spam_person.spam_person_id',
             '@spam_person.other_name',
             '@spam_person.family_name',
+            '@spam_person.spam_school_label',
             '@spam_person.study_year_new',
-            '@spam_school.spam_school_label',
+            '@spam_person.ac_year',
             '@school.school',
         ]);
         $this->addPresenterButton(

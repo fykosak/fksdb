@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
+use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\PersonFormComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
 use FKSDB\Models\ORM\Models\Spam\SpamPersonModel;
@@ -27,7 +28,11 @@ final class PersonPresenter extends BasePresenter
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, _('Edit person %s'));
+        return new PageTitle(
+            null,
+            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
+            'fas fa-user-edit'
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -45,9 +50,10 @@ final class PersonPresenter extends BasePresenter
         return new PersonFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentCreateForm(): PersonFormComponent
+    protected function createComponentCreateForm(): AjaxPersonFormComponent
     {
-        return new PersonFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
+        //return new PersonFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
+        return new AjaxPersonFormComponent($this->getSelectedContestYear(), $this->getContext());
     }
 
     protected function createComponentGrid(): PersonGrid

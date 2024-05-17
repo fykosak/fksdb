@@ -1494,12 +1494,14 @@ CREATE TABLE IF NOT EXISTS `spam_person`
     `spam_person_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `other_name`        VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Křestní jména',
     `family_name`       VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Příjmení',
-    `created`           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `spam_school_label` VARCHAR(255) NOT NULL,
     `study_year_new`     ENUM (
         'P_5','P_6','P_7','P_8','P_9',
         'H_1','H_2','H_3','H_4',
         'U_ALL','NONE')              NOT NULL DEFAULT 'NONE',
-    `spam_school_label` VARCHAR(255) NOT NULL,
+    `ac_year`           SMALLINT     NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
+    `created`           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `note`              TEXT         NULL     COMMENT 'Poznámka / původní soutěž',
     CONSTRAINT `fk__spam_person__school`
         FOREIGN KEY (`spam_school_label`)
         REFERENCES `spam_school` (`spam_school_label`)

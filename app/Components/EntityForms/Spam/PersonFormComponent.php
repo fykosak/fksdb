@@ -56,15 +56,16 @@ final class PersonFormComponent extends EntityFormComponent
         $container = new ModelContainer($this->container, 'spam_person');
         $container->addField('other_name', ['required' => true]);
         $container->addField('family_name', ['required' => true]);
-        //$container->addField('study_year_new', ['required' => true]);
+        $container->addField('spam_school_label', ['required' => true]);
         $studyYearControl = $this->reflectionFactory->createField(
             'spam_person',
             'study_year_new',
             $this->contestYear,
-            StudyYearNewColumnFactory::FLAG_ALL
+            StudyYearNewColumnFactory::FLAG_HS
         );
         $container->addComponent($studyYearControl, 'study_year_new');
-        $container->addField('spam_school_label', ['required' => true]);
+        $container->addField('ac_year', ['required' => true]);
+        $container->addField('note', ['required' => false]);
         $form->addComponent($container, self::CONTAINER);
     }
 

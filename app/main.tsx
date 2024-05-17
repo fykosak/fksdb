@@ -26,6 +26,7 @@ import TimeProgress from 'FKSDB/Components/Charts/Event/Applications/time-progre
 import PointsVarianceChart from 'FKSDB/Components/Controls/Inbox/PointsVariance/chart';
 import SubmitsPerSeries from './Components/Charts/submits-per-series-chart';
 import PaymentCode from 'FKSDB/Components/Payments/payment-code';
+import SpamPersonComponent from './Components/EntityForms/Spam/spam-person-component';
 
 const translator = new Translator();
 
@@ -88,6 +89,8 @@ renderer.hashMapLoader.registerDataComponent('event.model.graph', ModelChart, {t
 
 renderer.hashMapLoader.registerDataComponent('points-variance-chart', PointsVarianceChart);
 renderer.hashMapLoader.registerDataComponent('payment.qrcode', PaymentCode);
+
+renderer.hashMapLoader.registerActionsComponent('spam.person-form', SpamPersonComponent, {translator});
 
 window.addEventListener('DOMContentLoaded', () => {
 

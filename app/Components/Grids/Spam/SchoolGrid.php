@@ -9,9 +9,12 @@ use FKSDB\Models\ORM\Models\Spam\SpamSchoolModel;
 use FKSDB\Models\ORM\Services\Spam\SpamSchoolService;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
+use Nette\Forms\Form;
 
 /**
- * @phpstan-extends BaseGrid<SpamSchoolModel,array{}>
+ * @phpstan-extends BaseGrid<SpamSchoolModel,array{
+ *     not_set?:bool
+ * }>
  */
 final class SchoolGrid extends BaseGrid
 {
@@ -27,14 +30,30 @@ final class SchoolGrid extends BaseGrid
      */
     protected function getModels(): TypedSelection
     {
-        return $this->service->getTable();
+        $query = $this->service->getTable();
+        if(isset($this->filterParams['name'])) {
+            $tokens = explode(' ', $this->filterParams['name']);
+            foreach ($tokens as $token) {
+                $query->where('school.name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+            }
+        }
+        if(isset($this->filterParams['not_set']) && $this->filterParams['not_set']) {
+            $query->where('school_id', null);
+        }
+        return $query;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $form->addText('name', _('Name'))->setHtmlAttribute('placeholder', _('Name'));
+        $form->addCheckbox('not_set', _('Not set'));
     }
 
     protected function configure(): void
     {
         $this->paginate = true;
         $this->counter = true;
-        $this->filtered = false;
+        $this->filtered = true;
         $this->addSimpleReferencedColumns([
             '@spam_school.spam_school_label',
             '@school.school',
