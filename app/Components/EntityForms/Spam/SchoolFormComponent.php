@@ -61,7 +61,7 @@ final class SchoolFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->spamSchoolService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('School has been updated.') : _('School has been created.'),
+            isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');

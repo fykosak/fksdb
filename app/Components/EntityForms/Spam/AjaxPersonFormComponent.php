@@ -16,7 +16,8 @@ use Nette\Application\LinkGenerator;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
-class AjaxPersonFormComponent extends AjaxComponent {
+class AjaxPersonFormComponent extends AjaxComponent
+{
 
     private ContestYearModel $contestYear;
     private SpamPersonService $spamPersonService;
@@ -29,8 +30,11 @@ class AjaxPersonFormComponent extends AjaxComponent {
         $this->contestYear = $contestYear;
     }
 
-    public function injectService(SpamPersonService $spamPersonService, SpamSchoolService $spamSchoolService, LinkGenerator $linkGenerator): void
-    {
+    public function injectService(
+        SpamPersonService $spamPersonService,
+        SpamSchoolService $spamSchoolService,
+        LinkGenerator $linkGenerator
+    ): void {
         $this->spamPersonService = $spamPersonService;
         $this->spamSchoolService = $spamSchoolService;
         $this->linkGenerator = $linkGenerator;

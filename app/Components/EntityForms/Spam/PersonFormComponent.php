@@ -82,7 +82,7 @@ final class PersonFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $this->spamPersonService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Person has been updated.') : _('Person has been created.'),
+            isset($this->model) ? _('Person has been updated') : _('Person has been created'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');

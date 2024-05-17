@@ -6,9 +6,9 @@ import os
 import sys
 
 output_path = './i18n-data.ts'
-js_pattern = re.compile('^#: .*\.tsx')
+js_pattern = re.compile(r'^#: .*\.tsx')
 
-msg_pattern = re.compile('(?P<type>(msgid|msgstr|msgid_plural)(\[(?P<index>\d+)\])?) "(?P<value>.*)"')
+msg_pattern = re.compile(r'(?P<type>(msgid|msgstr|msgid_plural)(\[(?P<index>\d+)\])?) "(?P<value>.*)"')
 
 def parse_record(record):
     attributes = {}

@@ -13,6 +13,7 @@ use Nette\Forms\Form;
 
 /**
  * @phpstan-extends BaseGrid<SpamSchoolModel,array{
+ *     name?:string,
  *     not_set?:bool
  * }>
  */
@@ -31,15 +32,18 @@ final class SchoolGrid extends BaseGrid
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
-        if(isset($this->filterParams['name'])) {
+
+        if (isset($this->filterParams['name'])) {
             $tokens = explode(' ', $this->filterParams['name']);
             foreach ($tokens as $token) {
                 $query->where('school.name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         }
-        if(isset($this->filterParams['not_set']) && $this->filterParams['not_set']) {
+
+        if (isset($this->filterParams['not_set']) && $this->filterParams['not_set']) {
             $query->where('school_id', null);
         }
+
         return $query;
     }
 
