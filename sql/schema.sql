@@ -1474,7 +1474,7 @@ CREATE TABLE IF NOT EXISTS `spam_school`
 (
     `spam_school_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `spam_school_label` VARCHAR(255) NOT NULL,
-    `school_id`         INT          NULL,
+    `school_id`         INT UNSIGNED NULL,
     UNIQUE INDEX `uq__spam_school__label` (`spam_school_label`),
     CONSTRAINT `fk__spam_school__school_id`
         FOREIGN KEY (`school_id`)

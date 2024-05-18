@@ -82,7 +82,7 @@ class OrganizerModule extends AbstractPageDisplayTestCase
 
             ['Organizer:Schools', 'default'],
             ['Organizer:Schools', 'create'],
-            ['Organizer:Spam', 'list'],
+            ['Organizer:Email', 'list'],
 
             ['Warehouse:Dashboard', 'default'],
 
@@ -92,6 +92,12 @@ class OrganizerModule extends AbstractPageDisplayTestCase
             ['Warehouse:Producer', 'list'],
 
             ['Warehouse:Product', 'list'],
+
+            ['Spam:School', 'create'],
+            ['Spam:School', 'list'],
+
+            ['Spam:Person', 'create'],
+            ['Spam:Person', 'list'],
         ];
     }
 }
