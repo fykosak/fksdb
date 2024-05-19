@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use DateTimeInterface;
 use Fykosak\NetteORM\Model\Model;
 
 /**
@@ -25,10 +26,9 @@ final class GameSetupModel extends Model
     public function getAvailablePoints(): array
     {
         return $this->available_points ? \array_map(
-            fn(string $value): int => (int)trim($value),
+            fn (string $value): int => (int)trim($value),
             \explode(',', $this->available_points)
-        )
-        : [];
+        ) : [];
     }
 
     /**
@@ -52,7 +52,12 @@ final class GameSetupModel extends Model
     {
         $startMidnight = new \DateTime($this->game_start->format("Y-m-d"));
         $afterStartMidnight = ($startMidnight->getTimestamp() < time());
-        $endMidnight = \DateTime::createFromInterface($this->game_end)->add(new \DateInterval("P1D"));
+        /** @var \DateTime $gameEndDateTime */
+        $gameEndDateTime = \DateTime::createFromFormat(
+            DateTimeInterface::ATOM,
+            $this->game_end->format(DateTimeInterface::ATOM)
+        );
+        $endMidnight = $gameEndDateTime->add(new \DateInterval("P1D"));
         $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
         return ($afterStartMidnight && $beforeEndMidnight);
     }
