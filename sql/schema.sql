@@ -397,6 +397,23 @@ CREATE TABLE IF NOT EXISTS `school`
     COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
+-- Table `school_label`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `school_label`
+(
+    `school_label` VARCHAR(255) NOT NULL PRIMARY KEY,
+    `school_id`    INT UNSIGNED NULL,
+    CONSTRAINT `fk__spam_school__school_id`
+        FOREIGN KEY (`school_id`)
+        REFERENCES `school` (`school_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
 -- Table `org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `org`
@@ -897,6 +914,7 @@ CREATE TABLE IF NOT EXISTS `person_history`
     `person_id`         INT UNSIGNED NOT NULL,
     `ac_year`           SMALLINT(4)  NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
     `school_id`         INT UNSIGNED NULL     DEFAULT NULL,
+    `school_label`      VARCHAR(255) NULL     DEFAULT NULL,
     `class`             VARCHAR(16)  NULL     DEFAULT NULL COMMENT 'označení třídy',
     `study_year_new`    ENUM (
         'P_5','P_6','P_7','P_8','P_9',
@@ -919,7 +937,13 @@ CREATE TABLE IF NOT EXISTS `person_history`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk__person_history__school_label`
+        FOREIGN KEY (`school_label`)
+            REFERENCES `school_label` (`school_label`)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE,
+    CHECK ( `school_id` IS NOT NULL AND `school_label` IS NOT NULL )
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1468,45 +1492,18 @@ CREATE TABLE IF NOT EXISTS `unsubscribed_email`
     COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
--- Table `spam_school`
+-- Table `person_mail`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `spam_school`
+CREATE TABLE IF NOT EXISTS `person_mail`
 (
-    `spam_school_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `spam_school_label` VARCHAR(255) NOT NULL,
-    `school_id`         INT UNSIGNED NULL,
-    UNIQUE INDEX `uq__spam_school__label` (`spam_school_label`),
-    CONSTRAINT `fk__spam_school__school_id`
-        FOREIGN KEY (`school_id`)
-        REFERENCES `school` (`school_id`)
+    `person_mail_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name`           VARCHAR(255) NOT NULL,
+    `person_id`      INT UNSIGNED NOT NULL,
+    CONSTRAINT `fk__person_mail__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_czech_ci;
-
--- -----------------------------------------------------
--- Table `spam_person`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `spam_person`
-(
-    `spam_person_id`    INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `other_name`        VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Křestní jména',
-    `family_name`       VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_czech_ci' NOT NULL COMMENT 'Příjmení',
-    `spam_school_label` VARCHAR(255) NOT NULL,
-    `study_year_new`     ENUM (
-        'P_5','P_6','P_7','P_8','P_9',
-        'H_1','H_2','H_3','H_4',
-        'U_ALL','NONE')              NOT NULL DEFAULT 'NONE',
-    `ac_year`           SMALLINT     NOT NULL COMMENT 'první rok akademického roku, 2013/2014->2013',
-    `created`           DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `note`              TEXT         NULL     COMMENT 'Poznámka / původní soutěž',
-    CONSTRAINT `fk__spam_person__school`
-        FOREIGN KEY (`spam_school_label`)
-        REFERENCES `spam_school` (`spam_school_label`)
-            ON DELETE RESTRICT
-            ON UPDATE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
