@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
-use FKSDB\Components\EntityForms\Spam\SchoolFormComponent;
+use FKSDB\Components\EntityForms\SchoolLabelFormComponent;
 use FKSDB\Components\Grids\Spam\SchoolGrid;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\Spam\SpamSchoolModel;
-use FKSDB\Models\ORM\Services\Spam\SpamSchoolService;
+use FKSDB\Models\ORM\Models\SchoolLabelModel;
+use FKSDB\Models\ORM\Services\SchoolLabelService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
@@ -18,29 +18,29 @@ use Nette\Security\Resource;
 
 final class SchoolPresenter extends BasePresenter
 {
-    /** @phpstan-use EntityPresenterTrait<SpamSchoolModel> */
+    /** @phpstan-use EntityPresenterTrait<SchoolLabelModel> */
     use EntityPresenterTrait;
 
-    private SpamSchoolService $spamSchoolService;
+    private SchoolLabelService $schoolLabelService;
 
-    public function injectSpamSchoolService(SpamSchoolService $spamSchoolService): void
+    public function injectSpamSchoolService(SchoolLabelService $schoolLabelService): void
     {
-        $this->spamSchoolService = $spamSchoolService;
+        $this->schoolLabelService = $schoolLabelService;
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Edit school %s'), $this->getEntity()->spam_school_label), 'fas fa-pen');
+        return new PageTitle(null, sprintf(_('Edit label %s'), $this->getEntity()->school_label_key), 'fas fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create school'), 'fas fa-plus');
+        return new PageTitle(null, _('Add school label'), 'fas fa-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('Schools'), 'fas fa-school');
+        return new PageTitle(null, _('School labels'), 'fas fa-school');
     }
 
 
@@ -48,14 +48,14 @@ final class SchoolPresenter extends BasePresenter
      * @throws GoneException
      * @throws NotFoundException
      */
-    protected function createComponentEditForm(): SchoolFormComponent
+    protected function createComponentEditForm(): SchoolLabelFormComponent
     {
-        return new SchoolFormComponent($this->getContext(), $this->getEntity());
+        return new SchoolLabelFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentCreateForm(): SchoolFormComponent
+    protected function createComponentCreateForm(): SchoolLabelFormComponent
     {
-        return new SchoolFormComponent($this->getContext(), null);
+        return new SchoolLabelFormComponent($this->getContext(), null);
     }
 
     protected function createComponentGrid(): Control
@@ -63,9 +63,9 @@ final class SchoolPresenter extends BasePresenter
         return new SchoolGrid($this->getContext());
     }
 
-    protected function getORMService(): SpamSchoolService
+    protected function getORMService(): SchoolLabelService
     {
-        return $this->spamSchoolService;
+        return $this->schoolLabelService;
     }
 
     /**

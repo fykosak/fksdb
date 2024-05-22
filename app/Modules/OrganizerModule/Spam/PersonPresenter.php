@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
-use FKSDB\Components\EntityForms\Spam\PersonFormComponent;
+use FKSDB\Components\EntityForms\Spam\SpamPersonFormComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
-use FKSDB\Models\ORM\Models\Spam\SpamPersonModel;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\Spam\SpamPersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -16,21 +17,21 @@ use Nette\Security\Resource;
 
 final class PersonPresenter extends BasePresenter
 {
-    /** @phpstan-use EntityPresenterTrait<SpamPersonModel> */
+    /** @phpstan-use EntityPresenterTrait<PersonHistoryModel> */
     use EntityPresenterTrait;
 
-    private SpamPersonService $spamPersonService;
+    private PersonHistoryService $personHistoryService;
 
-    public function injectSpamPersonService(SpamPersonService $spamPersonService): void
+    public function injectSpamPersonService(PersonHistoryService $personHistoryService): void
     {
-        $this->spamPersonService = $spamPersonService;
+        $this->personHistoryService = $personHistoryService;
     }
 
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
+            sprintf(_('Edit person "%s"'), $this->getEntity()->person->getFullName()),
             'fas fa-user-edit'
         );
     }
@@ -45,14 +46,14 @@ final class PersonPresenter extends BasePresenter
         return new PageTitle(null, _('Persons'), 'fas fa-user-group');
     }
 
-    protected function createComponentEditForm(): PersonFormComponent
+    protected function createComponentEditForm(): SpamPersonFormComponent
     {
-        return new PersonFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
+        return new SpamPersonFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
     protected function createComponentCreateForm(): AjaxPersonFormComponent
     {
-        //return new PersonFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
+        //return new SpamPersonFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
         return new AjaxPersonFormComponent($this->getSelectedContestYear(), $this->getContext());
     }
 
@@ -61,9 +62,9 @@ final class PersonPresenter extends BasePresenter
         return new PersonGrid($this->getContext());
     }
 
-    protected function getORMService(): SpamPersonService
+    protected function getORMService(): PersonHistoryService
     {
-        return $this->spamPersonService;
+        return $this->personHistoryService;
     }
 
     /**

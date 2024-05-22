@@ -30,7 +30,7 @@ function SpamPersonForm({
     // JSON is not able to decode the map and it decodes it as Object.
     // For that reason, and to be able to use map, convert studyYears
     // into an array of [key, value] arrays.
-    let studyYearOptions = [
+    const studyYearOptions = [
         <option key="default" hidden disabled value=''>{translator.getText('Choose study year')}</option>
     ];
     studyYearOptions.push(...Object.entries(studyYears).map(([group_key, group_values]) =>
@@ -54,7 +54,7 @@ function SpamPersonForm({
         </div>
         <div className="form-group mb-3 required">
             <label htmlFor="input-school-label" className="form-label">{translator.getText('School label')}</label>
-            <Field name="spam_school_label" id="input-school-label"className="form-control" component="input" type="text" required/>
+            <Field name="school_label_key" id="input-school-label"className="form-control" component="input" type="text" required/>
         </div>
         <div className="row mb-3">
             <div className="form-group col-12 col-lg-6 mb-3 mb-lg-0 required">
@@ -68,10 +68,6 @@ function SpamPersonForm({
                 <div id="input-ac-year" className="form-control text-muted">{acYear}/{acYear+1}</div>
                 <span className="form-text">{translator.getText('Select different contest year to change this value')}</span>
             </div>
-        </div>
-        <div className="form-group mb-3">
-            <label htmlFor="input-note" className="form-label">{translator.getText('Note')}</label>
-            <Field name="note" id="input-note" className="form-control" component="input" type="text"/>
         </div>
         <button type="submit" className="btn btn-outline-primary mb-3">
             {submitting ? <i className="fas fa-spinner fa-spin" aria-hidden="true"/> : translator.getText('Create')}

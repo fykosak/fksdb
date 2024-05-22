@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Spam;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolSelectField;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use FKSDB\Models\ORM\Models\Spam\SpamSchoolModel;
-use FKSDB\Models\ORM\Services\Spam\SpamSchoolService;
+use FKSDB\Models\ORM\Models\SchoolLabelModel;
+use FKSDB\Models\ORM\Services\SchoolLabelService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -18,20 +18,20 @@ use Nette\Application\LinkGenerator;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<SpamSchoolModel>
+ * @phpstan-extends EntityFormComponent<SchoolLabelModel>
  */
-final class SchoolFormComponent extends EntityFormComponent
+final class SchoolLabelFormComponent extends EntityFormComponent
 {
-    private SpamSchoolService $spamSchoolService;
+    private SchoolLabelService $schoolLabelService;
     private LinkGenerator $linkGenerator;
 
     public const CONTAINER = 'container';
 
     public function injectService(
-        SpamSchoolService $spamSchoolService,
+        SchoolLabelService $schoolLabelService,
         LinkGenerator $linkGenerator
     ): void {
-        $this->spamSchoolService = $spamSchoolService;
+        $this->schoolLabelService = $schoolLabelService;
         $this->linkGenerator = $linkGenerator;
     }
 
@@ -42,8 +42,8 @@ final class SchoolFormComponent extends EntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = new ModelContainer($this->container, 'spam_school');
-        $container->addField('spam_school_label', ['required' => true]);
+        $container = new ModelContainer($this->container, 'school_label');
+        $container->addField('school_label_key', ['required' => true]);
         $schoolContainer = new SchoolSelectField($this->container, $this->linkGenerator);
         $container->addComponent($schoolContainer, 'school_id');
         $form->addComponent($container, self::CONTAINER);
@@ -53,15 +53,15 @@ final class SchoolFormComponent extends EntityFormComponent
     {
         /**
          * @phpstan-var array{container:array{
-         *      spam_school_label:string,
+         *      school_label:string,
          *      school_id:int
          * }} $values
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        $this->spamSchoolService->storeModel($data, $this->model);
+        $this->schoolLabelService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('School has been updated') : _('School has been created'),
+            isset($this->model) ? _('School label has been updated') : _('School label has been created'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');
