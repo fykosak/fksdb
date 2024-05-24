@@ -17,7 +17,7 @@ use Nette\Forms\Form;
  *     not_set?:bool
  * }>
  */
-final class SchoolGrid extends BaseGrid
+final class SchoolLabelGrid extends BaseGrid
 {
     private SchoolLabelService $service;
 

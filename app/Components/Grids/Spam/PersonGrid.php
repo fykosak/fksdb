@@ -44,7 +44,10 @@ final class PersonGrid extends BaseGrid
                 case 'name':
                     $tokens = explode(' ', $filterParam);
                     foreach ($tokens as $token) {
-                        $query->where('CONCAT(person.other_name, person.family_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                        $query->where(
+                            'CONCAT(person.other_name, person.family_name) LIKE CONCAT(\'%\', ? , \'%\')',
+                            $token
+                        );
                     }
                     break;
                 case 'school':

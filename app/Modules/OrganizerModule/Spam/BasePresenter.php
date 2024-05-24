@@ -28,6 +28,9 @@ abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresente
                 'items' => [
                     'Spam:Person:list' => [],
                     'Spam:Person:create' => [],
+                    'Spam:Person:import' => [],
+                    'Spam:Mail:list' => [],
+                    'Spam:Mail:import' => [],
                 ]
             ],
             [

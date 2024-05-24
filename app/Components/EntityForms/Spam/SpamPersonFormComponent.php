@@ -12,8 +12,6 @@ use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\ReflectionFactory;
-use FKSDB\Models\ORM\Services\PersonHistoryService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -28,8 +26,7 @@ final class SpamPersonFormComponent extends EntityFormComponent
     private ContestYearModel $contestYear;
 
     private ReflectionFactory $reflectionFactory;
-    private PersonService $personService;
-    private PersonHistoryService $personHistoryService;
+    private Handler $handler;
 
     public const CONTAINER = 'container';
     public const PERSON_HISTORY_CONTAINER = 'person_history_container';
@@ -38,15 +35,12 @@ final class SpamPersonFormComponent extends EntityFormComponent
     {
         parent::__construct($container, $model);
         $this->contestYear = $contestYear;
+        $this->handler = new Handler($contestYear, $this->container);
     }
 
     public function injectService(
-        PersonService $personService,
-        PersonHistoryService $personHistoryService,
         ReflectionFactory $reflectionFactory
     ): void {
-        $this->personService = $personService;
-        $this->personHistoryService = $personHistoryService;
         $this->reflectionFactory = $reflectionFactory;
     }
 
@@ -70,7 +64,10 @@ final class SpamPersonFormComponent extends EntityFormComponent
             StudyYearNewColumnFactory::FLAG_HS
         );
         $personHistoryContainer->addComponent($studyYearControl, 'study_year_new');
+        $personHistoryContainer->addText('ac_year', _('Academic year'))->setDisabled();
+
         $container->addComponent($personHistoryContainer, self::PERSON_HISTORY_CONTAINER);
+
 
         $form->addComponent($container, self::CONTAINER);
     }
@@ -89,19 +86,15 @@ final class SpamPersonFormComponent extends EntityFormComponent
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        bdump($data);
 
-        $personModel = $this->personService->storeModel([
+        $transformedData = [
             'other_name' => $data['other_name'],
             'family_name' => $data['family_name'],
-        ], $this->model ? $this->model->person : null);
-
-        $this->personHistoryService->storeModel([
-            'person_id' => $personModel->person_id,
             'school_label_key' => $data[self::PERSON_HISTORY_CONTAINER]['school_label_key'],
-            'ac_year' => $this->model ? $this->model->ac_year : $this->contestYear->ac_year,
-            'study_year_new' => $data[self::PERSON_HISTORY_CONTAINER]['study_year_new']
-        ], $this->model);
+            'study_year_new' => $data[self::PERSON_HISTORY_CONTAINER]['study_year_new'],
+        ];
+
+        $this->handler->storePerson($transformedData, $this->model);
 
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Person has been updated') : _('Person has been created'),
@@ -116,7 +109,7 @@ final class SpamPersonFormComponent extends EntityFormComponent
             $form->setDefaults([
                 self::CONTAINER => array_merge(
                     $this->model->person->toArray(),
-                    [SELF::PERSON_HISTORY_CONTAINER => $this->model->toArray()]
+                    [self::PERSON_HISTORY_CONTAINER => $this->model->toArray()]
                 )
             ]);
             bdump([self::CONTAINER => $this->model->person->toArray()]);

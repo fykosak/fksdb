@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonFormComponent;
+use FKSDB\Components\EntityForms\Spam\SpamPersonImportComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
@@ -27,6 +28,11 @@ final class PersonPresenter extends BasePresenter
         $this->personHistoryService = $personHistoryService;
     }
 
+    public function authorizedImport(): bool
+    {
+        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+    }
+
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
@@ -46,6 +52,11 @@ final class PersonPresenter extends BasePresenter
         return new PageTitle(null, _('Persons'), 'fas fa-user-group');
     }
 
+    public function titleImport(): PageTitle
+    {
+        return new PageTitle(null, _('Import people'), 'fas fa-download');
+    }
+
     protected function createComponentEditForm(): SpamPersonFormComponent
     {
         return new SpamPersonFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
@@ -60,6 +71,11 @@ final class PersonPresenter extends BasePresenter
     protected function createComponentGrid(): PersonGrid
     {
         return new PersonGrid($this->getContext());
+    }
+
+    protected function createComponentImportForm(): SpamPersonImportComponent
+    {
+        return new SpamPersonImportComponent($this->getSelectedContestYear(), $this->getContext());
     }
 
     protected function getORMService(): PersonHistoryService

@@ -942,8 +942,7 @@ CREATE TABLE IF NOT EXISTS `person_history`
         FOREIGN KEY (`school_label_key`)
             REFERENCES `school_label_key` (`school_label_key`)
             ON DELETE NO ACTION
-            ON UPDATE CASCADE,
-    CHECK ( `school_id` IS NOT NULL AND `school_label_key` IS NOT NULL )
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1497,7 +1496,7 @@ CREATE TABLE IF NOT EXISTS `unsubscribed_email`
 CREATE TABLE IF NOT EXISTS `person_mail`
 (
     `person_mail_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`           VARCHAR(255) NOT NULL,
+    `mail_type`      VARCHAR(255) NOT NULL,
     `person_id`      INT UNSIGNED NOT NULL,
     CONSTRAINT `fk__person_mail__person`
         FOREIGN KEY (`person_id`)

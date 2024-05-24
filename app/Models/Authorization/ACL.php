@@ -114,11 +114,15 @@ final class ACL
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+
         // spam
         $service->addResource(Models\SchoolLabelModel::RESOURCE_ID);
         $service->addResource(Models\PersonHistoryModel::RESOURCE_ID);
+        $service->addResource(Models\PersonMailModel::RESOURCE_ID);
+
         $service->allow(ContestRole::Organizer, Models\SchoolLabelModel::RESOURCE_ID);
         $service->allow(ContestRole::Organizer, Models\PersonHistoryModel::RESOURCE_ID);
+        $service->allow(ContestRole::Organizer, Models\PersonMailModel::RESOURCE_ID);
 
         self::createPayment($service, $selfAssertion);
         self::createGame($service);
@@ -290,7 +294,10 @@ final class ACL
             BaseRole::Registered,
             Models\PaymentModel::RESOURCE_ID,
             'edit',
-            new LogicAnd($selfAssertion, new Authorization\Assertions\PaymentEditableAssertion()) // @phpstan-ignore-line
+            new LogicAnd(
+                $selfAssertion, // @phpstan-ignore-line
+                new Authorization\Assertions\PaymentEditableAssertion() // @phpstan-ignore-line
+            )
         );
         $permission->allow(
             [

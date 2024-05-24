@@ -14,8 +14,7 @@ fi
 for i in `seq 1 $COUNT` ; do
 
 mysql $DB_NAME$i <<EOD
-DELETE FROM spam_person;
-DELETE FROM spam_school;
+DELETE FROM person_mail;
 
 DELETE FROM email_message;
 DELETE FROM submit;
@@ -42,6 +41,7 @@ DELETE FROM person_history;
 DELETE FROM contestant;
 DELETE FROM contest_year;
 DELETE FROM contest_grant;
+DELETE FROM school_label;
 DELETE FROM school;
 DELETE FROM address;
 DELETE FROM auth_token;

@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Event\Import;
+namespace FKSDB\Components\EntityForms\Spam;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Utils\CSVParser;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
@@ -16,21 +15,19 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
 
-final class ImportComponent extends BaseComponent
+final class SpamPersonImportComponent extends BaseComponent
 {
-    private EventModel $event;
-    private EventParticipantService $eventParticipantService;
     private Connection $connection;
+    private ContestYearModel $contestYear;
 
-    public function __construct(Container $container, EventModel $event)
+    public function __construct(ContestYearModel $contestYear, Container $container)
     {
         parent::__construct($container);
-        $this->event = $event;
+        $this->contestYear = $contestYear;
     }
 
-    public function inject(EventParticipantService $eventParticipantService, Connection $connection): void
+    public function inject(Connection $connection): void
     {
-        $this->eventParticipantService = $eventParticipantService;
         $this->connection = $connection;
     }
 
@@ -39,13 +36,8 @@ final class ImportComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $form->addUpload('file', _('File with applications'))
+        $form->addUpload('file', _('File with people'))
             ->addRule(Form::FILLED);
-        /*   ->addRule(
-               Form::MIME_TYPE,
-               _('Only CSV files are accepted.'),
-               'text/csv'
-           );*/
 
         $form->addSubmit('import', _('Import'));
 
@@ -55,29 +47,39 @@ final class ImportComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'importLayout.latte');
     }
 
-    /**
-     * @throws ConfigurationNotFoundException
-     * @throws \Throwable
-     */
     private function handleFormImport(Form $form): void
     {
-        /** @phpstan-var array{file:FileUpload,event_id:int} $values */
+        /** @phpstan-var array{file:FileUpload} $values */
         $values = $form->getValues();
         try {
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
+            $handler = new Handler($this->contestYear, $this->container);
             $this->connection->beginTransaction();
-            foreach ($parser as $row) {
-                $values = [];
-                foreach ($row as $columnName => $value) {
-                    $values[$columnName] = $value;
+            foreach ($parser as $data) {
+                foreach (['other_name', 'family_name', 'school_label', 'study_year'] as $requiredField) {
+                    if (!array_key_exists($requiredField, $data)) {
+                        $this->getPresenter()->flashMessage(
+                            sprintf(_('Missing required column %s.'), $requiredField),
+                            Message::LVL_ERROR
+                        );
+                        throw new MissingColumnException();
+                    }
                 }
-                $values['event_id'] = $this->event->event_id;
-                $this->eventParticipantService->storeModel($values);
+
+                $transformedData = [
+                    'other_name' => $data['other_name'],
+                    'family_name' => $data['family_name'],
+                    'school_label_key' => $data['school_label'],
+                    'study_year_new' => $data['study_year'],
+                ];
+
+                $handler->storeSchool($transformedData['school_label_key'], null);
+                $handler->storePerson($transformedData, null);
             }
             $this->connection->commit();
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);

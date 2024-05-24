@@ -1204,3 +1204,13 @@ orm:
     unsubscribed_email:
         model: Fykosak\NetteORM\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
+    person_mail:
+        model: FKSDB\Models\ORM\Models\PersonMailModel
+        service: FKSDB\Models\ORM\Services\PersonMailService
+        columns:
+            person_mail_id:
+                type: primaryKey
+                title: _('Mail Id')
+            mail_type:
+                type: string
+                title: _('Mail type')

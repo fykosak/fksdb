@@ -45,7 +45,7 @@ function SpamPersonForm({
         <div className="row mb-3">
             <div className="form-group col-12 col-lg-6 mb-3 mb-lg-0 required">
                 <label htmlFor="input-other-name" className="form-label">{translator.getText('Other name')}</label>
-                <Field name="other_name" id="input-other-name" className="form-control" component="input" type="text" required/>
+                <Field name="other_name" id="input-other-name" className="form-control" component="input" type="text" required autoFocus/>
             </div>
             <div className="form-group col-12 col-lg-6 required">
                 <label htmlFor="input-family-name" className="form-label">{translator.getText('Family name')}</label>
