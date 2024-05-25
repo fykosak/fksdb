@@ -52,7 +52,7 @@ final class GameSetupModel extends Model
     {
         $startMidnight = new \DateTime($this->game_start->format('Y-m-d'));
         $afterStartMidnight = ($startMidnight->getTimestamp() < time());
-        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D'));
+        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D')); // @phpstan-ignore-line
         $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
         return ($afterStartMidnight && $beforeEndMidnight);
     }
