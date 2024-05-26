@@ -10,7 +10,7 @@ final class DashboardPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Spam dashboard'), 'fas fa-envelope-open-text');
+        return new PageTitle(null, _('Spam dashboard'), 'fas fa-envelopes-bulk');
     }
 
     public function authorizedDefault(): bool

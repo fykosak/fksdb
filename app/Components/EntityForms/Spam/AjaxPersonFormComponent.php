@@ -84,7 +84,7 @@ class AjaxPersonFormComponent extends AjaxComponent
          */
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
 
-        $this->handler->storeSchool($data['school_label_key'], null);
+        $this->handler->storeSchool($data['school_label_key'], null, null);
         $this->handler->storePerson($data, null);
 
         foreach ($this->handler->logger->getMessages() as $message) {

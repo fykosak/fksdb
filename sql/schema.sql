@@ -401,7 +401,8 @@ CREATE TABLE IF NOT EXISTS `school`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `school_label`
 (
-    `school_label_key` VARCHAR(255) NOT NULL PRIMARY KEY,
+    `school_label_id`  INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `school_label_key` VARCHAR(255) NOT NULL UNIQUE,
     `school_id`        INT UNSIGNED NULL,
     CONSTRAINT `fk__spam_school__school_id`
         FOREIGN KEY (`school_id`)

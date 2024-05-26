@@ -12,8 +12,15 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class SchoolLabelService extends Service
 {
+    public function findByLabel(string $label): ?SchoolLabelModel
+    {
+        /** @var SchoolLabelModel|null $schoolLabel */
+        $schoolLabel = $this->getTable()->where('school_label_key', $label)->fetch();
+        return $schoolLabel;
+    }
+
     public function exists(string $label): bool
     {
-        return !is_null($this->findByPrimary($label));
+        return !is_null($this->findByLabel($label));
     }
 }

@@ -22,9 +22,8 @@ trait EntityPresenterTrait
 {
     /**
      * @persistent
-     * @var int|string|null $id
      */
-    public $id = null;
+    public ?int $id = null;
 
     /**
      * @throws EventNotFoundException

@@ -39,11 +39,6 @@ final class PersonHistoryModel extends Model implements Resource
             case 'study_year_new':
                 $value = StudyYear::from($value);
                 break;
-            case 'school':
-                if (!$value) {
-                    $value = $this->school_label->school;
-                }
-                break;
         }
         return $value;
     }

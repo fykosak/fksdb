@@ -14,7 +14,7 @@ use Nette\Forms\Form;
 
 /**
  * @phpstan-extends BaseGrid<PersonHistoryModel,array{
- *      name?:string,
+ *      person_name?:string,
  *      school?:string
  * }>
  */
@@ -41,7 +41,7 @@ final class PersonGrid extends BaseGrid
                 continue;
             }
             switch ($key) {
-                case 'name':
+                case 'person_name':
                     $tokens = explode(' ', $filterParam);
                     foreach ($tokens as $token) {
                         $query->where(
@@ -56,6 +56,12 @@ final class PersonGrid extends BaseGrid
                         $query->where('school.name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
                     }
                     break;
+                case 'school_label':
+                    $tokens = explode(' ', $filterParam);
+                    foreach ($tokens as $token) {
+                        $query->where('person_history.school_label_key LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                    }
+                    break;
             }
         }
 
@@ -64,8 +70,9 @@ final class PersonGrid extends BaseGrid
 
     protected function configureForm(Form $form): void
     {
-        $form->addText('name', _('Name'))->setHtmlAttribute('placeholder', _('Name'));
+        $form->addText('person_name', _('Person name'))->setHtmlAttribute('placeholder', _('Person name'));
         $form->addText('school', _('School'))->setHtmlAttribute('placeholder', _('School'));
+        $form->addText('school_label', _('School label'))->setHtmlAttribute('placeholder', _('School label'));
     }
 
     protected function configure(): void
@@ -76,7 +83,7 @@ final class PersonGrid extends BaseGrid
         $this->addSimpleReferencedColumns([
             '@person.other_name',
             '@person.family_name',
-            '@school_label.school_label_key',
+            '@person_history.school_label_key',
             '@person_history.study_year_new',
             '@person_history.ac_year',
             '@school.school'

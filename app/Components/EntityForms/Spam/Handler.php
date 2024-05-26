@@ -55,21 +55,28 @@ final class Handler
         $this->linkGenerator = $linkGenerator;
     }
 
-    public function storeSchool(string $schoolLabelKey, ?int $schoolId): SchoolLabelModel
-    {
-        $schoolLabel = $this->schoolLabelService->findByPrimary($schoolLabelKey);
+    public function storeSchool(
+        string $schoolLabelKey,
+        ?int $schoolId,
+        ?SchoolLabelModel $schoolLabel
+    ): SchoolLabelModel {
+        if (!$schoolLabel) {
+            // get possibly existing school
+            $schoolLabel = $this->schoolLabelService->findByLabel($schoolLabelKey);
+        }
 
-        if ($schoolLabel) {
-            return $this->schoolLabelService->storeModel([
-                'school_label_key' => $schoolLabelKey,
-                'school_id' => $schoolId
-            ], $schoolLabel);
-        } else {
-            $schoolLabel = $this->schoolLabelService->storeModel([
-                'school_label_key' => $schoolLabelKey,
-                'school_id' => $schoolId
-            ], $schoolLabel);
+        $created = false;
+        if (!$schoolLabel) {
+            $created = true;
+        }
 
+        // store school
+        $schoolLabel = $this->schoolLabelService->storeModel([
+            'school_label_key' => $schoolLabelKey,
+            'school_id' => $schoolId ?? $schoolLabel->school_id
+        ], $schoolLabel);
+
+        if ($created) {
             $this->logger->log(new Message(
                 Html::el('span')
                     ->addText(
@@ -79,9 +86,20 @@ final class Handler
                     ->addHtml($this->getSchoolEditLink($schoolLabel)),
                 Message::LVL_SUCCESS
             ));
-
-            return $schoolLabel;
         }
+
+        if ($schoolId) {
+            // set new school_id for person history
+            $query = $this->personHistoryService->getTable()->where('school_label_key', $schoolLabelKey);
+            /** @var PersonHistoryModel $personHistory */
+            foreach ($query as $personHistory) {
+                $this->personHistoryService->storeModel([
+                    'school_id' => $schoolId
+                ], $personHistory);
+            }
+        }
+
+        return $schoolLabel;
     }
 
     /**
@@ -107,12 +125,15 @@ final class Handler
         ], $model ? $model->person : null);
 
         // store person history
+        $schoolLabel = $this->schoolLabelService->findByLabel($values['school_label_key']);
+
         /** @var PersonHistoryModel $personHistoryModel */
         $personHistoryModel = $this->personHistoryService->storeModel([
             'person_id' => $personModel->person_id,
             'ac_year' => $model ? $model->ac_year : $this->contestYear->ac_year,
             'study_year_new' => $values['study_year_new'],
-            'school_label_key' => $values['school_label_key']
+            'school_label_key' => $values['school_label_key'],
+            'school_id' => $schoolLabel ? $schoolLabel->school_id : null
         ], $model);
 
         // add spam flag
@@ -161,7 +182,7 @@ final class Handler
             'Spam:School:edit',
             [
                 'contestId' => $this->contestYear->contest_id,
-                'id' => $school->school_label_key
+                'id' => $school->school_label_id
             ]
         );
 

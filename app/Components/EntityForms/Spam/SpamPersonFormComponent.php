@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\ReflectionFactory;
+use FKSDB\Models\ORM\Services\SchoolLabelService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -23,6 +24,7 @@ use Nette\Forms\Form;
  */
 final class SpamPersonFormComponent extends EntityFormComponent
 {
+    private SchoolLabelService $schoolLabelService;
     private ContestYearModel $contestYear;
 
     private ReflectionFactory $reflectionFactory;
@@ -39,8 +41,10 @@ final class SpamPersonFormComponent extends EntityFormComponent
     }
 
     public function injectService(
+        SchoolLabelService $schoolLabelService,
         ReflectionFactory $reflectionFactory
     ): void {
+        $this->schoolLabelService = $schoolLabelService;
         $this->reflectionFactory = $reflectionFactory;
     }
 
@@ -94,6 +98,10 @@ final class SpamPersonFormComponent extends EntityFormComponent
             'study_year_new' => $data[self::PERSON_HISTORY_CONTAINER]['study_year_new'],
         ];
 
+        if (!$this->schoolLabelService->exists($transformedData['school_label_key'])) {
+            throw new MissingSchoolLabelException();
+        }
+
         $this->handler->storePerson($transformedData, $this->model);
 
         $this->getPresenter()->flashMessage(
@@ -112,7 +120,6 @@ final class SpamPersonFormComponent extends EntityFormComponent
                     [self::PERSON_HISTORY_CONTAINER => $this->model->toArray()]
                 )
             ]);
-            bdump([self::CONTAINER => $this->model->person->toArray()]);
         }
     }
 }

@@ -14,6 +14,9 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Http\FileUpload;
+use Nette\Schema\Expect;
+use Nette\Schema\Processor;
+use Nette\Schema\ValidationException;
 
 final class SpamPersonImportComponent extends BaseComponent
 {
@@ -54,22 +57,23 @@ final class SpamPersonImportComponent extends BaseComponent
     {
         /** @phpstan-var array{file:FileUpload} $values */
         $values = $form->getValues();
+        $schema = Expect::structure([
+            'other_name' => Expect::string()->required(),
+            'family_name' => Expect::string()->required(),
+            'school_label' => Expect::string()->required(),
+            'study_year' => Expect::string()->pattern('P_[5-9]|H_[1-4]')->required()
+        ]);
+        $processor = new Processor();
+
         try {
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
             $handler = new Handler($this->contestYear, $this->container);
             $this->connection->beginTransaction();
+
             foreach ($parser as $data) {
-                foreach (['other_name', 'family_name', 'school_label', 'study_year'] as $requiredField) {
-                    if (!array_key_exists($requiredField, $data)) {
-                        $this->getPresenter()->flashMessage(
-                            sprintf(_('Missing required column %s.'), $requiredField),
-                            Message::LVL_ERROR
-                        );
-                        throw new MissingColumnException();
-                    }
-                }
+                $processor->process($schema, $data);
 
                 $transformedData = [
                     'other_name' => $data['other_name'],
@@ -78,11 +82,17 @@ final class SpamPersonImportComponent extends BaseComponent
                     'study_year_new' => $data['study_year'],
                 ];
 
-                $handler->storeSchool($transformedData['school_label_key'], null);
+                $handler->storeSchool($transformedData['school_label_key'], null, null);
                 $handler->storePerson($transformedData, null);
             }
+
             $this->connection->commit();
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
+        } catch (ValidationException $exception) {
+            $this->connection->rollBack();
+            foreach ($exception->getMessages() as $message) {
+                $this->getPresenter()->flashMessage($message, Message::LVL_ERROR);
+            }
         } catch (\Throwable $exception) {
             $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);

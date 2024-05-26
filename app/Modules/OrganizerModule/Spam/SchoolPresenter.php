@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
-use FKSDB\Components\EntityForms\SchoolLabelFormComponent;
+use FKSDB\Components\EntityForms\Spam\SchoolLabelFormComponent;
 use FKSDB\Components\Grids\Spam\SchoolLabelGrid;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -50,12 +50,12 @@ final class SchoolPresenter extends BasePresenter
      */
     protected function createComponentEditForm(): SchoolLabelFormComponent
     {
-        return new SchoolLabelFormComponent($this->getContext(), $this->getEntity());
+        return new SchoolLabelFormComponent($this->getContext(), $this->getEntity(), $this->getSelectedContestYear());
     }
 
     protected function createComponentCreateForm(): SchoolLabelFormComponent
     {
-        return new SchoolLabelFormComponent($this->getContext(), null);
+        return new SchoolLabelFormComponent($this->getContext(), null, $this->getSelectedContestYear());
     }
 
     protected function createComponentGrid(): Control

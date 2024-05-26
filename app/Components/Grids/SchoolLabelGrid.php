@@ -13,7 +13,7 @@ use Nette\Forms\Form;
 
 /**
  * @phpstan-extends BaseGrid<SchoolLabelModel,array{
- *     name?:string,
+ *     school_name?:string,
  *     not_set?:bool
  * }>
  */
@@ -33,8 +33,8 @@ final class SchoolLabelGrid extends BaseGrid
     {
         $query = $this->service->getTable();
 
-        if (isset($this->filterParams['name'])) {
-            $tokens = explode(' ', $this->filterParams['name']);
+        if (isset($this->filterParams['school_name'])) {
+            $tokens = explode(' ', $this->filterParams['school_name']);
             foreach ($tokens as $token) {
                 $query->where('school.name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
@@ -59,6 +59,7 @@ final class SchoolLabelGrid extends BaseGrid
         $this->counter = true;
         $this->filtered = true;
         $this->addSimpleReferencedColumns([
+            '@school_label.school_label_id',
             '@school_label.school_label_key',
             '@school.school',
         ]);
@@ -67,7 +68,7 @@ final class SchoolLabelGrid extends BaseGrid
             'edit',
             new Title(null, _('button.edit')),
             false,
-            ['id' => 'school_label_key']
+            ['id' => 'school_label_id']
         );
     }
 }

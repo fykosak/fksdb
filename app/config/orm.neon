@@ -689,6 +689,9 @@ orm:
         service: FKSDB\Models\ORM\Services\SchoolLabelService
         model: FKSDB\Models\ORM\Models\SchoolLabelModel
         columns:
+            school_label_id:
+                type: primaryKey
+                title: _('School label Id')
             school_label_key:
                 type: string
                 title: _('School label')

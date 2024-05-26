@@ -3132,7 +3132,7 @@ msgstr "Konfliktní role Contestant a Organizer"
 #: ../app/Models/ORM/Tests/Event/Team/TeamToPersonAdapter.php:30
 #: ../app/Models/ORM/Tests/Event/Team/TeamToPersonHistoryAdapter.php:40
 msgid "In person "
-msgstr "V osobě"
+msgstr "V osobě "
 
 #: ../app/Models/ORM/Tests/Contestant/ContestantToPersonHistoryAdapter.php:25
 msgid "In person related history"
