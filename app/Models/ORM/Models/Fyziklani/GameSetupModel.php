@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use DateTimeInterface;
 use Fykosak\NetteORM\Model\Model;
 
 /**
@@ -25,10 +26,9 @@ final class GameSetupModel extends Model
     public function getAvailablePoints(): array
     {
         return $this->available_points ? \array_map(
-            fn(string $value): int => (int)trim($value),
+            fn (string $value): int => (int)trim($value),
             \explode(',', $this->available_points)
-        )
-        : [];
+        ) : [];
     }
 
     /**
