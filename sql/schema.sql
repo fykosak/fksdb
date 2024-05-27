@@ -397,6 +397,24 @@ CREATE TABLE IF NOT EXISTS `school`
     COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
+-- Table `school_label`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `school_label`
+(
+    `school_label_id`  INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `school_label_key` VARCHAR(255) NOT NULL UNIQUE,
+    `school_id`        INT UNSIGNED NULL,
+    CONSTRAINT `fk__spam_school__school_id`
+        FOREIGN KEY (`school_id`)
+        REFERENCES `school` (`school_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
+-- -----------------------------------------------------
 -- Table `org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `org`
@@ -897,6 +915,7 @@ CREATE TABLE IF NOT EXISTS `person_history`
     `person_id`         INT UNSIGNED NOT NULL,
     `ac_year`           SMALLINT(4)  NOT NULL COMMENT 'první rok akademického roku, 2013/2014 -> 2013',
     `school_id`         INT UNSIGNED NULL     DEFAULT NULL,
+    `school_label_key`  VARCHAR(255) NULL     DEFAULT NULL,
     `class`             VARCHAR(16)  NULL     DEFAULT NULL COMMENT 'označení třídy',
     `study_year_new`    ENUM (
         'P_5','P_6','P_7','P_8','P_9',
@@ -919,7 +938,12 @@ CREATE TABLE IF NOT EXISTS `person_history`
         FOREIGN KEY (`ac_year`)
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk__person_history__school_label_key`
+        FOREIGN KEY (`school_label_key`)
+            REFERENCES `school_label_key` (`school_label_key`)
+            ON DELETE NO ACTION
+            ON UPDATE CASCADE
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1467,8 +1491,24 @@ CREATE TABLE IF NOT EXISTS `unsubscribed_email`
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
 
+-- -----------------------------------------------------
+-- Table `person_mail`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `person_mail`
+(
+    `person_mail_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `mail_type`      VARCHAR(255) NOT NULL,
+    `person_id`      INT UNSIGNED NOT NULL,
+    CONSTRAINT `fk__person_mail__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
-
-

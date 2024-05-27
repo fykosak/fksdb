@@ -133,6 +133,7 @@ application:
         Game: FKSDB\Modules\EventModule\Game\*Presenter
         Schedule: FKSDB\Modules\EventModule\Schedule\*Presenter
         Warehouse: FKSDB\Modules\OrganizerModule\Warehouse\*Presenter
+        Spam: FKSDB\Modules\OrganizerModule\Spam\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days

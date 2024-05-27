@@ -11,6 +11,7 @@ class DbNames
     public const TAB_CONTEST = 'contest';
     public const TAB_CONTEST_YEAR = 'contest_year';
     public const TAB_SCHOOL = 'school';
+    public const TAB_SCHOOL_LABEL = 'school_label';
     public const TAB_FLAG = 'flag';
     public const TAB_EMAIL_MESSAGE = 'email_message';
     /* person */
