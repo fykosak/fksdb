@@ -20,7 +20,9 @@ use Nette\Security\Resource;
  */
 trait EntityPresenterTrait
 {
-    /** @persistent */
+    /**
+     * @persistent
+     */
     public ?int $id = null;
 
     /**

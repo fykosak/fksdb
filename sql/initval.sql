@@ -20,7 +20,8 @@ VALUES (1, 'serial_author', 'serial_author', 'Je organizátornizátor autor seri
        (2, 'email_invalid', 'Neplatný e-mail',
         'E-maily zaslané na danou adresu se nám již nekdy vrátily. Zatím sem nepatri adresy, u nichž je hlášen \'mailbox full\'.',
         'global'),
-       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global');
+       (3, 'spam_mff', 'Spam z MFF', 'Zda si preje/nepreje dostávat spam z Matfyzu.', 'global'),
+       (4, 'source_spam', 'Získaný ve spamu', 'Údaj byl získaný v rámci sbírání dat pro papírový spam.', 'contest_year');
 
 INSERT INTO `event_type` (`event_type_id`, `contest_id`, `name`)
 VALUES (1, 1, 'FYKOSí Fyziklání'),
