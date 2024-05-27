@@ -54,7 +54,7 @@ final class PersonPresenter extends BasePresenter
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(null, _('Import people'), 'fas fa-download');
+        return new PageTitle(null, _('People import'), 'fas fa-download');
     }
 
     protected function createComponentEditForm(): SpamPersonFormComponent

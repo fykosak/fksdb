@@ -14,6 +14,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-extends BaseGrid<SchoolLabelModel,array{
  *     school_name?:string,
+ *     school_label?:string,
  *     not_set?:bool
  * }>
  */
@@ -33,15 +34,27 @@ final class SchoolLabelGrid extends BaseGrid
     {
         $query = $this->service->getTable();
 
-        if (isset($this->filterParams['school_name'])) {
-            $tokens = explode(' ', $this->filterParams['school_name']);
-            foreach ($tokens as $token) {
-                $query->where('school.name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
             }
-        }
-
-        if (isset($this->filterParams['not_set']) && $this->filterParams['not_set']) {
-            $query->where('school_id', null);
+            switch ($key) {
+                case 'school_name':
+                    $tokens = explode(' ', $this->filterParams['school_name']);
+                    foreach ($tokens as $token) {
+                        $query->where('CONCAT(school.name_full, school.name_abbrev, school.address.city) LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                    }
+                    break;
+                case 'school_label':
+                    $tokens = explode(' ', $filterParam);
+                    foreach ($tokens as $token) {
+                        $query->where('school_label_key LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                    }
+                    break;
+                case 'not_set':
+                    $query->where('school_id', null);
+                    break;
+            }
         }
 
         return $query;
@@ -50,6 +63,7 @@ final class SchoolLabelGrid extends BaseGrid
     protected function configureForm(Form $form): void
     {
         $form->addText('school_name', _('School name'))->setHtmlAttribute('placeholder', _('School name'));
+        $form->addText('school_label', _('School label'))->setHtmlAttribute('placeholder', _('School label'));
         $form->addCheckbox('not_set', _('Not set'));
     }
 

@@ -85,7 +85,7 @@ final class SchoolLabelFormComponent extends EntityFormComponent
         $handler->storeSchool($data['school_label_key'], intval($data['school_id']), $this->model);
 
         $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('School label has been updated') : _('School label has been created'),
+            isset($this->model) ? _('School label has been updated.') : _('School label has been created.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');

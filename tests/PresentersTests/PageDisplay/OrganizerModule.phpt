@@ -93,11 +93,17 @@ class OrganizerModule extends AbstractPageDisplayTestCase
 
             ['Warehouse:Product', 'list'],
 
+            ['Spam:Dashboard', 'default'],
+
             ['Spam:School', 'create'],
             ['Spam:School', 'list'],
 
             ['Spam:Person', 'create'],
             ['Spam:Person', 'list'],
+            ['Spam:Person', 'import'],
+
+            ['Spam:Mail', 'list'],
+            ['Spam:Mail', 'import'],
         ];
     }
 }

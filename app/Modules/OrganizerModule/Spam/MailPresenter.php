@@ -39,7 +39,7 @@ final class MailPresenter extends BasePresenter
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(null, _('Import mail'), 'fas fa-download');
+        return new PageTitle(null, _('Mail import'), 'fas fa-download');
     }
 
     /**
