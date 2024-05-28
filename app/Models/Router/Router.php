@@ -11,7 +11,7 @@ use Nette\Application\Routers\RouteList;
 class Router
 {
     private const CONTESTS = ['fykos' => ContestModel::ID_FYKOS, 'vyfuk' => ContestModel::ID_VYFUK];
-    // constestModules: organizer|public|warehouse
+    // constestModules: organizer|public|spam|warehouse
     // rootPresenters: settings
     public static function createRouter(): RouteList
     {
@@ -90,7 +90,7 @@ class Router
         );
         // phpcs:disable
         $service->addRoute(
-            '<module organizer|public|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>]/[series<series [0-9]+>/]]<presenter>/<action=default>[/<id>]',
+            '<module organizer|public|spam|warehouse>/[<contestId fykos|vyfuk>[<year [0-9]+>]/[series<series [0-9]+>/]]<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'contestId' => ['filterTable' => self::CONTESTS]]
         );
         // phpcs:enable

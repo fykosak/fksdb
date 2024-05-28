@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-03 13:38+0100\n"
+"POT-Creation-Date: 2024-05-26 16:44+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -58,7 +58,7 @@ msgid "Legend"
 msgstr ""
 
 #: ../app/Components/Charts/Contestants/per-years-chart.tsx.tsx2php:27
-#: ../app/config/orm.neon.neon2php:35 ../app/config/orm.neon.neon2php:715
+#: ../app/config/orm.neon.neon2php:35 ../app/config/orm.neon.neon2php:732
 msgid "Year"
 msgstr ""
 
@@ -148,8 +148,8 @@ msgstr ""
 
 #: ../app/Components/Contestants/SubmitsGrid.php:43
 #: ../app/Components/Grids/Submits/QuizAnswersGrid.php:62
-#: ../app/config/orm.neon.neon2php:712 ../app/config/orm.neon.neon2php:794
-#: ../app/config/orm.neon.neon2php:878
+#: ../app/config/orm.neon.neon2php:729 ../app/config/orm.neon.neon2php:811
+#: ../app/config/orm.neon.neon2php:895
 msgid "Points"
 msgstr ""
 
@@ -326,6 +326,8 @@ msgid "Legacy XML format is deprecated"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/TaskImportFormComponent.php:96
+#: ../app/Components/EntityForms/Spam/MailImportComponent.php:46
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:45
 #: ../app/Components/Event/Import/ImportComponent.php:50
 msgid "Import"
 msgstr ""
@@ -344,7 +346,7 @@ msgstr ""
 
 #: ../app/Components/Controls/Inbox/TaskImportFormComponent.php:117
 #: ../app/Modules/OrganizerModule/BasePresenter.php:38
-#: ../app/config/orm.neon.neon2php:700
+#: ../app/config/orm.neon.neon2php:717
 msgid "Series"
 msgstr ""
 
@@ -383,6 +385,20 @@ msgstr ""
 msgid "Person"
 msgstr ""
 
+#: ../app/Components/Controls/Inbox/layout.latte.latte2php:22
+#, fuzzy, php-format
+msgid "Total of %d active contestant"
+msgid_plural "Total of %d active contestants"
+msgstr[0] "Registrácia"
+msgstr[1] "Registrácia"
+
+#: ../app/Components/Controls/Inbox/layout.latte.latte2php:23
+#, fuzzy, php-format
+msgid "%d solution"
+msgid_plural "%d solutions"
+msgstr[0] "Zoznam platieb"
+msgstr[1] "Zoznam platieb"
+
 #: ../app/Components/Controls/Person/Detail/ContestantListComponent.php:40
 #, fuzzy
 msgid "Contest year @contestant.year"
@@ -396,6 +412,8 @@ msgstr "Registrácia"
 #: ../app/Components/Grids/ContestantsGrid.php:66
 #: ../app/Components/Grids/EventOrganizer/EventOrganizersGrid.php:44
 #: ../app/Components/Grids/Events/EventsGrid.php:61
+#: ../app/Components/Grids/SchoolLabelGrid.php:69
+#: ../app/Components/Grids/Spam/PersonGrid.php:94
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:69
 #: ../app/Components/Grids/Warehouse/ItemsGrid.php:50
 #: ../app/Components/Grids/Warehouse/ProductsGrid.php:45
@@ -466,7 +484,7 @@ msgid "Contest"
 msgstr ""
 
 #: ../app/Components/Controls/Person/Detail/flag.latte.latte2php:39
-#: ../app/config/orm.neon.neon2php:781
+#: ../app/config/orm.neon.neon2php:798
 msgid "Modified"
 msgstr ""
 
@@ -538,6 +556,8 @@ msgstr ""
 #: ../app/Components/Controls/Person/PizzaComponent.php:31
 #: ../app/Modules/EventModule/Schedule/templates/Item/detail.latte.latte2php:33
 #: ../app/Modules/OrganizerModule/BasePresenter.php:56
+#: ../app/Modules/OrganizerModule/Spam/BasePresenter.php:27
+#: ../app/Modules/OrganizerModule/Spam/PersonPresenter.php:52
 msgid "Persons"
 msgstr ""
 
@@ -547,12 +567,12 @@ msgstr ""
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:9
 #: ../app/Modules/OrganizerModule/PersonPresenter.php:117
-#: ../app/config/orm.neon.neon2php:600
+#: ../app/config/orm.neon.neon2php:603
 msgid "Pizza"
 msgstr ""
 
 #: ../app/Components/Controls/Person/layout.latte.latte2php:10
-#: ../app/config/orm.neon.neon2php:572
+#: ../app/config/orm.neon.neon2php:575
 msgid "ISIC"
 msgstr ""
 
@@ -562,11 +582,15 @@ msgstr ""
 
 #: ../app/Components/Controls/PreferredLangFormComponent.php:53
 #: ../app/Components/Controls/Upload/Quiz/QuizComponent.php:149
+#: ../app/Components/DataTest/list.latte.latte2php:12
+#: ../app/Components/DataTest/noList.latte.latte2php:7
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:175
 #: ../app/Modules/CoreModule/ErrorPresenter.php:18
 #: ../app/Modules/EventModule/Schedule/PersonPresenter.php:38
 msgid "Error"
-msgstr ""
+msgid_plural "Errors"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../app/Components/Controls/Stalking/container.latte.latte2php:14
 #: ../app/Components/Controls/Stalking/container.latte.latte2php:91
@@ -682,6 +706,7 @@ msgstr ""
 #: ../app/Components/Schedule/Input/ScheduleGroupField.php:31
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/AgreedColumnFactory.php:39
 #: ../app/Models/ORM/Columns/Types/DateTime/DateTimeColumnFactory.php:24
+#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:14
 msgid "__date_time"
 msgstr "d. m. Y, H:i:s"
 
@@ -813,6 +838,12 @@ msgstr ""
 msgid "No errors found"
 msgstr "Časový vývoj prihlášiek"
 
+#: ../app/Components/DataTest/list.latte.latte2php:17
+msgid "Warning"
+msgid_plural "Warnings"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../app/Components/DataTest/list.latte.latte2php:36
 #: ../app/Components/DataTest/noList.latte.latte2php:21
 #: ../app/Models/Mail/FOF/organizer.info.cs.latte.latte2php:32
@@ -850,6 +881,7 @@ msgid "Error in the form: %s"
 msgstr ""
 
 #: ../app/Components/EntityForms/EntityFormComponent.php:65
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:73
 #: ../app/Modules/OrganizerModule/templates/Contestant/list.latte.latte2php:4
 msgid "Create"
 msgstr ""
@@ -869,9 +901,9 @@ msgstr ""
 
 #: ../app/Components/EntityForms/EventOrganizerFormComponent.php:55
 #: ../app/config/orm.neon.neon2php:184 ../app/config/orm.neon.neon2php:227
-#: ../app/config/orm.neon.neon2php:588 ../app/config/orm.neon.neon2php:659
-#: ../app/config/orm.neon.neon2php:753 ../app/config/orm.neon.neon2php:856
-#: ../app/config/orm.neon.neon2php:1134 ../app/config/orm.neon.neon2php:1189
+#: ../app/config/orm.neon.neon2php:591 ../app/config/orm.neon.neon2php:662
+#: ../app/config/orm.neon.neon2php:770 ../app/config/orm.neon.neon2php:873
+#: ../app/config/orm.neon.neon2php:1151 ../app/config/orm.neon.neon2php:1206
 msgid "Note"
 msgstr ""
 
@@ -1049,12 +1081,15 @@ msgid "Payment has been updated."
 msgstr ""
 
 #: ../app/Components/EntityForms/PersonFormComponent.php:96
-msgid "Data has been updated"
+#: ../app/Components/EntityForms/Spam/SpamPersonFormComponent.php:108
+msgid "Person has been created"
 msgstr ""
 
 #: ../app/Components/EntityForms/PersonFormComponent.php:96
-msgid "Person has been created"
-msgstr ""
+#: ../app/Components/EntityForms/Spam/SpamPersonFormComponent.php:108
+#, fuzzy
+msgid "Person has been updated"
+msgstr "Registrácia"
 
 #: ../app/Components/EntityForms/PublicSchoolForm.php:57
 msgid "Address"
@@ -1132,6 +1167,115 @@ msgstr ""
 msgid "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
 msgstr ""
 
+#: ../app/Components/EntityForms/Spam/AjaxPersonFormComponent.php:49
+#: ../app/Components/EntityForms/Spam/AjaxPersonFormComponent.php:58
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:79
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:95
+#, php-format
+msgid "grade %d (expected graduation in %d)"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/AjaxPersonFormComponent.php:65
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:84
+msgid "primary school"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/AjaxPersonFormComponent.php:66
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:100
+msgid "high school"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/Handler.php:83
+#, fuzzy, php-format
+msgid "School %s created."
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Components/EntityForms/Spam/Handler.php:152
+#, fuzzy, php-format
+msgid "Person %s created."
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Components/EntityForms/Spam/Handler.php:176
+#: ../app/Components/EntityForms/Spam/Handler.php:192
+#: ../app/Components/Game/Submits/Handler/Handler.php:182
+#: ../app/Components/Schedule/PersonScheduleList.php:156
+#: ../app/Modules/EventModule/Game/templates/Seating/default.latte.latte2php:21
+msgid "Edit"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/MailImportComponent.php:43
+#, fuzzy
+msgid "File with mail"
+msgstr "Zoznam platieb"
+
+#: ../app/Components/EntityForms/Spam/MailImportComponent.php:65
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:90
+#: ../app/Components/Event/Import/ImportComponent.php:83
+msgid "Import successful."
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/MailImportComponent.php:68
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:98
+#: ../app/Components/Event/Import/ImportComponent.php:86
+msgid "Import completed with errors."
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/MissingSchoolLabelException.php:11
+#, fuzzy
+msgid "School label must exist."
+msgstr "Registrácia"
+
+#: ../app/Components/EntityForms/Spam/SchoolLabelFormComponent.php:88
+#, fuzzy
+msgid "School label has been created"
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Components/EntityForms/Spam/SchoolLabelFormComponent.php:88
+#, fuzzy
+msgid "School label has been updated"
+msgstr "Registrácia"
+
+#: ../app/Components/EntityForms/Spam/SpamPersonFormComponent.php:71
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:67
+#: ../app/config/orm.neon.neon2php:477
+msgid "Academic year"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:42
+#, fuzzy
+msgid "File with people"
+msgstr "Zoznam platieb"
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:34
+#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:43
+msgid "Choose study year"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:47
+#: ../app/config/orm.neon.neon2php:452
+msgid "Other name"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:51
+#: ../app/config/orm.neon.neon2php:448
+msgid "Family name"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:56
+#: ../app/Components/Grids/Spam/PersonGrid.php:75
+#: ../app/config/orm.neon.neon2php:474 ../app/config/orm.neon.neon2php:697
+msgid "School label"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:61
+#: ../app/config/orm.neon.neon2php:483
+msgid "Study year"
+msgstr ""
+
+#: ../app/Components/EntityForms/Spam/spam-person-form.tsx.tsx2php:69
+msgid "Select different contest year to change this value"
+msgstr ""
+
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:82
 msgid "Query has been created"
 msgstr ""
@@ -1142,7 +1286,7 @@ msgstr ""
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:95
 #: ../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:36
-#: ../app/config/orm.neon.neon2php:1092
+#: ../app/config/orm.neon.neon2php:1109
 msgid "SQL"
 msgstr ""
 
@@ -1186,8 +1330,8 @@ msgstr ""
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:196
 #: ../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:18
-#: ../app/config/orm.neon.neon2php:152 ../app/config/orm.neon.neon2php:1022
-#: ../app/config/orm.neon.neon2php:1033 ../app/config/orm.neon.neon2php:1102
+#: ../app/config/orm.neon.neon2php:152 ../app/config/orm.neon.neon2php:1039
+#: ../app/config/orm.neon.neon2php:1050 ../app/config/orm.neon.neon2php:1119
 msgid "Description"
 msgstr ""
 
@@ -1231,7 +1375,7 @@ msgid "Product has been updated."
 msgstr ""
 
 #: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:88
-#: ../app/config/orm.neon.neon2php:1148
+#: ../app/config/orm.neon.neon2php:1165
 #, fuzzy
 msgid "Producer"
 msgstr "Uprava platby #%s"
@@ -1275,14 +1419,6 @@ msgstr ""
 msgid "File with applications"
 msgstr "Zoznam platieb"
 
-#: ../app/Components/Event/Import/ImportComponent.php:83
-msgid "Import successful."
-msgstr ""
-
-#: ../app/Components/Event/Import/ImportComponent.php:86
-msgid "Import completed with errors."
-msgstr ""
-
 #: ../app/Components/Event/MassTransition/MassTransitionComponent.php:62
 #, php-format
 msgid "Total %d applications, state changed %d, unavailable %d."
@@ -1314,7 +1450,8 @@ msgstr ""
 
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:46
 #: ../app/Modules/CoreModule/RegisterPresenter.php:222
-#: ../app/config/orm.neon.neon2php:492
+#: ../app/Modules/CoreModule/templates/Authentication/recover.latte.latte2php:6
+#: ../app/config/orm.neon.neon2php:495
 msgid "E-mail"
 msgstr ""
 
@@ -1374,7 +1511,9 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolSelectField.php:24
 #: ../app/Components/Grids/ContestantsGrid.php:58
-#: ../app/config/orm.neon.neon2php:471 ../app/config/orm.neon.neon2php:631
+#: ../app/Components/Grids/Spam/PersonGrid.php:74
+#: ../app/config/orm.neon.neon2php:471 ../app/config/orm.neon.neon2php:634
+#: ../app/config/orm.neon.neon2php:701
 msgid "School"
 msgstr ""
 
@@ -1403,7 +1542,7 @@ msgid "Second optional row of the address (used rarely)"
 msgstr ""
 
 #: ../app/Components/Forms/Referenced/Address/AddressDataContainer.php:59
-#: ../app/config/orm.neon.neon2php:155 ../app/config/orm.neon.neon2php:913
+#: ../app/config/orm.neon.neon2php:155 ../app/config/orm.neon.neon2php:930
 msgid "Place"
 msgstr ""
 
@@ -1438,7 +1577,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Referenced/Address/AddressDataContainer.php:87
 #: ../app/Components/Grids/SchoolsGrid.php:40
-#: ../app/config/orm.neon.neon2php:614
+#: ../app/config/orm.neon.neon2php:617
 msgid "Country"
 msgstr ""
 
@@ -1519,7 +1658,7 @@ msgstr ""
 
 #: ../app/Components/Game/Closing/TeamList.php:74
 #: ../app/Components/Grids/Application/TeamTrait.php:51
-#: ../app/config/orm.neon.neon2php:898
+#: ../app/config/orm.neon.neon2php:915
 msgid "Team name"
 msgstr ""
 
@@ -1566,6 +1705,32 @@ msgstr ""
 #: ../app/Components/Game/Diplomas/RankingStrategy.php:81
 #, php-format
 msgid "Team %s (%d) - rank: %d"
+msgstr ""
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:4
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:15
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:42
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:56
+#, fuzzy, php-format
+msgid "Global"
+msgstr "Zvoliť typ"
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:7
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:24
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:39
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:53
+#, fuzzy, php-format
+msgid "Category %s"
+msgstr "Zvoliť typ"
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:9
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:33
+msgid "Winners"
+msgstr ""
+
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:10
+#: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:41
+msgid "Announcement"
 msgstr ""
 
 #: ../app/Components/Game/Diplomas/layout.finalResults.latte.latte2php:19
@@ -1724,13 +1889,19 @@ msgstr "Zoznam platieb"
 msgid "Time progress"
 msgstr "Časový vývoj prihlášiek"
 
+#: ../app/Components/Game/ResultsAndStatistics/Statistics/TeamStatistics/legend.tsx.tsx2php:10
+msgid "point"
+msgid_plural "points"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../app/Components/Game/ResultsAndStatistics/Table/Components/index.tsx.tsx2php:26
 msgid "Results"
 msgstr ""
 
 #: ../app/Components/Game/ResultsAndStatistics/Table/filter.ts.ts2php:29
 #: ../app/Components/Grids/Application/TeamTrait.php:60
-#: ../app/config/orm.neon.neon2php:862 ../app/config/orm.neon.neon2php:1137
+#: ../app/config/orm.neon.neon2php:879 ../app/config/orm.neon.neon2php:1154
 msgid "Category"
 msgstr ""
 
@@ -1778,9 +1949,9 @@ msgstr "Zvoliť typ"
 #: ../app/Components/Game/Submits/AllSubmitsGrid.php:201
 #: ../app/Components/Grids/Application/TeamTrait.php:72
 #: ../app/config/orm.neon.neon2php:80 ../app/config/orm.neon.neon2php:204
-#: ../app/config/orm.neon.neon2php:407 ../app/config/orm.neon.neon2php:777
-#: ../app/config/orm.neon.neon2php:848 ../app/config/orm.neon.neon2php:935
-#: ../app/config/orm.neon.neon2php:1164
+#: ../app/config/orm.neon.neon2php:407 ../app/config/orm.neon.neon2php:794
+#: ../app/config/orm.neon.neon2php:865 ../app/config/orm.neon.neon2php:952
+#: ../app/config/orm.neon.neon2php:1181
 msgid "State"
 msgstr ""
 
@@ -1843,12 +2014,6 @@ msgstr ""
 msgid "Points edited; points: %d, team: \"%s\" (%d), task: %s."
 msgstr ""
 
-#: ../app/Components/Game/Submits/Handler/Handler.php:182
-#: ../app/Components/Schedule/PersonScheduleList.php:156
-#: ../app/Modules/EventModule/Game/templates/Seating/default.latte.latte2php:21
-msgid "Edit"
-msgstr ""
-
 #: ../app/Components/Game/Submits/NoTaskLeftException.php:13
 msgid "No task left on board"
 msgstr ""
@@ -1908,7 +2073,7 @@ msgstr ""
 #: ../app/Components/Grids/Application/TeamGrid.php:55
 #: ../app/Components/Grids/Application/TeamList.php:122
 #: ../app/Modules/EventModule/templates/Attendance/detail.fof.latte.latte2php:35
-#: ../app/config/orm.neon.neon2php:920
+#: ../app/config/orm.neon.neon2php:937
 msgid "button.team.detail"
 msgstr ""
 
@@ -1940,7 +2105,7 @@ msgid "Works as %name%, characters \"%\" will be added automatically."
 msgstr ""
 
 #: ../app/Components/Grids/Application/TeamTrait.php:55
-#: ../app/config/orm.neon.neon2php:845
+#: ../app/config/orm.neon.neon2php:862
 msgid "Team Id"
 msgstr ""
 
@@ -1950,7 +2115,7 @@ msgid "Select category"
 msgstr "Zvoliť typ"
 
 #: ../app/Components/Grids/Application/TeamTrait.php:66
-#: ../app/config/orm.neon.neon2php:886
+#: ../app/config/orm.neon.neon2php:903
 msgid "Game language"
 msgstr ""
 
@@ -1965,6 +2130,18 @@ msgstr ""
 
 #: ../app/Components/Grids/Components/BaseComponent.php:104
 msgid "Reset filter!"
+msgstr ""
+
+#: ../app/Components/Grids/Components/layout.counter.latte.latte2php:5
+#, fuzzy, php-format
+msgid "Total of %d record"
+msgid_plural "Total of %d records"
+msgstr[0] "Registrácia"
+msgstr[1] "Registrácia"
+
+#: ../app/Components/Grids/Components/layout.counter.latte.latte2php:7
+#, php-format
+msgid "(Showing from %d to %d)"
 msgstr ""
 
 #: ../app/Components/Grids/Components/paginator.latte.latte2php:8
@@ -2019,6 +2196,16 @@ msgstr "Zvoliť typ"
 msgid "Select event type"
 msgstr "Zvoliť typ"
 
+#: ../app/Components/Grids/SchoolLabelGrid.php:52
+#: ../app/config/orm.neon.neon2php:642
+msgid "School name"
+msgstr ""
+
+#: ../app/Components/Grids/SchoolLabelGrid.php:53
+#: ../app/Models/UI/NotSetBadge.php:13
+msgid "Not set"
+msgstr ""
+
 #: ../app/Components/Grids/SchoolsGrid.php:38
 msgid "Not verified"
 msgstr ""
@@ -2043,6 +2230,11 @@ msgstr "Zvoliť typ"
 #: ../app/Components/Grids/SchoolsGrid.php:140
 #, fuzzy
 msgid "Study"
+msgstr "Zvoliť typ"
+
+#: ../app/Components/Grids/Spam/PersonGrid.php:73
+#, fuzzy
+msgid "Person name"
 msgstr "Zvoliť typ"
 
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:85
@@ -2132,7 +2324,7 @@ msgstr ""
 #: ../app/Components/Schedule/PersonScheduleList.php:124
 #: ../app/Modules/EventModule/ApplicationPresenter.php:142
 #: ../app/config/orm.neon.neon2php:215 ../app/config/orm.neon.neon2php:400
-#: ../app/config/orm.neon.neon2php:1179
+#: ../app/config/orm.neon.neon2php:1196
 msgid "Price"
 msgstr ""
 
@@ -2174,7 +2366,7 @@ msgid "Group"
 msgstr ""
 
 #: ../app/Components/Schedule/Input/Components/capacity-label.tsx.tsx2php:17
-#: ../app/config/orm.neon.neon2php:1050
+#: ../app/config/orm.neon.neon2php:1067
 #, fuzzy
 msgid "Free capacity"
 msgstr "Kapacita"
@@ -2231,6 +2423,7 @@ msgstr "Registrácia"
 #: ../app/Components/Schedule/Input/ScheduleContainer.php:114
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/BornColumnFactory.php:33
 #: ../app/Models/ORM/Columns/Types/DateTime/DateColumnFactory.php:25
+#: ../app/Modules/EventModule/Schedule/templates/Person/detail.latte.latte2php:27
 msgid "__date"
 msgstr ""
 
@@ -2254,13 +2447,13 @@ msgid "Used / Free / Total"
 msgstr ""
 
 #: ../app/Components/Schedule/ItemGrid.php:80
-#: ../app/config/orm.neon.neon2php:1058
+#: ../app/config/orm.neon.neon2php:1075
 #, fuzzy
 msgid "Progress bar"
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Components/Schedule/ItemGrid.php:88
-#: ../app/config/orm.neon.neon2php:1065
+#: ../app/config/orm.neon.neon2php:1082
 msgid "button.scheduleItem.detail"
 msgstr ""
 
@@ -2577,24 +2770,6 @@ msgstr "Nová platba"
 msgid "Payment not found"
 msgstr "Nová platba"
 
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:43
-msgid "Choose study year"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:79
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:95
-#, php-format
-msgid "grade %d (expected graduation in %d)"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:84
-msgid "primary school"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:100
-msgid "high school"
-msgstr ""
-
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearNewColumnFactory.php:112
 msgid "graduated & others"
 msgstr ""
@@ -2651,6 +2826,8 @@ msgid "QID can contain only english letters, numbers and dots."
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Types/DateTime/TimeColumnFactory.php:24
+#: ../app/Modules/EventModule/Schedule/templates/Person/blocks.latte.latte2php:11
+#: ../app/Modules/EventModule/Schedule/templates/Person/blocks.latte.latte2php:28
 msgid "__time"
 msgstr ""
 
@@ -3541,10 +3718,6 @@ msgstr ""
 msgid "No transitions available"
 msgstr ""
 
-#: ../app/Models/UI/NotSetBadge.php:13
-msgid "Not set"
-msgstr ""
-
 #: ../app/Models/UI/price-printer.tsx.tsx2php:20
 msgid "for free"
 msgstr ""
@@ -3576,30 +3749,30 @@ msgstr "Zvoliť typ"
 msgid "Editing entity outside chosen year."
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:38
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:40
 msgid "Create an entity"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:57
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:59
 msgid "Delete an entity"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:76
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:78
 msgid "Detail of the entity"
 msgstr ""
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:95
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:97
 #, fuzzy
 msgid "Edit an entity"
 msgstr "Uprava platby #%s"
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:110
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:125
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:112
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:127
 #, fuzzy
 msgid "List of entities"
 msgstr "Zoznam akcií"
 
-#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
+#: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:165
 #, fuzzy
 msgid "Model does not exist."
 msgstr "Ubytnovanie neexistuje"
@@ -3680,7 +3853,7 @@ msgstr ""
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:211
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:215
 #: ../app/Modules/CoreModule/SettingsPresenter.php:118
-#: ../app/config/orm.neon.neon2php:298 ../app/config/orm.neon.neon2php:894
+#: ../app/config/orm.neon.neon2php:298 ../app/config/orm.neon.neon2php:911
 msgid "Password"
 msgstr ""
 
@@ -3742,6 +3915,7 @@ msgid "Organizer %s"
 msgstr ""
 
 #: ../app/Modules/CoreModule/RegisterPresenter.php:97
+#: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:50
 #, fuzzy, php-format
 msgid "Register to %s"
 msgstr "Registrácia"
@@ -3848,6 +4022,12 @@ msgstr ""
 msgid "Bad Request"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/400.latte.latte2php:12
+#: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:20
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:12
+msgid "Pokračuj na rázcestník aktivít"
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:12
 msgid "You are not authorized to view this page."
 msgstr ""
@@ -3877,6 +4057,10 @@ msgstr "Zvoliť typ"
 msgid "ask for a role grant"
 msgstr ""
 
+#: ../app/Modules/CoreModule/templates/Error/404.latte.latte2php:10
+msgid "Whoooops! We are sorry, but the requested page does not exist."
+msgstr ""
+
 #: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:10
 #, fuzzy
 msgid "Chosen method is not supported."
@@ -3891,7 +4075,7 @@ msgid "This page is no longer available and will not be available again."
 msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Register/default.latte.latte2php:14
-#: ../app/config/orm.neon.neon2php:130 ../app/config/orm.neon.neon2php:969
+#: ../app/config/orm.neon.neon2php:130 ../app/config/orm.neon.neon2php:986
 #, fuzzy
 msgid "Registration end"
 msgstr "Registrácia"
@@ -3999,7 +4183,7 @@ msgid "Application belongs to another event."
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Modules/EventModule/BasePresenter.php:113
-#: ../app/Modules/OrganizerModule/BasePresenter.php:77
+#: ../app/Modules/OrganizerModule/BasePresenter.php:78
 msgid "Others"
 msgstr ""
 
@@ -4139,6 +4323,37 @@ msgstr "Zoznam akcií"
 #: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:36
 #, fuzzy
 msgid "Calculate ranking"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:40
+#, php-format
+msgid "Calculate results for %s category"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:40
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:54
+#, fuzzy, php-format
+msgid "Category %s is not ready"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+#, fuzzy
+msgid "Calculate global results"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:43
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:57
+msgid "Total results are not ready"
+msgstr ""
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:54
+#, fuzzy, php-format
+msgid "Validate category %s"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/EventModule/Game/templates/Diplomas/default.latte.latte2php:57
+#, fuzzy
+msgid "Validate all categories"
 msgstr "Zvoliť typ"
 
 #: ../app/Modules/EventModule/Game/templates/Seating/default.latte.latte2php:2
@@ -4428,7 +4643,7 @@ msgstr ""
 msgid "Entities"
 msgstr ""
 
-#: ../app/Modules/OrganizerModule/BasePresenter.php:101
+#: ../app/Modules/OrganizerModule/BasePresenter.php:102
 #, php-format
 msgid "%d. year, %s. series"
 msgstr ""
@@ -4479,6 +4694,16 @@ msgstr ""
 #: ../app/Modules/OrganizerModule/DeduplicatePresenter.php:239
 msgid "Manual conflict resolution is necessary."
 msgstr ""
+
+#: ../app/Modules/OrganizerModule/EmailPresenter.php:40
+#, fuzzy, php-format
+msgid "Detail of e-mail #%s"
+msgstr "Zoznam akcií"
+
+#: ../app/Modules/OrganizerModule/EmailPresenter.php:62
+#, fuzzy
+msgid "List of emails"
+msgstr "Zoznam akcií"
 
 #: ../app/Modules/OrganizerModule/EventPresenter.php:40
 msgid "Add event"
@@ -4533,11 +4758,13 @@ msgid "Detail of person %s"
 msgstr ""
 
 #: ../app/Modules/OrganizerModule/PersonPresenter.php:100
+#: ../app/Modules/OrganizerModule/Spam/PersonPresenter.php:40
 #, fuzzy, php-format
 msgid "Edit person \"%s\""
 msgstr "Uprava platby #%s"
 
 #: ../app/Modules/OrganizerModule/PersonPresenter.php:112
+#: ../app/Modules/OrganizerModule/Spam/PersonPresenter.php:47
 #: ../app/Modules/OrganizerModule/templates/Person/search.latte.latte2php:12
 msgid "Create person"
 msgstr ""
@@ -4585,6 +4812,7 @@ msgid "Error during calculation."
 msgstr ""
 
 #: ../app/Modules/OrganizerModule/SchoolsPresenter.php:39
+#: ../app/Modules/OrganizerModule/Spam/BasePresenter.php:37
 msgid "Schools"
 msgstr ""
 
@@ -4603,15 +4831,37 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: ../app/Modules/OrganizerModule/SpamPresenter.php:40
-#, fuzzy, php-format
-msgid "Detail of e-mail #%s"
-msgstr "Zoznam akcií"
-
-#: ../app/Modules/OrganizerModule/SpamPresenter.php:62
+#: ../app/Modules/OrganizerModule/Spam/DashboardPresenter.php:13
 #, fuzzy
-msgid "List of emails"
-msgstr "Zoznam akcií"
+msgid "Spam dashboard"
+msgstr "Nová platba"
+
+#: ../app/Modules/OrganizerModule/Spam/MailPresenter.php:37
+msgid "Mail"
+msgstr ""
+
+#: ../app/Modules/OrganizerModule/Spam/MailPresenter.php:42
+#, fuzzy
+msgid "Mail import"
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Modules/OrganizerModule/Spam/PersonPresenter.php:57
+#, fuzzy
+msgid "People import"
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Modules/OrganizerModule/Spam/SchoolPresenter.php:33
+#, fuzzy, php-format
+msgid "Edit label %s"
+msgstr "Uprava platby #%s"
+
+#: ../app/Modules/OrganizerModule/Spam/SchoolPresenter.php:38
+msgid "Add school label"
+msgstr ""
+
+#: ../app/Modules/OrganizerModule/Spam/SchoolPresenter.php:43
+msgid "School labels"
+msgstr ""
 
 #: ../app/Modules/OrganizerModule/StoredQueryPresenter.php:39
 #, fuzzy, php-format
@@ -4695,6 +4945,11 @@ msgstr ""
 msgid "Recalculate categories"
 msgstr "Zvoliť typ"
 
+#: ../app/Modules/OrganizerModule/templates/Email/detail.latte.latte2php:21
+#: ../app/config/orm.neon.neon2php:77
+msgid "Text"
+msgstr ""
+
 #: ../app/Modules/OrganizerModule/templates/Person/detail.latte.latte2php:10
 msgid "This is how you look, when you stalk yourself"
 msgstr ""
@@ -4734,18 +4989,13 @@ msgstr "Zvoliť typ"
 msgid "Calculate quiz points"
 msgstr "Zvoliť typ"
 
-#: ../app/Modules/OrganizerModule/templates/Spam/detail.latte.latte2php:21
-#: ../app/config/orm.neon.neon2php:77
-msgid "Text"
-msgstr ""
-
 #: ../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:17
-#: ../app/config/orm.neon.neon2php:706 ../app/config/orm.neon.neon2php:804
+#: ../app/config/orm.neon.neon2php:723 ../app/config/orm.neon.neon2php:821
 msgid "Name"
 msgstr "Meno"
 
 #: ../app/Modules/OrganizerModule/templates/StoredQuery/detail.latte.latte2php:20
-#: ../app/config/orm.neon.neon2php:737 ../app/config/orm.neon.neon2php:948
+#: ../app/config/orm.neon.neon2php:754 ../app/config/orm.neon.neon2php:965
 msgid "Type"
 msgstr ""
 
@@ -4906,7 +5156,7 @@ msgstr "Časový vývoj prihlášiek"
 
 #: ../app/config/applications/dsef.neon.neon2php:14
 #: ../app/config/applications/fol.neon.neon2php:21
-#: ../app/config/applications/setkani.neon.neon2php:30
+#: ../app/config/applications/setkani.neon.neon2php:34
 #: ../data/events/council/councilDefault.neon.neon2php:38
 #: ../data/events/tsaf/tsaf8.neon.neon2php:82
 #: ../data/events/vaf/vaf.neon.neon2php:47
@@ -4916,7 +5166,7 @@ msgstr ""
 
 #: ../app/config/applications/dsef.neon.neon2php:18
 #: ../app/config/applications/fol.neon.neon2php:24
-#: ../app/config/applications/setkani.neon.neon2php:33
+#: ../app/config/applications/setkani.neon.neon2php:37
 #: ../app/config/applications/tabor.neon.neon2php:107
 #: ../data/events/council/councilDefault.neon.neon2php:41
 #: ../data/events/tabor/tabor1-6.neon.neon2php:117
@@ -4932,8 +5182,8 @@ msgid "Nepřijel"
 msgstr ""
 
 #: ../app/config/applications/dsef.neon.neon2php:23
-#: ../app/config/applications/setkani.neon.neon2php:37
-#: ../app/config/applications/setkani.neon.neon2php:40
+#: ../app/config/applications/setkani.neon.neon2php:41
+#: ../app/config/applications/setkani.neon.neon2php:44
 #: ../app/config/applications/tabor.neon.neon2php:112
 #: ../data/events/council/councilDefault.neon.neon2php:45
 #: ../data/events/tabor/tabor1-6.neon.neon2php:120
@@ -4978,13 +5228,13 @@ msgid "Did not come"
 msgstr ""
 
 #: ../app/config/applications/fol.neon.neon2php:14
-#: ../app/config/applications/setkani.neon.neon2php:13
-#: ../app/config/applications/setkani.neon.neon2php:25
+#: ../app/config/applications/setkani.neon.neon2php:14
+#: ../app/config/applications/setkani.neon.neon2php:28
 msgid "Schválit účast"
 msgstr ""
 
 #: ../app/config/applications/fol.neon.neon2php:18
-#: ../app/config/applications/setkani.neon.neon2php:19
+#: ../app/config/applications/setkani.neon.neon2php:21
 msgid "Potvrdit jako náhradníka"
 msgstr ""
 
@@ -5195,7 +5445,7 @@ msgid "Bcc"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:84 ../app/config/orm.neon.neon2php:435
-#: ../app/config/orm.neon.neon2php:785 ../app/config/orm.neon.neon2php:867
+#: ../app/config/orm.neon.neon2php:802 ../app/config/orm.neon.neon2php:884
 msgid "Created"
 msgstr ""
 
@@ -5240,7 +5490,7 @@ msgstr "Zvoliť typ"
 msgid "For one-day events it is identical to the beginning."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:127 ../app/config/orm.neon.neon2php:966
+#: ../app/config/orm.neon.neon2php:127 ../app/config/orm.neon.neon2php:983
 #, fuzzy
 msgid "Registration begin"
 msgstr "Registrácia"
@@ -5465,7 +5715,7 @@ msgstr "Nová platba"
 msgid "Payment ID"
 msgstr "Nová platba"
 
-#: ../app/config/orm.neon.neon2php:375 ../app/config/orm.neon.neon2php:505
+#: ../app/config/orm.neon.neon2php:375 ../app/config/orm.neon.neon2php:508
 msgid "Bank account"
 msgstr ""
 
@@ -5489,7 +5739,7 @@ msgstr ""
 msgid "SWIFT"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:404 ../app/config/orm.neon.neon2php:1183
+#: ../app/config/orm.neon.neon2php:404 ../app/config/orm.neon.neon2php:1200
 msgid "Currency"
 msgstr ""
 
@@ -5521,488 +5771,482 @@ msgstr ""
 msgid "Only if different from \"Name Surname\"."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:448
-msgid "Family name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:452
-msgid "Other name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:474
-msgid "Academic year"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:479
+#: ../app/config/orm.neon.neon2php:482
 msgid "For determinig the category."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:480
-msgid "Study year"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:483
+#: ../app/config/orm.neon.neon2php:486
 msgid "Class"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:497
+#: ../app/config/orm.neon.neon2php:500
 msgid "Health insurance"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:502
+#: ../app/config/orm.neon.neon2php:505
 msgid "Nationality"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:510
+#: ../app/config/orm.neon.neon2php:513
 msgid "Homepage"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:513 ../app/config/orm.neon.neon2php:852
+#: ../app/config/orm.neon.neon2php:516 ../app/config/orm.neon.neon2php:869
 msgid "Phone"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:516
+#: ../app/config/orm.neon.neon2php:519
 msgid "Phone number (mother)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:520
+#: ../app/config/orm.neon.neon2php:523
 msgid "Phone number (father)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:524
+#: ../app/config/orm.neon.neon2php:527
 msgid "E-mail (mother)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:528
+#: ../app/config/orm.neon.neon2php:531
 msgid "E-mail (father)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:533
+#: ../app/config/orm.neon.neon2php:536
 msgid "Number of the ID which you will carry with you during the event"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:534
+#: ../app/config/orm.neon.neon2php:537
 msgid "Passport no."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:540
+#: ../app/config/orm.neon.neon2php:543
 msgid "Date of birth"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:544
+#: ../app/config/orm.neon.neon2php:547
 msgid "Birth Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:545
+#: ../app/config/orm.neon.neon2php:548
 msgid "For foreigners empty."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:549
+#: ../app/config/orm.neon.neon2php:552
 msgid "Place of birth"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:550
+#: ../app/config/orm.neon.neon2php:553
 msgid "City and region"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:553
+#: ../app/config/orm.neon.neon2php:556
 #, fuzzy
 msgid "Current career/study"
 msgstr "Zvoliť typ"
 
-#: ../app/config/orm.neon.neon2php:555
+#: ../app/config/orm.neon.neon2php:558
 msgid "Shown in the organizers' list"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:560
+#: ../app/config/orm.neon.neon2php:563
 msgid "ICQ, Jabber, etc."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:564
+#: ../app/config/orm.neon.neon2php:567
 msgid "I agree with the privacy policy"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:567
+#: ../app/config/orm.neon.neon2php:570
 msgid "Login UK"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:576
+#: ../app/config/orm.neon.neon2php:579
 msgid "Linkedin Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:580
+#: ../app/config/orm.neon.neon2php:583
 msgid "Zaměstnavatel"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:584 ../app/config/orm.neon.neon2php:905
+#: ../app/config/orm.neon.neon2php:587 ../app/config/orm.neon.neon2php:922
 msgid "How did you come to know about us?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:592
+#: ../app/config/orm.neon.neon2php:595
 msgid "Pre-nominal title"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:596
+#: ../app/config/orm.neon.neon2php:599
 msgid "Post-nominal title"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:618
+#: ../app/config/orm.neon.neon2php:621
 msgid "Flag"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:635
+#: ../app/config/orm.neon.neon2php:638
 msgid "Full name"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:636
+#: ../app/config/orm.neon.neon2php:639
 msgid "Full name of the school."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:639
-msgid "School name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:640
+#: ../app/config/orm.neon.neon2php:643
 msgid "Envelope name."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:643
+#: ../app/config/orm.neon.neon2php:646
 msgid "Abbreviated name"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:644
+#: ../app/config/orm.neon.neon2php:647
 msgid "Very short name."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:647
+#: ../app/config/orm.neon.neon2php:650
 msgid "Contact e-mail"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:650
+#: ../app/config/orm.neon.neon2php:653
 msgid "IČ (Czech schools only)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:653
+#: ../app/config/orm.neon.neon2php:656
 msgid "IZO (Czech schools only)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:656
+#: ../app/config/orm.neon.neon2php:659
 msgid "Active"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:662
+#: ../app/config/orm.neon.neon2php:665
 msgid "Teach grades H_*?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:665
+#: ../app/config/orm.neon.neon2php:668
 msgid "Teach grades P_*?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:668
+#: ../app/config/orm.neon.neon2php:671
 msgid "Teach grades U_ALL?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:671
+#: ../app/config/orm.neon.neon2php:674
 msgid "Verified"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:677
+#: ../app/config/orm.neon.neon2php:680
 msgid "button.school.edit"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:683
+#: ../app/config/orm.neon.neon2php:686
 msgid "button.school.detail"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:703 ../app/config/orm.neon.neon2php:807
+#: ../app/config/orm.neon.neon2php:694
+#, fuzzy
+msgid "School label Id"
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/config/orm.neon.neon2php:720 ../app/config/orm.neon.neon2php:824
 msgid "Label"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:709 ../app/config/orm.neon.neon2php:801
+#: ../app/config/orm.neon.neon2php:726 ../app/config/orm.neon.neon2php:818
 msgid "Task Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:718
+#: ../app/config/orm.neon.neon2php:735
 #, fuzzy
 msgid "Submit start"
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/config/orm.neon.neon2php:721
+#: ../app/config/orm.neon.neon2php:738
 #, fuzzy
 msgid "Submit deadline"
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/config/orm.neon.neon2php:724
+#: ../app/config/orm.neon.neon2php:741
 #, fuzzy
 msgid "Average points"
 msgstr "Zoznam akcií"
 
-#: ../app/config/orm.neon.neon2php:728
+#: ../app/config/orm.neon.neon2php:745
 msgid "Solvers count"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:747
+#: ../app/config/orm.neon.neon2php:764
 #, fuzzy
 msgid "Active cooperation"
 msgstr "Zvoliť typ"
 
-#: ../app/config/orm.neon.neon2php:750
+#: ../app/config/orm.neon.neon2php:767
 msgid "Role in institution/school"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:759
+#: ../app/config/orm.neon.neon2php:776
 msgid "button.teacher.edit"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:765
+#: ../app/config/orm.neon.neon2php:782
 msgid "button.teacher.detail"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:774
+#: ../app/config/orm.neon.neon2php:791
 #, fuzzy
 msgid "Submit Id"
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/config/orm.neon.neon2php:789
+#: ../app/config/orm.neon.neon2php:806
 #, fuzzy
 msgid "Checked"
 msgstr "Nová platba"
 
-#: ../app/config/orm.neon.neon2php:814
+#: ../app/config/orm.neon.neon2php:831
 msgid "Tasks on board"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:817
+#: ../app/config/orm.neon.neon2php:834
 msgid "Game start"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:820
+#: ../app/config/orm.neon.neon2php:837
 #, fuzzy
 msgid "Game end"
 msgstr "Meno"
 
-#: ../app/config/orm.neon.neon2php:823
+#: ../app/config/orm.neon.neon2php:840
 msgid "Results display"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:826
+#: ../app/config/orm.neon.neon2php:843
 msgid "Results hide"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:829
+#: ../app/config/orm.neon.neon2php:846
 msgid "Refresh delay"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:834
+#: ../app/config/orm.neon.neon2php:851
 msgid "Hard display"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:838
+#: ../app/config/orm.neon.neon2php:855
 msgid "Available points"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:859
+#: ../app/config/orm.neon.neon2php:876
 msgid "Internal note"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:870
+#: ../app/config/orm.neon.neon2php:887
 msgid "Rank in category"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:874
+#: ../app/config/orm.neon.neon2php:891
 msgid "Total rank"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:889
+#: ../app/config/orm.neon.neon2php:906
 msgid "Force A"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:890
+#: ../app/config/orm.neon.neon2php:907
 msgid ""
 "Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
 "nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato "
 "kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:902
+#: ../app/config/orm.neon.neon2php:919
 #, fuzzy
 msgid "Submit opened?"
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/config/orm.neon.neon2php:908
+#: ../app/config/orm.neon.neon2php:925
 msgid "Scholarship"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:944
+#: ../app/config/orm.neon.neon2php:961
 msgid "Schedule group Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:951
+#: ../app/config/orm.neon.neon2php:968
 msgid "Schedule start"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:954
+#: ../app/config/orm.neon.neon2php:971
 msgid "Schedule end"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:957 ../app/config/orm.neon.neon2php:1010
-#: ../app/config/orm.neon.neon2php:1122
+#: ../app/config/orm.neon.neon2php:974 ../app/config/orm.neon.neon2php:1027
+#: ../app/config/orm.neon.neon2php:1139
 #, fuzzy
 msgid "Name cs"
 msgstr "Meno"
 
-#: ../app/config/orm.neon.neon2php:960 ../app/config/orm.neon.neon2php:1007
-#: ../app/config/orm.neon.neon2php:1125
+#: ../app/config/orm.neon.neon2php:977 ../app/config/orm.neon.neon2php:1024
+#: ../app/config/orm.neon.neon2php:1142
 #, fuzzy
 msgid "Name en"
 msgstr "Meno"
 
-#: ../app/config/orm.neon.neon2php:963
+#: ../app/config/orm.neon.neon2php:980
 msgid "Group name"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:972
+#: ../app/config/orm.neon.neon2php:989
 #, fuzzy
 msgid "Modification end"
 msgstr "Registrácia"
 
-#: ../app/config/orm.neon.neon2php:978
+#: ../app/config/orm.neon.neon2php:995
 msgid "button.scheduleGroup.detail"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:983
+#: ../app/config/orm.neon.neon2php:1000
 msgid "button.scheduleGroup.edit"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:990
+#: ../app/config/orm.neon.neon2php:1007
 msgid "Schedule item Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:994
+#: ../app/config/orm.neon.neon2php:1011
 #, fuzzy
 msgid "Price CZK"
 msgstr "Cena v Kč"
 
-#: ../app/config/orm.neon.neon2php:998
+#: ../app/config/orm.neon.neon2php:1015
 #, fuzzy
 msgid "Price EUR"
 msgstr "Cena v Kč"
 
-#: ../app/config/orm.neon.neon2php:1001
+#: ../app/config/orm.neon.neon2php:1018
 msgid "Is item payable via FKSDB?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1004
+#: ../app/config/orm.neon.neon2php:1021
 msgid "Is item available via GUI?"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1013
+#: ../app/config/orm.neon.neon2php:1030
 msgid "Item name"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1016 ../app/config/orm.neon.neon2php:1131
-#: ../app/config/orm.neon.neon2php:1171
+#: ../app/config/orm.neon.neon2php:1033 ../app/config/orm.neon.neon2php:1148
+#: ../app/config/orm.neon.neon2php:1188
 #, fuzzy
 msgid "Description en"
 msgstr "Registrácia"
 
-#: ../app/config/orm.neon.neon2php:1019 ../app/config/orm.neon.neon2php:1128
-#: ../app/config/orm.neon.neon2php:1168
+#: ../app/config/orm.neon.neon2php:1036 ../app/config/orm.neon.neon2php:1145
+#: ../app/config/orm.neon.neon2php:1185
 #, fuzzy
 msgid "Description cs"
 msgstr "Registrácia"
 
-#: ../app/config/orm.neon.neon2php:1025
+#: ../app/config/orm.neon.neon2php:1042
 #, fuzzy
 msgid "Long description en"
 msgstr "Registrácia"
 
-#: ../app/config/orm.neon.neon2php:1026 ../app/config/orm.neon.neon2php:1030
+#: ../app/config/orm.neon.neon2php:1043 ../app/config/orm.neon.neon2php:1047
 msgid "Allow HTML"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1029
+#: ../app/config/orm.neon.neon2php:1046
 #, fuzzy
 msgid "Long description cs"
 msgstr "Registrácia"
 
-#: ../app/config/orm.neon.neon2php:1036
+#: ../app/config/orm.neon.neon2php:1053
 msgid "Begin"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1037 ../app/config/orm.neon.neon2php:1041
+#: ../app/config/orm.neon.neon2php:1054 ../app/config/orm.neon.neon2php:1058
 msgid "Only if is diferent from group time"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1040
+#: ../app/config/orm.neon.neon2php:1057
 msgid "End"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1044
+#: ../app/config/orm.neon.neon2php:1061
 #, fuzzy
 msgid "Total capacity"
 msgstr "Kapacita"
 
-#: ../app/config/orm.neon.neon2php:1054
+#: ../app/config/orm.neon.neon2php:1071
 #, fuzzy
 msgid "Used capacity"
 msgstr "Kapacita"
 
-#: ../app/config/orm.neon.neon2php:1071
+#: ../app/config/orm.neon.neon2php:1088
 msgid "button.scheduleItem.edit"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1083
+#: ../app/config/orm.neon.neon2php:1100
 msgid "QID"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1084
+#: ../app/config/orm.neon.neon2php:1101
 msgid ""
 "The queries with QID cannot be deleted and QID can be used for permissions "
 "and permanent reference."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1088
+#: ../app/config/orm.neon.neon2php:1105
 msgid "Tags"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1096
+#: ../app/config/orm.neon.neon2php:1113
 msgid "Query name"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1099
+#: ../app/config/orm.neon.neon2php:1116
 msgid "Query Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1119 ../app/config/orm.neon.neon2php:1145
-#: ../app/config/orm.neon.neon2php:1158
+#: ../app/config/orm.neon.neon2php:1136 ../app/config/orm.neon.neon2php:1162
+#: ../app/config/orm.neon.neon2php:1175
 #, fuzzy
 msgid "Product Id"
 msgstr "Uprava platby #%s"
 
-#: ../app/config/orm.neon.neon2php:1155
+#: ../app/config/orm.neon.neon2php:1172
 msgid "Item Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1161
+#: ../app/config/orm.neon.neon2php:1178
 msgid "Contest Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:1174
+#: ../app/config/orm.neon.neon2php:1191
 #, fuzzy
 msgid "Data"
 msgstr "Zvoliť typ"
 
-#: ../app/config/orm.neon.neon2php:1186
+#: ../app/config/orm.neon.neon2php:1203
 #, fuzzy
 msgid "Placement"
 msgstr "Nová platba"
 
-#: ../app/main.tsx.tsx2php:99
+#: ../app/config/orm.neon.neon2php:1216
+msgid "Mail Id"
+msgstr ""
+
+#: ../app/config/orm.neon.neon2php:1219
+#, fuzzy
+msgid "Mail type"
+msgstr "Zvoliť typ"
+
+#: ../app/main.tsx.tsx2php:102
 msgid "Hide"
 msgstr ""
 
-#: ../app/main.tsx.tsx2php:101
+#: ../app/main.tsx.tsx2php:104
 msgid "Show"
 msgstr ""
 
@@ -6426,287 +6670,19 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "{plink import}"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "validate!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solutions"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solution"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "sectors"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "recalculateAll!"
+#~ msgid "#nav-contests"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "navigation"
+#~ msgid "#nav-validation"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "events"
+#~ msgid "%s at event %s"
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "badge bg-info"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "application code"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Zvolená osoba je již přihlášená."
-#~ msgstr "Stránka požaduje prihlásenie."
-
-#, fuzzy
-#~ msgid "Validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Transition!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Team applications time progress"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Teacher: %s (%s)"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Submit!"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Skip the application and continue."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Show application!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Select the number of points given."
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Select test"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Select role"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Scan 2D code for group \"%s\""
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Register to Výfuk"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to %s!"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register into competition"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register for the next year"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Potvrdit jako účastnika"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Person not found"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Person info is not set"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Payment on the spot"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Parcipant"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Only check state"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Number of brochures"
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "No items found."
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "No error found"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Models are not the same!"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "List of rooms"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "List of groups"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "List of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "In team \"%s\"(%d): "
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid "Import of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Game has not started yet."
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Event web-site"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event orgs"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org: %s"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org Id"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Edit group"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Edit application"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Detailed list of payments"
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Detail of group"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors D"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors C"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors B"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors A"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Cooperation status"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Content-Type"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Check submit"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Applications detail"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Application detail \"%s\""
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Already participated"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "All tests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "All teams"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Action"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Accommodation for %s from %s to %s"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "<?php _('Remove parameter') ?>"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "<?php _('Execute query') ?>"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid ":Public:Register:"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "//:Core:MyApplications:default"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "--Select state--"
+#~ msgid "-- select event type --"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
@@ -6714,57 +6690,293 @@ msgstr ""
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "-- select event type --"
+#~ msgid "--Select state--"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "%s at event %s"
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "#nav-validation"
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Accommodation for %s from %s to %s"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "Action"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "#nav-contests"
+#~ msgid "All teams"
 #~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "All tests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Already participated"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Application detail \"%s\""
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Applications detail"
+#~ msgstr "Časový vývoj prihlášiek"
 
 #, fuzzy
 #~ msgid "Cancel the application"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "Validate all categories"
+#~ msgid "Check submit"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Content-Type"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Validate category %s"
+#~ msgid "Cooperation status"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors A"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors B"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors C"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors D"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Detail of group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Detailed list of payments"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Edit application"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Edit group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Event org Id"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Calculate global results"
+#~ msgid "Event org: %s"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Category %s is not ready"
+#~ msgid "Event orgs"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Category %s"
+#~ msgid "Event web-site"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "Global"
+#~ msgid "Game has not started yet."
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Import of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "In team \"%s\"(%d): "
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "List of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "List of groups"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "List of rooms"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Models are not the same!"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "No error found"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "No items found."
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Number of brochures"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Only check state"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "%d solution"
-#~ msgid_plural "%d solutions"
-#~ msgstr[0] "Zoznam platieb"
-#~ msgstr[1] "Zoznam platieb"
+#~ msgid "Parcipant"
+#~ msgstr "Registrácia"
 
 #, fuzzy
-#~ msgid "Total of %d active contestant"
-#~ msgid_plural "Total of %d active contestants"
-#~ msgstr[0] "Registrácia"
-#~ msgstr[1] "Registrácia"
+#~ msgid "Payment on the spot"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Person has been created."
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Person has been updated."
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Person info is not set"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Person not found"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Potvrdit jako účastnika"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Register for the next year"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register into competition"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to %s!"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to Výfuk"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Scan 2D code for group \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Select role"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Select test"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Select the number of points given."
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Show application!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Skip the application and continue."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Submit!"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Teacher: %s (%s)"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Team applications time progress"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Transition!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Zvolená osoba je již přihlášená."
+#~ msgstr "Stránka požaduje prihlásenie."
+
+#, fuzzy
+#~ msgid "application code"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "events"
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "sectors"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solution"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solutions"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "validate!"
+#~ msgstr "Zoznam platieb"

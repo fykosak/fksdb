@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{
+    ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
     Fyziklani\TeamMemberRole,
