@@ -22,7 +22,7 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-final class SpamPresenter extends BasePresenter
+final class EmailPresenter extends BasePresenter
 {
     /** @use EntityPresenterTrait<EmailMessageModel> */
     use EntityPresenterTrait;
