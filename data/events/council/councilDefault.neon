@@ -57,6 +57,5 @@ events:
                    label: _('Další poznámky')
             formAdjustments:
                 - @events.privacyPolicy
-                - @events.captcha
             processings:
                 - @events.privacyPolicy

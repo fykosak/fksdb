@@ -9,10 +9,10 @@ use Fykosak\NetteORM\Model\Model;
 
 /**
  * @property-read int $event_id
- * @property-read \DateTimeInterface $game_start
- * @property-read \DateTimeInterface $game_end
- * @property-read \DateTimeInterface $result_display
- * @property-read \DateTimeInterface $result_hide
+ * @property-read \DateTimeImmutable $game_start
+ * @property-read \DateTimeImmutable $game_end
+ * @property-read \DateTimeImmutable $result_display
+ * @property-read \DateTimeImmutable $result_hide
  * @property-read int $refresh_delay
  * @property-read int $result_hard_display
  * @property-read int $tasks_on_board
@@ -47,6 +47,7 @@ final class GameSetupModel extends Model
     /**
      * @note Check if current time is in between the midnight before game_start
      * and midnight after game_end.
+     * @throws \Exception
      */
     public function isGameTimeRange(): bool
     {
