@@ -34,7 +34,11 @@ class Role implements Statement
         [$holder] = $args;
         switch ($this->role) {
             case self::ADMIN:
-                return $this->eventAuthorizator->isAllowed($holder->getModel(), 'edit', $holder->getModel()->event);
+                return $this->eventAuthorizator->isAllowed(
+                    $holder->getModel(),
+                    'organizer',
+                    $holder->getModel()->event
+                );
             default:
                 return false;
         }
