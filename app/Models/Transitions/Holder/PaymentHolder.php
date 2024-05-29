@@ -26,7 +26,7 @@ class PaymentHolder implements ModelHolder
     /**
      * @param PaymentState $newState
      */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->model);
     }

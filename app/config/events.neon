@@ -74,7 +74,7 @@ field:
     default:
         default: null
     factory:
-        default: @event.DBReflectionFactory
+        default: null
         type: expression
 
 bmInstance:

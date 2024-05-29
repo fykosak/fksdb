@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -16,7 +16,7 @@ use Nette\SmartObject;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editations).
- * @phpstan-implements FormAdjustment<BaseHolder>
+ * @phpstan-implements FormAdjustment<ParticipantHolder>
  */
 class Captcha implements FormAdjustment
 {
@@ -31,11 +31,11 @@ class Captcha implements FormAdjustment
     }
 
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      */
     public function adjust(Form $form, ModelHolder $holder): void
     {
-        if ($holder->getModelState() != Machine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->getState() != Machine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
         $control = new CaptchaBox();

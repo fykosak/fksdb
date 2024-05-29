@@ -16,15 +16,15 @@ interface ModelHolder
     /**
      * @phpstan-param TState $newState
      */
-    public function updateState(EnumColumn $newState): void;
+    public function setState(EnumColumn $newState): void;
 
     /**
-     * @phpstan-return TState $newState
+     * @phpstan-return TState
      */
     public function getState(): EnumColumn;
 
     /**
-     * @phpstan-return TModel|null
+     * @phpstan-return TModel
      */
-    public function getModel(): ?Model;
+    public function getModel(): Model;
 }

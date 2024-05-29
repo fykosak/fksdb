@@ -6,17 +6,15 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 
-//phpcs:disable
 /**
- * @phpstan-template THolder of \FKSDB\Models\Events\Model\Holder\BaseHolder|\FKSDB\Models\Transitions\Holder\ParticipantHolder
- * @phpstan-extends MailCallback<THolder>
+ * @phpstan-extends MailCallback<ParticipantHolder>
  */
-// phpcs:enable
 abstract class EventParticipantCallback extends MailCallback
 {
     /**
-     * @param THolder $holder
+     * @param ParticipantHolder $holder
      * @phpstan-return PersonModel[]
      */
     final protected function getPersons(ModelHolder $holder): array
