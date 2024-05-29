@@ -27,7 +27,6 @@ use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Utils\FormUtils;
@@ -44,14 +43,22 @@ use Tracy\Debugger;
 /**
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type TMeta from ReferencedPersonContainer
+ * @phpstan-type RawFieldMetaData array{
+ *     required?:bool|(callable(ParticipantHolder):bool),
+ *     caption?:string|null|(callable(ParticipantHolder):string|null),
+ *     description?:string|null|(callable(ParticipantHolder):string|null)}
+ * @phpstan-type RawFieldDefinition array<string,array<string,RawFieldMetaData>> & array{
+ *    person_schedule?:array<string,TMeta>
+ *  }
  */
 abstract class ApplicationComponent extends BaseComponent
 {
-    private ?EventParticipantModel $model;
-    private EventModel $event;
-    private PersonModel $loggedPerson;
-    private EventParticipantMachine $machine;
+    protected ?EventParticipantModel $model;
+    protected EventModel $event;
+    protected PersonModel $loggedPerson;
 
+    protected EventDispatchFactory $eventDispatchFactory;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
     protected ReflectionFactory $reflectionFactory;
@@ -62,15 +69,12 @@ abstract class ApplicationComponent extends BaseComponent
         EventModel $event,
         PersonModel $loggedPerson
     ) {
-        $this->event = $event; // must be set before call parent and inject
         parent::__construct($container);
+        $this->event = $event;
         $this->model = $model;
         $this->loggedPerson = $loggedPerson;
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     public function inject(
         ReferencedPersonFactory $referencedPersonFactory,
         EventParticipantService $eventParticipantService,
@@ -80,7 +84,12 @@ abstract class ApplicationComponent extends BaseComponent
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->reflectionFactory = $reflectionFactory;
         $this->eventParticipantService = $eventParticipantService;
-        $this->machine = $eventDispatchFactory->getParticipantMachine($this->event);
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    protected function getTemplateFile(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
     /**
@@ -88,12 +97,13 @@ abstract class ApplicationComponent extends BaseComponent
      */
     final public function render(): void
     {
+        $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         $this->setDefault();
         $this->template->render(
-            __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte',
+            $this->getTemplateFile(),
             [
                 'model' => $this->model,
-                'holder' => $this->model ? $this->machine->createHolder($this->model) : null,
+                'holder' => $this->model ? $machine->createHolder($this->model) : null,
             ]
         );
     }
@@ -106,6 +116,7 @@ abstract class ApplicationComponent extends BaseComponent
      */
     protected function createComponentForm(): FormControl
     {
+        $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
@@ -118,10 +129,10 @@ abstract class ApplicationComponent extends BaseComponent
         $saveSubmit = $form->addSubmit('save', _('button.save'));
         $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
         if ($this->model) {
-            $holder = $this->machine->createHolder($this->model);
+            $holder = $machine->createHolder($this->model);
             foreach (
                 Machine::filterAvailable(
-                    Machine::filterBySource($this->machine->transitions, $holder->getState()),
+                    Machine::filterBySource($machine->transitions, $holder->getState()),
                     $holder
                 ) as $transition
             ) {
@@ -180,10 +191,11 @@ abstract class ApplicationComponent extends BaseComponent
      */
     public function handleSubmit(Form $form, ?Transition $transition = null): void
     {
+        $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         try {
             if ($transition && !$transition->getValidation()) {
-                $holder = $this->machine->createHolder($this->model);
-                $this->machine->execute($transition, $holder);
+                $holder = $machine->createHolder($this->model);
+                $machine->execute($transition, $holder);
                 $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             } else {
                 $this->eventParticipantService->explorer->beginTransaction();
@@ -206,14 +218,14 @@ abstract class ApplicationComponent extends BaseComponent
                     $values['event_participant'],
                     $this->model
                 );
-                $holder = $this->machine->createHolder($model);
+                $holder = $machine->createHolder($model);
                 if (!$this->model) { // new model select implicit
                     $transition = Machine::selectTransition(
-                        Machine::filterAvailable($this->machine->transitions, $holder)
+                        Machine::filterAvailable($machine->transitions, $holder)
                     );
                 }
                 if ($transition) {
-                    $this->machine->execute($transition, $holder);
+                    $machine->execute($transition, $holder);
                 }
                 if (isset($this->model)) {
                     $this->getPresenter()->flashMessage(
@@ -271,6 +283,25 @@ abstract class ApplicationComponent extends BaseComponent
             $form->setDefaults(['event_participant' => ['person_id' => $this->loggedPerson->person_id]]);
         }
     }
+    /*
+     * @throws \ReflectionException
+     * @phpstan-param RawFieldDefinition $definition
+     * @phpstan-return EvaluatedFieldsDefinition
+    private function evaluateFieldsDefinition(ParticipantHolder $holder, array $definition): array
+    {
+        foreach ($definition as &$sub) {
+            foreach ($sub as &$metadata) {
+                if (!is_array($metadata)) {
+                    $metadata = ['required' => $metadata];
+                }
+                foreach ($metadata as &$value) {
+                    $value = is_callable($value) ? ($value)($holder) : $value;
+                }
+            }
+        }
+        return $definition;
+    }
+      */
 
     /**
      * @phpstan-return EvaluatedFieldsDefinition

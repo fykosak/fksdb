@@ -5,11 +5,40 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Models\Events\Semantics\State;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Expressions\Logic\LogicAnd;
+use FKSDB\Models\Expressions\Logic\LogicOr;
+use FKSDB\Models\Expressions\Logic\Not;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole;
 
 class SousApplicationForm extends ApplicationComponent
 {
+    /**
+     * @throws NotImplementedException
+     */
     protected function getPersonFieldsDefinition(): array
     {
+        $holder = null;
+        if ($this->model) {
+            $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
+            $holder = $machine->createHolder($this->model);
+        }
+        $reqCondition = fn(?ParticipantHolder $holder): bool => isset($holder) ?
+            (new LogicOr(
+                new LogicAnd(
+                    new Not(
+                        new EventRole('organizer', $this->container)
+                    ),
+                    new LogicOr(
+                        new State('applied'),
+                        new State('interested')
+                    )
+                ),
+                new State('participated')
+            ))($holder)
+            : true;
         return [
             'person' => [
                 'other_name' => [
@@ -21,25 +50,25 @@ class SousApplicationForm extends ApplicationComponent
             ],
             'person_info' => [
                 'born_id' => [
-                    'required' => true,// '%events.soustredeni.requiredCond%',
+                    'required' => $reqCondition($holder),
                     'description' => _('For the insurance company.'),
                 ],
                 'birthplace' => [
-                    'required' => true //FKSDB\Models\Events\Semantics\State('participated'),
+                    'required' => isset($holder) ? (new State('participated'))($holder) : true,
                 ],
                 'phone' => [
-                    'required' => true,//'%events.soustredeni.requiredCond%',
+                    'required' => $reqCondition($holder),
                     'description' => _('Telephone number (including state prefix), that you will carry with you.'),
                 ],
             ],
             'post_contact_p' => [
                 'address' => [
-                    'required' => true,//'%events.soustredeni.requiredCond%',
+                    'required' => $reqCondition($holder),
                 ],
             ],
             'person_history' => [
                 'school_id' => [
-                    'required' => true,// FKSDB\Models\Events\Semantics\State('participated'),
+                    'required' => isset($holder) ? (new State('participated'))($holder) : true,
                     'description' => _('If you cannot find your school, e-mail the webmaster.'),
                 ],
             ],

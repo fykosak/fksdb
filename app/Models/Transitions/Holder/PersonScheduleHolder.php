@@ -31,7 +31,7 @@ class PersonScheduleHolder implements ModelHolder
     /**
      * @phpstan-param PersonScheduleState $newState
      */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->model);
     }

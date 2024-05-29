@@ -31,7 +31,7 @@ class ParticipantHolder implements ModelHolder
     /**
      * @phpstan-param EventParticipantStatus $newState
      */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }
