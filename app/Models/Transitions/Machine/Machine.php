@@ -7,6 +7,7 @@ namespace FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model\Model;
@@ -63,7 +64,7 @@ abstract class Machine
     }
 
     /**
-     * @throws UnavailableTransitionsException
+     * @throws UnavailableTransitionException
      * @throws \Throwable
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
@@ -71,7 +72,7 @@ abstract class Machine
     public function execute(Transition $transition, ModelHolder $holder): void
     {
         if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionException($transition, $holder);
         }
         $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
@@ -123,7 +124,7 @@ abstract class Machine
      * @phpstan-param SHolder $holder
      * @phpstan-param Transition<SHolder> $transition
      */
-    protected static function isAvailable(Transition $transition, ModelHolder $holder): bool
+    public static function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
         if ($transition->source->value !== $holder->getState()->value) {
             return false;

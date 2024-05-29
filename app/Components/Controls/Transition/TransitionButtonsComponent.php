@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
@@ -61,7 +62,7 @@ class TransitionButtonsComponent extends BaseComponent
                 $transition->getSuccessLabel(),
                 Message::LVL_SUCCESS
             );
-        } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
+        } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException | UnavailableTransitionException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
             Debugger::log($exception);

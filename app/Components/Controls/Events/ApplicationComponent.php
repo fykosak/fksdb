@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Transition\TransitionSubmitButton;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
@@ -136,14 +137,9 @@ abstract class ApplicationComponent extends BaseComponent
                     $holder
                 ) as $transition
             ) {
-                $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
-                if (!$transition->getValidation()) {
-                    $submit->setValidationScope([]);
-                }
+                $submit = new TransitionSubmitButton($transition, $holder);
+                $form->addComponent($submit, $transition->getId());
                 $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
-                $submit->getControlPrototype()->addAttributes(
-                    ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
-                );
             }
         }
         return $result;
