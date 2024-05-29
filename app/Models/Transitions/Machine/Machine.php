@@ -80,7 +80,7 @@ abstract class Machine
         }
         try {
             $transition->callBeforeExecute($holder);
-            $holder->updateState($transition->target);
+            $holder->setState($transition->target);
             $transition->callAfterExecute($holder);
         } catch (\Throwable $exception) {
             if (!$outerTransition) {

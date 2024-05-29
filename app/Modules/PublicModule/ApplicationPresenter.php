@@ -208,19 +208,6 @@ final class ApplicationPresenter extends BasePresenter
         return $holder->getModel()->person_id === $person->person_id;
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @phpstan-return EventParticipantMachine<BaseHolder>
-     */
-    private function getMachine(): EventParticipantMachine
-    {
-        static $machine;
-        if (!isset($machine)) {
-            $machine = $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
-        }
-        return $machine;
-    }
-
     protected function startup(): void
     {
         if (in_array($this->getEvent()->event_type_id, [2, 14, 10, 11, 12])) {
@@ -311,15 +298,6 @@ final class ApplicationPresenter extends BasePresenter
     private function initializeMachine(): void
     {
         $this->getHolder()->setModel($this->getEventApplication());
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     * @throws EventNotFoundException
-     */
-    protected function createComponentApplication(): ApplicationComponent
-    {
-        return new ApplicationComponent($this->getContext(), $this->getHolder(), $this->getMachine());
     }
 
     protected function beforeRender(): void
