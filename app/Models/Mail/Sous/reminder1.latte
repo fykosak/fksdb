@@ -1,14 +1,15 @@
 {layout none}
-{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
 
 {define subject}Pozvánka na jarní soustředění FYKOSu{/define}
 
 {block body}
-<p>Ahoj,<br>
-protože ses zatím nijak neozval{if $holder->getPerson()->gender->value == 'F'}a{/if},
-tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdříve.
-</p>
-<p>Níže přikládáme zvací e-mail.</p>
-<p>______</p>
-{include invite.latte}
+    <p>Ahoj,<br>
+        protože ses zatím nijak neozval{if $model->person->gender->value == 'F'}a{/if},
+        tak Ti připomínáme, že by se nám hodilo vědět Tvé rozhodnutí co nejdříve.
+    </p>
+    <p>Níže přikládáme zvací e-mail.</p>
+    <p>______</p>
+    {include invite.latte}
 {/block}

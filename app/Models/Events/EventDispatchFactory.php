@@ -79,6 +79,7 @@ class EventDispatchFactory
 
     /**
      * @phpstan-return EventParticipantMachine|TeamMachine
+     * @throws NotImplementedException
      */
     public function getEventMachine(EventModel $event): Machine
     {

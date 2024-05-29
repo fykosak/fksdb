@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Security\User;
 use Nette\Utils\Html;
@@ -97,6 +98,7 @@ abstract class Handler
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws \PDOException
+     * @throws InvalidLinkException
      */
     public function check(SubmitModel $submit, int $points): void
     {
@@ -128,6 +130,7 @@ abstract class Handler
     /**
      * @throws ClosedSubmittingException
      * @throws \PDOException
+     * @throws InvalidLinkException
      */
     public function edit(SubmitModel $submit, int $points): void
     {
@@ -166,6 +169,9 @@ abstract class Handler
         );
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function getTaskEditLink(SubmitModel $submit): Html
     {
         $link = $this->linkGenerator->link(
@@ -176,12 +182,10 @@ abstract class Handler
             ]
         );
 
-        $element = Html::el('a')
+        return Html::el('a')
             ->setAttribute('target', '_blank')
             ->href($link)
             ->setText(_('Edit'));
-
-        return $element;
     }
 
     abstract public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void;
