@@ -14,6 +14,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 abstract class SousMail extends EventParticipantCallback
 {
     /**
+     * @param ParticipantHolder $holder
      * @phpstan-return array{
      *     blind_carbon_copy?:string,
      *     sender:string,

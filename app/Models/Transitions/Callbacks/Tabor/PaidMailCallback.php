@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
-/**
- * @phpstan-extends EventParticipantCallback<ParticipantHolder>
- */
 class PaidMailCallback extends EventParticipantCallback
 {
     /**

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
