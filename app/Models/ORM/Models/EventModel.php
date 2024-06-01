@@ -28,6 +28,7 @@ use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 use Nette\Schema\Processor;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $event_id
@@ -35,10 +36,10 @@ use Nette\Security\Resource;
  * @property-read EventTypeModel $event_type
  * @property-read int $year
  * @property-read int $event_year
- * @property-read \DateTimeInterface $begin
- * @property-read \DateTimeInterface $end
- * @property-read \DateTimeInterface $registration_begin
- * @property-read \DateTimeInterface $registration_end
+ * @property-read DateTime $begin
+ * @property-read DateTime $end
+ * @property-read DateTime $registration_begin
+ * @property-read DateTime $registration_end
  * @property-read string $name
  * @property-read string|null $report_cs
  * @property-read string|null $report_en

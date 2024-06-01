@@ -19,7 +19,6 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
 
     /**
      * @persistent
-     * @phpstan-var class-string<Models\WebModel>
      */
     public string $model;
 

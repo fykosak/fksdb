@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $submit_id
@@ -13,7 +14,7 @@ use Nette\Security\Resource;
  * @property-read ContestantModel $contestant
  * @property-read int $task_id
  * @property-read TaskModel $task
- * @property-read \DateTimeInterface|null $submitted_on
+ * @property-read DateTime|null $submitted_on
  * @property-read SubmitSource $source
  * @property-read string|null $note
  * @property-read float|null $raw_points
