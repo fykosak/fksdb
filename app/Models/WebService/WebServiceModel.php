@@ -7,6 +7,9 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
+use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
+use FKSDB\Models\WebService\Models\Events\EventListWebModel;
 use FKSDB\Models\WebService\Models\ExportWebModel;
 use FKSDB\Models\WebService\Models\ResultsWebModel;
 use FKSDB\Models\WebService\Models\SoapWebModel;
@@ -29,8 +32,12 @@ final class WebServiceModel
     private User $user;
 
     private const WEB_MODELS = [
+        'GetOrganizers' => OrganizersWebModel::class,
+        'GetEventList' => EventListWebModel::class,
+        'GetEvent' => EventDetailWebModel::class,
         'GetExport' => ExportWebModel::class,
         'GetResults' => ResultsWebModel::class,
+        'GetSeriesResults' => ResultsWebModel::class,
     ];
 
     public function __construct(
@@ -86,7 +93,7 @@ final class WebServiceModel
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
-        return $webModel->getResponse(...$args);
+        return $webModel->getSOAPResponse(...$args);
     }
 
     /**

@@ -16,7 +16,7 @@ use Nette\Schema\Expect;
 class SchoolsReportsWebModel extends WebModel
 {
 
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return [];
     }

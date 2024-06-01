@@ -38,7 +38,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
      * @throws \DOMException
      * @throws BadTypeException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         // parse arguments
         if (!isset($args->qid)) {
@@ -120,7 +120,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
         return false;
     }
 
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         throw new NotImplementedException();
     }

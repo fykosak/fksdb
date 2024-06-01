@@ -18,7 +18,7 @@ use Nette\Schema\Expect;
 abstract class ContestWebModel extends WebModel
 {
     protected ContestModel $contest;
-    private ContestService $contestService;
+    protected ContestService $contestService;
 
     public function inject(ContestService $contestService): void
     {
@@ -39,7 +39,7 @@ abstract class ContestWebModel extends WebModel
         }
         return $this->contest;
     }
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return [
             'contestId' => Expect::scalar()->castTo('int'),

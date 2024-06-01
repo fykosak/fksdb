@@ -43,10 +43,10 @@ use Nette\Schema\Expect;
  */
 class GroupListWebModel extends EventWebModel
 {
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return array_merge(
-            parent::getInnerExpectedStructure(),
+            parent::getExpectedParams(),
             [
                 'types' => Expect::listOf(
                     Expect::anyOf(

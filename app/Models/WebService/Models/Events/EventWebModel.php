@@ -18,14 +18,14 @@ use Nette\Schema\Expect;
 abstract class EventWebModel extends WebModel
 {
     protected EventModel $event;
-    private EventService $eventService;
+    protected EventService $eventService;
 
     public function inject(EventService $eventService): void
     {
         $this->eventService = $eventService;
     }
 
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return [
             'eventId' => Expect::scalar()->castTo('int')->required(),

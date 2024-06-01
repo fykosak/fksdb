@@ -34,7 +34,7 @@ class ResultsWebModel extends WebModel implements SoapWebModel
      * @throws \SoapFault
      * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         if (
             !isset($args->contest)
@@ -187,7 +187,7 @@ class ResultsWebModel extends WebModel implements SoapWebModel
         return false;
     }
 
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         throw new NotImplementedException();
     }

@@ -24,7 +24,7 @@ class ItemListWebModel extends WebModel
         $this->scheduleGroupService = $scheduleGroupService;
     }
 
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return [
             'groupId' => Expect::scalar()->castTo('int')->required(),

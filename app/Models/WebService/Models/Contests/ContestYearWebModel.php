@@ -42,7 +42,7 @@ abstract class ContestYearWebModel extends WebModel
         }
         return $this->contestYear;
     }
-    protected function getInnerExpectedStructure(): array
+    protected function getExpectedParams(): array
     {
         return [
             'contestId' => Expect::scalar()->castTo('int'),

@@ -6,5 +6,5 @@ namespace FKSDB\Models\WebService\Models;
 
 interface SoapWebModel
 {
-    public function getResponse(\stdClass $args): \SoapVar;
+    public function getSOAPResponse(\stdClass $args): \SoapVar;
 }
