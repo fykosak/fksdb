@@ -69,7 +69,8 @@ use Nette\Security\Resource;
  *        tasksOnBoard: int,
  *        hardVisible: bool,
  *        begin:string,
- *        end:string
+ *        end:string,
+ *        resultsVisible:bool,
  *    }
  * }
  */
@@ -291,6 +292,7 @@ final class EventModel extends Model implements Resource, NodeCreator
                 'hardVisible' => (bool)$gameSetup->result_hard_display,
                 'begin' => $gameSetup->game_start->format('c'),
                 'end' => $gameSetup->game_end->format('c'),
+                'resultsVisible' => $gameSetup->isResultsVisible(),
             ];
         } catch (NotSetGameParametersException $exception) {
         }

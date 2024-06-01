@@ -6,8 +6,7 @@ namespace FKSDB\Models\WebService\Models\Events;
 
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\WebService\Models\SoapWebModel;
 use FKSDB\Models\WebService\XMLHelper;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
