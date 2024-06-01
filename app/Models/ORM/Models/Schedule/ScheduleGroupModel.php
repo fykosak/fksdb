@@ -12,19 +12,20 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $schedule_group_id
  * @property-read ScheduleGroupType $schedule_group_type
  * @property-read int $event_id
  * @property-read EventModel $event
- * @property-read \DateTimeInterface $start
- * @property-read \DateTimeInterface $end
+ * @property-read DateTime $start
+ * @property-read DateTime $end
  * @property-read string $name_cs
  * @property-read string $name_en
  * @property-read LocalizedString $name
- * @property-read \DateTimeInterface|null $registration_begin
- * @property-read \DateTimeInterface|null $registration_end
+ * @property-read DateTime|null $registration_begin
+ * @property-read DateTime|null $registration_end
  * @phpstan-type SerializedScheduleGroupModel array{
  *      scheduleGroupId:int,
  *      scheduleGroupType:string,

@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\WebService\Models\Events\EventWebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
@@ -62,12 +61,14 @@ class ResultsWebModel extends EventWebModel
         return $result;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
+        return array_merge(
+            parent::getExpectedParams(),
+            [
             'lastUpdate' => Expect::string()->nullable(),
-        ]);
+            ]
+        );
     }
 
     /**
