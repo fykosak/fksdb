@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
- * @phpstan-extends MailCallback<ParticipantHolder>
+ * @phpstan-extends MailCallback<EventParticipantModel>
  */
 class OrganizerMailCallback extends MailCallback
 {

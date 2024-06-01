@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Utils\FakeStringEnum;
 
 /**
- * @phpstan-implements ModelHolder<TeamState,TeamModel2>
+ * @phpstan-implements ModelHolder<TeamModel2,TeamState>
  */
 class TeamHolder implements ModelHolder
 {

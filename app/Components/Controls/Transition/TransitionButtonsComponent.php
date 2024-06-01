@@ -23,13 +23,13 @@ use Tracy\Debugger;
  */
 class TransitionButtonsComponent extends BaseComponent
 {
-    /** @phpstan-var Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> */
+    /** @phpstan-var Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> */
     protected Machine $machine;
     /** @phpstan-var TModel Model */
     private Model $model;
 
     /**
-     * @phpstan-param Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> $machine
+     * @phpstan-param Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> $machine
      * @phpstan-param TModel $model
      */
     public function __construct(Container $container, Machine $machine, Model $model)

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 
 /**
- * @phpstan-extends MailCallback<ParticipantHolder>
+ * @phpstan-extends MailCallback<EventParticipantModel>
  */
 abstract class EventParticipantCallback extends MailCallback
 {

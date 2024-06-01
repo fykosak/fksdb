@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 
 /**
- * @phpstan-implements ModelHolder<PersonScheduleState,PersonScheduleModel>
+ * @phpstan-implements ModelHolder<PersonScheduleModel,PersonScheduleState>
  */
 class PersonScheduleHolder implements ModelHolder
 {

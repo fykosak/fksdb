@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 
 /**
- * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ * @phpstan-implements ModelHolder<EventParticipantModel,EventParticipantStatus>
  */
 class ParticipantHolder implements ModelHolder
 {
