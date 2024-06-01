@@ -14,6 +14,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $schedule_item_id
@@ -33,8 +34,8 @@ use Nette\Security\Resource;
  * @property-read string|null $long_description_cs
  * @property-read string|null $long_description_en
  * @property-read LocalizedString $long_description
- * @property-read \DateTimeInterface|null $begin
- * @property-read \DateTimeInterface|null $end
+ * @property-read DateTime|null $begin
+ * @property-read DateTime|null $end
  * @phpstan-type SerializedScheduleItemModel array{
  *      scheduleGroupId:int,
  *      price:array<string, string>,
@@ -42,8 +43,8 @@ use Nette\Security\Resource;
  *      usedCapacity:int|null,
  *      scheduleItemId:int,
  *      name:array<string, string>,
- *      begin:\DateTimeInterface,
- *      end:\DateTimeInterface,
+ *      begin:DateTime,
+ *      end:DateTime,
  *      available: bool,
  *      description:array<string, string>,
  *      longDescription:array<string, string>,
@@ -53,12 +54,12 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'event.schedule.item';
 
-    public function getBegin(): \DateTimeInterface
+    public function getBegin(): DateTime
     {
         return $this->begin ?? $this->schedule_group->start;
     }
 
-    public function getEnd(): \DateTimeInterface
+    public function getEnd(): DateTime
     {
         return $this->end ?? $this->schedule_group->end;
     }

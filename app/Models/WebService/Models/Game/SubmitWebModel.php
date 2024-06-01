@@ -28,14 +28,14 @@ class SubmitWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([
+        return [
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
             'eventId' => Expect::scalar()->castTo('int')->required(),
             'code' => Expect::string()->pattern('^[0-9]{4,6}[a-hA-H]{2}[0-9]$')->required(),
             'points' => Expect::scalar()->castTo('int'),
-        ]);
+        ];
     }
 
     /**

@@ -10,8 +10,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-type SerializedTeamModel array{
@@ -36,13 +34,6 @@ use Nette\Schema\Expect;
  */
 class TeamsWebModel extends EventWebModel
 {
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
-        ]);
-    }
-
     /**
      * @throws BadRequestException
      */

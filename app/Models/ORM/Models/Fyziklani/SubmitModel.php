@@ -8,6 +8,7 @@ use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read SubmitState $state
@@ -19,9 +20,9 @@ use Nette\Security\Resource;
  * @property-read int $task_id
  * @property-read TeamModel2 $fyziklani_team
  * @property-read TaskModel $fyziklani_task
- * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface $checked
- * @property-read \DateTimeInterface $modified
+ * @property-read DateTime $created
+ * @property-read DateTime $checked
+ * @property-read DateTime $modified
  * @phpstan-type SerializedSubmitModel array{
  *      points:int|null,
  *      teamId:int,

@@ -16,9 +16,9 @@ use Nette\Schema\Expect;
 class SchoolsReportsWebModel extends WebModel
 {
 
-    protected function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([]);
+        return [];
     }
 
     protected function getJsonResponse(): array
@@ -28,7 +28,7 @@ class SchoolsReportsWebModel extends WebModel
         $tests = SchoolModel::getTests($this->container);
         $logger = new TestLogger();
         foreach ($tests as $test) {
-            $test->run($logger, $this->user->getIdentity()); //@phpstan-ignore-line
+            $test->run($logger, null); //@phpstan-ignore-line
         }
         return array_map(
             fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],

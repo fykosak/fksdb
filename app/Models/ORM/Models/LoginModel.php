@@ -18,6 +18,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $login_id
@@ -25,8 +26,8 @@ use Nette\Security\IIdentity;
  * @property-read PersonModel|null $person
  * @property-read string|null $login
  * @property-read string|null $hash
- * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface|null $last_login
+ * @property-read DateTime $created
+ * @property-read DateTime|null $last_login
  * @property-read int $active
  */
 final class LoginModel extends Model implements IIdentity

@@ -9,11 +9,8 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends ContestYearWebModel<array{
@@ -23,14 +20,6 @@ use Nette\Schema\Expect;
  */
 class ResultsWebModel extends ContestYearWebModel
 {
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'contestId' => Expect::scalar()->castTo('int')->required(),
-            'year' => Expect::scalar()->castTo('int')->required(),
-        ]);
-    }
-
     /**
      * @throws BadRequestException
      */

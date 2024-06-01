@@ -24,6 +24,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $fyziklani_team_id
@@ -32,7 +33,7 @@ use Nette\Security\Resource;
  * @property-read string $name
  * @property-read TeamState $state
  * @property-read TeamCategory $category
- * @property-read \DateTimeInterface $created
+ * @property-read DateTime $created
  * @property-read string|null $phone
  * @property-read string|null $note
  * @property-read string|null $password
