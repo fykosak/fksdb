@@ -19,8 +19,6 @@ use Nette\InvalidArgumentException;
  */
 class MailTemplateFactory
 {
-    /** without trailing slash */
-    private string $templateDir;
     /** @var Application */
     private $application;
 
@@ -29,13 +27,11 @@ class MailTemplateFactory
     private TemplateFactory $templateFactory;
 
     public function __construct(
-        string $templateDir,
         TemplateFactory $templateFactory,
         Application $application,
         GettextTranslator $translator,
         IRequest $request
     ) {
-        $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
@@ -62,7 +58,9 @@ class MailTemplateFactory
     public function renderWithParameters(string $templateFile, array $data, ?Language $lang): array
     {
         $lang = $lang ?? Language::from($this->translator->lang);
-        $templateFile = $this->resolverFileName($templateFile, $lang);
+        if (!file_exists($templateFile)) {
+            throw new InvalidArgumentException(sprintf(_('Cannot find template "%s".'), $templateFile));
+        }
         return [
             'subject' => $this->create($lang)->renderToString(
                 __DIR__ . '/subject.latte',
@@ -70,30 +68,6 @@ class MailTemplateFactory
             ),
             'text' => $this->create($lang)->renderToString($templateFile, $data),
         ];
-    }
-
-    private function resolverLang(?Language $lang): Language
-    {
-        return $lang ?? Language::from($this->translator->lang);
-    }
-
-    private function resolverFileName(string $filename, Language $lang): string
-    {
-        if (file_exists($filename)) {
-            return $filename;
-        }
-
-        $lang = $this->resolverLang($lang);
-        $filename = "$filename.$lang->value.latte";
-        if (file_exists($filename)) {
-            return $filename;
-        }
-
-        $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
-        if (file_exists($filename)) {
-            return $filename;
-        }
-        throw new InvalidArgumentException(sprintf(_('Cannot find template "%s.%s".'), $filename, $lang->value));
     }
 
     /**

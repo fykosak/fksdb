@@ -1,18 +1,17 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
-{var $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
-{define subject}Registrace na Fyziklání – {$holder->getModel()->name}{/define}
+{define subject}Registrace na Fyziklání – {$model->name}{/define}
 
 {block body}
     <p>
         Dobrý den,<br/><br/>
         děkujeme za registraci týmu do soutěže Fyziklání, která se bude konat <strong>16. 2. 2024 v Praze</strong> v PVA Letňany. Níže posíláme stručný přehled informací o týmu:
     </p>
-    {include detail from './detail.cs.latte',holder:$holder}
+    {include detail from './detail.cs.latte',model:$model}
     <p>
         Údaje můžete upravit pomocí odkazu <a href="{$detailLink}">zde</a> nebo ve <a href="https://db.fykos.cz/profile/my-applications/">FKSDB</a> po kliknutí na Detail příslušné přihlášky. Složení týmu můžete změnit kdykoliv před uzavřením registrace.
     </p>

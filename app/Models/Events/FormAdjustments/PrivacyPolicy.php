@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -20,7 +20,7 @@ use Nette\Utils\ArrayHash;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
- * @phpstan-implements FormAdjustment<BaseHolder>
+ * @phpstan-implements FormAdjustment<ParticipantHolder>
  */
 class PrivacyPolicy implements Processing, FormAdjustment
 {
@@ -39,13 +39,13 @@ class PrivacyPolicy implements Processing, FormAdjustment
     }
 
     /**
-     * @param BaseHolder $holder
+     * @param ParticipantHolder $holder
      * @throws OmittedControlException
      * @throws BadTypeException
      */
     public function adjust(Form $form, ModelHolder $holder): void
     {
-        if ($holder->getModelState() != Machine::STATE_INIT) {
+        if ($holder->getState() != Machine::STATE_INIT) {
             return;
         }
 

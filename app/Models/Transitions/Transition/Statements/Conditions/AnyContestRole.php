@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 
 /**
  * @phpstan-template TModel of (\Nette\Security\Resource&\Fykosak\NetteORM\Model\Model)
- * @phpstan-implements Statement<bool,ModelHolder<FakeStringEnum&EnumColumn,TModel>>
+ * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
  */
 class AnyContestRole implements Statement
 {

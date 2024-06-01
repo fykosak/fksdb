@@ -8,23 +8,23 @@ use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use Fykosak\NetteORM\Model\Model;
 
 /**
- * @phpstan-template TState of (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
  * @phpstan-template TModel of Model
+ * @phpstan-template TState of (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
  */
 interface ModelHolder
 {
     /**
      * @phpstan-param TState $newState
      */
-    public function updateState(EnumColumn $newState): void;
+    public function setState(EnumColumn $newState): void;
 
     /**
-     * @phpstan-return TState $newState
+     * @phpstan-return TState
      */
     public function getState(): EnumColumn;
 
     /**
-     * @phpstan-return TModel|null
+     * @phpstan-return TModel
      */
-    public function getModel(): ?Model;
+    public function getModel(): Model;
 }

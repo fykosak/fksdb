@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms\Spam;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Utils\CSVParser;
 use Fykosak\Utils\BaseComponent\BaseComponent;

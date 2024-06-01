@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Utils\FakeStringEnum;
 
 /**
- * @phpstan-implements ModelHolder<TeamState,TeamModel2>
+ * @phpstan-implements ModelHolder<TeamModel2,TeamState>
  */
 class TeamHolder implements ModelHolder
 {
@@ -25,7 +25,7 @@ class TeamHolder implements ModelHolder
     }
 
     /** @phpstan-param EnumColumn&FakeStringEnum $newState */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->team);
     }

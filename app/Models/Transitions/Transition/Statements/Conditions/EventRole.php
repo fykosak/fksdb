@@ -11,20 +11,26 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Nette\DI\Container;
 
 /**
  * @phpstan-template TModel of (\Nette\Security\Resource&\Fykosak\NetteORM\Model\Model)
- * @phpstan-implements Statement<bool,ModelHolder<FakeStringEnum&EnumColumn,TModel>>
+ * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
  */
 class EventRole implements Statement
 {
     protected EventAuthorizator $eventAuthorizator;
     protected ?string $privilege;
 
-    public function __construct(string $privilege, EventAuthorizator $eventAuthorizator)
+    public function __construct(string $privilege, Container $container)
+    {
+        $container->callInjects($this);
+        $this->privilege = $privilege;
+    }
+
+    public function inject(EventAuthorizator $eventAuthorizator): void
     {
         $this->eventAuthorizator = $eventAuthorizator;
-        $this->privilege = $privilege;
     }
 
     /**
