@@ -103,10 +103,13 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
         $applyButton = $control->getForm()->addSubmit('apply', _('Apply filter!'));
         $resetButton = $control->getForm()->addSubmit('reset', _('Reset filter!'));
         $applyButton->onClick[] = function (SubmitButton $button): void {
-            $this->filterParams = FormUtils::removeEmptyValues(
-            /** @phpstan-ignore-next-line */
+            $this->filterParams = FormUtils::toPrimitive(
+                FormUtils::removeEmptyValues(
+                /** @phpstan-ignore-next-line */
                 FormUtils::emptyStrToNull2($button->getForm()->getValues('array'))
+                )
             );
+
             $this->redirect('this');
         };
         $resetButton->onClick[] = function (): void {

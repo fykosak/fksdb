@@ -1509,6 +1509,25 @@ CREATE TABLE IF NOT EXISTS `person_mail`
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
 
+CREATE TABLE IF NOT EXISTS `disqualified_person`
+(
+    `disqualified_person_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`              INT UNSIGNED NOT NULL,
+    `begin`                  DATETIME     NOT NULL COMMENT 'dátum udelenia banu',
+    `end`                    DATETIME     NULL DEFAULT NULL COMMENT 'dátum konca banu, ak je doživotný null',
+    `case_id`                VARCHAR(256) NULL DEFAULT NULL,
+    `note`                   TEXT         NULL DEFAULT NULL,
+
+    CONSTRAINT `fk__disqualified_person__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_czech_ci;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;

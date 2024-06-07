@@ -23,6 +23,7 @@ use FKSDB\Models\ORM\Tests\Event\ScheduleGroupAdapter;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonAdapter;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\Event\TeamAdapter;
+use FKSDB\Models\ORM\Tests\Person\IsDisqualifiedTest;
 use FKSDB\Models\ORM\Tests\Person\PersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\Person\PersonInfoAdapter;
 use FKSDB\Models\ORM\Tests\Test;
@@ -77,7 +78,10 @@ class DataTestFactory
             ...TeamModel2::getTests($container),
             ...self::applyAdaptor(
                 TeamToPersonAdapter::class,
-                PersonModel::getTests($container),
+                [
+                    ...PersonModel::getTests($container),
+                    new IsDisqualifiedTest($container),
+                ],
                 $container
             ),
             ...self::applyAdaptor(

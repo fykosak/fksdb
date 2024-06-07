@@ -1217,3 +1217,24 @@ orm:
             mail_type:
                 type: string
                 title: _('Mail type')
+    disqualified_person:
+        model: FKSDB\Models\ORM\Models\DisqualifiedPersonModel
+        service: FKSDB\Models\ORM\Services\DisqualifiedPersonService
+        columns:
+            disqualified_person_id:
+                type: primaryKey
+                title: _('Id')
+            begin:
+                type: date
+                title: _('Begin')
+                format: 'd.M. Y'
+            end:
+                type: date
+                title: _('End')
+                format: 'd.M. Y'
+            case_id:
+                type: string
+                title: _('Case Id')
+            note:
+                type: text
+                title: _('Description/Note')
