@@ -16,6 +16,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime|null $end
  * @property-read string|null $case_id
  * @property-read string|null $note
+ * @property-read array{eventTypes?:int[],contests?:int[]}|null $scope
  */
 class BannedPersonModel extends Model implements Resource
 {
@@ -24,5 +25,21 @@ class BannedPersonModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    /**
+     * @param mixed $key
+     * @return Model|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get($key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'scope':
+                $value = $value ? json_decode($value) : null;
+                break;
+        }
+        return $value;
     }
 }

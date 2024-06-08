@@ -1512,12 +1512,12 @@ CREATE TABLE IF NOT EXISTS `person_mail`
 CREATE TABLE IF NOT EXISTS `banned_person`
 (
     `banned_person_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `person_id`              INT UNSIGNED NOT NULL,
-    `begin`                  DATETIME     NOT NULL COMMENT 'dátum udelenia banu',
-    `end`                    DATETIME     NULL DEFAULT NULL COMMENT 'dátum konca banu, ak je doživotný null',
-    `case_id`                VARCHAR(256) NULL DEFAULT NULL,
-    `note`                   TEXT         NULL DEFAULT NULL,
-
+    `person_id`        INT UNSIGNED NOT NULL,
+    `begin`            DATETIME     NOT NULL COMMENT 'dátum udelenia banu',
+    `end`              DATETIME     NULL DEFAULT NULL COMMENT 'dátum konca banu, ak je doživotný null',
+    `case_id`          VARCHAR(256) NULL DEFAULT NULL,
+    `note`             TEXT         NULL DEFAULT NULL,
+    `scope`            JSON         NULL DEFAULT NULL,
     CONSTRAINT `fk__banned_person__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
