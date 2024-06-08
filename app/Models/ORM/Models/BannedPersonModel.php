@@ -32,7 +32,7 @@ class BannedPersonModel extends Model implements Resource
      * @return Model|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get($key)
+    public function &__get($key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
@@ -41,5 +41,25 @@ class BannedPersonModel extends Model implements Resource
                 break;
         }
         return $value;
+    }
+
+    public function isBannedForEvent(EventModel $event): bool
+    {
+        if ($this->begin < $event->begin && (is_null($this->end) || $this->end > $event->begin)) {
+            if (isset($this->scope['eventTypes'])) {
+                return in_array($event->event_type_id, $this->scope['eventTypes']);
+            }
+        }
+        return false;
+    }
+
+    public function isBannedForContestYear(ContestYearModel $contestYear): bool
+    {
+        if ($this->begin < $contestYear->begin() && (is_null($this->end) || $this->end > $contestYear->begin())) {
+            if (isset($this->scope['contests'])) {
+                return in_array($contestYear->contest_id, $this->scope['contests']);
+            }
+        }
+        return false;
     }
 }

@@ -106,7 +106,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
             $this->filterParams = FormUtils::toPrimitive(
                 FormUtils::removeEmptyValues(
                 /** @phpstan-ignore-next-line */
-                FormUtils::emptyStrToNull2($button->getForm()->getValues('array'))
+                    FormUtils::emptyStrToNull2($button->getForm()->getValues('array'))
                 )
             );
 

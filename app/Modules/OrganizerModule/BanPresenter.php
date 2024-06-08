@@ -28,6 +28,9 @@ class BanPresenter extends BasePresenter
         return $this->bannedPersonService;
     }
 
+    /**
+     * @param string|BannedPersonModel $resource
+     */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
         return true;
