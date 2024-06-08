@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Tests\Person;
 
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Models\ORM\Models\DisqualifiedPersonModel;
+use FKSDB\Models\ORM\Models\BannedPersonModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
@@ -16,7 +16,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<PersonModel>
  */
-class IsDisqualifiedTest extends Test
+class IsBannedTest extends Test
 {
     /**
      * @param PersonModel $model
@@ -24,12 +24,12 @@ class IsDisqualifiedTest extends Test
     protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         /**
-         * @var DisqualifiedPersonModel $disqualification
+         * @var BannedPersonModel $ban
          */
-        foreach ($model->getDisqualifications() as $disqualification) {
+        foreach ($model->getBans() as $ban) {
             $logger->log(new TestMessage(
                 $id,
-                sprintf(_('Person was disqualified  caseId:%s'), $disqualification->case_id),
+                sprintf(_('Person was banned caseId: %s'), $ban->case_id),
                 Message::LVL_WARNING
             ));
         }
@@ -42,6 +42,6 @@ class IsDisqualifiedTest extends Test
 
     public function getId(): string
     {
-        return 'IsDisqualified';
+        return 'IsBanned';
     }
 }

@@ -290,12 +290,12 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<DisqualifiedPersonModel>
+     * @phpstan-return TypedGroupedSelection<BannedPersonModel>
      */
-    public function getDisqualifications(): TypedGroupedSelection
+    public function getBans(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<DisqualifiedPersonModel> $selection */
-        $selection = $this->related(DbNames::TAB_DISQUALIFIED_PERSON, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<BannedPersonModel> $selection */
+        $selection = $this->related(DbNames::TAB_BANNED_PERSON, 'person_id');
         return $selection;
     }
 

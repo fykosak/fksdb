@@ -6,42 +6,42 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\ORM\Models\DisqualifiedPersonModel;
-use FKSDB\Models\ORM\Services\DisqualifiedPersonService;
+use FKSDB\Models\ORM\Models\BannedPersonModel;
+use FKSDB\Models\ORM\Services\BannedPersonService;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Forms\Form;
 use Nette\Utils\DateTime;
 
 /**
- * @phpstan-extends BaseGrid<DisqualifiedPersonModel,array{date?:DateTime|null}>
+ * @phpstan-extends BaseGrid<BannedPersonModel,array{date?:DateTime|null}>
  */
-final class DisqualifiedPersonGrid extends BaseGrid
+final class BannedPersonGrid extends BaseGrid
 {
-    private DisqualifiedPersonService $disqualifiedPersonService;
+    private BannedPersonService $bannedPersonService;
 
-    public function injectService(DisqualifiedPersonService $disqualifiedPersonService): void
+    public function injectService(BannedPersonService $bannedPersonService): void
     {
-        $this->disqualifiedPersonService = $disqualifiedPersonService;
+        $this->bannedPersonService = $bannedPersonService;
     }
 
     protected function configure(): void
     {
         $this->filtered = true;
         $this->addSimpleReferencedColumns([
-            '@disqualified_person.case_id',
+            '@banned_person.case_id',
             '@person.full_name',
-            '@disqualified_person.begin',
-            '@disqualified_person.end',
-            '@disqualified_person.note',
+            '@banned_person.begin',
+            '@banned_person.end',
+            '@banned_person.note',
         ]);
     }
 
     /**
-     * @return TypedSelection<DisqualifiedPersonModel>
+     * @return TypedSelection<BannedPersonModel>
      */
     protected function getModels(): TypedSelection
     {
-        $query = $this->disqualifiedPersonService->getTable();
+        $query = $this->bannedPersonService->getTable();
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;

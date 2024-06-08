@@ -1217,11 +1217,11 @@ orm:
             mail_type:
                 type: string
                 title: _('Mail type')
-    disqualified_person:
-        model: FKSDB\Models\ORM\Models\DisqualifiedPersonModel
-        service: FKSDB\Models\ORM\Services\DisqualifiedPersonService
+    banned_person:
+        model: FKSDB\Models\ORM\Models\BannedPersonModel
+        service: FKSDB\Models\ORM\Services\BannedPersonService
         columns:
-            disqualified_person_id:
+            banned_person_id:
                 type: primaryKey
                 title: _('Id')
             begin:

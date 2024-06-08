@@ -9,7 +9,7 @@ use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
- * @property-read int $disqualified_person_id
+ * @property-read int $banned_person_id
  * @property-read int $person_id
  * @property-read PersonModel $person
  * @property-read DateTime $begin
@@ -17,9 +17,9 @@ use Nette\Utils\DateTime;
  * @property-read string|null $case_id
  * @property-read string|null $note
  */
-class DisqualifiedPersonModel extends Model implements Resource
+class BannedPersonModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'disqualifiedPerson';
+    public const RESOURCE_ID = 'bannedPerson';
 
     public function getResourceId(): string
     {

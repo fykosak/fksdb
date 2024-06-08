@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Grids\DisqualifiedPersonGrid;
+use FKSDB\Components\Grids\BannedPersonGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\DisqualifiedPersonModel;
-use FKSDB\Models\ORM\Services\DisqualifiedPersonService;
+use FKSDB\Models\ORM\Models\BannedPersonModel;
+use FKSDB\Models\ORM\Services\BannedPersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 
-class DisqualificationPresenter extends BasePresenter
+class BanPresenter extends BasePresenter
 {
-    /** @use EntityPresenterTrait<DisqualifiedPersonModel> */
+    /** @use EntityPresenterTrait<BannedPersonModel> */
     use EntityPresenterTrait;
 
-    private DisqualifiedPersonService $disqualifiedPersonService;
+    private BannedPersonService $bannedPersonService;
 
-    public function injectService(DisqualifiedPersonService $disqualifiedPersonService): void
+    public function injectService(BannedPersonService $bannedPersonService): void
     {
-        $this->disqualifiedPersonService = $disqualifiedPersonService;
+        $this->bannedPersonService = $bannedPersonService;
     }
 
-    protected function getORMService(): DisqualifiedPersonService
+    protected function getORMService(): BannedPersonService
     {
-        return $this->disqualifiedPersonService;
+        return $this->bannedPersonService;
     }
 
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -45,6 +45,6 @@ class DisqualificationPresenter extends BasePresenter
 
     protected function createComponentGrid(): Control
     {
-        return new DisqualifiedPersonGrid($this->getContext());
+        return new BannedPersonGrid($this->getContext());
     }
 }
