@@ -23,14 +23,16 @@ class TestsList extends BaseComponent
      * @persistent
      * */
     public array $selectedTests = [];
+    private bool $filtered;
 
     /**
      * @phpstan-param Test<TModel>[] $tests
      */
-    public function __construct(Container $container, array $tests)
+    public function __construct(Container $container, array $tests, bool $filtered)
     {
         parent::__construct($container);
         $this->availableTests = $tests;
+        $this->filtered = $filtered;
     }
 
     public function createComponentForm(): FormControl
@@ -38,14 +40,15 @@ class TestsList extends BaseComponent
         $control = new FormControl($this->container);
         $form = $control->getForm();
         foreach ($this->availableTests as $test) {
-            $form->addCheckbox($test->getTreeId(), $test->getTitle()->title);
+            $field = $form->addCheckbox($test->getTreeId(), $test->getTitle()->title);
+            $field->setOption('description', $test->getDescription());
         }
         $form->onSuccess[] = function (Form $form): void {
-            $this->selectedTests = $form->getValues('array');
+            $this->selectedTests = array_keys(array_filter($form->getValues('array'), fn($value) => $value));
             $this->redirect('this');
         };
         $form->addSubmit('submit', _('Submit'));
-        $form->setDefaults($this->selectedTests);
+        $form->setDefaults(array_fill_keys($this->selectedTests, true));
         return $control;
     }
 
@@ -56,7 +59,7 @@ class TestsList extends BaseComponent
     {
         $data = [];
         foreach ($this->availableTests as $test) {
-            if (isset($this->selectedTests[$test->getTreeId()]) && $this->selectedTests[$test->getTreeId()]) {
+            if ($this->filtered && in_array($test->getTreeId(), $this->selectedTests)) {
                 $logger = new TestLogger();
                 $test->run($logger, $model);
                 if (count($logger->getMessages())) {
@@ -68,9 +71,15 @@ class TestsList extends BaseComponent
             }
         }
         if ($list) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'list.latte', ['data' => $data]);
+            $this->template->render(
+                __DIR__ . DIRECTORY_SEPARATOR . 'list.latte',
+                ['data' => $data, 'filtered' => $this->filtered]
+            );
         } else {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'noList.latte', ['data' => $data]);
+            $this->template->render(
+                __DIR__ . DIRECTORY_SEPARATOR . 'noList.latte',
+                ['data' => $data, 'filtered' => $this->filtered]
+            );
         }
     }
 }

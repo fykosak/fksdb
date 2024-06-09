@@ -1,9 +1,12 @@
 {varType array $data}
-<div class="panel color-auto">
-    <div class="container">
-        {control form}
+{varType bool $filered}
+{if $filtered}
+    <div class="panel color-auto">
+        <div class="container">
+            {control form}
+        </div>
     </div>
-</div>
+{/if}
 {foreach $data as $datum}
     {var FKSDB\Models\ORM\Tests\Test $test = $datum['test']}
     {var FKSDB\Components\DataTest\TestMessage[] $messages = $datum[messages]}
