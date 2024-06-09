@@ -5,17 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\BaseList;
+use FKSDB\Components\Grids\Components\Container\RowContainer;
+use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
+use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\ORM\Models\BannedPersonModel;
+use FKSDB\Models\ORM\Models\BannedPersonScopeModel;
 use FKSDB\Models\ORM\Services\BannedPersonService;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 use Nette\Utils\DateTime;
 
 /**
- * @phpstan-extends BaseGrid<BannedPersonModel,array{date?:DateTime|null}>
+ * @phpstan-extends BaseList<BannedPersonModel,array{date?:DateTime|null}>
  */
-final class BannedPersonGrid extends BaseGrid
+final class BannedPersonGrid extends BaseList
 {
     private BannedPersonService $bannedPersonService;
 
@@ -27,13 +34,27 @@ final class BannedPersonGrid extends BaseGrid
     protected function configure(): void
     {
         $this->filtered = true;
-        $this->addSimpleReferencedColumns([
-            '@banned_person.case_id',
-            '@person.full_name',
-            '@banned_person.begin',
-            '@banned_person.end',
-            '@banned_person.note',
-        ]);
+        $this->mode = self::ModePanel;
+        $this->setTitle(new SimpleItem($this->container, '@person.full_name'));
+        /** @phpstan-var RowContainer<BannedPersonModel> $row */
+        $row = new RowContainer($this->container);
+        $row->addComponent(new TemplateItem($this->container, '<b>case ID:</b> @banned_person.case_id'), 'case_id');
+        $row->addComponent(new SimpleItem($this->container, '<b>note:</b> @banned_person.note'), 'note');
+
+        $this->addRow($row, 'row');
+        /** @phpstan-var RelatedTable<BannedPersonModel,BannedPersonScopeModel> $table */
+        $table = new RelatedTable(
+            $this->container,
+            /** @phpstan-return TypedGroupedSelection<BannedPersonScopeModel> */
+            fn(BannedPersonModel $model): TypedGroupedSelection => $model->getScopes(),
+            new Title(null, _('Scopes')),
+            true
+        );
+        $this->addRow($table, 'scope');
+        $table->addTableColumn(new SimpleItem($this->container, '@banned_person_scope.begin'), 'begin');
+        $table->addTableColumn(new SimpleItem($this->container, '@banned_person_scope.end'), 'end');
+        $table->addTableColumn(new SimpleItem($this->container, '@event_type.name'), 'event');
+        $table->addTableColumn(new SimpleItem($this->container, '@contest.contest'), 'contest');
     }
 
     /**
@@ -48,8 +69,8 @@ final class BannedPersonGrid extends BaseGrid
             }
             switch ($key) {
                 case 'date':
-                    $query->where('begin < ?', $this->filterParams['date']);
-                    $query->where('end > ? OR end IS NULL', $this->filterParams['date']);
+                    $query->where(':banned_person_scope.begin < ?', $this->filterParams['date']);
+                    $query->where(':banned_person_scope.end > ? OR :banned_person_scope.end IS NULL', $this->filterParams['date']);
                     break;
             }
         }

@@ -17,13 +17,13 @@ use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\ContestYear\ContestYearToContestantsAdapter;
 use FKSDB\Models\ORM\Tests\Event\ConflictRole;
 use FKSDB\Models\ORM\Tests\Event\EventToPersonsAdapter;
+use FKSDB\Models\ORM\Tests\Event\IsBannedFromEvent;
 use FKSDB\Models\ORM\Tests\Event\Schedule\ItemAdapter;
 use FKSDB\Models\ORM\Tests\Event\Schedule\RunOutCapacity;
 use FKSDB\Models\ORM\Tests\Event\ScheduleGroupAdapter;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonAdapter;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamToPersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\Event\TeamAdapter;
-use FKSDB\Models\ORM\Tests\Person\IsBannedTest;
 use FKSDB\Models\ORM\Tests\Person\PersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\Person\PersonInfoAdapter;
 use FKSDB\Models\ORM\Tests\Test;
@@ -59,6 +59,7 @@ class DataTestFactory
     {
         return [
             ...EventModel::getTests($container),
+            ...self::applyAdaptor(EventToPersonsAdapter::class, [new IsBannedFromEvent($container)], $container),
             ...self::applyAdaptor(EventToPersonsAdapter::class, [new ConflictRole($container)], $container),
             ...self::applyAdaptor(
                 ScheduleGroupAdapter::class,
@@ -80,7 +81,7 @@ class DataTestFactory
                 TeamToPersonAdapter::class,
                 [
                     ...PersonModel::getTests($container),
-                    new IsBannedTest($container),
+
                 ],
                 $container
             ),

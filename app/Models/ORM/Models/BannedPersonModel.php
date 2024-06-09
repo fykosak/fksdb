@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\Resource;
-use Nette\Utils\DateTime;
 
 /**
  * @property-read int $banned_person_id
  * @property-read int $person_id
  * @property-read PersonModel $person
- * @property-read DateTime $begin
- * @property-read DateTime|null $end
  * @property-read string|null $case_id
  * @property-read string|null $note
- * @property-read array{eventTypes?:int[],contests?:int[]}|null $scope
+ * @property-read string|null $scope TODO
  */
 class BannedPersonModel extends Model implements Resource
 {
@@ -28,38 +27,34 @@ class BannedPersonModel extends Model implements Resource
     }
 
     /**
-     * @param mixed $key
-     * @return Model|mixed|null
-     * @throws \ReflectionException
+     * @phpstan-return TypedGroupedSelection<BannedPersonScopeModel>
      */
-    public function &__get($key) // phpcs:ignore
+    public function getScopes(): TypedGroupedSelection
     {
-        $value = parent::__get($key);
-        switch ($key) {
-            case 'scope':
-                $value = $value ? json_decode($value) : null;
-                break;
-        }
-        return $value;
+        /** @var TypedGroupedSelection<BannedPersonScopeModel> $query */
+        $query = $this->related(DbNames::TAB_BANNED_PERSON_SCOPE, 'banned_person_id');
+        return $query;
     }
 
-    public function isBannedForEvent(EventModel $event): bool
+    public function getBanForEvent(EventModel $event): ?BannedPersonScopeModel
     {
-        if ($this->begin < $event->begin && (is_null($this->end) || $this->end > $event->begin)) {
-            if (isset($this->scope['eventTypes'])) {
-                return in_array($event->event_type_id, $this->scope['eventTypes']);
-            }
-        }
-        return false;
+        /** @var BannedPersonScopeModel|null $model */
+        $model = $this->getScopes()
+            ->where('event_type_id', $event->event_type_id)
+            ->where('begin < ?', $event->begin)
+            ->where('end > ? OR end IS NULL', $event->begin)
+            ->fetch();
+        return $model;
     }
 
-    public function isBannedForContestYear(ContestYearModel $contestYear): bool
+    public function getBanForContestYear(ContestYearModel $contestYear): ?BannedPersonScopeModel
     {
-        if ($this->begin < $contestYear->begin() && (is_null($this->end) || $this->end > $contestYear->begin())) {
-            if (isset($this->scope['contests'])) {
-                return in_array($contestYear->contest_id, $this->scope['contests']);
-            }
-        }
-        return false;
+        /** @var BannedPersonScopeModel|null $model */
+        $model = $this->getScopes()
+            ->where('contest_id', $contestYear->contest_id)
+            ->where('begin < ?', $contestYear->begin())
+            ->where('end > ? OR end IS NULL', $contestYear->begin())
+            ->fetch();
+        return $model;
     }
 }

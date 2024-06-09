@@ -48,6 +48,6 @@ class BanPresenter extends BasePresenter
 
     protected function createComponentGrid(): Control
     {
-        return new BannedPersonGrid($this->getContext());
+        return new BannedPersonGrid($this->getContext(), 1024);
     }
 }
