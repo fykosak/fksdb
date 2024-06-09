@@ -255,9 +255,9 @@ final class AttendancePresenter extends BasePresenter
     protected function createComponentTests(): TestsList
     {
         if ($this->getEvent()->isTeamEvent()) {
-            return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+            return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()), false);
         } else {
-            return new TestsList($this->getContext(), []); // @phpstan-ignore-line
+            return new TestsList($this->getContext(), [], false); // @phpstan-ignore-line
         }
     }
 }

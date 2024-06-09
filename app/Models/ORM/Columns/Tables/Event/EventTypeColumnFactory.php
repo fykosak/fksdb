@@ -8,13 +8,14 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventTypeModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends ColumnFactory<EventModel,ContestModel>
+ * @phpstan-extends ColumnFactory<EventModel|EventTypeModel,ContestModel>
  */
 class EventTypeColumnFactory extends ColumnFactory
 {
@@ -42,10 +43,13 @@ class EventTypeColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param EventModel $model
+     * @param EventModel|EventTypeModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText($model->event_type->name);
+        if ($model instanceof EventModel) {
+            $model = $model->event_type;
+        }
+        return Html::el('span')->addText($model->name);
     }
 }

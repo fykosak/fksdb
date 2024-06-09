@@ -11,6 +11,25 @@ use Nette\Utils\ArrayHash;
 class FormUtils
 {
     /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function toPrimitive(array $values): array
+    {
+        $result = [];
+        foreach ($values as $key => $value) {
+            if (is_iterable($value)) {
+                $result[$key] = self::toPrimitive((array)$value);
+            } elseif ($value instanceof \DateTimeInterface) {
+                $result[$key] = $value->format('c');
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+    /**
      * @phpstan-template TArray of ArrayHash
      * @phpstan-param TArray $values
      * @phpstan-return TArray

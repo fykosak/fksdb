@@ -30,6 +30,10 @@ abstract class Test
         return null;
     }
 
+    public function getTreeId(): string
+    {
+        return $this->getId();
+    }
     /**
      * @phpstan-param TModel $model
      */

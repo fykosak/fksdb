@@ -14,6 +14,8 @@ class DbNames
     public const TAB_SCHOOL_LABEL = 'school_label';
     public const TAB_FLAG = 'flag';
     public const TAB_EMAIL_MESSAGE = 'email_message';
+    public const TAB_BANNED_PERSON = 'banned_person';
+    public const TAB_BANNED_PERSON_SCOPE = 'banned_person_scope';
     /* person */
     public const TAB_PERSON = 'person';
     public const TAB_PERSON_HAS_FLAG = 'person_has_flag';

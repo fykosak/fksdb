@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Tests\ContestYear\InActiveContest;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $contest_id
@@ -94,5 +96,16 @@ final class ContestYearModel extends Model
         return [
             new InActiveContest($container),
         ];
+    }
+
+    public function begin(): DateTime
+    {
+        return DateTime::fromParts($this->ac_year, ContestYearService::FIRST_AC_MONTH, 1);
+    }
+
+    public function end(): DateTime
+    {
+        return (DateTime::fromParts($this->ac_year + 1, ContestYearService::FIRST_AC_MONTH, 1))
+            ->modify('-1 day');
     }
 }
