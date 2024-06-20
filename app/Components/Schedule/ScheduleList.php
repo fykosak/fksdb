@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -27,7 +28,7 @@ final class ScheduleList extends BaseList
 
     public function __construct(Container $container, EventModel $event)
     {
-        parent::__construct($container, FieldLevelPermission::ALLOW_FULL);
+        parent::__construct($container, FieldLevelPermissionValue::Full);
         $this->event = $event;
     }
 

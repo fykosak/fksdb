@@ -1,0 +1,22 @@
+{varType Fykosak\NetteORM\Model[] $models}
+{varType callable $classNameCallback}
+{varType Nette\Application\UI\Control $title}
+{varType FKSDB\Models\ORM\FieldLevelPermissionValue|null $userPermission}
+{varType FKSDB\Components\Grids\Components\BaseList $control}
+{block content}
+    {if count($models)}
+        {foreach $models as $model}
+            {var string $className = $classNameCallback?($classNameCallback)($model):''}
+
+            <div class="{$className}">
+                {if $title}
+                    <h4>{control $title $model,$userPermission}</h4>
+                {/if}
+                {control $control->rows $model,$userPermission}
+                {control $control->buttons $model,$userPermission}
+            </div>
+        {/foreach}
+    {else}
+        {FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
+{/block}

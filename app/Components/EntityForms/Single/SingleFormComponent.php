@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -99,7 +100,7 @@ abstract class SingleFormComponent extends EntityFormComponent
             $container->addField(
                 $field,
                 $metadata,
-                new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
+                new FieldLevelPermission(FieldLevelPermissionValue::Full, FieldLevelPermissionValue::Full)
             );
         }
 

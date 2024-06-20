@@ -18,6 +18,7 @@ use FKSDB\Models\Mail\FOF\OrganizerInfoMail;
 use FKSDB\Models\Mail\FOF\TeacherInfoMail;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -91,7 +92,7 @@ abstract class TeamForm extends EntityFormComponent
             $teamContainer->addField(
                 $field,
                 $metadata,
-                new FieldLevelPermission(FieldLevelPermission::ALLOW_FULL, FieldLevelPermission::ALLOW_FULL)
+                new FieldLevelPermission(FieldLevelPermissionValue::Full, FieldLevelPermissionValue::Full)
             );
         }
         $form->addComponent($teamContainer, 'team');
@@ -188,6 +189,7 @@ abstract class TeamForm extends EntityFormComponent
     {
         $this->saveMembers($team, $form);
     }
+
 
     protected function setDefaults(Form $form): void
     {

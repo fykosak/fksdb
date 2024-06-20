@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -29,7 +30,7 @@ use Nette\Utils\Paginator as NettePaginator;
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
     protected bool $filtered = false;
-    protected int $userPermission;
+    protected FieldLevelPermissionValue $userPermission;
     protected bool $paginate = true;
     protected bool $counter = true;
     protected ReflectionFactory $tableReflectionFactory;
@@ -39,7 +40,7 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
      */
     public array $filterParams = [];
 
-    public function __construct(Container $container, int $userPermission)
+    public function __construct(Container $container, FieldLevelPermissionValue $userPermission)
     {
         parent::__construct($container);
         $this->userPermission = $userPermission;

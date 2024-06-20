@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
+use FKSDB\Components\Grids\Application\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -38,7 +39,7 @@ final class MyApplicationsPresenter extends BasePresenter
         return new PersonRelatedGrid(
             'fyziklani_team_teacher',
             $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
+            FieldLevelPermissionValue::Full,
             $this->getContext()
         );
     }
@@ -52,7 +53,7 @@ final class MyApplicationsPresenter extends BasePresenter
         return new PersonRelatedGrid(
             'event_participant',
             $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
+            FieldLevelPermissionValue::Full,
             $this->getContext()
         );
     }
@@ -66,7 +67,7 @@ final class MyApplicationsPresenter extends BasePresenter
         return new PersonRelatedGrid(
             'fyziklani_team_member',
             $this->getLoggedPerson(),
-            FieldLevelPermission::ALLOW_FULL,
+            FieldLevelPermissionValue::Full,
             $this->getContext()
         );
     }

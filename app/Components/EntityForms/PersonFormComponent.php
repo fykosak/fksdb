@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -33,7 +34,7 @@ class PersonFormComponent extends EntityFormComponent
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
-    public function __construct(Container $container, int $userPermission, ?PersonModel $person)
+    public function __construct(Container $container, FieldLevelPermissionValue $userPermission, ?PersonModel $person)
     {
         parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);

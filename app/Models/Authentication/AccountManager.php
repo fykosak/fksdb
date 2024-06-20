@@ -24,30 +24,17 @@ class AccountManager
 {
     use SmartObject;
 
-    private string $invitationExpiration;
-    private string $recoveryExpiration;
-    private string $emailFrom;
-    private MailTemplateFactory $mailTemplateFactory;
-    private LoginService $loginService;
-    private AuthTokenService $authTokenService;
-    private EmailMessageService $emailMessageService;
-
     public function __construct(
-        string $invitationExpiration,
-        string $recoveryExpiration,
-        string $emailFrom,
-        MailTemplateFactory $mailTemplateFactory,
-        LoginService $loginService,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+            private readonly string $invitationExpiration,
+            private readonly string $recoveryExpiration,
+            private readonly string $emailFrom,
+            private readonly MailTemplateFactory $mailTemplateFactory,
+            private readonly LoginService $loginService,
+            private readonly AuthTokenService $authTokenService,
+            private readonly EmailMessageService $emailMessageService,
+            private readonly TokenAuthenticator $tokenAuthenticator,
+            private readonly PersonInfoService $personInfoService,
     ) {
-        $this->invitationExpiration = $invitationExpiration;
-        $this->recoveryExpiration = $recoveryExpiration;
-        $this->emailFrom = $emailFrom;
-        $this->mailTemplateFactory = $mailTemplateFactory;
-        $this->loginService = $loginService;
-        $this->authTokenService = $authTokenService;
-        $this->emailMessageService = $emailMessageService;
     }
 
     /**

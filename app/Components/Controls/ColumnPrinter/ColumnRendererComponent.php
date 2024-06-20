@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\ReflectionFactory;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model\Model;
@@ -19,12 +20,16 @@ class ColumnRendererComponent extends BaseComponent
     {
         $this->reflectionFactory = $reflectionFactory;
     }
+
     /**
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderColumn(string $templateString, ?Model $model, ?int $userPermission): void
-    {
+    final public function renderColumn(
+        string $templateString,
+        ?Model $model,
+        ?FieldLevelPermissionValue $userPermission
+    ): void {
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'string.latte',
             ['html' => $this->renderColumnToString($templateString, $model, $userPermission)]
@@ -35,8 +40,11 @@ class ColumnRendererComponent extends BaseComponent
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function renderColumnToString(string $templateString, ?Model $model, ?int $userPermission): string
-    {
+    final public function renderColumnToString(
+        string $templateString,
+        ?Model $model,
+        ?FieldLevelPermissionValue $userPermission
+    ): string {
         return preg_replace_callback(
             '/@([a-z_]+)\.([a-z_]+)(:([a-zA-Z]+))?/',
             function (array $match) use ($model, $userPermission) {
@@ -58,6 +66,7 @@ class ColumnRendererComponent extends BaseComponent
             $templateString
         );
     }
+
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException

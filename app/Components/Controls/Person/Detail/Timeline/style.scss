@@ -1,0 +1,44 @@
+@import "../../../../../css/colors";
+@import "../../../../../css/variables";
+
+.chart-container.person-detail-timeline svg.chart {
+  circle {
+    stroke: black;
+    stroke-width: 1;
+
+    &[data-contest-id="2"] {
+      fill: $vyfuk-color;
+    }
+
+    &[data-contest-id="1"] {
+      fill: $fykos-color;
+    }
+
+    &[data-event-type-id="1"] {
+      fill: $fof-color;
+    }
+
+    &[data-event-type-id="9"] {
+      fill: $fol-color;
+    }
+  }
+
+  rect {
+    stroke: white;
+    stroke-width: 1;
+  }
+
+  g[data-contest-id="1"] rect {
+    fill: $fykos-color;
+  }
+
+  g[data-contest-id="2"] rect {
+    fill: $vyfuk-color;
+  }
+
+  text {
+    text-anchor: middle;
+    alignment-baseline: middle;
+    fill: white;
+  }
+}

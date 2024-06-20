@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
@@ -15,9 +15,9 @@ use Fykosak\Utils\UI\Title;
  */
 class EventOrganizerListComponent extends DetailComponent
 {
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
-        return FieldLevelPermission::ALLOW_RESTRICT;
+        return FieldLevelPermissionValue::Restrict;
     }
 
     protected function getHeadline(): Title

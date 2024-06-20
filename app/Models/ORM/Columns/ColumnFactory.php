@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\UI\NotSetBadge;
 use FKSDB\Models\UI\PermissionDeniedBadge;
@@ -93,12 +94,9 @@ abstract class ColumnFactory
         return $field;
     }
 
-    final public function setPermissionValue(string $value): void
+    final public function setPermissionValue(FieldLevelPermissionValue $value): void
     {
-        $this->permission = new FieldLevelPermission(
-            constant(self::class . '::PERMISSION_ALLOW_' . $value),
-            constant(self::class . '::PERMISSION_ALLOW_' . $value)
-        );
+        $this->permission = new FieldLevelPermission($value, $value);
     }
 
     public function setWriteOnly(bool $isWriteOnly): void
@@ -152,7 +150,7 @@ abstract class ColumnFactory
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
-    final public function render(Model $originalModel, int $userPermissionsLevel): Html
+    final public function render(Model $originalModel, FieldLevelPermissionValue $userPermissionsLevel): Html
     {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
@@ -183,14 +181,15 @@ abstract class ColumnFactory
         return $modelSingle->getReferencedModel($this->modelClassName);
     }
 
-    final public function hasReadPermissions(int $userValue): bool
+    final public function hasReadPermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue >= $this->permission->read;
+        return $userValue->value >= $this->permission->read->value;
     }
 
-    final public function hasWritePermissions(int $userValue): bool
+    final public function hasWritePermissions(FieldLevelPermissionValue $userValue): bool
     {
-        return $userValue >= $this->permission->write;
+
+        return $userValue->value >= $this->permission->write->value;
     }
 
     protected function renderNullModel(): Html

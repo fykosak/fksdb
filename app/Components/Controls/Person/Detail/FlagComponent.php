@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Detail;
 
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 
 class FlagComponent extends BaseComponent
 {
@@ -17,8 +17,8 @@ class FlagComponent extends BaseComponent
         }
     }
 
-    protected function getMinimalPermissions(): int
+    protected function getMinimalPermission(): FieldLevelPermissionValue
     {
-        return FieldLevelPermission::ALLOW_RESTRICT;
+        return FieldLevelPermissionValue::Restrict;
     }
 }

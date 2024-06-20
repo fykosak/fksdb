@@ -12,11 +12,9 @@ use Nette\Forms\Controls\BaseControl;
 class UniqueEmail
 {
     private PersonInfoService $personInfoService;
-    private ?PersonModel $ignoredPerson;
 
-    public function __construct(Container $container, ?PersonModel $ignoredPerson = null)
+    public function __construct(Container $container, private readonly ?PersonModel $ignoredPerson = null)
     {
-        $this->ignoredPerson = $ignoredPerson;
         $container->callInjects($this);
     }
 

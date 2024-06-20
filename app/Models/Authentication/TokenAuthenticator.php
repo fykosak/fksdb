@@ -65,11 +65,14 @@ class TokenAuthenticator extends AbstractAuthenticator
         }
     }
 
+    /**
+     * @return bool true iff user has been authenticated by the authentication token
+     */
     public function isAuthenticatedByToken(?AuthTokenType $tokenType = null): bool
     {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
-            return $tokenType === null || $section->type == $tokenType->value;
+            return $tokenType === null || $section->type === $tokenType->value;
         }
         return false;
     }
