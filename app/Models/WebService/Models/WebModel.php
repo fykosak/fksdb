@@ -15,9 +15,8 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Processor;
-use Nette\Security\User;
+use Nette\Schema\Schema;
 use Nette\SmartObject;
-use Tracy\Debugger;
 
 /**
  * @phpstan-template TParams of array
@@ -28,7 +27,6 @@ abstract class WebModel
     use SmartObject;
 
     protected Container $container;
-    protected User $user;
 
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
@@ -49,43 +47,22 @@ abstract class WebModel
         $container->callInjects($this);
         if (isset($arguments)) {
             $processor = new Processor();
-            $schema = $this->getExpectedParams();
+            $schema = new Structure($this->getExpectedParams());
             $schema->otherItems()->castTo('array');
             $this->params = $processor->process($schema, $arguments);
         }
     }
 
     public function injectAuthorizators(
-        User $user,
         EventAuthorizator $eventAuthorizator,
         ContestAuthorizator $contestAuthorizator,
         BaseAuthorizator $baseAuthorizator,
         ContestYearAuthorizator $contestYearAuthorizator
     ): void {
-        $this->user = $user;
         $this->eventAuthorizator = $eventAuthorizator;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->baseAuthorizator = $baseAuthorizator;
         $this->contestYearAuthorizator = $contestYearAuthorizator;
-    }
-
-    /**
-     * @throws GoneException
-     */
-    public function getResponse(\stdClass $args): \SoapVar
-    {
-        throw new GoneException();
-    }
-
-    protected function log(string $msg): void
-    {
-        if (!$this->user->isLoggedIn()) {
-            $message = 'unauthenticated@';
-        } else {
-            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
-        }
-        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message, 'soap');
     }
 
 
@@ -103,8 +80,9 @@ abstract class WebModel
 
     /**
      * @throws NotImplementedException
+     * @phpstan-return Schema[]
      */
-    abstract protected function getExpectedParams(): Structure;
+    abstract protected function getExpectedParams(): array;
 
     /**
      * @throws GoneException

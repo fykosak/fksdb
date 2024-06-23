@@ -9,6 +9,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Price\Currency;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $item_id
@@ -23,8 +24,8 @@ use Nette\Security\Resource;
  * @property-read string|null $data dalšie info
  * @property-read float|null $purchase_price pořizovací cena
  * @property-read string|null $purchase_currency pořizovací měna
- * @property-read \DateTimeInterface $checked
- * @property-read \DateTimeInterface|null $shipped kedy bola položka vyexpedovaná
+ * @property-read DateTime $checked
+ * @property-read DateTime|null $shipped kedy bola položka vyexpedovaná
  * @property-read int $available available in online store
  * @property-read string|null $placement kde je uskladnena
  * @property-read float|null $price price in FYKOS Coins

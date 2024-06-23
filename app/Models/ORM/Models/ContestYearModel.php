@@ -19,7 +19,6 @@ use Nette\DI\Container;
  */
 final class ContestYearModel extends Model
 {
-
     /**
      * @phpstan-return TypedGroupedSelection<ContestantModel>
      */
@@ -29,6 +28,16 @@ final class ContestYearModel extends Model
         $selection = $this->contest->related(DbNames::TAB_CONTESTANT, 'contest_id')
             ->where('year', $this->year);
         return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
+     */
+    public function getOrganizers(): TypedGroupedSelection
+    {
+        return $this->contest->getOrganizers()
+            ->where('since<=?', $this->year)
+            ->where('until IS NULL OR until >=?', $this->year);
     }
 
     /**

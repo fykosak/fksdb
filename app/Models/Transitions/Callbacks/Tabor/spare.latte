@@ -22,9 +22,9 @@
     'id'=>$holder->getModel()->getPrimary()])}
     <a href="{$link}">{$link}</a>.<br>
     Zájem můžeš vyjádřit pomocí tlačítek pod přihláškou. Pokud máš zájem jet,
-    tak zároveň vyplň{if $holder->getModel()->person->gender->value == 'F'}a{/if}
-    a ulož{if $holder->getModel()->person->gender->value == 'F'}a{/if} svoji<br>
-    přihlášku. Po uložení důsledně zkontroluj, že jsi vyplnil všechny políčka a přihláška se uložila.
+    tak zároveň vyplň a ulož svoji<br>
+    přihlášku. Po uložení důsledně zkontroluj, že jsi
+    vyplnil{if $holder->getModel()->person->gender->value == 'F'}a{/if} všechny políčka a přihláška se uložila.
 </p>
 <p>
     Jelikož se již zbylá volná místa neobsazují podle pořadí v soutěži, nýbrž podle času zaslání přihlášky,<br>
@@ -32,7 +32,7 @@
     otázky, neváhejte nás kotaktovat na <a href="mailto:vyfuk@vyfuk.org">vyfuk@vyfuk.org</a>.
 </p>
 <p>
-    Za organizátory Výfuku se na tebe těší <br/>
+    Za organizátory Výfuku se na tebe těší<br>
     {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
 

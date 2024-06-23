@@ -10,6 +10,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $email_message_id`
@@ -23,8 +24,8 @@ use Nette\Security\Resource;
  * @property-read string|null $blind_carbon_copy
  * @property-read string $text
  * @property-read EmailMessageState $state
- * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface $sent
+ * @property-read DateTime $created
+ * @property-read DateTime $sent
  * @property-read bool|int $priority
  */
 final class EmailMessageModel extends Model implements Resource

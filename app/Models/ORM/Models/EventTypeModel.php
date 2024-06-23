@@ -76,13 +76,13 @@ final class EventTypeModel extends Model
             case 4:
             case 5:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vercah@fykos.cz'),
-                    'notifyFrom' => Expect::string('FYKOSí Soustředění <soustredeni@fykos.cz>'),
-                    'letterWhere' => Expect::string('Hejnice'),
-                    'deadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
-                    'letterSignature' => Expect::string('Veronika Hendrychová'),
-                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
-                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('2022-04-06'),
+                    'notifyBcc' => Expect::string('soustredeni@fykos.cz'),
+                    'notifyFrom' => Expect::string('FYKOSí soustředění <soustredeni@fykos.cz>'),
+                    'letterWhere' => Expect::string('nikde'),
+                    'deadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09'),
+                    'letterSignature' => Expect::string('Student Pilný'),
+                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09 00:00:00'),
+                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('1990-19-09 00:00:00'),
                 ])->castTo('array');
             case 10:
                 return Expect::structure([
@@ -96,6 +96,7 @@ final class EventTypeModel extends Model
             case 12:
                 return Expect::structure([
                     'capacity' => Expect::int(0),
+                    'letterSignature' => Expect::string('Student Pilný'),
                 ])->castTo('array');
             case 15:
                 return Expect::structure([

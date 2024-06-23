@@ -7,24 +7,20 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\WebService\Models\{Contests\AuthWebModel,
-    Contests\OrganizersWebModel,
-    Contests\StatsWebModel,
-    Events\EventDetailWebModel,
-    Events\EventListWebModel,
-    ExportWebModel,
-    Game,
-    PaymentListWebModel,
-    ResultsWebModel,
-    SignaturesWebModel,
-    WebModel};
+use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
+use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
+use FKSDB\Models\WebService\Models\Events\EventListWebModel;
+use FKSDB\Models\WebService\Models\ExportWebModel;
+use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SoapWebModel;
+use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
-class WebServiceModel
+final class WebServiceModel
 {
     use SmartObject;
 
@@ -36,18 +32,12 @@ class WebServiceModel
     private User $user;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => Game\ResultsWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventDetailWebModel::class,
         'GetExport' => ExportWebModel::class,
-        'GetSignatures' => SignaturesWebModel::class,
         'GetResults' => ResultsWebModel::class,
-        'GetStats' => StatsWebModel::class,
-        'GetPaymentList' => PaymentListWebModel::class,
-        'GetSeriesResults' => SeriesResultsWebModel::class,
-        'GetContests' => ContestsModel::class,
-        'auth' => AuthWebModel::class,
+        'GetSeriesResults' => ResultsWebModel::class,
     ];
 
     public function __construct(
@@ -103,7 +93,7 @@ class WebServiceModel
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
-        return $webModel->getResponse(...$args);
+        return $webModel->getSOAPResponse(...$args);
     }
 
     /**
@@ -137,7 +127,7 @@ class WebServiceModel
 
     /**
      * @throws \ReflectionException
-     * @phpstan-return WebModel<array<mixed>,array<mixed>>
+     * @phpstan-return (WebModel<array<mixed>,array<mixed>>&SoapWebModel)|null
      */
     private function getWebModel(string $name): ?WebModel
     {
@@ -147,7 +137,10 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
+            if (!$reflection->isSubclassOf(SoapWebModel::class)) {
+                return null;
+            }
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>>&SoapWebModel $model */
             $model = $reflection->newInstance($this->container, null);
             return $model;
         }

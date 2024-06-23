@@ -20,7 +20,7 @@ final class SchoolService extends Service
         }
         try {
             return in_array($this->findByPrimary($schoolId)->address->country->alpha_2, ['CZ', 'SK']);
-        } catch (\Throwable$exception) {
+        } catch (\Throwable $exception) {
             return false;
         }
     }
