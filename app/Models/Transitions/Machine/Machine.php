@@ -111,10 +111,10 @@ abstract class Machine
     {
         $length = \count($transitions);
         if ($length > 1) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionsException(UnavailableTransitionsException::ReasonLot);
         }
         if (!$length) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionsException(UnavailableTransitionsException::ReasonNone);
         }
         return \array_values($transitions)[0];
     }

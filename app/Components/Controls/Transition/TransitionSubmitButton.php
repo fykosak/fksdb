@@ -17,14 +17,14 @@ class TransitionSubmitButton extends SubmitButton
 {
     /** @var Transition<THolder> */
     private Transition $transition;
-    /** @var THolder */
-    private ModelHolder $holder;
+    /** @var THolder|null */
+    private ?ModelHolder $holder;
 
     /**
      * @param Transition<THolder> $transition
-     * @param THolder $holder
+     * @param THolder|null $holder
      */
-    public function __construct(Transition $transition, ModelHolder $holder)
+    public function __construct(Transition $transition, ?ModelHolder $holder)
     {
         parent::__construct($transition->label()->toHtml());
         $this->transition = $transition;
@@ -32,14 +32,14 @@ class TransitionSubmitButton extends SubmitButton
         if (!$this->transition->getValidation()) {
             $this->setValidationScope([]);
         }
-        if (!Machine::isAvailable($this->transition, $this->holder)) {
+        if ($this->holder && !Machine::isAvailable($this->transition, $this->holder)) {
             $this->disabled = true;
         }
         $this->getControlPrototype()->addAttributes(
             ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
         );
         $this->onClick[] = function (): void {
-            if (!Machine::isAvailable($this->transition, $this->holder)) {
+            if ($this->holder && !Machine::isAvailable($this->transition, $this->holder)) {
                 throw new UnavailableTransitionException($this->transition, $this->holder);
             }
         };
