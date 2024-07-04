@@ -3,6 +3,7 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
+            <h2>{_'Available templates'}</h2>
             <ul>
                 {foreach $sources as $key=> $value}
                     <li><a href="{plink this source=>$key}">{get_class($value)}</a></li>
@@ -14,9 +15,9 @@
         <div class="container">
             {if $source}
                 <h2>{get_class($source)}</h2>
-            {control testForm}
+            {control templateForm}
             {else}
-                <h2>No source selected</h2>
+                <h2 class="text-danger">No source selected</h2>
             {/if}
         </div>
     </div>

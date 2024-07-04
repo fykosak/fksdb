@@ -13,7 +13,6 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @phpstan-template TMailTemplateParam of array
@@ -84,7 +83,6 @@ class MailProviderForm extends BaseComponent
         /** @phpstan-var TMailSchema $values */
         $values = $form->getValues('array');
         $this->previewMails = $this->source->createEmails($values);
-        Debugger::barDump($this->previewMails);
     }
 
     /**
@@ -102,7 +100,6 @@ class MailProviderForm extends BaseComponent
 
     public function render(): void
     {
-        Debugger::barDump($this->previewMails);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
             'previewMails' => $this->previewMails,
         ]);

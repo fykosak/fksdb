@@ -70,9 +70,9 @@ final class EmailPresenter extends BasePresenter
         );
     }
 
-    public function titleTest(): PageTitle
+    public function titleTemplate(): PageTitle
     {
-        return new PageTitle(null, '', '');
+        return new PageTitle(null, _('Mail templates'), 'fas fa-envelope-open');
     }
 
     public function authorizedDetail(): bool
@@ -90,9 +90,16 @@ final class EmailPresenter extends BasePresenter
         return $authorized;
     }
 
-    public function authorizedTest(): bool
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedTemplate(): bool
     {
-        return true;
+        return $this->contestAuthorizator->isAllowed(
+            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+            'template',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleList(): PageTitle
@@ -100,7 +107,7 @@ final class EmailPresenter extends BasePresenter
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
     }
 
-    public function renderTest(): void
+    public function renderTemplate(): void
     {
         $this->template->sources = $this->getMailSources();
         $this->template->source = $this->getMailSource();
@@ -135,7 +142,7 @@ final class EmailPresenter extends BasePresenter
         return new EmailsGrid($this->getContext());
     }
 
-    protected function createComponentTestForm(): MailProviderForm //@phpstan-ignore-line
+    protected function createComponentTemplateForm(): MailProviderForm //@phpstan-ignore-line
     {
         return new MailProviderForm($this->getContext(), $this->getMailSource());
     }
