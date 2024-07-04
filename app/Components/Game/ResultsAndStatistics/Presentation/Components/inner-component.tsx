@@ -51,8 +51,8 @@ export default function InnerComponent() {
             table = <>
                 <div className="row head-row">
                     <div className="col-1">Pos.</div>
-                    <div className="col-1">Cat./Kat.</div>
-                    <div className="col-4">Team/Tým</div>
+                    <div className="col-1">Cat.</div>
+                    <div className="col-4">Team</div>
                     <div className="col-1">∑</div>
                     <div className="col-1">N</div>
                     <div className="col-1">x̄</div>
@@ -73,10 +73,9 @@ export default function InnerComponent() {
             case 1:
                 resultsItems.push(<div className="col-10" key={col}>{table}</div>);
         }
-
     }
     return <div className="p-3 h-100 bg-white">
         <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
-        <div className="row justify-content-around">{resultsItems}</div>
+        <div className="row justify-content-evenly">{resultsItems}</div>
     </div>;
-};
+}

@@ -7,24 +7,17 @@
     </div>
 {/define}
 
-{define codeTransition, bool $isOrganizer}
-    {if $control->getComponent('codeTransition')->available() && $isOrganizer}
-        <div class="panel color-auto">
-            <div class="container">
-                <h2>{_'Attendance'}</h2>
-                {control codeTransition}
-            </div>
-        </div>
-    {/if}
-{/define}
-
 {define titleButtons,FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|FKSDB\Models\ORM\Models\EventParticipantModel $model,bool $isOrganizer}
     <div class="d-flex align-items-center gap-2">
         {if $model->event->isRegistrationOpened() || $isOrganizer}
             <a href="{plink edit id => $model->getPrimary()}"
                class="btn btn-outline-primary">
                 <i class="fas fa-pencil me-2"></i>
-                {_'button.team.edit'}
+                {if $model instanceof FKSDB\Models\ORM\Models\Fyziklani\TeamModel2}
+                    {_'button.team.edit'}
+                {else}
+                    {_'button.participant.edit'}
+                {/if}
             </a>
         {/if}
         {if $isOrganizer}
@@ -46,7 +39,9 @@
             </div>
         {/if}
         {if $model instanceof FKSDB\Models\ORM\Models\EventParticipantModel && $isOrganizer}
-            {control printer:button 'person.detail', $model}
+            <a class="btn btn-secondary btn-sm"
+               href="{plink :Organizer:Person:detail id=>$model->person_id,contestId=>$model->event->event_type->contest_id}"
+            >{_'button.person.detail'}</a>
         {/if}
     </div>
 {/define}

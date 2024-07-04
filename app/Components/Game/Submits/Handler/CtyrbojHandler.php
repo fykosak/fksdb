@@ -23,7 +23,7 @@ class CtyrbojHandler extends Handler
     {
         $submit = $team->getSubmit($task);
         if (is_null($submit)) { // novo zadaný
-            $this->create($task, $team, $task->points, SubmitState::CHECKED);
+            $this->create($task, $team, $task->points, SubmitState::from(SubmitState::Checked));
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->edit($submit, $task->points);
         } else {

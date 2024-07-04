@@ -1,10 +1,9 @@
-import { scaleLinear, scaleTime } from 'd3-scale';
+import { scaleLinear } from 'd3-scale';
 import LineChart from 'FKSDB/Components/Charts/Core/LineChart/line-chart';
-import Legend from 'FKSDB/Components/Charts/Core/Legend/legend';
+import Legend, { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/legend';
 import { LineChartData, PointData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
 import { Translator } from '@translator/translator';
-import { LegendItemDatum } from 'FKSDB/Components/Charts/Core/Legend/item';
 import {getSeriesColor, getSeriesLabel} from './Contestants/contestants-data';
 
 interface Data {

@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
+use Nette\Schema\Elements\Structure;
 
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
  */
-class ResultsWebModel extends WebModel
+class ResultsWebModel extends WebModel implements SoapWebModel
 {
-
     private ResultsModelFactory $resultsModelFactory;
     private ContestYearService $contestYearService;
 
@@ -33,7 +34,7 @@ class ResultsWebModel extends WebModel
      * @throws \SoapFault
      * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         if (
             !isset($args->contest)
@@ -179,5 +180,23 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
+    }
+
+    protected function getExpectedParams(): array
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getJsonResponse(): array
+    {
+        throw new NotImplementedException();
     }
 }

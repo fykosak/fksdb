@@ -45,6 +45,7 @@ final class TeamGrid extends BaseGrid
                 '@fyziklani_team.scholarship',
                 '@fyziklani_team.game_lang',
                 '@fyziklani_team.category',
+                '@fyziklani_team.place',
                 '@fyziklani_team.phone',
             ]
         );
@@ -66,6 +67,13 @@ final class TeamGrid extends BaseGrid
             'edit',
             'edit',
             new Title(null, _('button.team.edit')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            ':Event:Attendance:detail',
+            'attendance',
+            new Title(null, _('button.team.attendance')),
             false,
             ['id' => 'fyziklani_team_id']
         );

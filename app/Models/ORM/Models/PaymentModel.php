@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $person_id
@@ -19,8 +20,8 @@ use Nette\Security\Resource;
  * @property-read PaymentState $state
  * @property-read float|null $price
  * @property-read string|null $currency
- * @property-read \DateTimeInterface|null $created
- * @property-read \DateTimeInterface|null $received
+ * @property-read DateTime|null $created
+ * @property-read DateTime|null $received
  * @property-read string|null $constant_symbol
  * @property-read string|null $variable_symbol
  * @property-read string|null $specific_symbol
@@ -31,21 +32,6 @@ use Nette\Security\Resource;
  * @property-read string|null $swift
  * @property-read int $want_invoice
  * @property-read string|null $invoice_id
- * @phpstan-type SerializedPaymentModel array{
- *      personId:int,
- *      paymentId:int,
- *      state:string,
- *      price:float|null,
- *      currency:string|null,
- *      constantSymbol:string|null,
- *      variableSymbol:string|null,
- *      specificSymbol:string|null,
- *      bankAccount:string|null,
- *      bankName:string|null,
- *      recipient:string|null,
- *      iban:string|null,
- *      swift:string|null,
- * }
  */
 final class PaymentModel extends Model implements Resource
 {
@@ -101,28 +87,6 @@ final class PaymentModel extends Model implements Resource
                 break;
         }
         return $value;
-    }
-
-    /**
-     * @phpstan-return SerializedPaymentModel
-     */
-    public function __toArray(): array
-    {
-        return [
-            'personId' => $this->person_id,
-            'paymentId' => $this->payment_id,
-            'state' => $this->state->value,
-            'price' => $this->price,
-            'currency' => $this->currency,
-            'constantSymbol' => $this->constant_symbol,
-            'variableSymbol' => $this->variable_symbol,
-            'specificSymbol' => $this->specific_symbol,
-            'bankAccount' => $this->bank_account,
-            'bankName' => $this->bank_name,
-            'recipient' => $this->recipient,
-            'iban' => $this->iban,
-            'swift' => $this->swift,
-        ];
     }
 
     public function hasGeneratedSymbols(): bool

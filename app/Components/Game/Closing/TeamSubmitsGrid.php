@@ -15,7 +15,7 @@ use Nette\DI\Container;
 /**
  * @phpstan-extends BaseGrid<SubmitModel,array{}>
  */
-class TeamSubmitsGrid extends BaseGrid
+final class TeamSubmitsGrid extends BaseGrid
 {
     protected SubmitService $submitService;
     private TeamModel2 $team;
@@ -46,7 +46,9 @@ class TeamSubmitsGrid extends BaseGrid
             '@fyziklani_team.name',
             '@fyziklani_task.label',
             '@fyziklani_submit.points',
+            '@fyziklani_submit.created',
             '@fyziklani_submit.modified',
+            '@fyziklani_submit.checked',
             '@fyziklani_submit.state',
         ]);
         if ($this->team->event->event_type_id === 1) {

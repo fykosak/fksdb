@@ -47,21 +47,21 @@ export default function Group({group}: OwnProps) {
         </p>
         }
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-            {group.items.map((item) => {
-                return <div key={item.scheduleItemId} className="col">
-                    <Item
-                        params={params}
-                        type={group.scheduleGroupType}
-                        item={item}
-                    />
-                </div>;
-            })}
+            {group.items.map((item) => <Item
+                key={item.scheduleItemId}
+                params={params}
+                type={group.scheduleGroupType}
+                item={item}
+            />)}
         </div>
     </div>;
 }
 
 function GroupInfo({group}: OwnProps) {
     const translator = useContext(TranslatorContext);
+    if (group.items.every(item => !item.available)) {
+        return null;
+    }
     return <div className="ms-3">
         <h5 className="mb-3">
             {translator.get(group.name)}
@@ -76,7 +76,7 @@ function GroupInfo({group}: OwnProps) {
             </small>
         </h5>
         <div>
-            {group.items.map((item) => {
+            {group.items.filter(item => item.available).map((item) => {
                 return <div key={item.scheduleItemId} className="alert alert-info">
                     <i className="fas fa-info me-2"/>{translator.get(item.name)}
                 </div>;
@@ -103,30 +103,31 @@ function Item({item, params}: ItemProps) {
         if (!visible) {
             setVisible(true);
         }
-        return <div
-            className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : (item.available ? '' : 'text-secondary border-secondary'))}
-            onClick={() => {
-                if (item.available) {
-                    if (isChecked) {
-                        dispatch(changeData('data', null));
-                    } else {
-                        dispatch(changeData('data', scheduleItemId))
+        return <div className="col">
+            <div
+                className={'mb-3 card ' + (isChecked ? 'text-white bg-success' : (item.available ? '' : 'text-secondary border-secondary'))}
+                onClick={() => {
+                    if (item.available) {
+                        if (isChecked) {
+                            dispatch(changeData('data', null));
+                        } else {
+                            dispatch(changeData('data', scheduleItemId))
+                        }
                     }
-                }
-            }}>
-
-            <div className="card-body">
-                <h5 className="card-title">
-                    <i className={'me-2 ' + (isChecked ? 'fas fa-check-circle' : (item.available ? 'far fa-circle' : 'fas fa-circle-xmark'))}/>
-                    {translator.get(name)}
-                </h5>
-                <h6 className="card-subtitle">
-                    {translator.get(description)}
-                </h6>
-                <p className="card-text">
-                    {params.price && <PriceLabel price={price} translator={translator}/>}
-                    {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
-                </p>
+                }}>
+                <div className="card-body">
+                    <h5 className="card-title">
+                        <i className={'me-2 ' + (isChecked ? 'fas fa-check-circle' : (item.available ? 'far fa-circle' : 'fas fa-circle-xmark'))}/>
+                        {translator.get(name)}
+                    </h5>
+                    <h6 className="card-subtitle">
+                        {translator.get(description)}
+                    </h6>
+                    <p className="card-text">
+                        {params.price && <PriceLabel price={price} translator={translator}/>}
+                        {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                    </p>
+                </div>
             </div>
         </div>;
     } else {

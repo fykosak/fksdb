@@ -26,7 +26,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): bool
     {
-        return $this->isAllowed('game.diplomas', 'results');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.results', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle
@@ -39,7 +39,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->isAllowed('game.diplomas', 'calculate');
+        return $this->eventAuthorizator->isAllowed('game', 'diplomas.calculate', $this->getEvent());
     }
 
     /**
@@ -88,24 +88,30 @@ final class DiplomasPresenter extends BasePresenter
         $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
         $category = $category ? TeamCategory::tryFrom($category) : null;
 
+        $isValid = true;
+
         // check saved points against submits
         $invalidTeams = $rankingStrategy->getInvalidTeamsPoints($category);
-
         if (!empty($invalidTeams)) {
             $log = Html::el('ul');
             foreach ($invalidTeams as $team) {
                 $log->addHtml(
                     Html::el('li')
+                        ->addHtml(
+                            Html::el('strong')
+                                ->setText($team->fyziklani_team_id)
+                        )
+                        ->addText(' ')
                         ->addText($team->name)
                 );
             }
             $this->flashMessage(
                 Html::el()
-                    ->addHtml(Html::el('h3')->addText('Saved points and points from submits do not match.'))
+                    ->addHtml(Html::el('h3')->addText(_('Saved points and points from submits do not match.')))
                     ->addHtml($log),
                 Message::LVL_ERROR
             );
-            return;
+            $isValid = false;
         }
 
         // check ranking
@@ -113,18 +119,28 @@ final class DiplomasPresenter extends BasePresenter
         if (!empty($invalidTeams)) {
             $log = Html::el('ul');
             foreach ($invalidTeams as $team) {
-                $log->addHtml(Html::el('li')->addText($team->name));
+                $log->addHtml(
+                    Html::el('li')
+                        ->addHtml(
+                            Html::el('strong')
+                                ->setText($team->fyziklani_team_id)
+                        )
+                        ->addText(' ')
+                        ->addText($team->name)
+                );
             }
             $this->flashMessage(
                 Html::el()
-                    ->addHtml(Html::el('h3')->addText('Ranking not valid'))
+                    ->addHtml(Html::el('h3')->addText(_('Ranking not valid')))
                     ->addHtml($log),
                 Message::LVL_ERROR
             );
-            return;
+            $isValid = false;
         }
 
-        $this->flashMessage("Validated", Message::LVL_SUCCESS);
+        if ($isValid) {
+            $this->flashMessage("Validated", Message::LVL_SUCCESS);
+        }
     }
 
     /**

@@ -1,19 +1,23 @@
 {layout none}
 {varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Letní tábor Výfuku – připomínka přihlašování{/define}
+
 <p>
-    {if $holder->getPerson()->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
-    všimli jsme si, že jsme od tebe stále nedostali odpověď ohledně účasti na Letním táboře Výfuku,
+    {if $holder->getModel()->person->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
+    všimli jsme si, že jsme od tebe stále nedostali odpověď ohledně účasti na Letním táboře Výfuku,<br>
     a chtěli bychom tě požádat o tvé vyjádření.
 </p>
 
 {include 'decision.latte'}
 
 <p>
-    Pokud bys potřeboval{if $holder->getPerson()->gender->value == 'F'}a{/if} přijet později či odjet dříve, se nám také ozvi a tento problém společně vyřešíme.
+    Pokud bys potřeboval{if $holder->getModel()->person->gender->value == 'F'}a{/if} přijet později
+    či odjet dříve, se nám také ozvi a tento problém společně vyřešíme.
 </p>
 
 <p>
     Za organizátory Výfuku<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$holder->getModel()->event->getParameter('letterSignature')}
 </p>
 

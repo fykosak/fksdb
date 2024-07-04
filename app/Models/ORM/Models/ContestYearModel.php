@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Tests\ContestYear\InActiveContest;
 use FKSDB\Models\ORM\Tests\Test;
-use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
@@ -28,6 +28,16 @@ final class ContestYearModel extends Model
         $selection = $this->contest->related(DbNames::TAB_CONTESTANT, 'contest_id')
             ->where('year', $this->year);
         return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<OrganizerModel>
+     */
+    public function getOrganizers(): TypedGroupedSelection
+    {
+        return $this->contest->getOrganizers()
+            ->where('since<=?', $this->year)
+            ->where('until IS NULL OR until >=?', $this->year);
     }
 
     /**

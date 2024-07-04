@@ -11,6 +11,7 @@ class DbNames
     public const TAB_CONTEST = 'contest';
     public const TAB_CONTEST_YEAR = 'contest_year';
     public const TAB_SCHOOL = 'school';
+    public const TAB_SCHOOL_LABEL = 'school_label';
     public const TAB_FLAG = 'flag';
     public const TAB_EMAIL_MESSAGE = 'email_message';
     /* person */
@@ -19,8 +20,8 @@ class DbNames
     public const TAB_PERSON_HISTORY = 'person_history';
     public const TAB_PERSON_INFO = 'person_info';
     /* ACL */
-    public const TAB_ROLE = 'role';
-    public const TAB_GRANT = 'grant';
+    public const TAB_CONTEST_GRANT = 'contest_grant';
+    public const TAB_EVENT_GRANT = 'event_grant';
     /* extended person */
     public const TAB_LOGIN = 'login';
     public const TAB_TEACHER = 'teacher';

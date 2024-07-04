@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Processor;
-use Nette\Security\User;
+use Nette\Schema\Schema;
 use Nette\SmartObject;
-use Tracy\Debugger;
 
 /**
  * @phpstan-template TParams of array
@@ -23,77 +27,68 @@ abstract class WebModel
     use SmartObject;
 
     protected Container $container;
-    protected User $user;
 
-    final public function __construct(Container $container)
+    protected EventAuthorizator $eventAuthorizator;
+    protected ContestAuthorizator $contestAuthorizator;
+    protected BaseAuthorizator $baseAuthorizator;
+    protected ContestYearAuthorizator $contestYearAuthorizator;
+    /**
+     * @phpstan-var TParams
+     */
+    protected array $params;
+
+    /**
+     * @throws NotImplementedException
+     * @phpstan-param mixed[] $arguments
+     */
+    final public function __construct(Container $container, ?array $arguments)
     {
         $this->container = $container;
         $container->callInjects($this);
-    }
-
-    final public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @throws GoneException
-     */
-    public function getResponse(\stdClass $args): \SoapVar
-    {
-        throw new GoneException();
-    }
-
-    protected function log(string $msg): void
-    {
-        if (!$this->user->isLoggedIn()) {
-            $message = 'unauthenticated@';
-        } else {
-            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
+        if (isset($arguments)) {
+            $processor = new Processor();
+            $schema = new Structure($this->getExpectedParams());
+            $schema->otherItems()->castTo('array');
+            $this->params = $processor->process($schema, $arguments);
         }
-        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message, 'soap');
     }
+
+    public function injectAuthorizators(
+        EventAuthorizator $eventAuthorizator,
+        ContestAuthorizator $contestAuthorizator,
+        BaseAuthorizator $baseAuthorizator,
+        ContestYearAuthorizator $contestYearAuthorizator
+    ): void {
+        $this->eventAuthorizator = $eventAuthorizator;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->baseAuthorizator = $baseAuthorizator;
+        $this->contestYearAuthorizator = $contestYearAuthorizator;
+    }
+
 
     /**
      * @throws GoneException
-     * @phpstan-param TParams $params
+     * @throws ForbiddenRequestException
+     */
+    final public function getApiResponse(): JsonResponse
+    {
+        if (!$this->isAuthorized()) {
+            throw new ForbiddenRequestException();
+        }
+        return new JsonResponse($this->getJsonResponse());
+    }
+
+    /**
+     * @throws NotImplementedException
+     * @phpstan-return Schema[]
+     */
+    abstract protected function getExpectedParams(): array;
+
+    /**
+     * @throws GoneException
      * @phpstan-return TReturn
      */
-    protected function getJsonResponse(array $params): array
-    {
-        throw new GoneException();
-    }
+    abstract protected function getJsonResponse(): array;
 
-    /**
-     * @phpstan-param TParams $arguments
-     * @throws GoneException
-     * @throws NotImplementedException
-     */
-    final public function getApiResponse(array $arguments): JsonResponse
-    {
-        $arguments = $this->processArguments($arguments);
-        return new JsonResponse($this->getJsonResponse($arguments));
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): Structure
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     * @phpstan-param TParams $arguments
-     * @phpstan-return TParams
-     */
-    final public function processArguments(array $arguments): array
-    {
-        $processor = new Processor();
-        $schema = $this->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        return $processor->process($schema, $arguments);
-    }
+    abstract protected function isAuthorized(): bool;
 }

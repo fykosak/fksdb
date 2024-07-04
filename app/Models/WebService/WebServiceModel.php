@@ -5,34 +5,26 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\WebService\Models\{ContestsModel,
-    EventListWebModel,
-    EventWebModel,
-    ExportWebModel,
-    Game,
-    OrganizersWebModel,
-    PaymentListWebModel,
-    ResultsWebModel,
-    SeriesResultsWebModel,
-    SignaturesWebModel,
-    StatsWebModel,
-    WebModel};
-use FKSDB\Models\WebService\Models\Events\{ParticipantsWebModel,
-    Schedule\GroupListWebModel,
-    Schedule\ItemListWebModel,
-    Schedule\PersonListWebModel,
-    TeamsWebModel,};
+use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
+use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
+use FKSDB\Models\WebService\Models\Events\EventListWebModel;
+use FKSDB\Models\WebService\Models\ExportWebModel;
+use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SoapWebModel;
+use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
-class WebServiceModel
+final class WebServiceModel
 {
     use SmartObject;
+
+    public const SOAP_RESOURCE_ID = 'soap';
 
     private PasswordAuthenticator $authenticator;
     private Container $container;
@@ -40,32 +32,12 @@ class WebServiceModel
     private User $user;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => Game\ResultsWebModel::class,
-        // 'game/submit' => Game\SubmitWebModel::class,
-        'contest.organizers' => OrganizersWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
-        'GetEvent' => EventWebModel::class,
+        'GetEvent' => EventDetailWebModel::class,
         'GetExport' => ExportWebModel::class,
-        'GetSignatures' => SignaturesWebModel::class,
         'GetResults' => ResultsWebModel::class,
-        'GetStats' => StatsWebModel::class,
-        'GetPaymentList' => PaymentListWebModel::class,
-        'GetSeriesResults' => SeriesResultsWebModel::class,
-        'GetContests' => ContestsModel::class,
-        // events
-        'events' => EventListWebModel::class,
-        'event/schedule/groups' => GroupListWebModel::class,
-        'event/schedule/items' => ItemListWebModel::class,
-        'event/schedule/persons' => PersonListWebModel::class,
-        'event/teams' => TeamsWebModel::class,
-        'event/participants' => ParticipantsWebModel::class,
-        // game
-        'game/results' => Game\ResultsWebModel::class,
-        'game/submit' => Game\SubmitWebModel::class,
-        // contest
-        'contest/organizers' => OrganizersWebModel::class,
-        'contest/stats' => StatsWebModel::class,
+        'GetSeriesResults' => ResultsWebModel::class,
     ];
 
     public function __construct(
@@ -97,7 +69,7 @@ class WebServiceModel
             $login = $this->authenticator->authenticate($args->username, $args->password);
             $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
-            if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+            if (!$this->contestAuthorizator->isAllowedAnyContest(self::SOAP_RESOURCE_ID, 'default')) {
                 $this->log('Unauthorized.');
                 throw new \SoapFault('Sender', 'Unauthorized.');
             }
@@ -121,7 +93,7 @@ class WebServiceModel
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
-        return $webModel->getResponse(...$args);
+        return $webModel->getSOAPResponse(...$args);
     }
 
     /**
@@ -136,7 +108,7 @@ class WebServiceModel
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
-        if (!$this->contestAuthorizator->isAllowed('soap', 'default')) {
+        if (!$this->contestAuthorizator->isAllowedAnyContest(self::SOAP_RESOURCE_ID, 'default')) {
             $this->log(sprintf('Unauthorized %s ', $nameService));
             throw new \SoapFault('Sender', 'Unauthorized');
         }
@@ -155,7 +127,7 @@ class WebServiceModel
 
     /**
      * @throws \ReflectionException
-     * @phpstan-return WebModel<array<mixed>,array<mixed>>
+     * @phpstan-return (WebModel<array<mixed>,array<mixed>>&SoapWebModel)|null
      */
     private function getWebModel(string $name): ?WebModel
     {
@@ -165,9 +137,11 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @phpstan-var WebModel<array<mixed>,array<mixed>> $model */
-            $model = $reflection->newInstance($this->container);
-            $model->setUser($this->user);
+            if (!$reflection->isSubclassOf(SoapWebModel::class)) {
+                return null;
+            }
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>>&SoapWebModel $model */
+            $model = $reflection->newInstance($this->container, null);
             return $model;
         }
         return null;

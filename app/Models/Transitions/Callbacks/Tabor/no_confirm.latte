@@ -1,0 +1,30 @@
+{layout none}
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{define subject}Letní tábor Výfuku – nevyjádření zájmu{/define}
+
+<p>
+    {if $holder->getModel()->person->gender->value == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br>
+    jelikož ses nevyjádřil{if $holder->getModel()->person->gender->value == 'F'}a{/if} ohledně zájmu o účast na táboře Výfuku,
+    ztrácíš své jisté místo na základě pořadí.<br>
+    Stále se můžeš na tábor přihlásit, ovšem o přijetí již
+    rozhoduje pouze čas odeslání přihlášky,<br>
+    nikoliv pořadí v korespondenční části.
+</p>
+
+<p>
+    Pokud se chceš zúčastnit, sděl nám svůj zájem co nejrychleji prostřednictvím
+    aplikace FKSDB po přihlášení<br>
+    nebo pomocí odkazu
+    {var string $link = $control->link('//:Event:Application:Edit',
+    ['eventId'=> $holder->getModel()->event->event_id,
+    'at'=>$token->token,
+    'id'=>$holder->getModel()->getPrimary()])}
+    <a href="{$link}">{$link}</a><br>
+    Jelikož se již zbylá volná místa neobsazují podle pořadí v soutěži, nýbrž podle
+    času zaslání přihlášky, s rozhodnutím neotálej!
+</p>
+<p>
+    Za organizátory Výfuku<br>
+    {$holder->getModel()->event->getParameter('letterSignature')}
+</p>

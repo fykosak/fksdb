@@ -28,21 +28,21 @@ class SubmitWebModel extends WebModel
         $this->eventService = $eventService;
     }
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([
+        return [
             'method' => Expect::anyOf('create', 'check', 'edit', 'revoke')->required(),
             'eventId' => Expect::scalar()->castTo('int')->required(),
             'code' => Expect::string()->pattern('^[0-9]{4,6}[a-hA-H]{2}[0-9]$')->required(),
             'points' => Expect::scalar()->castTo('int'),
-        ]);
+        ];
     }
 
     /**
      * @phpstan-return Message[]
      * @throws GoneException
      */
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         throw new GoneException();
         /* try {
@@ -94,5 +94,10 @@ class SubmitWebModel extends WebModel
                 new Message(_('Undefined error'), Message::LVL_ERROR),
             ];
         }*/
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
     }
 }

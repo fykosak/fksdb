@@ -67,11 +67,7 @@ final class PersonScheduleList extends BaseList
                     $this->filterParams['code'],
                     $this->event->getSalt()
                 );
-                if (
-                    $model instanceof EventParticipantModel
-                    || $model instanceof TeamTeacherModel
-                    || $model instanceof TeamMemberModel
-                ) {
+                if ($model instanceof PersonModel) {
                     $query->where('person.person_id', $model->person_id);
                 } elseif ($model instanceof TeamModel2) {
                     $query->where(

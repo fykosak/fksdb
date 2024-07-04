@@ -4,43 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{eventId?:int,event_id:int},array<mixed>>
+ * @phpstan-extends EventWebModel<array{eventId:int,event_id:int},array<mixed>>
  */
-class ParticipantsWebModel extends WebModel
+class ParticipantsWebModel extends EventWebModel
 {
-    private EventService $eventService;
-
-    public function inject(EventService $eventService): void
-    {
-        $this->eventService = $eventService;
-    }
-
-    public function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int'),
-            'event_id' => Expect::scalar()->castTo('int'),
-        ]);
-    }
-
     /**
      * @throws BadRequestException
      */
-    protected function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($params['eventId'] ?? $params['event_id']);
-        if (!$event) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
-        }
+        $event = $this->getEvent();
         $data = [];
         /** @var EventParticipantModel $participant */
         foreach ($event->getParticipants() as $participant) {
@@ -56,5 +37,13 @@ class ParticipantsWebModel extends WebModel
             ]);
         }
         return $data;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function isAuthorized(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
     }
 }

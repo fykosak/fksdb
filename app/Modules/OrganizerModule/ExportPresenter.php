@@ -7,7 +7,6 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
@@ -39,7 +38,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     public function titleExecute(): PageTitle
     {
@@ -48,7 +46,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     public function authorizedExecute(): bool
     {
@@ -57,7 +54,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     public function getStoredQuery(): StoredQuery
     {
@@ -82,7 +78,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     public function actionExecute(): void
     {
@@ -104,7 +99,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     final public function renderExecute(): void
     {
@@ -118,7 +112,6 @@ final class ExportPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
-     * @throws ModelNotFoundException
      */
     protected function createComponentResultsComponent(): ResultsComponent
     {

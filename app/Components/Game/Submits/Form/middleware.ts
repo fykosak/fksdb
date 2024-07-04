@@ -13,6 +13,7 @@ export const validate = (values: { code?: string }, {tasks,teams}: OwnProps): Fo
         const preprocessor = new TaskCodePreprocessor(teams, tasks);
         preprocessor.getTeam(values.code);
         preprocessor.getTask(values.code);
+        preprocessor.getSum(values.code);
     } catch (e) {
         errors.code = e.message;
     }

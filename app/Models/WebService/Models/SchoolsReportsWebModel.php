@@ -16,23 +16,28 @@ use Nette\Schema\Expect;
 class SchoolsReportsWebModel extends WebModel
 {
 
-    public function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([]);
+        return [];
     }
 
-    public function getJsonResponse(array $params): array
+    protected function getJsonResponse(): array
     {
         set_time_limit(-1);
 
         $tests = SchoolModel::getTests($this->container);
         $logger = new TestLogger();
         foreach ($tests as $test) {
-            $test->run($logger, $this->user->getIdentity()); //@phpstan-ignore-line
+            $test->run($logger, null); //@phpstan-ignore-line
         }
         return array_map(
             fn(TestMessage $message) => ['text' => $message->toText(), 'level' => $message->level],
             $logger->getMessages()
         );
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return true;
     }
 }

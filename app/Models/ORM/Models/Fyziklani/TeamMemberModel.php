@@ -48,14 +48,17 @@ final class TeamMemberModel extends Model
     {
         $node = $document->createElement('participant');
         $node->setAttribute('eventParticipantId', (string)$this->fyziklani_team_member_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode([
+            'participantId' => $this->fyziklani_team_member_id,
+            'personId' => $this->person_id,
+        ], $document, $node);
         return $node;
     }
 
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, $this->fyziklani_team->event->getSalt());
+            return MachineCode::createHash($this->person, $this->fyziklani_team->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }

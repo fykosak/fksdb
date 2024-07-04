@@ -12,6 +12,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $event_participant_id
@@ -21,7 +22,7 @@ use Nette\Security\Resource;
  * @property-read PersonModel $person
  * @property-read string|null $note poznámka
  * @property-read EventParticipantStatus $status
- * @property-read \DateTimeInterface $created čas vytvoření přihlášky
+ * @property-read DateTime $created čas vytvoření přihlášky
  * @property-read int|null $accomodation
  * @property-read string|null $diet speciální stravování
  * @property-read string|null $health_restrictions alergie, léky, úrazy
@@ -51,17 +52,11 @@ use Nette\Security\Resource;
  */
 final class EventParticipantModel extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.participant';
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
         return $this->person->getHistory($this->event->getContestYear());
-    }
-
-    public function __toString(): string
-    {
-        return $this->person->getFullName();
     }
 
     /**
@@ -111,7 +106,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, $this->event->getSalt());
+            return MachineCode::createHash($this->person, $this->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }
@@ -124,7 +119,14 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     {
         $node = $document->createElement('participant');
         $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode([
+            'participantId' => $this->event_participant_id,
+            'eventId' => $this->event_id,
+            'personId' => $this->person_id,
+            'status' => $this->status->value,
+            'created' => $this->created->format('c'),
+            'lunchCount' => $this->lunch_count,
+        ], $document, $node);
         return $node;
     }
 }

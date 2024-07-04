@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
-use FKSDB\Models\Authorization\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
+use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
+use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use Nette\Security\Permission;
-use Nette\Security\Role;
 
 class OwnApplicationAssertion implements Assertion
 {
@@ -19,29 +18,28 @@ class OwnApplicationAssertion implements Assertion
     {
         $queriedRole = $acl->getQueriedRole();
         $application = $acl->getQueriedResource();
-        if ($application instanceof TeamModel2) {
-            return $this->isPartOfTeam($queriedRole, $application) &&
-                $application->state->value !== TeamState::Disqualified;
-        } elseif ($application instanceof EventParticipantModel) {
-            if ($queriedRole instanceof ParticipantRole) {
-                return $queriedRole->eventParticipant->event_participant_id === $application->event_participant_id;
-            }
-        }
-        return false;
-    }
-
-    private function isPartOfTeam(Role $role, TeamModel2 $application): bool
-    {
-        if ($role instanceof FyziklaniTeamTeacherRole) {
-            foreach ($role->teams as $team) {
-                if ($team->fyziklani_team_id === $application->fyziklani_team_id) {
+        if ($application instanceof TeamModel2 && $queriedRole instanceof TeamTeacherRole) {
+            foreach ($queriedRole->teams as $team) {
+                if (
+                    $team->fyziklani_team_id === $application->fyziklani_team_id
+                    && $application->state->value !== TeamState::Disqualified
+                ) {
                     return true;
                 }
             }
-        } elseif ($role instanceof FyziklaniTeamMemberRole) {
-            if ($role->member->fyziklani_team_id === $application->fyziklani_team_id) {
+            return false;
+        }
+        if ($application instanceof TeamModel2 && $queriedRole instanceof TeamMemberRole) {
+            if (
+                $queriedRole->member->fyziklani_team_id === $application->fyziklani_team_id
+                && $application->state->value !== TeamState::Disqualified
+            ) {
                 return true;
             }
+            return false;
+        }
+        if ($application instanceof EventParticipantModel && $queriedRole instanceof ParticipantRole) {
+            return $queriedRole->eventParticipant->event_participant_id === $application->event_participant_id;
         }
         return false;
     }

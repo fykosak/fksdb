@@ -7,9 +7,9 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Schedule\Forms\ScheduleGroupForm;
 use FKSDB\Components\Schedule\ItemGrid;
 use FKSDB\Components\Schedule\ScheduleList;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -33,7 +33,7 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -47,7 +47,7 @@ final class GroupPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws \ReflectionException
      */
@@ -63,7 +63,7 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -88,7 +88,7 @@ final class GroupPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isAllowed($resource, $privilege);
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -102,7 +102,7 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException
@@ -123,7 +123,7 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
      * @throws \ReflectionException

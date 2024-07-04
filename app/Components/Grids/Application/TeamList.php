@@ -69,6 +69,10 @@ final class TeamList extends BaseList
             'lang'
         );
         $row->addComponent(
+            new SimpleItem($this->container, '@fyziklani_team.place'),
+            'place'
+        );
+        $row->addComponent(
             new SimpleItem($this->container, '@fyziklani_team.phone'),
             'phone'
         );
@@ -130,6 +134,13 @@ final class TeamList extends BaseList
             ':Event:Team:edit',
             'edit',
             new Title(null, _('button.team.edit')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
+        $this->addPresenterButton(
+            ':Event:Attendance:detail',
+            'attendance',
+            new Title(null, _('button.team.attendance')),
             false,
             ['id' => 'fyziklani_team_id']
         );

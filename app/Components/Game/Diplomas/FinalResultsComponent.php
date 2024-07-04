@@ -57,6 +57,16 @@ class FinalResultsComponent extends BaseComponent
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
+    protected function createComponentResultsWinnersGrid(): ResultsWinnersGrid
+    {
+        return new ResultsWinnersGrid($this->event, $this->getContext());
+    }
+
+    protected function createComponentResultsAnnouncementGrid(): ResultsAnnouncementGrid
+    {
+        return new ResultsAnnouncementGrid($this->event, $this->getContext());
+    }
+
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');

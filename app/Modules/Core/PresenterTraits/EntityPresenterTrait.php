@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Service\Service;
@@ -20,7 +20,9 @@ use Nette\Security\Resource;
  */
 trait EntityPresenterTrait
 {
-    /** @persistent */
+    /**
+     * @persistent
+     */
     public ?int $id = null;
 
     /**
@@ -42,7 +44,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -61,7 +63,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -80,7 +82,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
@@ -136,7 +138,7 @@ trait EntityPresenterTrait
     /**
      * @phpstan-return TModel
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      */
     public function getEntity(): Model
     {
@@ -149,7 +151,7 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
      * @phpstan-return TModel
      */
@@ -160,7 +162,7 @@ trait EntityPresenterTrait
         if ($candidate) {
             return $candidate;
         } else {
-            throw new ModelNotFoundException(_('Model does not exist.'));
+            throw new NotFoundException(_('Model does not exist.'));
         }
     }
 
@@ -168,7 +170,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException

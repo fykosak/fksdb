@@ -9,8 +9,8 @@ use FKSDB\Components\Contestants\SubmitsGrid;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -38,10 +38,10 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -55,10 +55,10 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     final public function renderDetail(): void
     {
@@ -121,10 +121,10 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentEditForm(): ContestantForm
     {
@@ -143,10 +143,10 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws ModelNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      * @throws \ReflectionException
+     * @throws NotFoundException
      */
     protected function createComponentSubmits(): SubmitsGrid
     {

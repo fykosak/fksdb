@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\ComponentReflection;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -47,16 +46,6 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     {
         parent::beforeRender();
         $this->template->event = $this->getEvent();
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * Check if has contest permission or is Event organizer
-     * @throws EventNotFoundException
-     */
-    final public function isAllowed($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     protected function isEnabled(): bool
@@ -117,6 +106,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                     'Event:Application:default' => [],
                     'Event:Application:mass' => [],
                     'Event:Application:import' => [],
+                    'Event:Attendance:search' => [],
                 ],
             ],
             [
@@ -130,6 +120,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                     'Schedule:Dashboard:default' => [],
                     'Event:Chart:list' => [],
                     'Event:Dispatch:default' => [],
+                    'Event:Acl:default' => [],
                     'Event:Dashboard:default' => [],
                 ],
             ],

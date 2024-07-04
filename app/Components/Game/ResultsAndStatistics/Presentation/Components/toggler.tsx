@@ -21,14 +21,14 @@ export default function Toggler({children, event}: OwnProps) {
     return <div className="h-100 d-flex flex-column justify-content-around align-items-center">
         <img className="w-50 logo" alt="" src={
             event === 'fof'
-                ? '/images/fyziklani/fyziklani_2023_logo.png'
+                ? '/images/fyziklani/fyziklani_2024_logo.svg'
                 : '/images/logo/vedecky_ctyrboj.png'
         }/>
         <Images/>
         <Timer mode="big"/>
         <img className="logo-sponsors" alt="" src={
             event === 'fof'
-                ? '/images/fyziklani/fyziklani_2023_sponsors.svg' : ''
+                ? '/images/fyziklani/fyziklani_2024_sponsors.svg' : ''
         }/>
     </div>;
 }
