@@ -7,6 +7,8 @@ namespace FKSDB\Models\Mail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
@@ -82,4 +84,8 @@ abstract class MailSource
         }
         return $return;//@phpstan-ignore-line
     }
+
+    abstract public function title(): Title;
+
+    abstract public function description(): LocalizedString;
 }

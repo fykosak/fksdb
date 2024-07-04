@@ -1,20 +1,22 @@
 {varType FKSDB\Models\Mail\MailSource[] $sources}
 {varType FKSDB\Models\Mail\MailSource|null $source}
+{varType string $lang}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Available templates'}</h2>
-            <ul>
-                {foreach $sources as $key=> $value}
-                    <li><a href="{plink this source=>$key}">{get_class($value)}</a></li>
-                {/foreach}
-            </ul>
+            {foreach $sources as $key => $value}
+                <h3>{$value->title()->toHtml()}</h3>
+                <p class="text-muted">{$value->description()->getText($lang)}</p>
+                <a class="btn btn-primary" href="{plink this source=>$key}">{_'Select'}</a>
+            {/foreach}
         </div>
     </div>
     <div class="panel color-auto">
         <div class="container">
             {if $source}
-                <h2>{get_class($source)}</h2>
+                <h2>{_'Selected'}: {$value->title()->toHtml()}</h2>
+                <p class="text-muted">{$value->description()->getText($lang)}</p>
             {control templateForm}
             {else}
                 <h2 class="text-danger">No source selected</h2>
