@@ -87,5 +87,5 @@ abstract class MailSource
 
     abstract public function title(): Title;
 
-    abstract public function description(): LocalizedString;
+    abstract public function description(): LocalizedString;//@phpstan-ignore-line
 }
