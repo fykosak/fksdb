@@ -19,3 +19,9 @@ typescript/**/*.js
 typescript/**/*.jsx
 dist/*
 www/**/.sass-cache/
+
+docker
+i18n/messages.pot
+i18n/i18n-data.ts
+i18n/**/*.po~
+i18n/**/*.mo
