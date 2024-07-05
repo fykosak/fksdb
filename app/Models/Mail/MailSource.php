@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\LocalizedString;
@@ -18,16 +19,16 @@ use Nette\DI\Container;
  */
 abstract class MailSource
 {
-    protected MailTemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $templateFactory;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(MailTemplateFactory $mailTemplateFactory): void
+    public function inject(TemplateFactory $templateFactory): void
     {
-        $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->templateFactory = $templateFactory;
     }
 
     /**
@@ -49,6 +50,8 @@ abstract class MailSource
      *          carbon_copy?:string,
      *          blind_carbon_copy?:string,
      *          priority?:int|bool,
+     *          lang:Language,
+     *          topic:EmailMessageTopic,
      *      }|array{
      *          recipient:string,
      *          sender:string,
@@ -56,7 +59,9 @@ abstract class MailSource
      *          carbon_copy?:string,
      *          blind_carbon_copy?:string,
      *          priority?:int|bool,
-     *      },
+     *          lang:Language,
+     *          topic:EmailMessageTopic,
+     * },
      *    }[]
      * @phpstan-param TSchema $params
      */
@@ -74,7 +79,7 @@ abstract class MailSource
         $return = [];
         foreach ($this->getSource($params) as $sourceItem) {
             $return[] = array_merge(
-                $this->mailTemplateFactory->renderWithParameters(
+                $this->templateFactory->renderWithParameters(
                     $sourceItem['template']['file'],
                     $sourceItem['template']['data'],
                     $sourceItem['lang']

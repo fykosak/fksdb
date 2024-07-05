@@ -7,6 +7,7 @@ namespace FKSDB\Models\Mail\FOF;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -14,6 +15,7 @@ use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 use Nette\InvalidStateException;
 
 /**
@@ -34,9 +36,6 @@ class MemberTransitionMail extends MailCallback
 
     /**
      * @param TeamHolder $holder
-     * @phpstan-return array{
-     *     sender:string,
-     * }
      */
     protected function getData(ModelHolder $holder): array
     {
@@ -81,6 +80,8 @@ class MemberTransitionMail extends MailCallback
     /**
      * @phpstan-return array{
      *     sender:string,
+     *     lang:Language,
+     *     topic:EmailMessageTopic,
      * }
      */
     public static function getStaticData(TeamHolder $holder): array
@@ -96,6 +97,8 @@ class MemberTransitionMail extends MailCallback
                 throw new InvalidStateException();
         }
         return [
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+            'lang' => Language::from($holder->getModel()->game_lang->value),
             'sender' => $sender,
         ];
     }

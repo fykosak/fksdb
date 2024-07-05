@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends EventParticipantCallback<BaseHolder>
@@ -23,15 +25,12 @@ class RejectedMailCallback extends EventParticipantCallback
         return __DIR__ . DIRECTORY_SEPARATOR . 'rejected.latte';
     }
 
-    /**
-     * @phpstan-return array{
-     *     sender:string,
-     * }
-     */
     protected function getData(ModelHolder $holder): array
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'lang' => Language::from(Language::CS),
         ];
     }
 }

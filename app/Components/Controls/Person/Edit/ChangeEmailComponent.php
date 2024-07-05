@@ -11,6 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -140,6 +141,8 @@ class ChangeEmailComponent extends EntityFormComponent
             [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => (string)$person->getInfo()->email,
+                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'lang' => $lang,
             ]
         );
         $newData = array_merge(
@@ -151,6 +154,8 @@ class ChangeEmailComponent extends EntityFormComponent
             [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => $newEmail,
+                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'lang' => $lang,
             ]
         );
         $this->emailMessageService->addMessageToSend($oldData);

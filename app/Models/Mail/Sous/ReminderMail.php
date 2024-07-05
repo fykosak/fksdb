@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail\Sous;
 
 use FKSDB\Models\Mail\MailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -54,6 +55,8 @@ abstract class ReminderMail extends MailSource
                     'recipient_person_id' => $participant->person_id,
                     'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
                     'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+                    'lang' => Language::from(Language::CS),
                 ],
             ];
         }

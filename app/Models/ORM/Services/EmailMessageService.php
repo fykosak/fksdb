@@ -6,8 +6,10 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
-use Fykosak\NetteORM\Service\Service;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
 
 /**
  * @phpstan-extends Service<EmailMessageModel>
@@ -20,6 +22,8 @@ use Fykosak\NetteORM\Selection\TypedSelection;
  *     carbon_copy?:string,
  *     blind_carbon_copy?:string,
  *     text:string,
+ *     topic:EmailMessageTopic,
+ *     lang: Language,
  *     priority?:int|bool
  * }
  */
@@ -45,6 +49,8 @@ final class EmailMessageService extends Service
         if (!isset($data['priority'])) {
             $data['priority'] = 1;
         }
+        $data['topic'] = $data['topic']->value;
+        $data['lang'] = $data['lang']->value;
         return $this->storeModel($data);
     }
 }

@@ -10,6 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -78,6 +79,8 @@ class AccountManager
         );
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $person->person_id;
+        $data['topic'] = EmailMessageTopic::from(EmailMessageTopic::Internal);
+        $data['lang'] = $lang;
         $this->emailMessageService->addMessageToSend($data);
         return $login;
     }
@@ -115,6 +118,8 @@ class AccountManager
         );
         $data['sender'] = $this->emailFrom;
         $data['recipient_person_id'] = $login->person_id;
+        $data['topic'] = EmailMessageTopic::from(EmailMessageTopic::Internal);
+        $data['lang'] = $lang;
 
         $this->emailMessageService->addMessageToSend($data);
     }

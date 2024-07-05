@@ -5,25 +5,23 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail\Sous;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends EventParticipantCallback<BaseHolder>
  */
 abstract class SousMail extends EventParticipantCallback
 {
-    /**
-     * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     sender:string,
-     * }
-     */
     final protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'lang' => Language::from(Language::CS),
         ];
     }
 }

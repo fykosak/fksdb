@@ -6,9 +6,11 @@ namespace FKSDB\Models\Transitions\Callbacks\Tabor;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends MailCallback<BaseHolder>
@@ -24,14 +26,11 @@ class OrganizerMailCallback extends MailCallback
         return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.latte';
     }
 
-    /**
-     * @phpstan-return array{
-     *     sender:string,
-     * }
-     */
     protected function getData(ModelHolder $holder): array
     {
         return [
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'lang' => Language::from(Language::CS),
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
         ];
     }

@@ -7,6 +7,7 @@ namespace FKSDB\Models\Events\Transitions;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
@@ -64,12 +65,6 @@ class MailSender extends MailCallback
 
     /**
      * @param ParticipantHolder $holder
-     * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     subject:string,
-     *     sender:string,
-     *     reply_to:string,
-     * }
      */
     protected function getData(ModelHolder $holder): array
     {
@@ -78,6 +73,8 @@ class MailSender extends MailCallback
             'subject' => $this->getSubject($holder->getModel()->event, $holder->getModel()),
             'sender' => $holder->getModel()->event->getParameter('notifyFrom'),
             'reply_to' => $holder->getModel()->event->getParameter('notifyFrom'),
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'lang' => Language::from(Language::CS),
         ];
     }
 

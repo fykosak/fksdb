@@ -7,12 +7,14 @@ namespace FKSDB\Models\Transitions\Callbacks\Fol;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends MailCallback<TeamHolder>
@@ -24,17 +26,13 @@ class TeamMemberMailCallback extends MailCallback
         return __DIR__ . DIRECTORY_SEPARATOR . 'member';
     }
 
-    /**
-     * @phpstan-return array{
-     *     blind_carbon_copy?:string,
-     *     sender:string,
-     * }
-     */
     protected function getData(ModelHolder $holder): array
     {
         return [
             'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
             'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+            'lang' => Language::from(Language::EN),//TODO
         ];
     }
 

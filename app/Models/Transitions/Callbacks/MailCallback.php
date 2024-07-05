@@ -7,6 +7,7 @@ namespace FKSDB\Models\Transitions\Callbacks;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -128,6 +129,8 @@ abstract class MailCallback implements Statement
      *     blind_carbon_copy?:string,
      *     sender:string,
      *     reply_to?:string,
+     *     topic:EmailMessageTopic,
+     *     lang:Language,
      * }
      */
     abstract protected function getData(ModelHolder $holder): array;

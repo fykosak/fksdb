@@ -6,9 +6,11 @@ namespace FKSDB\Models\Mail\Setkani;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends MailCallback<BaseHolder>
@@ -23,16 +25,12 @@ class OrganizerTransitionMail extends MailCallback
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.latte';
     }
-
-    /**
-     * @phpstan-return array{
-     *     sender:string,
-     * }
-     */
     protected function getData(ModelHolder $holder): array
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+            'lang' => Language::from(Language::CS),
         ];
     }
 

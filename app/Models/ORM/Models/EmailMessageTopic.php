@@ -18,6 +18,7 @@ class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     public const FOF = 'fof';
     public const FOL = 'fol';
     public const DSEF = 'dsef';
+    public const Internal = 'internal';//phpcs:ignore
 
     public function badge(): Html
     {
