@@ -941,7 +941,7 @@ CREATE TABLE IF NOT EXISTS `person_history`
             ON UPDATE NO ACTION,
     CONSTRAINT `fk__person_history__school_label_key`
         FOREIGN KEY (`school_label_key`)
-            REFERENCES `school_label_key` (`school_label_key`)
+            REFERENCES `school_label` (`school_label_key`)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 )
@@ -1346,6 +1346,25 @@ CREATE TABLE IF NOT EXISTS `email_message`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
+-- -----------------------------------------------------
+-- Table `email_preference`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `person_email_preference`
+(
+    `person_email_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`           INT UNSIGNED                                  NOT NULL,
+    `option`              ENUM ('spam_contest','spam_mff','spam_other') NOT NULL,
+    `value`               BOOL                                          NOT NULL,
+    `created`             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY `uq__email_preference__option` (`person_id`, `option`),
+    CONSTRAINT `fk__email_preference__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit_question`
