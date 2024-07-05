@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\Application;
-use Nette\Application\UI\TemplateFactory;
+use Nette\Application\UI\TemplateFactory as LatteTemplateFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
@@ -28,11 +29,11 @@ class TemplateFactory
 
     private GettextTranslator $translator;
     private IRequest $request;
-    private TemplateFactory $templateFactory;
+    private LatteTemplateFactory $templateFactory;
 
     public function __construct(
         string $templateDir,
-        TemplateFactory $templateFactory,
+        LatteTemplateFactory $templateFactory,
         Application $application,
         GettextTranslator $translator,
         IRequest $request
@@ -76,17 +77,19 @@ class TemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-param array{
+     *     text:string,
+     *     topic: EmailMessageTopic,
+     *     code:string|null,
+     *     token:AuthTokenModel|null,
+     *     } $data
      */
     public function addContainer(EmailMessageModel $model, array $data): string
     {
-        switch ($model->topic->value) {
-            case EmailMessageTopic::SpamOther:
-            case EmailMessageTopic::SpamMff:
-            case EmailMessageTopic::SpamContest:
-                $template = __DIR__ . '/Containers/spam.' . $model->lang->value . '.latte';
-                break;
-            default:
-                $template = __DIR__ . '/Containers/noSpam.' . $model->lang->value . '.latte';
+        if ($model->topic->isSpam()) {
+            $template = __DIR__ . '/Containers/spam.' . $model->lang->value . '.latte';
+        } else {
+            $template = __DIR__ . '/Containers/noSpam.' . $model->lang->value . '.latte';
         }
         return $this->create($model->lang)->renderToString($template, $data);
     }

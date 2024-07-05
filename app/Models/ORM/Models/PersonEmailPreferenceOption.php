@@ -10,7 +10,7 @@ use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-class PersonEmailPreferenceOption extends FakeStringEnum implements EnumColumn
+final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumColumn
 {
     public const SpamContest = 'spam_contest'; //phpcs:ignore
     public const SpamMff = 'spam_mff';//phpcs:ignore
