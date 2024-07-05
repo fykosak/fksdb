@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
-use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\Exceptions\RejectedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use Nette\DI\Container;
 use Nette\Mail\Mailer;
@@ -24,6 +25,7 @@ $mailer = $container->getByType(Mailer::class);
 
 /** @var EmailMessageService $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(EmailMessageService::class);
+$mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
 $serviceUnsubscribedEmail = $container->getByType(UnsubscribedEmailService::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend(
@@ -38,11 +40,11 @@ foreach ($query as $model) {
         break;
     }
     try {
-        $message = $model->toMessage($serviceUnsubscribedEmail);
+        $message = $model->toMessage($serviceUnsubscribedEmail, $mailTemplateFactory);
 
         $mailer->send($message);
         $serviceEmailMessage->storeModel(['state' => EmailMessageState::SENT, 'sent' => new DateTime()], $model);
-    } catch (UnsubscribedEmailException $exception) {
+    } catch (RejectedEmailException $exception) {
         $serviceEmailMessage->storeModel(['state' => EmailMessageState::REJECTED], $model);
         Debugger::log($exception, 'mailer-exceptions-unsubscribed');
     } catch (Throwable $exception) {

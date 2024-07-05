@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -70,6 +71,23 @@ class MailTemplateFactory
             ),
             'text' => $this->create($lang)->renderToString($templateFile, $data),
         ];
+    }
+
+    /**
+     * @throws BadTypeException
+     */
+    public function addContainer(EmailMessageModel $model): string
+    {
+        if ($model->topic->isSpam()) {
+            $templateName = __DIR__ . '/Containers/spam.' . $model->lang->value . '.latte';
+        } else {
+            $templateName = __DIR__ . '/Containers/noSpam.' . $model->lang->value . '.latte';
+        }
+        return $this->create($model->lang)->renderToString($templateName, [
+            'text' => $model->text,
+            'topic' => $model->topic,
+            'lang' => $model->lang,
+        ]);
     }
 
     private function resolverLang(?Language $lang): Language

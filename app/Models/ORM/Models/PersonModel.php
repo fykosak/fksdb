@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{
-    ContestOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
     Fyziklani\TeamMemberRole,
@@ -462,6 +461,16 @@ final class PersonModel extends Model implements Resource
         if ($type) {
             $selection->where('type', $type->value);
         }
+        return $selection;
+    }
+
+    /**
+     * @return TypedGroupedSelection<PersonEmailPreferenceModel>
+     */
+    public function getMailPreferences(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PersonEmailPreferenceModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_EMAIL_PREFERENCE, 'person_id');
         return $selection;
     }
 

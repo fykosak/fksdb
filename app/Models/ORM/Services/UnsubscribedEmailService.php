@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
+use FKSDB\Models\ORM\Services\Exceptions\RejectedEmailException;
 use Fykosak\NetteORM\Model\DummyModel;
 use Fykosak\NetteORM\Service\Service;
 
@@ -14,13 +14,13 @@ use Fykosak\NetteORM\Service\Service;
 final class UnsubscribedEmailService extends Service
 {
     /**
-     * @throws UnsubscribedEmailException
+     * @throws RejectedEmailException
      */
     public function checkEmail(string $email): void
     {
         $row = $this->getTable()->where('email_hash = SHA1(?)', $email)->fetch();
         if ($row) {
-            throw new UnsubscribedEmailException();
+            throw new RejectedEmailException();
         }
     }
 }

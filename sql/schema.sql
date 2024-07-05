@@ -310,7 +310,15 @@ CREATE TABLE IF NOT EXISTS `auth_token`
     `token_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id` INT UNSIGNED NOT NULL,
     `token`    VARCHAR(255) NOT NULL,
-    `type`     VARCHAR(31)  NOT NULL COMMENT 'type of token (from programmers POV)', # TODO ENUM
+    `type` ENUM (
+        'initial_login',
+        'recovery',
+        'event_notify',
+        'change_email',
+        'email_message',
+        'unsubscribe',
+        'sso'
+        ) NOT NULL COMMENT 'type of token (from programmers POV)', # TODO ENUM
     `data`     VARCHAR(255) NULL     DEFAULT NULL COMMENT 'various purpose data',
     `since`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `until`    TIMESTAMP    NULL     DEFAULT NULL,
@@ -1321,19 +1329,29 @@ CREATE TABLE IF NOT EXISTS `schedule_payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
-    `email_message_id`    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `recipient`           VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `recipient_person_id` INT UNSIGNED    NULl                                           DEFAULT NULL,
-    `sender`              VARCHAR(128)    NOT NULL,
-    `reply_to`            VARCHAR(128)    NOT NULL,
-    `subject`             VARCHAR(128)    NOT NULL,
-    `carbon_copy`         VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `blind_carbon_copy`   VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `text`                TEXT            NOT NULL,
+    `email_message_id`    BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`           VARCHAR(128)     NULL     DEFAULT NULL,
+    `recipient_person_id` INT UNSIGNED     NULl     DEFAULT NULL,
+    `sender`              VARCHAR(128)     NOT NULL,
+    `reply_to`            VARCHAR(128)     NOT NULL,
+    `subject`             VARCHAR(128)     NOT NULL,
+    `carbon_copy`         VARCHAR(128)     NULL     DEFAULT NULL,
+    `blind_carbon_copy`   VARCHAR(128)     NULL     DEFAULT NULL,
+    `text`                TEXT             NOT NULL,
     `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
-    `created`             DATETIME        NOT NULL                                       DEFAULT CURRENT_TIMESTAMP,
-    `sent`                DATETIME        NULL                                           DEFAULT NULL,
-    `priority`            BOOL            NOT NULL                                       DEFAULT FALSE,
+    `topic`               ENUM (
+        'spam_contest',
+        'spam_mff',
+        'spam_other',
+        'contest',
+        'fof',
+        'fol',
+        'dsef'
+        )                                  NOT NULL,
+    `lang`                ENUM ('cs','en') NOT NULL,
+    `created`             DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`                DATETIME         NULL     DEFAULT NULL,
+    `priority`            BOOL             NOT NULL DEFAULT FALSE,
     INDEX `idx__email_message__state` (`state` ASC),
     INDEX `idx__email_message__person` (`recipient_person_id` ASC),
     CONSTRAINT `fk__email_message__person`
