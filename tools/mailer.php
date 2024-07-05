@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\Mail\TemplateFactory;
+use FKSDB\Models\Mail\SenderFactory;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -23,9 +24,10 @@ if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['
 /** @var Mailer $mailer */
 $mailer = $container->getByType(Mailer::class);
 
+$sender = $container->getByType(SenderFactory::class);
 /** @var EmailMessageService $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(EmailMessageService::class);
-$mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
+$mailTemplateFactory = $container->getByType(TemplateFactory::class);
 $serviceUnsubscribedEmail = $container->getByType(UnsubscribedEmailService::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend(
@@ -39,16 +41,5 @@ foreach ($query as $model) {
         Debugger::log('Message limit reached.', 'mailer-exceptions');
         break;
     }
-    try {
-        $message = $model->toMessage($serviceUnsubscribedEmail, $mailTemplateFactory);
 
-        $mailer->send($message);
-        $serviceEmailMessage->storeModel(['state' => EmailMessageState::SENT, 'sent' => new DateTime()], $model);
-    } catch (RejectedEmailException $exception) {
-        $serviceEmailMessage->storeModel(['state' => EmailMessageState::REJECTED], $model);
-        Debugger::log($exception, 'mailer-exceptions-unsubscribed');
-    } catch (Throwable $exception) {
-        $serviceEmailMessage->storeModel(['state' => EmailMessageState::FAILED], $model);
-        Debugger::log($exception, 'mailer-exceptions');
-    }
 }

@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Services\Exceptions\RejectedEmailException;
-use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
-use Nette\InvalidStateException;
-use Nette\Mail\Message;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
@@ -36,50 +30,6 @@ use Nette\Utils\DateTime;
 final class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
-
-    /**
-     * @throws RejectedEmailException
-     * @throws BadTypeException
-     */
-    public function toMessage(
-        UnsubscribedEmailService $unsubscribedEmailService,
-        MailTemplateFactory $mailTemplateFactory
-    ): Message {
-        $message = new Message();
-        $message->setSubject($this->subject);
-        if (isset($this->recipient_person_id)) {
-            $mail = $this->person->getInfo()->email;
-
-            $preferenceType = $this->topic->mapToPreference();
-            if ($preferenceType) {
-                /** @var PersonEmailPreferenceModel|null $preference */
-                $preference = $this->person->getMailPreferences()->where('option', $preferenceType)->fetch();
-                if ($preference && !$preference->value) {
-                    throw new RejectedEmailException();
-                }
-            }
-        } elseif (isset($this->recipient)) {
-            $mail = $this->recipient;
-            $unsubscribedEmailService->checkEmail($mail);
-        } else {
-            throw new InvalidStateException('Recipient organizer person_id is required');
-        }
-
-        $message->addTo($mail);
-
-        if (!is_null($this->blind_carbon_copy)) {
-            $message->addBcc($this->blind_carbon_copy);
-        }
-        if (!is_null($this->carbon_copy)) {
-            $message->addCc($this->carbon_copy);
-        }
-        $message->setFrom($this->sender);
-        $message->addReplyTo($this->reply_to);
-        $text = $mailTemplateFactory->addContainer($this);
-        $message->setHtmlBody($text);
-
-        return $message;
-    }
 
     public function getResourceId(): string
     {

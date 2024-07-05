@@ -1,0 +1,13 @@
+{block footer}
+    Tento mail dostávate pretože ste prihlasený
+    {switch $topic->value}
+        {case FKSDB\Models\ORM\Models\EmailMessageTopic::Contest}
+        do semináru FYKOS alebo souteže Výfuku.
+        {case FKSDB\Models\ORM\Models\EmailMessageTopic::FOF}
+        na sútaž Fyzikláni.
+        {case FKSDB\Models\ORM\Models\EmailMessageTopic::FOL}
+        na sútaž Fyziklani Online.
+        {case FKSDB\Models\ORM\Models\EmailMessageTopic::FOL}
+        na DSEF.
+    {/switch}
+{/block}

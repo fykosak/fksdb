@@ -7,7 +7,7 @@ namespace FKSDB\Models\Authentication;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -27,7 +27,7 @@ class AccountManager
     private string $invitationExpiration;
     private string $recoveryExpiration;
     private string $emailFrom;
-    private MailTemplateFactory $mailTemplateFactory;
+    private TemplateFactory $mailTemplateFactory;
     private LoginService $loginService;
     private AuthTokenService $authTokenService;
     private EmailMessageService $emailMessageService;
@@ -36,7 +36,7 @@ class AccountManager
         string $invitationExpiration,
         string $recoveryExpiration,
         string $emailFrom,
-        MailTemplateFactory $mailTemplateFactory,
+        TemplateFactory $mailTemplateFactory,
         LoginService $loginService,
         AuthTokenService $authTokenService,
         EmailMessageService $emailMessageService

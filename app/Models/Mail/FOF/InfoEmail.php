@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -19,12 +19,12 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-implements Statement<void,TeamHolder>
- * @phpstan-import-type TRenderedData from MailTemplateFactory
+ * @phpstan-import-type TRenderedData from TemplateFactory
  */
 abstract class InfoEmail implements Statement
 {
     protected EmailMessageService $emailMessageService;
-    protected MailTemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $mailTemplateFactory;
     protected AuthTokenService $authTokenService;
     protected LoginService $loginService;
 
@@ -35,7 +35,7 @@ abstract class InfoEmail implements Statement
 
     public function inject(
         EmailMessageService $emailMessageService,
-        MailTemplateFactory $mailTemplateFactory,
+        TemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         LoginService $loginService
     ): void {
