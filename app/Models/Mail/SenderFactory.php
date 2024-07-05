@@ -109,7 +109,11 @@ class SenderFactory
                     null,
                 );
             } else {
-                $code = openssl_encrypt($model->recipient, 'aes-256-cbc', $this->container->getParameters()['spamHash']);
+                $code = openssl_encrypt(
+                    $model->recipient,
+                    'aes-256-cbc',
+                    $this->container->getParameters()['spamHash']
+                );
                 if ($code === false) {
                     throw new InvalidStateException(_('Cannot encrypt code'));
                 }

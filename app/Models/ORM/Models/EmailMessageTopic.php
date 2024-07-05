@@ -14,7 +14,7 @@ class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     public const SpamContest = 'spam_contest'; //phpcs:ignore
     public const SpamMff = 'spam_mff';//phpcs:ignore
     public const SpamOther = 'spam_other';//phpcs:ignore
-    public const Contest = 'contest';
+    public const Contest = 'contest';//phpcs:ignore
     public const FOF = 'fof';
     public const FOL = 'fol';
     public const DSEF = 'dsef';
