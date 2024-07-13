@@ -45,10 +45,10 @@ services:
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #mail
-    - FKSDB\Models\Mail\TemplateFactory(%email.templatesDir%)
-    - FKSDB\Models\Mail\ResolverFactory
-    - FKSDB\Models\Mail\SenderFactory
+    #email
+    - FKSDB\Models\Email\TemplateFactory(%email.templatesDir%)
+    - FKSDB\Models\Email\ResolverFactory
+    - FKSDB\Models\Email\SenderFactory
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
