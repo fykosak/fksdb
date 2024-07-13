@@ -141,7 +141,10 @@ abstract class ApplicationComponent extends BaseComponent
             );
         } else {
             $holder = null;
-            $transitions = Machine::filterBySource($machine->transitions, EventParticipantStatus::from(EventParticipantStatus::INIT));
+            $transitions = Machine::filterBySource(
+                $machine->transitions,
+                EventParticipantStatus::from(EventParticipantStatus::INIT)
+            );
         }
         foreach ($transitions as $transition) {
             $submit = new TransitionSubmitButton($transition, $holder);

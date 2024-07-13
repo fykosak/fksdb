@@ -17,14 +17,10 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Model\Model;
 
 /**
- * @phpstan-extends MailCallback<TeamHolder>
+ * @phpstan-extends MailCallback<TeamModel2>
  */
 class TeacherTransitionMail extends MailCallback
 {
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         $transitionId = self::resolveLayoutName($transition);

@@ -20,7 +20,6 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
@@ -51,8 +50,8 @@ abstract class SingleFormComponent extends EntityFormComponent
         EventModel $event,
         ?PersonModel $loggedPerson
     ) {
-        parent::__construct($container, $model);
         $this->event = $event;
+        parent::__construct($container, $model);
         $this->loggedPerson = $loggedPerson;
     }
 

@@ -16,10 +16,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
  */
 class OrganizerMailCallback extends MailCallback
 {
-    /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.latte';
@@ -49,10 +45,10 @@ class OrganizerMailCallback extends MailCallback
          * @phpstan-var Transition<ParticipantHolder> $transition
          */
         [$holder, $transition] = $args;
-        foreach ($this->getPersons($holder) as $person) {
+        foreach ($this->getPersons($holder) as $person) { //@phpstan-ignore-line
             $data = array_merge(
-                $this->getData($holder),
-                $this->createMessageText($holder, $transition, $person)
+                $this->getData($holder), //@phpstan-ignore-line
+                $this->createMessageText($holder, $transition, $person) //@phpstan-ignore-line
             );
             $data['recipient'] = 'Výfučí přihlášky <vyfuk-prihlasky@vyfuk.org>';
             $this->emailMessageService->addMessageToSend($data);

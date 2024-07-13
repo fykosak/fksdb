@@ -19,17 +19,14 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-extends MailCallback<TeamHolder>
+ * @phpstan-extends MailCallback<TeamModel2>
  */
 class MemberTransitionMail extends MailCallback
 {
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         $transitionId = self::resolveLayoutName($transition);
+        /** @var TeamHolder $holder */
         $lang = $holder->getModel()->game_lang->value;
         return __DIR__ . DIRECTORY_SEPARATOR . "member.$transitionId.$lang.latte";
     }

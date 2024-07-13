@@ -62,7 +62,12 @@ class TransitionButtonsComponent extends BaseComponent
                 $transition->getSuccessLabel(),
                 Message::LVL_SUCCESS
             );
-        } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException | UnavailableTransitionException $exception) {
+        } catch (
+            ApplicationHandlerException
+            | ForbiddenRequestException
+            | UnavailableTransitionsException
+            | UnavailableTransitionException $exception
+        ) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
             Debugger::log($exception);

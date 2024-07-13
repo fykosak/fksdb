@@ -17,13 +17,13 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use Fykosak\NetteORM\Model\Model;
 
 /**
- * @phpstan-extends MailCallback<TeamHolder>
+ * @phpstan-extends MailCallback<TeamModel2>
  */
 class TeamMemberMailCallback extends MailCallback
 {
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'member.en.latte';// TODO!!!
     }
 
     /**

@@ -55,7 +55,7 @@ class MailSender extends MailCallback
             $this->resolveLogin($person),
             AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $model->event->registration_end ?? $model->event->end,
-            null,//ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
+            null, // ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
     }
@@ -80,8 +80,6 @@ class MailSender extends MailCallback
     }
 
     /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -94,14 +92,14 @@ class MailSender extends MailCallback
                 'person' => $person,
                 'token' => $token,
                 'holder' => $holder,
-                'linkArgs' => $this->createLinkArgs($holder, $token),
+                'linkArgs' => $this->createLinkArgs($holder, $token), //@phpstan-ignore-line
             ],
             Language::tryFrom($person->getPreferredLang()),
         );
     }
 
     /**
-     * @param ParticipantHolder $holder
+     * @phpstan-param ParticipantHolder $holder
      * @throws \ReflectionException
      * @phpstan-return array{string,array<string,scalar>}
      */
@@ -127,10 +125,6 @@ class MailSender extends MailCallback
         return $event->name . ': ' . $application;
     }
 
-    /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return $this->templateFile;
