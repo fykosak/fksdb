@@ -55,9 +55,8 @@ class MailTemplateFactory
      * @phpstan-return TRenderedData
      * @throws BadTypeException
      */
-    public function renderWithParameters(string $templateFile, array $data, ?Language $lang): array
+    public function renderWithParameters(string $templateFile, array $data, Language $lang): array
     {
-        $lang = $lang ?? Language::from($this->translator->lang);
         if (!file_exists($templateFile)) {
             throw new InvalidArgumentException(sprintf(_('Cannot find template "%s".'), $templateFile));
         }

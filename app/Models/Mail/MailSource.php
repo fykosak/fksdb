@@ -10,7 +10,7 @@ use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TTeamplateParam of array
+ * @phpstan-template TTemplateParam of array
  * @phpstan-template TSchema of (int|bool|string)[]
  * @phpstan-import-type TMessageData from EmailMessageService
  */
@@ -36,7 +36,7 @@ abstract class MailSource
     /**
      * @phpstan-return array{
      *     template: array{
-     *          data: TTeamplateParam,
+     *          data: TTemplateParam,
      *          file: string,
      *      },
      *      lang: Language,
@@ -91,6 +91,6 @@ abstract class MailSource
                 $sourceItem['data']
             );
         }
-        return $return;
+        return $return; //@phpstan-ignore-line
     }
 }

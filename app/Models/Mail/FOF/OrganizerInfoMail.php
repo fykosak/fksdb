@@ -48,7 +48,7 @@ class OrganizerInfoMail extends InfoEmail
                     'tests' => DataTestFactory::getTeamTests($this->container),
                     'holder' => $holder,
                 ],
-                Language::tryFrom(Language::CS)
+                Language::from(Language::CS)
             )
         );
         $this->emailMessageService->addMessageToSend($data);

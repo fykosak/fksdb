@@ -21,7 +21,7 @@ class TeamMemberMailCallback extends MailCallback
 {
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'member';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'member.en.latte'; //TODO!!!
     }
 
     /**

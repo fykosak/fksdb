@@ -14,7 +14,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
@@ -57,7 +56,7 @@ class MailSender extends MailCallback
             $this->resolveLogin($person),
             AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
             $event->registration_end ?? $event->end,
-            null,//ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
+            null, // ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
     }
@@ -98,7 +97,7 @@ class MailSender extends MailCallback
                 'holder' => $holder,
                 'linkArgs' => $this->createLinkArgs($holder, $token),
             ],
-            Language::tryFrom($person->getPreferredLang()),
+            Language::tryFrom($person->getPreferredLang()) ?? Language::from(Language::CS),
         );
     }
 

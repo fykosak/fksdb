@@ -74,7 +74,7 @@ abstract class InfoEmail implements Statement
                 'holder' => $holder,
                 'token' => $this->createToken($person, $holder),
             ],
-            Language::tryFrom($person->getPreferredLang())
+            Language::tryFrom($person->getPreferredLang()) ?? Language::from(Language::EN)
         );
     }
     final protected function resolveLogin(PersonModel $person): LoginModel

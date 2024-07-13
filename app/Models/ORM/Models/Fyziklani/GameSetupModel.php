@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use DateTimeInterface;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $event_id
- * @property-read \DateTimeImmutable $game_start
- * @property-read \DateTimeImmutable $game_end
- * @property-read \DateTimeImmutable $result_display
- * @property-read \DateTimeImmutable $result_hide
+ * @property-read DateTime $game_start
+ * @property-read DateTime $game_end
+ * @property-read DateTime $result_display
+ * @property-read DateTime $result_hide
  * @property-read int $refresh_delay
  * @property-read int $result_hard_display
  * @property-read int $tasks_on_board
@@ -53,7 +53,7 @@ final class GameSetupModel extends Model
     {
         $startMidnight = new \DateTime($this->game_start->format('Y-m-d'));
         $afterStartMidnight = ($startMidnight->getTimestamp() < time());
-        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D')); // @phpstan-ignore-line
+        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D'));
         $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
         return ($afterStartMidnight && $beforeEndMidnight);
     }

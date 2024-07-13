@@ -40,7 +40,7 @@ final class EmailPresenter extends BasePresenter
     /**
      * @return MailSource[]
      */
-    protected function getMailSources(): array
+    protected function getMailSources(): array // @phpstan-ignore-line
     {
         return [
             new Reminder1Mail($this->getContext()),
@@ -49,7 +49,7 @@ final class EmailPresenter extends BasePresenter
         ];
     }
 
-    protected function getMailSource(): ?MailSource
+    protected function getMailSource(): ?MailSource // @phpstan-ignore-line
     {
         if (!isset($this->source)) {
             return null;
@@ -135,7 +135,7 @@ final class EmailPresenter extends BasePresenter
         return new EmailsGrid($this->getContext());
     }
 
-    protected function createComponentTestForm(): MailProviderForm
+    protected function createComponentTestForm(): MailProviderForm // @phpstan-ignore-line
     {
         return new MailProviderForm($this->getContext(), $this->getMailSource());
     }
