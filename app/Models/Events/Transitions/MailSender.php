@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Transitions;
 
+use FKSDB\Models\Email\TransitionEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -24,9 +24,9 @@ use Nette\Utils\Strings;
  * Sends email with given template name (in standard template directory)
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- * @phpstan-extends MailCallback<ParticipantHolder>
+ * @phpstan-extends TransitionEmail<ParticipantHolder>
  */
-class MailSender extends MailCallback
+class MailSender extends TransitionEmail
 {
     private string $templateFile;
 
