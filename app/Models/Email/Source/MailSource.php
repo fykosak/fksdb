@@ -13,9 +13,8 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TSource of mixed
  * @phpstan-template TTemplateParam of array
- * @phpstan-template TSchema of array
+ * @phpstan-template TSchema of (int|bool|string)[]
  * @phpstan-import-type TMessageData from EmailMessageService
  */
 abstract class MailSource
@@ -38,10 +37,31 @@ abstract class MailSource
     abstract public function getExpectedParams(): array;
 
     /**
-     * @phpstan-return iterable<TSource>
+     * @phpstan-return array{
+     *     template: array{
+     *          data: TTemplateParam,
+     *          file: string,
+     *      },
+     *      lang: Language,
+     *      data: array{
+     *          recipient_person_id:int,
+     *          sender:string,
+     *          reply_to?:string,
+     *          carbon_copy?:string,
+     *          blind_carbon_copy?:string,
+     *          priority?:int|bool,
+     *      }|array{
+     *          recipient:string,
+     *          sender:string,
+     *          reply_to?:string,
+     *          carbon_copy?:string,
+     *          blind_carbon_copy?:string,
+     *          priority?:int|bool,
+     *      },
+     *    }[]
      * @phpstan-param TSchema $params
      */
-    abstract protected function getSource(array $params): iterable;
+    abstract protected function getSource(array $params): array;
 
     /**
      * @phpstan-return TMessageData[]
@@ -56,51 +76,15 @@ abstract class MailSource
         foreach ($this->getSource($params) as $sourceItem) {
             $return[] = array_merge(
                 $this->mailTemplateFactory->renderWithParameters(
-                    $this->getTemplateFile($sourceItem), //      $sourceItem['template']['file'],
-                    $this->getTemplateParams($sourceItem), //$sourceItem['template']['data'],
-                    $this->getEmailLang($sourceItem)
+                    $sourceItem['template']['file'],
+                    $sourceItem['template']['data'],
+                    $sourceItem['lang']
                 ),
-                $this->getEmailData($sourceItem)
+                $sourceItem['data']
             );
         }
         return $return;//@phpstan-ignore-line
     }
-
-    /**
-     * @phpstan-param TSource $source
-     */
-    abstract protected function getTemplateFile($source): string;
-
-    /**
-     * @phpstan-param TSource $source
-     * @phpstan-return TTemplateParam
-     */
-    abstract protected function getTemplateParams($source): array;
-
-    /**
-     * @phpstan-param TSource $source
-     * @phpstan-return array{
-     *           recipient_person_id:int,
-     *           sender:string,
-     *           reply_to?:string,
-     *           carbon_copy?:string,
-     *           blind_carbon_copy?:string,
-     *           priority?:int|bool,
-     *       }|array{
-     *           recipient:string,
-     *           sender:string,
-     *           reply_to?:string,
-     *           carbon_copy?:string,
-     *           blind_carbon_copy?:string,
-     *           priority?:int|bool,
-     *       },
-     */
-    abstract protected function getEmailData($source): array;
-
-    /**
-     * @phpstan-param TSource $source
-     */
-    abstract protected function getEmailLang($source): Language;
 
     abstract public function title(): Title;
 

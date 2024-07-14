@@ -10,14 +10,15 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 
 /**
- * @phpstan-extends MailSource<EventParticipantModel,array{person:PersonModel,model:EventParticipantModel,token:null},array{event_id:int}>
+ * @phpstan-extends MailSource<array{person:PersonModel,model:EventParticipantModel,token:null},array{event_id:int}>
  */
 abstract class ReminderMail extends MailSource
 {
     protected EventParticipantService $eventParticipantService;
+
+    abstract protected function getTemplatePath(): string;
 
     public function getExpectedParams(): array
     {
@@ -31,38 +32,31 @@ abstract class ReminderMail extends MailSource
         $this->eventParticipantService = $eventParticipantService;
     }
 
-    /**
-     * @phpstan-return  TypedGroupedSelection<EventParticipantModel>
-     */
-    protected function getSource(array $params): TypedGroupedSelection
+    protected function getSource(array $params): array
     {
-        /** @phpstan-var TypedGroupedSelection<EventParticipantModel> $source */
         $source = $this->eventParticipantService->getTable()
             ->where('event_id', $params['event_id'])
             ->where('status', [EventParticipantStatus::INVITED, EventParticipantStatus::SPARE]);
-        return $source;
-    }
-
-    protected function getTemplateParams($source): array
-    {
-        return [
-            'person' => $source->person,
-            'model' => $source,
-            'token' => null,
-        ];
-    }
-
-    protected function getEmailData($source): array
-    {
-        return [
-            'recipient_person_id' => $source->person_id,
-            'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
-            'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
-        ];
-    }
-
-    protected function getEmailLang($source): Language
-    {
-        return Language::from(Language::CS);
+        $data = [];
+        /** @var EventParticipantModel $participant */
+        foreach ($source as $participant) {
+            $data[] = [
+                'template' => [
+                    'file' => $this->getTemplatePath(),
+                    'data' => [
+                        'person' => $participant->person,
+                        'model' => $participant,
+                        'token' => null,
+                    ],
+                ],
+                'lang' => Language::from(Language::CS),
+                'data' => [
+                    'recipient_person_id' => $participant->person_id,
+                    'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+                    'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+                ],
+            ];
+        }
+        return $data;
     }
 }
