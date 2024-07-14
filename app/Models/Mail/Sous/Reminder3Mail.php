@@ -9,7 +9,7 @@ use Fykosak\Utils\UI\Title;
 
 class Reminder3Mail extends ReminderMail
 {
-    protected function getTemplatePath(): string
+    protected function getTemplateFile($source): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'reminder3.latte';
     }

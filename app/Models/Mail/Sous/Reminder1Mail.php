@@ -12,7 +12,7 @@ class Reminder1Mail extends ReminderMail
 {
     protected EventParticipantService $eventParticipantService;
 
-    protected function getTemplatePath(): string
+    protected function getTemplateFile($source): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'reminder1.latte';
     }

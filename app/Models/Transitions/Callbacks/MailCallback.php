@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -19,14 +19,14 @@ use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 /**
- * @phpstan-import-type TRenderedData from MailTemplateFactory
+ * @phpstan-import-type TRenderedData from TemplateFactory
  * @phpstan-template THolder of ModelHolder
  * @implements Statement<void,THolder|Transition<THolder>>
  */
 abstract class MailCallback implements Statement
 {
     protected EmailMessageService $emailMessageService;
-    protected MailTemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $mailTemplateFactory;
     protected AuthTokenService $authTokenService;
     protected LoginService $loginService;
 
@@ -37,7 +37,7 @@ abstract class MailCallback implements Statement
 
     public function inject(
         EmailMessageService $emailMessageService,
-        MailTemplateFactory $mailTemplateFactory,
+        TemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         LoginService $loginService
     ): void {
