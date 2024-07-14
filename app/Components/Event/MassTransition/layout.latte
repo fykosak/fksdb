@@ -3,7 +3,6 @@
 
 {block content}
     {foreach $transitions as $transition}
-        {continueIf $transition->isCreating()}
         {var string $class = 'text-' . $transition->behaviorType->value}
         <div class="panel color-auto">
             <div class="container">

@@ -19,9 +19,6 @@ use Nette\Database\Explorer;
  */
 abstract class Machine
 {
-    public const STATE_INIT = '__init';
-    public const STATE_ANY = '*';
-
     /** @phpstan-var Transition<THolder>[] */
     public array $transitions = [];
     protected Explorer $explorer;
@@ -47,20 +44,6 @@ abstract class Machine
         if ($decorator) {
             $decorator->decorate($this);
         }
-    }
-
-    /**
-     * @throws UnavailableTransitionsException
-     * @phpstan-return Transition<THolder>
-     */
-    final public function getTransitionById(string $id): Transition
-    {
-        return self::selectTransition(
-            \array_filter(
-                $this->transitions,
-                fn(Transition $transition): bool => $transition->getId() === $id
-            )
-        );
     }
 
     /**
@@ -171,6 +154,19 @@ abstract class Machine
         return \array_filter(
             $transitions,
             fn(Transition $transition): bool => self::isAvailable($transition, $holder)
+        );
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-return Transition<SHolder>[]
+     */
+    public static function filterById(array $transitions, string $id): array
+    {
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => $transition->getId() === $id
         );
     }
 }

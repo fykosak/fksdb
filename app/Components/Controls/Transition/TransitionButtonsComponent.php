@@ -56,7 +56,7 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $holder = $this->machine->createHolder($this->model);
         try {
-            $transition = $this->machine->getTransitionById($transitionName);
+            $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $transitionName));
             $this->machine->execute($transition, $holder);
             $this->getPresenter()->flashMessage(
                 $transition->getSuccessLabel(),
