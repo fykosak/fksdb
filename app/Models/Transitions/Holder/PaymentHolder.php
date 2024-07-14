@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Services\PaymentService;
 /**
  * @phpstan-implements ModelHolder<PaymentModel,PaymentState>
  */
-class PaymentHolder implements ModelHolder
+final class PaymentHolder implements ModelHolder
 {
     private PaymentModel $model;
     private PaymentService $service;

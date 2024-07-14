@@ -13,7 +13,7 @@ use Nette\Database\Explorer;
 /**
  * @phpstan-extends Machine<PersonScheduleHolder>
  */
-class PersonScheduleMachine extends Machine
+final class PersonScheduleMachine extends Machine
 {
     private PersonScheduleService $service;
 

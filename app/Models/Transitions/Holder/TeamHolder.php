@@ -13,7 +13,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 /**
  * @phpstan-implements ModelHolder<TeamModel2,TeamState>
  */
-class TeamHolder implements ModelHolder
+final class TeamHolder implements ModelHolder
 {
     private TeamModel2 $team;
     private TeamService2 $service;
