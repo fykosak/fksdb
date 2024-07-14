@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\Sous;
 
-use FKSDB\Models\Mail\MailSource;
+use FKSDB\Models\Email\Source\MailSource;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;

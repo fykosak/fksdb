@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Mail;
+namespace FKSDB\Models\Email\Source;
 
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\Language;
@@ -18,14 +19,14 @@ use Nette\DI\Container;
  */
 abstract class MailSource
 {
-    protected MailTemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $mailTemplateFactory;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(MailTemplateFactory $mailTemplateFactory): void
+    public function inject(TemplateFactory $mailTemplateFactory): void
     {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
