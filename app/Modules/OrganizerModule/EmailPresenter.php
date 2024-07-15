@@ -6,13 +6,13 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Components\Mail\MailProviderForm;
+use FKSDB\Models\Email\Source\MailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Mail\MailSource;
-use FKSDB\Models\Mail\Sous\Reminder1Mail;
-use FKSDB\Models\Mail\Sous\Reminder2Mail;
-use FKSDB\Models\Mail\Sous\Reminder3Mail;
+use FKSDB\Models\Email\Sous\Reminder1Mail;
+use FKSDB\Models\Email\Sous\Reminder2Mail;
+use FKSDB\Models\Email\Sous\Reminder3Mail;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;

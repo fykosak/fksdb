@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Dsef;
 
-use FKSDB\Models\Email\EventParticipantCallback;
+use FKSDB\Models\Email\Source\EventParticipantCallback;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;

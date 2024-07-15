@@ -44,17 +44,17 @@ events:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                            - FKSDB\Models\Email\Sous\InviteMailCallback()
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                            - FKSDB\Models\Email\Sous\InviteMailCallback()
                     __init|auto.spare->spare:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Pozvat náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                            - FKSDB\Models\Email\Sous\InviteMailCallback()
                      # participant decides
                     invited|invited1|invited2|invited3->applied:
                         condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
@@ -72,34 +72,34 @@ events:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat první upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder1MailCallback()
                     invited->invited1:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat první upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder1MailCallback()
                     # 2. reminder
                     spare1->spare2:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat druhou upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder2MailCallback()
                     invited1->invited2:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat druhou upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder2MailCallback()
                     # 3. reminder
                     spare2->spare3:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat třetí upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder3MailCallback()
                     invited2->invited3:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Poslat třetí upomínku')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
+                            - FKSDB\Models\Email\Sous\Reminder3MailCallback()
 
                     # spare reject
                     spare|spare1|spare2|spare3->rejected:
@@ -111,28 +111,28 @@ events:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Potvrdit účast')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\InterestedAppliedMailCallback()
+                            - FKSDB\Models\Email\Sous\InterestedAppliedMailCallback()
                     # invite spare
                     spare->invited:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                            - FKSDB\Models\Email\Sous\SpareInvitedMailCallback()
                     spare1->invited1:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                            - FKSDB\Models\Email\Sous\SpareInvitedMailCallback()
                     spare2->invited2:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                            - FKSDB\Models\Email\Sous\SpareInvitedMailCallback()
                     spare3->invited3:
                         condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                         label: _('Invite as participant')
                         afterExecute:
-                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                            - FKSDB\Models\Email\Sous\SpareInvitedMailCallback()
                     # after sous
                     applied->participated:
                         condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())

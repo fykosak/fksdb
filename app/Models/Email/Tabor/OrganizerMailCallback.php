@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Tabor;
 
-use FKSDB\Models\Email\TransitionEmail;
+use FKSDB\Models\Email\Source\TransitionEmail;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;

@@ -61,51 +61,51 @@ events:
                     condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
                     label: _('Pozvat účastníka')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
+                        - FKSDB\Models\Email\Tabor\InvitedMailCallback()
                 auto.invited->invited:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Pozvat účastníka')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\InvitedMailCallback()
+                        - FKSDB\Models\Email\Tabor\InvitedMailCallback()
                 __init|auto.spare->spare:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Pozvat náhradníka')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\SpareMailCallback()
+                        - FKSDB\Models\Email\Tabor\SpareMailCallback()
                 # reminders
                 # 1. reminder
                 spare->spare1:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Send first call')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                        - FKSDB\Models\Email\Tabor\ReminderMailCallback()
                 invited->invited1:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Send first call')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                        - FKSDB\Models\Email\Tabor\ReminderMailCallback()
                 # 2. reminder
                 spare1->spare2:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Send second call')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                        - FKSDB\Models\Email\Tabor\ReminderMailCallback()
                 invited1->invited2:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Send second call')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\ReminderMailCallback()
+                        - FKSDB\Models\Email\Tabor\ReminderMailCallback()
                 # participant wants to go
                 invited|invited1|invited2->applied:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Potrvrdit učast')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
+                        - FKSDB\Models\Email\Tabor\AppliedMailCallback()
                 spare|spare1|spare2->interested:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
                     label: _('Chci jet')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\InterestedMailCallback()
+                        - FKSDB\Models\Email\Tabor\InterestedMailCallback()
                 # invite spare as normal participant
                 spare|spare1|spare2->invited:
                     condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
@@ -115,13 +115,13 @@ events:
                     condition: and(FKSDB\Models\Events\Semantics\Role('admin'),%events.tabor12.capacityCond%)
                     label: _('Schválit jako účastníka')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedInterestedMailCallback()
+                        - FKSDB\Models\Email\Tabor\AppliedInterestedMailCallback()
                 # participant paid
                 applied->paid:
                     condition: FKSDB\Models\Events\Semantics\Role('admin')
                     label: _('Zaplatil')
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\PaidMailCallback()
+                        - FKSDB\Models\Email\Tabor\PaidMailCallback()
                 # participant rejected
                 invited|invited1|invited2->rejected:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
@@ -138,7 +138,7 @@ events:
                     label: _('Odmítnout jako účastníka')
                     behaviorType: warning
                     afterExecute:
-                        - FKSDB\Models\Transitions\Callbacks\Tabor\RejectedMailCallback()
+                        - FKSDB\Models\Email\Tabor\RejectedMailCallback()
                 paid->participated:
                     condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                     label: _('Zúčastnil se')

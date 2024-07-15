@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;

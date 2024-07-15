@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Transitions;
 
-use FKSDB\Models\Email\TransitionEmail;
+use FKSDB\Models\Email\Source\TransitionEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;

@@ -12,7 +12,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\Application;
-use Nette\Application\UI\TemplateFactory as LatteTemplateFactory;
+use Nette\Application\UI\TemplateFactory as LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
@@ -29,11 +29,11 @@ class TemplateFactory
 
     private GettextTranslator $translator;
     private IRequest $request;
-    private LatteTemplateFactory $templateFactory;
+    private LatteFactory $templateFactory;
 
     public function __construct(
         string $templateDir,
-        LatteTemplateFactory $templateFactory,
+        LatteFactory $templateFactory,
         Application $application,
         GettextTranslator $translator,
         IRequest $request

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\FOF;
 
 use FKSDB\Components\DataTest\DataTestFactory;
-use FKSDB\Models\Email\TransitionEmail;
+use FKSDB\Models\Email\Source\TransitionEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;

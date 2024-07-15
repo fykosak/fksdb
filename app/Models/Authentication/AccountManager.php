@@ -6,8 +6,8 @@ namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;

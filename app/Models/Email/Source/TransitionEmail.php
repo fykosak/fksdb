@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Email;
+namespace FKSDB\Models\Email\Source;
 
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;

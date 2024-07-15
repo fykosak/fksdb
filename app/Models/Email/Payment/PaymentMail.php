@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Payment;
 
-use FKSDB\Models\Email\TransitionEmail;
+use FKSDB\Models\Email\Source\TransitionEmail;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;

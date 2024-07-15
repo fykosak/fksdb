@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Email;
+namespace FKSDB\Models\Email\Source;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder as THolder;
 use FKSDB\Models\ORM\Models\PersonModel;

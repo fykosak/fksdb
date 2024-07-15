@@ -9,9 +9,9 @@ transitions:
                 icon: 'fas fa-plus'
                 behaviorType: primary
                 afterExecute:
-                    - FKSDB\Models\Mail\FOF\MemberTransitionMail()
-                    - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
-                    - FKSDB\Models\Mail\FOF\OrganizerTransitionMail()
+                    - FKSDB\Models\Email\FOF\MemberTransitionMail()
+                    - FKSDB\Models\Email\FOF\TeacherTransitionMail()
+                    - FKSDB\Models\Email\FOF\OrganizerTransitionMail()
             pending->applied:
                 label: _('Move to applied')
                 behaviorType: success
@@ -21,15 +21,15 @@ transitions:
                 behaviorType: warning
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 afterExecute:
-                    - FKSDB\Models\Mail\FOF\MemberTransitionMail()
-                    - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
+                    - FKSDB\Models\Email\FOF\MemberTransitionMail()
+                    - FKSDB\Models\Email\FOF\TeacherTransitionMail()
             spare->applied:
                 label: _('Move to applied')
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 afterExecute:
-                    - FKSDB\Models\Mail\FOF\MemberTransitionMail()
-                    - FKSDB\Models\Mail\FOF\TeacherTransitionMail()
+                    - FKSDB\Models\Email\FOF\MemberTransitionMail()
+                    - FKSDB\Models\Email\FOF\TeacherTransitionMail()
             applied->pending:
                 label: _('Move to pending')
                 behaviorType: danger
