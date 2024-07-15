@@ -10,15 +10,23 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\UI\Title;
+use Nette\DI\Container;
 
 /**
  * @phpstan-extends EmailSource<array{person:PersonModel,model:EventParticipantModel,token:null},array{event_id:int}>
  */
-abstract class ReminderEmailSource extends EmailSource
+final class ReminderEmailSource extends EmailSource
 {
     protected EventParticipantService $eventParticipantService;
+    private int $number;
 
-    abstract protected function getTemplatePath(): string;
+    public function __construct(Container $container, int $number)
+    {
+        parent::__construct($container);
+        $this->number = $number;
+    }
 
     public function getExpectedParams(): array
     {
@@ -42,7 +50,7 @@ abstract class ReminderEmailSource extends EmailSource
         foreach ($source as $participant) {
             $data[] = [
                 'template' => [
-                    'file' => $this->getTemplatePath(),
+                    'file' => __DIR__ . DIRECTORY_SEPARATOR . 'reminder' . $this->number . '.latte',
                     'data' => [
                         'person' => $participant->person,
                         'model' => $participant,
@@ -58,5 +66,15 @@ abstract class ReminderEmailSource extends EmailSource
             ];
         }
         return $data;
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, sprintf(_('Reminder %d'), $this->number));
+    }
+
+    public function description(): LocalizedString//@phpstan-ignore-line
+    {
+        return new LocalizedString(['cs' => '', 'en' => '']);
     }
 }

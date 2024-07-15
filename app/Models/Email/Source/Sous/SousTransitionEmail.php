@@ -19,7 +19,7 @@ use FKSDB\Modules\Core\Language;
  *     model: EventParticipantModel,
  * }>
  */
-class SousTransitionEmail extends EventParticipantTransitionEmail
+final class SousTransitionEmail extends EventParticipantTransitionEmail
 {
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
