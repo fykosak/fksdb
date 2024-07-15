@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Mail;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -17,13 +17,13 @@ use Nette\Forms\Form;
 /**
  * @phpstan-template TMailTemplateParam of array
  * @phpstan-template TMailSchema of (int|bool|string)[]
- * @phpstan-type TMailSource = MailSource<TMailTemplateParam,TMailSchema>
+ * @phpstan-type TMailSource = EmailSource<TMailTemplateParam,TMailSchema>
  * @phpstan-import-type TMessageData from EmailMessageService
  */
 class MailProviderForm extends BaseComponent
 {
     /** @phpstan-var TMailSource */
-    private MailSource $source;
+    private EmailSource $source;
     /**
      * @persistent
      * @phpstan-var  TMessageData[]|null
@@ -34,7 +34,7 @@ class MailProviderForm extends BaseComponent
     /**
      * @phpstan-param TMailSource $source
      */
-    public function __construct(Container $container, MailSource $source)
+    public function __construct(Container $container, EmailSource $source)
     {
         parent::__construct($container);
         $this->source = $source;

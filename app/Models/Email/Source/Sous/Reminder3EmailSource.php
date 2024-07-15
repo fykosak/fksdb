@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Mail\Sous;
+namespace FKSDB\Models\Email\Source\Sous;
 
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 
-class Reminder2Mail extends ReminderMail
+class Reminder3EmailSource extends ReminderEmailSource
 {
     protected function getTemplatePath(): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'reminder2.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'reminder3.latte';
     }
 
     public function title(): Title
     {
-        return new Title(null, _('Reminder 2'));
+        return new Title(null, _('Reminder 3'));
     }
 
-    public function description(): LocalizedString//@phpstan-ignore-line
+    public function description(): LocalizedString //@phpstan-ignore-line
     {
         return new LocalizedString(['cs' => '', 'en' => '']);
     }

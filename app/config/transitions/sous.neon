@@ -8,12 +8,12 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Pozvat účastníka')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\InviteTransitionEmail()
             __init|auto.spare->spare:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Pozvat náhradníka')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\InviteTransitionEmail()
              # participant decides
             invited->applied:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))

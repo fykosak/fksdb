@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Mail\Sous;
+namespace FKSDB\Models\Email\Source\Sous;
 
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 
-class Reminder1Mail extends ReminderMail
+class Reminder1EmailSource extends ReminderEmailSource
 {
     protected EventParticipantService $eventParticipantService;
 

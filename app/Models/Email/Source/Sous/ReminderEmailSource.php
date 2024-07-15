@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Mail\Sous;
+namespace FKSDB\Models\Email\Source\Sous;
 
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -12,9 +12,9 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Modules\Core\Language;
 
 /**
- * @phpstan-extends MailSource<array{person:PersonModel,model:EventParticipantModel,token:null},array{event_id:int}>
+ * @phpstan-extends EmailSource<array{person:PersonModel,model:EventParticipantModel,token:null},array{event_id:int}>
  */
-abstract class ReminderMail extends MailSource
+abstract class ReminderEmailSource extends EmailSource
 {
     protected EventParticipantService $eventParticipantService;
 

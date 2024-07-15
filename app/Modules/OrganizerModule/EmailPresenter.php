@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Components\Mail\MailProviderForm;
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -38,7 +38,7 @@ final class EmailPresenter extends BasePresenter
     }
 
     /**
-     * @return MailSource[]
+     * @return EmailSource[]
      */
     protected function getMailSources(): array //@phpstan-ignore-line
     {
@@ -49,7 +49,7 @@ final class EmailPresenter extends BasePresenter
         ];
     }
 
-    protected function getMailSource(): ?MailSource //@phpstan-ignore-line
+    protected function getMailSource(): ?EmailSource //@phpstan-ignore-line
     {
         if (!isset($this->source)) {
             return null;
