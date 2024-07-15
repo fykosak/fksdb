@@ -2,7 +2,7 @@
 
 {varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
 
-{define subject}Pozvánka na jarní soustředění FYKOSu{/define}
+{define subject}Pozvánka na podzimní soustředění FYKOSu{/define}
 
 {block body}
 <p>
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-    Brzy dostaneš další info. Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás
+    Brzy dostaneš další info. Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz nebo jsi zjistil{if $model->person->gender->value == 'F'}a{/if}, že již nemáš čas, neváhej se na nás
     obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 
