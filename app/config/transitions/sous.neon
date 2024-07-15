@@ -36,13 +36,13 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Potvrdit účast')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InterestedAppliedMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\InterestedAppliedTransitionEmail()
             # invite spare
             spare->invited:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Invite as participant')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\SpareInvitedTransitionEmail()
             # after sous
             applied->participated:
                 condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())

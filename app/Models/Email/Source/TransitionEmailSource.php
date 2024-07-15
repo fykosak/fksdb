@@ -48,7 +48,7 @@ abstract class TransitionEmailSource extends EmailSource implements Statement
          * @phpstan-var Transition<THolder> $transition
          */
         [$holder, $transition] = $args;
-        foreach ($this->createEmails(['holder' => $holder, 'transition' => $transition]) as $email) {
+        foreach ($this->createEmails(['holder' => $holder, 'transition' => $transition]) as $email) {//@phpstan-ignore-line
             $this->emailMessageService->addMessageToSend($email);
         }
     }
@@ -72,7 +72,7 @@ abstract class TransitionEmailSource extends EmailSource implements Statement
         throw new NotImplementedException();
     }
 
-    public function description(): LocalizedString
+    public function description(): LocalizedString//@phpstan-ignore-line
     {
         throw new NotImplementedException();
     }

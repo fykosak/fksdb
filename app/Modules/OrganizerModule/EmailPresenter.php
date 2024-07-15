@@ -7,12 +7,12 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Components\Mail\MailProviderForm;
 use FKSDB\Models\Email\Source\EmailSource;
+use FKSDB\Models\Email\Source\Sous\Reminder1EmailSource;
+use FKSDB\Models\Email\Source\Sous\Reminder2EmailSource;
+use FKSDB\Models\Email\Source\Sous\Reminder3EmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Mail\Sous\Reminder1Mail;
-use FKSDB\Models\Mail\Sous\Reminder2Mail;
-use FKSDB\Models\Mail\Sous\Reminder3Mail;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -43,9 +43,9 @@ final class EmailPresenter extends BasePresenter
     protected function getMailSources(): array //@phpstan-ignore-line
     {
         return [
-            new Reminder1Mail($this->getContext()),
-            new Reminder2Mail($this->getContext()),
-            new Reminder3Mail($this->getContext()),
+            new Reminder1EmailSource($this->getContext()),
+            new Reminder2EmailSource($this->getContext()),
+            new Reminder3EmailSource($this->getContext()),
         ];
     }
 

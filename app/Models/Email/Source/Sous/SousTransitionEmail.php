@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Source\Sous;
 
 use FKSDB\Models\Email\Source\EventParticipantTransitionEmail;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -18,7 +19,7 @@ use FKSDB\Modules\Core\Language;
  *     model: EventParticipantModel,
  * }>
  */
-abstract class SousTransitionEmail extends EventParticipantTransitionEmail
+class SousTransitionEmail extends EventParticipantTransitionEmail
 {
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
@@ -41,5 +42,17 @@ abstract class SousTransitionEmail extends EventParticipantTransitionEmail
     protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
         return Language::from(Language::CS);
+    }
+
+    protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
+    {
+        switch ($transition->source->value) {
+            case EventParticipantStatus::INIT:
+            case EventParticipantStatus::AUTO_SPARE:
+            case EventParticipantStatus::AUTO_INVITED:
+                return __DIR__ . DIRECTORY_SEPARATOR . 'init->invite.latte';
+            default:
+                return __DIR__ . DIRECTORY_SEPARATOR . self::resolveLayoutName($transition);
+        }
     }
 }
