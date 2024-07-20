@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Components\Mail\MailProviderForm;
 use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
@@ -70,7 +70,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleTemplate(): PageTitle
     {
-        return new PageTitle(null, _('Mail templates'), 'fas fa-envelope-open');
+        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
     }
 
     public function authorizedDetail(): bool
@@ -140,9 +140,9 @@ final class EmailPresenter extends BasePresenter
         return new EmailsGrid($this->getContext());
     }
 
-    protected function createComponentTemplateForm(): MailProviderForm //@phpstan-ignore-line
+    protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
     {
-        return new MailProviderForm($this->getContext(), $this->getMailSource());
+        return new EmailProviderForm($this->getContext(), $this->getMailSource());
     }
 
     /**
