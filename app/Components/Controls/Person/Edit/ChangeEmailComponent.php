@@ -7,8 +7,8 @@ namespace FKSDB\Components\Controls\Person\Edit;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -29,14 +29,14 @@ use Tracy\Debugger;
 class ChangeEmailComponent extends EntityFormComponent
 {
     private ReflectionFactory $reflectionFormFactory;
-    private MailTemplateFactory $mailTemplateFactory;
+    private TemplateFactory $mailTemplateFactory;
     private LoginService $loginService;
     private AuthTokenService $authTokenService;
     private EmailMessageService $emailMessageService;
 
     public function inject(
         ReflectionFactory $reflectionFormFactory,
-        MailTemplateFactory $mailTemplateFactory,
+        TemplateFactory $mailTemplateFactory,
         LoginService $loginService,
         AuthTokenService $authTokenService,
         EmailMessageService $emailMessageService
