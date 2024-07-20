@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
@@ -24,21 +23,19 @@ use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<PersonModel>
+ * @property-read PersonModel $model
  */
 class ChangeEmailComponent extends EntityFormComponent
 {
     private ReflectionFactory $reflectionFormFactory;
     private LoginService $loginService;
-    private EmailMessageService $emailMessageService;
 
     public function inject(
         ReflectionFactory $reflectionFormFactory,
-        LoginService $loginService,
-        EmailMessageService $emailMessageService
+        LoginService $loginService
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
         $this->loginService = $loginService;
-        $this->emailMessageService = $emailMessageService;
     }
 
     public function render(): void
@@ -83,7 +80,7 @@ class ChangeEmailComponent extends EntityFormComponent
     {
         /** @phpstan-var array{new_email:string} $values */
         $values = $form->getValues('array');
-        $lang = Language::tryFrom($this->translator->lang);
+        $lang = Language::from($this->translator->lang);
         $newEmail = $values['new_email'];
         self::logEmailChange($this->model, $newEmail, true);
         $login = $this->model->getLogin();

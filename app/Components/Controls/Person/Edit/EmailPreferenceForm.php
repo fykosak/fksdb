@@ -32,8 +32,10 @@ class EmailPreferenceForm extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
+        /** @var array<string,bool> $values */
         $values = $form->getValues('array');
         foreach (PersonEmailPreferenceOption::cases() as $case) {
+            /** @var PersonEmailPreferenceModel|null $preference */
             $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
             $value = $values[$case->value];
             $this->emailPreferenceService->storeModel([
@@ -48,7 +50,7 @@ class EmailPreferenceForm extends EntityFormComponent
     {
         $defaults = [];
         foreach (PersonEmailPreferenceOption::cases() as $case) {
-            /** @var PersonEmailPreferenceModel $preference */
+            /** @var PersonEmailPreferenceModel|null $preference */
             $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
             $defaults[$case->value] = $preference ? $preference->option : true;
         }

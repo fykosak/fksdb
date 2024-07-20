@@ -94,7 +94,6 @@ abstract class EmailSource
     }
 
     /**
-     * @phpstan-return TMessageData[]
      * @phpstan-param TSchema $params
      * @throws BadTypeException
      */
