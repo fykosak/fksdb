@@ -21,15 +21,17 @@ use Nette\DI\Container;
 abstract class EmailSource
 {
     protected TemplateFactory $templateFactory;
+    private EmailMessageService $emailMessageService;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(TemplateFactory $templateFactory): void
+    public function inject(TemplateFactory $templateFactory, EmailMessageService $emailMessageService): void
     {
         $this->templateFactory = $templateFactory;
+        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -70,7 +72,7 @@ abstract class EmailSource
 
     /**
      * @phpstan-return TMessageData[]
-     * @phpstan-param (int|bool|string)[] $params
+     * @phpstan-param TSchema $params
      * @throws BadTypeException
      */
     public function createEmails(array $params): array
@@ -89,6 +91,18 @@ abstract class EmailSource
             );
         }
         return $return;//@phpstan-ignore-line
+    }
+
+    /**
+     * @phpstan-return TMessageData[]
+     * @phpstan-param TSchema $params
+     * @throws BadTypeException
+     */
+    public function createAndSend(array $params): void
+    {
+        foreach ($this->createEmails($params) as $email) {
+            $this->emailMessageService->addMessageToSend($email);
+        }
     }
 
     abstract public function title(): Title;

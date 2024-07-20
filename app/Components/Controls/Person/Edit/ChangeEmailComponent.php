@@ -95,10 +95,7 @@ class ChangeEmailComponent extends EntityFormComponent
             throw new ChangeInProgressException();
         }
         $emailSource = new ChangeEmailSource($this->container);
-        $emails = $emailSource->createEmails(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
-        foreach ($emails as $email) {
-            $this->emailMessageService->addMessageToSend($email);
-        }
+        $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
 
         $this->getPresenter()->flashMessage(
             _(

@@ -29,7 +29,6 @@ class EmailProviderForm extends BaseComponent
      * @phpstan-var  TMessageData[]|null
      */
     private ?array $previewEmails = null;
-    private EmailMessageService $emailMessageService;
 
     /**
      * @phpstan-param TEmailSource $source
@@ -38,11 +37,6 @@ class EmailProviderForm extends BaseComponent
     {
         parent::__construct($container);
         $this->source = $source;
-    }
-
-    public function inject(EmailMessageService $emailMessageService): void
-    {
-        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -92,10 +86,7 @@ class EmailProviderForm extends BaseComponent
     {
         /** @phpstan-var TEmailSchema $values */
         $values = $form->getValues('array');
-        $emails = $this->source->createEmails($values);
-        foreach ($emails as $email) {
-            $this->emailMessageService->addMessageToSend($email);
-        }
+        $this->source->createAndSend($values);
     }
 
     public function render(): void
