@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\SchoolLabelFormComponent;
-use FKSDB\Components\Grids\Spam\SchoolLabelGrid;
+use FKSDB\Components\Grids\SchoolLabelGrid;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolLabelModel;
 use FKSDB\Models\ORM\Services\SchoolLabelService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -46,7 +47,9 @@ final class SchoolPresenter extends BasePresenter
 
     /**
      * @throws GoneException
+     * @throws NoContestAvailable
      * @throws NotFoundException
+     * @throws NoContestYearAvailable
      */
     protected function createComponentEditForm(): SchoolLabelFormComponent
     {

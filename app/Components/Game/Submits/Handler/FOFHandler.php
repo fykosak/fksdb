@@ -10,12 +10,14 @@ use FKSDB\Components\Game\Submits\PointsMismatchException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Nette\Application\UI\InvalidLinkException;
 
 class FOFHandler extends Handler
 {
     /**
      * @throws PointsMismatchException
      * @throws ClosedSubmittingException
+     * @throws InvalidLinkException
      */
     public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void
     {

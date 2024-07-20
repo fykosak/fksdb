@@ -72,9 +72,6 @@ class FOFTeamForm extends TeamForm
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function appendTeacherFields(Form $form): void
     {
         $teacherCount = isset($this->model) ? max($this->model->getTeachers()->count('*'), 1) : 1;
