@@ -1,0 +1,29 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{var string $link = $control->link('//:Event:Application:edit',
+['eventId'=> $model->event->event_id,
+'at'=>$token->token,
+'id'=>$model->getPrimary()])}
+
+{define subject}Pozvánka na podzimní soustředění FYKOSu{/define}
+
+{block body}
+<p>
+    {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo na akci {$model->event->event_type->name} v obci {$model->event->getParameter('letterWhere')}
+{* TODO use place *} v termínu od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'}
+    , jsi nyní mezi pozvanými. Gratulujeme!
+</p>
+<p>
+    Připomínáme, že stále čekáme na Tvou odpověď prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
+    <a href="{$link}">{$link}</a>. Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz,
+    neváhej se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+</p>
+<p>
+    Těšíme se na Tebe!<br>
+    Za organizátory<br>
+    {$model->event->getParameter('letterSignature')} {* TODO to template *}
+</p>
+{/block}

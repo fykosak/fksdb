@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\Setkani;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 
 /**
- * @phpstan-extends MailCallback<BaseHolder>
+ * @phpstan-extends MailCallback<EventParticipantModel>
  */
 class OrganizerTransitionMail extends MailCallback
 {
-    /**
-     * @param BaseHolder $holder
-     * @phpstan-param Transition<BaseHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'organizer.latte';
@@ -35,21 +32,21 @@ class OrganizerTransitionMail extends MailCallback
     }
 
     /**
-     * @phpstan-param BaseHolder|Transition<BaseHolder> $args
+     * @phpstan-param ParticipantHolder|Transition<ParticipantHolder> $args
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     public function __invoke(...$args): void
     {
         /**
-         * @phpstan-var BaseHolder $holder
-         * @phpstan-var Transition<BaseHolder> $transition
+         * @phpstan-var ParticipantHolder $holder
+         * @phpstan-var Transition<ParticipantHolder> $transition
          */
         [$holder, $transition] = $args;
-        foreach ($this->getPersons($holder) as $person) {
+        foreach ($this->getPersons($holder) as $person) { //@phpstan-ignore-line
             $data = array_merge(
-                $this->getData($holder),
-                $this->createMessageText($holder, $transition, $person)
+                $this->getData($holder), //@phpstan-ignore-line
+                $this->createMessageText($holder, $transition, $person) //@phpstan-ignore-line
             );
             $data['recipient'] = 'Výfučí přihlášky <vyfuk-prihlasky@vyfuk.org>';
             $this->emailMessageService->addMessageToSend($data);

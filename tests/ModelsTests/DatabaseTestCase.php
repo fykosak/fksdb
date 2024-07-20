@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
+<<<<<<< HEAD
 use FKSDB\Models\Mail\TemplateFactory;
+=======
+use FKSDB\Models\Email\TemplateFactory;
+>>>>>>> dev-email-ns-p
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\ContestModel;

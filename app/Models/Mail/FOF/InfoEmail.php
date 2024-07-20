@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\FOF;
 
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\TemplateFactory;
 use FKSDB\Models\ORM\Models\AuthTokenModel;

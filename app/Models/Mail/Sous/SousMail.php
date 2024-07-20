@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\Sous;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Transitions\Callbacks\EventParticipantCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\Core\Language;
 
-/**
- * @phpstan-extends EventParticipantCallback<BaseHolder>
- */
 abstract class SousMail extends EventParticipantCallback
 {
     final protected function getData(ModelHolder $holder): array

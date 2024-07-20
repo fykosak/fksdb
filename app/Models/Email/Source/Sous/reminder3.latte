@@ -1,0 +1,17 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Pozvánka na podzimní soustředění FYKOSu{/define}
+
+{block body}
+    <p>Ahoj,<br>
+        protože ses stále nijak neozval{if $model->person->gender->value == 'F'}a{/if},
+        tak Ti připomínáme, že by se nám skutečně hodilo znát Tvé rozhodnutí co nejdříve,
+        neboť již <strong>{$model->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> se
+        přihlašování uzavírá.
+    </p>
+    <p>Níže přikládáme zvací e-mail.</p>
+    <p>______</p>
+    {include invite.latte}
+{/block}

@@ -73,7 +73,7 @@ orm:
                 type: email
                 title: _('Bcc')
             text:
-                type: string
+                type: text
                 title: _('Text')
             state:
                 type: enum
@@ -270,7 +270,7 @@ orm:
                     id: event_participant_id
                 title: _('button.eventParticipant.detail')
             edit:
-                destination: :Public:Application:default
+                destination: :Event:Application:edit
                 params:
                     eventId: event_id
                     id: event_participant_id

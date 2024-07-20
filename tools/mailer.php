@@ -2,8 +2,7 @@
 
 declare(strict_types=1);
 
-use FKSDB\Models\Mail\ResolverFactory;
-use FKSDB\Models\Mail\SenderFactory;
+use FKSDB\Models\Email\SenderFactory;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Nette\DI\Container;
@@ -19,8 +18,6 @@ if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['
 }
 /** @var SenderFactory $sender */
 $sender = $container->getByType(SenderFactory::class);
-/** @var ResolverFactory $resolver */
-$resolver = $container->getByType(ResolverFactory::class);
 /** @var EmailMessageService $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(EmailMessageService::class);
 $argv = $_SERVER['argv'];
@@ -35,6 +32,5 @@ foreach ($query as $model) {
         Debugger::log('Message limit reached.', 'mailer-exceptions');
         break;
     }
-    $resolver->resolve($model);
     $sender->send($model);
 }
