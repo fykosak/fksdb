@@ -80,6 +80,7 @@ final class WebServiceModel
     }
 
     /**
+     * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
      * @phpstan-ignore-next-line

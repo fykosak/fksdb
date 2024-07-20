@@ -10,7 +10,6 @@ use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
@@ -44,7 +43,6 @@ final class ChartPresenter extends BasePresenter
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
-     * @throws NotImplementedException
      */
     protected function getCharts(): array
     {

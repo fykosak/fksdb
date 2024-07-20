@@ -17,7 +17,6 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\LinkGenerator;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use ValueError;
@@ -52,7 +51,6 @@ final class SchoolLabelFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      * @throws ForbiddenRequestException
-     * @throws InvalidLinkException
      */
     protected function configureForm(Form $form): void
     {
