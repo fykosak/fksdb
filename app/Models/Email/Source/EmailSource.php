@@ -15,7 +15,7 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-template TTemplateParam of array
- * @phpstan-template TSchema of mixed[]
+ * @phpstan-template TSchema of array
  * @phpstan-import-type TMessageData from EmailMessageService
  */
 abstract class EmailSource

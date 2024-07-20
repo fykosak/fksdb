@@ -154,7 +154,7 @@ class SenderFactory
             $preferenceType = $model->topic->mapToPreference();
             if ($preferenceType) {
                 /** @var PersonEmailPreferenceModel|null $preference */
-                $preference = $model->person->getMailPreferences()->where('option', $preferenceType)->fetch();
+                $preference = $model->person->getEmailPreferences()->where('option', $preferenceType)->fetch();
                 if ($preference && !$preference->value) {
                     throw new RejectedEmailException();
                 }
