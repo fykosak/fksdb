@@ -307,7 +307,7 @@ final class EventModel extends Model implements Resource, NodeCreator
     {
         $node = $document->createElement('event');
         $node->setAttribute('eventId', (string)$this->event_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node, true);
         return $node;
     }
 

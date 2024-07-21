@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Mail;
+namespace FKSDB\Models\Email;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\Application;
-use Nette\Application\UI\TemplateFactory;
+use Nette\Application\UI\TemplateFactory as LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
@@ -17,7 +17,7 @@ use Nette\InvalidArgumentException;
 /**
  * @phpstan-type TRenderedData = array{text:string,subject:string}
  */
-class MailTemplateFactory
+class TemplateFactory
 {
     /** without trailing slash */
     private string $templateDir;
@@ -26,11 +26,11 @@ class MailTemplateFactory
 
     private GettextTranslator $translator;
     private IRequest $request;
-    private TemplateFactory $templateFactory;
+    private LatteFactory $templateFactory;
 
     public function __construct(
         string $templateDir,
-        TemplateFactory $templateFactory,
+        LatteFactory $templateFactory,
         Application $application,
         GettextTranslator $translator,
         IRequest $request
