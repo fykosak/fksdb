@@ -14,7 +14,7 @@
 <p>
     {if $model->person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $model->person->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu,
-    je nám ctí Tě pozvat <strong>{if $model->status===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
+    je nám ctí Tě pozvat <strong>{if $model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
     {if $model->person->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}{/if}</strong>
     na {$model->event->event_type->name}, které se bude konat v obci
     <strong>{$model->event->getParameter('letterWhere')}{* TODO use place *}</strong>
@@ -32,7 +32,7 @@
 {include price.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
     Své rozhodnutí, zda bys
-    chtěl{if $model->person->gender == 'F'}a{/if} přijet,{if $model->status===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
+    chtěl{if $model->person->gender == 'F'}a{/if} přijet,{if $model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
     <strong>{$model->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
     <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $model->person->gender == 'F'}á{else}ý{/if},
@@ -42,7 +42,7 @@
     tlačítko na odmítnutí účasti). V opačném případě Ti budou chodit upomínky.
 </p>
 
-<p n:if="$model->status===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE">
+<p n:if="$model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE">
     O Tvé účasti na soustředění bude rozhodnuto po {$model->event->getParameter('letterResolutionTime')|date:'j. n.'}, dáme Ti pak vědět e-mailem.
 </p>
 
