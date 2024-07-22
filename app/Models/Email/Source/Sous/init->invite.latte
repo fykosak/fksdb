@@ -14,11 +14,10 @@
 <p>
     {if $model->person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     gratulujeme! Jelikož jsi předvedl{if $model->person->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu,
-    je nám ctí Tě pozvat <strong>{if $model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
-    {if $model->person->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}{/if}</strong>
+    je nám ctí Tě pozvat {if $model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}<strong>
+    {if $model->person->gender == 'F'}jako náhradnici{else}jako náhradníka{/if}</strong>{/if}
     na {$model->event->event_type->name}, které se bude konat v obci
-    <strong>{$model->event->getParameter('letterWhere')}{* TODO use place *}</strong>
-    od <strong>{$model->event->begin|date:'j. n.'}</strong> do
+    <strong>Lázně Libverda</strong> od <strong>{$model->event->begin|date:'j. n.'}</strong> do
     <strong>{$model->event->end|date:'j. n. Y'}</strong>.
 </p>
 
@@ -34,7 +33,7 @@
     Své rozhodnutí, zda bys
     chtěl{if $model->person->gender == 'F'}a{/if} přijet,{if $model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE}
     kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
-    <strong>{$model->event->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
+    <strong>{$model->event->registration_end|date:'j. n. Y'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
     <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $model->person->gender == 'F'}á{else}ý{/if},
     jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své
     účasti nám pak můžeš dát vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s
@@ -43,7 +42,7 @@
 </p>
 
 <p n:if="$model->status->value===FKSDB\Models\ORM\Models\EventParticipantStatus::SPARE">
-    O Tvé účasti na soustředění bude rozhodnuto po {$model->event->getParameter('letterResolutionTime')|date:'j. n.'}, dáme Ti pak vědět e-mailem.
+    O Tvé účasti na soustředění bude rozhodnuto po 9. 9., dáme Ti pak vědět e-mailem.
 </p>
 
 <p>
@@ -54,6 +53,6 @@
 <p>
     Těšíme se na Tebe!<br>
     Za organizátory<br>
-    {$model->event->getParameter('letterSignature')} {* TODO to template *}
+    Vojtěch David
 </p>
 {/block}

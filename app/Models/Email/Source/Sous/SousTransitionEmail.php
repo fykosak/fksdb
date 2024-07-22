@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
-use Tracy\Debugger;
 
 /**
  * @phpstan-extends EventParticipantTransitionEmail<array{
@@ -24,7 +23,6 @@ final class SousTransitionEmail extends EventParticipantTransitionEmail
 {
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
-        Debugger::dump($holder->getModel()->status);
         return [
             'recipient_person_id' => $holder->getModel()->person_id,
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
