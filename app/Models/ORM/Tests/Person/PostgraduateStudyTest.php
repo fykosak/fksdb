@@ -26,7 +26,7 @@ final class PostgraduateStudyTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Checks if any of postgraduate studies are not followed by undergraduate');
+        return _('Checks if any of postgraduate studies are not followed by undergraduate.');
     }
 
     /**
