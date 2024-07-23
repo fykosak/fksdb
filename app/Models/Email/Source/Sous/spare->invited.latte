@@ -12,9 +12,8 @@
 {block body}
 <p>
     {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo na akci {$model->event->event_type->name} v obci {$model->event->getParameter('letterWhere')}
-{* TODO use place *} v termínu od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'}
-    , jsi nyní mezi pozvanými. Gratulujeme!
+    protože se uvolnilo místo na akci {$model->event->event_type->name} v obci Lázně Libverda v termínu od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'},
+    jsi nyní mezi pozvanými. Gratulujeme!
 </p>
 <p>
     Připomínáme, že stále čekáme na Tvou odpověď prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu
@@ -24,6 +23,6 @@
 <p>
     Těšíme se na Tebe!<br>
     Za organizátory<br>
-    {$model->event->getParameter('letterSignature')} {* TODO to template *}
+    Vojtěch David
 </p>
 {/block}

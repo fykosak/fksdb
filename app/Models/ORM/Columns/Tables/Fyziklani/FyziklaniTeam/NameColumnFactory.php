@@ -21,8 +21,7 @@ class NameColumnFactory extends StringColumnFactory
         $control->addRule(
             Form::PATTERN,
             _(
-                'Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici
-       a ASCII znaky.'
+                'The team name can contain only Latin, Greek, and Cyrillic alphabet, and ASCII characters.'
             ),
             '^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$'
         );

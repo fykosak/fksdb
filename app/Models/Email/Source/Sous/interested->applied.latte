@@ -8,8 +8,8 @@
 <p>
     {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
     protože se uvolnilo místo a Ty jsi projevil{if $model->person->gender->value == 'F'}a{/if} zájem o {$model->event->event_type->name} v obci
-    {$model->event->getParameter('letterWhere')}{* TODO use place *} od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'}
-    , jsi nyní mezi pozvanými. Gratulujeme.
+    Lázně Libverda od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'},
+    jsi nyní mezi pozvanými. Gratulujeme.
 </p>
 
 <p>
@@ -19,6 +19,6 @@
 
 <p>
     Za organizátory<br>
-    {$model->event->getParameter('letterSignature')} {* TODO to template *}
+    Vojtěch David
 </p>
 {/block}

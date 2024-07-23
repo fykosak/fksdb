@@ -8,12 +8,12 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Pozvat účastníka')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\SousTransitionEmail()
             __init|auto.spare->spare:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Pozvat náhradníka')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\SousTransitionEmail()
              # participant decides
             invited->applied:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
@@ -36,13 +36,13 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Potvrdit účast')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\InterestedAppliedMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\SousTransitionEmail()
             # invite spare
             spare->invited:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Invite as participant')
                 afterExecute:
-                    - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    - FKSDB\Models\Email\Source\Sous\SousTransitionEmail()
             # after sous
             applied->participated:
                 condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
