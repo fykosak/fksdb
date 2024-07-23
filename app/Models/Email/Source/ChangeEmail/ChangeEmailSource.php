@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Person\Edit\EmailSource;
+namespace FKSDB\Models\Email\Source\ChangeEmail;
 
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Email\Source\EmailSource;
@@ -37,6 +37,9 @@ class ChangeEmailSource extends EmailSource
         $this->tokenService = $tokenService;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function getExpectedParams(): array
     {
         throw new NotImplementedException();
@@ -86,11 +89,17 @@ class ChangeEmailSource extends EmailSource
         return [$oldData, $newData];
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function title(): Title
     {
         throw new NotImplementedException();
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function description(): LocalizedString //@phpstan-ignore-line
     {
         throw new NotImplementedException();

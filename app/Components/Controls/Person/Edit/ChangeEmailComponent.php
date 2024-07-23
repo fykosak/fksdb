@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Components\Controls\Person\Edit\EmailSource\ChangeEmailSource;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;

@@ -75,7 +75,7 @@ final class LoginModel extends Model implements IIdentity
     {
         if (!isset($this->contestRoles[$contest->contest_id])) {
             $this->contestRoles[$contest->contest_id] = [
-                ... $this->getExplicitContestRoles($contest),
+                ...$this->getExplicitContestRoles($contest),
                 ...$this->getImplicitContestRoles($contest),
             ];
         }

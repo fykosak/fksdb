@@ -1,15 +1,15 @@
 {layout none}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{varType string $lang}
+{varType FKSDB\Modules\Core\Language $lang}
 {define subject}
-    {switch $lang}
+    {switch $lang->value}
         {case 'cs'}
         {_'Create an account'}
         {case 'en'}
         {_'Create an account'}
     {/switch}
 {/define}
-{if $lang === 'cs'}
+{if $lang->value === 'cs'}
     <p>Ahoj,<br/>
         byl Ti vytvořen účet na fykos.cz. Pro první přihlášení a nastavení hesla použij prosím tento odkaz:<br/>
         <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
