@@ -25,7 +25,6 @@ use Fykosak\Utils\UI\Title;
  */
 class LoginInvitationEmailSource extends EmailSource
 {
-
     /**
      * @throws NotImplementedException
      */
