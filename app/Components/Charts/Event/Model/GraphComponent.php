@@ -39,13 +39,13 @@ class GraphComponent extends FrontEndComponent implements Chart
             if (!isset($nodes[$transition->source->value])) {
                 $nodes[$transition->source->value] = [
                     'label' => $transition->source->label(),
-                    'type' => $transition->source->value === Machine::STATE_INIT ? 'init' : 'default',
+                    'type' => 'default',
                 ];
             }
             if (!isset($nodes[$transition->target->value])) {
                 $nodes[$transition->target->value] = [
                     'label' => $transition->target->label(),
-                    'type' => $transition->target->value === Machine::STATE_INIT ? 'init' : 'default',
+                    'type' => 'default',
                 ];
             }
             $edges[] = [

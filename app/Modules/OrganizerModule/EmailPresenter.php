@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Components\Mail\MailProviderForm;
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
+use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Mail\Sous\Reminder1Mail;
-use FKSDB\Models\Mail\Sous\Reminder2Mail;
-use FKSDB\Models\Mail\Sous\Reminder3Mail;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -38,18 +36,18 @@ final class EmailPresenter extends BasePresenter
     }
 
     /**
-     * @return MailSource[]
+     * @return EmailSource[]
      */
     protected function getMailSources(): array //@phpstan-ignore-line
     {
         return [
-            new Reminder1Mail($this->getContext()),
-            new Reminder2Mail($this->getContext()),
-            new Reminder3Mail($this->getContext()),
+            new ReminderEmailSource($this->getContext(), 1),
+            new ReminderEmailSource($this->getContext(), 2),
+            new ReminderEmailSource($this->getContext(), 3),
         ];
     }
 
-    protected function getMailSource(): ?MailSource //@phpstan-ignore-line
+    protected function getMailSource(): ?EmailSource //@phpstan-ignore-line
     {
         if (!isset($this->source)) {
             return null;
@@ -72,7 +70,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleTemplate(): PageTitle
     {
-        return new PageTitle(null, _('Mail templates'), 'fas fa-envelope-open');
+        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
     }
 
     public function authorizedDetail(): bool
@@ -142,9 +140,9 @@ final class EmailPresenter extends BasePresenter
         return new EmailsGrid($this->getContext());
     }
 
-    protected function createComponentTemplateForm(): MailProviderForm //@phpstan-ignore-line
+    protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
     {
-        return new MailProviderForm($this->getContext(), $this->getMailSource());
+        return new EmailProviderForm($this->getContext(), $this->getMailSource());
     }
 
     /**

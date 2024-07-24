@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
@@ -22,13 +23,13 @@ use Tracy\Debugger;
  */
 class TransitionButtonsComponent extends BaseComponent
 {
-    /** @phpstan-var Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> */
+    /** @phpstan-var Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> */
     protected Machine $machine;
     /** @phpstan-var TModel Model */
     private Model $model;
 
     /**
-     * @phpstan-param Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> $machine
+     * @phpstan-param Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> $machine
      * @phpstan-param TModel $model
      */
     public function __construct(Container $container, Machine $machine, Model $model)
@@ -55,13 +56,18 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $holder = $this->machine->createHolder($this->model);
         try {
-            $transition = $this->machine->getTransitionById($transitionName);
+            $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $transitionName));
             $this->machine->execute($transition, $holder);
             $this->getPresenter()->flashMessage(
                 $transition->getSuccessLabel(),
                 Message::LVL_SUCCESS
             );
-        } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
+        } catch (
+            ApplicationHandlerException
+            | ForbiddenRequestException
+            | UnavailableTransitionsException
+            | UnavailableTransitionException $exception
+        ) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
             Debugger::log($exception);

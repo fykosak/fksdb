@@ -8,8 +8,11 @@ use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -17,7 +20,6 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
@@ -38,35 +40,32 @@ abstract class SingleFormComponent extends EntityFormComponent
 {
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
-    /**
-     * @phpstan-var EventParticipantMachine<ParticipantHolder> $machine
-     */
     protected EventParticipantMachine $machine;
     protected ?PersonModel $loggedPerson;
     protected EventModel $event;
 
-    /**
-     * @phpstan-param EventParticipantMachine<ParticipantHolder> $machine
-     */
     public function __construct(
         Container $container,
         ?Model $model,
         EventModel $event,
-        EventParticipantMachine $machine,
         ?PersonModel $loggedPerson
     ) {
-        parent::__construct($container, $model);
         $this->event = $event;
-        $this->machine = $machine;
+        parent::__construct($container, $model);
         $this->loggedPerson = $loggedPerson;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
-        EventParticipantService $eventParticipantService
+        EventParticipantService $eventParticipantService,
+        EventDispatchFactory $eventDispatchFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->eventParticipantService = $eventParticipantService;
+        $this->machine = $eventDispatchFactory->getParticipantMachine($this->event);
     }
 
     /**
@@ -77,11 +76,10 @@ abstract class SingleFormComponent extends EntityFormComponent
     protected function configureForm(Form $form): void
     {
         $container = new ModelContainer($this->container, 'event_participant');
-
         $personContainer = $this->referencedPersonFactory->createReferencedPerson(
             $this->getPersonFieldsDefinition(),
             $this->event->getContestYear(),
-            'email',
+            PersonSearchContainer::SEARCH_EMAIL,
             true,
             new SelfACLResolver(
                 $this->model ?? EventParticipantModel::RESOURCE_ID,
