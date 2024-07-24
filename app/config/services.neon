@@ -44,7 +44,6 @@ services:
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #email
     - FKSDB\Models\Email\TemplateFactory
-    - FKSDB\Models\Email\ResolverFactory
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
