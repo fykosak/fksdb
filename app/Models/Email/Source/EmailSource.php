@@ -92,6 +92,16 @@ abstract class EmailSource
         }
         return $return;//@phpstan-ignore-line
     }
+    /**
+     * @phpstan-param TSchema $params
+     * @throws BadTypeException
+     */
+    public function createAndSend(array $params): void
+    {
+        foreach ($this->createEmails($params) as $email) {
+            $this->emailMessageService->addMessageToSend($email);
+        }
+    }
 
     /**
      * @phpstan-param TSchema $params

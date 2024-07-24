@@ -19,10 +19,6 @@ parameters:
         fykos: 1
         vyfuk: 2
 
-    # Configuration of sent emails.
-    email:
-        from: FKSDB <noreply@%domain.cz%>
-
     # Navigation settings
     navigation:
         # How long data for navigation tree is held in the session
