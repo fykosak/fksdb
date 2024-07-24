@@ -28,26 +28,6 @@ class FormUtils
         }
         return $result;
     }
-    /**
-     * @phpstan-template TArray of ArrayHash
-     * @phpstan-param TArray $values
-     * @phpstan-return TArray
-     */
-    public static function emptyStrToNull(ArrayHash $values): ArrayHash
-    {
-        /** @phpstan-var TArray $result */
-        $result = new ArrayHash();
-        foreach ($values as $key => $value) {
-            if ($value instanceof ArrayHash) {
-                $result[$key] = self::emptyStrToNull($value);
-            } elseif ($value === '') {
-                $result[$key] = null;
-            } else {
-                $result[$key] = $value;
-            }
-        }
-        return $result;
-    }
 
     /**
      * @phpstan-template TArray of array

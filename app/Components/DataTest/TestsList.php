@@ -44,6 +44,7 @@ class TestsList extends BaseComponent
             $field->setOption('description', $test->getDescription());
         }
         $form->onSuccess[] = function (Form $form): void {
+            /** @phpstan-ignore-next-line */
             $this->selectedTests = array_keys(array_filter($form->getValues('array'), fn($value) => $value));
             $this->redirect('this');
         };

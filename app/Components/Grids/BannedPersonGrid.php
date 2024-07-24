@@ -35,6 +35,7 @@ final class BannedPersonGrid extends BaseList
     {
         $this->filtered = true;
         $this->mode = self::ModePanel;
+        /** @phpstan-ignore-next-line */
         $this->setTitle(new SimpleItem($this->container, '@person.full_name'));
         /** @phpstan-var RowContainer<BannedPersonModel> $row */
         $row = new RowContainer($this->container);
@@ -45,15 +46,19 @@ final class BannedPersonGrid extends BaseList
         /** @phpstan-var RelatedTable<BannedPersonModel,BannedPersonScopeModel> $table */
         $table = new RelatedTable(
             $this->container,
-            /** @phpstan-return TypedGroupedSelection<BannedPersonScopeModel> */
+            /** @phpstan-ignore-next-line */
             fn(BannedPersonModel $model): TypedGroupedSelection => $model->getScopes(),
             new Title(null, _('Scopes')),
             true
         );
         $this->addRow($table, 'scope');
+        /** @phpstan-ignore-next-line */
         $table->addTableColumn(new SimpleItem($this->container, '@banned_person_scope.begin'), 'begin');
+        /** @phpstan-ignore-next-line */
         $table->addTableColumn(new SimpleItem($this->container, '@banned_person_scope.end'), 'end');
+        /** @phpstan-ignore-next-line */
         $table->addTableColumn(new SimpleItem($this->container, '@event_type.name'), 'event');
+        /** @phpstan-ignore-next-line */
         $table->addTableColumn(new SimpleItem($this->container, '@contest.contest'), 'contest');
     }
 
@@ -70,7 +75,10 @@ final class BannedPersonGrid extends BaseList
             switch ($key) {
                 case 'date':
                     $query->where(':banned_person_scope.begin < ?', $this->filterParams['date']);
-                    $query->where(':banned_person_scope.end > ? OR :banned_person_scope.end IS NULL', $this->filterParams['date']);
+                    $query->where(
+                        ':banned_person_scope.end > ? OR :banned_person_scope.end IS NULL',
+                        $this->filterParams['date']
+                    );
                     break;
             }
         }

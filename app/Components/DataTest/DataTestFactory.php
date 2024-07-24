@@ -79,10 +79,7 @@ class DataTestFactory
             ...TeamModel2::getTests($container),
             ...self::applyAdaptor(
                 TeamToPersonAdapter::class,
-                [
-                    ...PersonModel::getTests($container),
-
-                ],
+                PersonModel::getTests($container),
                 $container
             ),
             ...self::applyAdaptor(
