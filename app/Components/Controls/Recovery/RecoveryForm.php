@@ -81,7 +81,7 @@ class RecoveryForm extends FormComponent
             );
             $connection->commit();
             $this->getPresenter()->redirect('login');
-        } catch (AuthenticationException|RecoveryException $exception) {
+        } catch (AuthenticationException | RecoveryException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
         }
