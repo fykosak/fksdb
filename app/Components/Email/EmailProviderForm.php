@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Mail;
+namespace FKSDB\Components\Email;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Email\Source\EmailSource;
@@ -15,24 +15,24 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-template TMailTemplateParam of array
- * @phpstan-template TMailSchema of (int|bool|string)[]
- * @phpstan-type TMailSource = EmailSource<TMailTemplateParam,TMailSchema>
+ * @phpstan-template TEmailTemplateParam of array
+ * @phpstan-template TEmailSchema of (int|bool|string)[]
+ * @phpstan-type TEmailSource = EmailSource<TEmailTemplateParam,TEmailSchema>
  * @phpstan-import-type TMessageData from EmailMessageService
  */
-class MailProviderForm extends BaseComponent
+class EmailProviderForm extends BaseComponent
 {
-    /** @phpstan-var TMailSource */
+    /** @phpstan-var TEmailSource */
     private EmailSource $source;
     /**
      * @persistent
      * @phpstan-var  TMessageData[]|null
      */
-    private ?array $previewMails = null;
+    private ?array $previewEmails = null;
     private EmailMessageService $emailMessageService;
 
     /**
-     * @phpstan-param TMailSource $source
+     * @phpstan-param TEmailSource $source
      */
     public function __construct(Container $container, EmailSource $source)
     {
@@ -80,9 +80,9 @@ class MailProviderForm extends BaseComponent
      */
     private function handlePreview(Form $form): void
     {
-        /** @phpstan-var TMailSchema $values */
+        /** @phpstan-var TEmailSchema $values */
         $values = $form->getValues('array');
-        $this->previewMails = $this->source->createEmails($values);
+        $this->previewEmails = $this->source->createEmails($values);
     }
 
     /**
@@ -90,18 +90,18 @@ class MailProviderForm extends BaseComponent
      */
     private function handleSend(Form $form): void
     {
-        /** @phpstan-var TMailSchema $values */
+        /** @phpstan-var TEmailSchema $values */
         $values = $form->getValues('array');
-        $mails = $this->source->createEmails($values);
-        foreach ($mails as $mail) {
-            $this->emailMessageService->addMessageToSend($mail);
+        $emails = $this->source->createEmails($values);
+        foreach ($emails as $email) {
+            $this->emailMessageService->addMessageToSend($email);
         }
     }
 
     public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'previewMails' => $this->previewMails,
+            'previewEmails' => $this->previewEmails,
         ]);
     }
 }

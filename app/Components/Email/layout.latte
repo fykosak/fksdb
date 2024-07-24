@@ -1,8 +1,8 @@
-{varType array[]|null $previewMails}
+{varType array[]|null $previewEmails}
 {control form}
-{if isset($previewMails)}
+{if isset($previewEmails)}
     <h2>Preview</h2>
-    {foreach $previewMails as $email}
+    {foreach $previewEmails as $email}
         <table class="table table-striped">
             <tbody>
             {foreach $email as $key=>$value}
