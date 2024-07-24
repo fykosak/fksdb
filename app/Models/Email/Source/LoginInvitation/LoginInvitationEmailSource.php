@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\LoginInvitation;
 
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -13,7 +13,7 @@ use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends MailSource<array{
+ * @phpstan-extends EmailSource<array{
  *     token:AuthTokenModel,
  *     lang:Language,
  * },array{
@@ -22,7 +22,7 @@ use Fykosak\Utils\UI\Title;
  *      lang:Language,
  *  }>
  */
-class LoginInvitationEmailSource extends MailSource
+class LoginInvitationEmailSource extends EmailSource
 {
     /**
      * @throws NotImplementedException

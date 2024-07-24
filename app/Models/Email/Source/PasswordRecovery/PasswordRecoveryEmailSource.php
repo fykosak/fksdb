@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\PasswordRecovery;
 
-use FKSDB\Models\Email\Source\MailSource;
+use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -13,7 +13,7 @@ use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends MailSource<array{
+ * @phpstan-extends EmailSource<array{
  *     person:PersonModel,
  *     token:AuthTokenModel,
  *     lang:Language,
@@ -23,7 +23,7 @@ use Fykosak\Utils\UI\Title;
  *      token:AuthTokenModel,
  *  }>
  */
-class PasswordRecoveryEmailSource extends MailSource
+class PasswordRecoveryEmailSource extends EmailSource
 {
     /**
      * @throws NotImplementedException
