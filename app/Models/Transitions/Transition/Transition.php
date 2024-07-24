@@ -7,13 +7,12 @@ namespace FKSDB\Models\Transitions\Transition;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\Utils\UI\Title;
 use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
- * @phpstan-type Enum (THolder is \FKSDB\Models\Events\Model\Holder\BaseHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Transitions\Holder\ParticipantHolder
  * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
  * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
  *     ? \FKSDB\Models\ORM\Models\PaymentState
@@ -68,11 +67,6 @@ class Transition
     public function getSuccessLabel(): string
     {
         return $this->successLabel ?? _('Transition successful');
-    }
-
-    public function isCreating(): bool
-    {
-        return $this->source->value === 'init' || $this->source->value === Machine::STATE_INIT;
     }
 
     public function getId(): string

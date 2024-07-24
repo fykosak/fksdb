@@ -14,10 +14,10 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-template TTemplateParam of array
- * @phpstan-template TSchema of (int|bool|string)[]
+ * @phpstan-template TSchema of mixed[]
  * @phpstan-import-type TMessageData from EmailMessageService
  */
-abstract class MailSource
+abstract class EmailSource
 {
     protected TemplateFactory $mailTemplateFactory;
 

@@ -10,9 +10,9 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 
 /**
- * @phpstan-implements ModelHolder<PersonScheduleState,PersonScheduleModel>
+ * @phpstan-implements ModelHolder<PersonScheduleModel,PersonScheduleState>
  */
-class PersonScheduleHolder implements ModelHolder
+final class PersonScheduleHolder implements ModelHolder
 {
     private PersonScheduleService $service;
     private PersonScheduleModel $model;
@@ -23,7 +23,7 @@ class PersonScheduleHolder implements ModelHolder
         $this->model = $model;
     }
 
-    public function getModel(): ?PersonScheduleModel
+    public function getModel(): PersonScheduleModel
     {
         return $this->model;
     }
@@ -31,7 +31,7 @@ class PersonScheduleHolder implements ModelHolder
     /**
      * @phpstan-param PersonScheduleState $newState
      */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->model);
     }

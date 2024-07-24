@@ -6,9 +6,6 @@ parameters:
     # Various logs
     logDir: %appDir%/../log
 
-    # Auxiliar data (templates etc.)
-    dataDir: %appDir%/../data
-
     # WDSL file defining provided services.
     wsdlUrl: https://db.fykos.cz/FKSDBWebServices.wsdl
 
@@ -24,7 +21,6 @@ parameters:
 
     # Configuration of sent emails.
     email:
-        templatesDir: %dataDir%/emails
         from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
@@ -96,11 +92,6 @@ parameters:
         # default language when not set explicitly
         defaultLanguage: cs
 
-    # Events
-    events:
-        # where locale files are stored
-        templateDir: %dataDir%/events
-
     # Parameters used for automated testing
     tester: []
 
@@ -139,9 +130,6 @@ session:
    expiration: 14 days
    autoStart: true
 extensions:
-    #fksrouter: FKSDB\Models\Router\RouterExtension
-    #acl: FKSDB\Models\Authorization\ACLExtension
-    events: FKSDB\Models\Events\EventsExtension()
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
@@ -151,10 +139,11 @@ includes:
     - services.neon
     - forms.neon
     - stalking.neon
-    - applications/payment.neon
-    - applications/fof.neon
-    - applications/fol.neon
-    - applications/dsef.neon
-    - applications/setkani.neon
-    - applications/tabor.neon
-    - applications/personSchedule.neon
+    - transitions/payment.neon
+    - transitions/fof.neon
+    - transitions/fol.neon
+    - transitions/dsef.neon
+    - transitions/setkani.neon
+    - transitions/tabor.neon
+    - transitions/personSchedule.neon
+    - transitions/sous.neon
