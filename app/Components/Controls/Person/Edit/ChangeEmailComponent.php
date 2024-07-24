@@ -29,20 +29,20 @@ use Tracy\Debugger;
 class ChangeEmailComponent extends EntityFormComponent
 {
     private ReflectionFactory $reflectionFormFactory;
-    private TemplateFactory $mailTemplateFactory;
+    private TemplateFactory $templateFactory;
     private LoginService $loginService;
     private AuthTokenService $authTokenService;
     private EmailMessageService $emailMessageService;
 
     public function inject(
         ReflectionFactory $reflectionFormFactory,
-        TemplateFactory $mailTemplateFactory,
+        TemplateFactory $templateFactory,
         LoginService $loginService,
         AuthTokenService $authTokenService,
         EmailMessageService $emailMessageService
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
-        $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->templateFactory = $templateFactory;
         $this->loginService = $loginService;
         $this->authTokenService = $authTokenService;
         $this->emailMessageService = $emailMessageService;
@@ -132,7 +132,7 @@ class ChangeEmailComponent extends EntityFormComponent
             $newEmail
         );
         $oldData = array_merge(
-            $this->mailTemplateFactory->renderWithParameters(
+            $this->templateFactory->renderWithParameters(
                 __DIR__ . '/email.old.latte',
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
                 $lang
@@ -143,7 +143,7 @@ class ChangeEmailComponent extends EntityFormComponent
             ]
         );
         $newData = array_merge(
-            $this->mailTemplateFactory->renderWithParameters(
+            $this->templateFactory->renderWithParameters(
                 __DIR__ . '/email.new.latte',
                 ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
                 $lang
