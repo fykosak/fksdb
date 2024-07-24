@@ -8,7 +8,6 @@ use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -41,7 +40,6 @@ abstract class TransitionEmailSource extends EmailSource implements Statement
          * @phpstan-var Transition<THolder> $transition
          */
         [$holder, $transition] = $args;
-        /** @phpstan-ignore-next-line */
         $this->createAndSend(['holder' => $holder, 'transition' => $transition]);
     }
 
