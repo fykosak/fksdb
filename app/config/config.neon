@@ -25,7 +25,6 @@ parameters:
     # Configuration of sent emails.
     email:
         templatesDir: %dataDir%/emails
-        from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
     navigation:
