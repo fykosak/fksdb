@@ -76,8 +76,7 @@ class TemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-param array{
-     *     text:string,
-     *     topic: EmailMessageTopic,
+     *     model: EmailMessageModel,
      *     code:string|null,
      *     token:AuthTokenModel|null,
      *     } $data
@@ -85,9 +84,9 @@ class TemplateFactory
     public function addContainer(EmailMessageModel $model, array $data): string
     {
         if ($model->topic->isSpam()) {
-            $template = __DIR__ . '/Containers/spam.' . $model->lang->value . '.latte';
+            $template = __DIR__ . '/Containers/spam.latte';
         } else {
-            $template = __DIR__ . '/Containers/noSpam.' . $model->lang->value . '.latte';
+            $template = __DIR__ . '/Containers/noSpam.latte';
         }
         return $this->create($model->lang)->renderToString($template, $data);
     }

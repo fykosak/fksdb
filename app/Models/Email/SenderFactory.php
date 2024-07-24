@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
@@ -56,8 +55,81 @@ class SenderFactory
     public function send(EmailMessageModel $model): void
     {
         try {
-            $message = $this->createMessage($model);
+            $message = new Message();
+            $message->setSubject($model->subject);
+            //check if is any account associated with this email, and change recipient to person
+            if ($model->recipient) {
+                $person = $this->personService->findByEmail($model->recipient);
+                if ($person) {
+                    $this->emailMessageService->storeModel([
+                        'recipient_person_id' => $person->person_id,
+                        'recipient' => null,
+                    ], $model);
+                }
+            }
+            // check if is allowed by user preferences
+            if (isset($model->recipient_person_id)) {
+                $preferenceType = $model->topic->mapToPreference();
+                if ($preferenceType) {
+                    /** @var PersonEmailPreferenceModel|null $preference */
+                    $preference = $model->person->getEmailPreferences()->where('option', $preferenceType)->fetch();
+                    if ($preference && !$preference->value) {
+                        throw new RejectedEmailException();
+                    }
+                }
+                $message->addTo($model->person->getInfo()->email);
+            } else {
+                // check if email is not in unsubscribed
+                $row = $this->unsubscribedEmailService->getTable()
+                    ->where('email_hash = SHA1(?)', $model->recipient)
+                    ->fetch();
+                if ($row) {
+                    throw new RejectedEmailException();
+                }
+                $message->addTo($model->recipient);
+            }
+            // check BCC and CC
+            if (!is_null($model->blind_carbon_copy)) {
+                $message->addBcc($model->blind_carbon_copy);
+            }
+            if (!is_null($model->carbon_copy)) {
+                $message->addCc($model->carbon_copy);
+            }
+            $message->setFrom($model->sender);
+            $message->addReplyTo($model->reply_to);
+            // add tokens if is "spam"
+            if ($model->topic->isSpam()) {
+                if ($model->person) {
+                    $login = $model->person->getLogin();
+                    if (!$login) {
+                        $login = $this->loginService->createLogin($model->person);
+                    }
+                    $token = $this->authTokenService->createToken(
+                        $login,
+                        AuthTokenType::from(AuthTokenType::UNSUBSCRIBE),
+                        null,
+                    );
+                } else {
+                    $code = openssl_encrypt(
+                        $model->recipient,
+                        'aes-256-cbc',
+                        $this->container->getParameters()['spamHash']
+                    );
+                    if ($code === false) {
+                        throw new InvalidStateException(_('Cannot encrypt code'));
+                    }
+                }
+            }
+            // finaly create template (include inner text into email with footer)
+            $text = $this->templateFactory->addContainer($model, [
+                'model' => $model,
+                'token' => $token ?? null,
+                'code' => $code ?? null,
+            ]);
+            $message->setHtmlBody($text);
+            // send email
             $this->mailer->send($message);
+            // change state to sent
             $this->emailMessageService->storeModel([
                 'state' => EmailMessageState::SENT,
                 'sent' => new DateTime(),
@@ -68,113 +140,6 @@ class SenderFactory
         } catch (\Throwable $exception) {
             $this->emailMessageService->storeModel(['state' => EmailMessageState::FAILED], $model);
             Debugger::log($exception, 'mailer-exceptions');
-        }
-    }
-
-    /**
-     * @throws RejectedEmailException
-     * @throws BadTypeException
-     */
-    private function createMessage(EmailMessageModel $model): Message
-    {
-        $message = new Message();
-        $message->setSubject($model->subject);
-        // check if email is not in unsubscribed or use no allowed this type
-        $this->resolveRecipient($model);
-        $this->resolvePreferences($model);
-        $message->addTo($this->getEmailAddress($model));
-
-        if (!is_null($model->blind_carbon_copy)) {
-            $message->addBcc($model->blind_carbon_copy);
-        }
-        if (!is_null($model->carbon_copy)) {
-            $message->addCc($model->carbon_copy);
-        }
-        $message->setFrom($model->sender);
-        $message->addReplyTo($model->reply_to);
-        $text = $this->resolveText($model);
-        $message->setHtmlBody($text);
-
-        return $message;
-    }
-
-    /**
-     * @throws BadTypeException
-     */
-    private function resolveText(EmailMessageModel $model): string
-    {
-        if ($model->topic->isSpam()) {
-            if ($model->person) {
-                $login = $model->person->getLogin();
-                if (!$login) {
-                    $login = $this->loginService->createLogin($model->person);
-                }
-                $token = $this->authTokenService->createToken(
-                    $login,
-                    AuthTokenType::from(AuthTokenType::UNSUBSCRIBE),
-                    null,
-                );
-            } else {
-                $code = openssl_encrypt(
-                    $model->recipient,
-                    'aes-256-cbc',
-                    $this->container->getParameters()['spamHash']
-                );
-                if ($code === false) {
-                    throw new InvalidStateException(_('Cannot encrypt code'));
-                }
-            }
-        }
-        return $this->templateFactory->addContainer($model, [
-            'text' => $model->text,
-            'topic' => $model->topic,
-            'token' => $token ?? null,
-            'code' => $code ?? null,
-        ]);
-    }
-
-    public function resolveRecipient(EmailMessageModel $model): void
-    {
-        if ($model->recipient) {
-            $person = $this->personService->findByEmail($model->recipient);
-            if ($person) {
-                $this->emailMessageService->storeModel([
-                    'recipient_person_id' => $person->person_id,
-                    'recipient' => null,
-                ], $model);
-            }
-        }
-    }
-    /**
-     * @throws RejectedEmailException
-     */
-    private function resolvePreferences(EmailMessageModel $model): void
-    {
-        if (isset($model->recipient_person_id)) {
-            $preferenceType = $model->topic->mapToPreference();
-            if ($preferenceType) {
-                /** @var PersonEmailPreferenceModel|null $preference */
-                $preference = $model->person->getEmailPreferences()->where('option', $preferenceType)->fetch();
-                if ($preference && !$preference->value) {
-                    throw new RejectedEmailException();
-                }
-            }
-        } else {
-            $row = $this->unsubscribedEmailService->getTable()
-                ->where('email_hash = SHA1(?)', $model->recipient)
-                ->fetch();
-            if ($row) {
-                throw new RejectedEmailException();
-            }
-        }
-    }
-
-    private function getEmailAddress(EmailMessageModel $model): string
-    {
-        if (isset($model->recipient_person_id)) {
-            return $model->person->getInfo()->email;
-        } else {
-            return $model->recipient;
         }
     }
 }

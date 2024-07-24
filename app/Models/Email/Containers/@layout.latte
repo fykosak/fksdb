@@ -1,7 +1,6 @@
-{varType string $text}
-{varType FKSDB\Models\ORM\Models\EmailMessageTopic $topic}
+{varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 <div>
-    {$text|noescape}
+    {$model->text|noescape}
     <div>
         {include footer}
     </div>
