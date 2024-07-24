@@ -96,7 +96,7 @@ final class CodeAttendance extends CodeTransition
             throw new BadRequestException(_('Wrong type of code.'));
         }
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
+            throw new BadRequestException(_('Models do not match')); // TODO
         }
         return $application; // @phpstan-ignore-line
     }

@@ -324,7 +324,7 @@ orm:
             order:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Organizer\OrderColumnFactory
-                description: _('Pro řazení v seznamu organizátorů')
+                description: _('To order organizers in the list of organizers')
                 title: _('Order')
             tex_signature:
                 type: class
@@ -344,11 +344,11 @@ orm:
             allow_wiki:
                 type: bool
                 title: _('Allow wiki login')
-                description: _('Allow login in to internal wiki before or after period of active orgnize')
+                description: _('Allow login to internal wiki before or after period of active organizing')
             allow_pm:
                 type: bool
                 title: _('Allow PM login')
-                description: _('Allow login in to Problem manager before or after period of active orgnize')
+                description: _('Allow login to Problem Manager before or after period of active organizing')
         links:
             detail:
                 destination: :Organizer:Organizer:detail
@@ -583,7 +583,7 @@ orm:
                 permission: BASIC
             employer:
                 type: string
-                title: _('Zaměstnavatel')
+                title: _('Employer')
                 permission: FULL
             origin:
                 type: string
