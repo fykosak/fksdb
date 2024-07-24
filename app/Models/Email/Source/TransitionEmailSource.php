@@ -30,13 +30,6 @@ use Fykosak\Utils\UI\Title;
  */
 abstract class TransitionEmailSource extends EmailSource implements Statement
 {
-    protected EmailMessageService $emailMessageService;
-
-    public function injectSecondary(EmailMessageService $emailMessageService): void
-    {
-        $this->emailMessageService = $emailMessageService;
-    }
-
     /**
      * @phpstan-param THolder|Transition<THolder> $args
      * @throws BadTypeException
@@ -49,9 +42,7 @@ abstract class TransitionEmailSource extends EmailSource implements Statement
          */
         [$holder, $transition] = $args;
         /** @phpstan-ignore-next-line */
-        foreach ($this->createEmails(['holder' => $holder, 'transition' => $transition]) as $email) {
-            $this->emailMessageService->addMessageToSend($email);
-        }
+        $this->createAndSend(['holder' => $holder, 'transition' => $transition]);
     }
 
     /**
