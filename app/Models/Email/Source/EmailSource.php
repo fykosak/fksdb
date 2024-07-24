@@ -17,7 +17,7 @@ use Nette\DI\Container;
  * @phpstan-template TSchema of array
  * @phpstan-import-type TMessageData from EmailMessageService
  */
-abstract class MailSource
+abstract class EmailSource
 {
     protected TemplateFactory $templateFactory;
     private EmailMessageService $emailMessageService;

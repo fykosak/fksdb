@@ -13,7 +13,7 @@ final class GameNotFinishedException extends GameException
     public function __construct(?\Throwable $previous = null)
     {
         parent::__construct(
-            sprintf(_('Game is not finished.')),
+            _('Game is not finished.'),
             IResponse::S400_BAD_REQUEST,
             $previous
         );

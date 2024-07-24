@@ -1,14 +1,14 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
-{define subject}Úprava týmu –  {$holder->getModel()->name}{/define}
+{define subject}Úprava týmu –  {$model->name}{/define}
 
 {block body}
     <p>
         Dobrý den,<br/><br/>
         zaznamenali jsme změnu údajů u Vašeho týmu na Fyziklání. Níže posíláme aktualizovaný přehled informací:
     </p>
-    {include detail from './detail.cs.latte',holder:$holder}
+    {include detail from './detail.cs.latte',model:$model}
     <p>
         Údaje můžete upravit pomocí odkazu v registračním e-mailu nebo ve <a href="https://db.fykos.cz/profile/my-applications/">FKSDB</a> po kliknutí na Detail příslušné přihlášky. Složení týmu můžete změnit kdykoliv před uzavřením registrace.
     </p>

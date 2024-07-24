@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Mail\Payment;
 
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 
 /**
- * @phpstan-extends MailCallback<PaymentHolder>
+ * @phpstan-extends MailCallback<PaymentModel>
  */
 class PaymentMail extends MailCallback
 {
@@ -33,10 +33,6 @@ class PaymentMail extends MailCallback
         ];
     }
 
-    /**
-     * @param PaymentHolder $holder
-     * @phpstan-param Transition<PaymentHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . MailCallback::resolveLayoutName($transition);

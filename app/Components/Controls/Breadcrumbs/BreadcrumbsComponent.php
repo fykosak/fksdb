@@ -300,7 +300,7 @@ class BreadcrumbsComponent extends BaseComponent
     {
         $result = [];
         foreach ($parameters as $key => $value) {
-            if ($key == Presenter::FLASH_KEY) {
+            if ($key === Presenter::FLASH_KEY) {
                 continue;
             }
             $result[$key] = $value;
