@@ -32,6 +32,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $person_id
@@ -40,7 +41,7 @@ use Nette\Security\Resource;
  * @property-read string|null $born_family_name
  * @property-read string|null $display_name
  * @property-read PersonGender $gender
- * @property-read \DateTimeInterface $created
+ * @property-read DateTime $created
  * @phpstan-type TSimplePersonArray array{personId:int,name:string,email:string|null}
  */
 final class PersonModel extends Model implements Resource

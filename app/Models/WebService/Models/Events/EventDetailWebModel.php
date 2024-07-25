@@ -4,45 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Models\WebService\Models\SoapWebModel;
 use FKSDB\Models\WebService\XMLHelper;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
- * @phpstan-extends WebModel<array{event_id?:int,eventId:int},array{
+ * @phpstan-extends EventWebModel<array{eventId:int},array{
  *     teams?: mixed,
  *     participants?:mixed,
  *     schedule?:mixed,
  *     personSchedule?:mixed,
  * }>
  */
-class EventDetailWebModel extends WebModel
+class EventDetailWebModel extends EventWebModel implements SoapWebModel
 {
-    private EventService $eventService;
-    private PersonScheduleService $personScheduleService;
-
-    public function inject(EventService $eventService, PersonScheduleService $personScheduleService): void
-    {
-        $this->eventService = $eventService;
-        $this->personScheduleService = $personScheduleService;
-    }
-
     /**
      * @throws \SoapFault
      * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown eventId.');
@@ -56,53 +40,6 @@ class EventDetailWebModel extends WebModel
         $root->appendChild($this->createParticipantListNode($doc, $event));
         $doc->formatOutput = true;
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
-    }
-
-    /**
-     * @param EventModel $event
-     * @return array<array{person:mixed,scheduleItemId:int}>
-     */
-    private function createPersonScheduleArray(EventModel $event): array
-    {
-        $data = [];
-        $query = $this->personScheduleService->getTable()
-            ->where('schedule_item.schedule_group.event_id', $event->event_id);
-        /** @var PersonScheduleModel $model */
-        foreach ($query as $model) {
-            $data[] = [
-                'person' => $model->person->__toArray(),
-                'scheduleItemId' => $model->schedule_item_id,
-            ];
-        }
-        return $data;
-    }
-
-    /**
-     * @throws \Exception
-     * @phpstan-import-type SerializedScheduleGroupModel from ScheduleGroupModel
-     * @phpstan-import-type SerializedScheduleItemModel from ScheduleItemModel
-     * @phpstan-return (SerializedScheduleGroupModel&array{
-     *     scheduleItems:SerializedScheduleItemModel[],
-     *     schedule_items:SerializedScheduleItemModel[],
-     *  })[]
-     * @phpstan-ignore-next-line
-     */
-    private function createScheduleListArray(EventModel $event): array
-    {
-        $data = [];
-        /** @var ScheduleGroupModel $group */
-        foreach ($event->getScheduleGroups() as $group) {
-            $datum = $group->__toArray();
-            $datum['schedule_items'] = [];
-            $datum['scheduleItems'] = [];
-            /** @var ScheduleItemModel $item */
-            foreach ($group->getItems() as $item) {
-                $datum['schedule_items'][] = $item->__toArray();
-                $datum['scheduleItems'][] = $item->__toArray();
-            }
-            $data[] = $datum;
-        }
-        return $data;
     }
 
     /**
@@ -156,30 +93,14 @@ class EventDetailWebModel extends WebModel
      */
     protected function getJsonResponse(): array
     {
-        $event = $this->eventService->findByPrimary($this->params['event_id'] ?? $this->params['eventId']);
-        if (is_null($event)) {
-            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
-        }
-        $data = $event->__toArray();
-        $data['schedule'] = $this->createScheduleListArray($event);
-        $data['personSchedule'] = $this->createPersonScheduleArray($event);
-        return $data;
+        return $this->getEvent()->__toArray();
     }
 
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'event_id' => Expect::scalar()->castTo('int'),
-            'eventId' => Expect::scalar()->castTo('int'),
-        ]);
-    }
-
+    /**
+     * @throws NotFoundException
+     */
     protected function isAuthorized(): bool
     {
-        $event = $this->eventService->findByPrimary($this->params['eventId']);
-        if (!$event) {
-            return false;
-        }
-        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
+        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
     }
 }

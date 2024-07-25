@@ -125,7 +125,6 @@ class QuizComponent extends FormComponent
                 if ($email && !$person->getLogin()) {
                     $this->accountManager->sendLoginWithInvitation(
                         $person,
-                        $email,
                         Language::from($this->translator->lang)
                     );
                 }

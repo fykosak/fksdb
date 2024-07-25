@@ -7,6 +7,7 @@ namespace FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use Fykosak\NetteORM\Model\Model;
@@ -18,9 +19,6 @@ use Nette\Database\Explorer;
  */
 abstract class Machine
 {
-    public const STATE_INIT = '__init';
-    public const STATE_ANY = '*';
-
     /** @phpstan-var Transition<THolder>[] */
     public array $transitions = [];
     protected Explorer $explorer;
@@ -49,21 +47,7 @@ abstract class Machine
     }
 
     /**
-     * @throws UnavailableTransitionsException
-     * @phpstan-return Transition<THolder>
-     */
-    final public function getTransitionById(string $id): Transition
-    {
-        return self::selectTransition(
-            \array_filter(
-                $this->transitions,
-                fn(Transition $transition): bool => $transition->getId() === $id
-            )
-        );
-    }
-
-    /**
-     * @throws UnavailableTransitionsException
+     * @throws UnavailableTransitionException
      * @throws \Throwable
      * @phpstan-param THolder $holder
      * @phpstan-param Transition<THolder> $transition
@@ -71,7 +55,7 @@ abstract class Machine
     public function execute(Transition $transition, ModelHolder $holder): void
     {
         if (!$this->isAvailable($transition, $holder)) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionException($transition, $holder);
         }
         $outerTransition = true;
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
@@ -110,10 +94,10 @@ abstract class Machine
     {
         $length = \count($transitions);
         if ($length > 1) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionsException(UnavailableTransitionsException::ReasonLot);
         }
         if (!$length) {
-            throw new UnavailableTransitionsException();
+            throw new UnavailableTransitionsException(UnavailableTransitionsException::ReasonNone);
         }
         return \array_values($transitions)[0];
     }
@@ -123,7 +107,7 @@ abstract class Machine
      * @phpstan-param SHolder $holder
      * @phpstan-param Transition<SHolder> $transition
      */
-    protected static function isAvailable(Transition $transition, ModelHolder $holder): bool
+    public static function isAvailable(Transition $transition, ModelHolder $holder): bool
     {
         if ($transition->source->value !== $holder->getState()->value) {
             return false;
@@ -170,6 +154,19 @@ abstract class Machine
         return \array_filter(
             $transitions,
             fn(Transition $transition): bool => self::isAvailable($transition, $holder)
+        );
+    }
+
+    /**
+     * @template SHolder of ModelHolder
+     * @phpstan-param Transition<SHolder>[] $transitions
+     * @phpstan-return Transition<SHolder>[]
+     */
+    public static function filterById(array $transitions, string $id): array
+    {
+        return \array_filter(
+            $transitions,
+            fn(Transition $transition): bool => $transition->getId() === $id
         );
     }
 }

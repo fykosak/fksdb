@@ -29,7 +29,7 @@ services:
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
     - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
-    - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
+    - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%)
     #auth
     - FKSDB\Models\Authorization\Authorizators\ContestAuthorizator
     - FKSDB\Models\Authorization\Authorizators\EventAuthorizator
@@ -42,8 +42,8 @@ services:
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #main
-    - FKSDB\Models\Mail\MailTemplateFactory
+    #email
+    - FKSDB\Models\Email\TemplateFactory
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%)

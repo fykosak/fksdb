@@ -8,6 +8,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\Models\WebModel;
+use Nette\Schema\Expect;
 
 /**
  * @phpstan-template TParams of array{contestId:int}
@@ -17,7 +18,7 @@ use FKSDB\Models\WebService\Models\WebModel;
 abstract class ContestWebModel extends WebModel
 {
     protected ContestModel $contest;
-    private ContestService $contestService;
+    protected ContestService $contestService;
 
     public function inject(ContestService $contestService): void
     {
@@ -37,5 +38,11 @@ abstract class ContestWebModel extends WebModel
             $this->contest = $contest;
         }
         return $this->contest;
+    }
+    protected function getExpectedParams(): array
+    {
+        return [
+            'contestId' => Expect::scalar()->castTo('int'),
+        ];
     }
 }

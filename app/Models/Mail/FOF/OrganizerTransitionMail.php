@@ -6,6 +6,7 @@ namespace FKSDB\Models\Mail\FOF;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\Transitions\Callbacks\MailCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
@@ -14,7 +15,7 @@ use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends MailCallback<TeamHolder>
+ * @phpstan-extends MailCallback<TeamModel2>
  */
 class OrganizerTransitionMail extends MailCallback
 {
@@ -30,6 +31,9 @@ class OrganizerTransitionMail extends MailCallback
         return __DIR__ . DIRECTORY_SEPARATOR . "organizer.$transitionId.cs.latte";
     }
 
+    /**
+     * @phpstan-param TeamHolder $holder
+     */
     protected function getData(ModelHolder $holder): array
     {
         return MemberTransitionMail::getStaticData($holder);
@@ -51,7 +55,7 @@ class OrganizerTransitionMail extends MailCallback
         $data = array_merge(
             $data,
             $this->mailTemplateFactory->renderWithParameters(
-                $this->getTemplatePath($holder, $transition),
+                $this->getTemplatePath($holder, $transition), //@phpstan-ignore-line
                 [
                     'tests' => DataTestFactory::getTeamTests($this->container),
                     'holder' => $holder,

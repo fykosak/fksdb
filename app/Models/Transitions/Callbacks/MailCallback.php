@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -15,18 +16,21 @@ use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Utils\FakeStringEnum;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 
 /**
- * @phpstan-import-type TRenderedData from MailTemplateFactory
- * @phpstan-template THolder of ModelHolder
- * @implements Statement<void,THolder|Transition<THolder>>
+ * @phpstan-import-type TRenderedData from TemplateFactory
+ * @phpstan-template TModel of Model
+ * @phpstan-type THolder = ModelHolder<TModel,(FakeStringEnum&EnumColumn)>
+ * @phpstan-implements Statement<void,THolder|Transition<THolder>>
  */
 abstract class MailCallback implements Statement
 {
     protected EmailMessageService $emailMessageService;
-    protected MailTemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $mailTemplateFactory;
     protected AuthTokenService $authTokenService;
     protected LoginService $loginService;
 
@@ -37,7 +41,7 @@ abstract class MailCallback implements Statement
 
     public function inject(
         EmailMessageService $emailMessageService,
-        MailTemplateFactory $mailTemplateFactory,
+        TemplateFactory $mailTemplateFactory,
         AuthTokenService $authTokenService,
         LoginService $loginService
     ): void {
@@ -83,7 +87,7 @@ abstract class MailCallback implements Statement
                 'person' => $person,
                 'holder' => $holder,
                 'model' => $holder->getModel(),
-                'token' => $this->createToken($person, $holder),
+                'token' => $this->createToken($person, $holder->getModel()),
             ],
             Language::tryFrom($person->getPreferredLang()) ?? Language::from(Language::CS)
         );
@@ -95,9 +99,9 @@ abstract class MailCallback implements Statement
     }
 
     /**
-     * @phpstan-param THolder $holder
+     * @phpstan-param TModel $model
      */
-    protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
+    protected function createToken(PersonModel $person, Model $model): ?AuthTokenModel
     {
         return null;
     }

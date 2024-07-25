@@ -11,10 +11,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
 
 class PaidMailCallback extends EventParticipantCallback
 {
-    /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'paid.latte';

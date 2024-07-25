@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Transition\TransitionSubmitButton;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
@@ -20,6 +21,7 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\EventParticipantService;
@@ -126,25 +128,28 @@ abstract class ApplicationComponent extends BaseComponent
         /*
          * Create save (no transition) button
          */
-        $saveSubmit = $form->addSubmit('save', _('button.save'));
-        $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
+        if ($this->model) {
+            $saveSubmit = $form->addSubmit('save', _('button.save'));
+            $saveSubmit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm());
+        }
+
         if ($this->model) {
             $holder = $machine->createHolder($this->model);
-            foreach (
-                Machine::filterAvailable(
-                    Machine::filterBySource($machine->transitions, $holder->getState()),
-                    $holder
-                ) as $transition
-            ) {
-                $submit = $form->addSubmit($transition->getId(), $transition->label()->toHtml());
-                if (!$transition->getValidation()) {
-                    $submit->setValidationScope([]);
-                }
-                $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
-                $submit->getControlPrototype()->addAttributes(
-                    ['class' => 'btn btn-outline-' . $transition->behaviorType->value]
-                );
-            }
+            $transitions = Machine::filterAvailable(
+                Machine::filterBySource($machine->transitions, $holder->getState()),
+                $holder
+            );
+        } else {
+            $holder = null;
+            $transitions = Machine::filterBySource(
+                $machine->transitions,
+                EventParticipantStatus::from(EventParticipantStatus::INIT)
+            );
+        }
+        foreach ($transitions as $transition) {
+            $submit = new TransitionSubmitButton($transition, $holder);
+            $form->addComponent($submit, $transition->getId());
+            $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
         }
         return $result;
     }
@@ -215,15 +220,13 @@ abstract class ApplicationComponent extends BaseComponent
 
                  /** @var EventParticipantModel $model */
                 $model = $this->eventParticipantService->storeModel(
-                    $values['event_participant'],
+                    array_merge(
+                        $values['event_participant'],
+                        ['event_id' => $this->event->event_id]
+                    ),
                     $this->model
                 );
                 $holder = $machine->createHolder($model);
-                if (!$this->model) { // new model select implicit
-                    $transition = Machine::selectTransition(
-                        Machine::filterAvailable($machine->transitions, $holder)
-                    );
-                }
                 if ($transition) {
                     $machine->execute($transition, $holder);
                 }
@@ -247,7 +250,7 @@ abstract class ApplicationComponent extends BaseComponent
                     ':Event:Application:detail',
                     [
                         'eventId' => $this->event->event_id,
-                        'id' => $this->model->getPrimary(),
+                        'id' => $model->getPrimary(),
                     ]
                 );
             }
@@ -268,6 +271,7 @@ abstract class ApplicationComponent extends BaseComponent
             $this->eventParticipantService->explorer->rollBack();
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
+            Debugger::barDump($exception);
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }

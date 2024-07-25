@@ -51,9 +51,9 @@ final class GameSetupModel extends Model
      */
     public function isGameTimeRange(): bool
     {
-        $startMidnight = new \DateTime($this->game_start->format('Y-m-d'));
+        $startMidnight = new \DateTimeImmutable($this->game_start->format('Y-m-d'));
         $afterStartMidnight = ($startMidnight->getTimestamp() < time());
-        $endMidnight = (clone $this->game_end)->add(new \DateInterval('P1D'));
+        $endMidnight = $this->game_end->modifyClone('+1 day');
         $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
         return ($afterStartMidnight && $beforeEndMidnight);
     }

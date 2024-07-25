@@ -12,6 +12,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $contestant_id
@@ -22,7 +23,7 @@ use Nette\Security\Resource;
  * @property-read PersonModel $person
  * @property-read int|null $contest_category_id
  * @property-read ContestCategoryModel|null $contest_category
- * @property-read \DateTimeInterface $created
+ * @property-read DateTime $created
  */
 final class ContestantModel extends Model implements Resource
 {
