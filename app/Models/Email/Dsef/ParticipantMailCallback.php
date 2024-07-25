@@ -11,9 +11,6 @@ use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 
-/**
- * @phpstan-extends EventParticipantCallback<ParticipantHolder>
- */
 class ParticipantMailCallback extends EventParticipantCallback
 {
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string

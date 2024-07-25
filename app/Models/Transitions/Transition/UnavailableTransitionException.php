@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template THolder of ModelHolder
  */
 class UnavailableTransitionException extends InvalidStateException
 {
     /**
-     * @phpstan-param TModel|ModelHolder<FakeStringEnum&EnumColumn,TModel>|null $holder
-     * @phpstan-param Transition<ModelHolder<FakeStringEnum&EnumColumn,TModel>> $transition
+     * @phpstan-param THolder|null $holder
+     * @phpstan-param Transition<THolder> $transition
      */
-    public function __construct(Transition $transition, $holder)
+    public function __construct(Transition $transition, ?ModelHolder $holder)
     {
         $source = $transition->source->value;
         $target = $transition->target->value;
@@ -27,7 +25,7 @@ class UnavailableTransitionException extends InvalidStateException
                 _('Transition from %s to %s is unavailable for %s'),
                 $source,
                 $target,
-                $holder instanceof ModelHolder ? (string)$holder->getModel() : (string)$holder
+                (string)$holder->getModel()
             )
         );
     }

@@ -11,15 +11,8 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 
-/**
- * @phpstan-extends EventParticipantCallback<BaseHolder>
- */
 class InvitedMailCallback extends EventParticipantCallback
 {
-    /**
-     * @param BaseHolder $holder
-     * @phpstan-param Transition<BaseHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'invited.latte';

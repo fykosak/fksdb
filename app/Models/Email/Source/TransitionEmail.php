@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Source;
 
 use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -16,12 +17,16 @@ use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Utils\FakeStringEnum;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 
 /**
  * @phpstan-import-type TRenderedData from TemplateFactory
- * @phpstan-template THolder of ModelHolder
- * @implements Statement<void,THolder|Transition<THolder>>
+ * @phpstan-template TModel of Model
+ * @phpstan-type THolder = ModelHolder<TModel,(FakeStringEnum&EnumColumn)>
+ * @phpstan-implements Statement<void,THolder|Transition<THolder>>
  */
 abstract class TransitionEmail implements Statement
 {
@@ -77,7 +82,8 @@ abstract class TransitionEmail implements Statement
             [
                 'person' => $person,
                 'holder' => $holder,
-                'token' => $this->createToken($person, $holder),
+                'model' => $holder->getModel(),
+                'token' => $this->createToken($person, $holder->getModel()),
             ],
             Language::tryFrom($person->getPreferredLang())
         );
@@ -89,9 +95,9 @@ abstract class TransitionEmail implements Statement
     }
 
     /**
-     * @phpstan-param ModelHolder $holder
+     * @phpstan-param TModel $model
      */
-    protected function createToken(PersonModel $person, ModelHolder $holder): ?AuthTokenModel
+    protected function createToken(PersonModel $person, Model $model): ?AuthTokenModel
     {
         return null;
     }

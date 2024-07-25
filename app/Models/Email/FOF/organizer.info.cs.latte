@@ -1,20 +1,20 @@
 {layout './layout.latte'}
-{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
 {varType FKSDB\Models\ORM\Tests\Test[] $tests}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
-{define subject}Úprava týmu –  {$holder->getModel()->name}{/define}
+{define subject}Úprava týmu –  {$model->name}{/define}
 
 {block body}
     <p>
         Ahoj,<br/><br/>
-        tým {$holder->getModel()->name} si změnil informace, možná jsou v tom chyby.
+        tým {$model->name} si změnil informace, možná jsou v tom chyby.
     </p>
-    {include detail from './detail.cs.latte',holder:$holder}
+    {include detail from './detail.cs.latte',model:$model}
     <h2>Chyby</h2>
     {var bool $hasError = false}
     {foreach $tests as $test}
         {var FKSDB\Components\DataTest\TestLogger $logger = new FKSDB\Components\DataTest\TestLogger()}
-        {php $test->run($logger,$holder->getModel())}
+        {php $test->run($logger,$model)}
         {var FKSDB\Components\DataTest\TestMessage[] $messages = $logger->getMessages()}
         {if count($messages)}
             {php $hasError = true}

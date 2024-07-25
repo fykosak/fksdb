@@ -1,21 +1,20 @@
-{define detail,FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{define detail,FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
     <h3>Členové týmu</h3>
-    {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
-    {foreach $team->getMembers() as $member}
+    {foreach $model->getMembers() as $member}
         {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         <h4>{$member->person->getFullName()}</h4>
         <ul>
             <li>Škola: {$member->getPersonHistory()->school->name_abbrev}</li>
             <li>Ročník: {$member->getPersonHistory()->study_year_new->label()}</li>
         </ul>
-        {include  schedule, person:$member->person, event: $team->event}
+        {include  schedule, person:$member->person, event: $model->event}
     {/foreach}
-    {if $team->getTeachers()->count('*')}
+    {if $model->getTeachers()->count('*')}
         <h3>Doprovod</h3>
-        {foreach $team->getTeachers() as $teacher}
+        {foreach $model->getTeachers() as $teacher}
             {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
             <h4>{$teacher->person->getFullName()}</h4>
-            {include schedule, person:$teacher->person, event: $team->event}
+            {include schedule, person:$teacher->person, event: $model->event}
         {/foreach}
     {/if}
 {/define}

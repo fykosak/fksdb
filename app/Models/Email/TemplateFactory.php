@@ -22,8 +22,6 @@ use Nette\InvalidArgumentException;
  */
 class TemplateFactory
 {
-    /** without trailing slash */
-    private string $templateDir;
     /** @var Application */
     private $application;
 
@@ -32,13 +30,11 @@ class TemplateFactory
     private LatteFactory $templateFactory;
 
     public function __construct(
-        string $templateDir,
         LatteFactory $templateFactory,
         Application $application,
         GettextTranslator $translator,
         IRequest $request
     ) {
-        $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
@@ -65,7 +61,9 @@ class TemplateFactory
     public function renderWithParameters(string $templateFile, array $data, ?Language $lang): array
     {
         $lang = $lang ?? Language::from($this->translator->lang);
-        $templateFile = $this->resolverFileName($templateFile, $lang);
+        if (!file_exists($templateFile)) {
+            throw new InvalidArgumentException(sprintf(_('Cannot find template "%s".'), $templateFile));
+        }
         return [
             'subject' => $this->create($lang)->renderToString(
                 __DIR__ . '/subject.latte',
@@ -78,8 +76,7 @@ class TemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-param array{
-     *     text:string,
-     *     topic: EmailMessageTopic,
+     *     model: EmailMessageModel,
      *     code:string|null,
      *     token:AuthTokenModel|null,
      *     } $data
@@ -87,35 +84,11 @@ class TemplateFactory
     public function addContainer(EmailMessageModel $model, array $data): string
     {
         if ($model->topic->isSpam()) {
-            $template = __DIR__ . '/Containers/spam.' . $model->lang->value . '.latte';
+            $template = __DIR__ . '/Containers/spam.latte';
         } else {
-            $template = __DIR__ . '/Containers/noSpam.' . $model->lang->value . '.latte';
+            $template = __DIR__ . '/Containers/noSpam.latte';
         }
         return $this->create($model->lang)->renderToString($template, $data);
-    }
-
-    private function resolverLang(?Language $lang): Language
-    {
-        return $lang ?? Language::from($this->translator->lang);
-    }
-
-    private function resolverFileName(string $filename, Language $lang): string
-    {
-        if (file_exists($filename)) {
-            return $filename;
-        }
-
-        $lang = $this->resolverLang($lang);
-        $filename = "$filename.$lang->value.latte";
-        if (file_exists($filename)) {
-            return $filename;
-        }
-
-        $filename = $this->templateDir . DIRECTORY_SEPARATOR . $filename;
-        if (file_exists($filename)) {
-            return $filename;
-        }
-        throw new InvalidArgumentException(sprintf(_('Cannot find template "%s.%s".'), $filename, $lang->value));
     }
 
     /**

@@ -8,21 +8,19 @@ use FKSDB\Models\Email\Source\TransitionEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
+use Fykosak\NetteORM\Model\Model;
 
 /**
- * @phpstan-extends TransitionEmail<TeamHolder>
+ * @phpstan-extends TransitionEmail<TeamModel2>
  */
 class TeacherTransitionMail extends TransitionEmail
 {
-    /**
-     * @param TeamHolder $holder
-     * @phpstan-param Transition<TeamHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         $transitionId = self::resolveLayoutName($transition);
@@ -51,18 +49,18 @@ class TeacherTransitionMail extends TransitionEmail
     }
 
     /**
-     * @param TeamHolder $holder
+     * @param TeamModel2 $model
      * @throws BadTypeException
      */
-    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
+    protected function createToken(PersonModel $person, Model $model): AuthTokenModel
     {
-        if (!$holder instanceof TeamHolder) {
-            throw new BadTypeException(TeamHolder::class, $holder);
+        if (!$model instanceof TeamModel2) {
+            throw new BadTypeException(TeamModel2::class, $model);
         }
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
             AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $holder->getModel()->event->registration_end,
+            $model->event->registration_end,
             null,
             true
         );

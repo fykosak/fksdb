@@ -467,7 +467,7 @@ final class PersonModel extends Model implements Resource
     /**
      * @return TypedGroupedSelection<PersonEmailPreferenceModel>
      */
-    public function getMailPreferences(): TypedGroupedSelection
+    public function getEmailPreferences(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<PersonEmailPreferenceModel> $selection */
         $selection = $this->related(DbNames::TAB_PERSON_EMAIL_PREFERENCE, 'person_id');

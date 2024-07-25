@@ -10,12 +10,12 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
@@ -48,17 +48,15 @@ class MailSender extends TransitionEmail
     }
 
     /**
-     * @param ParticipantHolder $holder
-     * @throws \ReflectionException
+     * @param EventParticipantModel $model
      */
-    protected function createToken(PersonModel $person, ModelHolder $holder): AuthTokenModel
+    protected function createToken(PersonModel $person, Model $model): AuthTokenModel
     {
-        $event = $holder->getModel()->getReferencedModel(EventModel::class);
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
             AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $event->registration_end ?? $event->end,
-            ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
+            $model->event->registration_end ?? $model->event->end,
+            null, // ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
     }
@@ -79,28 +77,26 @@ class MailSender extends TransitionEmail
     }
 
     /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
      * @throws \ReflectionException
      * @throws BadTypeException
      */
     protected function createMessageText(ModelHolder $holder, Transition $transition, PersonModel $person): array
     {
-        $token = $this->createToken($person, $holder);
+        $token = $this->createToken($person, $holder->getModel());
         return $this->mailTemplateFactory->renderWithParameters(
             $this->getTemplatePath($holder, $transition),
             [
                 'person' => $person,
                 'token' => $token,
                 'holder' => $holder,
-                'linkArgs' => $this->createLinkArgs($holder, $token),
+                'linkArgs' => $this->createLinkArgs($holder, $token), //@phpstan-ignore-line
             ],
             Language::tryFrom($person->getPreferredLang()),
         );
     }
 
     /**
-     * @param ParticipantHolder $holder
+     * @phpstan-param ParticipantHolder $holder
      * @throws \ReflectionException
      * @phpstan-return array{string,array<string,scalar>}
      */
@@ -126,10 +122,6 @@ class MailSender extends TransitionEmail
         return $event->name . ': ' . $application;
     }
 
-    /**
-     * @param ParticipantHolder $holder
-     * @phpstan-param Transition<ParticipantHolder> $transition
-     */
     protected function getTemplatePath(ModelHolder $holder, Transition $transition): string
     {
         return $this->templateFile;

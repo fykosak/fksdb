@@ -9,7 +9,7 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class EmailMessageTopic extends FakeStringEnum implements EnumColumn
+final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 {
     public const SpamContest = 'spam_contest'; //phpcs:ignore
     public const SpamMff = 'spam_mff';//phpcs:ignore
@@ -37,7 +37,16 @@ class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return [];
+        return [
+            new self(self::SpamContest),
+            new self(self::SpamMff),
+            new self(self::SpamOther),
+            new self(self::Contest),
+            new self(self::FOF),
+            new self(self::FOL),
+            new self(self::DSEF),
+            new self(self::Internal),
+        ];
     }
 
     public function isSpam(): bool

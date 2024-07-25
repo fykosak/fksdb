@@ -13,7 +13,7 @@ final class OutOfGameTimeException extends GameException
     public function __construct(?\Throwable $previous = null)
     {
         parent::__construct(
-            sprintf(_('It\'s too early before or too late after the game.')),
+            _('It\'s too early before or too late after the game.'),
             IResponse::S400_BAD_REQUEST,
             $previous
         );
