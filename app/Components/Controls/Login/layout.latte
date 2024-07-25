@@ -1,0 +1,8 @@
+{form $control['formControl']['form'] class => 'form-signin'}
+    <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+    {input id}
+    {input password}
+    <div class="d-grid gap-2">
+        {input send class => 'btn btn-success'}
+    </div>
+{/form}

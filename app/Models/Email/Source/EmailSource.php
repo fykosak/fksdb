@@ -14,21 +14,23 @@ use Nette\DI\Container;
 
 /**
  * @phpstan-template TTemplateParam of array
- * @phpstan-template TSchema of mixed[]
+ * @phpstan-template TSchema of array
  * @phpstan-import-type TMessageData from EmailMessageService
  */
 abstract class EmailSource
 {
-    protected TemplateFactory $mailTemplateFactory;
+    protected TemplateFactory $templateFactory;
+    private EmailMessageService $emailMessageService;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
     }
 
-    public function inject(TemplateFactory $mailTemplateFactory): void
+    public function inject(TemplateFactory $templateFactory, EmailMessageService $emailMessageService): void
     {
-        $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->templateFactory = $templateFactory;
+        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -75,7 +77,7 @@ abstract class EmailSource
         $return = [];
         foreach ($this->getSource($params) as $sourceItem) {
             $return[] = array_merge(
-                $this->mailTemplateFactory->renderWithParameters(
+                $this->templateFactory->renderWithParameters(
                     $sourceItem['template']['file'],
                     $sourceItem['template']['data'],
                     $sourceItem['lang']
@@ -84,6 +86,16 @@ abstract class EmailSource
             );
         }
         return $return;//@phpstan-ignore-line
+    }
+    /**
+     * @phpstan-param TSchema $params
+     * @throws BadTypeException
+     */
+    public function createAndSend(array $params): void
+    {
+        foreach ($this->createEmails($params) as $email) {
+            $this->emailMessageService->addMessageToSend($email);
+        }
     }
 
     abstract public function title(): Title;
