@@ -8,7 +8,6 @@ use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -30,13 +29,6 @@ use Fykosak\Utils\UI\Title;
  */
 abstract class TransitionEmailSource extends EmailSource implements Statement
 {
-    protected EmailMessageService $emailMessageService;
-
-    public function injectSecondary(EmailMessageService $emailMessageService): void
-    {
-        $this->emailMessageService = $emailMessageService;
-    }
-
     /**
      * @phpstan-param THolder|Transition<THolder> $args
      * @throws BadTypeException
