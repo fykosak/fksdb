@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
@@ -56,7 +56,7 @@ class PaymentColumnFactory extends AbstractColumnFactory
     protected function createHtmlValue(Model $model): Html
     {
         $factory = $this->reflectionFactory->loadColumnFactory('payment', 'state');
-        $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
+        $html = $factory->render($model, FieldLevelPermissionValue::Full);
         $text = $html->getText();
         $html->setText(sprintf('#%d %s', $model->payment_id, $text));
         return $html;

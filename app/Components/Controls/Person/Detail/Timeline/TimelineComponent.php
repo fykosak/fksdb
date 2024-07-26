@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Stalking\Timeline;
+namespace FKSDB\Components\Controls\Person\Detail\Timeline;
 
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\EventModel;

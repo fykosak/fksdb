@@ -7,6 +7,7 @@ namespace FKSDB\Components\Grids\Components\Referenced;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Grids\Components\BaseItem;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;

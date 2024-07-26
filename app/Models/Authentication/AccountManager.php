@@ -49,7 +49,7 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
+            AuthTokenType::InitialLogin,
             $until
         );
         $email = new LoginInvitationEmailSource($this->container);

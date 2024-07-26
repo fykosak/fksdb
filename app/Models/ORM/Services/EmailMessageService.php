@@ -30,7 +30,9 @@ final class EmailMessageService extends Service
      */
     public function getMessagesToSend(int $limit): TypedSelection
     {
-        return $this->getTable()->where('state', EmailMessageState::WAITING)->order('priority DESC')->limit($limit);
+        return $this->getTable()->where('state', EmailMessageState::Waiting)
+            ->order('priority DESC')
+            ->limit($limit);
     }
 
     /**
@@ -38,7 +40,7 @@ final class EmailMessageService extends Service
      */
     public function addMessageToSend(array $data): EmailMessageModel
     {
-        $data['state'] = EmailMessageState::WAITING;
+        $data['state'] = EmailMessageState::Waiting;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];
         }

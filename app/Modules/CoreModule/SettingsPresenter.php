@@ -50,14 +50,9 @@ final class SettingsPresenter extends BasePresenter
     final public function renderDefault(): void
     {
         if (
-            $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
-            )
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin)
         ) {
-            $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
-        }
-
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY))) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
@@ -68,10 +63,8 @@ final class SettingsPresenter extends BasePresenter
         $form = $control->getForm();
         $login = $this->getLoggedPerson()->getLogin();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::from(AuthTokenType::INITIAL_LOGIN)
-            ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY));
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery);
 
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
@@ -151,11 +144,10 @@ final class SettingsPresenter extends BasePresenter
          */
         $values = $form->getValues('array');
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::INITIAL_LOGIN)
-            ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::RECOVERY));
-        $login = $this->getLoggedPerson()->getLogin();
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::InitialLogin) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::Recovery);
+        /** @var LoginModel $login */
+        $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
         if ($loginData['password']) {

@@ -58,10 +58,7 @@ class EventFormComponent extends EntityFormComponent
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @return never
-     */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleFormSuccess(Form $form): never
     {
         /** @phpstan-var array{event:array{
          *      event_type_id:int,

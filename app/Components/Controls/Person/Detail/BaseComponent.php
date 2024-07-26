@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Detail;
 
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use Nette\DI\Container;
@@ -12,14 +13,14 @@ use Nette\DI\Container;
 abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
 {
     protected ReflectionFactory $tableReflectionFactory;
-    protected PersonModel $person;
-    protected int $userPermissions;
 
-    public function __construct(Container $container, PersonModel $person, int $userPermissions)
-    {
+    public function __construct(
+        Container $container,
+        protected readonly PersonModel $person,
+        protected readonly FieldLevelPermissionValue $userPermission,
+        protected readonly bool $isOrg,
+    ) {
         parent::__construct($container);
-        $this->person = $person;
-        $this->userPermissions = $userPermissions;
     }
 
     final public function injectPrimary(ReflectionFactory $tableReflectionFactory): void
@@ -30,14 +31,17 @@ abstract class BaseComponent extends \Fykosak\Utils\BaseComponent\BaseComponent
     public function beforeRender(): bool
     {
         $this->template->person = $this->person;
-        if ($this->userPermissions < $this->getMinimalPermissions()) {
+        $this->template->isOrg = $this->isOrg;
+        $this->template->userPermission = $this->userPermission;
+        if ($this->userPermission->value < $this->getMinimalPermission()) {
             $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'permissionDenied.latte');
+
             return false;
         }
         return true;
     }
 
-    abstract protected function getMinimalPermissions(): int;
+    abstract protected function getMinimalPermission(): FieldLevelPermissionValue;
 
     protected function createComponentValuePrinter(): ColumnRendererComponent
     {

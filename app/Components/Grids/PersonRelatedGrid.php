@@ -6,9 +6,10 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
 /**
@@ -20,10 +21,14 @@ final class PersonRelatedGrid extends BaseGrid
     protected PersonModel $person;
     /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
     protected array $definition;
-    protected int $userPermissions;
+    protected FieldLevelPermissionValue $userPermissions;
 
-    public function __construct(string $section, PersonModel $person, int $userPermissions, Container $container)
-    {
+    public function __construct(
+        string $section,
+        PersonModel $person,
+        FieldLevelPermissionValue $userPermissions,
+        Container $container
+    ) {
         $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
         $this->person = $person;
@@ -37,7 +42,7 @@ final class PersonRelatedGrid extends BaseGrid
     {
         /** @phpstan-var TypedGroupedSelection<TModel> $query */
         $query = $this->person->related($this->definition['table']);
-        if ($this->definition['minimalPermission'] > $this->userPermissions) {
+        if ($this->definition['minimalPermission'] > $this->userPermissions->value) {
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }

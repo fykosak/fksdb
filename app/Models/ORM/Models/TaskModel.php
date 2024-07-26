@@ -209,6 +209,11 @@ final class TaskModel extends Model implements Resource
         return true;
     }
 
+    public function createUniqueKey(): string
+    {
+        return $this->contest_id . '-' . $this->year . '-' . $this->series . '-' . $this->label;
+    }
+
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;

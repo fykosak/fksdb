@@ -5,19 +5,35 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Person\Detail\AddressComponent;
+use FKSDB\Components\Controls\Person\Detail\Component;
+use FKSDB\Components\Controls\Person\Detail\ContestantListComponent;
+use FKSDB\Components\Controls\Person\Detail\EmailMessageListComponent;
+use FKSDB\Components\Controls\Person\Detail\EventOrgListComponent;
+use FKSDB\Components\Controls\Person\Detail\FlagComponent;
+use FKSDB\Components\Controls\Person\Detail\FyziklaniTeamTeacherListComponent;
+use FKSDB\Components\Controls\Person\Detail\HistoryListComponent;
+use FKSDB\Components\Controls\Person\Detail\OrgListComponent;
+use FKSDB\Components\Controls\Person\Detail\PaymentListComponent;
+use FKSDB\Components\Controls\Person\Detail\RoleComponent;
+use FKSDB\Components\Controls\Person\Detail\TaskContributionListComponent;
+use FKSDB\Components\Controls\Person\Detail\Timeline\TimelineComponent;
+use FKSDB\Components\Controls\Person\Detail\ValidationComponent;
 use FKSDB\Components\Controls\Person\PizzaComponent;
-use FKSDB\Components\Controls\Stalking\StalkingContainer;
-use FKSDB\Components\DataTest\PersonTestComponent;
-use FKSDB\Components\DataTest\PersonTestGrid;
 use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Grids\PersonRelatedGrid;
+use FKSDB\Components\Controls\Stalking\StalkingContainer;
+use FKSDB\Components\DataTest\PersonTestComponent;
+use FKSDB\Components\DataTest\PersonTestGrid;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -40,7 +56,8 @@ final class PersonPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private PersonService $personService;
-    private int $userPermissions;
+    private PersonFactory $personFactory;
+    private FieldLevelPermissionValue $userPermissions;
 
     final public function injectQuarterly(PersonService $personService): void
     {
@@ -133,58 +150,201 @@ final class PersonPresenter extends BasePresenter
     {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getLoggedPerson()->person_id === $person->person_id;
+        $this->template->userPermission = $this->getUserPermissions();
         Debugger::log(
             sprintf(
-                '%s (%d) stalk %s (%d)',
+                '%s (%d) shows %s (%d)',
                 $this->getLoggedPerson()->getFullName(),
                 $this->getLoggedPerson()->person_id,
                 $person->getFullName(),
                 $person->person_id
             ),
-            'stalking-log'
+            'person-detail-log'
         );
     }
 
+    /* ******************* COMPONENTS *******************/
     /**
-     * @throws NoContestAvailable
+     * @throws GoneException
+     * @throws ModelNotFoundException
      */
-    public function authorizedTests(): bool
+    protected function createComponentEventOrgList(): EventOrgListComponent
     {
-        return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
-            'data-test',
-            $this->getSelectedContest()
-        );
-    }
-
-    public function titleTests(): PageTitle
-    {
-        return new PageTitle(null, _('Test data'), 'fas fa-tasks');
-    }
-
-    public function authorizedList(): bool
-    {
-        return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
-            'data-test',
-            $this->getSelectedContest()
-        );
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Test data'), 'fas fa-tasks');
+        return new EventOrgListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
     }
 
     /**
      * @throws GoneException
-     * @throws NoContestAvailable
-     * @throws NotFoundException
-     * @throws NotFoundException
+     * @throws ModelNotFoundException
      */
-    public function createComponentDetailContainer(): StalkingContainer
+    protected function createComponentFyziklaniTeacherList(): FyziklaniTeamTeacherListComponent
     {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+        return new FyziklaniTeamTeacherListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            false
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEventParticipantsGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'event_participant',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEventScheduleGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'schedule_item',
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            $this->getContext()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentDetailComponent(): Component
+    {
+        return new Component($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentAddresses(): AddressComponent
+    {
+        return new AddressComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentPaymentList(): PaymentListComponent
+    {
+        return new PaymentListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentContestantList(): ContestantListComponent
+    {
+        return new ContestantListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEmailMessageList(): EmailMessageListComponent
+    {
+        return new EmailMessageListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            true
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentOrgList(): OrgListComponent
+    {
+        return new OrgListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentHistoryList(): HistoryListComponent
+    {
+        return new HistoryListComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTaskContributionList(): TaskContributionListComponent
+    {
+        return new TaskContributionListComponent(
+            $this->getContext(),
+            $this->getEntity(),
+            $this->getUserPermissions(),
+            true
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentRole(): RoleComponent
+    {
+        return new RoleComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentFlag(): FlagComponent
+    {
+        return new FlagComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentValidation(): ValidationComponent
+    {
+        return new ValidationComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions(), true);
+    }
+
+    /**
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTimeline(): TimelineComponent
+    {
+        return new TimelineComponent($this->getContext(), $this->getEntity());
     }
 
     protected function createComponentFormSearch(): FormControl
@@ -196,7 +356,7 @@ final class PersonPresenter extends BasePresenter
             'person_id'
         );
 
-        $form->addSubmit('detail', _('Let\'s stalk'))
+        $form->addSubmit('show', _('Show detail'))
             ->onClick[] =
             function (SubmitButton $button) {
                 /** @phpstan-var array{person_id:int} $values */
@@ -230,7 +390,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function createComponentDeliveryPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::DELIVERY));
+        return $this->createComponentPostContactForm(PostContactType::Delivery);
     }
 
     /**
@@ -239,7 +399,7 @@ final class PersonPresenter extends BasePresenter
      */
     protected function createComponentPermanentPostContactForm(): AddressFormComponent
     {
-        return $this->createComponentPostContactForm(PostContactType::from(PostContactType::PERMANENT));
+        return $this->createComponentPostContactForm(PostContactType::Permanent);
     }
 
     /**
@@ -260,10 +420,10 @@ final class PersonPresenter extends BasePresenter
      * @throws GoneException
      * @throws NoContestAvailable
      */
-    private function getUserPermissions(bool $throw = true): int
+    private function getUserPermissions(bool $throw = true): FieldLevelPermissionValue
     {
         if (!isset($this->userPermissions)) {
-            $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
+            $this->userPermissions = FieldLevelPermissionValue::Basic;
             try {
                 $person = $this->getEntity();
                 if ($this->contestAuthorizator->isAllowed($person, 'detail.basic', $this->getSelectedContest())) {
@@ -279,7 +439,7 @@ final class PersonPresenter extends BasePresenter
                 if ($throw) {
                     throw $exception;
                 }
-                $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
+                $this->userPermissions = FieldLevelPermissionValue::Full;
             }
         }
         return $this->userPermissions;

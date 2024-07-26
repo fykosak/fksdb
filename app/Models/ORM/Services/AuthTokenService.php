@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Service\Service;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -88,14 +88,9 @@ final class AuthTokenService extends Service
         return $token;
     }
 
-    /**
-     * @param string|AuthTokenModel $token
-     */
-    public function disposeToken($token): void
+    public function disposeToken(string $token): void
     {
-        if (!$token instanceof AuthTokenModel) {
-            $token = $this->verifyToken($token);
-        }
+        $token = $this->verifyToken($token);
         if ($token) {
             $this->disposeModel($token);
         }
@@ -107,7 +102,7 @@ final class AuthTokenService extends Service
     public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()
-            ->where('type', AuthTokenType::EVENT_NOTIFY)
+            ->where('type', AuthTokenType::EventNotify->value)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
             ->where('data LIKE ?', $event->event_id . ':%');

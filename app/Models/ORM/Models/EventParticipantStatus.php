@@ -154,6 +154,46 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
         return $this->value;
     }
 
+    public function getBehaviorType(): string
+    {
+        switch ($this->value) {
+            case self::APPLIED:
+            case self::APPLIED_NODSEF:
+            case self::APPLIED_NOTSAF:
+            case self::APPLIED_TSAF:
+            case self::APPROVED:
+                return 'color-1';
+            case self::INTERESTED:
+            case self::PENDING:
+                return 'color-2';
+            case self::PARTICIPATED:
+                return 'color-3';
+            case self::MISSED:
+                return 'color-4';
+            case self::DISQUALIFIED:
+                return 'color-5';
+            case self::REJECTED:
+            case self::CANCELLED:
+                return 'color-6';
+            case self::PAID:
+                return 'color-7';
+            case self::OUT_OF_DB:
+                return 'color-8';
+            case self::SPARE:
+            case self::SPARE1:
+            case self::SPARE2:
+            case self::SPARE3:
+            case self::SPARE_TSAF:
+            case self::AUTO_SPARE:
+                return 'color-9';
+            case self::INVITED:
+            case self::INVITED1:
+            case self::INVITED2:
+            case self::INVITED3:
+            case self::AUTO_INVITED:
+                return 'color-10';
+        }
+    }
     public function title(): Title
     {
         return new Title(null, $this->label());

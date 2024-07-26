@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -32,7 +33,7 @@ final class TeamList extends BaseList
 
     public function __construct(EventModel $event, Container $container)
     {
-        parent::__construct($container, FieldLevelPermission::ALLOW_FULL);
+        parent::__construct($container, FieldLevelPermissionValue::Full);
         $this->event = $event;
     }
 

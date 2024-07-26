@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;

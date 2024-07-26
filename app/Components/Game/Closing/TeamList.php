@@ -9,6 +9,7 @@ use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
@@ -30,7 +31,7 @@ final class TeamList extends BaseList
 
     public function __construct(Container $container, EventModel $event)
     {
-        parent::__construct($container, FieldLevelPermission::ALLOW_FULL);
+        parent::__construct($container, FieldLevelPermissionValue::Full);
         $this->event = $event;
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
@@ -32,6 +33,11 @@ final class SubmitSource extends FakeStringEnum implements EnumColumn
             new self(self::QUIZ),
             new self(self::UPLOAD),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 
     public function title(): Title

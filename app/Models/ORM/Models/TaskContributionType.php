@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
@@ -57,5 +58,10 @@ final class TaskContributionType extends FakeStringEnum implements EnumColumn
             new self(self::SOLUTION),
             new self(self::GRADE),
         ];
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 }

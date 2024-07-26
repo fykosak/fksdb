@@ -5,25 +5,19 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class TeamState extends FakeStringEnum implements EnumColumn
+enum TeamState: string implements EnumColumn
 {
-    // phpcs:disable
-    public const Applied = 'applied';
-    public const Arrived = 'arrived';
-    public const Cancelled = 'cancelled';
-    public const Disqualified = 'disqualified';
-    public const Missed = 'missed';
-    public const Participated = 'participated';
-    public const Pending = 'pending';
-    public const Spare = 'spare';
-
-    public const Init = 'init'; // virtual state for correct ORM
-
-    // phpcs:enable
+    case Applied = 'applied';
+    case Pending = 'pending';
+    case Approved = 'approved';
+    case Spare = 'spare';
+    case Participated = 'participated';
+    case Missed = 'missed';
+    case Disqualified = 'disqualified';
+    case Cancelled = 'cancelled';
+    case Init = 'init'; // virtual state for correct ORM
 
     public function badge(): Html
     {
@@ -34,78 +28,51 @@ final class TeamState extends FakeStringEnum implements EnumColumn
 
     public function pseudoState(): self
     {
-        switch ($this->value) {
-            case self::Pending:
-                return new self(self::Applied);
-            case self::Participated:
-                return new self(self::Participated);
-            default:
-                return $this;
-        }
+        return match ($this) {
+            self::Pending => self::Applied,
+            self::Participated => self::Participated,
+            default => $this,
+        };
     }
 
     public function behaviorType(): string
     {
-        switch ($this->value) {
-            case self::Arrived:
-                return 'danger';
-            case self::Applied:
-                return 'info';
-            case self::Pending:
-                return 'warning';
-            case self::Spare:
-                return 'primary';
-            case self::Participated:
-                return 'success';
-            case self::Missed:
-            case self::Cancelled:
-            case self::Init:
-                return 'secondary';
-            case self::Disqualified:
-            default:
-                return 'dark';
-        }
+        return match ($this) {
+            self::Arrived => 'danger',
+            self::Applied => 'info',
+            self::Pending => 'warning',
+            self::Spare => 'primary',
+            self::Participated => 'success',
+            self::Missed, self::Cancelled, self::Init => 'secondary',
+            default => 'dark',
+        };
     }
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::Arrived:
-                return _('Arrived');
-            case self::Applied:
-                return _('Applied');
-            case self::Pending:
-                return _('Pending');
-            case self::Spare:
-                return _('Spare');
-            case self::Participated:
-                return _('Participated');
-            case self::Missed:
-                return _('Missed');
-            case self::Disqualified:
-                return _('Disqualified');
-            case self::Cancelled:
-                return _('Canceled');
-        }
-        return $this->value;
+        return match ($this) {
+            self::Applied => _('Applied'),
+            self::Pending => _('Pending'),
+            self::Approved => _('Approved'),
+            self::Spare => _('Spare'),
+            self::Participated => _('Participated'),
+            self::Missed => _('Missed'),
+            self::Disqualified => _('Disqualified'),
+            self::Cancelled => _('Canceled'),
+            self::Init => _('Init'),
+        };
     }
 
-    /**
-     * @phpstan-return TeamState[]
-     */
-    public static function cases(): array
+    public function getBehaviorType(): string
     {
-        return [
-            new self(self::Applied),
-            new self(self::Arrived),
-            new self(self::Pending),
-            new self(self::Spare),
-            new self(self::Participated),
-            new self(self::Missed),
-            new self(self::Disqualified),
-            new self(self::Cancelled),
-            new self(self::Init),
-        ];
+        return match ($this) {
+            self::Applied, self::Approved => 'info',
+            self::Pending => 'warning',
+            self::Spare => 'primary',
+            self::Participated => 'success',
+            self::Missed, self::Cancelled, self::Init => 'secondary',
+            self::Disqualified => 'danger',
+        };
     }
 
     public function title(): Title

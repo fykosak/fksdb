@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components;
 
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;

@@ -53,9 +53,9 @@ class MailSender extends MailCallback
     {
         return $this->authTokenService->createToken(
             $this->resolveLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
+            AuthTokenType::EventNotify,
             $model->event->registration_end ?? $model->event->end,
-            null, // ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
+            null, //ApplicationPresenter::encodeParameters($event->getPrimary(), $holder->getModel()->getPrimary()),
             true
         );
     }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Modules\Core\Language;
@@ -54,9 +53,6 @@ class PreferredLangFormComponent extends FormComponent
         }
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function configureForm(Form $form): void
     {
         $items = [];

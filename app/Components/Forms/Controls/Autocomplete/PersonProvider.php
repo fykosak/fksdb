@@ -96,7 +96,7 @@ class PersonProvider implements FilteredDataProvider
     private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $person->getAddress(PostContactType::from(PostContactType::DELIVERY));
+        $address = $person->getAddress(PostContactType::Delivery);
         if ($address) {
             $place = $address->city;
         }

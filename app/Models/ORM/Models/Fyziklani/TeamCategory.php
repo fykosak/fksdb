@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Utils\FakeStringEnum;
@@ -122,8 +123,29 @@ final class TeamCategory extends FakeStringEnum implements EnumColumn
         return $this->value;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
+    public function getBehaviorType(): string
+    {
+        switch ($this->value) {
+            case self::A:
+                return 'color-4';
+            case self::B:
+                return 'color-2';
+            case self::C:
+                return 'color-3';
+            case self::F:
+                return 'color-5';
+            case self::O:
+                return 'color-10';
+        }
+        throw new NotImplementedException();
+    }
+
     public function title(): Title
     {
         return new Title(null, $this->label());
+
     }
 }

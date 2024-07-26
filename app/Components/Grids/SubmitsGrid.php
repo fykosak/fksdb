@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
-use FKSDB\Components\Grids\Components\Renderer\RendererItem;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;

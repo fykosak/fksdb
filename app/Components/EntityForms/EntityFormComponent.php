@@ -20,17 +20,11 @@ use Tracy\Debugger;
 abstract class EntityFormComponent extends FormComponent
 {
     /**
-     * @phpstan-var TModel|null
-     */
-    protected ?Model $model;
-
-    /**
      * @phpstan-param TModel|null $model
      */
-    public function __construct(Container $container, ?Model $model)
+    public function __construct(Container $container,protected ?Model $model)
     {
         parent::__construct($container);
-        $this->model = $model;
     }
 
     public function render(): void

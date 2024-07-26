@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Links\Link;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use FKSDB\Models\ORM\Links\Link;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;

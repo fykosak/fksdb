@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Components;
 
 use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Components\Grids\Components\Table\TableTrait;
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Nette\DI\Container;
 
 /**
@@ -24,8 +24,10 @@ abstract class BaseGrid extends BaseComponent
     /** @phpstan-use TableTrait<TModel> */
     use TableTrait;
 
-    public function __construct(Container $container, int $userPermission = FieldLevelPermission::ALLOW_FULL)
-    {
+    public function __construct(
+        Container $container,
+        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
+    ) {
         parent::__construct($container, $userPermission);
         $this->registerTable($container);
     }

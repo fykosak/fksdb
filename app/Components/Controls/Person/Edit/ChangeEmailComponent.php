@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -30,6 +31,13 @@ class ChangeEmailComponent extends EntityFormComponent
     private ReflectionFactory $reflectionFormFactory;
     private LoginService $loginService;
 
+    public function __construct(
+        Container $container,
+        PersonModel $person
+    ) {
+        parent::__construct($container, $person);
+    }
+
     public function inject(
         ReflectionFactory $reflectionFormFactory,
         LoginService $loginService
@@ -41,9 +49,9 @@ class ChangeEmailComponent extends EntityFormComponent
     public function render(): void
     {
         $login = $this->model->getLogin();
+        $this->template->lang = $this->translator->lang;
+        $this->template->changeActive = $login && $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         $this->template->lang = Language::tryFrom($this->translator->lang);
-        $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
         parent::render();
     }
 
@@ -87,7 +95,7 @@ class ChangeEmailComponent extends EntityFormComponent
         if (!$login) {
             $this->loginService->createLogin($this->model);
         }
-        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
+        $token = $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
         if ($token) {
             throw new ChangeInProgressException();
         }
@@ -106,7 +114,7 @@ class ChangeEmailComponent extends EntityFormComponent
 
     protected function setDefaults(Form $form): void
     {
-        $form->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
+        $form->setDefaults(['new_email' => $this->model->getInfo()?->email]);
     }
 
     public static function logEmailChange(PersonModel $person, string $newEmail, bool $request): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
-use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermissionValue;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -15,6 +15,7 @@ class ColumnTable extends BaseComponent
     {
         return new ColumnRendererComponent($this->getContext());
     }
+
     /**
      * @phpstan-param string[] $fields
      * @throws CannotAccessModelException
@@ -22,7 +23,7 @@ class ColumnTable extends BaseComponent
     final public function render(
         array $fields,
         Model $model,
-        int $userPermission = FieldLevelPermission::ALLOW_FULL
+        FieldLevelPermissionValue $userPermission = FieldLevelPermissionValue::Full
     ): void {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'table.latte', [
             'model' => $model,

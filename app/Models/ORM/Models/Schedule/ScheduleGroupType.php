@@ -159,4 +159,54 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         }
         throw new NotImplementedException();
     }
+
+    public function getRenderOptions(): array
+    {
+        $params = [
+            'capacity' => true,
+            'description' => true,
+            'groupLabel' => true,
+            'price' => true,
+            'groupTime' => false,
+        ];
+        switch ($this->value) {
+            case self::DSEF_AFTERNOON:
+            case self::DSEF_MORNING:
+                $params['price'] = false;
+                $params['groupLabel'] = false;
+                break;
+            case self::ACCOMMODATION:
+                break;
+            case self::VACCINATION_COVID:
+            case self::ACCOMMODATION_TEACHER:
+            case self::ACCOMMODATION_GENDER:
+            case self::VISA:
+            case self::TEACHER_PRESENT:
+                $params['capacity'] = false;
+                $params['price'] = false;
+                $params['groupLabel'] = false;
+                break;
+            case self::WEEKEND:
+                $params['groupTime'] = true;
+                break;
+            case self::APPAREL:
+                $params['capacity'] = false;
+                $params['price'] = false;
+                $params['groupTime'] = false;
+                break;
+            case self::TRANSPORT:
+                $params['capacity'] = false;
+                $params['price'] = false;
+                break;
+            case self::TICKET:
+                $params['capacity'] = false;
+                break;
+        }
+        return $params;
+    }
+
+    public function getBehaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
 }

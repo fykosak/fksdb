@@ -30,27 +30,16 @@ final class EventTypeModel extends Model
 
     public function getSymbol(): string
     {
-        switch ($this->event_type_id) {
-            case 1:
-                return 'fof';
-            case 2:
-            case 14:
-                return 'dsef';
-            case 3:
-                return 'fav';
-            case 4:
-            case 5:
-                return 'sous';
-            case 6:
-            case 7:
-                return 'tsaf';
-            case 9:
-                return 'fol';
-            case 16:
-                return 'fov';
-            default:
-                return $this->contest->getContestSymbol();
-        }
+        return match ($this->event_type_id) {
+            1 => 'fof',
+            2, 14 => 'dsef',
+            3 => 'fav',
+            4, 5 => 'sous',
+            6, 7 => 'tsaf',
+            9 => 'fol',
+            16 => 'fov',
+            default => $this->contest->getContestSymbol(),
+        };
     }
 
     public function getParamSchema(): Schema
