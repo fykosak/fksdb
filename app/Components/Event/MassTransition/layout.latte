@@ -3,7 +3,6 @@
 
 {block content}
     {foreach $transitions as $transition}
-        {continueIf $transition->isCreating()}
         {var string $class = 'text-' . $transition->behaviorType->value}
         <div class="panel color-auto">
             <div class="container">
@@ -13,7 +12,7 @@
                 </p>
                 <p>
                     {var string $className = 'btn btn-outline-' . $transition->behaviorType->value}
-                    <a class="{$className}" href="{link transition! $transition->getId()}">{_'Evalute'}</a>
+                    <a class="{$className}" href="{link transition! $transition->getId()}">{_'Execute'}</a>
                 </p>
             </div>
         </div>

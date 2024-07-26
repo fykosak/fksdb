@@ -10,9 +10,9 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 
 /**
- * @phpstan-implements ModelHolder<EventParticipantStatus,EventParticipantModel>
+ * @phpstan-implements ModelHolder<EventParticipantModel,EventParticipantStatus>
  */
-class ParticipantHolder implements ModelHolder
+final class ParticipantHolder implements ModelHolder
 {
     private EventParticipantService $service;
     private EventParticipantModel $model;
@@ -23,7 +23,7 @@ class ParticipantHolder implements ModelHolder
         $this->model = $model;
     }
 
-    public function getModel(): ?EventParticipantModel
+    public function getModel(): EventParticipantModel
     {
         return $this->model;
     }
@@ -31,7 +31,7 @@ class ParticipantHolder implements ModelHolder
     /**
      * @phpstan-param EventParticipantStatus $newState
      */
-    public function updateState(EnumColumn $newState): void
+    public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['status' => $newState->value], $this->model);
     }

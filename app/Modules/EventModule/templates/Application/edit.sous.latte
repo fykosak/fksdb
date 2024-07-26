@@ -1,0 +1,18 @@
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{block outerContent}
+    <div class="container">
+        <ul>
+            <li>
+                Potvrzením přihlášky se přihlašuješ <strong>na celé soustředění</strong>.
+            </li>
+            <li>
+                Tlačítko na odmítnutí účasti najdeš dole.
+            </li>
+            <li>
+                Uzávěrka pro vyjádření
+                <strong>{$model->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+            </li>
+        </ul>
+        {control editForm}
+    </div>
+{/block}

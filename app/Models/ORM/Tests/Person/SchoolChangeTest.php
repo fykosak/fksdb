@@ -26,7 +26,7 @@ final class SchoolChangeTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Check if person changes primary school or high school during the study.');
+        return _('Checks if person changes primary school or high school during the study.');
     }
 
     protected function innerRun(TestLogger $logger, Model $model, string $id): void
