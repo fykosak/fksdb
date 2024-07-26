@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
@@ -21,7 +23,7 @@ use Nette\Mail\Message;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
-class SenderFactory
+final class SenderFactory
 {
     private UnsubscribedEmailService $unsubscribedEmailService;
     private EmailMessageService $emailMessageService;
@@ -121,7 +123,7 @@ class SenderFactory
                 }
             }
             // finaly create template (include inner text into email with footer)
-            $text = $this->templateFactory->addContainer($model, [
+            $text = $this->addContainer($model, [
                 'model' => $model,
                 'token' => $token ?? null,
                 'code' => $code ?? null,
@@ -141,5 +143,23 @@ class SenderFactory
             $this->emailMessageService->storeModel(['state' => EmailMessageState::FAILED], $model);
             Debugger::log($exception, 'mailer-exceptions');
         }
+    }
+
+    /**
+     * @throws BadTypeException
+     * @phpstan-param array{
+     *     model: EmailMessageModel,
+     *     code:string|null,
+     *     token:AuthTokenModel|null,
+     *     } $data
+     */
+    private function addContainer(EmailMessageModel $model, array $data): string
+    {
+        if ($model->topic->isSpam()) {
+            $template = __DIR__ . '/Containers/spam.latte';
+        } else {
+            $template = __DIR__ . '/Containers/noSpam.latte';
+        }
+        return $this->templateFactory->create($model->lang)->renderToString($template, $data);
     }
 }

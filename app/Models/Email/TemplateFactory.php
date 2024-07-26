@@ -38,25 +38,6 @@ final class TemplateFactory
         $this->presenterFactory = $presenterFactory;
     }
 
-
-    /**
-     * @throws BadTypeException
-     * @phpstan-param array{
-     *     model: EmailMessageModel,
-     *     code:string|null,
-     *     token:AuthTokenModel|null,
-     *     } $data
-     */
-    public function addContainer(EmailMessageModel $model, array $data): string
-    {
-        if ($model->topic->isSpam()) {
-            $template = __DIR__ . '/Containers/spam.latte';
-        } else {
-            $template = __DIR__ . '/Containers/noSpam.latte';
-        }
-        return $this->create($model->lang)->renderToString($template, $data);
-    }
-
     /**
      * @throws BadTypeException
      */
