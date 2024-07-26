@@ -90,7 +90,6 @@ class RegisterTeacherFormComponent extends EntityFormComponent
             try {
                 $this->accountManager->sendLoginWithInvitation(
                     $person,
-                    $person->getInfo()->email,
                     Language::from($this->translator->lang)
                 );
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);

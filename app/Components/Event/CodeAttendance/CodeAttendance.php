@@ -24,7 +24,7 @@ use Nette\Utils\Html;
  *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
  * @phpstan-type TMachine (TModel is TeamModel2
  *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
- *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+ *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine)
  * @phpstan-extends CodeTransition<TModel>
  */
 final class CodeAttendance extends CodeTransition
@@ -96,7 +96,7 @@ final class CodeAttendance extends CodeTransition
             throw new BadRequestException(_('Wrong type of code.'));
         }
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
+            throw new BadRequestException(_('Models do not match')); // TODO
         }
         return $application; // @phpstan-ignore-line
     }

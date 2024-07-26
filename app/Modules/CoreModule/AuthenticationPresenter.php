@@ -5,24 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Authentication\Exceptions\NoLoginException;
-use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Components\Controls\Login\LoginForm;
+use FKSDB\Components\Controls\Recovery\RecoveryForm;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\AuthTokenService;
-use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
-use Nette\Application\UI\Form;
 use Nette\Http\SessionSection;
 use Nette\Security\AuthenticationException;
 use Nette\Security\UserStorage;
@@ -34,27 +26,15 @@ final class AuthenticationPresenter extends BasePresenter
     public const PARAM_REASON = 'reason';
     /** @persistent */
     public ?string $backlink = '';
-    private AuthTokenService $authTokenService;
-    private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
-    private LoginService $loginService;
-    private PersonService $personService;
 
     final public function injectTernary(
-        AuthTokenService $authTokenService,
-        LoginService $loginService,
-        AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
-        GoogleProvider $googleProvider,
-        PersonService $personService
+        GoogleProvider $googleProvider
     ): void {
-        $this->loginService = $loginService;
-        $this->authTokenService = $authTokenService;
-        $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
         $this->googleProvider = $googleProvider;
-        $this->personService = $personService;
     }
 
     public function authorizedLogin(): bool
@@ -195,103 +175,17 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * Login form component factory.
      */
-    protected function createComponentLoginForm(): Form
+    protected function createComponentLoginForm(): LoginForm
     {
-        $form = new Form($this, 'loginForm');
-        $form->addText('id', _('Login or e-mail'))
-            ->addRule(\Nette\Forms\Form::FILLED, _('Insert login or email address.'))
-            ->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'top form-control',
-                    'autofocus' => true,
-                    'placeholder' => _('Login or e-mail'),
-                    'autocomplete' => 'username',
-                ]
-            );
-        $form->addPassword('password', _('Password'))
-            ->addRule(\Nette\Forms\Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'bottom mb-3 form-control',
-                    'placeholder' => _('Password'),
-                    'autocomplete' => 'current-password',
-                ]
-            );
-        $form->addSubmit('send', _('Log in'));
-        $form->addProtection(_('The form has expired. Please send it again.'));
-        $form->onSuccess[] = fn(\Nette\Forms\Form $form) => $this->loginFormSubmitted($form);
-
-        return $form;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function loginFormSubmitted(\Nette\Forms\Form $form): void
-    {
-        /**
-         * @phpstan-var array{id:string,password:string} $values
-         */
-        $values = $form->getValues('array');
-        try {
-            $this->getUser()->login($values['id'], $values['password']);
-            $this->initialRedirect();
-        } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        }
+        return new LoginForm($this->getContext(), fn() => $this->initialRedirect());
     }
 
     /**
      * Password recover form.
      */
-    protected function createComponentRecoverForm(): Form
+    protected function createComponentRecoverForm(): RecoveryForm
     {
-        $form = new Form();
-        $form->addText('id', _('Login or e-mail address'))
-            ->addRule(\Nette\Forms\Form::FILLED, _('Insert login or email address.'));
-
-        $form->addSubmit('send', _('Continue'));
-
-        $form->addProtection(_('The form has expired. Please send it again.'));
-
-        $form->onSuccess[] = fn(\Nette\Forms\Form $form) => $this->recoverFormSubmitted($form);
-
-        return $form;
-    }
-
-    /**
-     * @throws BadTypeException
-     */
-    private function recoverFormSubmitted(\Nette\Forms\Form $form): void
-    {
-        $connection = $this->authTokenService->explorer->getConnection();
-        try {
-            /**
-             * @phpstan-var array{id:string} $values
-             */
-            $values = $form->getValues('array');
-            $connection->beginTransaction();
-            try {
-                $login = $this->passwordAuthenticator->findLogin($values['id']);
-            } catch (NoLoginException $exception) {
-                $person = $this->personService->findByEmail($values['id']);
-                $login = $this->loginService->createLogin($person);
-            }
-
-            $this->accountManager->sendRecovery(
-                $login,
-                Language::from($login->person->getPreferredLang() ?? $this->translator->lang)
-            );
-            $email = Utils::cryptEmail($login->person->getInfo()->email);
-            $this->flashMessage(
-                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
-                Message::LVL_SUCCESS
-            );
-            $connection->commit();
-            $this->redirect('login');
-        } catch (AuthenticationException | RecoveryException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
-        }
+        return new RecoveryForm($this->getContext());
     }
 
     protected function getStyleId(): string

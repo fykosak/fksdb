@@ -41,7 +41,7 @@ final class MassTransitionComponent extends BaseComponent
     {
         $total = 0;
         $errored = 0;
-        $transition = $this->machine->getTransitionById($name);
+        $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $name));
         if ($this->event->isTeamEvent()) {
             $query = $this->event->getTeams();
         } else {
