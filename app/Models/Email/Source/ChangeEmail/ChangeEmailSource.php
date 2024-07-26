@@ -37,14 +37,6 @@ class ChangeEmailSource extends EmailSource
     }
 
     /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @throws ChangeInProgressException
      */
     protected function getSource(array $params): array
@@ -82,21 +74,5 @@ class ChangeEmailSource extends EmailSource
             ]
         ];
         return [$oldData, $newData];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }

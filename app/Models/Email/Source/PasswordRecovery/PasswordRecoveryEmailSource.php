@@ -25,14 +25,6 @@ use Fykosak\Utils\UI\Title;
  */
 class PasswordRecoveryEmailSource extends EmailSource
 {
-    /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
     protected function getSource(array $params): array
     {
         $lang = $params['lang'];
@@ -56,21 +48,5 @@ class PasswordRecoveryEmailSource extends EmailSource
                 ]
             ]
         ];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }

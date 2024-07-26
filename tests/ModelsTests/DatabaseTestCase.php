@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -20,7 +19,6 @@ use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
@@ -180,10 +178,7 @@ abstract class DatabaseTestCase extends TestCase
     protected function mockApplication(): void
     {
         $mockPresenter = new MockPresenter();
-        $application = new MockApplication($mockPresenter);
         $this->container->callInjects($mockPresenter);
-        $mailFactory = $this->container->getByType(TemplateFactory::class);
-        $mailFactory->injectApplication($application);
     }
 
     protected function fakeProtection(string $token, int $timeout = null): void
