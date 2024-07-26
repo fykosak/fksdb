@@ -1,0 +1,9 @@
+{block content}
+    {varType FKSDB\Models\ORM\Models\EventModel $event}
+    <div class="btn-group">
+        <a n:href=":Public:Application:default eventId => $event->getPrimary()"
+                class="btn btn-sm btn-outline-primary">{_'New application'}</a>
+        <a n:href="transitions" class="btn btn-outline-primary btn-sm">{_'Mass transitions'}</a>
+    </div>
+    {control grid}
+{/block}

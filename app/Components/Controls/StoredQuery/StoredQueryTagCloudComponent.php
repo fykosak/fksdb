@@ -22,12 +22,12 @@ class StoredQueryTagCloudComponent extends BaseComponent
         $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 
-    public function handleOnClick(int $activeTagId): void
+    public function handleOnClick(int $activeTagId, bool $active): void
     {
-        if (isset($this->activeTagIds[$activeTagId])) {
-            unset($this->activeTagIds[$activeTagId]);
-        } else {
+        if ($active) {
             $this->activeTagIds[$activeTagId] = true;
+        } else {
+            unset($this->activeTagIds[$activeTagId]);
         }
     }
 

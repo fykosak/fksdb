@@ -48,34 +48,34 @@ events:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tsaf/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Pozvat účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(tsaf/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(tsaf/invited)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf8.appCond%
                         label: _('Přihlásit náhradníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     # to applied
                     __init->applied:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Přihlásit účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     spare->applied:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Potvrdit účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(transition)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(transition)
                     invited->applied:
                         condition: and(or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin')),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
                         label: _('Potvrdit účast')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(transition)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(transition)
                     # to end-states
                     applied->participated:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())

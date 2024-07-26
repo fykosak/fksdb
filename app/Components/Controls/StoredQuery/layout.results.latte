@@ -2,7 +2,6 @@
 {block content}
     {varType bool $hasParameters}
     {varType bool $hasStoredQuery}
-    {varType \Throwable|null $error}
     {varType array $formats}
     {varType FKSDB\Models\StoredQuery\StoredQuery $storedQuery}
     {varType bool $showParametrizeForm}
@@ -27,7 +26,7 @@
                        href="{plink :Organizer:StoredQuery:detail 'id'=>$storedQuery->queryPattern->query_id}">{_'Detail of the query'}</a>
                 {/if}
             {/if}
-            {control grid}
         {/if}
+        {control grid}
     {/if}
 {/block}

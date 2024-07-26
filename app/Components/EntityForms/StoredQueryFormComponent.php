@@ -245,9 +245,7 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     protected function createComponentQueryResultsComponent(): ResultsComponent
     {
-        $grid = new ResultsComponent($this->getContext());
-        $grid->showParametrizeForm = false;
-        return $grid;
+        return new ResultsComponent($this->getContext(), false);
     }
 
     /**

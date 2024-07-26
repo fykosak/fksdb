@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Tests\PersonInfo\PersonInfoFileLevelTest;
 use FKSDB\Models\ORM\Tests\Test;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
@@ -46,6 +47,21 @@ use Nette\Utils\DateTime;
  */
 final class PersonInfoModel extends Model
 {
+    /**
+     * @return Language|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'preferred_lang':
+                $value = Language::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
+
     /**
      * @phpstan-return Test<self>[]
      */

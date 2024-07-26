@@ -1,4 +1,681 @@
 orm:
+<<<<<<< HEAD
+        address:
+            service: FKSDB\Models\ORM\Services\AddressService
+            model: FKSDB\Models\ORM\Models\AddressModel
+        auth_token:
+            service: FKSDB\Models\ORM\Services\AuthTokenService
+            model: FKSDB\Models\ORM\Models\AuthTokenModel
+        contest:
+            service: FKSDB\Models\ORM\Services\ContestService
+            model: FKSDB\Models\ORM\Models\ContestModel
+            columnFactories:
+                contest:
+                   type: class
+                   class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
+                   title: _('Contest')
+        contestant:
+            service: FKSDB\Models\ORM\Services\ContestantService
+            model: FKSDB\Models\ORM\Models\ContestantModel
+            columnFactories:
+                contestant_id:
+                    type: primaryKey
+                    title: _('Contestant Id')
+                year:
+                    type: string
+                    title: _('Year')
+            linkFactories:
+                edit:
+                    destination: ':Org:Contestant:edit'
+                    params:
+                       contestId: contest_id
+                       id: contestant_id
+                    title: Edit
+        contest_year:
+            service: FKSDB\Models\ORM\Services\ContestYearService
+            model: FKSDB\Models\ORM\Models\ContestYearModel
+        email_message:
+            service: FKSDB\Models\ORM\Services\EmailMessageService
+            model: FKSDB\Models\ORM\Models\EmailMessageModel
+            columnFactories:
+                email_message_id:
+                    type: primaryKey
+                    title: _('Message Id')
+                recipient:
+                    sender:
+                    type: email
+                    title: _('Recipient')
+                sender:
+                    type: email
+                    title: _('Sender')
+                reply_to:
+                    type: email
+                    title: _('Reply to')
+                subject:
+                    type: string
+                    title: _('Subject')
+                carbon_copy:
+                    type: email
+                    title: _('Cc')
+                blind_carbon_copy:
+                    type: email
+                    title: _('Bcc')
+                text:
+                    type: string
+                    title: _('Text')
+                state:
+                    type: enum
+                    title: _('State')
+                    enumClassName: FKSDB\Models\ORM\Models\EmailMessageState
+
+             #created:
+             #send:
+        event:
+            service: FKSDB\Models\ORM\Services\EventService
+            model: FKSDB\Models\ORM\Models\EventModel
+            columnFactories:
+                event:
+                    type: string
+                    title: _('Event')
+                    accessKey: name
+                role:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventRole
+                    title: _('Event role')
+                event_id:
+                    type: primaryKey
+                    title: _('Event Id')
+                parameters:
+                    type: text
+                    title: _('Parameters')
+                    description: _('In Neon syntax, the scheme is specific for each event.')
+                name:
+                    type: string
+                    title: _('Events name')
+                    description: _("For the camps, it is its place.")
+                    required: true
+                begin:
+                    type: dateTime
+                    title: _('Event begin')
+                    required: true
+                end:
+                    type: dateTime
+                    title: _('Event end')
+                    required: false
+                    description: _('For one-day events it is identical to the beginning.')
+                registration_begin:
+                    type: dateTime
+                    title:  _('Registration begin')
+                registration_end:
+                    type: dateTime
+                    title: _('Registration end')
+                report:
+                    type: text
+                    description: _('Summary of the event.')
+                    title: _('Report')
+                event_year:
+                    type: int
+                    title: _('Event year')
+                    required: true
+                    description: _('The year of an event must be unique for a given event type.')
+                year:
+                    type: int
+                    title: _('Contest year')
+                    omitInputField: true
+                event_type:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
+                    title: _('Event type')
+                event_type_id:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
+                    title: _('Event type id')
+                event_link:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
+                    title: _('Event')
+            linkFactories:
+                 application.list: FKSDB\Models\ORM\Links\ParticipantListLink
+        event_org:
+             service: FKSDB\Models\ORM\Services\EventOrgService
+             model: FKSDB\Models\ORM\Models\EventOrgModel
+             columnFactories:
+                event_org_id:
+                    accessKey: e_org_id
+                    type: primaryKey
+                    title:  _('Event organiser Id')
+                note:
+                    type: string
+                    title: _('Note')
+             linkFactories:
+                 edit:
+                    destination: ':Event:EventOrg:edit'
+                    params:
+                        eventId: event_id
+                        id: e_org_id
+                    title: Edit
+                 detail:
+                     destination: ':Event:EventOrg:detail'
+                     params:
+                         eventId: event_id
+                         id: e_org_id
+                     title: Detail
+        event_participant:
+             service: FKSDB\Models\ORM\Services\EventParticipantService
+             model: FKSDB\Models\ORM\Models\EventParticipantModel
+             columnFactories:
+                status:
+                    type: enum
+                    title: _('State')
+                    enumClassName: FKSDB\Models\ORM\Models\EventParticipantStatus
+                created:
+                    type: dateTime
+                    title: _('Created event')
+                swimmer:
+                    type: logic
+                    title: _('Swimmer')
+                price:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\PriceColumnFactory
+                    title: _('Price')
+                diet:
+                    type: text
+                    title: _('Diet')
+                health_restrictions:
+                    type: text
+                    title:  _('Health restrictions')
+                used_drugs:
+                    type: text
+                    title: _('Used drugs')
+                note:
+                    type: text
+                    title: _('Note')
+                tshirt_color:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtColorColumnFactory
+                    title: _('T-shirt color')
+                tshirt_size:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtSizeColumnFactory
+                    title: _('T-shirt size')
+                arrival_ticket:
+                    type: logic
+                    title: _('Arrival ticket')
+                arrival_time:
+                    type: time
+                    title:  _('Arrival time')
+                    format: %H:%I
+                arrival_destination:
+                    type: string
+                    title: _('Arrival destination')
+                departure_time:
+                    type: time
+                    title: _('Departure time')
+                    format: %H:%I
+                departure_destination:
+                    type: string
+                    title: _('Departure destination')
+                departure_ticket:
+                    type: logic
+                    title: _('Departure ticket')
+                event_participant_id:
+                    type: primaryKey
+                    title:  _('Event participant Id')
+                lunch_count:
+                    type: int
+                    title: _('Number of baguettes for lunch')
+             linkFactories:
+                   detail: FKSDB\Models\ORM\Links\ParticipantDetailLink
+                   edit: FKSDB\Models\ORM\Links\ApplicationEditLink
+        event_type:
+            service: FKSDB\Models\ORM\Services\EventTypeService
+            model: FKSDB\Models\ORM\Models\EventTypeModel
+        flag:
+            service: FKSDB\Models\ORM\Services\FlagService
+            model: FKSDB\Models\ORM\Models\FlagModel
+        grant:
+            service: FKSDB\Models\ORM\Services\GrantService
+            model: FKSDB\Models\ORM\Models\GrantModel
+        login:
+            service: FKSDB\Models\ORM\Services\LoginService
+            model: FKSDB\Models\ORM\Models\LoginModel
+            columnFactories:
+                login_id:
+                    type: primaryKey
+                    title: _('login Id')
+                hash:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Login\HashColumnFactory
+                    permissions: RESTRICT
+                    title: _('Password')
+                    omitInputField: true
+                last_login:
+                    type: dateTime
+                    title: _('Last logged')
+                login:
+                    type: string
+                    title: _('Login')
+                    permission: RESTRICT
+        org:
+             service: FKSDB\Models\ORM\Services\OrgService
+             model: FKSDB\Models\ORM\Models\OrgModel
+             columnFactories:
+                org_id:
+                    type: primaryKey
+                    title: _('Organiser Id')
+                since:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory
+                    title: _('Since')
+                until:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\UntilColumnFactory
+                    title: _('Until')
+                order:
+                    type: class
+
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
+                    description: _('Pro řazení v seznamu organizátorů')
+
+                    title: _('Order')
+                tex_signature:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\TexSignatureColumnFactory
+                    title: _('Tex signature')
+                domain_alias:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\DomainAliasColumnFactory
+                    title: _('Domain alias')
+                contribution:
+                    type: string
+                    title: _('Contribution')
+                    description: _('For the hall of fame')
+                role:
+                    type: string
+                    title: Role
+             linkFactories:
+                 detail:
+                    destination: ':Org:Org:detail'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Detail
+                 edit:
+                    destination: ':Org:Org:edit'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Edit
+        payment:
+             service: FKSDB\Models\ORM\Services\PaymentService
+             model: FKSDB\Models\ORM\Models\PaymentModel
+             columnFactories:
+                 payment:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Payment\PaymentColumnFactory
+                    title: _('Payment')
+                 payment_uid:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Payment\UIdColumnFactory
+                    title: _('Payment UId')
+                 bank_account:
+                    type: string
+                    title: _('Bank account')
+                 bank_name:
+                    type: string
+                    title: _('Bank name')
+                 constant_symbol:
+                    type: string
+                    title: _('Constant symbol')
+                 iban:
+                    type: string
+                    title: _(IBAN)
+                 specific_symbol:
+                    type: string
+                    title: _('Specific symbol')
+                 swift:
+                    type: string
+                    title: _(SWIFT)
+                 variable_symbol:
+                    type: string
+                    title: _('Variable symbol')
+                 recipient:
+                    type: string
+                    title: _('Recipient')
+                 price:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Payment\PriceColumnFactory
+                    title: _('Price')
+                 currency:
+                     type: class
+                     class: FKSDB\Models\ORM\Columns\Tables\Payment\CurrencyColumnFactory
+                     title: _('Currency')
+                 state:
+                     type: enum
+                     title: _('State')
+                     enumClassName: FKSDB\Models\ORM\Models\PaymentState
+             linkFactories:
+                 detail:
+                      destination: ':Event:Payment:detail'
+                      params:
+                          eventId: event_id
+                          id: payment_id
+                      title: Detail
+        person:
+             service: FKSDB\Models\ORM\Services\PersonService
+             model: FKSDB\Models\ORM\Models\PersonModel
+             columnFactories:
+                person_link:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkColumnFactory
+                    title: _('Person')
+                full_name:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameColumnFactory
+                    title: _('Person')
+                person_id:
+                    type: primaryKey
+                    title: _('Person Id')
+                    permission: BASIC
+                gender:
+                    type: enum
+                    enumClassName: FKSDB\Models\ORM\Models\PersonGender
+                    permission: FULL
+                    title: _('Gender')
+                created:
+                    type: dateTime
+                    title: _('Created')
+                born_family_name:
+                    type: string
+                    title: _('Born family name')
+                    description: _('Only if different from surname.')
+                    permission: FULL
+                display_name:
+                    type: string
+                    title: _('Display name')
+                    description: _('Only if different from "Name Surname".')
+                    permission: BASIC
+                family_name:
+                    type: string
+                    title: _('Family name')
+                    permission: BASIC
+                other_name:
+                    type: string
+                    title: _('Other name')
+                    permission: BASIC
+        person_has_flag:
+            service: FKSDB\Models\ORM\Services\PersonHasFlagService
+            model: FKSDB\Models\ORM\Models\PersonHasFlagModel
+        person_history:
+             service: FKSDB\Models\ORM\Services\PersonHistoryService
+             model: FKSDB\Models\ORM\Models\PersonHistoryModel
+             columnFactories:
+                school_id:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdColumnFactory
+                    title: _('School')
+                ac_year:
+                    type: string
+                    title: _('Academic year')
+                    omitInputField: true
+                study_year:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearColumnFactory
+                    description: _('For determinig the category.')
+                    title: _('Study year')
+                class:
+                    type: string
+                    title: _('Class')
+                    permissions: RESTRICT
+        person_info:
+             service: FKSDB\Models\ORM\Services\PersonInfoService
+             model: FKSDB\Models\ORM\Models\PersonInfoModel
+             columnFactories:
+                email:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\EmailColumnFactory
+                    permision: RESTRICT
+                    title:  _('E-mail')
+                health_insurance:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HealthInsuranceColumnFactory
+                    permisson: FULL
+                    title: _('Health insurance')
+                citizenship:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipColumnFactory
+                    permission: FULL
+                    title: _('Nationality')
+                account:
+                    type: string
+                    title: _('Bank account')
+                    permission:
+                        read: FULL
+                        write: FULL
+                homepage:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HomepageColumnFactory
+                    title: _('Homepage')
+                phone:
+                    type: phone
+                    title: _('Phone')
+                phone_parent_m:
+                    type: phone
+                    title: _('Phone number (mother)')
+                    permission:
+                       read: RESTRICT
+                       write: RESTRICT
+                phone_parent_d:
+                    type: phone
+                    title: _('Phone number (father)')
+                    permission:
+                        read: RESTRICT
+                        write: RESTRICT
+                email_parent_m:
+                    type: email
+                    title: _('E-mail (mother)')
+                    permission: RESTRICT
+                email_parent_d:
+                    type: email
+                    title: _('E-mail (father)')
+                    permission: RESTRICT
+                id_number:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
+                    description: _('Number of the ID which you will carry with you during the event')
+                    title: _('Passport no.')
+                    permission: FULL
+                born:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornColumnFactory
+                    permission: FULL
+                    title: _('Date of birth')
+                born_id:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory
+                    title: _('Birth Id')
+                    description: _('For foreigners empty.')
+                    permission: FULL
+                birthplace:
+                    type: string
+                    title: _('Place of birth')
+                    description: _('City and region (for diplomas).')
+                    permission:
+                        read: FULL
+                        write: FULL
+                career:
+                    title: _('Current role')
+                    type: text
+                    description: _("Shown in the organizers' list")
+                im:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImColumnFactory
+                    permission: RESTRICT
+                    title: _('ICQ, Jabber, etc.')
+                agreed:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\AgreedColumnFactory
+                    title: _('I agree with the privacy policy')
+                uk_login:
+                    type: string
+                    title: Login UK
+                    permission: RESTRICT
+                isic_number:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IsicNumberColumnFactory
+                    title: ISIC
+                    permission: RESTRICT
+                linkedin_id:
+                    type: string
+                    title: Linkedin Id
+                    permission: BASIC
+                employer:
+                    type: string
+                    title: Zaměstnavatel
+                    permission: FULL
+                origin:
+                    type: string
+                    title: 'How did you came to know about us?'
+                    permission: BASIC
+                note:
+                    type: string
+                    title: Poznámka
+                    permission: BASIC
+                academic_degree_prefix:
+                    type: string
+                    title: Titul před jménem
+                    permission: RESTRICT
+                academic_degree_suffix:
+                    type: string
+                    title: Titul za jménem
+                    permission: RESTRICT
+                pizza:
+                    type: string
+                    title: Pizza
+                    permission: RESTRICT
+        post_contact:
+            service: FKSDB\Models\ORM\Services\PostContactService
+            model: FKSDB\Models\ORM\Models\PostContactModel
+        submit_question:
+            service: FKSDB\Models\ORM\Services\SubmitQuestionService
+            model: FKSDB\Models\ORM\Models\SubmitQuestionModel
+        country:
+            service: FKSDB\Models\ORM\Services\CountryService
+            model: FKSDB\Models\ORM\Models\CountryModel
+        country_subdivision:
+            service: FKSDB\Models\ORM\Services\CountrySubdivisionService
+            model: FKSDB\Models\ORM\Models\CountrySubdivisionModel
+        region:
+            service: FKSDB\Models\ORM\Services\RegionService
+            model: FKSDB\Models\ORM\Models\RegionModel
+        psc_region:
+            service: FKSDB\Models\ORM\Services\PSCRegionService
+            model: FKSDB\Models\ORM\Models\PSCRegionModel
+        role:
+           service: FKSDB\Models\ORM\Services\RoleService
+           model: FKSDB\Models\ORM\Models\RoleModel
+        school:
+              service: FKSDB\Models\ORM\Services\SchoolService
+              model: FKSDB\Models\ORM\Models\SchoolModel
+              columnFactories:
+                  school:
+                      type: string
+                      title: _('School')
+                      accessKey: name_abbrev
+              linkFactories:
+                  edit:
+                      destination: :Org:School:edit
+                      params:
+                          id: school_id
+                      title: Edit
+                  detail:
+                      destination: :Org:School:detail
+                      params:
+                          id: school_id
+                      title: Detail
+        study_year:
+            service: FKSDB\Models\ORM\Services\StudyYearService
+            model: FKSDB\Models\ORM\Models\StudyYearModel
+        submit:
+            service: FKSDB\Models\ORM\Services\SubmitService
+            model: FKSDB\Models\ORM\Models\SubmitModel
+        submit_question_answer:
+            service: FKSDB\Models\ORM\Services\SubmitQuestionAnswerService
+            model: FKSDB\Models\ORM\Models\SubmitQuestionAnswerModel
+        task:
+             service: FKSDB\Models\ORM\Services\TaskService
+             model: FKSDB\Models\ORM\Models\TaskModel
+             columnFactories:
+                 fq_name:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\Task\FQNameColumnFactory
+                    title: _('Task')
+                 series:
+                    type: string
+                    title: _('Series')
+                 label:
+                     type: string
+                     title: _('Label')
+                 name_cs:
+                     type: string
+                     title: _('Name cs')
+                 task_id:
+                     type: primaryKey
+                     title: _('Task Id')
+                 points:
+                     type: string
+                     title: _('Points')
+                 year:
+                     type: string
+                     title: _('Year')
+        task_contribution:
+             service: FKSDB\Models\ORM\Services\TaskContributionService
+             model: FKSDB\Models\ORM\Models\TaskContributionModel
+             columnFactories:
+                 type:
+                    type: enum
+                    enumClassName: FKSDB\Models\ORM\Models\TaskContributionType
+                    title: _('Type')
+        task_study_year:
+            service: FKSDB\Models\ORM\Services\TaskStudyYearService
+            model: FKSDB\Models\ORM\Models\TaskStudyYearModel
+        teacher:
+             service: FKSDB\Models\ORM\Services\TeacherService
+             model: FKSDB\Models\ORM\Models\TeacherModel
+             columnFactories:
+                 state:
+                     type: state
+                     states:
+                         proposal: [badge: 'badge bg-info', label: 'Proposal']
+                         cooperate: [badge: 'badge bg-success', label: 'Cooperate']
+                         ended: [badge: 'badge bg-dark',  label: 'Ended']
+                         undefined: [badge: 'badge bg-secondary',  label: 'Undefined']
+                     title: _('Cooperation status')
+                 since:
+                    type: date
+                    title: _('Teaches since')
+                 until:
+                    type: date
+                    title: _('Teaches until')
+                 number_brochures:
+                    type: int
+                    title: _('Number of brochures')
+                    description: _('Number of brochures/propagation items, that he wants to send.')
+                 note:
+                    type: text
+                    title: _('Note')
+             linkFactories:
+                 edit:
+                     destination: :Org:Teacher:edit
+                     params:
+                         id: teacher_id
+                     title: Edit
+                 detail:
+                     destination: :Org:Teacher:detail
+                     params:
+                         id: teacher_id
+                     title: Detail
+=======
     address:
         service: FKSDB\Models\ORM\Services\AddressService
         model: FKSDB\Models\ORM\Models\AddressModel
@@ -781,6 +1458,7 @@ orm:
                     id: teacher_id
                 title: _('button.teacher.detail')
                 icon: 'fas fa-pencil'
+>>>>>>> origin/master
 #fyziklani
     fyziklani_submit:
         service: FKSDB\Models\ORM\Services\Fyziklani\SubmitService

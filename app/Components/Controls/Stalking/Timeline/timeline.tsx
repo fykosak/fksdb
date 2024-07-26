@@ -65,11 +65,7 @@ export default function Timeline(props: Props) {
     const lineHeight = 30;
     let rowNumber;
 
-    const rectProperty = {
-        rx: 7.5,
-        ry: 7.5,
-        height: 15,
-    };
+
     const createTimeXScale = (start: Date, end: Date): ScaleTime<number, number> => {
         return scaleTime<number>().domain([start, end]).range(ChartComponent.getInnerXSize());
     }
@@ -98,14 +94,14 @@ export default function Timeline(props: Props) {
         const contests = {};
         contestants.forEach((contestant, index) => {
             contests[contestant.model.contestId] = contests[contestant.model.contestId] || [];
-            createRect(index, contestant.model.contestId, 'Contestant #' + contestant.model.contestantId, contestant.since, contestant.until)
-            contests[contestant.model.contestId].push(createRect(
-                index,
-                contestant.model.contestId,
-                'Contestant #' + contestant.model.contestantId,
-                contestant.since,
-                contestant.until,
-            ));
+            contests[contestant.model.contestId].push(
+                <Rect
+                    scale={scale}
+                    key={index}
+                    contestId={contestant.model.contestId}
+                    label={'Contestant #' + contestant.model.contestantId}
+                    since={contestant.since} until={contestant.until}
+                />);
         });
         const finalRows = [];
         for (const id in contests) {
@@ -117,27 +113,6 @@ export default function Timeline(props: Props) {
             }
         }
         return finalRows;
-    }
-
-    const createRect = (index: number, contestId: number, label: string, since: string, until: string): JSX.Element => {
-        const sinceDate = scale(new Date(since));
-        const untilDate = scale(new Date(until));
-        return <g
-            key={index}
-            style={{'--color': 'var(--color-contest-' + contestId + ')'} as React.CSSProperties}
-        >
-            <rect
-                x={sinceDate}
-                width={untilDate - sinceDate}
-                {...rectProperty}
-            >
-                <title>{label}</title>
-            </rect>
-            <text
-                y={rectProperty.height / 2}
-                x={(sinceDate + untilDate) / 2}
-            >{label}</text>
-        </g>;
     }
 
     rowNumber = 0;
@@ -156,13 +131,14 @@ export default function Timeline(props: Props) {
             rowNumber += 1;
             const y = (rowNumber * lineHeight);
             return <g transform={'translate(0,' + y + ')'} key={index}>
-                {createRect(
-                    index,
-                    organizer.model.contestId,
-                    'Organizer #' + organizer.model.organizerId,
-                    organizer.since,
-                    organizer.until,
-                )}
+                <Rect
+                    key={index}
+                    contestId={organizer.model.contestId}
+                    since={organizer.since}
+                    until={organizer.until}
+                    label={'Organizer #' + organizer.model.organizerId}
+                    scale={scale}
+                />
             </g>;
         })}
         {createContestants(contestants)}
@@ -181,5 +157,45 @@ export default function Timeline(props: Props) {
             {content}
         </svg>
     </div>;
+}
 
+interface RectProps {
+    scale: ScaleTime<number, number>;
+    contestId: number;
+    label: string;
+    since: string;
+    until: string;
+}
+
+function Rect(
+    {
+        scale,
+        contestId,
+        label,
+        since,
+        until,
+    }: RectProps,
+) {
+    const rectProperty = {
+        rx: 7.5,
+        ry: 7.5,
+        height: 15,
+    };
+    const sinceDate = scale(new Date(since));
+    const untilDate = scale(new Date(until));
+    return <g
+        style={{'--color': 'var(--color-contest-' + contestId + ')'} as React.CSSProperties}
+    >
+        <rect
+            x={sinceDate}
+            width={untilDate - sinceDate}
+            {...rectProperty}
+        >
+            <title>{label}</title>
+        </rect>
+        <text
+            y={rectProperty.height / 2}
+            x={(sinceDate + untilDate) / 2}
+        >{label}</text>
+    </g>;
 }

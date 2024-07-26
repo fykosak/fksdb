@@ -32,7 +32,7 @@ events:
                         condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit účastníka')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(confirmation)
                     applied->participated:
                         condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')

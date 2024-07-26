@@ -27,12 +27,12 @@ events:
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fov/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
                         afterExecute:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
+                            - FKSDB\Models\Transitions\Callbacks\EventParticipantMailCallback(fov/invited)
                     invited->applied:
                         condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Confirm participation')
