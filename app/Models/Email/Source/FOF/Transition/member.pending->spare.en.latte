@@ -1,0 +1,16 @@
+{layout '../layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{define subject}Status update - {$model->name}{/define}
+
+{block body}
+    <p>
+        Dear contestants,<br/><br/>
+        Thank you for your registration to the Fyziklani competition. Unfortunately, at least four teams from your school have already applied for Fyziklani. Due to restricted capacity, your team has been marked as a spare one (you are currently not applied to the competition). In case we have more capacity at disposition, we will let you know.
+    </p>
+    <p>
+        Thank you for your understanding,<br/>
+        Fyziklani organizers<br/>
+        <a href="https://fyziklani.org/en">fyziklani.org</a>
+    </p>
+{/block}

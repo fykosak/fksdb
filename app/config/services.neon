@@ -41,7 +41,7 @@ services:
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
-    -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    - \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #email
     - FKSDB\Models\Email\TemplateFactory
     - FKSDB\Models\Email\SenderFactory

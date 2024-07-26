@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\ChangeEmail;
 
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
-use FKSDB\Models\Email\Source\EmailSource;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends EmailSource<array{
@@ -38,14 +35,6 @@ class ChangeEmailSource extends EmailSource
     }
 
     /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @throws ChangeInProgressException
      */
     protected function getSource(array $params): array
@@ -65,7 +54,6 @@ class ChangeEmailSource extends EmailSource
                 'file' => __DIR__ . '/email.old.latte',
                 'data' => ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
             ],
-            'lang' => $lang,
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => (string)$person->getInfo()->email,
@@ -78,7 +66,6 @@ class ChangeEmailSource extends EmailSource
                 'file' => __DIR__ . '/email.new.latte',
                 'data' => ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
             ],
-            'lang' => $lang,
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => $newEmail,
@@ -87,21 +74,5 @@ class ChangeEmailSource extends EmailSource
             ]
         ];
         return [$oldData, $newData];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }

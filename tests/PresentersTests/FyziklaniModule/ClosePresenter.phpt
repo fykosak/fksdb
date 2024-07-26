@@ -89,7 +89,6 @@ class ClosePresenter extends FyziklaniTestCase
 
         /* Remaining setup stuff */
         $this->fixture = $this->createPresenter('Game:Close');
-        $this->mockApplication();
 
         $this->authenticatePerson($this->userPerson, $this->fixture);
     }

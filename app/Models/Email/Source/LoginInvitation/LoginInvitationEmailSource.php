@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\LoginInvitation;
 
-use FKSDB\Models\Email\Source\EmailSource;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends EmailSource<array{
  *     token:AuthTokenModel,
- *     lang:Language,
  * },array{
  *      person:PersonModel,
  *      token:AuthTokenModel,
@@ -25,14 +21,6 @@ use Fykosak\Utils\UI\Title;
  */
 class LoginInvitationEmailSource extends EmailSource
 {
-    /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
     protected function getSource(array $params): array
     {
         $lang = $params['lang'];
@@ -41,13 +29,11 @@ class LoginInvitationEmailSource extends EmailSource
         return [
             [
                 'template' => [
-                    'file' => __DIR__ . '/loginInvitation.latte',
+                    'file' => __DIR__ . "/layout.$lang->value.latte",
                     'data' => [
                         'token' => $token,
-                        'lang' => $lang,
                     ],
                 ],
-                'lang' => $lang,
                 'data' => [
                     'sender' => 'FKSDB <fksdb@fykos.cz>',
                     'recipient_person_id' => $person->person_id,
@@ -56,21 +42,5 @@ class LoginInvitationEmailSource extends EmailSource
                 ]
             ]
         ];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }
