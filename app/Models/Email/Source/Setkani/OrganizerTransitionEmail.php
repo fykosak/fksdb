@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\Setkani;
 
-use FKSDB\Models\Email\Source\EmailSource;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Modules\Core\Language;

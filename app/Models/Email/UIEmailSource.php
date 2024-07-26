@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
-use FKSDB\Models\Email\Source\EmailSource;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;

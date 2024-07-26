@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Email\Source;
+namespace FKSDB\Models\Email;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
-use Nette\Application\Application;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\TemplateFactory as LatteFactory;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
@@ -29,7 +29,7 @@ abstract class EmailSource
     private GettextTranslator $translator;
     private IRequest $request;
     private LatteFactory $latteTemplateFactory;
-    private Application $application;
+    private IPresenterFactory $presenterFactory;
 
     public function __construct(Container $container)
     {
@@ -40,15 +40,15 @@ abstract class EmailSource
     public function inject(
         EmailMessageService $emailMessageService,
         LatteFactory $latteTemplateFactory,
-        Application $application,
+        IPresenterFactory $presenterFactory,
         GettextTranslator $translator,
         IRequest $request
     ): void {
         $this->emailMessageService = $emailMessageService;
-        $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
         $this->latteTemplateFactory = $latteTemplateFactory;
+        $this->presenterFactory = $presenterFactory;
     }
 
 
@@ -136,12 +136,11 @@ abstract class EmailSource
      */
     private function create(Language $lang): Template
     {
-        $presenter = $this->application->getPresenter();
-        if ($presenter && !$presenter instanceof BasePresenter) {
+        $presenter = $this->presenterFactory->createPresenter('Organizer:Email');
+        if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
         $template = $this->latteTemplateFactory->createTemplate();
-
         if (!$template instanceof Template) {
             throw new BadTypeException(Template::class, $template);
         }

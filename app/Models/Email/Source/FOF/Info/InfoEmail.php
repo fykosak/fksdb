@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\FOF\Info;
 
-use FKSDB\Models\Email\Source\EmailSource;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;

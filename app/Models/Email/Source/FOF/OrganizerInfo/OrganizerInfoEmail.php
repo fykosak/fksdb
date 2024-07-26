@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\FOF\OrganizerInfo;
 
 use FKSDB\Components\DataTest\DataTestFactory;
-use FKSDB\Models\Email\Source\EmailSource;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Transitions\Holder\TeamHolder;

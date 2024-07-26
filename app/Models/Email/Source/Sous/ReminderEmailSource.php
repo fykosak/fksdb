@@ -36,7 +36,7 @@ final class ReminderEmailSource extends UIEmailSource
 
     public function injectService(
         EventParticipantService $eventParticipantService,
-        EventService $eventService,
+        EventService $eventService
     ): void {
         $this->eventParticipantService = $eventParticipantService;
         $this->eventService = $eventService;

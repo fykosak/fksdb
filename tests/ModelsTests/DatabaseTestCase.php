@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Tests\MockEnvironment\MockPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Explorer;
@@ -173,12 +172,6 @@ abstract class DatabaseTestCase extends TestCase
             'class' => $class,
             'study_year_new' => $studyYear,
         ]);
-    }
-
-    protected function mockApplication(): void
-    {
-        $mockPresenter = new MockPresenter();
-        $this->container->callInjects($mockPresenter);
     }
 
     protected function fakeProtection(string $token, int $timeout = null): void

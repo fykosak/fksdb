@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\ChangeEmail;
 
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
-use FKSDB\Models\Email\Source\EmailSource;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends EmailSource<array{

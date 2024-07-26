@@ -60,7 +60,7 @@ final class TeamMemberEmail extends TransitionEmailSource
                         'token' => $this->createToken($member->person, $holder),
                     ],
                 ],
-                'lang' => Language::from($holder->getModel()->game_lang->value),
+                'lang' => $lang,
                 'data' => [
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
                     'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),

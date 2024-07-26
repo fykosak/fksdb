@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
-use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
