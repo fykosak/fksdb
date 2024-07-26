@@ -8,6 +8,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
+use Nette\Schema\Expect;
 
 /**
  * @phpstan-template TParams of array{eventId:int}
@@ -17,11 +18,18 @@ use FKSDB\Models\WebService\Models\WebModel;
 abstract class EventWebModel extends WebModel
 {
     protected EventModel $event;
-    private EventService $eventService;
+    protected EventService $eventService;
 
     public function inject(EventService $eventService): void
     {
         $this->eventService = $eventService;
+    }
+
+    protected function getExpectedParams(): array
+    {
+        return [
+            'eventId' => Expect::scalar()->castTo('int')->required(),
+        ];
     }
 
     /**

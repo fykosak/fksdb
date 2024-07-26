@@ -73,7 +73,7 @@ orm:
                 type: email
                 title: _('Bcc')
             text:
-                type: string
+                type: text
                 title: _('Text')
             state:
                 type: enum
@@ -267,7 +267,7 @@ orm:
                     id: event_participant_id
                 title: _('button.eventParticipant.detail')
             edit:
-                destination: :Public:Application:default
+                destination: :Event:Application:edit
                 params:
                     eventId: event_id
                     id: event_participant_id
@@ -321,7 +321,7 @@ orm:
             order:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Organizer\OrderColumnFactory
-                description: _('Pro řazení v seznamu organizátorů')
+                description: _('To order organizers in the list of organizers')
                 title: _('Order')
             tex_signature:
                 type: class
@@ -341,11 +341,11 @@ orm:
             allow_wiki:
                 type: bool
                 title: _('Allow wiki login')
-                description: _('Allow login in to internal wiki before or after period of active orgnize')
+                description: _('Allow login to internal wiki before or after period of active organizing')
             allow_pm:
                 type: bool
                 title: _('Allow PM login')
-                description: _('Allow login in to Problem manager before or after period of active orgnize')
+                description: _('Allow login to Problem Manager before or after period of active organizing')
         links:
             detail:
                 destination: :Organizer:Organizer:detail
@@ -469,6 +469,9 @@ orm:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdColumnFactory
                 title: _('School')
+            school_label_key:
+                type: string
+                title: _('School label')
             ac_year:
                 type: string
                 title: _('Academic year')
@@ -577,7 +580,7 @@ orm:
                 permission: BASIC
             employer:
                 type: string
-                title: _('Zaměstnavatel')
+                title: _('Employer')
                 permission: FULL
             origin:
                 type: string
@@ -682,6 +685,20 @@ orm:
                       id: school_id
                   title: _('button.school.detail')
                   icon: 'fas fa-school'
+    school_label:
+        service: FKSDB\Models\ORM\Services\SchoolLabelService
+        model: FKSDB\Models\ORM\Models\SchoolLabelModel
+        columns:
+            school_label_id:
+                type: primaryKey
+                title: _('School label Id')
+            school_label_key:
+                type: string
+                title: _('School label')
+            school_id:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdColumnFactory
+                title: _('School')
     study_year:
         service: FKSDB\Models\ORM\Services\StudyYearService
         model: FKSDB\Models\ORM\Models\StudyYearModel
@@ -779,15 +796,15 @@ orm:
             modified:
                 type: dateTime
                 title: _('Modified')
-                format: 'H:m:s d-M-Y'
+                format: 'H:i:s d-M-Y'
             created:
                 type: dateTime
                 title: _('Created')
-                format: 'H:m:s d-M-Y'
+                format: 'H:i:s d-M-Y'
             checked:
                 type: dateTime
                 title: _('Checked')
-                format: 'H:m:s d-M-Y'
+                format: 'H:i:s d-M-Y'
             points:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
@@ -1190,3 +1207,38 @@ orm:
     unsubscribed_email:
         model: Fykosak\NetteORM\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
+    person_mail:
+        model: FKSDB\Models\ORM\Models\PersonMailModel
+        service: FKSDB\Models\ORM\Services\PersonMailService
+        columns:
+            person_mail_id:
+                type: primaryKey
+                title: _('Mail Id')
+            mail_type:
+                type: string
+                title: _('Mail type')
+    banned_person:
+        model: FKSDB\Models\ORM\Models\BannedPersonModel
+        service: FKSDB\Models\ORM\Services\BannedPersonService
+        columns:
+            banned_person_id:
+                type: primaryKey
+                title: _('Id')
+            case_id:
+                type: string
+                title: _('Case Id')
+            note:
+                type: text
+                title: _('Description/Note')
+    banned_person_scope:
+        model: FKSDB\Models\ORM\Models\BannedPersonScopeModel
+        service: Fykosak\NetteORM\Service\DummyService
+        columns:
+            begin:
+                type: date
+                title: _('Begin')
+                format: 'd.M. Y'
+            end:
+                type: date
+                title: _('End')
+                format: 'd.M. Y'

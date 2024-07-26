@@ -61,38 +61,38 @@ final class ACL
         $service->addResource(Models\TeacherModel::RESOURCE_ID);
         self::createApi($service);
 
-// tasks
+        // tasks
         $service->addResource(Models\TaskModel::RESOURCE_ID);
         $service->allow(ContestRole::Organizer, Models\TaskModel::RESOURCE_ID, 'points');
         $service->allow([ContestRole::TaskManager, ContestRole::InboxManager], Models\TaskModel::RESOURCE_ID);
 
         self::createContestant($service);
         self::createPerson($service, $selfAssertion, $ownerAssertion);
-// contest
+        // contest
         $service->addResource(Models\ContestModel::RESOURCE_ID);
         $service->allow(ContestRole::Organizer, Models\ContestModel::RESOURCE_ID, ['chart', 'organizerDashboard']);
         $service->allow(ContestRole::Boss, Models\ContestModel::RESOURCE_ID, 'acl');
 
         self::createOrganizer($service, $selfAssertion);
-// submits
+        // submits
         $service->addResource(Models\SubmitModel::RESOURCE_ID);
         $service->allow([ContestRole::TaskManager, ContestRole::InboxManager], Models\SubmitModel::RESOURCE_ID);
         self::createUpload($service, $submitUploaderAssertion);
-//emails
+        //emails
         $service->addResource(Models\EmailMessageModel::RESOURCE_ID);
         $service->allow([ContestRole::DataManager, ContestRole::Boss], Models\EmailMessageModel::RESOURCE_ID, 'list');
-// events
+        // events
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::Organizer, Models\EventModel::RESOURCE_ID, 'list');
         $service->allow(ContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
         $service->allow(BaseRole::Registered, Models\EventModel::RESOURCE_ID, 'dashboard');
-// event organizers
+        // event organizers
         $service->addResource(Models\EventOrganizerModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
 
         self::createApplications($service);
-// schedule
+        // schedule
         $service->addResource(Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->addResource(Models\Schedule\PersonScheduleModel::RESOURCE_ID);
@@ -100,20 +100,29 @@ final class ACL
             Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\ScheduleGroupModel::RESOURCE_ID,
             ['list', 'detail']
-        );// TODO
+        ); // TODO
         $service->allow(
             Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\ScheduleItemModel::RESOURCE_ID,
             'detail'
-        );// TODO
+        ); // TODO
         $service->allow(
             Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
             Models\Schedule\PersonScheduleModel::RESOURCE_ID,
             ['list', 'detail']
-        );// TODO
+        ); // TODO
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+
+        // spam
+        $service->addResource(Models\SchoolLabelModel::RESOURCE_ID);
+        $service->addResource(Models\PersonHistoryModel::RESOURCE_ID);
+        $service->addResource(Models\PersonMailModel::RESOURCE_ID);
+
+        $service->allow(ContestRole::Organizer, Models\SchoolLabelModel::RESOURCE_ID);
+        $service->allow(ContestRole::Organizer, Models\PersonHistoryModel::RESOURCE_ID);
+        $service->allow(ContestRole::Organizer, Models\PersonMailModel::RESOURCE_ID);
 
         self::createPayment($service, $selfAssertion);
         self::createGame($service);
@@ -268,9 +277,9 @@ final class ACL
             WebServiceModel::SOAP_RESOURCE_ID
         );
         $permission->allow(ContestRole::Aesop, AESOPPresenter::AESOP_RESOURCE_ID);
-        $permission->allow([ContestRole::InboxManager,ContestRole::EventManager], 'export', 'execute');
+        $permission->allow([ContestRole::InboxManager, ContestRole::EventManager], 'export', 'execute');
         $permission->allow(ContestRole::DataManager, Models\StoredQuery\QueryModel::RESOURCE_ID);
-        $permission->allow(ContestRole::DataManager, ['export','export.adhoc']);
+        $permission->allow(ContestRole::DataManager, ['export', 'export.adhoc']);
         $permission->allow([ContestRole::Organizer, ContestRole::Web], RestApiPresenter::RESOURCE_ID);
     }
 
@@ -285,7 +294,10 @@ final class ACL
             BaseRole::Registered,
             Models\PaymentModel::RESOURCE_ID,
             'edit',
-            new LogicAnd($selfAssertion, new Authorization\Assertions\PaymentEditableAssertion())// @phpstan-ignore-line
+            new LogicAnd(
+                $selfAssertion, // @phpstan-ignore-line
+                new Authorization\Assertions\PaymentEditableAssertion() // @phpstan-ignore-line
+            )
         );
         $permission->allow(
             [
@@ -322,6 +334,15 @@ final class ACL
             ContestRole::Organizer,
             'game',
             ['gameSetup', 'statistics', 'presentation', 'seating', 'diplomas']
+        );
+        $permission->allow(
+            [
+                ContestRole::Organizer,
+                Authorization\Roles\Events\EventOrganizerRole::ROLE_ID,
+                Authorization\Roles\Events\EventRole::GameInserter,
+            ],
+            'game',
+            'howTo'
         );
     }
 

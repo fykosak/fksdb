@@ -27,9 +27,3 @@ jobs:
         run: composer install --no-progress --prefer-dist
       - run: composer run-script ${{ matrix.script }}
         name: Test
-      - if: failure()
-        name: Failure output
-        uses: actions/upload-artifact@v2
-        with:
-          name: output
-          path: tests/**/*.actual

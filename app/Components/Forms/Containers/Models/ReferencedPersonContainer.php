@@ -256,7 +256,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     if ($value) {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
-                        if ($fieldName == 'agreed') {
+                        if ($fieldName === 'agreed') {
                             // NOTE: this may need refactoring when more customization requirements occurre
                             $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                             break;

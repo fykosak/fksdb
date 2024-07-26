@@ -1,0 +1,21 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+
+{define subject}Payment received{/define}
+
+{block body}
+    <div>
+        <p>
+            Hello,<br/><br/>
+            We confirm that the payment #{$model->payment_id} for Fyziklani 2024 in total sum of <b>{$model->getPrice()->__toString()}</b> has been accepted.
+        </p>
+
+        <p>
+            It includes the following:
+        </p>
+
+        {include './items.latte', lang: 'en'}
+
+        {include './signature.en.latte'}
+    </div>
+{/block}

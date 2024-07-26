@@ -1,10 +1,14 @@
 {layout none}
-{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Letní tábor Výfuku – potvrzení o platbě{/define}
+
 <p>
     Ahoj,<br/>
     potvrzujeme přijetí tvé platby za účast na Letním táboře Výfuku.
 </p>
 <p>
     Za organizátory<br/>
-    {$holder->event->getParameter('letterSignature')}
+    {$model->event->getParameter('letterSignature')}
 </p>

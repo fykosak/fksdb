@@ -20,11 +20,19 @@ class XMLHelper
      * @throws \DOMException
      * @phpstan-param array<string,mixed> $data
      */
-    public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void
-    {
+    public static function fillArrayToNode(
+        array $data,
+        \DOMDocument $doc,
+        \DOMNode $parentNode,
+        bool $recursive = false
+    ): void {
         foreach ($data as $key => $datum) {
             $childNode = $doc->createElement($key);
-            $childNode->nodeValue = htmlspecialchars((string)$datum);
+            if ($recursive && is_array($datum)) {
+                XMLHelper::fillArrayToNode($datum, $doc, $childNode);
+            } else {
+                $childNode->nodeValue = htmlspecialchars((string)$datum);
+            }
             $parentNode->appendChild($childNode);
         }
     }
