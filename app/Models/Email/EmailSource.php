@@ -115,6 +115,4 @@ abstract class EmailSource
             'text' => $this->templateFactory->create($lang)->renderToString($templateFile, $data),
         ];
     }
-
-
 }

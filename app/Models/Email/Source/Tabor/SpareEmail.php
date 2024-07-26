@@ -13,6 +13,4 @@ class SpareEmail extends TaborTransitionEmail
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'spare.latte';
     }
-
-
 }
