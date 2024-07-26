@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 
 /**
@@ -25,8 +26,8 @@ use Nette\Utils\Strings;
  * @property-read int $series
  * @property-read int|null $tasknr
  * @property-read int|null $points
- * @property-read \DateTimeInterface|null $submit_start
- * @property-read \DateTimeInterface|null $submit_deadline
+ * @property-read DateTime|null $submit_start
+ * @property-read DateTime|null $submit_deadline
  * @phpstan-type SerializedTaskModel array{
  *     taskId:int,
  *     series:int,

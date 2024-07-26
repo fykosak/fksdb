@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use FKSDB\Components\DataTest\DataTestFactory;
+use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -71,7 +71,7 @@ try {
     }
 
     $mailService = $container->getByType(EmailMessageService::class);
-    $mailTemplateFactory = $container->getByType(MailTemplateFactory::class);
+    $mailTemplateFactory = $container->getByType(TemplateFactory::class);
     $mailService->addMessageToSend(
         array_merge(
             $mailTemplateFactory->renderWithParameters(

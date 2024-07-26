@@ -1,18 +1,20 @@
 {layout none}
-{varType FKSDB\Models\Transitions\Holder\TeamHolder $holder}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team = $holder->getModel()}
-{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
-{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$team->fyziklani_team_id,'at' => $token->token])}
+{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
 {define subject}{_'Physics Brawl Online Team Registration'}{/define}
 
 <p>
     Hello,<br/>
-    You have been successfully registered for {$team->event->name}. You are now a member of the team <em>{$team->name}</em>.
+    You have been successfully registered for {$model->event->name}. You are now a member of the team
+    <em>{$model->name}</em>.
 </p>
 <p>
-    You can look at the details of your application at <a href="{$detailLink}">{$detailLink}</a>, changes are possible until {$holder->getModel()->event->registration_end|date:'M d, Y; H:i, P'} after logging in in <a n:href="//:Profile:MyApplications:default">My Applications</a>
+    You can look at the details of your application at <a href="{$detailLink}">{$detailLink}</a>, changes are possible
+    until {$model->event->registration_end|date:'M d, Y; H:i, P'} after logging in in
+    <a n:href="//:Profile:MyApplications:default">My Applications</a>
     or via the link below:<br/>
     <a href="{$editLink}">{$editLink}</a>.
 </p>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 1156.93 250"
+   version="1.1"
+   sodipodi:docname="fyziklani_logo.svg"
+   width="1156.9301"
+   height="250"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.72989503"
+     inkscape:cx="578.16533"
+     inkscape:cy="124.67546"
+     inkscape:window-width="1920"
+     inkscape:window-height="1080"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #e6060d;
+      }
+    </style>
+  </defs>
+  <rect
+     id="Box"
+     class="cls-2"
+     width="250"
+     height="250"
+     x="0"
+     y="0" />
+  <g
+     id="g9">
+    <path
+       d="m 371.54,110.18 h 48.84 V 139 h -48.84 v 59.18 H 335.9 V 51.44 h 84.48 v 28.82 h -48.84 z"
+       id="path1" />
+    <path
+       d="m 500.68,96.32 h 35.2 L 480.22,243.5 H 444.36 L 462.62,196.2 427.2,96.32 h 35.42 l 17.6,53.46 z"
+       id="path2" />
+    <path
+       d="m 624.76,170.46 v 27.72 h -87.34 l 37.84,-74.14 H 540.5 V 96.32 h 86.24 l -37.84,74.14 z"
+       id="path3" />
+    <path
+       d="m 677.11,66.84 c 0,10.12 -7.7,17.6 -17.82,17.6 -10.12,0 -17.82,-7.48 -17.82,-17.82 0,-10.34 7.48,-17.82 18.04,-17.82 10.56,0 17.6,7.48 17.6,18.04 z m -1.1,131.34 H 642.57 V 96.32 h 33.44 z"
+       id="path4" />
+    <path
+       d="M 734.31,198.18 H 700.87 V 51.44 h 33.44 v 81.18 l 22.66,-36.3 h 37.84 l -29.7,48.4 29.7,53.46 h -37.84 l -22.66,-40.7 z"
+       id="path5" />
+    <path
+       d="M 808.01,198.18 V 51.44 h 33.44 v 146.74 z"
+       id="path6" />
+    <path
+       d="m 944.63,96.32 h 33.44 v 101.86 h -33.44 v -11.44 c -9.24,10.56 -20.02,15.4 -34.54,15.4 -29.04,0 -49.94,-22.22 -49.94,-53.46 0,-31.24 22.22,-56.32 52.8,-56.32 12.98,0 21.78,4.18 31.68,14.96 z m -48.84,51.7 c 0,15.62 10.56,27.72 24.2,27.72 13.64,0 25.08,-12.76 25.08,-28.16 0,-16.28 -10.34,-27.5 -24.86,-27.5 -14.52,0 -24.42,11.66 -24.42,27.94 z"
+       id="path7" />
+    <path
+       d="m 1036.59,96.32 v 11.44 c 6.6,-11.22 13.64,-15.4 25.96,-15.4 10.12,0 19.8,3.74 26.18,9.9 6.82,7.04 9.24,15.4 9.24,33.44 v 62.48 h -33.44 v -62.26 c 0,-9.9 -5.28,-15.84 -13.86,-15.84 -8.58,0 -14.08,6.38 -14.08,16.28 v 61.82 h -33.44 V 96.32 Z"
+       id="path8" />
+    <path
+       d="m 1156.93,66.84 c 0,10.12 -7.7,17.6 -17.82,17.6 -10.12,0 -17.82,-7.48 -17.82,-17.82 0,-10.34 7.48,-17.82 18.04,-17.82 10.56,0 17.6,7.48 17.6,18.04 z m -1.1,131.34 h -33.44 V 96.32 h 33.44 z"
+       id="path9" />
+  </g>
+  <path
+     id="Logo"
+     class="cls-1"
+     d="m 28.9,146.68 55.94,-0.63 22.46,40.51 25.45,-11.53 29.03,37.03 59.32,-174.12 c 0,0 -191.11,108.09 -192.2,108.74 z m 89.89,24.05 3.45,-8.56 4.19,5.11 -7.63,3.44 z m -1.62,-21.1 -8.1,19.38 -15.2,-26.64 107.36,-84.84 -84.07,92.1 z" />
+</svg>

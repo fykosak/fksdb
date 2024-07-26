@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Models\WebService\Models\WebModel;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**
@@ -25,11 +24,11 @@ class ItemListWebModel extends WebModel
         $this->scheduleGroupService = $scheduleGroupService;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
-        return Expect::structure([
+        return [
             'groupId' => Expect::scalar()->castTo('int')->required(),
-        ]);
+        ];
     }
 
     /**

@@ -12,6 +12,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $event_participant_id
@@ -21,7 +22,7 @@ use Nette\Security\Resource;
  * @property-read PersonModel $person
  * @property-read string|null $note poznámka
  * @property-read EventParticipantStatus $status
- * @property-read \DateTimeInterface $created čas vytvoření přihlášky
+ * @property-read DateTime $created čas vytvoření přihlášky
  * @property-read int|null $accomodation
  * @property-read string|null $diet speciální stravování
  * @property-read string|null $health_restrictions alergie, léky, úrazy

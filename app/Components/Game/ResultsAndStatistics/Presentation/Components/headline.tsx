@@ -11,24 +11,24 @@ interface OwnProps {
 
 export default function Headline({category, startPosition, endPosition}: OwnProps) {
     const translator = useContext(TranslatorContext);
-    return <div className="row justify-content-md-center">
-        <div className="col-3">
-            <span className="subheader">
-                <Ordinal order={startPosition}/>-<Ordinal order={endPosition}/>
-            </span>
-            <h1>
-                {category ?
-                    (translator.getLocalizedText('Category', 'en') + ' ' + category) :
-                    translator.getLocalizedText('Global results', 'en')}
-            </h1>
+    return <div className="row justify-content-evenly">
+        <div className="col-5 d-flex justify-content-center">
+            <div>
+                <span className="subheader">
+                    <Ordinal order={startPosition}/>-<Ordinal order={endPosition}/>
+                </span>
+                <h1>
+                    {category ? 'Category ' + category : 'Global results'}
+                </h1>
+            </div>
         </div>
-        <div className="col-3">
-            <span className="subheader">{startPosition}.-{endPosition}.</span>
-            <h1>
-                {category ?
-                    (translator.getLocalizedText('Category', 'cs') + ' ' + category) :
-                    translator.getLocalizedText('Global results', 'cs')}
-            </h1>
+        <div className="col-5 d-flex justify-content-center">
+            <div>
+                <span className="subheader">{startPosition}.-{endPosition}.</span>
+                <h1>
+                    {category ? 'Kategorie ' + category : 'Globální výsledky'}
+                </h1>
+            </div>
         </div>
     </div>;
 }

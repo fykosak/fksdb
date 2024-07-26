@@ -23,7 +23,8 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
     public const INVITED2 = 'invited2';
     public const INVITED3 = 'invited3';
     public const MISSED = 'missed';
-    public const OUT_OF_DB = 'out_of_db';
+    //public const OUT_OF_DB = 'out_of_db';
+    public const OUT_OF_DB = 'outOfDB';
     public const PAID = 'paid';
     public const PARTICIPATED = 'participated';
     public const PENDING = 'pending';

@@ -11,18 +11,24 @@ export default class TaskCodePreprocessor {
     }
 
     public getTeam(code: string): TeamModel {
-        const teamId = this.extractTeamId(code);
+        if (code.length < 6) {
+            throw new Error('Team id not completed');
+        }
+        const teamId = code.substring(0,6);
         const [filterTeams] = this.teams.filter((currentTeam) => {
             return currentTeam.teamId === +teamId;
         });
         if (!filterTeams) {
-            throw new Error('Team does not exist.');
+            throw new Error('Team does not exist');
         }
         return filterTeams;
     }
 
     public getTask(code: string): TaskModel {
-        const taskLabel = this.extractTaskLabel(code);
+        if (code.length < 8) {
+            throw new Error('Task code not completed');
+        }
+        const taskLabel = code.substring(6, 8).toString();
         if (taskLabel === 'XX') {
             throw Error('No task left');
         }
@@ -30,29 +36,20 @@ export default class TaskCodePreprocessor {
             return currentTask.label === taskLabel;
         });
         if (!filterTask) {
-            throw new Error('Task does not exist.');
+            throw new Error('Task does not exist');
         }
         return filterTask;
     }
 
-    private extractTeamId(code: string): number {
-        const fullCode = this.createFullCode(code);
-        return +fullCode.substring(0, 6);
-    }
-
-    private extractTaskLabel(code: string): string {
-        const fullCode = this.createFullCode(code);
-        return fullCode.substring(6, 8).toString();
-    }
-
-    private createFullCode(code: string): string {
+    public getSum(code: string): number {
+        if (code.length < 9) {
+            throw new Error('Code not complete');
+        }
         if (code.length > 9) {
             throw new Error('Code is too long');
         }
 
-        const fullCode = (('0').repeat(9 - code.length) + code).toLocaleUpperCase();
-
-        const subCode = fullCode.split('').map((char): number => {
+        const subCode = code.split('').map((char): number => {
             return +char.toLocaleUpperCase()
                 .replace('A', '1')
                 .replace('B', '2')
@@ -70,7 +67,7 @@ export default class TaskCodePreprocessor {
         if (sum % 10 !== 0) {
             throw new Error('Invalid control');
         }
-        return fullCode;
+        return sum;
     }
 }
 

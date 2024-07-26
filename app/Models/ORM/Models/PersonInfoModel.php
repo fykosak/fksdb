@@ -9,12 +9,13 @@ use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $person_id
  * @property-read PersonModel $person
  * @property-read string|null $preferred_lang # TODO enum
- * @property-read \DateTimeInterface|null $born
+ * @property-read DateTime|null $born
  * @property-read string|null $id_number
  * @property-read string|null $born_id
  * @property-read string|null $phone
@@ -23,7 +24,7 @@ use Nette\DI\Container;
  * @property-read string|null $uk_login
  * @property-read string|null $isic_number
  * @property-read string|null $account
- * @property-read \DateTimeInterface|null $agreed
+ * @property-read DateTime|null $agreed
  * @property-read string|null $birthplace
  * @property-read string|null $citizenship
  * @property-read int|null $health_insurance

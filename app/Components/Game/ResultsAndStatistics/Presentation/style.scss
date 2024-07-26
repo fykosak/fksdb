@@ -1,6 +1,8 @@
 @import "../../../../css/variables";
 
 .game-presentation {
+  font-size: 1.1vw;
+
   .subheader {
     font-weight: bold;
     color: black;
@@ -8,6 +10,7 @@
 
   h1 {
     font-weight: bold;
+    font-size: 3.5vw;
   }
 
   .head-row {
@@ -22,23 +25,22 @@
       background-color: #eee;
     }
 
-    & > div {
-      align-items: center;
-      display: flex;
-    }
-
-
     .team-name-col {
       text-align: justify;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    .team-progress {
+      align-items: center;
+      display: flex;
+    }
   }
 
   .head-row, .team-row {
     text-align: center;
-    padding: 0.3rem 0;
+    padding: 0.2rem 0;
   }
 
 
@@ -74,6 +76,10 @@
           background-color: var(--color-fof-points-1);
         }
       }
+    }
+
+    .progress-row{
+      height: 5px;
     }
   }
 

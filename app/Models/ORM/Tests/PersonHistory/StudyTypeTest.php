@@ -25,7 +25,7 @@ final class StudyTypeTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Checks if school provides study type filled in study_year field');
+        return _('Checks if school provides study type filled in study_year field.');
     }
 
     /**

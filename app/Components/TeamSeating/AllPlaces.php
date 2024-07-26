@@ -21,19 +21,19 @@ class AllPlaces extends BaseComponent
 
     final public function render(string $dev): void
     {
-        $places = [];
+        $teams = [];
         /** @var TeamModel2 $team */
         foreach ($this->event->getTeams() as $team) {
             $place = $team->getPlace();
             if ($place) {
-                $places[$place->label()] = $team;
+                $teams[$place->label()] = $team;
             }
         }
 
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . './@layout.latte', [
             'lang' => $this->translator->lang,
-            'places' => $this->template->places = Place2024::getAll(),
-            'teams' => $this->template->teams = $places,
+            'places' => Place2024::getAll(),
+            'teams' => $teams,
             'dev' => $dev,
         ]);
     }

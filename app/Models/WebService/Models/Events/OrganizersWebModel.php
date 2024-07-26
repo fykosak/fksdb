@@ -18,13 +18,6 @@ use Nette\Schema\Expect;
  */
 class OrganizersWebModel extends EventWebModel
 {
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
-        ]);
-    }
-
     /**
      * @throws BadRequestException
      */
