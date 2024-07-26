@@ -13,16 +13,4 @@ class RejectedEmail extends TaborTransitionEmail
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'rejected.latte';
     }
-
-    /**
-     * @phpstan-return array{
-     *     sender:string,
-     * }
-     */
-    protected function getData(ParticipantHolder $holder, Transition $transition): array
-    {
-        return [
-            'sender' => 'Výfuk <vyfuk@vyfuk.org>',
-        ];
-    }
 }

@@ -17,15 +17,27 @@ use FKSDB\Modules\Core\Language;
  */
 abstract class TaborTransitionEmail extends ParticipantTransitionEmail
 {
-    protected function getTemplateData(ParticipantHolder $holder, Transition $transition): array
+    final protected function getTemplateData(ParticipantHolder $holder, Transition $transition): array
     {
         return [
             'model' => $holder->getModel(),
         ];
     }
 
-    protected function getLang(ParticipantHolder $holder, Transition $transition): Language
+    final protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
         return Language::from(Language::CS);
+    }
+
+    /**
+     * @phpstan-return array{
+     *     sender:string,
+     * }
+     */
+    final protected function getData(ParticipantHolder $holder, Transition $transition): array
+    {
+        return [
+            'sender' => 'Výfuk <vyfuk@vyfuk.org>',
+        ];
     }
 }

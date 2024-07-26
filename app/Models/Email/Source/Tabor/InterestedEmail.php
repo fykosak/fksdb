@@ -13,16 +13,4 @@ class InterestedEmail extends TaborTransitionEmail
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'interested.latte';
     }
-
-    /**
-     * @phpstan-return array{
-     *     sender:string,
-     * }
-     */
-    protected function getData(ParticipantHolder $holder, Transition $transition): array
-    {
-        return [
-            'sender' => 'Výfuk <vyfuk@vyfuk.org>',
-        ];
-    }
 }
