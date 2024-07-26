@@ -29,7 +29,7 @@ services:
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
     - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
-    - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
+    - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%)
     #auth
     - FKSDB\Models\Authorization\Authorizators\ContestAuthorizator
     - FKSDB\Models\Authorization\Authorizators\EventAuthorizator
@@ -38,15 +38,12 @@ services:
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory
-    # Events
-    events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
-    events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
-    #main
-    - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
+    #email
+    - FKSDB\Models\Email\TemplateFactory
     #person
     - FKSDB\Models\Persons\Resolvers\SelfResolver
     - FKSDB\Models\Persons\Deduplication\Merger(%merger%)
@@ -67,12 +64,12 @@ services:
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
+    - FKSDB\Models\Events\EventDispatchFactory
 
     - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
     #formFactory
-    event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
     #handlers

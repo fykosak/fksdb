@@ -138,5 +138,12 @@ final class TeamList extends BaseList
             false,
             ['id' => 'fyziklani_team_id']
         );
+        $this->addPresenterButton(
+            ':Event:Attendance:detail',
+            'attendance',
+            new Title(null, _('button.team.attendance')),
+            false,
+            ['id' => 'fyziklani_team_id']
+        );
     }
 }

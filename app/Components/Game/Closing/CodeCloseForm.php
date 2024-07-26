@@ -10,12 +10,14 @@ use FKSDB\Components\Game\Submits\NoTaskLeftException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-class CodeCloseForm extends FormComponent
+final class CodeCloseForm extends FormComponent
 {
     private EventModel $event;
     private Handler $handler;
@@ -57,11 +59,14 @@ class CodeCloseForm extends FormComponent
                     sprintf(_('system expected task %s on top.'), $expectedTask->label)
                 );
             }
-            $this->handler->close($team);
-            FlashMessageDump::dump($this->handler->logger, $this->getPresenter());
+            $logger = new MemoryLogger();
+            $this->handler->close($logger, $team);
+            FlashMessageDump::dump($logger, $this->getPresenter());
             $this->getPresenter()->redirect('list', ['id' => null]);
         } catch (GameException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (AbortException $exception) {
+            throw $exception;
         } catch (\Throwable $exception) {
             $this->flashMessage('Undefined error', Message::LVL_ERROR);
         }
@@ -69,7 +74,7 @@ class CodeCloseForm extends FormComponent
 
     protected function appendSubmitButton(Form $form): SubmitButton
     {
-        return $form->addSubmit('submit', _('Close submitting!'));
+        return $form->addSubmit('submit', _('button.close.submitting'));
     }
 
     protected function configureForm(Form $form): void
@@ -77,7 +82,7 @@ class CodeCloseForm extends FormComponent
         $codeInput = $form->addText('code', _('Task code'));
         $codeInput->setOption(
             'description',
-            _('Kód z úlohy ktorá ostala ako daľšia na vydavanie, prip. posledný papierik')
+            _('Code from the top most paper on the table.')
         );
     }
 }

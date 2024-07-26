@@ -11,21 +11,26 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Schema\Elements\Structure;
+use Nette\Security\User;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
  */
-class ExportWebModel extends WebModel
+class ExportWebModel extends WebModel implements SoapWebModel
 {
     private StoredQueryFactory $storedQueryFactory;
     private ContestService $contestService;
+    private User $user;
 
     public function inject(
         StoredQueryFactory $storedQueryFactory,
-        ContestService $contestService
+        ContestService $contestService,
+        User $user
     ): void {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestService = $contestService;
+        $this->user = $user;
     }
 
     /**
@@ -33,7 +38,7 @@ class ExportWebModel extends WebModel
      * @throws \DOMException
      * @throws BadTypeException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         // parse arguments
         if (!isset($args->qid)) {
@@ -99,13 +104,23 @@ class ExportWebModel extends WebModel
             $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
         );
     }
+    protected function log(string $msg): void
+    {
+        if (!$this->user->isLoggedIn()) {
+            $message = 'unauthenticated@';
+        } else {
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
+        }
+        $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
+        Debugger::log($message, 'soap');
+    }
 
     protected function isAuthorized(): bool
     {
         return false;
     }
 
-    protected function getExpectedParams(): Structure
+    protected function getExpectedParams(): array
     {
         throw new NotImplementedException();
     }

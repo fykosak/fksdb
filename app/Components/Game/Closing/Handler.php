@@ -12,15 +12,13 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 
-class Handler
+final class Handler
 {
     private TeamService2 $teamService;
-    public MemoryLogger $logger;
 
     public function __construct(Container $container)
     {
         $container->callInjects($this);
-        $this->logger = new MemoryLogger();
     }
 
     public function inject(TeamService2 $teamService): void
@@ -28,16 +26,19 @@ class Handler
         $this->teamService = $teamService;
     }
 
-    public function close(TeamModel2 $team, bool $checkRequirements = true): void
+    public function close(MemoryLogger $logger, TeamModel2 $team, bool $checkRequirements = true): void
     {
         if ($checkRequirements) {
+            if (time() < $team->event->getGameSetup()->game_end->getTimestamp()) {
+                throw new GameNotFinishedException();
+            }
             $team->canClose();
         }
         $this->teamService->explorer->beginTransaction();
         $sum = (int)$team->getNonRevokedSubmits()->sum('points');
         $this->teamService->storeModel(['points' => $sum,], $team);
         $this->teamService->explorer->commit();
-        $this->logger->log(
+        $logger->log(
             new Message(
                 \sprintf(
                     _('Team "%s" rating was successfully closed with total %d points.'),

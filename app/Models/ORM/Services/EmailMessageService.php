@@ -11,6 +11,17 @@ use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
  * @phpstan-extends Service<EmailMessageModel>
+ * @phpstan-type TMessageData = array{
+ *     recipient_person_id?:int,
+ *     recipient?:string,
+ *     sender:string,
+ *     reply_to?:string,
+ *     subject:string,
+ *     carbon_copy?:string,
+ *     blind_carbon_copy?:string,
+ *     text:string,
+ *     priority?:int|bool
+ * }
  */
 final class EmailMessageService extends Service
 {
@@ -25,17 +36,7 @@ final class EmailMessageService extends Service
     }
 
     /**
-     * @phpstan-param array{
-     *     recipient_person_id?:int,
-     *     recipient?:string,
-     *     sender:string,
-     *     reply_to?:string,
-     *     subject:string,
-     *     carbon_copy?:string,
-     *     blind_carbon_copy?:string,
-     *     text:string,
-     *     priority?:int|bool
-     * } $data
+     * @phpstan-param TMessageData $data
      */
     public function addMessageToSend(array $data): EmailMessageModel
     {

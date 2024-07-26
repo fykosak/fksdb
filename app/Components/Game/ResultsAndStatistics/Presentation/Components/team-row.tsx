@@ -22,7 +22,7 @@ export default function TeamRow<AvailablePoints extends number>(
         <div className="col-1">{item.points}</div>
         <div className="col-1">{item.count}</div>
         <div className="col-1">{average}</div>
-        <div className="col-3">
+        <div className="col-3 team-progress">
             <div className="progress">
                 {availablePoints.map((points) => {
                     const width = ((item.groups[points]) ?

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Event\Import;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
@@ -49,7 +48,7 @@ final class ImportComponent extends BaseComponent
 
         $form->addSubmit('import', _('Import'));
 
-        $form->onSuccess[] = fn(Form $form) => $this->handleFormImport($form);
+        $form->onSuccess[] = fn (Form $form) => $this->handleFormImport($form);
         return $control;
     }
 
@@ -59,7 +58,6 @@ final class ImportComponent extends BaseComponent
     }
 
     /**
-     * @throws ConfigurationNotFoundException
      * @throws \Throwable
      */
     private function handleFormImport(Form $form): void

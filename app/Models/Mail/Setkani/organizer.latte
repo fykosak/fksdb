@@ -1,0 +1,25 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Výfučí setkání – změna účastníka{/define}
+
+<p>
+    <strong>Osoba</strong>
+    {$model->person->getFullName()}
+</p>
+<p>
+    <strong>Nový stav</strong>
+    {$model->status->label()}
+</p>
+<p>
+    <strong>Detail přihlášky</strong>
+    {var string $link = $control->link('//:Event:Application:Detail',
+    ['eventId'=> $model->event->event_id,
+    'id'=>$model->getPrimary()])}
+    <a href="{$link}">{$link}</a>
+</p>
+<p>
+    Tvá milá<br />
+    FKSDB
+</p>

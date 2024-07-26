@@ -10,22 +10,30 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
- * @phpstan-import-type SerializedTeamModel from TeamModel2
+ * @phpstan-type SerializedTeamModel array{
+ *      teamId:int,
+ *      name:string,
+ *      state:string,
+ *      code:string|null,
+ *      category:string,
+ *      created:string,
+ *      phone:string|null,
+ *      points:int|null,
+ *      rankCategory:int|null,
+ *      rankTotal:int|null,
+ *      rank:array{total:int|null,category:int|null},
+ *      forceA:int|null,
+ *      gameLang:string|null,
+ *      place:array{sector:string,label:string}|null,
+ *      teachers:mixed[],
+ *      members:mixed[],
+ * }
  * @phpstan-extends EventWebModel<array{eventId:int},(SerializedTeamModel)[]>
  */
 class TeamsWebModel extends EventWebModel
 {
-    protected function getExpectedParams(): Structure
-    {
-        return Expect::structure([
-            'eventId' => Expect::scalar()->castTo('int')->required(),
-        ]);
-    }
-
     /**
      * @throws BadRequestException
      */
@@ -38,7 +46,6 @@ class TeamsWebModel extends EventWebModel
                 'teamId' => $team->fyziklani_team_id,
                 'name' => $team->name,
                 'code' => $team->createMachineCode(),
-                'status' => $team->state->value,
                 'state' => $team->state->value,
                 'category' => $team->category->value,
                 'created' => $team->created->format('c'),
@@ -46,8 +53,13 @@ class TeamsWebModel extends EventWebModel
                 'points' => $team->points,
                 'rankCategory' => $team->rank_category,
                 'rankTotal' => $team->rank_total,
+                'rank' => [
+                    'category' => $team->rank_category,
+                    'total' => $team->rank_total,
+                ],
                 'forceA' => $team->force_a,
                 'gameLang' => $team->game_lang->value,
+                'place' => $team->getPlace() ? $team->getPlace()->__serialize() : null,
                 'teachers' => [],
                 'members' => [],
             ];

@@ -26,8 +26,8 @@ use Nette\Utils\DateTime;
  * @property-read PersonModel|null $person
  * @property-read string|null $login
  * @property-read string|null $hash
- * @property-read \DateTimeInterface $created
- * @property-read \DateTimeInterface|null $last_login
+ * @property-read DateTime $created
+ * @property-read DateTime|null $last_login
  * @property-read int $active
  */
 final class LoginModel extends Model implements IIdentity

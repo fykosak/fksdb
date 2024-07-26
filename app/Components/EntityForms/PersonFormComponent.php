@@ -94,7 +94,7 @@ class PersonFormComponent extends EntityFormComponent
         $connection->commit();
         $this->logger->log(
             new Message(
-                isset($this->model) ? _('Data has been updated') : _('Person has been created'),
+                isset($this->model) ? _('Person has been updated') : _('Person has been created'),
                 Message::LVL_SUCCESS
             )
         );

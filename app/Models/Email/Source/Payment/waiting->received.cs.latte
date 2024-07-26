@@ -1,0 +1,21 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+
+{define subject}Potvrzení přijetí platby{/define}
+
+{block body}
+<div>
+    <p>
+        Dobrý den,<br/><br/>
+        potvrzujeme, že jsme úspěšně přijali Vaši platbu #{$model->payment_id} za Fyziklání 2024 v hodnotě <b>{$model->getPrice()->__toString()}</b>.
+    </p>
+
+    <p>
+        Pro rekapitulaci, platba zahrnovala následující:
+    </p>
+
+    {include './items.latte', lang: 'cs'}
+
+    {include './signature.cs.latte'}
+</div>
+{/block}

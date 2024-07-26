@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ACTION_SET_PARAMS } from '../../actions/presentation';
 import { Store } from 'FKSDB/Components/Game/ResultsAndStatistics/reducers/store';
@@ -12,6 +12,7 @@ export default function PositionSwitcher() {
     const rows = useSelector((state: Store) => state.presentation.rows);
     const teams = useSelector((state: Store) => state.data.teams);
     const dispatch = useDispatch();
+    const timer = useRef(null);
     const getCategory = (): string => {
         const index = categories.indexOf(category);
         if (index === -1) {
@@ -40,7 +41,10 @@ export default function PositionSwitcher() {
             newPosition = 0;
         }
         await new Promise<void>((resolve) => {
-            setTimeout(() => {
+            if (timer.current != null) {
+                clearTimeout(timer.current);
+            }
+            timer.current = setTimeout(() => {
                 dispatch({
                     data: {position: newPosition, category: newCategory},
                     type: ACTION_SET_PARAMS,

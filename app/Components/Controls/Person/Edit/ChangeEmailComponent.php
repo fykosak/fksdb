@@ -7,14 +7,12 @@ namespace FKSDB\Components\Controls\Person\Edit;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
-use FKSDB\Models\ORM\Services\AuthTokenService;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Logging\Message;
@@ -26,14 +24,12 @@ use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<PersonModel>
+ * @property-read PersonModel $model
  */
 class ChangeEmailComponent extends EntityFormComponent
 {
     private ReflectionFactory $reflectionFormFactory;
-    private MailTemplateFactory $mailTemplateFactory;
     private LoginService $loginService;
-    private AuthTokenService $authTokenService;
-    private EmailMessageService $emailMessageService;
 
     public function __construct(
         Container $container,
@@ -44,16 +40,10 @@ class ChangeEmailComponent extends EntityFormComponent
 
     public function inject(
         ReflectionFactory $reflectionFormFactory,
-        MailTemplateFactory $mailTemplateFactory,
-        LoginService $loginService,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+        LoginService $loginService
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
-        $this->mailTemplateFactory = $mailTemplateFactory;
         $this->loginService = $loginService;
-        $this->authTokenService = $authTokenService;
-        $this->emailMessageService = $emailMessageService;
     }
 
     public function render(): void
@@ -98,11 +88,19 @@ class ChangeEmailComponent extends EntityFormComponent
     {
         /** @phpstan-var array{new_email:string} $values */
         $values = $form->getValues('array');
-        $this->sendChangeEmail(
-            $this->model,
-            $values['new_email'],
-            Language::tryFrom($this->translator->lang)
-        );
+        $lang = Language::from($this->translator->lang);
+        $newEmail = $values['new_email'];
+        self::logEmailChange($this->model, $newEmail, true);
+        $login = $this->model->getLogin();
+        if (!$login) {
+            $this->loginService->createLogin($this->model);
+        }
+        $token = $login->getActiveTokens(AuthTokenType::ChangeEmail)->fetch();
+        if ($token) {
+            throw new ChangeInProgressException();
+        }
+        $emailSource = new ChangeEmailSource($this->container);
+        $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
 
         $this->getPresenter()->flashMessage(
             _(
@@ -117,53 +115,6 @@ class ChangeEmailComponent extends EntityFormComponent
     protected function setDefaults(Form $form): void
     {
         $form->setDefaults(['new_email' => $this->model->getInfo()?->email]);
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws ChangeInProgressException
-     */
-    private function sendChangeEmail(PersonModel $person, string $newEmail, Language $lang): void
-    {
-        self::logEmailChange($person, $newEmail, true);
-        $login = $person->getLogin();
-        if (!$login) {
-            $this->loginService->createLogin($person);
-        }
-        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch();
-        if ($token) {
-            throw new ChangeInProgressException();
-        }
-        $token = $this->authTokenService->createToken(
-            $login,
-            AuthTokenType::from(AuthTokenType::ChangeEmail),
-            (new \DateTime())->modify('+20 minutes'),
-            $newEmail
-        );
-        $oldData = array_merge(
-            $this->mailTemplateFactory->renderWithParameters(
-                __DIR__ . '/email.old.latte',
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
-                $lang
-            ),
-            [
-                'sender' => 'FKSDB <fksdb@fykos.cz>',
-                'recipient' => (string)$person->getInfo()->email,
-            ]
-        );
-        $newData = array_merge(
-            $this->mailTemplateFactory->renderWithParameters(
-                __DIR__ . '/email.new.latte',
-                ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
-                $lang
-            ),
-            [
-                'sender' => 'FKSDB <fksdb@fykos.cz>',
-                'recipient' => $newEmail,
-            ]
-        );
-        $this->emailMessageService->addMessageToSend($oldData);
-        $this->emailMessageService->addMessageToSend($newData);
     }
 
     public static function logEmailChange(PersonModel $person, string $newEmail, bool $request): void

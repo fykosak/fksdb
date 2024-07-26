@@ -32,10 +32,13 @@ final class EventTypeModel extends Model
     {
         return match ($this->event_type_id) {
             1 => 'fof',
-            9 => 'fol',
             2, 14 => 'dsef',
+            3 => 'fav',
+            4, 5 => 'sous',
+            6, 7 => 'tsaf',
+            9 => 'fol',
             16 => 'fov',
-            default => $this->contest->getContestSymbol()
+            default => $this->contest->getContestSymbol(),
         };
     }
 
@@ -57,7 +60,6 @@ final class EventTypeModel extends Model
                     'deadline' => Expect::type(\DateTimeInterface::class)->default(
                         new \DateTime('2021-05-09 23:59:00')
                     ),
-                    'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                     'letterResolutionTime' => Expect::string('až naprší a uschne'),
                 ])->castTo('array');
@@ -70,26 +72,23 @@ final class EventTypeModel extends Model
             case 4:
             case 5:
                 return Expect::structure([
-                    'notifyBcc' => Expect::string('vercah@fykos.cz'),
-                    'notifyFrom' => Expect::string('FYKOSí Soustředění <soustredeni@fykos.cz>'),
-                    'letterWhere' => Expect::string('Hejnice'),
-                    'deadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
-                    'letterSignature' => Expect::string('Veronika Hendrychová'),
-                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('2022-04-04'),
-                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('2022-04-06'),
-                ])->castTo('array');
+                    'deadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09'),
+                    'letterSignature' => Expect::string('Student Pilný'),
+                    'letterDecisionDeadline' => Expect::type(\DateTimeInterface::class)->default('1990-09-09 00:00:00'),
+                    'letterResolutionTime' => Expect::type(\DateTimeInterface::class)->default('1990-19-09 00:00:00'),
+                ])->castTo('array')->otherItems(Expect::mixed());
             case 10:
                 return Expect::structure([
                     'notifyBcc' => Expect::string('vyfuk@vyfuk.org'),
                     'notifyFrom' => Expect::string('Výfučí tábor <vyfuk@vyfuk.org>'),
                     'capacity' => Expect::int(29),
-                    'letterWhere' => Expect::string('nikde'),
                     'letterSignature' => Expect::string('Student Pilný'),
                 ])->castTo('array');
             case 11:
             case 12:
                 return Expect::structure([
                     'capacity' => Expect::int(0),
+                    'letterSignature' => Expect::string('Student Pilný'),
                 ])->castTo('array');
             case 15:
                 return Expect::structure([

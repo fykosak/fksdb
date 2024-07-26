@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Security\Resource;
+use Nette\Utils\DateTime;
 
 /**
  * @property-read int $person_id
@@ -19,8 +20,8 @@ use Nette\Security\Resource;
  * @property-read PaymentState $state
  * @property-read float|null $price
  * @property-read string|null $currency
- * @property-read \DateTimeInterface|null $created
- * @property-read \DateTimeInterface|null $received
+ * @property-read DateTime|null $created
+ * @property-read DateTime|null $received
  * @property-read string|null $constant_symbol
  * @property-read string|null $variable_symbol
  * @property-read string|null $specific_symbol

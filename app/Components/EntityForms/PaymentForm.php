@@ -16,10 +16,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
@@ -91,7 +89,7 @@ class PaymentForm extends EntityFormComponent
         // $currencyField->setItems($this->machine->priceCalculator->getAllowedCurrencies());
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
+       // $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
         foreach ($this->sources as $source) {
             if ($source instanceof EventModel) {
                 $form->addComponent(
@@ -109,9 +107,6 @@ class PaymentForm extends EntityFormComponent
     }
 
     /**
-     * @throws UnavailableTransitionsException
-     * @throws \PDOException
-     * @throws StorageException
      * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void

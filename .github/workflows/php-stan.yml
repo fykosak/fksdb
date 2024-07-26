@@ -9,6 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        script: [ 'testPHPStan' ]
         php: [ '7.4' ]
     steps:
       - uses: actions/checkout@v2
@@ -24,8 +25,5 @@ jobs:
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
         run: composer install --no-progress --prefer-dist
-      - uses: php-actions/phpstan@v3
-        with:
-          configuration: phpstan.neon
-          version: 1.10.21
-          php_version: 7.4
+      - name: Run PHPStan
+        run: composer run-script ${{ matrix.script }}
