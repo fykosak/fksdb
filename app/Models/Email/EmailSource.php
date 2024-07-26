@@ -6,14 +6,8 @@ namespace FKSDB\Models\Email;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\GettextTranslator;
-use Nette\Application\IPresenterFactory;
-use Nette\Application\UI\TemplateFactory as LatteFactory;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
-use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 
 /**
@@ -26,10 +20,7 @@ abstract class EmailSource
 {
     protected Container $container;
     private EmailMessageService $emailMessageService;
-    private GettextTranslator $translator;
-    private IRequest $request;
-    private LatteFactory $latteTemplateFactory;
-    private IPresenterFactory $presenterFactory;
+    private TemplateFactory $templateFactory;
 
     public function __construct(Container $container)
     {
@@ -38,17 +29,11 @@ abstract class EmailSource
     }
 
     public function inject(
-        EmailMessageService $emailMessageService,
-        LatteFactory $latteTemplateFactory,
-        IPresenterFactory $presenterFactory,
-        GettextTranslator $translator,
-        IRequest $request
+        TemplateFactory $templateFactory,
+        EmailMessageService $emailMessageService
     ): void {
+        $this->templateFactory = $templateFactory;
         $this->emailMessageService = $emailMessageService;
-        $this->translator = $translator;
-        $this->request = $request;
-        $this->latteTemplateFactory = $latteTemplateFactory;
-        $this->presenterFactory = $presenterFactory;
     }
 
 
@@ -123,31 +108,13 @@ abstract class EmailSource
             throw new InvalidArgumentException(sprintf(_('Cannot find template "%s".'), $templateFile));
         }
         return [
-            'subject' => $this->create($lang)->renderToString(
+            'subject' => $this->templateFactory->create($lang)->renderToString(
                 __DIR__ . '/subject.latte',
                 array_merge(['templateFile' => $templateFile], $data)
             ),
-            'text' => $this->create($lang)->renderToString($templateFile, $data),
+            'text' => $this->templateFactory->create($lang)->renderToString($templateFile, $data),
         ];
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    private function create(Language $lang): Template
-    {
-        $presenter = $this->presenterFactory->createPresenter('Organizer:Email');
-        if (!$presenter instanceof BasePresenter) {
-            throw new BadTypeException(BasePresenter::class, $presenter);
-        }
-        $template = $this->latteTemplateFactory->createTemplate();
-        if (!$template instanceof Template) {
-            throw new BadTypeException(Template::class, $template);
-        }
-        $template->getLatte()->addProvider('uiControl', $presenter);
-        $template->control = $presenter;
-        $template->baseUrl = $this->request->getUrl()->getBaseUrl();
-        $template->setTranslator($this->translator, $lang->value);
-        return $template;
-    }
+
 }
