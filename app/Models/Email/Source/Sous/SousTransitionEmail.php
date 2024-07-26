@@ -4,27 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\Sous;
 
-use FKSDB\Models\Email\Source\EventParticipantTransitionEmail;
+use FKSDB\Models\Email\ParticipantTransitionEmail;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
 
 /**
- * @phpstan-extends EventParticipantTransitionEmail<array{
- *     person: PersonModel,
- *     holder: ParticipantHolder,
+ * @phpstan-extends ParticipantTransitionEmail<array{
  *     model: EventParticipantModel,
  * }>
  */
-final class SousTransitionEmail extends EventParticipantTransitionEmail
+final class SousTransitionEmail extends ParticipantTransitionEmail
 {
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
         return [
-            'recipient_person_id' => $holder->getModel()->person_id,
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
         ];
@@ -33,8 +29,6 @@ final class SousTransitionEmail extends EventParticipantTransitionEmail
     protected function getTemplateData(ParticipantHolder $holder, Transition $transition): array
     {
         return [
-            'person' => $holder->getModel()->person,
-            'holder' => $holder,
             'model' => $holder->getModel(),
         ];
     }

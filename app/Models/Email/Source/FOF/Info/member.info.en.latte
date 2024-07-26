@@ -1,0 +1,20 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{define subject}Team update – {$model->name}{/define}
+
+{block body}
+    <p>
+        Hello,<br/><br/>
+        Some changes have been made in the application of your team. Below you find the updated information:
+    </p>
+    {include detail from '../detail.en.latte',model:$model}
+    <p>
+        You can edit it using the link in the registration email or in <a href="https://db.fykos.cz/profile/my-applications/">FKSDB</a> after clicking on the Detail of the application. Data regarding team members can be edited anytime before the end of the registration.
+    </p>
+    <p>
+        See you in Prague!<br/>
+        Fyziklani organizers<br/>
+        <a href="https://fyziklani.org/en">fyziklani.org</a>
+    </p>
+{/block}
