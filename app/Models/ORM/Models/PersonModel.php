@@ -289,6 +289,16 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
+    /**
+     * @phpstan-return TypedGroupedSelection<BannedPersonModel>
+     */
+    public function getBans(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<BannedPersonModel> $selection */
+        $selection = $this->related(DbNames::TAB_BANNED_PERSON, 'person_id');
+        return $selection;
+    }
+
     public function getEventOrganizer(EventModel $event): ?EventOrganizerModel
     {
         /** @var EventOrganizerModel|null $eventOrganizer */

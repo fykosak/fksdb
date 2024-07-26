@@ -1220,3 +1220,28 @@ orm:
             mail_type:
                 type: string
                 title: _('Mail type')
+    banned_person:
+        model: FKSDB\Models\ORM\Models\BannedPersonModel
+        service: FKSDB\Models\ORM\Services\BannedPersonService
+        columns:
+            banned_person_id:
+                type: primaryKey
+                title: _('Id')
+            case_id:
+                type: string
+                title: _('Case Id')
+            note:
+                type: text
+                title: _('Description/Note')
+    banned_person_scope:
+        model: FKSDB\Models\ORM\Models\BannedPersonScopeModel
+        service: Fykosak\NetteORM\Service\DummyService
+        columns:
+            begin:
+                type: date
+                title: _('Begin')
+                format: 'd.M. Y'
+            end:
+                type: date
+                title: _('End')
+                format: 'd.M. Y'
