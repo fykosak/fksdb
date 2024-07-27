@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{
-    ContestOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
     EventOrganizerRole,
     EventRole,
     Fyziklani\TeamMemberRole,
@@ -287,6 +286,16 @@ final class PersonModel extends Model implements Resource
     {
         /** @phpstan-var TypedGroupedSelection<EventOrganizerModel> $selection */
         $selection = $this->related(DbNames::TAB_EVENT_ORGANIZER, 'person_id');
+        return $selection;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<BannedPersonModel>
+     */
+    public function getBans(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<BannedPersonModel> $selection */
+        $selection = $this->related(DbNames::TAB_BANNED_PERSON, 'person_id');
         return $selection;
     }
 

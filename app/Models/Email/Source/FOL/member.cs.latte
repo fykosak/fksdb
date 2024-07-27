@@ -1,0 +1,23 @@
+{layout none}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
+
+{define subject}{_'Physics Brawl Online Team Registration'}{/define}
+
+<p>Ahoj,<br/>
+    byl(a) jsi úspěšně zaregistrován(a) na Fyziklání Online, jsi členem týmu <em>{$model->name}</em>.
+</p>
+<p>
+    Přihlášku si můžeš prohlédnout na odkazu <a href="{$detailLink}">{$detailLink}</a>, případné změny lze provádět až
+    do {$model->event->registration_end|date:'d.m.Y, H:i'} po přihlášení v sekci
+    <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
+    nebo na odkazu níže:<br/>
+    <a href="{$editLink}">{$editLink}</a>.
+</p>
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

@@ -1,0 +1,14 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Letní tábor Výfuku – potvrzení přihlášky{/define}
+
+<p>
+    Ahoj,<br>
+    tvou přihlášku jsme zaevidovali. V blízké době můžeš očekávat potvrzení o tvé účasti.
+</p>
+<p>
+    Za organizátory<br>
+    {$model->event->getParameter('letterSignature')}
+</p>

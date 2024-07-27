@@ -1,0 +1,26 @@
+transitions:
+    dsef:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        decorator: null
+        transitions:
+            __init->applied:
+                label: _('Register')
+                icon: 'fas fa-plus'
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Dsef\DsefTransitionEmail()
+            applied->participated:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Prezentovat')
+                icon: 'fas fa-check'
+            applied->missed:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Nepřijel')
+                icon: 'fas fa-poo'
+                behaviorType: danger
+            applied->cancelled:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Zrušit přihlášku')
+                icon: 'fas fa-xmark'
+                behaviorType: danger
+

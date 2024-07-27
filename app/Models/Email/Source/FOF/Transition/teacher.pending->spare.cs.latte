@@ -1,0 +1,19 @@
+{layout '../layout.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+
+{define subject}Změna stavu - {$model->name}{/define}
+
+{block body}
+    <p>
+        Dobrý den,<br/><br/>
+        Váš tým {$model->name} je zaregistrován do soutěže Fyziklání, nicméně buď kvůli omezené kapacitě nebo kvůli pravidlům (omezení počtu týmů z jedné školy) byl přesunut mezi náhradníky. Momentálně s tímto týmem tedy na soutěži nepočítáme.
+    </p>
+    <p>
+        Pokud budeme před soutěží disponovat volnou kapacitou, váš tým kontaktujeme a bude se moci zúčastnit.
+    </p>
+    <p>
+        Děkujeme za pochopení,<br/>
+        Organizátoři Fyziklání<br/>
+        <a href="https://fyziklani.cz">fyziklani.cz</a>
+    </p>
+{/block}

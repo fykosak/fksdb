@@ -20,7 +20,7 @@ use Nette\Forms\Form;
  * @phpstan-import-type TSupportedModel from MachineCode
  * @phpstan-template TModel of Model
  * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
- * @phpstan-type TMachine Machine<ModelHolder<TState,TModel>>
+ * @phpstan-type TMachine Machine<ModelHolder<TModel,TState>>
  */
 abstract class CodeTransition extends CodeForm
 {
@@ -45,7 +45,7 @@ abstract class CodeTransition extends CodeForm
     }
 
     /**
-     * @phpstan-return Transition<ModelHolder<TState,TModel>>[]
+     * @phpstan-return Transition<ModelHolder<TModel,TState>>[]
      */
     protected function getTransitions(): array
     {

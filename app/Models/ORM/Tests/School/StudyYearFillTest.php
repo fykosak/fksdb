@@ -24,7 +24,7 @@ final class StudyYearFillTest extends Test
 
     public function getDescription(): ?string
     {
-        return _('Check if school has filled any of study types (study_* fields)');
+        return _('Checks if school has filled any of study types (study_* fields).');
     }
 
     protected function innerRun(TestLogger $logger, Model $model, string $id): void

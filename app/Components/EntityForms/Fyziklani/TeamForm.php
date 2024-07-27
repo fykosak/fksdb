@@ -12,10 +12,9 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Email\Source\FOF\Info\InfoEmail;
+use FKSDB\Models\Email\Source\FOF\OrganizerInfo\OrganizerInfoEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\FOF\MemberInfoMail;
-use FKSDB\Models\Mail\FOF\OrganizerInfoMail;
-use FKSDB\Models\Mail\FOF\TeacherInfoMail;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -157,9 +156,8 @@ abstract class TeamForm extends EntityFormComponent
             }
             // pri každej editácii okrem initu pošle mail
             if (isset($this->model) && $this->event->event_type_id === 1) {
-                (new TeacherInfoMail($this->container))($holder);
-                (new MemberInfoMail($this->container))($holder);
-                (new OrganizerInfoMail($this->container))($holder);
+                (new InfoEmail($this->container))->createAndSend(['holder' => $holder]);
+                (new OrganizerInfoEmail($this->container))->createAndSend(['holder' => $holder]);
             }
             $this->teamService->explorer->commit();
             $this->getPresenter()->flashMessage(
