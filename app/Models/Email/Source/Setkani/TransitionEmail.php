@@ -16,7 +16,7 @@ use FKSDB\Modules\Core\Language;
  *     model: EventParticipantModel,
  * }>
  */
-class TransitionEmail extends ParticipantTransitionEmail
+final class TransitionEmail extends ParticipantTransitionEmail
 {
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {

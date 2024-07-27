@@ -20,7 +20,7 @@ use FKSDB\Modules\Core\Language;
  *      token:AuthTokenModel,
  *  }>
  */
-class PasswordRecoveryEmailSource extends EmailSource
+final class PasswordRecoveryEmail extends EmailSource
 {
     protected function getSource(array $params): array
     {

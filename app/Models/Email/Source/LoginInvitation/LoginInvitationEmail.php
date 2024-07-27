@@ -19,7 +19,7 @@ use FKSDB\Modules\Core\Language;
  *      lang:Language,
  *  }>
  */
-class LoginInvitationEmailSource extends EmailSource
+final class LoginInvitationEmail extends EmailSource
 {
     protected function getSource(array $params): array
     {

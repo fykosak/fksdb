@@ -18,11 +18,11 @@ use FKSDB\Modules\Core\Language;
  *     token: AuthTokenModel,
  * }>
  */
-final class DsefTransitionEmail extends ParticipantTransitionEmail
+final class TransitionEmail extends ParticipantTransitionEmail
 {
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'participant.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
     protected function getData(ParticipantHolder $holder, Transition $transition): array

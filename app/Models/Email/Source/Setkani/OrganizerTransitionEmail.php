@@ -13,7 +13,7 @@ use FKSDB\Modules\Core\Language;
 /**
  * @phpstan-extends EmailSource<array{model:EventParticipantModel},array{holder:ParticipantHolder}>
  */
-class OrganizerTransitionEmail extends EmailSource
+final class OrganizerTransitionEmail extends EmailSource
 {
     protected function getSource(array $params): array
     {

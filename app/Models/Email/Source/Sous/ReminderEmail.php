@@ -22,7 +22,7 @@ use Nette\Forms\Form;
  *      model: EventParticipantModel,
  * },array{event_id:int}>
  */
-final class ReminderEmailSource extends UIEmailSource
+final class ReminderEmail extends UIEmailSource
 {
     private EventParticipantService $eventParticipantService;
     private EventService $eventService;

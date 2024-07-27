@@ -25,7 +25,7 @@ use FKSDB\Modules\Core\Language;
  *      lang:Language,
  *  }>
  */
-class ChangeEmailSource extends EmailSource
+class ChangeEmailEmail extends EmailSource
 {
     private AuthTokenService $tokenService;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailEmail;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
@@ -91,7 +91,7 @@ class ChangeEmailComponent extends EntityFormComponent
         if ($token) {
             throw new ChangeInProgressException();
         }
-        $emailSource = new ChangeEmailSource($this->container);
+        $emailSource = new ChangeEmailEmail($this->container);
         $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
 
         $this->getPresenter()->flashMessage(

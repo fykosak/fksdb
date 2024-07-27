@@ -15,7 +15,7 @@ use FKSDB\Modules\Core\Language;
 /**
  * @phpstan-extends EmailSource<array{tests:Test<TeamModel2>[],model:TeamModel2},array{holder:TeamHolder}>
  */
-class OrganizerInfoEmail extends EmailSource
+final class OrganizerInfoEmail extends EmailSource
 {
     protected function getSource(array $params): array
     {

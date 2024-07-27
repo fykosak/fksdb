@@ -16,7 +16,7 @@ use FKSDB\Modules\Core\Language;
 /**
  * @phpstan-extends TransitionEmailSource<TeamModel2,array{tests:Test<TeamModel2>[],model:TeamModel2}>
  */
-class OrganizerTransitionEmail extends TransitionEmailSource
+final class OrganizerTransitionEmail extends TransitionEmailSource
 {
     protected function getSource(array $params): array
     {
