@@ -106,8 +106,6 @@ class Authorization extends FyziklaniTestCase
             'role' => 'game.inserter',
             'event_id' => $this->event->event_id,
         ]);
-
-        $this->mockApplication();
     }
 
     public function getTestData(): array

@@ -7,7 +7,7 @@ transitions:
             init->pending:
                 label: _('Register team')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\Fol\TeamMemberMailCallback()
+                    - FKSDB\Models\Email\Source\FOL\TeamMemberEmail()
             pending->applied:
                 behaviorType: success
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
