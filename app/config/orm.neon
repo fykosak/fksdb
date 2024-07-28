@@ -72,6 +72,9 @@ orm:
             blind_carbon_copy:
                 type: email
                 title: _('Bcc')
+            inner_text:
+                type: text
+                title: _('Inner text')
             text:
                 type: text
                 title: _('Text')

@@ -70,7 +70,13 @@ abstract class Machine
             if (!$outerTransition) {
                 $this->explorer->getConnection()->rollBack();
             }
-            throw $exception;
+            if (count($transition->onFail)) {
+                foreach ($transition->onFail as $failHandler) {
+                    $failHandler->handle($exception, $holder, $transition);
+                }
+            } else {
+                throw $exception;
+            }
         }
         if (!$outerTransition) {
             $this->explorer->getConnection()->commit();

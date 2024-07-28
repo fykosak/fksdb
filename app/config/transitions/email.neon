@@ -1,0 +1,26 @@
+transitions:
+    email:
+        machine: FKSDB\Models\Transitions\Machine\TeamMachine
+        stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
+        decorator: null
+        transitions:
+            saved->ready:
+                label: _('Email ready')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
+            ready->waiting:
+                label: _('Prepare and put to front')
+                beforeExcecute:
+                    - FKSDB\Models\Email\Transitions\ResolveRecipient()
+                    - FKSDB\Models\Email\Transitions\PrepareText()
+            waiting->sent:
+                lable: _('Send')
+                beforeExcecute:
+                    - FKSDB\Models\Email\Transitions\SendEmail()
+                onFail:
+                    - FKSDB\Models\Email\Transitions\OnFailSend()
+            waiting->rejeted:
+                label: _('Reject')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
+            waiting->failed:
+                label: _('Fail')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()

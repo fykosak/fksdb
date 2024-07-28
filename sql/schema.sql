@@ -1337,8 +1337,16 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `subject`             VARCHAR(128)     NOT NULL,
     `carbon_copy`         VARCHAR(128)     NULL     DEFAULT NULL,
     `blind_carbon_copy`   VARCHAR(128)     NULL     DEFAULT NULL,
-    `text`                TEXT             NOT NULL,
-    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
+    `inner_text`          TEXT             NOT NULL COMMENT 'telo emailu, ktoré sa pri odoslaní zabalí do dalších blokov',
+    `text`                TEXT             NULL     DEFAULT NULL COMMENT 'celý text emailu vrátane pätičky, to čo realne odišlo',
+    `state`               ENUM (
+        'saved',
+        'waiting',
+        'sent',
+        'failed',
+        'canceled',
+        'rejected'
+        )                                           DEFAULT 'saved',
     `topic`               ENUM (
         'spam_contest',
         'spam_mff',
@@ -1370,10 +1378,10 @@ CREATE TABLE IF NOT EXISTS `email_message`
 CREATE TABLE IF NOT EXISTS `person_email_preference`
 (
     `person_email_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `person_id`           INT UNSIGNED                                  NOT NULL,
-    `option`              ENUM ('spam_contest','spam_mff','spam_other') NOT NULL,
-    `value`               BOOL                                          NOT NULL,
-    `created`             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `person_id`                  INT UNSIGNED                                  NOT NULL,
+    `option`                     ENUM ('spam_contest','spam_mff','spam_other') NOT NULL,
+    `value`                      BOOL                                          NOT NULL,
+    `created`                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY `uq__email_preference__option` (`person_id`, `option`),
     CONSTRAINT `fk__email_preference__person`
         FOREIGN KEY (`person_id`)

@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\Transitions\Machine\EmailMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -14,7 +18,7 @@ use Nette\InvalidArgumentException;
 /**
  * @phpstan-template TTemplateParam of array
  * @phpstan-template TSchema of array
- * @phpstan-type TRenderedData = array{text:string,subject:string}
+ * @phpstan-type TRenderedData = array{inner_text:string,subject:string}
  * @phpstan-import-type TMessageData from EmailMessageService
  */
 abstract class EmailSource
@@ -22,6 +26,7 @@ abstract class EmailSource
     protected Container $container;
     private EmailMessageService $emailMessageService;
     private TemplateFactory $templateFactory;
+    private EmailMachine $machine;
 
     public function __construct(Container $container)
     {
@@ -31,12 +36,13 @@ abstract class EmailSource
 
     public function inject(
         TemplateFactory $templateFactory,
-        EmailMessageService $emailMessageService
+        EmailMessageService $emailMessageService,
+        TransitionsMachineFactory $transitionsMachineFactory
     ): void {
         $this->templateFactory = $templateFactory;
         $this->emailMessageService = $emailMessageService;
+        $this->machine = $transitionsMachineFactory->getEmailMachine();
     }
-
 
     /**
      * @phpstan-return array{
@@ -90,14 +96,27 @@ abstract class EmailSource
         }
         return $return;//@phpstan-ignore-line
     }
+
     /**
      * @phpstan-param TSchema $params
      * @throws BadTypeException
+     * @throws \Throwable
      */
     public function createAndSend(array $params): void
     {
+        $transition = Machine::selectTransition(
+            Machine::filterByTarget(
+                Machine::filterBySource(
+                    $this->machine->transitions,
+                    EmailMessageState::from(EmailMessageState::Ready)
+                ),
+                EmailMessageState::from(EmailMessageState::Waiting)
+            )
+        );
         foreach ($this->createEmails($params) as $email) {
-            $this->emailMessageService->addMessageToSend($email);
+            $model = $this->emailMessageService->addMessageToSend($email);
+            $holder = $this->machine->createHolder($model);
+            $this->machine->execute($transition, $holder);
         }
     }
 
@@ -116,7 +135,7 @@ abstract class EmailSource
                 __DIR__ . '/subject.latte',
                 array_merge(['templateFile' => $templateFile], $data)
             ),
-            'text' => $this->templateFactory->create($lang)->renderToString($templateFile, $data),
+            'inner_text' => $this->templateFactory->create($lang)->renderToString($templateFile, $data),
         ];
     }
 }

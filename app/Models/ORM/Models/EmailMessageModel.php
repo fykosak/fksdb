@@ -20,6 +20,7 @@ use Nette\Utils\DateTime;
  * @property-read string|null $carbon_copy
  * @property-read string|null $blind_carbon_copy
  * @property-read string $text
+ * @property-read string|null $inner_text
  * @property-read EmailMessageState $state
  * @property-read DateTime $created
  * @property-read DateTime $sent
@@ -46,6 +47,12 @@ final class EmailMessageModel extends Model implements Resource
         switch ($key) {
             case 'state':
                 $value = EmailMessageState::from($value);
+                break;
+            case 'topic':
+                $value = EmailMessageTopic::from($value);
+                break;
+            case 'lang':
+                $value = Language::from($value);
                 break;
         }
         return $value;

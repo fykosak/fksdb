@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -20,6 +19,7 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Utils\FormUtils;
@@ -61,7 +61,7 @@ abstract class SingleFormComponent extends EntityFormComponent
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
         EventParticipantService $eventParticipantService,
-        EventDispatchFactory $eventDispatchFactory
+        TransitionsMachineFactory $eventDispatchFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->eventParticipantService = $eventParticipantService;

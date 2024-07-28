@@ -11,31 +11,34 @@ use Nette\Utils\Html;
 
 final class EmailMessageState extends FakeStringEnum implements EnumColumn
 {
-    public const SAVED = 'saved'; // uložená, na ďalšiu úpravu
-    public const WAITING = 'waiting'; //čaká na poslanie
-    public const SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
-    public const FAILED = 'failed'; // posielanie zlyhalo
-    public const CANCELED = 'canceled'; // posielanie zrušené
-    public const REJECTED = 'rejected'; // zastavené kvôli GDPR
+    //phpcs:disable
+    public const Saved = 'saved'; // uložená, na ďalšiu úpravu
+    public const Ready = 'ready'; // dokončený čaká na pridanie unsubscribed options
+    public const Waiting = 'waiting'; //čaká na poslanie
+    public const Sent = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
+    public const Failed = 'failed'; // posielanie zlyhalo
+    public const Cancelled = 'canceled'; // posielanie zrušené
+    public const Rejected = 'rejected'; // zastavené kvôli GDPR
+    //phpcs:enable
 
     public function badge(): Html
     {
         switch ($this->value) {
             default:
-            case self::CANCELED:
+            case self::Cancelled:
                 $badge = 'secondary';
                 break;
-            case self::REJECTED:
-            case self::FAILED:
+            case self::Rejected:
+            case self::Failed:
                 $badge = 'danger';
                 break;
-            case self::SAVED:
+            case self::Saved:
                 $badge = 'info';
                 break;
-            case self::SENT:
+            case self::Sent:
                 $badge = 'success';
                 break;
-            case self::WAITING:
+            case self::Waiting:
                 $badge = 'warning';
                 break;
         }
@@ -46,17 +49,17 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             default:
-            case self::CANCELED:
+            case self::Cancelled:
                 return _('Canceled');
-            case self::FAILED:
+            case self::Failed:
                 return _('Failed');
-            case self::REJECTED:
+            case self::Rejected:
                 return _('Rejected');
-            case self::SAVED:
+            case self::Saved:
                 return _('Saved');
-            case self::SENT:
+            case self::Sent:
                 return _('Sent');
-            case self::WAITING:
+            case self::Waiting:
                 return _('Waiting');
         }
     }
@@ -64,12 +67,12 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::SAVED),
-            new self(self::WAITING),
-            new self(self::SENT),
-            new self(self::FAILED),
-            new self(self::CANCELED),
-            new self(self::REJECTED),
+            new self(self::Saved),
+            new self(self::Waiting),
+            new self(self::Sent),
+            new self(self::Failed),
+            new self(self::Cancelled),
+            new self(self::Rejected),
         ];
     }
 

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Choosers\EventChooser;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\ComponentReflection;
@@ -18,9 +18,9 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     /** @persistent */
     public ?int $eventId = null;
     protected EventService $eventService;
-    protected EventDispatchFactory $eventDispatchFactory;
+    protected TransitionsMachineFactory $eventDispatchFactory;
 
-    final public function injectEventBase(EventService $eventService, EventDispatchFactory $eventDispatchFactory): void
+    final public function injectEventBase(EventService $eventService, TransitionsMachineFactory $eventDispatchFactory): void
     {
         $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;

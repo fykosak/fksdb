@@ -1,7 +1,8 @@
+{layout none}
 {varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 <div>
-    {$model->text|noescape}
+    {$model->inner_text|noescape}
     <div>
-        {include footer}
+        {block footer}{/block}
     </div>
 </div>

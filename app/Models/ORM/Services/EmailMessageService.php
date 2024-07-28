@@ -21,7 +21,7 @@ use Fykosak\NetteORM\Service\Service;
  *     subject:string,
  *     carbon_copy?:string,
  *     blind_carbon_copy?:string,
- *     text:string,
+ *     inner_text:string,
  *     topic:EmailMessageTopic,
  *     lang: Language,
  *     priority?:int|bool
@@ -34,7 +34,7 @@ final class EmailMessageService extends Service
      */
     public function getMessagesToSend(int $limit): TypedSelection
     {
-        return $this->getTable()->where('state', EmailMessageState::WAITING)->order('priority DESC')->limit($limit);
+        return $this->getTable()->where('state', EmailMessageState::Waiting)->order('priority DESC')->limit($limit);
     }
 
     /**
@@ -42,7 +42,7 @@ final class EmailMessageService extends Service
      */
     public function addMessageToSend(array $data): EmailMessageModel
     {
-        $data['state'] = EmailMessageState::WAITING;
+        $data['state'] = EmailMessageState::Ready;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];
         }

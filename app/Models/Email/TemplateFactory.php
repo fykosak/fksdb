@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\EmailMessageModel;
-use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -47,6 +44,7 @@ final class TemplateFactory
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
+        $presenter->setParent($presenter);
         $template = $this->latteTemplateFactory->createTemplate();
         if (!$template instanceof Template) {
             throw new BadTypeException(Template::class, $template);

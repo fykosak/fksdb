@@ -13,7 +13,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -28,6 +27,7 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -60,7 +60,7 @@ abstract class ApplicationComponent extends BaseComponent
     protected EventModel $event;
     protected PersonModel $loggedPerson;
 
-    protected EventDispatchFactory $eventDispatchFactory;
+    protected TransitionsMachineFactory $eventDispatchFactory;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
     protected ReflectionFactory $reflectionFactory;
@@ -80,7 +80,7 @@ abstract class ApplicationComponent extends BaseComponent
     public function inject(
         ReferencedPersonFactory $referencedPersonFactory,
         EventParticipantService $eventParticipantService,
-        EventDispatchFactory $eventDispatchFactory,
+        TransitionsMachineFactory $eventDispatchFactory,
         ReflectionFactory $reflectionFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;

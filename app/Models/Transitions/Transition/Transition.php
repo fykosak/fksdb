@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\FailHandler;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\UI\Title;
 use Nette\SmartObject;
@@ -36,6 +37,9 @@ class Transition
     public array $beforeExecute = [];
     /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
+
+    /** @phpstan-var FailHandler<THolder>[] */
+    public array $onFail = [];
 
     protected bool $validation;
     /** @phpstan-var Enum */
