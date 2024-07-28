@@ -47,22 +47,6 @@ class Transition
     /** @phpstan-var Enum */
     public EnumColumn $target;
 
-    /**
-     * @phpstan-param Enum $sourceState
-     */
-    public function setSourceStateEnum(EnumColumn $sourceState): void
-    {
-        $this->source = $sourceState;
-    }
-
-    /**
-     * @phpstan-param Enum $targetState
-     */
-    public function setTargetStateEnum(EnumColumn $targetState): void
-    {
-        $this->target = $targetState;
-    }
-
     public function setSuccessLabel(?string $successLabel): void
     {
         $this->successLabel = $successLabel;
@@ -76,11 +60,6 @@ class Transition
     public function getId(): string
     {
         return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
-    }
-
-    public function setBehaviorType(BehaviorType $behaviorType): void
-    {
-        $this->behaviorType = $behaviorType;
     }
 
     public function label(): Title
@@ -124,23 +103,6 @@ class Transition
     {
         $this->validation = $validation ?? true;
     }
-
-    /**
-     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
-     */
-    public function addBeforeExecute(callable $callBack): void
-    {
-        $this->beforeExecute[] = $callBack;
-    }
-
-    /**
-     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
-     */
-    public function addAfterExecute(callable $callBack): void
-    {
-        $this->afterExecute[] = $callBack;
-    }
-
     /**
      * @phpstan-param THolder $holder
      */

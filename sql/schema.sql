@@ -1341,6 +1341,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `text`                TEXT             NULL     DEFAULT NULL COMMENT 'celý text emailu vrátane pätičky, to čo realne odišlo',
     `state`               ENUM (
         'saved',
+        'ready',
         'waiting',
         'sent',
         'failed',

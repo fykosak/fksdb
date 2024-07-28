@@ -68,6 +68,7 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
     {
         return [
             new self(self::Saved),
+            new self(self::Ready),
             new self(self::Waiting),
             new self(self::Sent),
             new self(self::Failed),

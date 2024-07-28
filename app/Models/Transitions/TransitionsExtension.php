@@ -29,6 +29,7 @@ use Nette\Schema\Schema;
  *      validation:\Nette\DI\Definitions\Statement|bool|null,
  *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
  *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      onFail:array<\Nette\DI\Definitions\Statement|string|null>,
  *      behaviorType:'success'|'warning'|'danger'|'primary'|'secondary'
  *  }
  */
@@ -56,6 +57,7 @@ class TransitionsExtension extends CompilerExtension
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'behaviorType' => Expect::anyOf('success', 'warning', 'danger', 'primary', 'secondary')
                         ->default('secondary'),
+                    'onFail' => Expect::listOf(Helpers::createExpressionSchemaType()),
                 ])->castTo('array'),
                 Expect::string()
             ),
@@ -94,8 +96,8 @@ class TransitionsExtension extends CompilerExtension
                     ->setType(Transition::class)
                     ->addSetup('setValidation', [$transitionConfig['validation']])
                     ->addSetup('setCondition', [$transitionConfig['condition']])
-                    ->addSetup('setSourceStateEnum', [$source])
-                    ->addSetup('setTargetStateEnum', [$target])
+                    ->addSetup('$service->source=?', [$source])
+                    ->addSetup('$service->target=?', [$target])
                     ->addSetup(
                         'setLabel',
                         [
@@ -104,16 +106,19 @@ class TransitionsExtension extends CompilerExtension
                         ]
                     )->addSetup('setSuccessLabel', [$transitionConfig['successLabel']])
                     ->addSetup(
-                        'setBehaviorType',
+                        '$service->behaviorType=?',
                         [
                             BehaviorType::tryFrom($transitionConfig['behaviorType']),
                         ]
                     );
                 foreach ($transitionConfig['afterExecute'] as $callback) {
-                    $transition->addSetup('addAfterExecute', [$callback]);
+                    $transition->addSetup('$service->afterExecute[]=?', [$callback]);
                 }
                 foreach ($transitionConfig['beforeExecute'] as $callback) {
-                    $transition->addSetup('addBeforeExecute', [$callback]);
+                    $transition->addSetup('$service->beforeExecute[]=?', [$callback]);
+                }
+                foreach ($transitionConfig['onFail'] as $callback) {
+                    $transition->addSetup('$service->onFail[]=?', [$callback]);
                 }
                 $factory->addSetup('addTransition', [$transition]);
             }

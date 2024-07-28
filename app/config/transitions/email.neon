@@ -1,7 +1,7 @@
 transitions:
     email:
-        machine: FKSDB\Models\Transitions\Machine\TeamMachine
-        stateEnum: FKSDB\Models\ORM\Models\Fyziklani\TeamState
+        machine: FKSDB\Models\Transitions\Machine\EmailMachine
+        stateEnum: FKSDB\Models\ORM\Models\EmailMessageState
         decorator: null
         transitions:
             saved->ready:
@@ -9,16 +9,16 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
             ready->waiting:
                 label: _('Prepare and put to front')
-                beforeExcecute:
+                beforeExecute:
                     - FKSDB\Models\Email\Transitions\ResolveRecipient()
                     - FKSDB\Models\Email\Transitions\PrepareText()
             waiting->sent:
-                lable: _('Send')
-                beforeExcecute:
+                label: _('Send')
+                beforeExecute:
                     - FKSDB\Models\Email\Transitions\SendEmail()
                 onFail:
                     - FKSDB\Models\Email\Transitions\OnFailSend()
-            waiting->rejeted:
+            waiting->rejected:
                 label: _('Reject')
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
             waiting->failed:

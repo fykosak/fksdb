@@ -41,7 +41,6 @@ final class CheckPreference implements Statement
                     throw new RejectedEmailException();
                 }
             }
-
         } else {
             // check if email is not in unsubscribed
             $row = $this->unsubscribedEmailService->getTable()

@@ -81,9 +81,9 @@ final class PrepareText implements Statement
             'code' => $code ?? null,
         ];
         if ($model->topic->isSpam()) {
-            $template = __DIR__ . '/Containers/spam.latte';
+            $template = __DIR__ . '/../Containers/spam.latte';
         } else {
-            $template = __DIR__ . '/Containers/noSpam.latte';
+            $template = __DIR__ . '/../Containers/noSpam.latte';
         }
         $text = $this->templateFactory->create($model->lang)->renderToString($template, $data);
         $this->emailMessageService->storeModel(['text' => $text], $model);
