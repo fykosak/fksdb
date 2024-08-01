@@ -17,12 +17,13 @@ services:
       - ./config/config.neon:/var/www/fksdb/app/config/config.local.neon # nette config
       - ./log:/var/www/fksdb/log
       - ./upload:/var/www/fksdb/upload
+      - ../:/var/www/fksdb
     ports:
       - 8080:80 # opened ports mapping, not needed with proxy
     user: 1000:1000 # expects the main user as uid:pid
 
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: fksdb_mysql
     restart: on-failure:3
     environment:

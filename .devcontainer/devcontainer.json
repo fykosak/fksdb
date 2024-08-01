@@ -34,7 +34,6 @@
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {},
 		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {}
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
