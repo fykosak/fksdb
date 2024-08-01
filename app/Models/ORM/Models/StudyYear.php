@@ -5,28 +5,27 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 
-final class StudyYear extends FakeStringEnum implements EnumColumn
+enum StudyYear: string implements EnumColumn
 {
     // phpcs:disable
-    public const Primary5 = 'P_5';
-    public const Primary6 = 'P_6';
-    public const Primary7 = 'P_7';
-    public const Primary8 = 'P_8';
-    public const Primary9 = 'P_9';
+    case Primary5 = 'P_5';
+    case Primary6 = 'P_6';
+    case Primary7 = 'P_7';
+    case Primary8 = 'P_8';
+    case Primary9 = 'P_9';
 
-    public const High1 = 'H_1';
-    public const High2 = 'H_2';
-    public const High3 = 'H_3';
-    public const High4 = 'H_4';
+    case High1 = 'H_1';
+    case High2 = 'H_2';
+    case High3 = 'H_3';
+    case High4 = 'H_4';
 
-    public const UniversityAll = 'U_ALL';
+    case UniversityAll = 'U_ALL';
 
-    public const None = 'NONE';
+    case None = 'NONE';
 
     // phpcs:enable
 
@@ -36,7 +35,7 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
             return 'primary';
         } elseif ($this->isHighSchool()) {
             return 'success';
-        } elseif ($this->value === self::UniversityAll) {
+        } elseif ($this === self::UniversityAll) {
             return 'warning';
         }
         return 'dark';
@@ -51,57 +50,35 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::Primary5:
-                return _('Primary school 5th grade or lower.');
-            case self::Primary6:
-                return _('Primary school 6th'); //(ISCED 2)
-            case self::Primary7:
-                return _('Primary school 7th');
-            case self::Primary8:
-                return _('Primary school 8th');
-            case self::Primary9:
-                return _('Primary school 9th');
-            case self::High1:
-                return _('High school 1st grade'); // (ISCED 3)
-            case self::High2:
-                return _('High school 2nd grade');
-            case self::High3:
-                return _('High school 3rd grade');
-            case self::High4:
-                return _('High school 4th grade');
-            case self::UniversityAll:
-                return _('University any grade'); // (ISCED 4 or higher)
-            case self::None:
-                return _('Not a student');
-        }
-        throw new \InvalidArgumentException();
+        return match ($this) {
+            self::Primary5 => _('Primary school 5th grade or lower.'),
+            self::Primary6 => _('Primary school 6th or lower.'),
+            self::Primary7 => _('Primary school 7th'),
+            self::Primary8 => _('Primary school 8th'),
+            self::Primary9 => _('Primary school 9th'),
+            self::High1 => _('High school 1st grade'),
+            self::High2 => _('High school 2nd grade'),
+            self::High3 => _('High school 3rd grade'),
+            self::High4 => _('High school 4th grade'),
+            self::UniversityAll => _('University any grade'),
+            self::None => _('Not a student'),
+        };
     }
 
     public function numeric(): ?int
     {
-        switch ($this->value) {
-            case self::Primary5:
-                return 5;
-            case self::Primary6:
-                return 6;
-            case self::Primary7:
-                return 7;
-            case self::Primary8:
-                return 8;
-            case self::Primary9:
-                return 9;
-            case self::High1:
-                return 1;
-            case self::High2:
-                return 2;
-            case self::High3:
-                return 3;
-            case self::High4:
-                return 4;
-            default:
-                return null;
-        }
+        return match ($this) {
+            self::Primary5 => 5,
+            self::Primary6 => 6,
+            self::Primary7 => 7,
+            self::Primary8 => 8,
+            self::Primary9 => 9,
+            self::High1 => 1,
+            self::High2 => 2,
+            self::High3 => 3,
+            self::High4 => 4,
+            default => null,
+        };
     }
 
     /**
@@ -110,17 +87,17 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     public static function getPrimarySchoolCases(): array
     {
         return [
-            new self(self::Primary5),
-            new self(self::Primary6),
-            new self(self::Primary7),
-            new self(self::Primary8),
-            new self(self::Primary9),
+            self::Primary5,
+            self::Primary6,
+            self::Primary7,
+            self::Primary8,
+            self::Primary9,
         ];
     }
 
     public function isPrimarySchool(): bool
     {
-        return Strings::startsWith($this->value, 'P');
+        return Strings::startsWith($this->value, 'P_');
     }
 
     /**
@@ -129,16 +106,16 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
     public static function getHighSchoolCases(): array
     {
         return [
-            new self(self::High1),
-            new self(self::High2),
-            new self(self::High3),
-            new self(self::High4),
+            self::High1,
+            self::High2,
+            self::High3,
+            self::High4,
         ];
     }
 
     public function isHighSchool(): bool
     {
-        return Strings::startsWith($this->value, 'H');
+        return Strings::startsWith($this->value, 'H_');
     }
 
     public function getGraduationYear(int $acYear): ?int
@@ -150,23 +127,6 @@ final class StudyYear extends FakeStringEnum implements EnumColumn
         }
         return null;
         // throw new \InvalidArgumentException('Graduation year not match');
-    }
-
-    public static function cases(): array
-    {
-        return [
-            new self(self::Primary5),
-            new self(self::Primary6),
-            new self(self::Primary7),
-            new self(self::Primary8),
-            new self(self::Primary9),
-            new self(self::High1),
-            new self(self::High2),
-            new self(self::High3),
-            new self(self::High4),
-            new self(self::UniversityAll),
-            new self(self::None),
-        ];
     }
 
     public function title(): Title

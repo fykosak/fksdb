@@ -94,7 +94,7 @@ WHERE
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->label == $stringCategory) {
+            if ($category->contest_category_id === +$stringCategory) {
                 return $category;
             }
         }
@@ -115,7 +115,7 @@ WHERE
 
         $graduationYears = [];
         foreach ($studyYears as $studyYear) {
-            $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->contestYear);
+            $graduationYears[] = $this->studyYearToGraduation(StudyYear::tryFromLegacy($studyYear), $this->contestYear);
         }
 
         $result = [];
@@ -154,11 +154,11 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?string $studyYear, ContestYearModel $contestYear): ?int
+    private function studyYearToGraduation(?StudyYear $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;
         }
-        return StudyYear::from($studyYear)->getGraduationYear($contestYear->ac_year);
+        return $studyYear->getGraduationYear($contestYear->ac_year);
     }
 }
