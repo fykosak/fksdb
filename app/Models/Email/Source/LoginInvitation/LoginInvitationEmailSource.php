@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\LoginInvitation;
 
-use FKSDB\Models\Email\Source\EmailSource;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends EmailSource<array{
@@ -24,14 +21,6 @@ use Fykosak\Utils\UI\Title;
  */
 class LoginInvitationEmailSource extends EmailSource
 {
-    /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
     protected function getSource(array $params): array
     {
         $lang = $params['lang'];
@@ -53,21 +42,5 @@ class LoginInvitationEmailSource extends EmailSource
                 ]
             ]
         ];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }
