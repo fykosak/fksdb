@@ -1,0 +1,23 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Letní tábor Výfuku – změna účastníka na {$model->status->label()}{/define}
+
+<p>
+    <p><strong>Osoba</strong>
+    {$model->person->getFullName()}</p>
+    <p><strong>Nový stav</strong>
+    {$model->status->label()}</p>
+    <p><strong>Detail přihlášky</strong>
+    {var string $link = $control->link('//:Event:Application:detail',
+    ['eventId'=> $model->event->event_id,
+    'at'=>$token->token,
+    'id'=>$model->getPrimary()])}
+        <a href="{$link}">{$link}</a>
+    </p>
+</p>
+<p>
+    Tvá milá<br/>
+    FKSDB
+</p>

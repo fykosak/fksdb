@@ -29,7 +29,6 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
         parent::setUp();
         /** @phpstan-var SchoolModel $school */
         $school = $this->container->getByType(SchoolService::class)->getTable()->fetch();
-        $this->mockApplication();
 
         $this->personA = $this->createPerson('A', 'A', ['email' => 'a@a.a'], ['login' => 'AAAAAA', 'hash' => 'AAAAAA']);
         $this->createPersonHistory(

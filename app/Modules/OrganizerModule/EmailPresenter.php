@@ -6,8 +6,8 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Models\Email\Source\EmailSource;
 use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
+use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -36,9 +36,9 @@ final class EmailPresenter extends BasePresenter
     }
 
     /**
-     * @return EmailSource[]
+     * @return UIEmailSource[]
      */
-    protected function getMailSources(): array //@phpstan-ignore-line
+    protected function getEmailSources(): array //@phpstan-ignore-line
     {
         return [
             new ReminderEmailSource($this->getContext(), 1),
@@ -47,12 +47,12 @@ final class EmailPresenter extends BasePresenter
         ];
     }
 
-    protected function getMailSource(): ?EmailSource //@phpstan-ignore-line
+    protected function getEmailSource(): ?UIEmailSource //@phpstan-ignore-line
     {
         if (!isset($this->source)) {
             return null;
         }
-        return $this->getMailSources()[$this->source] ?? null;
+        return $this->getEmailSources()[$this->source] ?? null;
     }
 
     /**
@@ -107,8 +107,8 @@ final class EmailPresenter extends BasePresenter
 
     public function renderTemplate(): void
     {
-        $this->template->sources = $this->getMailSources();
-        $this->template->source = $this->getMailSource();
+        $this->template->sources = $this->getEmailSources();
+        $this->template->source = $this->getEmailSource();
     }
 
     protected function getORMService(): EmailMessageService
@@ -142,7 +142,7 @@ final class EmailPresenter extends BasePresenter
 
     protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
     {
-        return new EmailProviderForm($this->getContext(), $this->getMailSource());
+        return new EmailProviderForm($this->getContext(), $this->getEmailSource());
     }
 
     /**
