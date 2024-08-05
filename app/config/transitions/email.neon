@@ -4,11 +4,8 @@ transitions:
         stateEnum: FKSDB\Models\ORM\Models\EmailMessageState
         decorator: null
         transitions:
-            saved->ready:
-                label: _('Email ready')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
             ready->waiting:
-                label: _('Prepare and put to front')
+                label: _('Prepare and put into the front')
                 beforeExecute:
                     - FKSDB\Models\Email\Transitions\ResolveRecipient()
                     - FKSDB\Models\Email\Transitions\PrepareText()
@@ -18,9 +15,3 @@ transitions:
                     - FKSDB\Models\Email\Transitions\SendEmail()
                 onFail:
                     - FKSDB\Models\Email\Transitions\OnFailSend()
-            waiting->rejected:
-                label: _('Reject')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
-            waiting->failed:
-                label: _('Fail')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\Falsable()
