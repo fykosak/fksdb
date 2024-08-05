@@ -150,7 +150,7 @@ final class AttendancePresenter extends BasePresenter
             return new CodeAttendance(
                 $this->getContext(),
                 $model,
-                TeamState::tryFrom(TeamState::Arrived),
+                TeamState::from(TeamState::Arrived),
                 $this->getMachine() //@phpstan-ignore-line
             );
         } else {

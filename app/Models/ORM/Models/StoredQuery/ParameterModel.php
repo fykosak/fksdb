@@ -60,7 +60,6 @@ final class ParameterModel extends Model
     }
 
     /**
-     * @param string $key
      * @return ParameterType|mixed
      * @throws \ReflectionException
      */
@@ -69,7 +68,7 @@ final class ParameterModel extends Model
         $value = parent::__get($key);
         switch ($key) {
             case 'type':
-                $value = ParameterType::tryFrom($value);
+                $value = ParameterType::from($value);
                 break;
         }
         return $value;

@@ -263,7 +263,7 @@ class StoredQueryFormComponent extends EntityFormComponent
             $parameters[] = new StoredQueryParameter(
                 $paramMetaData['name'],
                 $paramMetaData['default'],
-                ParameterType::tryFrom($paramMetaData['type'])
+                ParameterType::from($paramMetaData['type'])
             );
         }
         $query = $this->storedQueryFactory->createQueryFromSQL(
