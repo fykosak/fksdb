@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Components\Table;
 
 use FKSDB\Components\Grids\Components\BaseItem;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModel of Model
  */
 trait TableTrait
 {

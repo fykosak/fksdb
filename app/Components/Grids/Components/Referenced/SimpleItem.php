@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Components\Referenced;
 
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
- * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModel of Model
+ * @phpstan-template TModelHelper of Model
  * @phpstan-extends TemplateItem<TModel,TModelHelper>
  */
 class SimpleItem extends TemplateItem

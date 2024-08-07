@@ -19,7 +19,7 @@ use Fykosak\Utils\UI\Title;
 /**
  * @phpstan-extends Test<EventParticipantModel|TeamMemberModel|TeamTeacherModel|EventOrganizerModel>
  */
-class IsBannedFromEvent extends Test
+final class IsBannedFromEvent extends Test
 {
     /**
      * @param EventParticipantModel|TeamMemberModel|TeamTeacherModel|EventOrganizerModel $model
@@ -48,7 +48,7 @@ class IsBannedFromEvent extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Is banned from event'));
+        return new Title(null, _('Detect participant, team members or team teacher, who are banned from event.'));
     }
 
     public function getId(): string

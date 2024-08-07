@@ -12,7 +12,7 @@ use Nette\ComponentModel\Container;
 use Nette\DI\Container as DIContainer;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModel of Model
  */
 final class Table extends BaseComponent
 {

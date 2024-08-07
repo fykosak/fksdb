@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\BannedPersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 
-class BanPresenter extends BasePresenter
+final class BanPresenter extends BasePresenter
 {
     /** @use EntityPresenterTrait<BannedPersonModel> */
     use EntityPresenterTrait;

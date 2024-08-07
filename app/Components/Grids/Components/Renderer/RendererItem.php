@@ -11,7 +11,7 @@ use Nette\DI\Container;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModel of Model
  * @phpstan-extends BaseItem<TModel>
  */
 class RendererItem extends BaseItem
