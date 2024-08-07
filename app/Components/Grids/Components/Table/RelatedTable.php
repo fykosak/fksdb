@@ -10,8 +10,8 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
- * @phpstan-template TRelatedModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModel of Model
+ * @phpstan-template TRelatedModel of Model
  * @phpstan-extends BaseItem<TModel>
  */
 class RelatedTable extends BaseItem

@@ -32,7 +32,7 @@ final class LanguageChooserComponent extends ChooserComponent
         }
 
         return new NavItem(
-            new Title(null, Language::tryFrom($this->translator->lang)->label(), 'fas fa-language'),
+            new Title(null, Language::from($this->translator->lang)->label(), 'fas fa-language'),
             '#',
             [],
             $items

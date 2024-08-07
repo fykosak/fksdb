@@ -70,6 +70,6 @@ final class PersonInfoFileLevelTest extends Test
 
     public function getId(): string
     {
-        return 'personInfo-' . $this->fieldName;
+        return 'personInfo__' . $this->fieldName;
     }
 }

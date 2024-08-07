@@ -47,6 +47,11 @@ abstract class Adapter extends Test
         return $this->test->getDescription();
     }
 
+    public function getTreeId(): string
+    {
+        return $this->getId() . '_' . $this->test->getTreeId();
+    }
+
     /**
      * @param TOriginalModel $model
      */

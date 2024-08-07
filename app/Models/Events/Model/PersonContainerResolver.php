@@ -41,7 +41,7 @@ class PersonContainerResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         return ($this->isModifiable($person)) ? ResolutionMode::from(ResolutionMode::OVERWRITE)
             : ResolutionMode::from(ResolutionMode::EXCEPTION);

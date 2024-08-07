@@ -17,6 +17,7 @@ use FKSDB\Models\ORM\Tests\Contestant\ContestantToPersonHistoryAdapter;
 use FKSDB\Models\ORM\Tests\ContestYear\ContestYearToContestantsAdapter;
 use FKSDB\Models\ORM\Tests\Event\ConflictRole;
 use FKSDB\Models\ORM\Tests\Event\EventToPersonsAdapter;
+use FKSDB\Models\ORM\Tests\Event\IsBannedFromEvent;
 use FKSDB\Models\ORM\Tests\Event\Schedule\ItemAdapter;
 use FKSDB\Models\ORM\Tests\Event\Schedule\RunOutCapacity;
 use FKSDB\Models\ORM\Tests\Event\ScheduleGroupAdapter;
@@ -58,6 +59,7 @@ class DataTestFactory
     {
         return [
             ...EventModel::getTests($container),
+            ...self::applyAdaptor(EventToPersonsAdapter::class, [new IsBannedFromEvent($container)], $container),
             ...self::applyAdaptor(EventToPersonsAdapter::class, [new ConflictRole($container)], $container),
             ...self::applyAdaptor(
                 ScheduleGroupAdapter::class,

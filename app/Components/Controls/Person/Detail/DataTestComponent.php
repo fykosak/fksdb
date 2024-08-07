@@ -28,7 +28,7 @@ class DataTestComponent extends BaseComponent
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->container, DataTestFactory::getPersonTests($this->container));
+        return new TestsList($this->container, DataTestFactory::getPersonTests($this->container), false);
     }
 
     protected function getMinimalPermissions(): int

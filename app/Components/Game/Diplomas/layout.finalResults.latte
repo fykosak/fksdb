@@ -22,7 +22,7 @@
     {foreach ['A','B','C'] as $category}
         <div class="tab-pane fade" id="{('category' . $category)}">
             <h2>{\sprintf(_('Category %s'),$category)}</h2>
-            {if $control->isClosedCategory(FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category))}
+            {if $control->isClosedCategory(FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::from($category))}
                 {control 'resultsCategory' . $category . 'Grid'}
             {else}
                 <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
