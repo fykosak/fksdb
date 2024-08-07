@@ -44,7 +44,7 @@ class TransitionButtonsComponent extends BaseComponent
         $holder = $this->machine->createHolder($this->model);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte', [
             'showInfo' => $showInfo,
-            'transitions' => Machine::filterAvailable($this->machine->transitions, $holder),
+            'transitions' => $this->machine->getTransitionsSelection()->filterAvailable($holder)->toArray(),
             'holder' => $holder,
         ]);
     }
@@ -56,7 +56,7 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $holder = $this->machine->createHolder($this->model);
         try {
-            $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $transitionName));
+            $transition = $this->machine->getTransitionsSelection()->filterById($transitionName)->select();
             $this->machine->execute($transition, $holder);
             $this->getPresenter()->flashMessage(
                 $transition->getSuccessLabel(),

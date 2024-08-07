@@ -33,7 +33,7 @@ final class MassTransitionComponent extends BaseComponent
     final public function render(): void
     {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte', [
-            'transitions' => $this->machine->transitions,
+            'transitions' => $this->machine->getTransitionsSelection()->toArray(),
         ]);
     }
 
@@ -41,7 +41,7 @@ final class MassTransitionComponent extends BaseComponent
     {
         $total = 0;
         $errored = 0;
-        $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $name));
+        $transition = $this->machine->getTransitionsSelection()->filterById($name)->select();
         if ($this->event->isTeamEvent()) {
             $query = $this->event->getTeams();
         } else {

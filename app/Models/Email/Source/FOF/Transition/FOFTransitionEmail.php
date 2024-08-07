@@ -35,12 +35,9 @@ final class FOFTransitionEmail extends TransitionEmailSource
 
     protected function createToken(PersonModel $person, TeamModel2 $teamModel): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $person->getLogin() ?? $this->loginService->createLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $teamModel->event->registration_end,
-            null,
-            true
+            $teamModel->event
         );
     }
 

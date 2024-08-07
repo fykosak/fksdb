@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Transitions;
 
 use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
@@ -54,14 +53,8 @@ final class PrepareText implements Statement
         // add tokens if is "spam"
         if ($model->topic->isSpam()) {
             if ($model->person) {
-                $login = $model->person->getLogin();
-                if (!$login) {
-                    $login = $this->loginService->createLogin($model->person);
-                }
-                $token = $this->authTokenService->createToken(
-                    $login,
-                    AuthTokenType::from(AuthTokenType::UNSUBSCRIBE),
-                    null,
+                $token = $this->authTokenService->createUnsubscribeToken(
+                    $model->person->getLogin() ?? $this->loginService->createLogin($model->person)
                 );
             } else {
                 $code = openssl_encrypt(

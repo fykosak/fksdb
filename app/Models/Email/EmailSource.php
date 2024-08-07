@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Machine\EmailMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
@@ -104,15 +103,10 @@ abstract class EmailSource
      */
     public function createAndSend(array $params): void
     {
-        $transition = Machine::selectTransition(
-            Machine::filterByTarget(
-                Machine::filterBySource(
-                    $this->machine->transitions,
-                    EmailMessageState::from(EmailMessageState::Ready)
-                ),
-                EmailMessageState::from(EmailMessageState::Waiting)
-            )
-        );
+        $transition = $this->machine->getTransitionsSelection()
+            ->filterBySource(EmailMessageState::from(EmailMessageState::Ready))
+            ->filterByTarget(EmailMessageState::from(EmailMessageState::Waiting))
+            ->select();
         foreach ($this->createEmails($params) as $email) {
             $model = $this->emailMessageService->addMessageToSend($email);
             $holder = $this->machine->createHolder($model);

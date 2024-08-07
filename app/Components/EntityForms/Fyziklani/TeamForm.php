@@ -142,16 +142,14 @@ abstract class TeamForm extends EntityFormComponent
             $holder = $this->machine->createHolder($team);
             if (!isset($this->model)) {
                 // ak je nový pošle defaultný mail
-                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
+                $transition = $this->machine->getTransitionsSelection()->filterAvailable($holder)->select();
                 $this->machine->execute($transition, $holder);
             } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
                 // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
-                $transition = Machine::selectTransition(
-                    Machine::filterAvailable(
-                        Machine::filterByTarget($this->machine->transitions, TeamState::from(TeamState::Pending)),
-                        $holder
-                    )
-                );
+                $transition = $this->machine->getTransitionsSelection()
+                    ->filterByTarget(TeamState::from(TeamState::Pending))
+                    ->filterAvailable($holder)
+                    ->select();
                 $this->machine->execute($transition, $holder);
             }
             // pri každej editácii okrem initu pošle mail

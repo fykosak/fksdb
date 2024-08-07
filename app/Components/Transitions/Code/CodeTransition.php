@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\Machine\TransitionsSelection;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -45,14 +45,11 @@ abstract class CodeTransition extends CodeForm
     }
 
     /**
-     * @phpstan-return Transition<ModelHolder<TModel,TState>>[]
+     * @phpstan-return TransitionsSelection<ModelHolder<TModel,TState>>
      */
-    protected function getTransitions(): array
+    protected function getTransitions(): TransitionsSelection
     {
-        return Machine::filterByTarget(
-            $this->machine->transitions,
-            $this->targetState
-        );
+        return $this->machine->getTransitionsSelection()->filterByTarget($this->targetState);
     }
 
     /**
@@ -62,9 +59,7 @@ abstract class CodeTransition extends CodeForm
     {
         $holder = $this->machine->createHolder($this->resolveModel($model));
 
-        $transition = Machine::selectTransition(
-            Machine::filterAvailable($this->getTransitions(), $holder)
-        );
+        $transition = $this->getTransitions()->filterAvailable($holder)->select();
         $this->machine->execute($transition, $holder);
 
         $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);

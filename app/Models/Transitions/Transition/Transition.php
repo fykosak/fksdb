@@ -85,6 +85,9 @@ class Transition
      */
     public function canExecute(ModelHolder $holder): bool
     {
+        if ($this->source->value !== $holder->getState()->value) {
+            return false;
+        }
         if (!isset($this->condition)) {
             return true;
         }

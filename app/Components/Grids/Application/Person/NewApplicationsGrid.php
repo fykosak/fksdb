@@ -21,7 +21,10 @@ class NewApplicationsGrid extends BaseGrid
 
     protected TransitionsMachineFactory $eventDispatchFactory;
 
-    final public function injectPrimary(EventService $eventService, TransitionsMachineFactory $eventDispatchFactory): void
+    final public function injectPrimary(
+        EventService $eventService,
+        TransitionsMachineFactory $eventDispatchFactory
+    ): void
     {
         $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;

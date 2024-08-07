@@ -27,10 +27,9 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -135,18 +134,13 @@ abstract class ApplicationComponent extends BaseComponent
 
         if ($this->model) {
             $holder = $machine->createHolder($this->model);
-            $transitions = Machine::filterAvailable(
-                Machine::filterBySource($machine->transitions, $holder->getState()),
-                $holder
-            );
+            $transitions = $machine->getTransitionsSelection()->filterAvailable($holder);
         } else {
             $holder = null;
-            $transitions = Machine::filterBySource(
-                $machine->transitions,
-                EventParticipantStatus::from(EventParticipantStatus::INIT)
-            );
+            $transitions = $machine->getTransitionsSelection()
+                ->filterBySource(EventParticipantStatus::from(EventParticipantStatus::INIT));
         }
-        foreach ($transitions as $transition) {
+        foreach ($transitions->toArray() as $transition) {
             $submit = new TransitionSubmitButton($transition, $holder);
             $form->addComponent($submit, $transition->getId());
             $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);

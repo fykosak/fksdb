@@ -1343,6 +1343,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
         'saved',
         'ready',
         'waiting',
+
         'sent',
         'failed',
         'canceled',

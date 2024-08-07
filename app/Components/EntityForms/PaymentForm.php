@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
@@ -136,7 +135,7 @@ class PaymentForm extends EntityFormComponent
             );
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
+                $transition = $this->machine->getTransitionsSelection()->filterAvailable($holder)->select();
                 $this->machine->execute($transition, $holder);
                 $model = $holder->getModel();
             }

@@ -7,7 +7,6 @@ namespace FKSDB\Models\Email;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\Transitions\Machine\EmailMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 
 final class SenderFactory
@@ -20,18 +19,16 @@ final class SenderFactory
         $this->machine = $transitionsMachineFactory->getEmailMachine();
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function send(EmailMessageModel $model): void
     {
         $holder = $this->machine->createHolder($model);
-        $transition = Machine::selectTransition(
-            Machine::filterByTarget(
-                Machine::filterAvailable(
-                    $this->machine->transitions,
-                    $holder
-                ),
-                EmailMessageState::from(EmailMessageState::Sent)
-            )
-        );
+        $transition = $this->machine->getTransitionsSelection()
+            ->filterByTarget(EmailMessageState::from(EmailMessageState::Sent))
+            ->filterAvailable($holder)
+            ->select();
         $this->machine->execute($transition, $holder);
     }
 }

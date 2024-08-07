@@ -56,12 +56,9 @@ abstract class ParticipantTransitionEmail extends TransitionEmailSource
 
     protected function createToken(ParticipantHolder $holder): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $holder->getModel()->person->getLogin() ?? $this->loginService->createLogin($holder->getModel()->person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $holder->getModel()->event->registration_end,
-            null,
-            true
+            $holder->getModel()->event
         );
     }
 

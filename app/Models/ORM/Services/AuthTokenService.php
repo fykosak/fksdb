@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Service\Service;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -77,6 +77,76 @@ final class AuthTokenService extends Service
         return $token;
     }
 
+    public function createUnsubscribeToken(LoginModel $login): AuthTokenModel
+    {
+        $connection = $this->explorer->getConnection();
+        $outerTransaction = false;
+        if ($connection->getPdo()->inTransaction()) {
+            $outerTransaction = true;
+        } else {
+            $connection->beginTransaction();
+        }
+        /** @var AuthTokenModel|null $token */
+        $token = $this->getTable()->where('type', AuthTokenType::UNSUBSCRIBE)->fetch();
+        if (!$token) {
+            $token = $this->create([
+                'login_id' => $login->login_id,
+                'type' => AuthTokenType::UNSUBSCRIBE,
+                'until' => (new \DateTime())->modify('+1 year'),
+            ]);
+        }
+        if (!$outerTransaction) {
+            $connection->commit();
+        }
+        return $token;
+    }
+
+    public function createEventToken(LoginModel $login, EventModel $event): AuthTokenModel
+    {
+        $connection = $this->explorer->getConnection();
+        $outerTransaction = false;
+        if ($connection->getPdo()->inTransaction()) {
+            $outerTransaction = true;
+        } else {
+            $connection->beginTransaction();
+        }
+        /** @var AuthTokenModel|null $token */
+        $token = $this->getTable()
+            ->where('type', AuthTokenType::EVENT_NOTIFY)
+            ->where('data', $event->event_id)
+            ->fetch();
+        if (!$token) {
+            $token = $this->create([
+                'login_id' => $login->login_id,
+                'type' => AuthTokenType::EVENT_NOTIFY,
+                'data' => (string)$event->event_id,
+                'until' => $event->registration_end,
+                'since' => $event->registration_begin,
+            ]);
+        }
+        if (!$outerTransaction) {
+            $connection->commit();
+        }
+        return $token;
+    }
+
+    /**
+     * @phpstan-param array{
+     *     login_id:int,
+     *     type:string,
+     *     data?:string,
+     *     until?:\DateTimeInterface,
+     *     since?:\DateTimeInterface,
+     * } $data
+     */
+    private function create(array $data): AuthTokenModel
+    {
+        do {
+            $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
+        } while ($this->verifyToken($tokenData));
+        return $this->storeModel(array_merge($data, ['token' => $tokenData]));
+    }
+
     public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
     {
         $tokens = $this->getTable()->where('token', $tokenData);
@@ -108,8 +178,6 @@ final class AuthTokenService extends Service
     {
         return $this->getTable()
             ->where('type', AuthTokenType::EVENT_NOTIFY)
-            ->where('since <= NOW()')
-            ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $event->event_id . ':%');
+            ->where('data', $event->event_id);
     }
 }

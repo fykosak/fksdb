@@ -34,12 +34,10 @@ final class PaymentTransitions implements TransitionsDecorator
                 PaymentState::from(PaymentState::WAITING),
             ] as $state
         ) {
-            $transition = Machine::selectTransition(
-                Machine::filterByTarget(
-                    Machine::filterBySource($machine->transitions, $state),
-                    PaymentState::from(PaymentState::CANCELED)
-                )
-            );
+            $transition = $machine->getTransitionsSelection()
+                ->filterBySource($state)
+                ->filterByTarget(PaymentState::from(PaymentState::CANCELED))
+                ->select();
             $transition->beforeExecute[] = function (PaymentHolder $holder): void {
                 Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
                 /** @var SchedulePaymentModel $row */
