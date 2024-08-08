@@ -1,0 +1,17 @@
+transitions:
+    email:
+        machine: FKSDB\Models\Transitions\Machine\EmailMachine
+        stateEnum: FKSDB\Models\ORM\Models\EmailMessageState
+        decorator: null
+        transitions:
+            ready->waiting:
+                label: _('Prepare and put into the front')
+                beforeExecute:
+                    - FKSDB\Models\Email\Transitions\ResolveRecipient()
+                    - FKSDB\Models\Email\Transitions\PrepareText()
+            waiting->sent:
+                label: _('Send')
+                beforeExecute:
+                    - FKSDB\Models\Email\Transitions\SendEmail()
+                onFail:
+                    - FKSDB\Models\Email\Transitions\OnFailSend()

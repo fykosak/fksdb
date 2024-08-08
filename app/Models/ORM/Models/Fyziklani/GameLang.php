@@ -6,7 +6,9 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\UI\Title;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 final class GameLang extends FakeStringEnum implements EnumColumn
@@ -29,7 +31,7 @@ final class GameLang extends FakeStringEnum implements EnumColumn
             case self::EN:
                 return 'danger';
         }
-        return ''; // TODO remove on PHP8.1
+        throw new InvalidStateException();
     }
 
     public function label(): string
@@ -40,7 +42,7 @@ final class GameLang extends FakeStringEnum implements EnumColumn
             case self::EN:
                 return _('English');
         }
-        return ''; // TODO remove on PHP8.1
+        throw new InvalidStateException();
     }
 
     /**
@@ -57,5 +59,16 @@ final class GameLang extends FakeStringEnum implements EnumColumn
     public function title(): Title
     {
         return new Title(null, $this->label());
+    }
+
+    public function toLanguage(): Language
+    {
+        switch ($this->value) {
+            case self::CS:
+                return Language::from(Language::CS);
+            case self::EN:
+                return Language::from(Language::EN);
+        }
+        throw new InvalidStateException();
     }
 }

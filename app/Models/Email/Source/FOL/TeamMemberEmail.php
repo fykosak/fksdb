@@ -7,6 +7,7 @@ namespace FKSDB\Models\Email\Source\FOL;
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -33,12 +34,9 @@ final class TeamMemberEmail extends TransitionEmailSource
 
     protected function createToken(PersonModel $person, TeamHolder $holder): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $person->getLogin() ?? $this->loginService->createLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $holder->getModel()->event->registration_end,
-            null,
-            true
+            $holder->getModel()->event
         );
     }
 
@@ -54,17 +52,18 @@ final class TeamMemberEmail extends TransitionEmailSource
         foreach ($holder->getModel()->getMembers() as $member) {
             $emails[] = [
                 'template' => [
-                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "member.$lang.latte",
+                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "member.$lang->value.latte",
                     'data' => [
                         'model' => $holder->getModel(),
                         'token' => $this->createToken($member->person, $holder),
                     ],
                 ],
-                'lang' => $lang,
                 'data' => [
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
                     'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
                     'recipient_person_id' => $member->person_id,
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOL),
+                    'lang' => $lang,
                 ],
             ];
         }

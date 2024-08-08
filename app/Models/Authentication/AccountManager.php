@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authentication;
 
-use FKSDB\Models\Email\Source\LoginInvitation\LoginInvitationEmailSource;
+use FKSDB\Models\Email\Source\LoginInvitation\LoginInvitationEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -41,6 +41,7 @@ class AccountManager
      * Creates login and invites user to set up the account.
      * @throws BadTypeException
      * @throws \Exception
+     * @throws \Throwable
      */
     public function sendLoginWithInvitation(PersonModel $person, Language $lang): LoginModel
     {
@@ -49,10 +50,11 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
+            AuthTokenType::from(AuthTokenType::InitialLogin),
+            null,
             $until
         );
-        $email = new LoginInvitationEmailSource($this->container);
+        $email = new LoginInvitationEmail($this->container);
         $email->createAndSend([
             'token' => $token,
             'person' => $person,

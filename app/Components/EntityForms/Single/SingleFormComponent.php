@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -22,6 +21,7 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model\Model;
@@ -61,7 +61,7 @@ abstract class SingleFormComponent extends EntityFormComponent
     public function injectPrimary(
         ReferencedPersonFactory $referencedPersonFactory,
         EventParticipantService $eventParticipantService,
-        EventDispatchFactory $eventDispatchFactory
+        TransitionsMachineFactory $eventDispatchFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->eventParticipantService = $eventParticipantService;
@@ -149,8 +149,8 @@ abstract class SingleFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($eventParticipant);
-                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
-                $this->machine->execute($transition, $holder);
+                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                $transition->execute($holder);
             }
             $this->eventParticipantService->explorer->commit();
             $this->getPresenter()->flashMessage(

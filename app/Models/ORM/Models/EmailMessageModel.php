@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
-use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
+use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
-use Nette\InvalidStateException;
-use Nette\Mail\Message;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
@@ -23,47 +20,17 @@ use Nette\Utils\DateTime;
  * @property-read string|null $carbon_copy
  * @property-read string|null $blind_carbon_copy
  * @property-read string $text
+ * @property-read string|null $inner_text
  * @property-read EmailMessageState $state
  * @property-read DateTime $created
  * @property-read DateTime $sent
  * @property-read bool|int $priority
+ * @property-read EmailMessageTopic $topic
+ * @property-read Language $lang
  */
 final class EmailMessageModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'emailMessage';
-
-    /**
-     * @throws UnsubscribedEmailException
-     */
-    public function toMessage(UnsubscribedEmailService $unsubscribedEmailService): Message
-    {
-        $message = new Message();
-        $message->setSubject($this->subject);
-        if (isset($this->recipient_person_id)) {
-            if (isset($this->recipient) && $this->person->getInfo()->email !== $this->recipient) {
-                throw new InvalidStateException('Recipient and person\'s email do not match');
-            }
-            $email = $this->person->getInfo()->email;
-        } elseif (isset($this->recipient)) {
-            $email = $this->recipient;
-        } else {
-            throw new InvalidStateException('Recipient organizer person_id is required');
-        }
-        $unsubscribedEmailService->checkEmail($email);
-        $message->addTo($email);
-
-        if (!is_null($this->blind_carbon_copy)) {
-            $message->addBcc($this->blind_carbon_copy);
-        }
-        if (!is_null($this->carbon_copy)) {
-            $message->addCc($this->carbon_copy);
-        }
-        $message->setFrom($this->sender);
-        $message->addReplyTo($this->reply_to);
-        $message->setHtmlBody($this->text);
-
-        return $message;
-    }
 
     public function getResourceId(): string
     {
@@ -80,6 +47,12 @@ final class EmailMessageModel extends Model implements Resource
         switch ($key) {
             case 'state':
                 $value = EmailMessageState::from($value);
+                break;
+            case 'topic':
+                $value = EmailMessageTopic::from($value);
+                break;
+            case 'lang':
+                $value = Language::from($value);
                 break;
         }
         return $value;

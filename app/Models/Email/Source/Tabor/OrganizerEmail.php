@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\Tabor;
 
 use FKSDB\Models\Email\TransitionEmailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Modules\Core\Language;
@@ -26,10 +27,11 @@ class OrganizerEmail extends TransitionEmailSource
                         'model' => $holder->getModel(),
                     ],
                 ],
-                'lang' => Language::from(Language::CS),
                 'data' => [
                     'sender' => 'Výfuk <vyfuk@vyfuk.org>',
                     'recipient' => 'Výfučí přihlášky <vyfuk-prihlasky@vyfuk.org>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                    'lang' => Language::from(Language::CS),
                 ]
             ]
         ];

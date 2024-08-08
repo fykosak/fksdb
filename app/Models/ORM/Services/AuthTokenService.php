@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use Fykosak\NetteORM\Service\Service;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -21,21 +21,13 @@ final class AuthTokenService extends Service
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * @throws \PDOException
-     */
     public function createToken(
         LoginModel $login,
         AuthTokenType $type,
-        ?\DateTimeInterface $until,
-        ?string $data = null,
-        bool $refresh = false,
-        ?\DateTimeInterface $since = null
+        ?\DateTimeInterface $since,
+        \DateTimeInterface $until,
+        ?string $data = null
     ): AuthTokenModel {
-        if ($since === null) {
-            $since = new DateTime();
-        }
-
         $connection = $this->explorer->getConnection();
         $outerTransaction = false;
         if ($connection->getPdo()->inTransaction()) {
@@ -44,37 +36,57 @@ final class AuthTokenService extends Service
             $connection->beginTransaction();
         }
 
-        if ($refresh) {
+        if ($type->refresh()) {
+            $query = $login->getTokens($type);
+            if (isset($data)) {
+                $query->where('data', $data);
+            }
             /** @var AuthTokenModel|null $token */
-            $token = $login->getTokens($type)
-                ->where('data', $data)
-                ->where('since <= NOW()')
-                ->where('until IS NULL OR until >= NOW()')
-                ->fetch();
-        } else {
-            $token = null;
+            $token = $query->fetch();
         }
-        if (!$token) {
+
+        $data = [
+            'login_id' => $login->login_id,
+            'type' => $type->value,
+            'data' => $data,
+            'since' => $since ?? new DateTime(),
+            'until' => $until,
+        ];
+        if (isset($token)) {
+            $token = $this->storeModel($data, $token);
+        } else {
             do {
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
-
-            $token = $this->storeModel([
-                'until' => $until,
-                'login_id' => $login->login_id,
-                'token' => $tokenData,
-                'data' => $data,
-                'since' => $since,
-                'type' => $type,
-            ]);
-        } else {
-            $this->storeModel(['until' => $until], $token);
+            $token = $this->storeModel(array_merge($data, ['token' => $tokenData]));
         }
+
         if (!$outerTransaction) {
             $connection->commit();
         }
 
         return $token;
+    }
+
+    public function createUnsubscribeToken(LoginModel $login): AuthTokenModel
+    {
+        return $this->createToken(
+            $login,
+            AuthTokenType::from(AuthTokenType::Unsubscribe),
+            new DateTime(),
+            (new \DateTime())->modify('+1 year')
+        );
+    }
+
+    public function createEventToken(LoginModel $login, EventModel $event): AuthTokenModel
+    {
+        return $this->createToken(
+            $login,
+            AuthTokenType::from(AuthTokenType::EventNotify),
+            $event->registration_begin,
+            $event->registration_end,
+            (string)$event->event_id
+        );
     }
 
     public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
@@ -107,9 +119,7 @@ final class AuthTokenService extends Service
     public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()
-            ->where('type', AuthTokenType::EVENT_NOTIFY)
-            ->where('since <= NOW()')
-            ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $event->event_id . ':%');
+            ->where('type', AuthTokenType::EventNotify)
+            ->where('data', $event->event_id);
     }
 }

@@ -7,6 +7,7 @@ namespace FKSDB\Models\Email\Source\FOF\Transition;
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -15,7 +16,6 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends TransitionEmailSource<TeamModel2,array{token:AuthTokenModel,model:TeamModel2}>
@@ -35,12 +35,9 @@ final class FOFTransitionEmail extends TransitionEmailSource
 
     protected function createToken(PersonModel $person, TeamModel2 $teamModel): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $person->getLogin() ?? $this->loginService->createLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $teamModel->event->registration_end,
-            null,
-            true
+            $teamModel->event
         );
     }
 
@@ -53,21 +50,22 @@ final class FOFTransitionEmail extends TransitionEmailSource
 
         $emails = [];
         $transitionId = self::resolveLayoutName($transition);
-        $lang = $holder->getModel()->game_lang->value;
+        $gameLang = $holder->getModel()->game_lang;
         /** @var TeamMemberModel $member */
         foreach ($holder->getModel()->getMembers() as $member) {
             $emails[] = [
                 'template' => [
-                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "member.$transitionId.$lang.latte",
+                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "member.$transitionId.$gameLang->value.latte",
                     'data' => [
                         'model' => $holder->getModel(),
                         'token' => $this->createToken($member->person, $holder->getModel()),
                     ],
                 ],
-                'lang' => Language::from($holder->getModel()->game_lang->value),
                 'data' => [
                     'recipient_person_id' => $member->person_id,
-                    'sender' => 'Fyziklani <fyziklani@fykos.cz>'
+                    'sender' => 'Fyziklani <fyziklani@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'lang' => $gameLang->toLanguage(),
                 ],
             ];
         }
@@ -75,16 +73,17 @@ final class FOFTransitionEmail extends TransitionEmailSource
         foreach ($holder->getModel()->getTeachers() as $teacher) {
             $emails[] = [
                 'template' => [
-                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.$lang.latte",
+                    'file' => __DIR__ . DIRECTORY_SEPARATOR . "teacher.$transitionId.$gameLang->value.latte",
                     'data' => [
                         'model' => $holder->getModel(),
                         'token' => $this->createToken($teacher->person, $holder->getModel()),
                     ],
                 ],
-                'lang' => Language::from($holder->getModel()->game_lang->value),
                 'data' => [
                     'recipient_person_id' => $teacher->person_id,
-                    'sender' => 'Fyziklani <fyziklani@fykos.cz>'
+                    'sender' => 'Fyziklani <fyziklani@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'lang' => $gameLang->toLanguage(),
                 ],
             ];
         }

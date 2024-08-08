@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Events;
+namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EmailMachine;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -15,7 +16,7 @@ use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
 
-class EventDispatchFactory
+class TransitionsMachineFactory
 {
     private Container $container;
 
@@ -55,6 +56,11 @@ class EventDispatchFactory
     public function getPersonScheduleMachine(): PersonScheduleMachine
     {
         return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
+    }
+
+    public function getEmailMachine(): EmailMachine
+    {
+        return $this->container->getService('transitions.email.machine'); //@phpstan-ignore-line
     }
 
     public function getPaymentFactoryName(): ?string

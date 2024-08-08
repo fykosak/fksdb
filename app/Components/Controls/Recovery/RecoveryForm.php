@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmailSource;
+use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -43,6 +43,7 @@ class RecoveryForm extends FormComponent
     /**+
      * @throws BadRequestException
      * @throws BadTypeException
+     * @throws \Throwable
      */
     protected function handleSuccess(Form $form): void
     {
@@ -55,19 +56,24 @@ class RecoveryForm extends FormComponent
             $connection->beginTransaction();
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             /** @var AuthTokenModel|null $token */
-            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::RECOVERY))->fetch();
+            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::Recovery))->fetch();
             if ($token) {
                 throw new RecoveryExistsException();
             }
 
             $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
-            $token = $this->authTokenService->createToken($login, AuthTokenType::from(AuthTokenType::RECOVERY), $until);
+            $token = $this->authTokenService->createToken(
+                $login,
+                AuthTokenType::from(AuthTokenType::Recovery),
+                null,
+                $until
+            );
 
             $person = $login->person;
             if (!$person) {
                 throw new BadRequestException();
             }
-            $source = new PasswordRecoveryEmailSource($this->getContext());
+            $source = new PasswordRecoveryEmail($this->getContext());
             $source->createAndSend([
                 'token' => $token,
                 'person' => $person,

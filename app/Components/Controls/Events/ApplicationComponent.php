@@ -13,7 +13,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -29,8 +28,8 @@ use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -60,7 +59,7 @@ abstract class ApplicationComponent extends BaseComponent
     protected EventModel $event;
     protected PersonModel $loggedPerson;
 
-    protected EventDispatchFactory $eventDispatchFactory;
+    protected TransitionsMachineFactory $eventDispatchFactory;
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
     protected ReflectionFactory $reflectionFactory;
@@ -80,7 +79,7 @@ abstract class ApplicationComponent extends BaseComponent
     public function inject(
         ReferencedPersonFactory $referencedPersonFactory,
         EventParticipantService $eventParticipantService,
-        EventDispatchFactory $eventDispatchFactory,
+        TransitionsMachineFactory $eventDispatchFactory,
         ReflectionFactory $reflectionFactory
     ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -135,18 +134,13 @@ abstract class ApplicationComponent extends BaseComponent
 
         if ($this->model) {
             $holder = $machine->createHolder($this->model);
-            $transitions = Machine::filterAvailable(
-                Machine::filterBySource($machine->transitions, $holder->getState()),
-                $holder
-            );
+            $transitions = $machine->getTransitions()->filterAvailable($holder);
         } else {
             $holder = null;
-            $transitions = Machine::filterBySource(
-                $machine->transitions,
-                EventParticipantStatus::from(EventParticipantStatus::INIT)
-            );
+            $transitions = $machine->getTransitions()
+                ->filterBySource(EventParticipantStatus::from(EventParticipantStatus::INIT));
         }
-        foreach ($transitions as $transition) {
+        foreach ($transitions->toArray() as $transition) {
             $submit = new TransitionSubmitButton($transition, $holder);
             $form->addComponent($submit, $transition->getId());
             $submit->onClick[] = fn(SubmitButton $button) => $this->handleSubmit($button->getForm(), $transition);
@@ -198,9 +192,9 @@ abstract class ApplicationComponent extends BaseComponent
     {
         $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         try {
-            if ($transition && !$transition->getValidation()) {
+            if ($transition && !$transition->validation) {
                 $holder = $machine->createHolder($this->model);
-                $machine->execute($transition, $holder);
+                $transition->execute($holder);
                 $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             } else {
                 $this->eventParticipantService->explorer->beginTransaction();
@@ -228,7 +222,7 @@ abstract class ApplicationComponent extends BaseComponent
                 );
                 $holder = $machine->createHolder($model);
                 if ($transition) {
-                    $machine->execute($transition, $holder);
+                    $transition->execute($holder);
                 }
                 if (isset($this->model)) {
                     $this->getPresenter()->flashMessage(

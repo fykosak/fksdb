@@ -7,7 +7,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Components\EntityForms\PublicSchoolForm;
 use Fykosak\Utils\UI\PageTitle;
 
-class SchoolPresenter extends BasePresenter
+final class SchoolPresenter extends BasePresenter
 {
     public function requiresLogin(): bool
     {

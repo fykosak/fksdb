@@ -27,6 +27,7 @@ abstract class TransitionEmailSource extends EmailSource implements Statement
     /**
      * @phpstan-param THolder|Transition<THolder> $args
      * @throws BadTypeException
+     * @throws \Throwable
      */
     final public function __invoke(...$args): void
     {

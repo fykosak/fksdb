@@ -55,12 +55,7 @@ final class CodeAttendance extends CodeTransition
     public function available(): bool
     {
         $holder = $this->machine->createHolder($this->model);
-        $hasTransition = count(
-            Machine::filterAvailable(
-                $this->getTransitions(),
-                $holder
-            )
-        );
+        $hasTransition = $this->getTransitions()->filterAvailable($holder)->count();
         return $hasTransition && $this->model->createMachineCode();
     }
 
@@ -74,7 +69,7 @@ final class CodeAttendance extends CodeTransition
         parent::configureForm($form);
         $el = Html::el('span');
         $el->addText(_('Processed') . ': ');
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        $transitions = $this->machine->getTransitions()->filterByTarget($this->targetState)->toArray();
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
         }

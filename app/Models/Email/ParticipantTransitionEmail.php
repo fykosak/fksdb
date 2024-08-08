@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -55,12 +56,9 @@ abstract class ParticipantTransitionEmail extends TransitionEmailSource
 
     protected function createToken(ParticipantHolder $holder): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $holder->getModel()->person->getLogin() ?? $this->loginService->createLogin($holder->getModel()->person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $holder->getModel()->event->registration_end,
-            null,
-            true
+            $holder->getModel()->event
         );
     }
 
@@ -86,6 +84,8 @@ abstract class ParticipantTransitionEmail extends TransitionEmailSource
      *     blind_carbon_copy?:string,
      *     sender:string,
      *     reply_to?:string,
+     *     topic: EmailMessageTopic,
+     *     lang: Language,
      * }
      */
     abstract protected function getData(ParticipantHolder $holder, Transition $transition): array;

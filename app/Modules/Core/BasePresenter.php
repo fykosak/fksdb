@@ -104,7 +104,8 @@ abstract class BasePresenter extends Presenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
+            // TODO test - teoreticky fixuje prihlásenie tokenom ak je uživateľ prihlásený
+            if (/*!$this->getUser()->isLoggedIn() && */ $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
             if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {

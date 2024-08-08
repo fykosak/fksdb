@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Database\Explorer;
 
 /**
  * @phpstan-extends Machine<ParticipantHolder>
@@ -19,11 +18,8 @@ final class EventParticipantMachine extends Machine
 {
     private EventParticipantService $eventParticipantService;
 
-    public function __construct(
-        Explorer $explorer,
-        EventParticipantService $eventParticipantService
-    ) {
-        parent::__construct($explorer);
+    public function __construct(EventParticipantService $eventParticipantService)
+    {
         $this->eventParticipantService = $eventParticipantService;
     }
 

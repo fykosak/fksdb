@@ -143,3 +143,4 @@ includes:
     - transitions/tabor.neon
     - transitions/personSchedule.neon
     - transitions/sous.neon
+    - transitions/email.neon
