@@ -135,8 +135,8 @@ class PaymentForm extends EntityFormComponent
             );
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($model);
-                $transition = $this->machine->getTransitionsSelection()->filterAvailable($holder)->select();
-                $this->machine->execute($transition, $holder);
+                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                $transition->execute($holder);
                 $model = $holder->getModel();
             }
         } catch (\Throwable $exception) {

@@ -23,8 +23,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     final public function injectEventBase(
         EventService $eventService,
         TransitionsMachineFactory $eventDispatchFactory
-    ): void
-    {
+    ): void {
         $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }

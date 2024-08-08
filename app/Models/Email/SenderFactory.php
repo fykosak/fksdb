@@ -25,10 +25,10 @@ final class SenderFactory
     public function send(EmailMessageModel $model): void
     {
         $holder = $this->machine->createHolder($model);
-        $transition = $this->machine->getTransitionsSelection()
+        $transition = $this->machine->getTransitions()
             ->filterByTarget(EmailMessageState::from(EmailMessageState::Sent))
             ->filterAvailable($holder)
             ->select();
-        $this->machine->execute($transition, $holder);
+        $transition->execute($holder);
     }
 }

@@ -134,10 +134,10 @@ abstract class ApplicationComponent extends BaseComponent
 
         if ($this->model) {
             $holder = $machine->createHolder($this->model);
-            $transitions = $machine->getTransitionsSelection()->filterAvailable($holder);
+            $transitions = $machine->getTransitions()->filterAvailable($holder);
         } else {
             $holder = null;
-            $transitions = $machine->getTransitionsSelection()
+            $transitions = $machine->getTransitions()
                 ->filterBySource(EventParticipantStatus::from(EventParticipantStatus::INIT));
         }
         foreach ($transitions->toArray() as $transition) {
@@ -192,9 +192,9 @@ abstract class ApplicationComponent extends BaseComponent
     {
         $machine = $this->eventDispatchFactory->getParticipantMachine($this->event);
         try {
-            if ($transition && !$transition->getValidation()) {
+            if ($transition && !$transition->validation) {
                 $holder = $machine->createHolder($this->model);
-                $machine->execute($transition, $holder);
+                $transition->execute($holder);
                 $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             } else {
                 $this->eventParticipantService->explorer->beginTransaction();
@@ -222,7 +222,7 @@ abstract class ApplicationComponent extends BaseComponent
                 );
                 $holder = $machine->createHolder($model);
                 if ($transition) {
-                    $machine->execute($transition, $holder);
+                    $transition->execute($holder);
                 }
                 if (isset($this->model)) {
                     $this->getPresenter()->flashMessage(

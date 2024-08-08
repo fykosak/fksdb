@@ -94,12 +94,16 @@ class TransitionsExtension extends CompilerExtension
                 )
                     ->addTag($name)
                     ->setType(Transition::class)
-                    ->addSetup('setValidation', [$transitionConfig['validation']])
-                    ->addSetup('setCondition', [$transitionConfig['condition']])
+                    ->addSetup('$service->validation=?', [$transitionConfig['validation']])
+                    ->addSetup('$service->condition= is_bool(?) \? fn() => ? : ?;', [
+                        $transitionConfig['condition'],
+                        $transitionConfig['condition'],
+                        $transitionConfig['condition'],
+                    ])
                     ->addSetup('$service->source=?', [$source])
                     ->addSetup('$service->target=?', [$target])
                     ->addSetup(
-                        'setLabel',
+                        '$service->label = new \Fykosak\Utils\UI\Title(null,?,?)',
                         [
                             Helpers::resolveMixedExpression($transitionConfig['label']),
                             $transitionConfig['icon'],
@@ -120,11 +124,11 @@ class TransitionsExtension extends CompilerExtension
                 foreach ($transitionConfig['onFail'] as $callback) {
                     $transition->addSetup('$service->onFail[]=?', [$callback]);
                 }
-                $factory->addSetup('addTransition', [$transition]);
+                $factory->addSetup('$service->transitions[]=?', [$transition]);
             }
         }
         if (isset($config['decorator'])) {
-            $factory->addSetup('decorateTransitions', [$config['decorator']]);
+            $factory->addSetup('(?)->decorate($service)', [$config['decorator']]);
         }
         return $factory;
     }

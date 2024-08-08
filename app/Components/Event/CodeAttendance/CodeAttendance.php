@@ -69,7 +69,7 @@ final class CodeAttendance extends CodeTransition
         parent::configureForm($form);
         $el = Html::el('span');
         $el->addText(_('Processed') . ': ');
-        $transitions = $this->machine->getTransitionsSelection()->filterByTarget($this->targetState)->toArray();
+        $transitions = $this->machine->getTransitions()->filterByTarget($this->targetState)->toArray();
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
         }

@@ -34,7 +34,7 @@ final class PaymentTransitions implements TransitionsDecorator
                 PaymentState::from(PaymentState::WAITING),
             ] as $state
         ) {
-            $transition = $machine->getTransitionsSelection()
+            $transition = $machine->getTransitions()
                 ->filterBySource($state)
                 ->filterByTarget(PaymentState::from(PaymentState::CANCELED))
                 ->select();

@@ -25,10 +25,10 @@ class TransitionSubmitButton extends SubmitButton
      */
     public function __construct(Transition $transition, ?ModelHolder $holder)
     {
-        parent::__construct($transition->label()->toHtml());
+        parent::__construct($transition->label->toHtml());
         $this->transition = $transition;
         $this->holder = $holder;
-        if (!$this->transition->getValidation()) {
+        if (!$this->transition->validation) {
             $this->setValidationScope([]);
         }
         if ($this->holder && !$this->transition->canExecute($this->holder)) {

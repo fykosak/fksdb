@@ -16,7 +16,7 @@ use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 final class TransitionsSelection
 {
     /** @phpstan-var Transition<THolder>[] */
-    private array $transitions = [];
+    private array $transitions;
 
     /** @phpstan-param Transition<THolder>[] $transitions */
     public function __construct(array $transitions)

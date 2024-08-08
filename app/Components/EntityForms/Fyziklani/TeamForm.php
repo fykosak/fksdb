@@ -26,7 +26,6 @@ use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -142,15 +141,15 @@ abstract class TeamForm extends EntityFormComponent
             $holder = $this->machine->createHolder($team);
             if (!isset($this->model)) {
                 // ak je nový pošle defaultný mail
-                $transition = $this->machine->getTransitionsSelection()->filterAvailable($holder)->select();
-                $this->machine->execute($transition, $holder);
+                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                $transition->execute($holder);
             } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
                 // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
-                $transition = $this->machine->getTransitionsSelection()
+                $transition = $this->machine->getTransitions()
                     ->filterByTarget(TeamState::from(TeamState::Pending))
                     ->filterAvailable($holder)
                     ->select();
-                $this->machine->execute($transition, $holder);
+                $transition->execute($holder);
             }
             // pri každej editácii okrem initu pošle mail
             if (isset($this->model) && $this->event->event_type_id === 1) {

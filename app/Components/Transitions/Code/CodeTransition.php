@@ -49,7 +49,7 @@ abstract class CodeTransition extends CodeForm
      */
     protected function getTransitions(): TransitionsSelection
     {
-        return $this->machine->getTransitionsSelection()->filterByTarget($this->targetState);
+        return $this->machine->getTransitions()->filterByTarget($this->targetState);
     }
 
     /**
@@ -60,7 +60,7 @@ abstract class CodeTransition extends CodeForm
         $holder = $this->machine->createHolder($this->resolveModel($model));
 
         $transition = $this->getTransitions()->filterAvailable($holder)->select();
-        $this->machine->execute($transition, $holder);
+        $transition->execute($holder);
 
         $this->getPresenter()->flashMessage(_('Transition successful'), Message::LVL_SUCCESS);
         $this->finalRedirect();

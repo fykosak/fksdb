@@ -149,8 +149,8 @@ abstract class SingleFormComponent extends EntityFormComponent
 
             if (!isset($this->model)) {
                 $holder = $this->machine->createHolder($eventParticipant);
-                $transition = $this->machine->getTransitionsSelection()->filterAvailable($holder)->select();
-                $this->machine->execute($transition, $holder);
+                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                $transition->execute($holder);
             }
             $this->eventParticipantService->explorer->commit();
             $this->getPresenter()->flashMessage(

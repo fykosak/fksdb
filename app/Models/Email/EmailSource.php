@@ -103,14 +103,14 @@ abstract class EmailSource
      */
     public function createAndSend(array $params): void
     {
-        $transition = $this->machine->getTransitionsSelection()
+        $transition = $this->machine->getTransitions()
             ->filterBySource(EmailMessageState::from(EmailMessageState::Ready))
             ->filterByTarget(EmailMessageState::from(EmailMessageState::Waiting))
             ->select();
         foreach ($this->createEmails($params) as $email) {
             $model = $this->emailMessageService->addMessageToSend($email);
             $holder = $this->machine->createHolder($model);
-            $this->machine->execute($transition, $holder);
+            $transition->execute($holder);
         }
     }
 
