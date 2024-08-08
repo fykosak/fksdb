@@ -62,7 +62,7 @@ class RecoveryForm extends FormComponent
             }
 
             $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
-            $token = $this->authTokenService->createToken2(
+            $token = $this->authTokenService->createToken(
                 $login,
                 AuthTokenType::from(AuthTokenType::Recovery),
                 null,

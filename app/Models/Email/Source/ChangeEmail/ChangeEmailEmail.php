@@ -44,7 +44,7 @@ class ChangeEmailEmail extends EmailSource
         $person = $params['person'];
         $newEmail = $params['newEmail'];
 
-        $token = $this->tokenService->createToken2(
+        $token = $this->tokenService->createToken(
             $person->getLogin(),
             AuthTokenType::from(AuthTokenType::ChangeEmail),
             null,

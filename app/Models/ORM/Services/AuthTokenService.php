@@ -21,7 +21,7 @@ final class AuthTokenService extends Service
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    public function createToken2(
+    public function createToken(
         LoginModel $login,
         AuthTokenType $type,
         ?\DateTimeInterface $since,
@@ -37,8 +37,7 @@ final class AuthTokenService extends Service
         }
 
         if ($type->refresh()) {
-            $query = $this->getTable()
-                ->where('type', AuthTokenType::Unsubscribe);
+            $query = $login->getTokens($type);
             if (isset($data)) {
                 $query->where('data', $data);
             }
@@ -71,7 +70,7 @@ final class AuthTokenService extends Service
 
     public function createUnsubscribeToken(LoginModel $login): AuthTokenModel
     {
-        return $this->createToken2(
+        return $this->createToken(
             $login,
             AuthTokenType::from(AuthTokenType::Unsubscribe),
             new DateTime(),
@@ -81,7 +80,7 @@ final class AuthTokenService extends Service
 
     public function createEventToken(LoginModel $login, EventModel $event): AuthTokenModel
     {
-        return $this->createToken2(
+        return $this->createToken(
             $login,
             AuthTokenType::from(AuthTokenType::EventNotify),
             $event->registration_begin,
