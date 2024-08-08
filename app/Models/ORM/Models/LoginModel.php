@@ -235,20 +235,18 @@ final class LoginModel extends Model implements IIdentity
     /**
      * @phpstan-return TypedGroupedSelection<AuthTokenModel>
      */
-    public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    public function getTokens(AuthTokenType $type): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<AuthTokenModel> $query */
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
-        if (isset($type)) {
-            $query->where('type', $type);
-        }
+        $query->where('type', $type);
         return $query;
     }
 
     /**
      * @phpstan-return TypedGroupedSelection<AuthTokenModel>
      */
-    public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    public function getActiveTokens(AuthTokenType $type): TypedGroupedSelection
     {
         $query = $this->getTokens($type);
         $query->where('until > ?', new \DateTime());

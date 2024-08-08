@@ -64,8 +64,8 @@ final class EmailPresenter extends BasePresenter
     private function handleChangeEmail(PersonModel $person, Logger $logger): void
     {
         if (
-            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch()
-            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))
+            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch()
+            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::ChangeEmail))
         ) {
             $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
             // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.

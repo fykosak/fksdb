@@ -47,9 +47,10 @@ class AccountManager
         $login = $this->loginService->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
-        $token = $this->authTokenService->createToken(
+        $token = $this->authTokenService->createToken2(
             $login,
-            AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
+            AuthTokenType::from(AuthTokenType::InitialLogin),
+            null,
             $until
         );
         $email = new LoginInvitationEmail($this->container);

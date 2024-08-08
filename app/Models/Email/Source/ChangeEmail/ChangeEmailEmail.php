@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
+use Nette\Utils\DateTime;
 
 /**
  * @phpstan-extends EmailSource<array{
@@ -43,9 +44,10 @@ class ChangeEmailEmail extends EmailSource
         $person = $params['person'];
         $newEmail = $params['newEmail'];
 
-        $token = $this->tokenService->createToken(
+        $token = $this->tokenService->createToken2(
             $person->getLogin(),
-            AuthTokenType::from(AuthTokenType::CHANGE_EMAIL),
+            AuthTokenType::from(AuthTokenType::ChangeEmail),
+            null,
             (new \DateTime())->modify('+20 minutes'),
             $newEmail
         );

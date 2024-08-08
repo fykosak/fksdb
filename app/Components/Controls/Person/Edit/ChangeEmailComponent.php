@@ -43,7 +43,7 @@ class ChangeEmailComponent extends EntityFormComponent
         $login = $this->model->getLogin();
         $this->template->lang = Language::tryFrom($this->translator->lang);
         $this->template->changeActive = $login &&
-            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
+            $login->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch();
         parent::render();
     }
 
@@ -75,6 +75,7 @@ class ChangeEmailComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws ChangeInProgressException
+     * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {
@@ -87,7 +88,7 @@ class ChangeEmailComponent extends EntityFormComponent
         if (!$login) {
             $this->loginService->createLogin($this->model);
         }
-        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
+        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch();
         if ($token) {
             throw new ChangeInProgressException();
         }

@@ -21,21 +21,13 @@ final class AuthTokenService extends Service
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * @throws \PDOException
-     */
-    public function createToken(
+    public function createToken2(
         LoginModel $login,
         AuthTokenType $type,
-        ?\DateTimeInterface $until,
-        ?string $data = null,
-        bool $refresh = false,
-        ?\DateTimeInterface $since = null
+        ?\DateTimeInterface $since,
+        \DateTimeInterface $until,
+        ?string $data = null
     ): AuthTokenModel {
-        if ($since === null) {
-            $since = new DateTime();
-        }
-
         $connection = $this->explorer->getConnection();
         $outerTransaction = false;
         if ($connection->getPdo()->inTransaction()) {
@@ -44,32 +36,32 @@ final class AuthTokenService extends Service
             $connection->beginTransaction();
         }
 
-        if ($refresh) {
+        if ($type->refresh()) {
+            $query = $this->getTable()
+                ->where('type', AuthTokenType::Unsubscribe);
+            if (isset($data)) {
+                $query->where('data', $data);
+            }
             /** @var AuthTokenModel|null $token */
-            $token = $login->getTokens($type)
-                ->where('data', $data)
-                ->where('since <= NOW()')
-                ->where('until IS NULL OR until >= NOW()')
-                ->fetch();
-        } else {
-            $token = null;
+            $token = $query->fetch();
         }
-        if (!$token) {
+
+        $data = [
+            'login_id' => $login->login_id,
+            'type' => $type->value,
+            'data' => $data,
+            'since' => $since ?? new DateTime(),
+            'until' => $until,
+        ];
+        if (isset($token)) {
+            $token = $this->storeModel($data, $token);
+        } else {
             do {
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
-
-            $token = $this->storeModel([
-                'until' => $until,
-                'login_id' => $login->login_id,
-                'token' => $tokenData,
-                'data' => $data,
-                'since' => $since,
-                'type' => $type,
-            ]);
-        } else {
-            $this->storeModel(['until' => $until], $token);
+            $token = $this->storeModel(array_merge($data, ['token' => $tokenData]));
         }
+
         if (!$outerTransaction) {
             $connection->commit();
         }
@@ -79,72 +71,23 @@ final class AuthTokenService extends Service
 
     public function createUnsubscribeToken(LoginModel $login): AuthTokenModel
     {
-        $connection = $this->explorer->getConnection();
-        $outerTransaction = false;
-        if ($connection->getPdo()->inTransaction()) {
-            $outerTransaction = true;
-        } else {
-            $connection->beginTransaction();
-        }
-        /** @var AuthTokenModel|null $token */
-        $token = $this->getTable()->where('type', AuthTokenType::UNSUBSCRIBE)->fetch();
-        if (!$token) {
-            $token = $this->create([
-                'login_id' => $login->login_id,
-                'type' => AuthTokenType::UNSUBSCRIBE,
-                'until' => (new \DateTime())->modify('+1 year'),
-            ]);
-        }
-        if (!$outerTransaction) {
-            $connection->commit();
-        }
-        return $token;
+        return $this->createToken2(
+            $login,
+            AuthTokenType::from(AuthTokenType::Unsubscribe),
+            new DateTime(),
+            (new \DateTime())->modify('+1 year')
+        );
     }
 
     public function createEventToken(LoginModel $login, EventModel $event): AuthTokenModel
     {
-        $connection = $this->explorer->getConnection();
-        $outerTransaction = false;
-        if ($connection->getPdo()->inTransaction()) {
-            $outerTransaction = true;
-        } else {
-            $connection->beginTransaction();
-        }
-        /** @var AuthTokenModel|null $token */
-        $token = $this->getTable()
-            ->where('type', AuthTokenType::EVENT_NOTIFY)
-            ->where('data', $event->event_id)
-            ->fetch();
-        if (!$token) {
-            $token = $this->create([
-                'login_id' => $login->login_id,
-                'type' => AuthTokenType::EVENT_NOTIFY,
-                'data' => (string)$event->event_id,
-                'until' => $event->registration_end,
-                'since' => $event->registration_begin,
-            ]);
-        }
-        if (!$outerTransaction) {
-            $connection->commit();
-        }
-        return $token;
-    }
-
-    /**
-     * @phpstan-param array{
-     *     login_id:int,
-     *     type:string,
-     *     data?:string,
-     *     until?:\DateTimeInterface,
-     *     since?:\DateTimeInterface,
-     * } $data
-     */
-    private function create(array $data): AuthTokenModel
-    {
-        do {
-            $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
-        } while ($this->verifyToken($tokenData));
-        return $this->storeModel(array_merge($data, ['token' => $tokenData]));
+        return $this->createToken2(
+            $login,
+            AuthTokenType::from(AuthTokenType::EventNotify),
+            $event->registration_begin,
+            $event->registration_end,
+            (string)$event->event_id
+        );
     }
 
     public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
@@ -177,7 +120,7 @@ final class AuthTokenService extends Service
     public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()
-            ->where('type', AuthTokenType::EVENT_NOTIFY)
+            ->where('type', AuthTokenType::EventNotify)
             ->where('data', $event->event_id);
     }
 }

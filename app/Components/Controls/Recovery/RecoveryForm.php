@@ -43,6 +43,7 @@ class RecoveryForm extends FormComponent
     /**+
      * @throws BadRequestException
      * @throws BadTypeException
+     * @throws \Throwable
      */
     protected function handleSuccess(Form $form): void
     {
@@ -55,13 +56,18 @@ class RecoveryForm extends FormComponent
             $connection->beginTransaction();
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             /** @var AuthTokenModel|null $token */
-            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::RECOVERY))->fetch();
+            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::Recovery))->fetch();
             if ($token) {
                 throw new RecoveryExistsException();
             }
 
             $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
-            $token = $this->authTokenService->createToken($login, AuthTokenType::from(AuthTokenType::RECOVERY), $until);
+            $token = $this->authTokenService->createToken2(
+                $login,
+                AuthTokenType::from(AuthTokenType::Recovery),
+                null,
+                $until
+            );
 
             $person = $login->person;
             if (!$person) {
