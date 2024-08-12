@@ -47,7 +47,7 @@ class ChangeEmailEmail extends EmailSource
         $token = $this->tokenService->createToken(
             $person->getLogin(),
             AuthTokenType::from(AuthTokenType::ChangeEmail),
-            null,
+            new DateTime(),
             (new \DateTime())->modify('+20 minutes'),
             $newEmail
         );

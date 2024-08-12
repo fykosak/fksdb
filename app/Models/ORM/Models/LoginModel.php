@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Roles\BaseRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\Authorization\Roles\Events\ContestOrganizerRole;
 use FKSDB\Models\Authorization\Roles\Events\EventOrganizerRole;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
-use FKSDB\Models\Authorization\Roles\BaseRole;
-use FKSDB\Models\Authorization\Roles\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
@@ -243,13 +243,14 @@ final class LoginModel extends Model implements IIdentity
         return $query;
     }
 
-    /**
-     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
-     */
-    public function getActiveTokens(AuthTokenType $type): TypedGroupedSelection
+    public function hasActiveToken(AuthTokenType $type): bool
     {
-        $query = $this->getTokens($type);
-        $query->where('until > ?', new \DateTime());
-        return $query;
+        /** @var AuthTokenModel $token */
+        foreach ($this->getTokens($type) as $token) {
+            if ($token->isActive()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

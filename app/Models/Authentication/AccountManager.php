@@ -51,7 +51,7 @@ class AccountManager
         $token = $this->authTokenService->createToken(
             $login,
             AuthTokenType::from(AuthTokenType::InitialLogin),
-            null,
+            new DateTime(),
             $until
         );
         $email = new LoginInvitationEmail($this->container);

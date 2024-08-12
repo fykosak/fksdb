@@ -55,9 +55,7 @@ class RecoveryForm extends FormComponent
             $values = $form->getValues('array');
             $connection->beginTransaction();
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            /** @var AuthTokenModel|null $token */
-            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::Recovery))->fetch();
-            if ($token) {
+            if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::Recovery))) {
                 throw new RecoveryExistsException();
             }
 
@@ -65,7 +63,7 @@ class RecoveryForm extends FormComponent
             $token = $this->authTokenService->createToken(
                 $login,
                 AuthTokenType::from(AuthTokenType::Recovery),
-                null,
+                new DateTime(),
                 $until
             );
 

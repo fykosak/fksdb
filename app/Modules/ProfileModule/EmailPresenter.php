@@ -63,10 +63,7 @@ final class EmailPresenter extends BasePresenter
 
     private function handleChangeEmail(PersonModel $person, Logger $logger): void
     {
-        if (
-            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::ChangeEmail))->fetch()
-            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::ChangeEmail))
-        ) {
+        if (!$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::ChangeEmail))) {
             $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
             // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.
             //Možné príčiny: neskoro kliknutie na link; nebolo o zmenu vôbec požiuadané a nejak sa dostal sem.
@@ -76,7 +73,7 @@ final class EmailPresenter extends BasePresenter
             $newEmail = $this->tokenAuthenticator->getTokenData();
             ChangeEmailComponent::logEmailChange($person, $newEmail, false);
             $this->personInfoService->storeModel([
-                'email' => $this->tokenAuthenticator->getTokenData(),
+                'email' => $newEmail,
             ], $person->getInfo());
             $logger->log(new Message(_('Email has been changed.'), Message::LVL_SUCCESS));
             $this->tokenAuthenticator->disposeAuthToken();

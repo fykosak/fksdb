@@ -21,53 +21,49 @@ final class AuthTokenService extends Service
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
+    /**
+     * @throws \Throwable
+     */
     public function createToken(
         LoginModel $login,
         AuthTokenType $type,
-        ?\DateTimeInterface $since,
+        \DateTimeInterface $since,
         \DateTimeInterface $until,
         ?string $data = null
     ): AuthTokenModel {
-        $connection = $this->explorer->getConnection();
-        $outerTransaction = false;
-        if ($connection->getPdo()->inTransaction()) {
-            $outerTransaction = true;
-        } else {
-            $connection->beginTransaction();
-        }
+        return $this->explorer->getConnection()->transaction(
+            function () use ($login, $type, $since, $until, $data): AuthTokenModel {
+                if ($type->refresh()) {
+                    $query = $login->getTokens($type);
+                    if (isset($data)) {
+                        $query->where('data', $data);
+                    }
+                    /** @var AuthTokenModel|null $token */
+                    $token = $query->fetch();
+                }
 
-        if ($type->refresh()) {
-            $query = $login->getTokens($type);
-            if (isset($data)) {
-                $query->where('data', $data);
+                $data = [
+                    'login_id' => $login->login_id,
+                    'type' => $type->value,
+                    'data' => $data,
+                    'since' => $since,
+                    'until' => $until,
+                ];
+                if (isset($token)) {
+                    return $this->storeModel($data, $token);
+                } else {
+                    do {
+                        $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
+                    } while ($this->findToken($tokenData));
+                    return $this->storeModel(array_merge($data, ['token' => $tokenData]));
+                }
             }
-            /** @var AuthTokenModel|null $token */
-            $token = $query->fetch();
-        }
-
-        $data = [
-            'login_id' => $login->login_id,
-            'type' => $type->value,
-            'data' => $data,
-            'since' => $since ?? new DateTime(),
-            'until' => $until,
-        ];
-        if (isset($token)) {
-            $token = $this->storeModel($data, $token);
-        } else {
-            do {
-                $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
-            } while ($this->verifyToken($tokenData));
-            $token = $this->storeModel(array_merge($data, ['token' => $tokenData]));
-        }
-
-        if (!$outerTransaction) {
-            $connection->commit();
-        }
-
-        return $token;
+        );
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function createUnsubscribeToken(LoginModel $login): AuthTokenModel
     {
         return $this->createToken(
@@ -78,6 +74,9 @@ final class AuthTokenService extends Service
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function createEventToken(LoginModel $login, EventModel $event): AuthTokenModel
     {
         return $this->createToken(
@@ -100,13 +99,21 @@ final class AuthTokenService extends Service
         return $token;
     }
 
+    public function findToken(string $tokenData): ?AuthTokenModel
+    {
+        $tokens = $this->getTable()->where('token', $tokenData);
+        /** @var AuthTokenModel|null $token */
+        $token = $tokens->fetch();
+        return $token;
+    }
+
     /**
      * @param string|AuthTokenModel $token
      */
     public function disposeToken($token): void
     {
         if (!$token instanceof AuthTokenModel) {
-            $token = $this->verifyToken($token);
+            $token = $this->findToken($token);
         }
         if ($token) {
             $this->disposeModel($token);
