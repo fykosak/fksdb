@@ -64,7 +64,7 @@ services:
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
-    - FKSDB\Models\Events\EventDispatchFactory
+    - FKSDB\Models\Transitions\TransitionsMachineFactory
 
     - FKSDB\Models\News
     ## components

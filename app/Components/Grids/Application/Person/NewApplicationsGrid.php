@@ -6,9 +6,9 @@ namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Grids\Components\Button\Button;
-use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
@@ -19,10 +19,12 @@ class NewApplicationsGrid extends BaseGrid
 {
     protected EventService $eventService;
 
-    protected EventDispatchFactory $eventDispatchFactory;
+    protected TransitionsMachineFactory $eventDispatchFactory;
 
-    final public function injectPrimary(EventService $eventService, EventDispatchFactory $eventDispatchFactory): void
-    {
+    final public function injectPrimary(
+        EventService $eventService,
+        TransitionsMachineFactory $eventDispatchFactory
+    ): void {
         $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
