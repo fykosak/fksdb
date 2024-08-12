@@ -12,15 +12,17 @@ use Nette\Utils\Html;
 
 final class AuthTokenType extends FakeStringEnum implements EnumColumn
 {
-    public const INITIAL_LOGIN = 'initial_login';
-    public const RECOVERY = 'recovery';
-    public const EVENT_NOTIFY = 'event_notify';
-    public const CHANGE_EMAIL = 'change_email';
+    // phpcs:disable
+    public const InitialLogin = 'initial_login';
+    public const Recovery = 'recovery';
+    public const EventNotify = 'event_notify';
+    public const ChangeEmail = 'change_email';
+    public const Unsubscribe = 'unsubscribe';
     /** @internal */
-    public const EMAIL_MESSAGE = 'email_message';
+    public const EmailMessage = 'email_message';
     /** @deprecated */
     public const SSO = 'sso';
-
+    // phpcs:enable
     /**
      * @throws NotImplementedException
      */
@@ -48,13 +50,30 @@ final class AuthTokenType extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::INITIAL_LOGIN),
-            new self(self::RECOVERY),
-            new self(self::EVENT_NOTIFY),
-            new self(self::CHANGE_EMAIL),
-            new self(self::EMAIL_MESSAGE),
+            new self(self::InitialLogin),
+            new self(self::Recovery),
+            new self(self::EventNotify),
+            new self(self::ChangeEmail),
+            new self(self::EmailMessage),
+            new self(self::Unsubscribe),
             new self(self::SSO),
         ];
+    }
+
+    public function refresh(): bool
+    {
+        switch ($this->value) {
+            case self::Recovery:
+            case self::ChangeEmail:
+            case self::EmailMessage:
+            case self::SSO:
+            case self::InitialLogin:
+            default:
+                return false;
+            case self::EventNotify:
+            case self::Unsubscribe:
+                return true;
+        }
     }
 
     /**
