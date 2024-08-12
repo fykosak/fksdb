@@ -63,6 +63,7 @@ class TransitionsMachineFactory
         return $this->container->getService('transitions.email.machine'); //@phpstan-ignore-line
     }
 
+
     public function getPaymentFactoryName(): ?string
     {
         return 'transitions.fykosPayment';
