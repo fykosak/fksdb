@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Database\Explorer;
 
 /**
  * @phpstan-extends Machine<PaymentHolder>
@@ -17,9 +16,8 @@ final class PaymentMachine extends Machine
 {
     private PaymentService $paymentService;
 
-    public function __construct(Explorer $explorer, PaymentService $paymentService)
+    public function __construct(PaymentService $paymentService)
     {
-        parent::__construct($explorer);
         $this->paymentService = $paymentService;
     }
 
