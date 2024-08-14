@@ -29,7 +29,6 @@ use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
@@ -113,50 +112,53 @@ abstract class TeamForm extends EntityFormComponent
      */
     final protected function handleFormSuccess(Form $form): void
     {
-        $this->teamService->explorer->beginTransaction();
         /** @phpstan-var array{team:array{category:string,name:string}} $values */
         $values = $form->getValues('array');
 
         try {
-            $values = array_reduce(
-                $this->getProcessing(),
-                fn(array $prevValue, FormProcessing $item): array => $item(
-                    $prevValue,
-                    $form,
-                    $this->event,
-                    $this->model
-                ),
-                $values
-            );
-            if (isset($values['state'])) { // @phpstan-ignore-line
-                throw new InvalidStateException(); // TODO
-            }
-            $team = $this->teamService->storeModel(
-                array_merge($values['team'], [
-                    'event_id' => $this->event->event_id,
-                ]),
-                $this->model
-            );
-            $this->savePersons($team, $form);
-            $holder = $this->machine->createHolder($team);
-            if (!isset($this->model)) {
-                // ak je nový pošle defaultný mail
-                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
-                $transition->execute($holder);
-            } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
-                // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
-                $transition = $this->machine->getTransitions()
-                    ->filterByTarget(TeamState::from(TeamState::Pending))
-                    ->filterAvailable($holder)
-                    ->select();
-                $transition->execute($holder);
-            }
-            // pri každej editácii okrem initu pošle mail
-            if (isset($this->model) && $this->event->event_type_id === 1) {
-                (new InfoEmail($this->container))->createAndSend(['holder' => $holder]);
-                (new OrganizerInfoEmail($this->container))->createAndSend(['holder' => $holder]);
-            }
-            $this->teamService->explorer->commit();
+            $team = $this->teamService->explorer->getConnection()
+                ->transaction(function () use ($form, $values): TeamModel2 {
+                    $values = array_reduce(
+                        $this->getProcessing(),
+                        fn(array $prevValue, FormProcessing $item): array => $item(
+                            $prevValue,
+                            $form,
+                            $this->event,
+                            $this->model
+                        ),
+                        $values
+                    );
+                    if (isset($values['state'])) { // @phpstan-ignore-line
+                        throw new InvalidStateException(); // TODO
+                    }
+                    $team = $this->teamService->storeModel(
+                        array_merge($values['team'], [
+                            'event_id' => $this->event->event_id,
+                        ]),
+                        $this->model
+                    );
+                    $this->savePersons($team, $form);
+                    $holder = $this->machine->createHolder($team);
+                    if (!isset($this->model)) {
+                        // ak je nový pošle defaultný mail
+                        $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                        $transition->execute($holder);
+                    } elseif (!$this->isOrganizer && $team->state->value !== TeamState::Pending) {
+                        // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
+                        $transition = $this->machine->getTransitions()
+                            ->filterByTarget(TeamState::from(TeamState::Pending))
+                            ->filterAvailable($holder)
+                            ->select();
+                        $transition->execute($holder);
+                    }
+                    // pri každej editácii okrem initu pošle mail
+                    if (isset($this->model) && $this->event->event_type_id === 1) {
+                        (new InfoEmail($this->container))->createAndSend(['holder' => $holder]);
+                        (new OrganizerInfoEmail($this->container))->createAndSend(['holder' => $holder]);
+                    }
+                    return $team;
+                });
+
             $this->getPresenter()->flashMessage(
                 isset($this->model)
                     ? _('Application has been updated')
@@ -164,18 +166,12 @@ abstract class TeamForm extends EntityFormComponent
                 Message::LVL_SUCCESS
             );
             $this->getPresenter()->redirect('detail', ['id' => $team->fyziklani_team_id]);
-        } catch (AbortException $exception) {
-            throw $exception;
         } catch (UniqueConstraintViolationException $exception) {
             if (preg_match('/fyziklani_team\.uq_fyziklani_team__name__event/', $exception->getMessage())) {
                 $this->flashMessage(_('Team with same name already exists'), Message::LVL_ERROR);
             }
         } catch (DuplicateMemberException | SchoolsPerTeamException $exception) {
-            $this->teamService->explorer->rollBack();
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        } catch (\Throwable $exception) {
-            $this->teamService->explorer->rollBack();
-            throw $exception;
         }
     }
 

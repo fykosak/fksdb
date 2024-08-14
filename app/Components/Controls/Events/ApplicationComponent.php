@@ -197,49 +197,43 @@ abstract class ApplicationComponent extends BaseComponent
                 $transition->execute($holder);
                 $this->getPresenter()->flashMessage($transition->getSuccessLabel(), Message::LVL_SUCCESS);
             } else {
-                $this->eventParticipantService->explorer->beginTransaction();
                 /** @phpstan-var array{event_participant:array{person_id:int}} $values */
                 $values = $form->getValues('array');
-
                 $values = FormUtils::emptyStrToNull2($values);
                 $values['event_participant']['person_container']['person_info']['agreed'] = 1;
                 Debugger::log(json_encode((array)$values), 'app-form');
+                /** @var EventParticipantModel $model */
+                $model = $this->eventParticipantService->explorer->getConnection()
+                    ->transaction(function () use ($machine, $values, $transition): EventParticipantModel {
+                        $model = $this->eventParticipantService->storeModel(
+                            array_merge(
+                                $values['event_participant'],
+                                ['event_id' => $this->event->event_id]
+                            ),
+                            $this->model
+                        );
+                        $holder = $machine->createHolder($model);
+                        if ($transition) {
+                            $transition->execute($holder);
+                        }
+                        return $model;
+                    });
+
+
                 /* $values = array_reduce(
                      $this->getProcessing(),
                      function (array $data, Processing $processing) {
                          return $processing->process($data);
                      },
                      $values
-                 );/*
+                 );*/
 
-                 /** @var EventParticipantModel $model */
-                $model = $this->eventParticipantService->storeModel(
-                    array_merge(
-                        $values['event_participant'],
-                        ['event_id' => $this->event->event_id]
-                    ),
-                    $this->model
+                $this->getPresenter()->flashMessage(
+                    isset($this->model)
+                        ? sprintf(_('Application "%s" updated.'), $model->person->getFullName())
+                        : sprintf(_('Application "%s" created.'), $model->person->getFullName()),
+                    Message::LVL_SUCCESS
                 );
-                $holder = $machine->createHolder($model);
-                if ($transition) {
-                    $transition->execute($holder);
-                }
-                if (isset($this->model)) {
-                    $this->getPresenter()->flashMessage(
-                        sprintf(
-                            _('Application "%s" updated.'),
-                            $model->person->getFullName()
-                        ),
-                        Message::LVL_INFO
-                    );
-                } else {
-                    $this->getPresenter()->flashMessage(
-                        sprintf(_('Application "%s" created.'), $model->person->getFullName()),
-                        Message::LVL_SUCCESS
-                    );
-                }
-
-                $this->eventParticipantService->explorer->commit();
                 $this->getPresenter()->redirect(
                     ':Event:Application:detail',
                     [
@@ -262,7 +256,6 @@ abstract class ApplicationComponent extends BaseComponent
             foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
                 $referencedId->rollback();
             }
-            $this->eventParticipantService->explorer->rollBack();
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
             Debugger::barDump($exception);

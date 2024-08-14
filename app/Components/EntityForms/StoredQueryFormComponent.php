@@ -57,27 +57,26 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     /**
      * @throws \PDOException
+     * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {
         $values = FormUtils::emptyStrToNull2($form->getValues('array')); //@phpstan-ignore-line
-        $connection = $this->storedQueryService->explorer->getConnection();
-        $connection->beginTransaction();
-
         $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
 
-        if (isset($this->model)) {
-            $model = $this->model;
-            $this->storedQueryService->storeModel($data, $model);
-        } else {
-            /** @var QueryModel $model */
-            $model = $this->storedQueryService->storeModel($data);
-        }
+        $this->storedQueryService->explorer->getConnection()
+            ->transaction(function () use ($data, $values): void {
+                if (isset($this->model)) {
+                    $model = $this->model;
+                    $this->storedQueryService->storeModel($data, $model);
+                } else {
+                    /** @var QueryModel $model */
+                    $model = $this->storedQueryService->storeModel($data);
+                }
 
-        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
-        $this->saveParameters($values[self::CONT_PARAMS], $model);
-
-        $connection->commit();
+                $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
+                $this->saveParameters($values[self::CONT_PARAMS], $model);
+            });
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Query has been edited') : _('Query has been created'),
             Message::LVL_SUCCESS

@@ -20,13 +20,11 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -138,33 +136,28 @@ abstract class SingleFormComponent extends EntityFormComponent
     {
         /** @phpstan-var array<array{event_participant:array<string,mixed>}> $values */
         $values = $form->getValues('array');
-        $this->eventParticipantService->explorer->beginTransaction();
-        try {
-            $eventParticipant = $this->eventParticipantService->storeModel(
-                array_merge(FormUtils::emptyStrToNull2($values['event_participant']), [
-                    'event_id' => $this->event->event_id,
-                ]),
-                $this->model
-            );
+        $eventParticipant = $this->eventParticipantService->explorer->getConnection()
+            ->transaction(function () use ($values): EventParticipantModel {
+                $eventParticipant = $this->eventParticipantService->storeModel(
+                    array_merge(FormUtils::emptyStrToNull2($values['event_participant']), [
+                        'event_id' => $this->event->event_id,
+                    ]),
+                    $this->model
+                );
 
-            if (!isset($this->model)) {
-                $holder = $this->machine->createHolder($eventParticipant);
-                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
-                $transition->execute($holder);
-            }
-            $this->eventParticipantService->explorer->commit();
-            $this->getPresenter()->flashMessage(
-                isset($this->model)
-                    ? _('Application has been updated')
-                    : _('Application has been created'),
-                Message::LVL_SUCCESS
-            );
-            $this->getPresenter()->redirect('detail', ['id' => $eventParticipant->event_participant_id]);
-        } catch (AbortException $exception) {
-            throw $exception;
-        } catch (\Throwable $exception) {
-            $this->eventParticipantService->explorer->rollBack();
-            throw $exception;
-        }
+                if (!isset($this->model)) {
+                    $holder = $this->machine->createHolder($eventParticipant);
+                    $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                    $transition->execute($holder);
+                }
+                return $eventParticipant;
+            });
+        $this->getPresenter()->flashMessage(
+            isset($this->model)
+                ? _('Application has been updated')
+                : _('Application has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('detail', ['id' => $eventParticipant->event_participant_id]);
     }
 }

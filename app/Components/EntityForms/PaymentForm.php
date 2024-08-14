@@ -117,33 +117,30 @@ class PaymentForm extends EntityFormComponent
          *     event_items:array<array<int,bool>>} $values
          */
         $values = $form->getValues('array');
-        $connection = $this->paymentService->explorer->getConnection();
-        $connection->beginTransaction();
-        try {
-            $model = $this->paymentService->storeModel(
-                [
-                    'currency' => $values['currency'],
-                    'want_invoice' => $values['want_invoice'],
-                    'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
-                ],
-                $this->model
-            );
-            $this->schedulePaymentService->storeItems(
-                (array)$values['event_items'],
-                $model,
-                Language::from($this->translator->lang)
-            );
-            if (!isset($this->model)) {
-                $holder = $this->machine->createHolder($model);
-                $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
-                $transition->execute($holder);
-                $model = $holder->getModel();
-            }
-        } catch (\Throwable $exception) {
-            $connection->rollBack();
-            throw $exception;
-        }
-        $connection->commit();
+
+        $model = $this->paymentService->explorer->getConnection()
+            ->transaction(function () use ($values): PaymentModel {
+                $model = $this->paymentService->storeModel(
+                    [
+                        'currency' => $values['currency'],
+                        'want_invoice' => $values['want_invoice'],
+                        'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
+                    ],
+                    $this->model
+                );
+                $this->schedulePaymentService->storeItems(
+                    (array)$values['event_items'],
+                    $model,
+                    Language::from($this->translator->lang)
+                );
+                if (!isset($this->model)) {
+                    $holder = $this->machine->createHolder($model);
+                    $transition = $this->machine->getTransitions()->filterAvailable($holder)->select();
+                    $transition->execute($holder);
+                    $model = $holder->getModel();
+                }
+                return $model;
+            });
         $this->getPresenter()->flashMessage(
             !isset($this->model)
                 ? _('Payment has been created.')

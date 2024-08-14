@@ -72,9 +72,11 @@ class PersonFormComponent extends EntityFormComponent
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function handleFormSuccess(Form $form): void
     {
-        $connection = $this->personService->explorer->getConnection();
         /** @phpstan-var array{
          *     person_info: array<string,mixed>,
          *     person: array{gender?:string|null,family_name:string}
@@ -82,15 +84,17 @@ class PersonFormComponent extends EntityFormComponent
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values);
-        $connection->beginTransaction();
-        $this->logger->clear();
-        $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
-        $this->personInfoService->storeModel(
-            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
-            $person->getInfo()
-        );
 
-        $connection->commit();
+        $this->logger->clear();
+        $this->personService->explorer->getConnection()
+            ->transaction(function () use ($data): void {
+                $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
+                $this->personInfoService->storeModel(
+                    array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
+                    $person->getInfo()
+                );
+            });
+
         $this->logger->log(
             new Message(
                 isset($this->model) ? _('Person has been updated') : _('Person has been created'),
