@@ -96,7 +96,7 @@ class AddressHandler extends ReferencedHandler
             if (strlen($postalCode) != 5) {
                 return null;
             }
-            Debugger::log("Czechoslovak ZIP code not found '$postalCode'", Debugger::WARNING);
+            Debugger::log("Czechoslovak ZIP code not found '$postalCode'", 'psc');
             $firstChar = substr($postalCode, 0, 1);
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {

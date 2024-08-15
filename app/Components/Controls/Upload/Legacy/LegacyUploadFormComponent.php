@@ -54,7 +54,7 @@ class LegacyUploadFormComponent extends FormComponent
         $values = $form->getValues();
         Debugger::log(
             \sprintf('Contestant %d upload %s', $this->contestant->contestant_id, $values['tasks']),
-            'old-submit'
+            'upload-old'
         );
 
         $taskIds = explode(',', $values['tasks']);
@@ -83,7 +83,7 @@ class LegacyUploadFormComponent extends FormComponent
                 if (!$taskValues['file']->isOk()) {
                     Debugger::log(
                         sprintf('Uploaded file error %s.', $taskValues['file']->getError()),
-                        Debugger::WARNING
+                        'upload'
                     );
                     continue;
                 }
@@ -98,7 +98,7 @@ class LegacyUploadFormComponent extends FormComponent
         } catch (ProcessingException | \PDOException $exception) {
             $this->submitHandlerFactory->uploadedStorage->rollback();
             $this->taskService->explorer->getConnection()->rollBack();
-            Debugger::log($exception);
+            Debugger::log($exception, 'upload');
             $this->flashMessage(_('Task storing error.'), Message::LVL_ERROR);
         }
     }

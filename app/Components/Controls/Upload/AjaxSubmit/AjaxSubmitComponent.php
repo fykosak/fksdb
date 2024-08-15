@@ -138,7 +138,7 @@ class AjaxSubmitComponent extends AjaxComponent
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         } catch (StorageException | \PDOException $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'upload');
             $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), Message::LVL_ERROR));
         }
 

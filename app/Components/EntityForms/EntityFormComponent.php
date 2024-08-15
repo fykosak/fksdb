@@ -44,7 +44,7 @@ abstract class EntityFormComponent extends FormComponent
         try {
             $this->handleFormSuccess($form);
         } catch (\PDOException $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, Debugger::EXCEPTION);
             $previous = $exception->getPrevious();
             // catch NotNull|ForeignKey|Unique
             if ($previous instanceof ConstraintViolationException) {
@@ -55,7 +55,7 @@ abstract class EntityFormComponent extends FormComponent
         } catch (AbortException $exception) {// @phpstan-ignore-line
             throw $exception;
         } catch (\Throwable $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, Debugger::EXCEPTION);
             $this->flashMessage(sprintf(_('Error in the form: %s'), $exception->getMessage()), Message::LVL_ERROR);
         }
     }

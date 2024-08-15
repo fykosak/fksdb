@@ -30,7 +30,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
     {
         Debugger::log(
             sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),
-            'auth-log'
+            'auth'
         );
         $this->loginService->storeModel(['last_login' => DateTime::from(time())], $login);
     }

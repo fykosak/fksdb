@@ -79,10 +79,10 @@ final class TaskImportFormComponent extends FormComponent
                 sprintf(_('Error during import. %s'), $exception->getMessage()),
                 Message::LVL_ERROR
             );
-            Debugger::log($exception);
+            Debugger::log($exception, 'task-import');
         } catch (\PDOException $exception) {
             $this->getPresenter()->flashMessage(_('Error during import.'), Message::LVL_ERROR);
-            Debugger::log($exception);
+            Debugger::log($exception, 'task-import');
         } catch (DeprecatedException $exception) {
             $this->getPresenter()->flashMessage(_('Legacy XML format is deprecated'), Message::LVL_ERROR);
         } finally {

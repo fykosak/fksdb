@@ -34,7 +34,9 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\Http\Request;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends EntityFormComponent<TeamModel2>
@@ -50,6 +52,7 @@ abstract class TeamForm extends EntityFormComponent
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
     protected bool $isOrganizer;
+    protected Request $request;
 
     public function __construct(
         TeamMachine $machine,
@@ -65,6 +68,7 @@ abstract class TeamForm extends EntityFormComponent
     }
 
     final public function injectPrimary(
+        Request $request,
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
         ReflectionFactory $reflectionFormFactory,
@@ -74,6 +78,7 @@ abstract class TeamForm extends EntityFormComponent
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->teamService = $teamService;
         $this->teamMemberService = $teamMemberService;
+        $this->request = $request;
     }
 
     /**
@@ -116,6 +121,13 @@ abstract class TeamForm extends EntityFormComponent
         $this->teamService->explorer->beginTransaction();
         /** @phpstan-var array{team:array{category:string,name:string}} $values */
         $values = $form->getValues('array');
+        if (!$this->isOrganizer) {
+            Debugger::log(json_encode([
+                'cookies' => $this->request->cookies,
+                'headers' => $this->request->headers,
+                'remoteAddress' => $this->request->remoteAddress,
+            ]), 'team-app-remote');
+        }
 
         try {
             $values = array_reduce(

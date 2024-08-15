@@ -47,15 +47,9 @@ class FOLTeamForm extends TeamForm
             'person' => [
                 'other_name' => [
                     'required' => true,
-                    'description' => _(
-                        'Usually the first part of your name. For example, "Albert".'
-                    ),
                 ],
                 'family_name' => [
                     'required' => true,
-                    'description' => _(
-                        'The second part of your name. For example, "Einstein".'
-                    ),
                 ],
             ],
             'person_info' => [
@@ -63,8 +57,8 @@ class FOLTeamForm extends TeamForm
                     'required' => true,
                 ],
                 'born' => [
-                    'required' => false,
-                    'description' => _('Only for Czech and Slovak students.'),
+                    'required' => true,
+                    'description' => _('For certificates'),
                 ],
             ],
             'person_history' => [
@@ -93,7 +87,10 @@ class FOLTeamForm extends TeamForm
      */
     protected function getTeamFieldsDefinition(): array
     {
-        return ['name' => ['required' => true]];
+        return [
+            'name' => ['required' => true],
+            'game_lang' => ['required' => true, 'caption' => _('Language of communication')],
+        ];
     }
 
     /**
