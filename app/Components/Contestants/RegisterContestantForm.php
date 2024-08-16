@@ -78,7 +78,7 @@ final class RegisterContestantForm extends EntityFormComponent
      * @throws BadTypeException
      * @throws BadRequestException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         $form->getValues('array');//trigger RPC
         /** @phpstan-var ReferencedId<PersonModel> $referencedId */

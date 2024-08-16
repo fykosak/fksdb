@@ -14,15 +14,25 @@ use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<OrganizerModel>
+ * @phpstan-extends ProcessedFormComponent<OrganizerModel,array{container:array{
+ *       since:int,
+ *       until:int|null,
+ *       role:string,
+ *       tex_signature:string,
+ *       domain_alias:string,
+ *       order:int,
+ *       contribution:string,
+ *      contest_id?:int,
+ *  }}>
  */
-class OrganizerFormComponent extends EntityFormComponent
+class OrganizerFormComponent extends ProcessedFormComponent
 {
     use ReferencedPersonTrait;
 
@@ -63,26 +73,17 @@ class OrganizerFormComponent extends EntityFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function innerSuccess(array $values, Form $form): Model
     {
-        /**
-         * @phpstan-var array{container:array{
-         *      since:int,
-         *      until:int|null,
-         *      role:string,
-         *      tex_signature:string,
-         *      domain_alias:string,
-         *      order:int,
-         *      contribution:string,
-         *     contest_id?:int,
-         * }} $values
-         */
-        $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        if (!isset($data['contest_id'])) {
-            $data['contest_id'] = $this->contestYear->contest_id;
-        }
-        $this->service->storeModel($data, $this->model);
+        $data['contest_id'] = $this->contestYear->contest_id;
+        /** @var OrganizerModel $model */
+        $model = $this->service->storeModel($data, $this->model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Organizer has been updated.') : _('Organizer has been created.'),
             Message::LVL_SUCCESS

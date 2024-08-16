@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\Application\Team;
 
-use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOLCategoryProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolRequirement\FOLSchoolRequirementProcessing;
+use FKSDB\Components\Application\Team\Processing\Category\FOLCategoryProcessing;
+use FKSDB\Components\Application\Team\Processing\SchoolRequirement\FOLSchoolRequirementProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
 
@@ -16,14 +15,11 @@ use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
  */
 class FOLTeamForm extends TeamForm
 {
-    /**
-     * @phpstan-return FormProcessing[]
-     */
-    protected function getProcessing(): array
+    protected function getPreprocessing(): array
     {
         return [
-            new FOLSchoolRequirementProcessing($this->container),
-            new FOLCategoryProcessing($this->container),
+            new FOLSchoolRequirementProcessing($this->container, $this->event),
+            new FOLCategoryProcessing($this->container, $this->event),
         ];
     }
 
@@ -91,13 +87,5 @@ class FOLTeamForm extends TeamForm
             'name' => ['required' => true],
             'game_lang' => ['required' => true, 'caption' => _('Language of communication')],
         ];
-    }
-
-    /**
-     * @phpstan-return array{}
-     */
-    protected function getTeacherFieldsDefinition(): array
-    {
-        return [];
     }
 }

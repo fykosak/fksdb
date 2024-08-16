@@ -77,7 +77,7 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $form->addProtection(_('The form has expired. Please send it again.'));
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         $values = $form->getValues('array');
         /** @phpstan-var ReferencedId<PersonModel> $referencedId */

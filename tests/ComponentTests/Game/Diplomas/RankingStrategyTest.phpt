@@ -8,7 +8,7 @@ namespace FKSDB\Tests\ComponentTests\Game\Diplomas;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
+use FKSDB\Components\Application\Team\NoMemberException;
 use FKSDB\Components\Game\Diplomas\RankingStrategy;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;

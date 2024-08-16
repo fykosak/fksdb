@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam;
+namespace FKSDB\Components\Application\Team\Processing\SchoolsPerTeam;
 
 use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\InvalidStateException;

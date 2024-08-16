@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events;
+namespace FKSDB\Components\Application\SingleInvited;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Transition\TransitionSubmitButton;
@@ -53,7 +53,7 @@ use Tracy\Debugger;
  *    person_schedule?:array<string,TMeta>
  *  }
  */
-abstract class ApplicationComponent extends BaseComponent
+abstract class InvitationApplicationForm extends BaseComponent
 {
     protected ?EventParticipantModel $model;
     protected EventModel $event;

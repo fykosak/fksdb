@@ -56,16 +56,14 @@ class EventOrganizerFormComponent extends EntityFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /**
-         * @phpstan-var array{container:array{person_id:int,note:string,event_id?:int}} $values
+         * @phpstan-var array{container:array{person_id:int,note:string}} $values
          */
         $values = $form->getValues('array');
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        if (!isset($data['event_id'])) {
-            $data['event_id'] = $this->event->event_id;
-        }
+        $data['event_id'] = $this->event->event_id;
         $this->service->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Event organizer has been updated') : _('Event organizer has been created'),

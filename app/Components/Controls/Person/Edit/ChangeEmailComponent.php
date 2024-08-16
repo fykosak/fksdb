@@ -76,7 +76,7 @@ class ChangeEmailComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws ChangeInProgressException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /** @phpstan-var array{new_email:string} $values */
         $values = $form->getValues('array');

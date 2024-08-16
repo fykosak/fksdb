@@ -42,7 +42,7 @@ class ScheduleItemForm extends EntityFormComponent
         $this->scheduleItemService = $scheduleItemService;
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /**
          * @phpstan-var array{container:array{

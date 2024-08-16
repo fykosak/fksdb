@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\Application\Team;
 
-use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\SchoolsPerTeam\SchoolsPerTeamProcessing;
+use FKSDB\Components\Application\Team\Processing\Category\FOFCategoryProcessing;
+use FKSDB\Components\Application\Team\Processing\SchoolsPerTeam\SchoolsPerTeam;
+use FKSDB\Components\Application\Team\Processing\SendInfoEmail;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
@@ -20,7 +20,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Neon\Exception;
 
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
@@ -35,9 +34,6 @@ class FOFTeamForm extends TeamForm
         $this->teacherService = $teacherService;
     }
 
-    /**
-     * @throws Exception
-     */
     protected function appendPersonsFields(Form $form): void
     {
         $this->appendTeacherFields($form);
@@ -72,9 +68,6 @@ class FOFTeamForm extends TeamForm
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function appendTeacherFields(Form $form): void
     {
         $teacherCount = isset($this->model) ? max($this->model->getTeachers()->count('*'), 1) : 1;
@@ -185,7 +178,7 @@ class FOFTeamForm extends TeamForm
     protected function savePersons(TeamModel2 $team, Form $form): void
     {
         $this->saveTeachers($team, $form);
-        $this->saveMembers($team, $form);
+        parent::savePersons($team, $form);
     }
 
     private function saveTeachers(TeamModel2 $team, Form $form): void
@@ -250,15 +243,22 @@ class FOFTeamForm extends TeamForm
         }
     }
 
-    /**
-     * @phpstan-return FormProcessing[]
-     */
-    protected function getProcessing(): array
+    protected function getPreprocessing(): array
     {
         return [
-            new FOFCategoryProcessing($this->container),
-            new SchoolsPerTeamProcessing($this->container),
+            new FOFCategoryProcessing($this->container, $this->event),
+            new SchoolsPerTeam($this->container, $this->event),
         ];
+    }
+
+    protected function getPostprocessing(): array
+    {
+        $postprocessing = parent::getPostprocessing();
+        if (isset($this->model)) {
+            $postprocessing[] = new SendInfoEmail($this->container, $this->machine);
+        }
+        // pri každej editácii okrem initu pošle mail
+        return $postprocessing;
     }
 
     /**

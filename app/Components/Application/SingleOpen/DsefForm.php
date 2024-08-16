@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Single;
+namespace FKSDB\Components\Application\SingleOpen;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -12,7 +12,7 @@ use FKSDB\Modules\Core\BasePresenter;
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
-final class DsefFormComponent extends SingleFormComponent
+final class DsefForm extends OpenApplicationForm
 {
     /**
      * @phpstan-return EvaluatedFieldsDefinition

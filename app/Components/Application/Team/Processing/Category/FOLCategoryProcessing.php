@@ -2,28 +2,37 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani\Processing\Category;
+namespace FKSDB\Components\Application\Team\Processing\Category;
 
-use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
+use FKSDB\Components\Application\Team\TeamForm;
+use FKSDB\Components\EntityForms\Processing\Preprocessing;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 
-class FOLCategoryProcessing extends FormProcessing
+/**
+ * @phpstan-extends Preprocessing<TeamModel2,array{team:array{category:string,name:string}}>
+ */
+final class FOLCategoryProcessing extends Preprocessing
 {
-    /**
-     * @phpstan-param array{team:array{category:string,name:string}} $values
-     * @phpstan-return array{team:array{category:string,name:string}}
-     */
-    public function __invoke(array $values, Form $form, EventModel $event, ?TeamModel2 $model): array
+    private EventModel $event;
+
+    public function __construct(Container $container, EventModel $event)
+    {
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
+    public function __invoke(array $values, Form $form, ?Model $model): array
     {
         $members = TeamForm::getFormMembers($form);
-        $values['team']['category'] = $this->getCategory($members, $event)->value;
+        $values['team']['category'] = $this->getCategory($members)->value;
         return $values;
     }
 
@@ -35,14 +44,14 @@ class FOLCategoryProcessing extends FormProcessing
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      * @phpstan-param PersonModel[] $members
      */
-    protected function getCategory(array $members, EventModel $event): TeamCategory
+    protected function getCategory(array $members): TeamCategory
     {
-        [$olds, $years] = FOFCategoryProcessing::getTeamMembersYears($members, $event);
+        [$olds, $years] = FOFCategoryProcessing::getTeamMembersYears($members, $this->event);
         // evaluate stats
         if ($olds > 0) {
             return TeamCategory::from(TeamCategory::O);
         } else {
-            $avg = FOFCategoryProcessing::getCoefficientAvg($members, $event);
+            $avg = FOFCategoryProcessing::getCoefficientAvg($members, $this->event);
             if ($avg <= 2 && $years[StudyYear::High4] === 0 && $years[StudyYear::High3] <= 2) {
                 return TeamCategory::from(TeamCategory::C);
             } elseif ($avg <= 3 && $years[StudyYear::High4] <= 2) {
@@ -60,6 +69,6 @@ class FOLCategoryProcessing extends FormProcessing
         foreach ($team->getMembers() as $member) {
             $members[] = $member->person;
         }
-        return $this->getCategory($members, $team->event);
+        return $this->getCategory($members);
     }
 }

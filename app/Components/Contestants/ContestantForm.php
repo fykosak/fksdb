@@ -58,7 +58,7 @@ final class ContestantForm extends EntityFormComponent
     /**
      * @throws BadRequestException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         $form->getValues(); // trigger RPC
         $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);

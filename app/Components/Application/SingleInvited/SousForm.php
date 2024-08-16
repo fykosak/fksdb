@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Controls\Events;
+namespace FKSDB\Components\Application\SingleInvited;
 
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Models\Events\Semantics\State;
@@ -13,7 +13,7 @@ use FKSDB\Models\Expressions\Logic\Not;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole;
 
-class SousApplicationForm extends ApplicationComponent
+class SousForm extends InvitationApplicationForm
 {
     /**
      * @throws NotImplementedException

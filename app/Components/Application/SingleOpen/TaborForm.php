@@ -2,20 +2,17 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Single;
+namespace FKSDB\Components\Application\SingleOpen;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 
 /**
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
-final class TaborFormComponent extends SingleFormComponent
+final class TaborForm extends OpenApplicationForm
 {
 
     /**

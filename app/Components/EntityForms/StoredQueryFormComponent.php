@@ -58,7 +58,7 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws \PDOException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         $values = FormUtils::emptyStrToNull2($form->getValues('array')); //@phpstan-ignore-line
         $connection = $this->storedQueryService->explorer->getConnection();

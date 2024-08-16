@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Application\Team\FOFTeamForm;
+use FKSDB\Components\Application\Team\FOLTeamForm;
+use FKSDB\Components\Application\Team\NoteForm;
+use FKSDB\Components\Application\Team\TeamForm;
 use FKSDB\Components\Controls\SchoolCheckComponent;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
-use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
-use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
-use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
-use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Grids\Application\TeamGrid;

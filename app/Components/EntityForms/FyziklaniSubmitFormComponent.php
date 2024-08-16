@@ -7,8 +7,8 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
-use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -36,25 +36,32 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         }
     }
 
-    protected function handleFormSuccess(Form $form): void
+    /**
+     * @throws InvalidLinkException
+     */
+    protected function handleSuccess(Form $form): void
     {
         /**
          * @phpstan-var array{points:int} $values
          */
         $values = $form->getValues('array');
-        try {
-            $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
-            $handler->edit($this->model, (int)$values['points']);
-            foreach ($handler->logger->getMessages() as $message) {
-                // interpret html edit links
-                $this->getPresenter()->flashMessage(Html::el()->setHtml($message->text), $message->level);
-            }
-            $handler->logger->clear();
-            $this->redirect('this');
-        } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $this->redirect('this');
+        $handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
+        $handler->edit($this->model, (int)$values['points']);
+        foreach ($handler->logger->getMessages() as $message) {
+            // interpret html edit links
+            $this->getPresenter()->flashMessage(Html::el()->setHtml($message->text), $message->level);
         }
+        $handler->logger->clear();
+        $this->redirect('this');
+    }
+
+    protected function onException(\Throwable $exception): bool
+    {
+        if ($exception instanceof ClosedSubmittingException) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            return true;
+        }
+        return parent::onException($exception);
     }
 
     /**

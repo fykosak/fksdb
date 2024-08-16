@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Single;
+namespace FKSDB\Components\Application\SingleOpen;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\FormProcessing;
+use FKSDB\Components\EntityForms\Processing\Preprocessing;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
@@ -20,7 +20,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
@@ -36,7 +35,7 @@ use Nette\Forms\Form;
  * @phpstan-extends EntityFormComponent<EventParticipantModel>
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
-abstract class SingleFormComponent extends EntityFormComponent
+abstract class OpenApplicationForm extends EntityFormComponent
 {
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
@@ -105,7 +104,7 @@ abstract class SingleFormComponent extends EntityFormComponent
     }
 
     /**
-     * @return FormProcessing[]
+     * @return Preprocessing<EventParticipantModel,array{}>[]
      */
     protected function getProcessing(): array
     {
@@ -134,7 +133,7 @@ abstract class SingleFormComponent extends EntityFormComponent
     /**
      * @throws \Throwable
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /** @phpstan-var array<array{event_participant:array<string,mixed>}> $values */
         $values = $form->getValues('array');

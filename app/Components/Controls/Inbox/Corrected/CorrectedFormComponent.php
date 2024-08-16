@@ -51,7 +51,7 @@ class CorrectedFormComponent extends FormComponent
                 $updated++;
             }
             $this->flashMessage(\sprintf(_('Updated %d submits'), $updated), Message::LVL_INFO);
-        } catch (\PDOException $exception) {
+        } catch (\Throwable $exception) {
             $this->flashMessage(_('Error during updating'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');

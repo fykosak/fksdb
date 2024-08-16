@@ -42,7 +42,7 @@ class FlagComponent extends EntityFormComponent
         $this->personHasFlagService = $personHasFlagService;
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /** @var array{value:string} $values */
         $values = $form->getValues('array');

@@ -72,7 +72,7 @@ class PersonFormComponent extends EntityFormComponent
         }
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         $connection = $this->personService->explorer->getConnection();
         /** @phpstan-var array{

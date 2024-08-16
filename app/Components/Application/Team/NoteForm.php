@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Fyziklani;
+namespace FKSDB\Components\Application\Team;
 
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -48,7 +48,7 @@ final class NoteForm extends EntityFormComponent
         $form->addComponent($container, 'team');
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /** @phpstan-var array{team:array{note:string,internal_note:string}} $values */
         $values = $form->getValues('array');

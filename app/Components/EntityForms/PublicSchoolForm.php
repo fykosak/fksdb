@@ -68,7 +68,7 @@ final class PublicSchoolForm extends EntityFormComponent
     /**
      * @throws \PDOException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /** @phpstan-var array{school:array{
          *     name_full:string,

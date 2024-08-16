@@ -46,7 +46,7 @@ class LoginFomComponent extends EntityFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function handleSuccess(Form $form): void
     {
         /**
          * @phpstan-var array{login:array{login:string}} $values
