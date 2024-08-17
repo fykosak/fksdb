@@ -8,7 +8,7 @@
 <body class="print-area">
 {var \Metzli\Renderer\PngRenderer $renderer = new \Metzli\Renderer\PngRenderer()}
 {foreach $control->getComponent('teamList')->getComponents() as $teamComponent}
-    {varType FKSDB\Components\TeamSeating\Single $teamComponent}
+    {varType FKSDB\Components\Game\Seating\Single $teamComponent}
     <div class="page page-a5-landscape" style="position: relative">
         <div class="row mt-3">
             <span class="col-6 text-center">

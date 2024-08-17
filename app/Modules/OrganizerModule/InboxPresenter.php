@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
-use FKSDB\Components\Controls\Inbox\Corrected\CorrectedFormComponent;
-use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
-use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
-use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
+use FKSDB\Components\Inbox\Corrected\CorrectedComponent;
+use FKSDB\Components\Inbox\Corrected\CorrectedFormComponent;
+use FKSDB\Components\Inbox\Inbox\InboxFormComponent;
+use FKSDB\Components\Inbox\SubmitCheck\SubmitCheckComponent;
+use FKSDB\Components\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;

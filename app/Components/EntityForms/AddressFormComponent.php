@@ -14,15 +14,16 @@ use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidAddressException;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use FKSDB\Models\ORM\Services\PostContactService;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-extends EntityFormComponent<PostContactModel>
+ * @phpstan-extends ModelForm<PostContactModel,array{address:array<string,mixed>}>
  */
-class AddressFormComponent extends EntityFormComponent
+class AddressFormComponent extends ModelForm
 {
     public const CONTAINER = 'address';
 
@@ -52,37 +53,36 @@ class AddressFormComponent extends EntityFormComponent
     /**
      * @throws \Throwable
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function innerSuccess(array $values, Form $form): PostContactModel
     {
-        try {
-            /** @phpstan-var array{address:array<string,mixed>} $values */
-            $values = $form->getValues('array');
-            $this->postContactService->explorer->getConnection()->transaction(function () use ($values): void {
-                $address = (new AddressHandler($this->container))->store(
-                /** @phpstan-ignore-next-line */
-                    $values[self::CONTAINER],
-                    isset($this->model) ? $this->model->address : null
-                );
-                if (!$address) {
-                    throw new InvalidStateException(_('Address is required'));
-                }
-                if (!isset($this->model)) {
-                    $this->postContactService->storeModel(
-                        [
-                            'type' => $this->postContactType->value,
-                            'address_id' => $address->address_id,
-                            'person_id' => $this->person->person_id,
-                        ],
-                        $this->model
-                    );
-                }
-            });
-
-            $this->getPresenter()->flashMessage(_('Address has been saved'));
-            $this->getPresenter()->redirect('default');
-        } catch (InvalidAddressException | InvalidPostalCode $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        $address = (new AddressHandler($this->container))->store(
+        /** @phpstan-ignore-next-line */
+            $values[self::CONTAINER],
+            isset($this->model) ? $this->model->address : null
+        );
+        if (!$address) {
+            throw new InvalidStateException(_('Address is required'));
         }
+        if (!isset($this->model)) {
+            $postContactModel = $this->postContactService->storeModel(
+                [
+                    'type' => $this->postContactType->value,
+                    'address_id' => $address->address_id,
+                    'person_id' => $this->person->person_id,
+                ],
+                $this->model
+            );
+        }
+        return $postContactModel ?? $this->model;
+    }
+
+    protected function onException(\Throwable $exception): bool
+    {
+        if ($exception instanceof InvalidAddressException || $exception instanceof InvalidPostalCode) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            return true;
+        }
+        return parent::onException($exception);
     }
 
     protected function setDefaults(Form $form): void
@@ -120,5 +120,11 @@ class AddressFormComponent extends EntityFormComponent
     protected function getTemplatePath(): string
     {
         return __DIR__ . '/layout.address.latte';
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(_('Address has been saved'));
+        $this->getPresenter()->redirect('default');
     }
 }
