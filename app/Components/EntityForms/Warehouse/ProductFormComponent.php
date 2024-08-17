@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Warehouse;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -12,16 +12,23 @@ use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ProductModel>
+ * @phpstan-extends ModelForm<ProductModel,array{container:array{
+ *        name_cs:string,
+ *        name_en:string,
+ *        description_cs:string,
+ *        description_en:string,
+ *        category:string,
+ *        note:string,
+ *  }}>
  */
-final class ProductFormComponent extends EntityFormComponent
+final class ProductFormComponent extends ModelForm
 {
     private ProducerService $producerService;
     private ProductService $productService;
@@ -34,29 +41,6 @@ final class ProductFormComponent extends EntityFormComponent
     ): void {
         $this->producerService = $producerService;
         $this->productService = $productService;
-    }
-
-    protected function handleFormSuccess(Form $form): void
-    {
-        /**
-         * @phpstan-var array{container:array{
-         *       name_cs:string,
-         *       name_en:string,
-         *       description_cs:string,
-         *       description_en:string,
-         *       category:string,
-         *       note:string,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-
-        $this->productService->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Product has been updated.') : _('Product has been created.'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
     }
 
     protected function setDefaults(Form $form): void
@@ -88,5 +72,21 @@ final class ProductFormComponent extends EntityFormComponent
         $container->addComponent(new SelectBox(_('Producer'), $producers), 'producer_id', 'name_cs');
         $container->addText('url', _('URL'))->addRule(Form::URL);
         $form->addComponent($container, self::CONTAINER);
+    }
+
+    protected function innerSuccess(array $values, Form $form): ProductModel
+    {
+        /** @var ProductModel $product */
+        $product = $this->productService->storeModel($values[self::CONTAINER], $this->model);
+        return $product;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Product has been updated.') : _('Product has been created.'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

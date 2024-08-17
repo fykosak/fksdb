@@ -79,6 +79,9 @@ final class InfoEmail extends EmailSource
         return $emails;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(PersonModel $person, TeamHolder $holder): AuthTokenModel
     {
         return $this->authTokenService->createEventToken(

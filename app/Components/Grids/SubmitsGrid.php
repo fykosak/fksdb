@@ -144,7 +144,7 @@ final class SubmitsGrid extends BaseGrid
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (StorageException | \PDOException $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'upload');
             $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_ERROR);
         }
     }

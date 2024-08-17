@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Game;
 
-use FKSDB\Components\TeamSeating\AllPlaces;
-use FKSDB\Components\TeamSeating\SeatingForm;
-use FKSDB\Components\TeamSeating\Single;
+use FKSDB\Components\Game\Seating\AllPlaces;
+use FKSDB\Components\Game\Seating\SeatingForm;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;

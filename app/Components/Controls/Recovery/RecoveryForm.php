@@ -10,7 +10,6 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\Utils\Utils;

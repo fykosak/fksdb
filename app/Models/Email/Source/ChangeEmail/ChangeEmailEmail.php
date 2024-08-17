@@ -37,6 +37,7 @@ class ChangeEmailEmail extends EmailSource
 
     /**
      * @throws ChangeInProgressException
+     * @throws \Throwable
      */
     protected function getSource(array $params): array
     {
@@ -48,7 +49,7 @@ class ChangeEmailEmail extends EmailSource
             $person->getLogin(),
             AuthTokenType::from(AuthTokenType::ChangeEmail),
             new DateTime(),
-            (new \DateTime())->modify('+20 minutes'),
+            (new DateTime())->modify('+20 minutes'),
             $newEmail
         );
         $oldData = [

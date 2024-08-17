@@ -44,6 +44,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team A',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -77,6 +78,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team A',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -88,6 +90,9 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
             'privacy' => '1',
         ];
         $response = $this->createFormRequest('create', $data);
+        if ($response instanceof TextResponse) {
+            file_put_contents('r2.html', (string)$response->getSource());
+        }
         Assert::type(RedirectResponse::class, $response);
     }
 
@@ -97,6 +102,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team A',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -130,6 +136,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team A',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => (string)$this->personB->person_id,
@@ -149,6 +156,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team A',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => null,
@@ -168,6 +176,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'test team B',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -189,6 +198,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => null,
@@ -215,6 +225,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -242,6 +253,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => null,
@@ -268,6 +280,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -296,6 +309,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -324,6 +338,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personA),
@@ -351,6 +366,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personB->person_id,
             'member_0_container' => self::personToValues($this->event->event_type->contest, $this->personB),
@@ -375,6 +391,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => (string)$this->personA->person_id,
@@ -398,6 +415,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Edited',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => null,
@@ -421,6 +439,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
         $data = [
             'team' => [
                 'name' => 'Unique',
+                'game_lang' => 'en',
             ],
             'member_0' => (string)$this->personA->person_id,
             'member_1' => null,

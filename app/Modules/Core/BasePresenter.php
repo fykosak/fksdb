@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
+use FKSDB\Components\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
@@ -407,7 +407,7 @@ abstract class BasePresenter extends Presenter
 
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
-            Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'token-login');
+            Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'auth-token');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
             $this->getUser()->login($login);
             $this->redirect('this');
@@ -427,7 +427,7 @@ abstract class BasePresenter extends Presenter
         }
         try {
             $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-            Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'http-login');
+            Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'auth-http');
             $this->getUser()->login($login);
             $method = $this->formatAuthorizedMethod();
             $this->authorized = $method->invoke($this);

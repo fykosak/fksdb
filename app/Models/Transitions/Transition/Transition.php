@@ -79,34 +79,25 @@ class Transition
         if (!$this->canExecute($holder)) {
             throw new UnavailableTransitionException($this, $holder);
         }
-        $outerTransition = true;
-        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
-            $outerTransition = false;
-            $this->explorer->getConnection()->beginTransaction();
-        }
-        try {
-            foreach ($this->beforeExecute as $callback) {
-                $callback($holder, $this);
-            }
-            $holder->setState($this->target);
-            foreach ($this->afterExecute as $callback) {
-                $callback($holder, $this);
-            }
-        } catch (\Throwable $exception) {
-            if (!$outerTransition) {
-                $this->explorer->getConnection()->rollBack();
-            }
-            if (count($this->onFail)) {
-                foreach ($this->onFail as $failHandler) {
-                    $failHandler->handle($exception, $holder, $this);
+        $this->explorer->getConnection()->transaction(function () use ($holder): void {
+            try {
+                foreach ($this->beforeExecute as $callback) {
+                    $callback($holder, $this);
                 }
-            } else {
-                throw $exception;
+                $holder->setState($this->target);
+                foreach ($this->afterExecute as $callback) {
+                    $callback($holder, $this);
+                }
+            } catch (\Throwable $exception) {
+                if (count($this->onFail)) {
+                    foreach ($this->onFail as $failHandler) {
+                        $failHandler->handle($exception, $holder, $this);
+                    }
+                } else {
+                    throw $exception;
+                }
             }
-        }
-        if (!$outerTransition) {
-            $this->explorer->getConnection()->commit();
-        }
+        });
     }
 
     /**

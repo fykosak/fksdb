@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -23,9 +23,23 @@ use Nette\Forms\Form;
 use Nette\Neon\Neon;
 
 /**
- * @phpstan-extends EntityFormComponent<EventModel>
+ * @phpstan-extends ModelForm<EventModel,array{event:array{
+ *       event_type_id:int,
+ *       event_year:int,
+ *       name:string,
+ *       begin:\DateTimeInterface,
+ *       end:\DateTimeInterface,
+ *       registration_begin:\DateTimeInterface,
+ *       registration_end:\DateTimeInterface,
+ *       report_cs:string,
+ *       report_en:string,
+ *       description_cs:string,
+ *       description_en:string,
+ *       place:string,
+ *       parameters:string,
+ *  }}>
  */
-class EventFormComponent extends EntityFormComponent
+class EventFormComponent extends ModelForm
 {
     public const CONT_EVENT = 'event';
 
@@ -56,36 +70,6 @@ class EventFormComponent extends EntityFormComponent
     {
         $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
-    }
-
-    /**
-     * @return never
-     */
-    protected function handleFormSuccess(Form $form): void
-    {
-        /** @phpstan-var array{event:array{
-         *      event_type_id:int,
-         *      event_year:int,
-         *      name:string,
-         *      begin:\DateTimeInterface,
-         *      end:\DateTimeInterface,
-         *      registration_begin:\DateTimeInterface,
-         *      registration_end:\DateTimeInterface,
-         *      report_cs:string,
-         *      report_en:string,
-         *      description_cs:string,
-         *      description_en:string,
-         *      place:string,
-         *      parameters:string,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
-        $data['year'] = $this->contestYear->year;
-        $model = $this->eventService->storeModel($data, $this->model);
-        $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
     }
 
     protected function setDefaults(Form $form): void
@@ -137,14 +121,31 @@ class EventFormComponent extends EntityFormComponent
 
     private function updateTokens(EventModel $event): void
     {
-        $connection = $this->authTokenService->explorer->getConnection();
-        $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
         /** @var AuthTokenModel $token $token */
         foreach ($this->authTokenService->findTokensByEvent($event) as $token) {
             $this->authTokenService->storeModel($tokenData, $token);
         }
-        $connection->commit();
+    }
+
+    protected function innerSuccess(array $values, Form $form): EventModel
+    {
+        $data = $values[self::CONT_EVENT];
+        $data['year'] = $this->contestYear->year;
+        return $this->eventService->storeModel($data, $this->model);
+    }
+
+    protected function getPostprocessing(): array
+    {
+        $processing = parent::getPostprocessing();
+        $processing[] = fn($model) => $this->updateTokens($model);
+        return $processing;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 }

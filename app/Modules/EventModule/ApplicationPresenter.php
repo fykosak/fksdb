@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\SousApplicationForm;
+use FKSDB\Components\Applications\Single\InvitedForms\SousForm;
+use FKSDB\Components\Applications\Single\OpenForms\DsefForm;
+use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
+use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
+use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\EntityForms\Single\DsefFormComponent;
-use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
-use FKSDB\Components\EntityForms\Single\TaborFormComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
-use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -262,7 +262,7 @@ final class ApplicationPresenter extends BasePresenter
         switch ($this->getEvent()->event_type_id) {
             case 4:
             case 5:
-                return new SousApplicationForm(
+                return new SousForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
@@ -270,14 +270,14 @@ final class ApplicationPresenter extends BasePresenter
                 );
             case 2:
             case 14:
-                return new DsefFormComponent(
+                return new DsefForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
                     $this->getLoggedPerson()
                 );
             case 10:
-                return new TaborFormComponent(
+                return new TaborForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
@@ -285,7 +285,7 @@ final class ApplicationPresenter extends BasePresenter
                 );
             case 11:
             case 12:
-                return new SetkaniFormComponent(
+                return new SetkaniForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
