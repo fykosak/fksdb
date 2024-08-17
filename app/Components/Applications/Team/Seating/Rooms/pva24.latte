@@ -1,0 +1,40 @@
+{varType string|null $lang}
+<div class="seating-layout seating-layout-pva">
+    <svg viewBox="-1100 -400 2100 1000">
+        <g class="wall wall-outer">
+            <polyline points="-1025,70 -1000,70 -1000,480 910,480 910,-350 -1000,-350 -1000,-10 -1025,-10"/>
+        </g>
+        <text font-size="2rem" transform="translate(-1040, 130)">
+            <tspan alignment-baseline="middle">{_'WC'}</tspan>
+        </text>
+        <text font-size="1.75rem" transform="translate(-1000,40)">
+            <tspan alignment-baseline="middle">
+                {switch $lang}
+                    {case 'cs'}Vchod
+                    {default}Entrance
+                {/switch}
+            </tspan>
+        </text>
+        <g class="stage" transform="translate(0,380)">
+            <text font-size="1.75rem" transform="translate(0,50)">
+                {switch $lang}
+                    {case 'cs'}Pódium
+                    {default}Stage
+                {/switch}
+            </text>
+            <rect x="-60" y="0" height="80" width="120"/>
+        </g>
+        <g class="central" transform="rotate(90)">
+            <rect x="-250" width="500" y="-50" height="100" fill="#ccc" stroke-width="1"></rect>
+            <text>
+                    {switch $lang}
+                        {case 'cs'}Opravovatelé
+                        {default}Correctors
+                    {/switch}
+            </text>
+        </g>
+        <g class=" seats">
+            {include seats,places:FKSDB\Components\Applications\Team\Seating\Place2024::getAll()}
+        </g>
+    </svg>
+</div>

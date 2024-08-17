@@ -4,23 +4,32 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Forms;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ScheduleGroupModel>
+ * @phpstan-extends ModelForm<ScheduleGroupModel,array{container:array{
+ *          name_cs:string,
+ *          name_en:string,
+ *          start:\DateTimeInterface,
+ *          end:\DateTimeInterface,
+ *          schedule_group_type:string,
+ *          registration_begin:\DateTimeInterface,
+ *          registration_end:\DateTimeInterface,
+ *          modification_end:\DateTimeInterface,
+ *  }}>
  */
-class ScheduleGroupForm extends EntityFormComponent
+class ScheduleGroupForm extends ModelForm
 {
     public const CONTAINER = 'container';
 
@@ -36,27 +45,6 @@ class ScheduleGroupForm extends EntityFormComponent
     final public function injectPrimary(ScheduleGroupService $scheduleGroupService): void
     {
         $this->scheduleGroupService = $scheduleGroupService;
-    }
-
-    protected function handleSuccess(Form $form): void
-    {
-        /** @phpstan-var array{container:array{
-         *         name_cs:string,
-         *         name_en:string,
-         *         start:\DateTimeInterface,
-         *         end:\DateTimeInterface,
-         *         schedule_group_type:string,
-         *         registration_begin:\DateTimeInterface,
-         *         registration_end:\DateTimeInterface,
-         *         modification_end:\DateTimeInterface,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        $data['event_id'] = $this->event->event_id;
-        $model = $this->scheduleGroupService->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Group "#%d" has been saved.'), $model->schedule_group_id), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('detail', ['id' => $model->getPrimary()]);
     }
 
     protected function setDefaults(Form $form): void
@@ -85,5 +73,20 @@ class ScheduleGroupForm extends EntityFormComponent
         $container->addField('registration_end', []);
         $container->addField('modification_end', []);
         $form->addComponent($container, self::CONTAINER);
+    }
+
+    protected function innerSuccess(array $values, Form $form): ScheduleGroupModel
+    {
+        $data = $values[self::CONTAINER];
+        $data['event_id'] = $this->event->event_id;
+        /** @var ScheduleGroupModel $model */
+        $model = $this->scheduleGroupService->storeModel($data, $this->model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->flashMessage(sprintf(_('Group "#%d" has been saved.'), $model->schedule_group_id), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('detail', ['id' => $model->getPrimary()]);
     }
 }

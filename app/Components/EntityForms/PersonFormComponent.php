@@ -11,9 +11,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PersonService;
-use FKSDB\Models\Utils\FormUtils;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -21,23 +19,24 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * @phpstan-extends EntityFormComponent<PersonModel>
+ * @phpstan-extends ModelForm<PersonModel,array{
+ *      person_info: array<string,mixed>,
+ *      person: array{gender?:string|null,family_name:string}
+ *  }>
  */
-class PersonFormComponent extends EntityFormComponent
+class PersonFormComponent extends ModelForm
 {
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
     private PersonService $personService;
     private PersonInfoService $personInfoService;
-    private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
     public function __construct(Container $container, int $userPermission, ?PersonModel $person)
     {
         parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
-        $this->logger = new MemoryLogger();
     }
 
     final public function injectFactories(
@@ -72,35 +71,6 @@ class PersonFormComponent extends EntityFormComponent
         }
     }
 
-    protected function handleSuccess(Form $form): void
-    {
-        $connection = $this->personService->explorer->getConnection();
-        /** @phpstan-var array{
-         *     person_info: array<string,mixed>,
-         *     person: array{gender?:string|null,family_name:string}
-         * } $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values);
-        $connection->beginTransaction();
-        $this->logger->clear();
-        $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
-        $this->personInfoService->storeModel(
-            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
-            $person->getInfo()
-        );
-
-        $connection->commit();
-        $this->logger->log(
-            new Message(
-                isset($this->model) ? _('Person has been updated') : _('Person has been created'),
-                Message::LVL_SUCCESS
-            )
-        );
-        FlashMessageDump::dump($this->logger, $this->getPresenter());
-        $this->getPresenter()->redirect('this');
-    }
-
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
@@ -109,5 +79,24 @@ class PersonFormComponent extends EntityFormComponent
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
             ]);
         }
+    }
+
+    protected function innerSuccess(array $values, Form $form): Model
+    {
+        $person = $this->personService->storeModel($values[self::PERSON_CONTAINER], $this->model);
+        $this->personInfoService->storeModel(
+            array_merge($values[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id]),
+            $person->getInfo()
+        );
+        return $person;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Person has been updated') : _('Person has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('this');
     }
 }

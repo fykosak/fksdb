@@ -14,15 +14,26 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<SchoolModel>
+ * @phpstan-extends ModelForm<SchoolModel,array{school:array{
+ *      name_full:string,
+ *      name:string,
+ *      name_abbrev:string,
+ *      description:string,
+ *      email:string,
+ *      ic:string,
+ *      izo:string,
+ *      active:bool,
+ *      note:string,
+ *      address_id:int,
+ *  }}>
  */
-class SchoolFormComponent extends EntityFormComponent
+class SchoolFormComponent extends ModelForm
 {
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
@@ -73,34 +84,6 @@ class SchoolFormComponent extends EntityFormComponent
         return __DIR__ . '/school.latte';
     }
 
-    /**
-     * @throws \PDOException
-     */
-    protected function handleSuccess(Form $form): void
-    {
-        /** @phpstan-var array{school:array{
-         *     name_full:string,
-         *     name:string,
-         *     name_abbrev:string,
-         *     description:string,
-         *     email:string,
-         *     ic:string,
-         *     izo:string,
-         *     active:bool,
-         *     note:string,
-         *     address_id:int,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
-        $this->schoolService->storeModel($schoolData, $this->model);
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('School has been updated') : _('School has been created'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('default');
-    }
-
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
@@ -108,5 +91,21 @@ class SchoolFormComponent extends EntityFormComponent
         } else {
             $form->setDefaults([self::CONT_SCHOOL => ['address_id' => ReferencedId::VALUE_PROMISE]]);
         }
+    }
+
+    protected function innerSuccess(array $values, Form $form): SchoolModel
+    {
+        /** @var SchoolModel $school */
+        $school = $this->schoolService->storeModel($values[self::CONT_SCHOOL], $this->model);
+        return $school;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('School has been updated') : _('School has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('default');
     }
 }

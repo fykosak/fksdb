@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Spam;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolSelectField;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -12,19 +12,22 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\SchoolLabelModel;
 use FKSDB\Models\ORM\Services\SchoolLabelService;
-use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use ValueError;
 
 /**
- * @phpstan-extends EntityFormComponent<SchoolLabelModel>
+ * @phpstan-extends ModelForm<SchoolLabelModel,array{container:array{
+ *       school_label_key:string,
+ *       school_id:int
+ *  }}>
  */
-final class SchoolLabelFormComponent extends EntityFormComponent
+final class SchoolLabelFormComponent extends ModelForm
 {
     private SchoolLabelService $schoolLabelService;
     private LinkGenerator $linkGenerator;
@@ -51,6 +54,7 @@ final class SchoolLabelFormComponent extends EntityFormComponent
      * @throws BadTypeException
      * @throws OmittedControlException
      * @throws ForbiddenRequestException
+     * @throws InvalidLinkException
      */
     protected function configureForm(Form $form): void
     {
@@ -61,16 +65,16 @@ final class SchoolLabelFormComponent extends EntityFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleSuccess(Form $form): void
+    protected function setDefaults(Form $form): void
     {
-        /**
-         * @phpstan-var array{container:array{
-         *      school_label_key:string,
-         *      school_id:int
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
+        if (isset($this->model)) {
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
+        }
+    }
+
+    protected function innerSuccess(array $values, Form $form): Model
+    {
+        $data = $values[self::CONTAINER];
 
         // prevent adding already existing label
         if (!isset($this->model) && $this->schoolLabelService->exists($data['school_label_key'])) {
@@ -82,19 +86,15 @@ final class SchoolLabelFormComponent extends EntityFormComponent
         }
 
         $handler = new Handler($this->contestYear, $this->container);
-        $handler->storeSchool($data['school_label_key'], intval($data['school_id']), $this->model);
+        return $handler->storeSchool($data['school_label_key'], intval($data['school_id']), $this->model);
+    }
 
+    protected function successRedirect(Model $model): void
+    {
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School label has been updated.') : _('School label has been created.'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');
-    }
-
-    protected function setDefaults(Form $form): void
-    {
-        if (isset($this->model)) {
-            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
-        }
     }
 }

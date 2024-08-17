@@ -26,13 +26,13 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ProcessedFormComponent<PaymentModel,array{
+ * @phpstan-extends ModelForm<PaymentModel,array{
  *      currency:string,
  *      person_id:int,
  *      want_invoice:bool,
  *      event_items:array<array<int,bool>>}>
  */
-class PaymentForm extends ProcessedFormComponent
+class PaymentForm extends ModelForm
 {
     private bool $isOrganizer;
     private PaymentMachine $machine;
@@ -136,7 +136,7 @@ class PaymentForm extends ProcessedFormComponent
     {
         $processing = parent::getPostprocessing();
         if (!isset($this->model)) {
-            $processing[] = new DefaultTransition($this->container, $this->machine);
+            $processing[] = new DefaultTransition($this->container, $this->machine); //@phpstan-ignore-line
         }
         return $processing;
     }

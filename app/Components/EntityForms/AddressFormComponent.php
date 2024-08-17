@@ -21,9 +21,9 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * @phpstan-extends ProcessedFormComponent<PostContactModel,array{address:array<string,mixed>}>
+ * @phpstan-extends ModelForm<PostContactModel,array{address:array<string,mixed>}>
  */
-class AddressFormComponent extends ProcessedFormComponent
+class AddressFormComponent extends ModelForm
 {
     public const CONTAINER = 'address';
 

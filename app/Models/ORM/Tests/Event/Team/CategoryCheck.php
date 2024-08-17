@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event\Team;
 
-use FKSDB\Components\Application\Team\Processing\Category\FOFCategoryProcessing;
-use FKSDB\Components\Application\Team\Processing\Category\FOLCategoryProcessing;
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOFCategoryProcessing;
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;

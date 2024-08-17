@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
@@ -22,10 +23,10 @@ use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**
- * @phpstan-extends EntityFormComponent<PersonModel>
+ * @phpstan-extends ModelForm<PersonModel,array{new_email:string}>
  * @property-read PersonModel $model
  */
-class ChangeEmailComponent extends EntityFormComponent
+class ChangeEmailComponent extends ModelForm
 {
     private ReflectionFactory $reflectionFormFactory;
     private LoginService $loginService;
@@ -72,38 +73,6 @@ class ChangeEmailComponent extends EntityFormComponent
         return $form->addSubmit('submit', _('Change email'));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ChangeInProgressException
-     */
-    protected function handleSuccess(Form $form): void
-    {
-        /** @phpstan-var array{new_email:string} $values */
-        $values = $form->getValues('array');
-        $lang = Language::from($this->translator->lang);
-        $newEmail = $values['new_email'];
-        self::logEmailChange($this->model, $newEmail, true);
-        $login = $this->model->getLogin();
-        if (!$login) {
-            $this->loginService->createLogin($this->model);
-        }
-        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
-        if ($token) {
-            throw new ChangeInProgressException();
-        }
-        $emailSource = new ChangeEmailSource($this->container);
-        $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
-
-        $this->getPresenter()->flashMessage(
-            _(
-                'Email with a verification link has been sent to the new email address,' .
-                ' the link is active for 20 minutes.'
-            ),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('this');
-    }
-
     protected function setDefaults(Form $form): void
     {
         $form->setDefaults(['new_email' => $this->model->getInfo() ? $this->model->getInfo()->email : null]);
@@ -123,5 +92,39 @@ class ChangeEmailComponent extends EntityFormComponent
             ),
             'email-change'
         );
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws ChangeInProgressException
+     */
+    protected function innerSuccess(array $values, Form $form): PersonModel
+    {
+        $lang = Language::from($this->translator->lang);
+        $newEmail = $values['new_email'];
+        self::logEmailChange($this->model, $newEmail, true);
+        $login = $this->model->getLogin();
+        if (!$login) {
+            $this->loginService->createLogin($this->model);
+        }
+        $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch();
+        if ($token) {
+            throw new ChangeInProgressException();
+        }
+        $emailSource = new ChangeEmailSource($this->container);
+        $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
+        return $this->model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            _(
+                'Email with a verification link has been sent to the new email address,' .
+                ' the link is active for 20 minutes.'
+            ),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('this');
     }
 }

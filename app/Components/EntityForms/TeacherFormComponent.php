@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
-use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -24,9 +23,13 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<TeacherModel>
+ * @phpstan-extends ModelForm<TeacherModel,array{teacher:array{
+ *    active:bool,
+ *    role:string,
+ *    note:string,
+ *  }}>
  */
-class TeacherFormComponent extends EntityFormComponent
+class TeacherFormComponent extends ModelForm
 {
     use ReferencedPersonTrait;
 
@@ -74,25 +77,6 @@ class TeacherFormComponent extends EntityFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleSuccess(Form $form): void
-    {
-        /**
-         * @phpstan-var array{teacher:array{
-         *   active:bool,
-         *   role:string,
-         *   note:string,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        $this->teacherService->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
-    }
-
     protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
@@ -112,5 +96,21 @@ class TeacherFormComponent extends EntityFormComponent
         $container->addField('role', ['required' => true]);
         $container->addField('note', ['required' => true]);
         return $container;
+    }
+
+    protected function innerSuccess(array $values, Form $form): TeacherModel
+    {
+        /** @var TeacherModel $teacher */
+        $teacher = $this->teacherService->storeModel($values[self::CONTAINER], $this->model);
+        return $teacher;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

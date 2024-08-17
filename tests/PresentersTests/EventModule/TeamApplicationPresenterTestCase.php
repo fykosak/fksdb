@@ -30,7 +30,12 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
         /** @phpstan-var SchoolModel $school */
         $school = $this->container->getByType(SchoolService::class)->getTable()->fetch();
 
-        $this->personA = $this->createPerson('A', 'A', ['email' => 'a@a.a', 'born' => '2000-01-01 00:00:00'], ['login' => 'AAAAAA', 'hash' => 'AAAAAA']);
+        $this->personA = $this->createPerson(
+            'A',
+            'A',
+            ['email' => 'a@a.a', 'born' => '2000-01-01 00:00:00'],
+            ['login' => 'AAAAAA', 'hash' => 'AAAAAA']
+        );
         $this->createPersonHistory(
             $this->personA,
             ContestYearService::getCurrentAcademicYear(),
@@ -39,7 +44,12 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
             '1A'
         );
 
-        $this->personB = $this->createPerson('B', 'B', ['email' => 'b@b.b', 'born' => '2000-01-01 00:00:00'], ['login' => 'BBBBBB', 'hash' => 'BBBBBB']);
+        $this->personB = $this->createPerson(
+            'B',
+            'B',
+            ['email' => 'b@b.b', 'born' => '2000-01-01 00:00:00'],
+            ['login' => 'BBBBBB', 'hash' => 'BBBBBB']
+        );
         $this->createPersonHistory(
             $this->personB,
             ContestYearService::getCurrentAcademicYear(),
@@ -48,7 +58,12 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
             '2A'
         );
 
-        $this->personC = $this->createPerson('C', 'C', ['email' => 'c@c.c', 'born' => '2000-01-01 00:00:00'], ['login' => 'CCCCCC', 'hash' => 'CCCCCC']);
+        $this->personC = $this->createPerson(
+            'C',
+            'C',
+            ['email' => 'c@c.c', 'born' => '2000-01-01 00:00:00'],
+            ['login' => 'CCCCCC', 'hash' => 'CCCCCC']
+        );
         $this->createPersonHistory(
             $this->personC,
             ContestYearService::getCurrentAcademicYear(),
@@ -57,7 +72,12 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
             '3C'
         );
 
-        $this->personD = $this->createPerson('D', 'D', ['email' => 'd@d.d', 'born' => '2000-01-01 00:00:00'], ['login' => 'DDDDDD', 'hash' => 'DDDDDD']);
+        $this->personD = $this->createPerson(
+            'D',
+            'D',
+            ['email' => 'd@d.d', 'born' => '2000-01-01 00:00:00'],
+            ['login' => 'DDDDDD', 'hash' => 'DDDDDD']
+        );
         $this->createPersonHistory(
             $this->personD,
             ContestYearService::getCurrentAcademicYear(),
@@ -66,7 +86,12 @@ abstract class TeamApplicationPresenterTestCase extends EntityPresenterTestCase
             '4D'
         );
 
-        $this->personE = $this->createPerson('E', 'E', ['email' => 'e@e.e', 'born' => '2000-01-01 00:00:00'], ['login' => 'EEEEEE', 'hash' => 'EEEEEE']);
+        $this->personE = $this->createPerson(
+            'E',
+            'E',
+            ['email' => 'e@e.e', 'born' => '2000-01-01 00:00:00'],
+            ['login' => 'EEEEEE', 'hash' => 'EEEEEE']
+        );
         $this->createPersonHistory(
             $this->personE,
             ContestYearService::getCurrentAcademicYear(),

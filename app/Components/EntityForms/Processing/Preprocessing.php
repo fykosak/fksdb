@@ -21,7 +21,7 @@ abstract class Preprocessing
         $this->container = $container;
         $container->callInjects($this);
     }
-// array{team:array{category:string,name:string}} 
+
     /**
      * @phpstan-param TData $values
      * @phpstan-return TData

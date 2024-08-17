@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Forms;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
@@ -17,15 +17,16 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<PersonScheduleModel>
+ * @phpstan-extends ModelForm<PersonScheduleModel,array{schedule_item_id:int,person_id:int}>
  */
-final class PersonScheduleForm extends EntityFormComponent
+final class PersonScheduleForm extends ModelForm
 {
     private PersonScheduleService $personScheduleService;
     private ScheduleItemService $scheduleItemService;
@@ -46,37 +47,6 @@ final class PersonScheduleForm extends EntityFormComponent
         $this->personService = $personService;
         $this->personScheduleService = $personScheduleService;
         $this->scheduleItemService = $scheduleItemService;
-    }
-
-    protected function handleSuccess(Form $form): void
-    {
-        /**
-         * @phpstan-var array{schedule_item_id:int,person_id:int} $values
-         */
-        $values = $form->getValues('array');
-        $item = $this->scheduleItemService->findByPrimary($values['schedule_item_id']);
-        $person = $this->personService->findByPrimary($values['person_id']);
-        $oldPersonSchedule = $person->getScheduleByGroup($item->schedule_group);
-        if ($oldPersonSchedule) {
-            if (isset($this->model)) {
-                if ($this->model->schedule_item_id !== $oldPersonSchedule->schedule_item_id) {
-                    throw new ScheduleException($item->schedule_group, _('Already applied in this block'));
-                }
-            } else {
-                throw new ScheduleException($item->schedule_group, _('Already applied in this block'));
-            }
-        }
-
-        if (
-            isset($this->model)
-            && $this->model->getPayment()
-            && $item->schedule_item_id !== $this->model->schedule_item_id
-        ) {
-            throw new ExistingPaymentException($this->model);
-        }
-        $this->personScheduleService->storeModel($values, $this->model);
-        $this->flashMessage(_('Model has been saved.'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
     }
 
     protected function setDefaults(Form $form): void
@@ -107,5 +77,38 @@ final class PersonScheduleForm extends EntityFormComponent
         $select = new SelectBox(_('Schedule item'), $items);
         $select->setRequired();
         $form->addComponent($select, 'schedule_item_id');
+    }
+
+    protected function innerSuccess(array $values, Form $form): PersonScheduleModel
+    {
+        $item = $this->scheduleItemService->findByPrimary($values['schedule_item_id']);
+        $person = $this->personService->findByPrimary($values['person_id']);
+        $oldPersonSchedule = $person->getScheduleByGroup($item->schedule_group);
+        if ($oldPersonSchedule) {
+            if (isset($this->model)) {
+                if ($this->model->schedule_item_id !== $oldPersonSchedule->schedule_item_id) {
+                    throw new ScheduleException($item->schedule_group, _('Already applied in this block'));
+                }
+            } else {
+                throw new ScheduleException($item->schedule_group, _('Already applied in this block'));
+            }
+        }
+
+        if (
+            isset($this->model)
+            && $this->model->getPayment()
+            && $item->schedule_item_id !== $this->model->schedule_item_id
+        ) {
+            throw new ExistingPaymentException($this->model);
+        }
+        /** @var PersonScheduleModel $model */
+        $model = $this->personScheduleService->storeModel($values, $this->model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->flashMessage(_('Model has been saved.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 }

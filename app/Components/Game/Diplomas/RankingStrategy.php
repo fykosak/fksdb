@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\Application\Team\NoMemberException;
-use FKSDB\Components\Application\Team\Processing\Category\FOFCategoryProcessing;
+use FKSDB\Components\Applications\Team\Forms\NoMemberException;
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;

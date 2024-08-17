@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
+use FKSDB\Components\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnRendererComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnTable;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;

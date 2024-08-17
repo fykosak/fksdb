@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Application\Team\FOFTeamForm;
-use FKSDB\Components\Application\Team\FOLTeamForm;
-use FKSDB\Components\Application\Team\NoteForm;
-use FKSDB\Components\Application\Team\TeamForm;
-use FKSDB\Components\Controls\SchoolCheckComponent;
+use FKSDB\Components\Applications\Team\Forms\FOFTeamForm;
+use FKSDB\Components\Applications\Team\Forms\FOLTeamForm;
+use FKSDB\Components\Applications\Team\Forms\TeamForm;
+use FKSDB\Components\Applications\Team\NoteForm;
+use FKSDB\Components\Applications\Team\SchoolCheckComponent;
+use FKSDB\Components\Applications\Team\TeamGrid;
+use FKSDB\Components\Applications\Team\TeamList;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamGrid;
-use FKSDB\Components\Grids\Application\TeamList;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Components\TeamSeating\Single;

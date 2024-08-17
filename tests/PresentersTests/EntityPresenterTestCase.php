@@ -100,7 +100,6 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
                 'send' => 'Save',
             ], $formData)
         );
-        var_dump($request);
         return $this->fixture->run($request);
     }
 

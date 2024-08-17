@@ -18,10 +18,10 @@ use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
-use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\OrganizerModule\BasePresenter;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\ForbiddenRequestException;
@@ -30,10 +30,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<QueryModel>
+ * @phpstan-extends ModelForm<QueryModel,array{sql:array<mixed>,params:array<mixed>,main:array<mixed>}>
  * @method BasePresenter getPresenter()
  */
-class StoredQueryFormComponent extends EntityFormComponent
+class StoredQueryFormComponent extends ModelForm
 {
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
@@ -53,36 +53,6 @@ class StoredQueryFormComponent extends EntityFormComponent
         $this->storedQueryTagService = $storedQueryTagService;
         $this->storedQueryParameterService = $storedQueryParameterService;
         $this->storedQueryFactory = $storedQueryFactory;
-    }
-
-    /**
-     * @throws \PDOException
-     */
-    protected function handleSuccess(Form $form): void
-    {
-        $values = FormUtils::emptyStrToNull2($form->getValues('array')); //@phpstan-ignore-line
-        $connection = $this->storedQueryService->explorer->getConnection();
-        $connection->beginTransaction();
-
-        $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
-
-        if (isset($this->model)) {
-            $model = $this->model;
-            $this->storedQueryService->storeModel($data, $model);
-        } else {
-            /** @var QueryModel $model */
-            $model = $this->storedQueryService->storeModel($data);
-        }
-
-        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
-        $this->saveParameters($values[self::CONT_PARAMS], $model);
-
-        $connection->commit();
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Query has been edited') : _('Query has been created'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
     }
 
     /**
@@ -279,5 +249,25 @@ class StoredQueryFormComponent extends EntityFormComponent
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
+    }
+
+    protected function innerSuccess(array $values, Form $form): QueryModel
+    {
+        $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
+        /** @var QueryModel $model */
+        $model = $this->storedQueryService->storeModel($data);
+
+        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
+        $this->saveParameters($values[self::CONT_PARAMS], $model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Query has been edited') : _('Query has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

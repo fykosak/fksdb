@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
-use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
+use FKSDB\Components\Inbox\PointPreview\PointsPreviewComponent;
+use FKSDB\Components\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\Models\{TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;

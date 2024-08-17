@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Warehouse;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -21,9 +21,19 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ItemModel>
+ * @phpstan-extends ModelForm<ItemModel,array{container:array{
+ *       state:string,
+ *       description_cs:string,
+ *       description_en:string,
+ *       data:string,
+ *       purchase_price:float,
+ *       purchase_currency:string,
+ *       placement:string,
+ *       note:string,
+ *      contest_id?:int,
+ *  }}>
  */
-final class ItemFormComponent extends EntityFormComponent
+final class ItemFormComponent extends ModelForm
 {
 
     private ProductService $productService;
@@ -44,36 +54,6 @@ final class ItemFormComponent extends EntityFormComponent
     ): void {
         $this->productService = $productService;
         $this->itemService = $itemService;
-    }
-
-    protected function handleSuccess(Form $form): void
-    {
-        /**
-         * @phpstan-var array{container:array{
-         *      state:string,
-         *      description_cs:string,
-         *      description_en:string,
-         *      data:string,
-         *      purchase_price:float,
-         *      purchase_currency:string,
-         *      placement:string,
-         *      note:string,
-         *     contest_id?:int,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-
-        if (!isset($data['contest_id'])) {
-            $data['contest_id'] = $this->contest->contest_id;
-        }
-
-        $this->itemService->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Item has been updated.') : _('Item has been created.'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
     }
 
     protected function setDefaults(Form $form): void
@@ -106,5 +86,25 @@ final class ItemFormComponent extends EntityFormComponent
         }
         $container->addComponent(new SelectBox(_('Product'), $products), 'product_id', 'state');
         $form->addComponent($container, self::CONTAINER);
+    }
+
+    protected function innerSuccess(array $values, Form $form): ItemModel
+    {
+        $data = $values[self::CONTAINER];
+        if (!isset($data['contest_id'])) {
+            $data['contest_id'] = $this->contest->contest_id;
+        }
+        /** @var ItemModel $item */
+        $item = $this->itemService->storeModel($data, $this->model);
+        return $item;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Item has been updated.') : _('Item has been created.'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

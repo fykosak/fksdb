@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
-use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -21,7 +20,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ProcessedFormComponent<OrganizerModel,array{container:array{
+ * @phpstan-extends ModelForm<OrganizerModel,array{container:array{
  *       since:int,
  *       until:int|null,
  *       role:string,
@@ -32,7 +31,7 @@ use Nette\Forms\Form;
  *      contest_id?:int,
  *  }}>
  */
-class OrganizerFormComponent extends ProcessedFormComponent
+class OrganizerFormComponent extends ModelForm
 {
     use ReferencedPersonTrait;
 
@@ -73,9 +72,9 @@ class OrganizerFormComponent extends ProcessedFormComponent
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function innerSuccess(array $values, Form $form): Model
+    protected function innerSuccess(array $values, Form $form): OrganizerModel
     {
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
+        $data = $values[self::CONTAINER];
         $data['contest_id'] = $this->contestYear->contest_id;
         /** @var OrganizerModel $model */
         $model = $this->service->storeModel($data, $this->model);
