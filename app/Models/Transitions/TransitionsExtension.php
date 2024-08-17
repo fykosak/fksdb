@@ -30,6 +30,7 @@ use Nette\Schema\Schema;
  *      validation:\Nette\DI\Definitions\Statement|bool|null,
  *      afterExecute:array<\Nette\DI\Definitions\Statement|string|null>,
  *      beforeExecute:array<\Nette\DI\Definitions\Statement|string|null>,
+ *      onFail:array<\Nette\DI\Definitions\Statement|string|null>,
  *      behaviorType:'success'|'warning'|'danger'|'primary'|'secondary'
  *  }
  */
@@ -57,6 +58,7 @@ class TransitionsExtension extends CompilerExtension
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'behaviorType' => Expect::anyOf(...array_map(fn($case) => $case->value, BehaviorType::cases()))
                         ->default(BehaviorType::DEFAULT),
+                    'onFail' => Expect::listOf(Helpers::createExpressionSchemaType()),
                 ])->castTo('array'),
                 Expect::string()
             ),
@@ -89,34 +91,41 @@ class TransitionsExtension extends CompilerExtension
                 )
                     ->addTag($name)
                     ->setType(Transition::class)
-                    ->addSetup('setValidation', [$transitionConfig['validation']])
-                    ->addSetup('setCondition', [$transitionConfig['condition']])
-                    ->addSetup('setSourceStateEnum', [$source])
-                    ->addSetup('setTargetStateEnum', [$target])
+                    ->addSetup('$service->validation=?', [$transitionConfig['validation']])
+                    ->addSetup('$service->condition= is_bool(?) \? fn() => ? : ?;', [
+                        $transitionConfig['condition'],
+                        $transitionConfig['condition'],
+                        $transitionConfig['condition'],
+                    ])
+                    ->addSetup('$service->source=?', [$source])
+                    ->addSetup('$service->target=?', [$target])
                     ->addSetup(
-                        'setLabel',
+                        '$service->label = new \Fykosak\Utils\UI\Title(null,?,?)',
                         [
                             Helpers::resolveMixedExpression($transitionConfig['label']),
                             $transitionConfig['icon'],
                         ]
                     )->addSetup('setSuccessLabel', [$transitionConfig['successLabel']])
                     ->addSetup(
-                        'setBehaviorType',
+                        '$service->behaviorType=?',
                         [
                             BehaviorType::from($transitionConfig['behaviorType']),
                         ]
                     );
                 foreach ($transitionConfig['afterExecute'] as $callback) {
-                    $transition->addSetup('addAfterExecute', [$callback]);
+                    $transition->addSetup('$service->afterExecute[]=?', [$callback]);
                 }
                 foreach ($transitionConfig['beforeExecute'] as $callback) {
-                    $transition->addSetup('addBeforeExecute', [$callback]);
+                    $transition->addSetup('$service->beforeExecute[]=?', [$callback]);
                 }
-                $factory->addSetup('addTransition', [$transition]);
+                foreach ($transitionConfig['onFail'] as $callback) {
+                    $transition->addSetup('$service->onFail[]=?', [$callback]);
+                }
+                $factory->addSetup('$service->transitions[]=?', [$transition]);
             }
         }
         if (isset($config['decorator'])) {
-            $factory->addSetup('decorateTransitions', [$config['decorator']]);
+            $factory->addSetup('(?)->decorate($service)', [$config['decorator']]);
         }
         return $factory;
     }
