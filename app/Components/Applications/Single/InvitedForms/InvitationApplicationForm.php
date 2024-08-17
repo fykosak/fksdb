@@ -201,8 +201,6 @@ abstract class InvitationApplicationForm extends BaseComponent
                 $values = $form->getValues('array');
                 $values = FormUtils::emptyStrToNull2($values);
                 $values['event_participant']['person_container']['person_info']['agreed'] = 1;
-
-
                 Debugger::log(json_encode((array)$values), 'application');
                 /* $values = array_reduce(
                      $this->getProcessing(),
