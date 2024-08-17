@@ -1,17 +1,13 @@
-{layout '../../Controls/FormComponent/layout.latte'}
-{varType string $lang}
+{layout '../../../Controls/FormComponent/layout.latte'}
+{varType FKSDB\Modules\Core\Language|null $lang}
 {block content}
     <ul>
-        {if $lang === 'cs'}
+        {if $lang->value === 'cs'}
             <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání Online.
                 Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.
             </li>
             <li>
                 Informace, jak se přihlásit do hry, vám budou zaslány později.
-            </li>
-            <li>
-                Není-li vaše <strong>škola</strong>, v nabídce napište na <a
-                        href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>.
             </li>
             <li>
                 Další informace a pravidla naleznente na stránce <a href="https://online.fyziklani.cz/">Fyziklání
@@ -26,10 +22,6 @@
             </li>
             <li>
                 Information on how to log into the game will be sent to you later.
-            </li>
-            <li>
-                If you cannot find your <strong>school</strong> in the list, let us know to <a
-                        href="m&#97;ilto:schola.novum&#64;fykos.cz">schola.novum&#64;fykos.cz</a>, we will add it.
             </li>
             <li>
                 Further information and rules are on the web <a href="https://physicsbrawl.org/">Online Physics

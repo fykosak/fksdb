@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Applications;
+namespace FKSDB\Components\Applications\Single;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\ORM\DbNames;

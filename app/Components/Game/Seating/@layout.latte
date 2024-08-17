@@ -5,7 +5,7 @@
     './Rooms/pva24.latte'
     lang:$lang}
     {block seats}
-        {foreach FKSDB\Components\Applications\Team\Seating\Place2024::getAll() as $place}
+        {foreach FKSDB\Components\Game\Seating\Place2024::getAll() as $place}
             {$place->html($teams[$place->label()]??null,$dev)}
         {/foreach}
     {/block}

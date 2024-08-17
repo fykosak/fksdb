@@ -8,7 +8,7 @@ use FKSDB\Components\Applications\Single\InvitedForms\SousForm;
 use FKSDB\Components\Applications\Single\OpenForms\DsefForm;
 use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
 use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
-use FKSDB\Components\Applications\SingleApplicationsGrid;
+use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;

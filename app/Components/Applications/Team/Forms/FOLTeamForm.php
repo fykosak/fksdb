@@ -8,6 +8,7 @@ use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOLCategoryProc
 use FKSDB\Components\Applications\Team\Forms\Processing\SchoolRequirement\FOLSchoolRequirementProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
+use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
@@ -26,6 +27,7 @@ class FOLTeamForm extends TeamForm
     public function render(): void
     {
         $this->template->event = $this->event;
+        $this->template->lang = Language::tryFrom($this->translator->lang);
         parent::render();
     }
 
@@ -60,14 +62,6 @@ class FOLTeamForm extends TeamForm
             'person_history' => [
                 'school_id' => [
                     'required' => false,
-                    'description' => _(
-                        'Type a few characters of your school name, then select
-                        your school from the list. If you cannot find it,
-                        please send us email with your school details to
-                        schola.novum@fykos.cz. We will add your school and send
-                        you a reply. Then that you can proceed with
-                        registration.'
-                    ),
                 ],
                 'study_year_new' => [
                     'required' => true,

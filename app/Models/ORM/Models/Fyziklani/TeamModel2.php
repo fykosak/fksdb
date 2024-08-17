@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Components\Applications\Team\Seating\Place;
-use FKSDB\Components\Applications\Team\Seating\Place2022;
-use FKSDB\Components\Applications\Team\Seating\Place2024;
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
+use FKSDB\Components\Game\Seating\Place;
+use FKSDB\Components\Game\Seating\Place2022;
+use FKSDB\Components\Game\Seating\Place2024;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;

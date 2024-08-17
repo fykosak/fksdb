@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Applications\Team\Seating;
+namespace FKSDB\Components\Game\Seating;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\ORM\Models\EventModel;

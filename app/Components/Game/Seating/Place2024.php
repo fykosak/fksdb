@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Applications\Team\Seating;
+namespace FKSDB\Components\Game\Seating;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Localization\LocalizedString;

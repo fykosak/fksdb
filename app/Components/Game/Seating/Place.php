@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\Applications\Team\Seating;
+namespace FKSDB\Components\Game\Seating;
 
 use Nette\Utils\Html;
 
