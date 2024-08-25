@@ -20,6 +20,7 @@ use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -115,12 +116,41 @@ final class EmailPresenter extends BasePresenter
 
     public function titleTransition(): PageTitle
     {
-        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
+        return new PageTitle(null, _('Transitions'), 'fas fa-envelope-open');
     }
 
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('E-mail dashboard'), 'fas fa-mail-bulk');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(
+            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+            'dashboard',
+            $this->getSelectedContest()
+        );
+    }
+
+    public function renderDefault(): void
+    {
+        $this->template->root = [
+            'title' => new Title(null, _('Entities')),
+            'items' => [
+                'Organizer:Email:list' => [],
+                'Organizer:Email:transition' => [],
+                'Organizer:Email:template' => [],
+            ],
+        ];
     }
 
     /**
