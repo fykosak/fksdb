@@ -1,6 +1,5 @@
 {layout './@layout.latte'}
 {varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 {block footer}
-    Tento mail dostávate pretože ste prihlasený
-        do semináru FYKOS, souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.
+    {$model->topic->getReason()->getText($model->lang->value)}
 {/block}

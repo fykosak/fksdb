@@ -20,7 +20,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -317,14 +316,14 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
-     * @phpstan-return MassTransitionComponent<EventParticipantMachine>
+     * @phpstan-return MassTransitionComponent<EventParticipantModel>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
         return new MassTransitionComponent(
             $this->getContext(),
             $this->eventDispatchFactory->getParticipantMachine($this->getEvent()),
-            $this->getEvent()
+            $this->getEvent()->getParticipants()
         );
     }
 

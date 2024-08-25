@@ -1211,7 +1211,7 @@ orm:
                 type: text
                 title: _('Note')
     unsubscribed_email:
-        model: Fykosak\NetteORM\DummyModel
+        model: Fykosak\NetteORM\Model\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
     person_mail:
         model: FKSDB\Models\ORM\Models\PersonMailModel

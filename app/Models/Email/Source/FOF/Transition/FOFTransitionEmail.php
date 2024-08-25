@@ -32,6 +32,9 @@ final class FOFTransitionEmail extends TransitionEmailSource
         $this->authTokenService = $authTokenService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(PersonModel $person, TeamModel2 $teamModel): AuthTokenModel
     {
         return $this->authTokenService->createEventToken(
@@ -40,6 +43,9 @@ final class FOFTransitionEmail extends TransitionEmailSource
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         /** @var TeamHolder $holder */

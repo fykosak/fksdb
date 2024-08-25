@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Transitions;
 
 use FKSDB\Models\Email\TemplateFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
@@ -13,6 +14,7 @@ use FKSDB\Models\Transitions\Holder\EmailHolder;
 use FKSDB\Models\Transitions\Statement;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
 /**
  * @phpstan-implements Statement<void,EmailHolder>
@@ -41,6 +43,7 @@ final class PrepareText implements Statement
 
     /**
      * @throws BadTypeException
+     * @throws \Throwable
      */
     public function __invoke(...$args): void
     {
@@ -50,35 +53,43 @@ final class PrepareText implements Statement
         if ($model->text) {
             throw new InvalidStateException('Email has already generated text');
         }
+        $template = $this->templateFactory->create($model->lang);
         // add tokens if is "spam"
         if ($model->topic->isSpam()) {
+            Debugger::barDump($model->person);
             if ($model->person) {
                 $token = $this->authTokenService->createUnsubscribeToken(
                     $model->person->getLogin() ?? $this->loginService->createLogin($model->person)
                 );
-            } else {
-                $code = openssl_encrypt(
-                    $model->recipient,
-                    'aes-256-cbc',
-                    $this->container->getParameters()['spamHash']
+                $text = $template->renderToString(
+                    __DIR__ . "/../Containers/spam.person.{$model->lang->value}.latte",
+                    [
+                        'model' => $model,
+                        'token' => $token,
+                    ]
                 );
-                if ($code === false) {
-                    throw new InvalidStateException(_('Cannot encrypt code'));
-                }
+            } else {
+                $code = MachineCode::createStringHash(
+                    $model->recipient,
+                    $this->container->getParameters()['machineCode']['salt']['unsubscribe']
+                );
+                Debugger::barDump($code);
+                $text = $template->renderToString(
+                    __DIR__ . "/../Containers/spam.anonymous.{$model->lang->value}.latte",
+                    [
+                        'model' => $model,
+                        'code' => $code,
+                    ]
+                );
             }
-        }
-        // finaly create template (include inner text into email with footer)
-        $data = [
-            'model' => $model,
-            'token' => $token ?? null,
-            'code' => $code ?? null,
-        ];
-        if ($model->topic->isSpam()) {
-            $template = __DIR__ . '/../Containers/spam.latte';
         } else {
-            $template = __DIR__ . '/../Containers/noSpam.latte';
+            $text = $template->renderToString(
+                __DIR__ . '/../Containers/noSpam.latte',
+                [
+                    'model' => $model,
+                ]
+            );
         }
-        $text = $this->templateFactory->create($model->lang)->renderToString($template, $data);
         $this->emailMessageService->storeModel(['text' => $text], $model);
     }
 }

@@ -51,6 +51,7 @@ final class TemplateFactory
             throw new BadTypeException(Template::class, $template);
         }
         $template->getLatte()->addProvider('uiControl', $this->presenter);
+        $template->getLatte()->addProvider('uiPresenter', $this->presenter);
         $template->control = $this->presenter;
         $template->baseUrl = $this->request->getUrl()->getBaseUrl();
         $template->setTranslator($this->translator, $lang->value);

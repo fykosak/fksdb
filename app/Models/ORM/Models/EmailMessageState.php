@@ -38,6 +38,7 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
             case self::Sent:
                 $badge = 'success';
                 break;
+            case self::Ready:
             case self::Waiting:
                 $badge = 'warning';
                 break;
@@ -48,6 +49,8 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
+            case self::Ready:
+                return _('Ready');
             default:
             case self::Cancelled:
                 return _('Canceled');

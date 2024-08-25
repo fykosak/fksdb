@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Models\ORM\Models\PersonEmailPreferenceModel;
 use FKSDB\Models\ORM\Models\PersonEmailPreferenceOption;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonEmailPreferenceService;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<PersonModel>
+ * @phpstan-extends ModelForm<PersonModel,array<string,bool>>
  */
-class EmailPreferenceForm extends EntityFormComponent
+class EmailPreferenceForm extends ModelForm
 {
     private PersonEmailPreferenceService $emailPreferenceService;
 
@@ -30,10 +31,19 @@ class EmailPreferenceForm extends EntityFormComponent
         }
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function setDefaults(Form $form): void
     {
-        /** @var array<string,bool> $values */
-        $values = $form->getValues('array');
+        $defaults = [];
+        foreach (PersonEmailPreferenceOption::cases() as $case) {
+            /** @var PersonEmailPreferenceModel|null $preference */
+            $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
+            $defaults[$case->value] = $preference ? $preference->option : true;
+        }
+        $form->setDefaults($defaults);
+    }
+
+    protected function innerSuccess(array $values, Form $form): Model
+    {
         foreach (PersonEmailPreferenceOption::cases() as $case) {
             /** @var PersonEmailPreferenceModel|null $preference */
             $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
@@ -44,16 +54,11 @@ class EmailPreferenceForm extends EntityFormComponent
                 'value' => $value,
             ], $preference);
         }
+        return $this->model;
     }
 
-    protected function setDefaults(Form $form): void
+    protected function successRedirect(Model $model): void
     {
-        $defaults = [];
-        foreach (PersonEmailPreferenceOption::cases() as $case) {
-            /** @var PersonEmailPreferenceModel|null $preference */
-            $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
-            $defaults[$case->value] = $preference ? $preference->option : true;
-        }
-        $form->setDefaults($defaults);
+// TODO
     }
 }

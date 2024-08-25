@@ -1,5 +1,6 @@
 {layout './@layout.latte'}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {block footer}
-    {$control->link('//:Profile:Email:')}
-    Tento mail je spam!!
+    Ak si neprajete dostávať emaily tohoto typu,
+    môžete preferencie upraviť <a href="{plink '//:Profile:Email:default' 'at'=>$token->token}">zde</a>.
 {/block}

@@ -1,5 +1,7 @@
 {layout './@layout.latte'}
+{varType string $code}
 {block footer}
-    {$control->link('//:Profile:Email:')}
-    Tento mail je spam!!
+    Kliknutím <a
+        href="{plink '//:Core:Unsubscribe:default' 'token'=>$code}">zde</a> se odhlásite z dostávania týchto emailov.
 {/block}
+

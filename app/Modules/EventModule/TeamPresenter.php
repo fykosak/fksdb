@@ -328,11 +328,11 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return MassTransitionComponent<TeamMachine>
+     * @phpstan-return MassTransitionComponent<TeamModel2>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
-        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent()->getTeams());
     }
 
     /**

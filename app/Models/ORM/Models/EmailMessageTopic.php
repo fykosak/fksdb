@@ -6,7 +6,9 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
@@ -71,5 +73,38 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
                 return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamOther);
         }
         return null;
+    }
+
+    public function getReason(): LocalizedString
+    {
+        switch ($this->value) {
+            case self::Contest:
+                return new LocalizedString([
+                    'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
+                    souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
+                    'en' => '', // TODO
+                ]);
+            case self::FOL:
+                return new LocalizedString([
+                    'cs' => '',// TODO
+                    'en' => '',// TODO
+                ]);
+            case self::FOF:
+                return new LocalizedString([
+                    'cs' => '',// TODO
+                    'en' => '',// TODO
+                ]);
+            case self::DSEF:
+                return new LocalizedString([
+                    'cs' => '',// TODO
+                    'en' => '',// TODO
+                ]);
+            case self::Internal:
+                return new LocalizedString([
+                    'cs' => 'Tento mail ste dostali pretože ste on požiadali.',
+                    'en' => '',
+                ]);
+        }
+        throw new InvalidStateException();
     }
 }
