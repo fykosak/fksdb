@@ -78,6 +78,13 @@ orm:
             text:
                 type: text
                 title: _('Text')
+            topic:
+                type: enum
+                class: FKSDB\Models\ORM\Models\EmailMessageTopic
+                title: _('Topic')
+            lang:
+                type: string #TODO
+                title: _('Language')
             state:
                 type: enum
                 title: _('State')

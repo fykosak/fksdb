@@ -29,7 +29,25 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        return '';
+        switch ($this->value) {
+            case self::SpamContest:
+                return _('Spam contest');
+            case self::SpamMff:
+                return _('Spam MFF');
+            case self::SpamOther:
+                return _('Spam others');
+            case self::Contest:
+                return _('Contest');
+            case self::FOF:
+                return _('FOF');
+            case self::FOL:
+                return _('FOL');
+            case self::DSEF:
+                return _('DSEF');
+            case self::Internal:
+                return _('Internal');
+        }
+        throw new InvalidStateException();
     }
 
     public function title(): Title

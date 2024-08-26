@@ -178,7 +178,6 @@ final class EmailPresenter extends BasePresenter
         return $this->emailMessageService;
     }
 
-
     protected function createComponentEditForm(): Control
     {
         throw new NotImplementedException();

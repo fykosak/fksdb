@@ -34,6 +34,19 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
         throw new InvalidStateException();
     }
 
+    public function description(): string
+    {
+        switch ($this->value) {
+            case self::SpamContest:
+                return _('Spam zo semináru a akcií FYKOSu a Výfuku');
+            case self::SpamMff:
+                return _('Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK');
+            case self::SpamOther:
+                return _('Spam od našich partnerov a sponzorov');
+        }
+        throw new InvalidStateException();
+    }
+
     public function title(): Title
     {
         return new Title(null, $this->label());

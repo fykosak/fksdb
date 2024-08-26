@@ -10,7 +10,9 @@ use FKSDB\Models\ORM\Models\PersonEmailPreferenceOption;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonEmailPreferenceService;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends ModelForm<PersonModel,array<string,bool>>
@@ -27,7 +29,8 @@ class EmailPreferenceForm extends ModelForm
     protected function configureForm(Form $form): void
     {
         foreach (PersonEmailPreferenceOption::cases() as $case) {
-            $form->addCheckbox($case->value, $case->label());
+            $input = $form->addCheckbox($case->value, $case->label());
+            $input->setOption('description', $case->description());
         }
     }
 
@@ -37,7 +40,8 @@ class EmailPreferenceForm extends ModelForm
         foreach (PersonEmailPreferenceOption::cases() as $case) {
             /** @var PersonEmailPreferenceModel|null $preference */
             $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
-            $defaults[$case->value] = $preference ? $preference->option : true;
+            Debugger::barDump($preference);
+            $defaults[$case->value] = $preference ? $preference->value : true;
         }
         $form->setDefaults($defaults);
     }
@@ -59,6 +63,7 @@ class EmailPreferenceForm extends ModelForm
 
     protected function successRedirect(Model $model): void
     {
-// TODO
+        $this->getPresenter()->flashMessage(_('Preferences saved'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('this');
     }
 }
