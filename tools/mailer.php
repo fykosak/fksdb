@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use FKSDB\Models\Email\SenderFactory;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
@@ -16,14 +17,18 @@ set_time_limit(60);
 if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['spamMailer']['enabled']) {
     exit(0);
 }
-/** @var SenderFactory $sender */
-$sender = $container->getByType(SenderFactory::class);
 /** @var EmailMessageService $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(EmailMessageService::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend(
     $argv[1] ? (int)$argv[1] : (int)$container->getParameters()['spamMailer']['defaultLimit']
 );
+
+$machine = $container->getByType(TransitionsMachineFactory::class)->getEmailMachine();
+$transition = $machine->getTransitions()
+    ->filterBySource(EmailMessageState::from(EmailMessageState::Waiting))
+    ->filterByTarget(EmailMessageState::from(EmailMessageState::Sent))
+    ->select();
 $counter = 0;
 /** @var EmailMessageModel $model */
 foreach ($query as $model) {
@@ -32,5 +37,6 @@ foreach ($query as $model) {
         Debugger::log('Message limit reached.', 'mailer-exceptions');
         break;
     }
-    $sender->send($model);
+    $holder = $machine->createHolder($model);
+    $transition->execute($holder);
 }
