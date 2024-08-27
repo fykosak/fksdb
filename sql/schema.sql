@@ -1340,15 +1340,14 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `inner_text`          TEXT             NOT NULL COMMENT 'telo emailu, ktoré sa pri odoslaní zabalí do dalších blokov',
     `text`                TEXT             NULL     DEFAULT NULL COMMENT 'celý text emailu vrátane pätičky, to čo realne odišlo',
     `state`               ENUM (
-        'saved',
+        'concept',
         'ready',
         'waiting',
-
         'sent',
         'failed',
         'canceled',
         'rejected'
-        )                                           DEFAULT 'saved',
+        )                                           DEFAULT 'concept',
     `topic`               ENUM (
         'spam_contest',
         'spam_mff',

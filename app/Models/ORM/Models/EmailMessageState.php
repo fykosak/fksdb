@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 final class EmailMessageState extends FakeStringEnum implements EnumColumn
 {
     //phpcs:disable
-    public const Saved = 'saved'; // uložená, na ďalšiu úpravu
+    public const Concept = 'concept'; // uložená, na ďalšiu úpravu
     public const Ready = 'ready'; // dokončený čaká na pridanie unsubscribed options
     public const Waiting = 'waiting'; //čaká na poslanie
     public const Sent = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
@@ -32,7 +32,7 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
             case self::Failed:
                 $badge = 'danger';
                 break;
-            case self::Saved:
+            case self::Concept:
                 $badge = 'info';
                 break;
             case self::Sent:
@@ -58,8 +58,8 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
                 return _('Failed');
             case self::Rejected:
                 return _('Rejected');
-            case self::Saved:
-                return _('Saved');
+            case self::Concept:
+                return _('Concept');
             case self::Sent:
                 return _('Sent');
             case self::Waiting:
@@ -70,7 +70,7 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
     public static function cases(): array
     {
         return [
-            new self(self::Saved),
+            new self(self::Concept),
             new self(self::Ready),
             new self(self::Waiting),
             new self(self::Sent),
