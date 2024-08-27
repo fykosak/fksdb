@@ -3,7 +3,14 @@
 
 {block titleBody}
     {include parent}
-    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:false}
+    <div class="d-flex align-items-center gap-2">
+        {if $model->event->isRegistrationOpened()}
+            <a href="{plink edit id => $model->getPrimary()}"
+               class="btn btn-outline-primary">
+                <i class="fas fa-pencil me-2"></i> {_'button.participant.edit'}
+            </a>
+        {/if}
+    </div>
 {/block}
 
 {block outerContent}
