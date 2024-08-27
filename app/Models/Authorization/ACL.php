@@ -214,7 +214,10 @@ final class ACL
             BaseRole::Guest,
             [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
             'create',
-            new Authorization\Assertions\IsRegistrationOpened()
+            new LogicAnd(
+                new Authorization\Assertions\IsRegistrationOpened(),
+                new Authorization\Assertions\IsOpenEvent()
+            )
         );
         $permission->allow(
             [
@@ -223,7 +226,7 @@ final class ACL
                 Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             ],
             [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
-            ['detail'],
+            'detail',
             new Authorization\Assertions\OwnApplicationAssertion()
         );
         $permission->allow(
@@ -233,7 +236,7 @@ final class ACL
                 Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             ],
             [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
-            ['edit'],
+            'edit',
             new LogicAnd(
                 new Authorization\Assertions\OwnApplicationAssertion(),
                 new Authorization\Assertions\IsRegistrationOpened()

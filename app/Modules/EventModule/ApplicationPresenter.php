@@ -72,23 +72,11 @@ final class ApplicationPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        switch ($event->event_type_id) {
-            case 10:
-            case 4:
-            case 5:
-                return $this->eventAuthorizator->isAllowed(
-                    new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
-                    'organizer',
-                    $event
-                );
-            default:
-                return $this->eventAuthorizator->isAllowed(
-                    new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
-                    'create',
-                    $event
-                );
-        }
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
