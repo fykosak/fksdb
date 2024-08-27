@@ -50,13 +50,13 @@ abstract class TeamForm extends ModelForm
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
     protected Request $request;
-    protected PersonModel $loggedPerson;
+    protected ?PersonModel $loggedPerson;
 
     public function __construct(
         Container $container,
         ?Model $model,
         EventModel $event,
-        PersonModel $loggedPerson
+        ?PersonModel $loggedPerson
     ) {
         $this->event = $event;
         parent::__construct($container, $model);
@@ -91,7 +91,9 @@ abstract class TeamForm extends ModelForm
                 'cookies' => $this->request->cookies,
                 'headers' => $this->request->headers,
                 'remoteAddress' => $this->request->remoteAddress,
-                'person' => $this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')',
+                'person' => isset($this->loggedPerson)
+                    ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
+                    '',
             ]), 'team-app-remote');
         $team = $this->teamService->storeModel(
             array_merge($values['team'], [
