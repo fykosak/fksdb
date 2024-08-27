@@ -58,8 +58,8 @@ abstract class TeamForm extends ModelForm
         EventModel $event,
         PersonModel $loggedPerson
     ) {
-        parent::__construct($container, $model);
         $this->event = $event;
+        parent::__construct($container, $model);
         $this->loggedPerson = $loggedPerson;
     }
 
