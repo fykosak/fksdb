@@ -220,14 +220,17 @@ final class ACL
             Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             Models\EventParticipantModel::RESOURCE_ID,
             'detail',
-            new Authorization\Assertions\OwnApplicationAssertion()
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnApplicationAssertion()
+            )
         );
         $permission->allow(
             Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             Models\EventParticipantModel::RESOURCE_ID,
             'edit',
             new LogicAnd(
-            // new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\NotDisqualified(),
                 new Authorization\Assertions\OwnApplicationAssertion(),
                 new Authorization\Assertions\IsRegistrationOpened()
             )
@@ -254,7 +257,10 @@ final class ACL
             ],
             Models\Fyziklani\TeamModel2::RESOURCE_ID,
             'detail',
-            new Authorization\Assertions\OwnTeamAssertion()
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnTeamAssertion()
+            )
         );
         $permission->allow(
             [

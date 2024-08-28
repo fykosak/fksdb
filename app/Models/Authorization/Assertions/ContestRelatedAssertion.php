@@ -7,37 +7,22 @@ namespace FKSDB\Models\Authorization\Assertions;
 use FKSDB\Models\Authorization\Roles\ContestRole;
 use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\InvalidStateException;
 use Nette\Security\Permission;
-use Nette\Security\UserStorage;
 
 class ContestRelatedAssertion implements Assertion
 {
-    private UserStorage $userStorage;
-
-    public function __construct(UserStorage $userStorage)
-    {
-        $this->userStorage = $userStorage;
-    }
-
     /**
      * Checks whether person is contestant in any of the role-assigned contests.
-     * @throws BadTypeException
      */
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
-        [$state] = $this->userStorage->getState();
-        if (!$state) {
-            throw new InvalidStateException('Expecting logged user.');
-        }
         $person = $acl->getQueriedResource();
         if (!$person instanceof PersonModel) {
-            throw new BadTypeException(PersonModel::class, $person);
+            throw new WrongAssertionException();
         }
         $role = $acl->getQueriedRole();
         $contest = null;

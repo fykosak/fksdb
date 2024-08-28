@@ -11,7 +11,7 @@ use Nette\Security\Permission;
 
 class IsRegistrationOpened implements Assertion
 {
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
         $resource = $acl->getQueriedResource();
         if (
@@ -19,9 +19,8 @@ class IsRegistrationOpened implements Assertion
             || $resource instanceof EventParticipantModel
             || $resource instanceof PseudoEventResource
         ) {
-
             return $resource->event->isRegistrationOpened();
         }
-        return false;
+        throw new WrongAssertionException();
     }
 }
