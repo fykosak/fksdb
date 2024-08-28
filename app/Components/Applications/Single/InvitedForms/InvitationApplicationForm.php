@@ -265,7 +265,6 @@ abstract class InvitationApplicationForm extends BaseComponent
             $this->eventParticipantService->explorer->rollBack();
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }

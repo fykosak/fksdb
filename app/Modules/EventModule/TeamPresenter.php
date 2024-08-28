@@ -34,6 +34,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 final class TeamPresenter extends BasePresenter
 {
@@ -190,11 +191,15 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
     {
         return $this->eventAuthorizator->isAllowed(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            $this->getEntity(),
             'edit',
             $this->getEvent()
         );

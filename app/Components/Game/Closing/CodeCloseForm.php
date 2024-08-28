@@ -61,7 +61,6 @@ final class CodeCloseForm extends FormComponent
             }
             $logger = new MemoryLogger();
             $this->handler->close($logger, $team);
-            FlashMessageDump::dump($logger, $this->getPresenter());
             $this->getPresenter()->redirect('list', ['id' => null]);
         } catch (GameException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
