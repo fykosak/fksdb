@@ -25,18 +25,16 @@ class ContestRelatedAssertion implements Assertion
             throw new WrongAssertionException();
         }
         $role = $acl->getQueriedRole();
-        $contest = null;
         if ($role instanceof ContestRole) {
             $contest = $role->getContest();
         } elseif ($role instanceof ContestYearRole) {
             $contest = $role->getContestYear()->contest;
         } elseif ($role instanceof EventRole) {
             $contest = $role->getEvent()->event_type->contest;
-        }
-
-        if (!$contest) {
+        } else {
             return false;
         }
+
         if ($person->getContestants($contest)->fetch()) {
             return true;
         }
