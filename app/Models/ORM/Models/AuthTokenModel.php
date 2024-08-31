@@ -15,8 +15,12 @@ use Nette\Utils\DateTime;
  * @property-read string $type
  * @property-read string|null $data
  * @property-read DateTime $since
- * @property-read DateTime|null $until
+ * @property-read DateTime $until
  */
 final class AuthTokenModel extends Model
 {
+    public function isActive(): bool
+    {
+        return $this->since <= new \DateTime() && $this->until >= new \DateTime();
+    }
 }

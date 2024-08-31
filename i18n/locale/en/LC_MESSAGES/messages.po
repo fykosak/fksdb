@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-31 22:03+0200\n"
+"POT-Creation-Date: 2024-08-31 22:26+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Application \"%s\" updated."
 msgstr ""
 
-#: ../app/Components/Applications/Single/InvitedForms/InvitationApplicationForm.php:237
+#: ../app/Components/Applications/Single/InvitedForms/InvitationApplicationForm.php:231
 #, php-format
 msgid "Application \"%s\" created."
 msgstr ""
@@ -270,8 +270,8 @@ msgstr ""
 
 #: ../app/Components/Applications/Team/Forms/FOLTeamForm.php:86
 msgid ""
-"Preferred language only for communication with the team. The game language "
-"can be freely changed during the competition."
+"Preferred language for communication. The game language can be freely "
+"changed during the competition."
 msgstr ""
 
 #: ../app/Components/Applications/Team/Forms/NoMemberException.php:13
@@ -510,7 +510,7 @@ msgstr ""
 
 #: ../app/Components/Contestants/RegisterContestantForm.php:74
 #: ../app/Components/Controls/Login/LoginForm.php:80
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:99
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:102
 #: ../app/Components/EntityForms/RegisterTeacherFormComponent.php:78
 msgid "The form has expired. Please send it again."
 msgstr ""
@@ -530,10 +530,7 @@ msgid "of"
 msgstr ""
 
 #: ../app/Components/Contestants/SubmitsGrid.php:43
-#: ../app/Components/Grids/Submits/QuizAnswersGrid.php:62
-#: ../app/config/orm.neon.neon2php:729 ../app/config/orm.neon.neon2php:811
-#: ../app/config/orm.neon.neon2php:895
-msgid "Points"
+msgid "Points (raw/calc of total)"
 msgstr ""
 
 #: ../app/Components/Controls/FormComponent/CodeForm.php:40
@@ -567,7 +564,7 @@ msgid "Login or e-mail"
 msgstr ""
 
 #: ../app/Components/Controls/Login/LoginForm.php:62
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:98
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:101
 msgid "Insert login or email address."
 msgstr ""
 
@@ -669,7 +666,6 @@ msgid "This email is already in use."
 msgstr ""
 
 #: ../app/Components/Controls/Person/Edit/ChangeEmailComponent.php:73
-#: ../app/Modules/ProfileModule/EmailPresenter.php:28
 msgid "Change email"
 msgstr ""
 
@@ -778,16 +774,16 @@ msgid_plural "Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:79
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:82
 #, php-format
 msgid "Further instructions for the recovery have been sent to %s."
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:92
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:95
 msgid "Continue"
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:97
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:100
 msgid "Login or e-mail address"
 msgstr ""
 
@@ -1100,14 +1096,14 @@ msgid "Import"
 msgstr ""
 
 #: ../app/Components/EntityForms/Spam/MailImportComponent.php:65
-#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:89
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:84
 #: ../app/Components/Event/Import/ImportComponent.php:81
 msgid "Import successful."
 msgstr ""
 
-#: ../app/Components/EntityForms/Spam/MailImportComponent.php:68
-#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:97
-#: ../app/Components/Event/Import/ImportComponent.php:84
+#: ../app/Components/EntityForms/Spam/MailImportComponent.php:67
+#: ../app/Components/EntityForms/Spam/SpamPersonImportComponent.php:90
+#: ../app/Components/Event/Import/ImportComponent.php:83
 msgid "Import completed with errors."
 msgstr ""
 
@@ -1496,7 +1492,7 @@ msgstr ""
 msgid "Game is not finished."
 msgstr ""
 
-#: ../app/Components/Game/Closing/Handler.php:44
+#: ../app/Components/Game/Closing/Handler.php:48
 #, php-format
 msgid "Team \"%s\" rating was successfully closed with total %d points."
 msgstr ""
@@ -1564,7 +1560,7 @@ msgstr ""
 msgid "Team %s (%d) has not closed submitting"
 msgstr ""
 
-#: ../app/Components/Game/Diplomas/RankingStrategy.php:81
+#: ../app/Components/Game/Diplomas/RankingStrategy.php:75
 #, php-format
 msgid "Team %s (%d) - rank: %d"
 msgstr ""
@@ -2020,6 +2016,12 @@ msgstr ""
 
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:85
 msgid "Execute export"
+msgstr ""
+
+#: ../app/Components/Grids/Submits/QuizAnswersGrid.php:62
+#: ../app/config/orm.neon.neon2php:729 ../app/config/orm.neon.neon2php:811
+#: ../app/config/orm.neon.neon2php:895
+msgid "Points"
 msgstr ""
 
 #: ../app/Components/Grids/Submits/QuizAnswersGrid.php:77
@@ -2527,12 +2529,11 @@ msgstr ""
 msgid "Email not found in the google account."
 msgstr ""
 
-#: ../app/Models/Authentication/TokenAuthenticator.php:41
+#: ../app/Models/Authentication/TokenAuthenticator.php:42
 msgid "Invalid authentication token."
 msgstr ""
 
-#: ../app/Models/Authentication/TokenAuthenticator.php:80
-#: ../app/Models/Authentication/TokenAuthenticator.php:89
+#: ../app/Models/Authentication/TokenAuthenticator.php:79
 msgid "Not authenticated by token."
 msgstr ""
 
@@ -2573,7 +2574,7 @@ msgstr ""
 msgid "Change of email"
 msgstr ""
 
-#: ../app/Models/Email/Source/FOL/TeamMemberEmail.php:66
+#: ../app/Models/Email/Source/FOL/TeamMemberEmail.php:63
 msgid "Physics Brawl Online <online@physicsbrawl.org>"
 msgstr ""
 
@@ -4862,19 +4863,23 @@ msgstr ""
 msgid "Points variance"
 msgstr ""
 
+#: ../app/Modules/ProfileModule/EmailPresenter.php:28
+msgid "E-mail settings"
+msgstr ""
+
 #: ../app/Modules/ProfileModule/EmailPresenter.php:33
 msgid "Confirm new email"
 msgstr ""
 
-#: ../app/Modules/ProfileModule/EmailPresenter.php:64
+#: ../app/Modules/ProfileModule/EmailPresenter.php:61
 msgid "Invalid token"
 msgstr ""
 
-#: ../app/Modules/ProfileModule/EmailPresenter.php:75
+#: ../app/Modules/ProfileModule/EmailPresenter.php:72
 msgid "Email has been changed."
 msgstr ""
 
-#: ../app/Modules/ProfileModule/EmailPresenter.php:78
+#: ../app/Modules/ProfileModule/EmailPresenter.php:75
 msgid "Some error occurred! Please contact system admins."
 msgstr ""
 
@@ -5320,11 +5325,11 @@ msgid "Only if different from \"<First name> <Last name>\"."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:448
-msgid "Last Name (Family name or Surname)"
+msgid "Last name (family name or surname)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:452
-msgid "First Name (Given name)"
+msgid "First name (given name)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:482
@@ -6451,11 +6456,81 @@ msgstr ""
 "longer-term problems... Do you take any medication? What are they? Are there "
 "any other information about your health condition, what should we know?"
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#~ msgid "řešitelů"
+#~ msgstr "contestants"
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "Zvolená osoba je již přihlášená."
+#~ msgstr "Chosen person is already registered to the event."
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Pro řazení v seznamu organizátorů"
+#~ msgstr "For ranking among organiser list"
+
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgstr ""
+#~ "To calculate category. Leave empty if you are not a high school student."
+
+#~ msgid "Pouze pro české a slovenské studenty."
+#~ msgstr ""
+#~ "Only for Czech and Slovak students. So if you are from abroad, please "
+#~ "leave it empty as it is."
+
+#~ msgid ""
+#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
+#~ "       a ASCII znaky."
+#~ msgstr ""
+#~ "The name of the team can be composed only from latin, greek, cyrilic and "
+#~ "ASCII."
+
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
 
 #~ msgid ""
 #~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
@@ -6471,78 +6546,8 @@ msgstr ""
 #~ "they? Are there any other information about your health condition, what "
 #~ "should we know?"
 
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
-#~ msgid ""
-#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
-#~ "       a ASCII znaky."
-#~ msgstr ""
-#~ "The name of the team can be composed only from latin, greek, cyrilic and "
-#~ "ASCII."
-
-#~ msgid "Pouze pro české a slovenské studenty."
-#~ msgstr ""
-#~ "Only for Czech and Slovak students. So if you are from abroad, please "
-#~ "leave it empty as it is."
-
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-#~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
-
-#~ msgid "Pro řazení v seznamu organizátorů"
-#~ msgstr "For ranking among organiser list"
-
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "Zvolená osoba je již přihlášená."
-#~ msgstr "Chosen person is already registered to the event."
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
