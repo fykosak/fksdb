@@ -3,14 +3,14 @@
 {block content}
     <ul>
         {if $lang->value === 'cs'}
-            <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání Online.
-                Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.
+            <li>Vyplněním této přihlášky přihlásíte tým na soutěž Fyziklání Online.
+                Každému členu týmu přijde e-mail s odkazem na úpravu přihlášky.
             </li>
             <li>
-                Informace, jak se přihlásit do hry, vám budou zaslány později.
+                Informace, jak se přihlásit do hry, vám budou zaslány až během několika dní před soutěží.
             </li>
             <li>
-                Další informace a pravidla naleznente na stránce <a href="https://online.fyziklani.cz/">Fyziklání
+                Další informace a pravidla naleznete na stránce <a href="https://online.fyziklani.cz/">Fyziklání
                     Online</a>.
             </li>
             <li>
@@ -18,14 +18,15 @@
             </li>
         {else}
             <li>You can apply a team for <strong>Physics Brawl Online</strong> using this form.
-                Each member of the team will receive an e-mail with link to edit the application.
+                Each member of the team will receive an e-mail with a link to edit the application.
+            </li>
+            <li>When choosing your school, type a few first letters and try to find it in the dropdown menu. If you have trouble finding your school, you can create it in the form.</li>
+            <li>
+                Information on how to log into the game system will be sent to you a few days before the competition.
             </li>
             <li>
-                Information on how to log into the game will be sent to you later.
-            </li>
-            <li>
-                Further information and rules are on the web <a href="https://physicsbrawl.org/">Online Physics
-                    Brawl</a>.
+                More information and rules are available at the <a href="https://physicsbrawl.org/">Online Physics
+                    Brawl website</a>.
             </li>
             <li>
                 Registration is open until <strong>{$event->registration_end|date:'r'}</strong>.
