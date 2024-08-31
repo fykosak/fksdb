@@ -12,14 +12,11 @@ use Nette\Security\Permission;
 
 class ContestContestantAssertion implements Assertion
 {
-    /**
-     * @throws BadTypeException
-     */
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
         $contestant = $acl->getQueriedResource();
         if (!$contestant instanceof ContestantModel) {
-            throw new BadTypeException(ContestantModel::class, $contestant);
+            throw new WrongAssertionException();
         }
         $grant = $acl->getQueriedRole();
         if ($grant instanceof ContestRole) {

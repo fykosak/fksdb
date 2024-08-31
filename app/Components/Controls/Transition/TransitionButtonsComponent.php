@@ -70,7 +70,7 @@ class TransitionButtonsComponent extends BaseComponent
         ) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'transitions');
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');
