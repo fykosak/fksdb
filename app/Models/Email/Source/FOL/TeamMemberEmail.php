@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Source\FOL;
 
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -31,6 +30,9 @@ final class TeamMemberEmail extends TransitionEmailSource
         $this->authTokenService = $authTokenService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(PersonModel $person, TeamHolder $holder): AuthTokenModel
     {
         return $this->authTokenService->createEventToken(
@@ -39,6 +41,9 @@ final class TeamMemberEmail extends TransitionEmailSource
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         /**

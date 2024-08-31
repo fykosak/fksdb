@@ -97,6 +97,7 @@ abstract class TeamForm extends ModelForm
             'cookies' => $this->request->cookies,
             'headers' => $this->request->headers,
             'remoteAddress' => $this->request->remoteAddress,
+            'form' => $values,
             'person' => isset($this->loggedPerson)
                 ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
                 '',
