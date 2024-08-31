@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-31 22:26+0200\n"
+"POT-Creation-Date: 2024-08-31 23:38+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -25,7 +25,7 @@ msgid "Create application"
 msgstr ""
 
 #: ../app/Components/Applications/Single/InvitedForms/InvitationApplicationForm.php:126
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:195
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:214
 msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
@@ -138,12 +138,12 @@ msgid "Accommodation"
 msgstr ""
 
 #: ../app/Components/Applications/Single/OpenForms/OpenApplicationForm.php:151
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:112
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:131
 msgid "Application has been updated"
 msgstr ""
 
 #: ../app/Components/Applications/Single/OpenForms/OpenApplicationForm.php:152
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:113
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:132
 msgid "Application has been created"
 msgstr ""
 
@@ -270,8 +270,9 @@ msgstr ""
 
 #: ../app/Components/Applications/Team/Forms/FOLTeamForm.php:86
 msgid ""
-"Preferred language for communication. The game language can be freely "
-"changed during the competition."
+"Preferred language for communication.\n"
+"                    The game language can be freely changed during the "
+"competition."
 msgstr ""
 
 #: ../app/Components/Applications/Team/Forms/NoMemberException.php:13
@@ -292,16 +293,16 @@ msgstr ""
 msgid "Only 2 different schools can be represented by the team (got %d: %s)."
 msgstr ""
 
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:123
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:142
 msgid "Team with same name already exists"
 msgstr ""
 
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:294
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:313
 #, php-format
 msgid "Member %d - %s"
 msgstr ""
 
-#: ../app/Components/Applications/Team/Forms/TeamForm.php:296
+#: ../app/Components/Applications/Team/Forms/TeamForm.php:315
 #, php-format
 msgid "Member %d"
 msgstr ""
@@ -2572,14 +2573,6 @@ msgstr ""
 
 #: ../app/Models/Email/Source/ChangeEmail/email.old.latte.latte2php:5
 msgid "Change of email"
-msgstr ""
-
-#: ../app/Models/Email/Source/FOL/TeamMemberEmail.php:63
-msgid "Physics Brawl Online <online@physicsbrawl.org>"
-msgstr ""
-
-#: ../app/Models/Email/Source/FOL/member.en.latte.latte2php:7
-msgid "Physics Brawl Online - Team Registration"
 msgstr ""
 
 #: ../app/Models/Email/Source/LoginInvitation/loginInvitation.latte.latte2php:7
@@ -6456,81 +6449,11 @@ msgstr ""
 "longer-term problems... Do you take any medication? What are they? Are there "
 "any other information about your health condition, what should we know?"
 
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
 
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "Zvolená osoba je již přihlášená."
-#~ msgstr "Chosen person is already registered to the event."
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Pro řazení v seznamu organizátorů"
-#~ msgstr "For ranking among organiser list"
-
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-#~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
-
-#~ msgid "Pouze pro české a slovenské studenty."
-#~ msgstr ""
-#~ "Only for Czech and Slovak students. So if you are from abroad, please "
-#~ "leave it empty as it is."
-
-#~ msgid ""
-#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
-#~ "       a ASCII znaky."
-#~ msgstr ""
-#~ "The name of the team can be composed only from latin, greek, cyrilic and "
-#~ "ASCII."
-
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
 #~ msgid ""
 #~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
@@ -6546,8 +6469,78 @@ msgstr ""
 #~ "they? Are there any other information about your health condition, what "
 #~ "should we know?"
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#~ msgid ""
+#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
+#~ "       a ASCII znaky."
+#~ msgstr ""
+#~ "The name of the team can be composed only from latin, greek, cyrilic and "
+#~ "ASCII."
+
+#~ msgid "Pouze pro české a slovenské studenty."
+#~ msgstr ""
+#~ "Only for Czech and Slovak students. So if you are from abroad, please "
+#~ "leave it empty as it is."
+
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgstr ""
+#~ "To calculate category. Leave empty if you are not a high school student."
+
+#~ msgid "Pro řazení v seznamu organizátorů"
+#~ msgstr "For ranking among organiser list"
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "Zvolená osoba je již přihlášená."
+#~ msgstr "Chosen person is already registered to the event."
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitelů"
+#~ msgstr "contestants"
