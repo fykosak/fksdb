@@ -106,6 +106,6 @@ final class ContestYearModel extends Model
     public function end(): DateTime
     {
         return (DateTime::fromParts($this->ac_year + 1, ContestYearService::FIRST_AC_MONTH, 1))
-            ->modify('-1 day');
+            ->modify('-1 second');
     }
 }

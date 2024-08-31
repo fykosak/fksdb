@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\SchoolLabelFormComponent;
-use FKSDB\Components\Grids\Spam\SchoolLabelGrid;
+use FKSDB\Components\Grids\SchoolLabelGrid;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolLabelModel;

@@ -4,40 +4,47 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Contests;
 
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\WebService\Models\WebModel;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 
 /**
- * @phpstan-extends WebModel<array<never>,array<int,array{
+ * @phpstan-extends ContestWebModel<array{contestId:int},array{
  *      contestId:int,
  *      contest:string,
  *      name:string,
- *      currentYear:int,
- *      firstYear:int,
- *      lastYear:int,
- * }>>
+ *      years:array<array{
+ *          year:int,
+ *          active:bool,
+ *          begin:string,
+ *          end:string,
+ *      }>
+ * }>
  */
-class ContestsWebModel extends WebModel
+class ContestsWebModel extends ContestWebModel
 {
-    private ContestService $contestService;
-
-    public function inject(ContestService $contestService): void
-    {
-        $this->contestService = $contestService;
-    }
-
+    /**
+     * @throws NotFoundException
+     */
     protected function getJsonResponse(): array
     {
-        $data = [];
-        /** @var ContestModel $contest */
-        foreach ($this->contestService->getTable() as $contest) {
-            if ($this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $contest)) {
-                $data[] = $contest->__toArray();
-            }
+        $contest = $this->getContest();
+        $datum = [
+            'contestId' => $contest->contest_id,
+            'contest' => $contest->getContestSymbol(),
+            'name' => $contest->name,
+        ];
+        $datum['years'] = [];
+        /** @var ContestYearModel $contestYear */
+        foreach ($contest->getContestYears() as $contestYear) {
+            $datum['years'][] = [
+                'year' => $contestYear->year,
+                'active' => $contestYear->isActive(),
+                'begin' => $contestYear->begin()->format('c'),
+                'end' => $contestYear->end()->format('c'),
+            ];
         }
-        return $data;
+        return $datum;
     }
 
     protected function getExpectedParams(): array
@@ -45,8 +52,11 @@ class ContestsWebModel extends WebModel
         return [];
     }
 
+    /**
+     * @throws NotFoundException
+     */
     protected function isAuthorized(): bool
     {
-        return $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, self::class);
+        return $this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getContest());
     }
 }
