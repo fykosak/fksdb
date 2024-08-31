@@ -97,7 +97,6 @@ abstract class TeamForm extends ModelForm
             'cookies' => $this->request->cookies,
             'headers' => $this->request->headers,
             'remoteAddress' => $this->request->remoteAddress,
-            'form' => $values,
             'person' => isset($this->loggedPerson)
                 ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
                 '',
@@ -109,6 +108,20 @@ abstract class TeamForm extends ModelForm
         ]), 'team-app-remote');
         $this->savePersons($team, $form);
         return $team;
+    }
+
+    protected function getPreprocessing(): array
+    {
+        /** @phpstan-ignore-next-line */
+        return [
+            function (array $values, Form $form, ?Model $model): array {
+                Debugger::log(json_encode([
+                    'form' => $values,
+                ]), 'team-app-form');
+                return $values;
+            },
+            ... parent::getPreprocessing()
+        ];
     }
 
     protected function successRedirect(Model $model): void
