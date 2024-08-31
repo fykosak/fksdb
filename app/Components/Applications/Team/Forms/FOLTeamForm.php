@@ -83,7 +83,7 @@ class FOLTeamForm extends TeamForm
             'game_lang' => [
                 'required' => true,
                 'caption' => _('Language of communication'),
-                'description' => _('Preferred language only for communication with the team. The game language can be freely changed during the competition.')
+                'description' => _('Preferred language for communication. The game language can be freely changed during the competition.')
             ],
         ];
     }
