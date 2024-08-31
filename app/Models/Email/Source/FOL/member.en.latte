@@ -1,10 +1,11 @@
 {layout none}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
-{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
-{define subject}{_'Physics Brawl Online - Team Registration'}{/define}
+{var string $detailLink = $control->link('//:Event:Team:detail',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
+
+{define subject}Physics Brawl Online - Team Registration{/define}
 
 <p>
     Hello,<br/>

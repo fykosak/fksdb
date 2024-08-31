@@ -2,10 +2,10 @@
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 
-{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
-{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $detailLink = $control->link('//:Event:Team:detail',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
-{define subject}{'Registrace týmu na Fyziklání Online'}{/define}
+{define subject}Registrace týmu na Fyziklání Online{/define}
 
 <p>Ahoj,<br/>
     byl(a) jsi úspěšně zaregistrován(a) na Fyziklání Online, jsi členem týmu <em>{$model->name}</em>.

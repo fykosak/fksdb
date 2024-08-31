@@ -48,7 +48,7 @@ final class TeamMemberEmail extends TransitionEmailSource
          * @var TeamHolder $holder
          */
         $holder = $params['holder'];
-        $lang = Language::from(Language::EN);//TODO
+        $lang = Language::from($holder->getModel()->game_lang->value);
         $emails = [];
         /** @var TeamMemberModel $member */
         foreach ($holder->getModel()->getMembers() as $member) {
