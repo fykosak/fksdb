@@ -10,7 +10,6 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmailSource;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\Utils\Utils;
@@ -43,6 +42,7 @@ class RecoveryForm extends FormComponent
     /**+
      * @throws BadRequestException
      * @throws BadTypeException
+     * @throws \Throwable
      */
     protected function handleSuccess(Form $form): void
     {
@@ -54,14 +54,17 @@ class RecoveryForm extends FormComponent
             $values = $form->getValues('array');
             $connection->beginTransaction();
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            /** @var AuthTokenModel|null $token */
-            $token = $login->getActiveTokens(AuthTokenType::from(AuthTokenType::RECOVERY))->fetch();
-            if ($token) {
+            if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::Recovery))) {
                 throw new RecoveryExistsException();
             }
 
             $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
-            $token = $this->authTokenService->createToken($login, AuthTokenType::from(AuthTokenType::RECOVERY), $until);
+            $token = $this->authTokenService->createToken(
+                $login,
+                AuthTokenType::from(AuthTokenType::Recovery),
+                new DateTime(),
+                $until
+            );
 
             $person = $login->person;
             if (!$person) {

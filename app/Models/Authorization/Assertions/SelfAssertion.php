@@ -31,7 +31,7 @@ class SelfAssertion implements Assertion
      * @note Grant contest is ignored in this context (i.e. person is context-less).
      * @throws \ReflectionException
      */
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
         /** @var IIdentity $identity */
         [$state, $identity] = $this->userStorage->getState();

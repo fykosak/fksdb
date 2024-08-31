@@ -13,7 +13,6 @@ use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
-use Nette\InvalidStateException;
 
 class TransitionsMachineFactory
 {
@@ -62,6 +61,9 @@ class TransitionsMachineFactory
         return 'transitions.fykosPayment';
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function getTeamMachine(EventModel $event): TeamMachine
     {
         switch ($event->event_type_id) {
@@ -72,7 +74,7 @@ class TransitionsMachineFactory
                 $machine = $this->container->getService('transitions.fol.machine');
                 break;
             default:
-                throw new InvalidStateException();
+                throw new NotImplementedException();
         }
         return $machine; //@phpstan-ignore-line
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Contestants;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -14,15 +14,16 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\AclResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ContestantModel>
+ * @phpstan-extends ModelForm<ContestantModel,array{}>
  */
-final class ContestantForm extends EntityFormComponent
+final class ContestantForm extends ModelForm
 {
     use ReferencedPersonTrait;
 
@@ -55,32 +56,36 @@ final class ContestantForm extends EntityFormComponent
         $form->addComponent($container, self::CONT_CONTESTANT);
     }
 
-    /**
-     * @throws BadRequestException
-     */
-    protected function handleFormSuccess(Form $form): void
-    {
-        $form->getValues(); // trigger RPC
-        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
-        if (isset($this->model)) {
-            $strategy->updateCategory($this->model);
-        } else {
-            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
-            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
-            $person = $referencedId->getModel();
-            $strategy->createContestant($person);
-        }
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Contestant has been updated') : _('Contestant has been created'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
-    }
-
     protected function setDefaults(Form $form): void
     {
         $form->setDefaults([
             self::CONT_CONTESTANT => ['person_id' => $this->model->person_id],
         ]);
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    protected function innerSuccess(array $values, Form $form): ContestantModel
+    {
+        $form->getValues(); // trigger RPC
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        if (isset($this->model)) {
+            return $strategy->updateCategory($this->model);
+        } else {
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            $referencedId = $form[self::CONT_CONTESTANT]['person_id'];//@phpstan-ignore-line
+            $person = $referencedId->getModel();
+            return $strategy->createContestant($person);
+        }
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Contestant has been updated') : _('Contestant has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

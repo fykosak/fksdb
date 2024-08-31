@@ -29,7 +29,7 @@
             <div class="container">
                 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
                 {php $counter++}
-                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                <h2>{FKSDB\Components\Applications\Team\Forms\TeamForm::formatMemberLabel($counter,$member)}</h2>
                 <a class="btn btn-secondary btn-sm"
                    href="{plink :Organizer:Person:detail id=>$member->person_id,contestId=>$member->fyziklani_team->event->event_type->contest_id}"
                 >{_'button.person.detail'}</a>
@@ -37,5 +37,5 @@
             </div>
         </div>
     {/foreach}
-    {include tests from './orgDetail.latte', model:$model}
+    {control tests $model}
 {/block}

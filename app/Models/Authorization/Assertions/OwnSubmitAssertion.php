@@ -22,7 +22,7 @@ class OwnSubmitAssertion implements Assertion
     /**
      * @throws BadTypeException
      */
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
         [$state, $login] = $this->userStorage->getState();
         if (!$state) {
