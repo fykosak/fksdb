@@ -445,11 +445,11 @@ orm:
                 permission: BASIC
             family_name:
                 type: string
-                title: _('Last Name (Family name or Surname)')
+                title: _('Last name (family name or surname)')
                 permission: BASIC
             other_name:
                 type: string
-                title: _('First Name (Given name)')
+                title: _('First name (given name)')
                 permission: BASIC
         links:
             detail:
