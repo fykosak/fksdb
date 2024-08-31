@@ -7,7 +7,12 @@
 
 {define subject}Registrace týmu na Fyziklání Online{/define}
 
-<p>Ahoj,<br/><br/>
+<div style="max-width: 800px; margin: 0 auto; border-bottom: 5px solid #00AE6B; font-family: 'Inter', sans-serif">
+    <a href="https://online.fyziklani.cz/"><img alt="Fyziklání Online"
+                                                src="https://static.fykos.cz/physics-brawl-online/fyziklani_online_cz_logo_green.png"
+                                                style="max-width: 250px; width: 100%;"></a>
+
+    <p>Ahoj,<br/><br/>
     byl(a) jsi úspěšně zaregistrován(a) na Fyziklání Online, jsi členem týmu <em>{$model->name}</em>.
 </p>
 <p>
@@ -15,12 +20,19 @@
     do {$model->event->registration_end|date:'d.m.Y, H:i'} v sekci
     <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
     nebo na přímém editovacím odkazu níže:<br/>
-    <a href="{$editLink}">{$editLink}</a>.
+    <a href="{$editLink}">{$editLink}</a>.<br/>
+    Informace, které zadáš do přihlášky, budou v této formě zaneseny na diplomu týmu, doporučujeme je proto pečlivě zkontrolovat.
 </p>
 <p>
-    Další instrukce a přihlašovací údaje do herního systému obdržíš před soutěží.
+    Další instrukce a přihlašovací údaje do herního systému obdržíš před soutěží. Více informací o soutěži a pravidla naleznete na stránce <a href="https://online.fyziklani.cz/">Fyziklání Online</a>.
 </p>
 <p>
     S pozdravem<br/>
     FKSDB
 </p>
+<br>
+<a style="color: #00ae6b;" href="mailto:online@fyziklani.cz">online@fyziklani.cz</a><br>
+<a href="https://www.facebook.com/FYKOS" style="color: #00ae6b;" target="_blank">FB/FYKOS</a><br>
+<a href="https://www.instagram.com/fykosak/" style="color: #00ae6b;" target="_blank">@fykosak</a>
+</p>
+</div>

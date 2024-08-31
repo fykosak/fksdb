@@ -7,6 +7,10 @@
 
 {define subject}Physics Brawl Online - Team Registration{/define}
 
+<div style="max-width: 800px; margin: 0 auto; border-bottom: 5px solid #00AE6B; font-family: 'Inter', sans-serif">
+    <a href="https://physicsbrawl.org/"><img alt="PhysicsBrawl Online"
+                                                src="https://static.fykos.cz/physics-brawl-online/fyziklani_online_en_logo_green.png"
+                                                style="max-width: 250px; width: 100%;"></a>
 <p>
     Hello,<br/><br/>
     You have been successfully registered for Physics Brawl Online. You are now a member of the team
@@ -17,12 +21,19 @@
     until {$model->event->registration_end|date:'M d, Y; H:i, P'} after logging in in
     <a n:href="//:Profile:MyApplications:default">My Applications</a>
     or via the link below:<br/>
-    <a href="{$editLink}">{$editLink}</a>.
+    <a href="{$editLink}">{$editLink}</a>.<br/>
+    Please note that the information you enter into the application will be included on your team's certificate. We recommend checking it carefully.
 </p>
 <p>
-    More instructions and the game system credentials will be sent to you before the competition.
+    More instructions and the game system credentials will be sent to you before the competition. Information about the competition and rules are available at the <a href="https://physicsbrawl.org/">Physics Brawl Online website</a>.
 </p>
 <p>
     Kind regards,<br/>
     FKSDB
 </p>
+    <br>
+    <a style="color: #00ae6b;" href="mailto:online@physicsbrawl.org">online@physicsbrawl.org</a><br>
+    <a href="https://www.facebook.com/FYKOS" style="color: #00ae6b;" target="_blank">FB/FYKOS</a><br>
+    <a href="https://www.instagram.com/fykosak/" style="color: #00ae6b;" target="_blank">@fykosak</a>
+    </p>
+</div>
