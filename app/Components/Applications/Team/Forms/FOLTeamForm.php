@@ -53,10 +53,11 @@ class FOLTeamForm extends TeamForm
             'person_info' => [
                 'email' => [
                     'required' => true,
+                    'description' => _('Required for communication'),
                 ],
                 'born' => [
                     'required' => true,
-                    'description' => _('For certificates'),
+                    'description' => _('Required for certificates'),
                 ],
             ],
             'person_history' => [
@@ -65,7 +66,7 @@ class FOLTeamForm extends TeamForm
                 ],
                 'study_year_new' => [
                     'required' => true,
-                    'description' => _('For category calculation.'),
+                    'description' => _('Required for category calculation'),
                     'flag' => StudyYearNewColumnFactory::FLAG_ALL,
                 ],
             ],
@@ -79,7 +80,12 @@ class FOLTeamForm extends TeamForm
     {
         return [
             'name' => ['required' => true],
-            'game_lang' => ['required' => true, 'caption' => _('Language of communication')],
+            'game_lang' => [
+                'required' => true,
+                'caption' => _('Language of communication'),
+                'description' => _('Preferred language for communication.
+                    The game language can be freely changed during the competition.')
+            ],
         ];
     }
 }

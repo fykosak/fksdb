@@ -32,6 +32,9 @@ final class TeamMemberEmail extends TransitionEmailSource
         $this->authTokenService = $authTokenService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(PersonModel $person, TeamHolder $holder): AuthTokenModel
     {
         return $this->authTokenService->createEventToken(
@@ -40,13 +43,20 @@ final class TeamMemberEmail extends TransitionEmailSource
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         /**
          * @var TeamHolder $holder
          */
         $holder = $params['holder'];
-        $lang = Language::from(Language::EN);//TODO
+        $lang = Language::from($holder->getModel()->game_lang->value);
+        $sender = 'Physics Brawl Online <online@physicsbrawl.org>';
+        if ($lang == 'cs') {
+            $sender = 'Fyziklání Online <online@fyziklani.cz>';
+        }
         $emails = [];
         /** @var TeamMemberModel $member */
         foreach ($holder->getModel()->getMembers() as $member) {
@@ -60,7 +70,7 @@ final class TeamMemberEmail extends TransitionEmailSource
                 ],
                 'data' => [
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
-                    'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
+                    'sender' => $sender,
                     'recipient_person_id' => $member->person_id,
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::FOL),
                     'lang' => $lang,

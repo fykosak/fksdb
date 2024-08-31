@@ -68,7 +68,7 @@
         {php $counter++}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                <h2>{FKSDB\Components\Applications\Team\Forms\TeamForm::formatMemberLabel($counter,$member)}</h2>
                 <a
                         class="btn btn-secondary btn-sm"
                         href="{plink :Organizer:Person:detail id=>$member->person_id,contestId=>$member->fyziklani_team->event->event_type->contest_id}"

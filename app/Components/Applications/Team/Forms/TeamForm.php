@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -25,6 +26,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
+use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -47,34 +49,37 @@ abstract class TeamForm extends ModelForm
     protected EventModel $event;
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
-    protected bool $isOrganizer;
     protected Request $request;
+    protected ?PersonModel $loggedPerson;
 
     public function __construct(
-        TeamMachine $machine,
-        EventModel $event,
         Container $container,
         ?Model $model,
-        bool $isOrganizer
+        EventModel $event,
+        ?PersonModel $loggedPerson
     ) {
-        parent::__construct($container, $model);
-        $this->machine = $machine;
         $this->event = $event;
-        $this->isOrganizer = $isOrganizer;
+        parent::__construct($container, $model);
+        $this->loggedPerson = $loggedPerson;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     final public function injectPrimary(
         Request $request,
         TeamService2 $teamService,
         TeamMemberService $teamMemberService,
         ReflectionFactory $reflectionFormFactory,
-        ReferencedPersonFactory $referencedPersonFactory
+        ReferencedPersonFactory $referencedPersonFactory,
+        TransitionsMachineFactory $machineFactory
     ): void {
         $this->reflectionFormFactory = $reflectionFormFactory;
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->teamService = $teamService;
         $this->teamMemberService = $teamMemberService;
         $this->request = $request;
+        $this->machine = $machineFactory->getTeamMachine($this->event);
     }
 
     /**
@@ -82,21 +87,41 @@ abstract class TeamForm extends ModelForm
      */
     final protected function innerSuccess(array $values, Form $form): TeamModel2
     {
-        if (!$this->isOrganizer) {
-            Debugger::log(json_encode([
-                'cookies' => $this->request->cookies,
-                'headers' => $this->request->headers,
-                'remoteAddress' => $this->request->remoteAddress,
-            ]), 'team-app-remote');
-        }
         $team = $this->teamService->storeModel(
             array_merge($values['team'], [
                 'event_id' => $this->event->event_id,
             ]),
             $this->model
         );
+        Debugger::log(json_encode([
+            'cookies' => $this->request->cookies,
+            'headers' => $this->request->headers,
+            'remoteAddress' => $this->request->remoteAddress,
+            'person' => isset($this->loggedPerson)
+                ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
+                '',
+            'team' => [
+                'fyziklani_team_id' => $team->fyziklani_team_id,
+                'name' => $team->name,
+                'action' => isset($this->model) ? 'updated' : 'created',
+            ],
+        ]), 'team-app-remote');
         $this->savePersons($team, $form);
         return $team;
+    }
+
+    protected function getPreprocessing(): array
+    {
+        /** @phpstan-ignore-next-line */
+        return [
+            function (array $values, Form $form, ?Model $model): array {
+                Debugger::log(json_encode([
+                    'form' => $values,
+                ]), 'team-app-form');
+                return $values;
+            },
+            ... parent::getPreprocessing()
+        ];
     }
 
     protected function successRedirect(Model $model): void

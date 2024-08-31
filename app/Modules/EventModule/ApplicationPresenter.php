@@ -14,6 +14,7 @@ use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
+use FKSDB\Models\Authorization\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -70,15 +71,11 @@ final class ApplicationPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        if ($event->event_type_id === 10) {
-            return $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event);
-        }
-        return
-            $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'create', $event)
-            );
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -152,10 +149,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
     }
 
     /**
@@ -168,11 +162,6 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderEdit(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getModelResource(),
-            'organizer',
-            $this->getEvent()
-        );
         $this->template->model = $this->getEntity();
     }
 

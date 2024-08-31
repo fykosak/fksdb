@@ -5,7 +5,7 @@
     {if count($transitions)}
         {foreach $transitions as $transition}
             {var string $className = 'btn btn-outline-' . $transition->behaviorType->value}
-            <a n:href="transition! $transition->getId()" class="{$className}">{$transition->label()->toHtml()}</a>
+            <a n:href="transition! $transition->getId()" class="{$className}">{$transition->label->toHtml()}</a>
         {/foreach}
     {elseif $showInfo}
         {FKSDB\Models\UI\NoTransitionBadge::getHtml()}
