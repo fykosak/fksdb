@@ -43,23 +43,17 @@ final class RankingStrategy
 
     /**
      * @throws NotClosedTeamException
+     * @throws \Throwable
      */
     public function __invoke(?TeamCategory $category = null): Html
     {
         $connection = $this->teamService->explorer->getConnection();
-        try {
-            $connection->beginTransaction();
+        return $connection->transaction(function () use ($category): Html {
             $teams = $this->getAllTeams($category);
             $teamsData = $this->getTeamsStats($teams);
             usort($teamsData, self::getSortFunction());
-            $log = $this->saveResults($teamsData, is_null($category));
-            $connection->commit();
-        } catch (NoMemberException $exception) {
-            $connection->rollBack();
-            throw $exception;
-        }
-
-        return $log;
+            return $this->saveResults($teamsData, is_null($category));
+        });
     }
 
     /**

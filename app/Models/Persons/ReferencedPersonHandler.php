@@ -111,21 +111,14 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
+     * @throws \Throwable
      * @phpstan-param array<string,array<string,mixed>> $data
      */
     private function innerStore(PersonModel $person, array $data): void
     {
         $connection = $this->personService->explorer->getConnection();
-        try {
-            $outerTransaction = false;
-
-            if (!$connection->getPdo()->inTransaction()) {
-                $connection->beginTransaction();
-            } else {
-                $outerTransaction = true;
-            }
-            $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
-
+        $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
+        $connection->transaction(function () use ($person, $data): void {
             if (isset($data['person'])) {
                 /** @phpstan-ignore-next-line */
                 $this->storePerson($person, (array)$data['person']);
@@ -157,15 +150,7 @@ class ReferencedPersonHandler extends ReferencedHandler
             if (isset($data['person_schedule'])) {
                 $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event);
             }
-            if (!$outerTransaction) {
-                $connection->commit();
-            }
-        } catch (ModelDataConflictException | StorageException | \PDOException $exception) {
-            if (!$outerTransaction) {
-                $connection->rollBack();
-            }
-            throw $exception;
-        }
+        });
     }
 
     /**

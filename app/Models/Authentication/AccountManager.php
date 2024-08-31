@@ -41,6 +41,7 @@ class AccountManager
      * Creates login and invites user to set up the account.
      * @throws BadTypeException
      * @throws \Exception
+     * @throws \Throwable
      */
     public function sendLoginWithInvitation(PersonModel $person, Language $lang): LoginModel
     {
@@ -49,7 +50,8 @@ class AccountManager
         $until = DateTime::from($this->invitationExpiration);
         $token = $this->authTokenService->createToken(
             $login,
-            AuthTokenType::from(AuthTokenType::INITIAL_LOGIN),
+            AuthTokenType::from(AuthTokenType::InitialLogin),
+            new DateTime(),
             $until
         );
         $email = new LoginInvitationEmailSource($this->container);
