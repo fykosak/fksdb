@@ -40,7 +40,7 @@ final class SubmitsGrid extends BaseGrid
                 fn(SubmitModel $submit) => $submit->raw_points . '/'
                     . $submit->calc_points . ' ' . _('of') . ' '
                     . $submit->task->points,
-                new Title(null, _('Points'))
+                new Title(null, _('Points (raw/calc of total)'))
             ),
             'points'
         );

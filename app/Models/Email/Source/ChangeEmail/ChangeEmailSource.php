@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
+use Nette\Utils\DateTime;
 
 /**
  * @phpstan-extends EmailSource<array{
@@ -35,6 +36,7 @@ class ChangeEmailSource extends EmailSource
 
     /**
      * @throws ChangeInProgressException
+     * @throws \Throwable
      */
     protected function getSource(array $params): array
     {
@@ -44,8 +46,9 @@ class ChangeEmailSource extends EmailSource
 
         $token = $this->tokenService->createToken(
             $person->getLogin(),
-            AuthTokenType::from(AuthTokenType::CHANGE_EMAIL),
-            (new \DateTime())->modify('+20 minutes'),
+            AuthTokenType::from(AuthTokenType::ChangeEmail),
+            new DateTime(),
+            (new DateTime())->modify('+20 minutes'),
             $newEmail
         );
         $oldData = [

@@ -39,28 +39,31 @@ class SQLResultsCache
     /**
      * @throws BadRequestException
      * @throws \PDOException
+     * @throws \Throwable
      */
     public function recalculate(ContestYearModel $contestYear): void
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $contestYear);
-        $this->submitService->explorer->getConnection()->beginTransaction();
-        /** @var TaskModel $task */
-        foreach ($contestYear->getTasks() as $task) {
-            /** @var SubmitModel $submit */
-            foreach ($task->getSubmits() as $submit) {
-                $this->submitService->storeModel(
-                    [
-                        'calc_points' => $evaluationStrategy->getSubmitPoints($submit),
-                    ],
-                    $submit
-                );
-            }
-        }
-        $this->submitService->explorer->getConnection()->commit();
+        $this->submitService->explorer->getConnection()
+            ->transaction(function () use ($evaluationStrategy, $contestYear): void {
+                /** @var TaskModel $task */
+                foreach ($contestYear->getTasks() as $task) {
+                    /** @var SubmitModel $submit */
+                    foreach ($task->getSubmits() as $submit) {
+                        $this->submitService->storeModel(
+                            [
+                                'calc_points' => $evaluationStrategy->getSubmitPoints($submit),
+                            ],
+                            $submit
+                        );
+                    }
+                }
+            });
     }
 
     /**
      * @throws BadRequestException
+     * @throws \Throwable
      * Calculate points from form-based tasks, such as quizzes.
      */
     public function calculateQuizPoints(ContestYearModel $contestYear, int $series): void
