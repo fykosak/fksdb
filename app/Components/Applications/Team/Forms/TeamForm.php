@@ -87,20 +87,25 @@ abstract class TeamForm extends ModelForm
      */
     final protected function innerSuccess(array $values, Form $form): TeamModel2
     {
-            Debugger::log(json_encode([
-                'cookies' => $this->request->cookies,
-                'headers' => $this->request->headers,
-                'remoteAddress' => $this->request->remoteAddress,
-                'person' => isset($this->loggedPerson)
-                    ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
-                    '',
-            ]), 'team-app-remote');
         $team = $this->teamService->storeModel(
             array_merge($values['team'], [
                 'event_id' => $this->event->event_id,
             ]),
             $this->model
         );
+        Debugger::log(json_encode([
+            'cookies' => $this->request->cookies,
+            'headers' => $this->request->headers,
+            'remoteAddress' => $this->request->remoteAddress,
+            'person' => isset($this->loggedPerson)
+                ? ($this->loggedPerson->person_id . ' (' . $this->loggedPerson->getFullName() . ')') :
+                '',
+            'team' => [
+                'fyziklani_team_id' => $team->fyziklani_team_id,
+                'name' => $team->name,
+                'action' => isset($this->model) ? 'updated' : 'created',
+            ],
+        ]), 'team-app-remote');
         $this->savePersons($team, $form);
         return $team;
     }
