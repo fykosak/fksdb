@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Source\FOF\Transition;
 
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -35,12 +34,9 @@ final class FOFTransitionEmail extends TransitionEmailSource
 
     protected function createToken(PersonModel $person, TeamModel2 $teamModel): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $person->getLogin() ?? $this->loginService->createLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $teamModel->event->registration_end,
-            null,
-            true
+            $teamModel->event
         );
     }
 

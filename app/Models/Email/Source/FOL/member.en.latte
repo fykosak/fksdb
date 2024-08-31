@@ -1,14 +1,19 @@
 {layout none}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-{var string $detailLink = $control->link('//:Event:Team:detail',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
-{var string $editLink = $control->link('//:Event:Team:edit',['id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
-{define subject}{_'Physics Brawl Online Team Registration'}{/define}
+{var string $detailLink = $control->link('//:Event:Team:detail',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
+{var string $editLink = $control->link('//:Event:Team:edit',['eventId'=>$model->event_id,'id'=>$model->fyziklani_team_id,'at' => $token->token])}
 
+{define subject}Physics Brawl Online - Team Registration{/define}
+
+<div style="max-width: 800px; margin: 0 auto; border-bottom: 5px solid #00AE6B; font-family: 'Inter', sans-serif">
+    <a href="https://physicsbrawl.org/"><img alt="PhysicsBrawl Online"
+                                                src="https://static.fykos.cz/physics-brawl-online/fyziklani_online_en_logo_green.png"
+                                                style="max-width: 250px; width: 100%;"></a>
 <p>
-    Hello,<br/>
-    You have been successfully registered for {$model->event->name}. You are now a member of the team
+    Hello,<br/><br/>
+    You have been successfully registered for Physics Brawl Online. You are now a member of the team
     <em>{$model->name}</em>.
 </p>
 <p>
@@ -16,9 +21,19 @@
     until {$model->event->registration_end|date:'M d, Y; H:i, P'} after logging in in
     <a n:href="//:Profile:MyApplications:default">My Applications</a>
     or via the link below:<br/>
-    <a href="{$editLink}">{$editLink}</a>.
+    <a href="{$editLink}">{$editLink}</a>.<br/>
+    Please note that the information you enter into the application will be included on your team's certificate. We recommend checking it carefully.
 </p>
 <p>
-    With kind regards,<br/>
+    More instructions and the game system credentials will be sent to you before the competition. Information about the competition and rules are available at the <a href="https://physicsbrawl.org/">Physics Brawl Online website</a>.
+</p>
+<p>
+    Kind regards,<br>
     FKSDB
 </p>
+<p>
+    <a style="color: #00ae6b;" href="mailto:online@physicsbrawl.org">online@physicsbrawl.org</a><br>
+    <a href="https://www.facebook.com/FYKOS" style="color: #00ae6b;" target="_blank">FB/FYKOS</a><br>
+    <a href="https://www.instagram.com/fykosak/" style="color: #00ae6b;" target="_blank">@fykosak</a>
+</p>
+</div>

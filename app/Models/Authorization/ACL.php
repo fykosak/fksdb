@@ -342,8 +342,8 @@ final class ACL
             Models\PaymentModel::RESOURCE_ID,
             'edit',
             new LogicAnd(
-                $selfAssertion, // @phpstan-ignore-line
-                new Authorization\Assertions\PaymentEditableAssertion() // @phpstan-ignore-line
+                $selfAssertion,
+                new Authorization\Assertions\PaymentEditableAssertion()
             )
         );
         $permission->allow(
