@@ -3,11 +3,16 @@
 {block content}
     <ul>
         {if $lang->value === 'cs'}
-            <li>Vyplněním této přihlášky přihlásíte tým na soutěž Fyziklání Online.
-                Každému členu týmu přijde e-mail s odkazem na úpravu přihlášky.
+            <li>
+                Vyplněním této přihlášky přihlásíte tým na soutěž <strong>Fyziklání Online</strong>.
+                Každý člen týmu je e-mailem informován o přihlášení a může přihlášku upravit.
             </li>
             <li>
-                Informace, jak se přihlásit do hry, vám budou zaslány až během několika dní před soutěží.
+                Při výběru školy zadejte několik prvních písmen a pokuste se ji najít v rozbalovací nabídce.
+                Pokud školu nenajdete, můžete ji pomocí <a href={plink :Core:School:create}>formuláře</a> vytvořit.
+            </li>
+            <li>
+                Informace, jak se přihlásit do herního systému, vám budou zaslány až během několika dní před soutěží.
             </li>
             <li>
                 Další informace a pravidla naleznete na stránce <a href="https://online.fyziklani.cz/">Fyziklání
@@ -17,10 +22,15 @@
                 Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
             </li>
         {else}
-            <li>You can apply a team for <strong>Physics Brawl Online</strong> using this form.
-                Each member of the team will receive an e-mail with a link to edit the application.
+            <li>
+                By filling out this application, you will register the team for the <strong>Physics Brawl Online</strong>.
+                Each team member will be notified by email about the registration and can modify this application.
             </li>
-            <li>When choosing your school, type a few first letters and try to find it in the dropdown menu. If you have trouble finding your school, you can create it in the form.</li>
+            <li>
+                When choosing your school, type the first few letters and try to find it in the dropdown menu.
+                If you have trouble finding your school, you can create it in another
+                <a href={plink :Core:School:create}>form</a>.
+            </li>
             <li>
                 Information on how to log into the game system will be sent to you a few days before the competition.
             </li>
