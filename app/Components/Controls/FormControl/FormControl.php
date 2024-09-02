@@ -29,9 +29,11 @@ class FormControl extends BaseComponent
     final public function render(): void
     {
         if (!isset($this->template->mainContainer)) {
-            $this->template->form = $this->getComponent('form');//TODO
+            $this->template->form = $this->getComponent('form');
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte', [
+            'lang' => $this->translator->lang
+        ]);
     }
 
     /**

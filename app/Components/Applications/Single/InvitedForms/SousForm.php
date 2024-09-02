@@ -12,6 +12,7 @@ use FKSDB\Models\Expressions\Logic\LogicOr;
 use FKSDB\Models\Expressions\Logic\Not;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole;
+use Fykosak\Utils\Localization\LocalizedString;
 
 class SousForm extends InvitationApplicationForm
 {
@@ -51,7 +52,10 @@ class SousForm extends InvitationApplicationForm
             'person_info' => [
                 'born_id' => [
                     'required' => $reqCondition($holder),
-                    'description' => _('For the insurance company.'),
+                    'reason' => new LocalizedString([
+                        'cs' => 'Kvůli zdravotní pojišťovně',
+                        'en' => 'For the insurance company.',
+                    ])
                 ],
                 'birthplace' => [
                     'required' => isset($holder) ? (new State('participated'))($holder) : true,
@@ -69,7 +73,6 @@ class SousForm extends InvitationApplicationForm
             'person_history' => [
                 'school_id' => [
                     'required' => isset($holder) ? (new State('participated'))($holder) : true,
-                    'description' => _('If you cannot find your school, e-mail the webmaster.'),
                 ],
             ],
             'person_schedule' => [
