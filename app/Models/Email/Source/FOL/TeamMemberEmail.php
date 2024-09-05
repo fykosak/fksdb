@@ -51,6 +51,10 @@ final class TeamMemberEmail extends TransitionEmailSource
          */
         $holder = $params['holder'];
         $lang = Language::from($holder->getModel()->game_lang->value);
+        $sender = 'Physics Brawl Online <online@physicsbrawl.org>';
+        if ($lang == 'cs') {
+            $sender = 'Fyziklání Online <online@fyziklani.cz>';
+        }
         $emails = [];
         /** @var TeamMemberModel $member */
         foreach ($holder->getModel()->getMembers() as $member) {
@@ -65,7 +69,7 @@ final class TeamMemberEmail extends TransitionEmailSource
                 'lang' => $lang,
                 'data' => [
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
-                    'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
+                    'sender' => $sender,
                     'recipient_person_id' => $member->person_id,
                 ],
             ];
