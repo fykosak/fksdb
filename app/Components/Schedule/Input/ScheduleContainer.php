@@ -96,7 +96,7 @@ class ScheduleContainer extends ContainerWithOptions
             $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
-                $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
+                $field = new ScheduleGroupField($group, $this->translator);
                 if ($this->required) {
                     $field->setRequired(_('Field %label is required.'));
                 }

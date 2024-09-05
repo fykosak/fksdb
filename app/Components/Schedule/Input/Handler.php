@@ -77,7 +77,7 @@ class Handler
             if (!$item->available) {
                 throw new ScheduleException(
                     $group,
-                    sprintf(_('Item with Id %s is not available'), $item->name->get($this->translator->lang))
+                    sprintf(_('Item with Id %s is not available'), $this->translator->getVariant($item->name))
                 );
             }
             // create
@@ -87,7 +87,7 @@ class Handler
                         $group,
                         sprintf(
                             _('Schedule "%s" is not allowed at this time'),
-                            $group->name->get($this->translator->lang)
+                            $this->translator->getVariant($group->name)
                         )
                     );
                 }
@@ -99,14 +99,14 @@ class Handler
                     $group,
                     sprintf(
                         _('Schedule "%s" is not available at this time'),
-                        $group->name->get($this->translator->lang)
+                        $this->translator->getVariant($group->name)
                     )
                 );
             } elseif (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
             if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
 
             $this->service->storeModel(

@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Security\Resource;
 
 /**
@@ -31,11 +31,14 @@ final class PersonScheduleModel extends Model implements Resource
         return $schedulePayment ? $schedulePayment->payment : null;
     }
 
-    public function getLabel(Language $lang): string
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function getLabel(GettextTranslator $translator): string
     {
         return $this->person->getFullName() . ': '
-            . $this->schedule_item->schedule_group->name->get($lang->value) . ' - '
-            . $this->schedule_item->name->get($lang->value);
+            . $translator->getVariant($this->schedule_item->schedule_group->name) . ' - '
+            . $translator->getVariant($this->schedule_item->name);
     }
 
     public function isPaid(): bool

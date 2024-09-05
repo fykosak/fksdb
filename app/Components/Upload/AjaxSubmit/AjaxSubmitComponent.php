@@ -130,7 +130,7 @@ class AjaxSubmitComponent extends AjaxComponent
                 new Message(
                     \sprintf(
                         _('Uploading of task %s cancelled.'),
-                        $submit->task->getFullLabel(Language::from($this->translator->lang))
+                        $submit->task->getFullLabel($this->translator)
                     ),
                     Message::LVL_ERROR
                 )

@@ -75,7 +75,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     protected function getSubTitle(): ?string
     {
-        return $this->getEvent()->getName()->getText($this->translator->lang); // @phpstan-ignore-line
+        return $this->translator->getVariant($this->getEvent()->getName()); // @phpstan-ignore-line
     }
 
     /**

@@ -23,6 +23,6 @@ class LocalizedStringColumnFactory extends AbstractColumnFactory
         if (!$langMap instanceof LangMap) {
             throw new BadTypeException(LangMap::class, $langMap);
         }
-        return Html::el('span')->addText($langMap->get($this->translator->lang));
+        return Html::el('span')->addText($this->translator->getVariant($langMap));
     }
 }

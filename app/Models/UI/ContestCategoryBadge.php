@@ -17,6 +17,6 @@ class ContestCategoryBadge
     {
         return Html::el('span')->addAttributes(
             ['class' => 'me-1 badge bg-category-' . mb_strtolower(str_replace('_', '-', $contestCategory->label))]
-        )->addText($contestCategory->name->get($translator->lang));
+        )->addText($translator->getVariant($contestCategory->name));
     }
 }
