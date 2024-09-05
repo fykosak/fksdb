@@ -18,7 +18,6 @@ final class TaskContributionModel extends Model
 {
 
     /**
-     * @param string $key
      * @return TaskContributionType|mixed|null
      * @throws \ReflectionException
      */
@@ -27,7 +26,7 @@ final class TaskContributionModel extends Model
         $value = parent::__get($key);
         switch ($key) {
             case 'type':
-                $value = TaskContributionType::tryFrom($value);
+                $value = TaskContributionType::from($value);
                 break;
         }
         return $value;

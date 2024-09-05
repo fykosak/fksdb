@@ -91,7 +91,7 @@ final class SubmitModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'source':
-                $value = SubmitSource::tryFrom($value);
+                $value = SubmitSource::from($value);
                 break;
         }
         return $value;
