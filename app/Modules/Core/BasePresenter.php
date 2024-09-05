@@ -25,6 +25,7 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -163,6 +164,17 @@ abstract class BasePresenter extends Presenter
                 return false;
         }
         return false;
+    }
+
+    /**
+     * @param string|LocalizedString $message
+     */
+    public function flashMessage($message, string $type = 'info'): \stdClass
+    {
+        if ($message instanceof LocalizedString) {
+            $message = $message->getText($this->translator->lang);
+        }
+        return parent::flashMessage($message, $type);
     }
 
     /**

@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd3cf07904272b5397fed659fe19d4bc",
+    "content-hash": "734cf707f273ae4a1d1a718d0fcab5e2",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
-            "version": "v0.1.4",
+            "version": "v0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-fks-utils.git",
-                "reference": "73282c116c5abfa0f745d10105d29d5dc2694c3f"
+                "reference": "2f84dd9bf3ebb9bcecf6c014f4baf3e7863414c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/73282c116c5abfa0f745d10105d29d5dc2694c3f",
-                "reference": "73282c116c5abfa0f745d10105d29d5dc2694c3f",
+                "url": "https://api.github.com/repos/fykosak/nette-fks-utils/zipball/2f84dd9bf3ebb9bcecf6c014f4baf3e7863414c6",
+                "reference": "2f84dd9bf3ebb9bcecf6c014f4baf3e7863414c6",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-fks-utils/issues",
-                "source": "https://github.com/fykosak/nette-fks-utils/tree/v0.1.4"
+                "source": "https://github.com/fykosak/nette-fks-utils/tree/v0.1.5"
             },
-            "time": "2024-02-07T20:32:51+00:00"
+            "time": "2024-09-03T20:16:33+00:00"
         },
         {
             "name": "fykosak/nette-frontend-component",
@@ -2909,5 +2909,5 @@
         "ext-xsl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.1.0"
 }

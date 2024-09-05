@@ -10,9 +10,9 @@ use FKSDB\Models\ORM\Models\PersonEmailPreferenceOption;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonEmailPreferenceService;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * @phpstan-extends ModelForm<PersonModel,array<string,bool>>
@@ -40,7 +40,6 @@ class EmailPreferenceForm extends ModelForm
         foreach (PersonEmailPreferenceOption::cases() as $case) {
             /** @var PersonEmailPreferenceModel|null $preference */
             $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
-            Debugger::barDump($preference);
             $defaults[$case->value] = $preference ? $preference->value : true;
         }
         $form->setDefaults($defaults);
@@ -63,7 +62,11 @@ class EmailPreferenceForm extends ModelForm
 
     protected function successRedirect(Model $model): void
     {
-        $this->getPresenter()->flashMessage(_('Preferences saved'), Message::LVL_SUCCESS);
+        /** @phpstan-ignore-next-line */
+        $this->getPresenter()->flashMessage(new LocalizedString([
+            'en' => 'Preferences saved',
+            'cs' => 'Preference byli uloženy',
+        ]), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 }

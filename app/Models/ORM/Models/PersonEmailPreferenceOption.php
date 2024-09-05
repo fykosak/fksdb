@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -34,15 +35,24 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
         throw new InvalidStateException();
     }
 
-    public function description(): string
+    /**
+     * @phpstan-return LangMap<'cs'|'en',string>
+     */
+    public function description(): LangMap
     {
         switch ($this->value) {
             case self::SpamContest:
-                return _('Spam zo semináru a akcií FYKOSu a Výfuku');
+                return new LangMap([
+                    'cs' => 'Spam zo semináru a akcií FYKOSu a Výfuku',
+                ]);
             case self::SpamMff:
-                return _('Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK');
+                return new LangMap([
+                    'cs' => 'Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK',
+                ]);
             case self::SpamOther:
-                return _('Spam od našich partnerov a sponzorov');
+                return new LangMap([
+                    'cs' => 'Spam od našich partnerov a sponzorov',
+                ]);
         }
         throw new InvalidStateException();
     }
