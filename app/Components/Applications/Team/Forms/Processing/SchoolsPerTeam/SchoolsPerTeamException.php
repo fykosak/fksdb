@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Team\Forms\Processing\SchoolsPerTeam;
 
+use FKSDB\Components\EntityForms\Processing\ProcessingException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use Nette\InvalidStateException;
 
-class SchoolsPerTeamException extends InvalidStateException
+class SchoolsPerTeamException extends ProcessingException
 {
     /**
      * @phpstan-param SchoolModel[] $schools
