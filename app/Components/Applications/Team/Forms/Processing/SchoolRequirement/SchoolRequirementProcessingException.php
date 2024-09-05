@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Team\Forms\Processing\SchoolRequirement;
 
+use FKSDB\Components\EntityForms\Processing\ProcessingException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
-use Nette\InvalidStateException;
 
-class SchoolRequirementProcessingException extends InvalidStateException
+class SchoolRequirementProcessingException extends ProcessingException
 {
     public function __construct(StudyYear $studyYear, PersonModel $person, \Throwable $previous = null)
     {
