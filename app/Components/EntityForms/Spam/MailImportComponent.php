@@ -57,14 +57,13 @@ final class MailImportComponent extends BaseComponent
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-            $this->connection->beginTransaction();
-            foreach ($parser as $data) {
-                $this->personMailService->storeModel($data);
-            }
-            $this->connection->commit();
+            $this->connection->transaction(function () use ($parser): void {
+                foreach ($parser as $data) {
+                    $this->personMailService->storeModel($data);
+                }
+            });
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
         } catch (\Throwable $exception) {
-            $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
         }
         $this->getPresenter()->redirect('this');

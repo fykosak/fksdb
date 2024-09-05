@@ -44,7 +44,7 @@ class TransitionButtonsComponent extends BaseComponent
         $holder = $this->machine->createHolder($this->model);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte', [
             'showInfo' => $showInfo,
-            'transitions' => Machine::filterAvailable($this->machine->transitions, $holder),
+            'transitions' => $this->machine->getTransitions()->filterAvailable($holder)->toArray(),
             'holder' => $holder,
         ]);
     }
@@ -56,8 +56,8 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $holder = $this->machine->createHolder($this->model);
         try {
-            $transition = Machine::selectTransition(Machine::filterById($this->machine->transitions, $transitionName));
-            $this->machine->execute($transition, $holder);
+            $transition = $this->machine->getTransitions()->filterById($transitionName)->select();
+            $transition->execute($holder);
             $this->getPresenter()->flashMessage(
                 $transition->getSuccessLabel(),
                 Message::LVL_SUCCESS
@@ -70,7 +70,7 @@ class TransitionButtonsComponent extends BaseComponent
         ) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'transitions');
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');

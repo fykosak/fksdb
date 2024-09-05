@@ -37,8 +37,6 @@ final class TeamState extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::Pending:
                 return new self(self::Applied);
-            case self::Participated:
-                return new self(self::Participated);
             default:
                 return $this;
         }

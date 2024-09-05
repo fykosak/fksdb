@@ -4,29 +4,29 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Contestants;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ContestantModel>
+ * @phpstan-extends ModelForm<ContestantModel,array{}>
  */
-final class RegisterContestantForm extends EntityFormComponent
+final class RegisterContestantForm extends ModelForm
 {
     use ReferencedPersonTrait;
 
@@ -74,19 +74,28 @@ final class RegisterContestantForm extends EntityFormComponent
         $form->addProtection(_('The form has expired. Please send it again.'));
     }
 
+    protected function setDefaults(Form $form): void
+    {
+        $form->setDefaults([
+            self::CONT_CONTESTANT => [
+                'person_id' => isset($this->person) ? $this->person->person_id
+                    : ReferencedId::VALUE_PROMISE,
+            ],
+        ]);
+    }
+
     /**
-     * @throws BadTypeException
      * @throws BadRequestException
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function innerSuccess(array $values, Form $form): ContestantModel
     {
-        $form->getValues('array');//trigger RPC
+        $form->getValues();//trigger RPC
         /** @phpstan-var ReferencedId<PersonModel> $referencedId */
         $referencedId = $form[self::CONT_CONTESTANT]['person_id']; //@phpstan-ignore-line
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
         $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
-        $strategy->createContestant($person);
+        $contestant = $strategy->createContestant($person);
 
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
@@ -100,16 +109,11 @@ final class RegisterContestantForm extends EntityFormComponent
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
             }
         }
-        $this->getPresenter()->redirect(':Core:Dispatch:default');
+        return $contestant;
     }
 
-    protected function setDefaults(Form $form): void
+    protected function successRedirect(Model $model): void
     {
-        $form->setDefaults([
-            self::CONT_CONTESTANT => [
-                'person_id' => isset($this->person) ? $this->person->person_id
-                    : ReferencedId::VALUE_PROMISE,
-            ],
-        ]);
+        $this->getPresenter()->redirect(':Core:Dispatch:default');
     }
 }

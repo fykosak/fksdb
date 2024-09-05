@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\SeriesChooserComponent;
+use FKSDB\Components\Choosers\SeriesChooserComponent;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 

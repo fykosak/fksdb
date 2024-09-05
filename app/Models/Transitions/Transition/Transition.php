@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\FailHandler;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\UI\Title;
+use Nette\Database\Explorer;
 use Nette\SmartObject;
 
 /**
@@ -28,35 +29,29 @@ class Transition
     use SmartObject;
 
     /** @phpstan-var (callable(THolder):bool)|bool|null */
-    protected $condition;
+    public $condition;
     public BehaviorType $behaviorType;
-    private Title $label;
+    public Title $label;
     private ?string $successLabel;
     /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
     /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
 
-    protected bool $validation;
+    /** @phpstan-var FailHandler<THolder>[] */
+    public array $onFail = [];
+
+    public bool $validation;
     /** @phpstan-var Enum */
     public EnumColumn $source;
     /** @phpstan-var Enum */
     public EnumColumn $target;
 
-    /**
-     * @phpstan-param Enum $sourceState
-     */
-    public function setSourceStateEnum(EnumColumn $sourceState): void
-    {
-        $this->source = $sourceState;
-    }
+    private Explorer $explorer;
 
-    /**
-     * @phpstan-param Enum $targetState
-     */
-    public function setTargetStateEnum(EnumColumn $targetState): void
+    public function __construct(Explorer $explorer)
     {
-        $this->target = $targetState;
+        $this->explorer = $explorer;
     }
 
     public function setSuccessLabel(?string $successLabel): void
@@ -74,27 +69,35 @@ class Transition
         return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
     }
 
-    public function setBehaviorType(BehaviorType $behaviorType): void
-    {
-        $this->behaviorType = $behaviorType;
-    }
-
-    public function label(): Title
-    {
-        return $this->label;
-    }
-
-    public function setLabel(string $label, string $icon): void
-    {
-        $this->label = new Title(null, $label, $icon);
-    }
-
     /**
-     * @phpstan-param (callable(THolder):bool)|bool $condition
+     * @throws UnavailableTransitionException
+     * @throws \Throwable
+     * @phpstan-param THolder $holder
      */
-    public function setCondition($condition): void
+    final public function execute(ModelHolder $holder): void
     {
-        $this->condition = is_bool($condition) ? fn() => $condition : $condition;
+        if (!$this->canExecute($holder)) {
+            throw new UnavailableTransitionException($this, $holder);
+        }
+        $this->explorer->getConnection()->transaction(function () use ($holder): void {
+            try {
+                foreach ($this->beforeExecute as $callback) {
+                    $callback($holder, $this);
+                }
+                $holder->setState($this->target);
+                foreach ($this->afterExecute as $callback) {
+                    $callback($holder, $this);
+                }
+            } catch (\Throwable $exception) {
+                if (count($this->onFail)) {
+                    foreach ($this->onFail as $failHandler) {
+                        $failHandler->handle($exception, $holder, $this);
+                    }
+                } else {
+                    throw $exception;
+                }
+            }
+        });
     }
 
     /**
@@ -102,6 +105,9 @@ class Transition
      */
     public function canExecute(ModelHolder $holder): bool
     {
+        if ($this->source->value !== $holder->getState()->value) {
+            return false;
+        }
         if (!isset($this->condition)) {
             return true;
         }
@@ -109,55 +115,5 @@ class Transition
             return (bool)($this->condition)($holder);
         }
         return (bool)$this->condition;
-    }
-
-    public function getValidation(): bool
-    {
-        return $this->validation ?? true;
-    }
-
-    public function setValidation(?bool $validation): void
-    {
-        $this->validation = $validation ?? true;
-    }
-
-    /**
-     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
-     */
-    public function addBeforeExecute(callable $callBack): void
-    {
-        $this->beforeExecute[] = $callBack;
-    }
-
-    /**
-     * @phpstan-param (callable(THolder,Transition<THolder>):void) $callBack
-     */
-    public function addAfterExecute(callable $callBack): void
-    {
-        $this->afterExecute[] = $callBack;
-    }
-
-    /**
-     * @phpstan-param THolder $holder
-     */
-    final public function callBeforeExecute(ModelHolder $holder): void
-    {
-        foreach ($this->beforeExecute as $callback) {
-            $callback($holder, $this);
-        }
-    }
-
-    /**
-     * @phpstan-param THolder $holder
-     */
-    final public function callAfterExecute(ModelHolder $holder): void
-    {
-        try {
-            foreach ($this->afterExecute as $callback) {
-                $callback($holder, $this);
-            }
-        } catch (\Throwable $exception) {
-            throw new TransitionOnExecutedException($this->getId() . ': ' . $exception->getMessage(), 0, $exception);
-        }
     }
 }

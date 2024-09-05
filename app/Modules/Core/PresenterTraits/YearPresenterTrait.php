@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\YearChooserComponent;
+use FKSDB\Components\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;

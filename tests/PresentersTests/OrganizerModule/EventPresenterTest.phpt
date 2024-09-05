@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 class EventPresenterTest extends AbstractOrganizerPresenterTestCase
@@ -65,6 +66,9 @@ class EventPresenterTest extends AbstractOrganizerPresenterTestCase
                 'registration_end' => (new \DateTime())->format('c'),
             ],
         ]);
+        if ($response instanceof TextResponse) {
+            file_put_contents('r.html', (string)$response->getSource());
+        }
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countEvents();
         Assert::equal($init + 1, $after);

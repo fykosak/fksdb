@@ -11,7 +11,7 @@ use FKSDB\Components\Event\CodeAttendance\CodeAttendance;
 use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\TeamSeating\Single;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\MachineCode\MachineCode;

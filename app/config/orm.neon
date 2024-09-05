@@ -440,16 +440,16 @@ orm:
                 permission: FULL
             display_name:
                 type: string
-                title: _('Display name')
-                description: _('Only if different from "Name Surname".')
+                title: _('Full name')
+                description: _('Only if different from "<First name> <Last name>".')
                 permission: BASIC
             family_name:
                 type: string
-                title: _('Family name')
+                title: _('Last name (family name or surname)')
                 permission: BASIC
             other_name:
                 type: string
-                title: _('Other name')
+                title: _('First name (given name)')
                 permission: BASIC
         links:
             detail:

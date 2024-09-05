@@ -41,7 +41,7 @@ services:
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
      #localization
-    -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    - \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #email
     - FKSDB\Models\Email\TemplateFactory
     #person
@@ -64,7 +64,7 @@ services:
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel
-    - FKSDB\Models\Events\EventDispatchFactory
+    - FKSDB\Models\Transitions\TransitionsMachineFactory
 
     - FKSDB\Models\News
     ## components

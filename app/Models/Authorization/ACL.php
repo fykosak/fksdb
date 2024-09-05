@@ -92,6 +92,7 @@ final class ACL
         $service->allow(ContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
 
         self::createApplications($service);
+        self::createTeamApplications($service);
         // schedule
         $service->addResource(Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $service->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
@@ -203,32 +204,78 @@ final class ACL
 
     private static function createApplications(Permission $permission): void
     {
+        $permission->addRole(Authorization\Roles\Events\ParticipantRole::ROLE_ID);
+        $permission->addResource(Models\EventParticipantModel::RESOURCE_ID);
+
+        $permission->allow(
+            BaseRole::Guest,
+            Models\EventParticipantModel::RESOURCE_ID,
+            'create',
+            new LogicAnd(
+                new Authorization\Assertions\IsRegistrationOpened(),
+                new Authorization\Assertions\IsOpenEvent()
+            )
+        );
+        $permission->allow(
+            Authorization\Roles\Events\ParticipantRole::ROLE_ID,
+            Models\EventParticipantModel::RESOURCE_ID,
+            'detail',
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnApplicationAssertion()
+            )
+        );
+        $permission->allow(
+            Authorization\Roles\Events\ParticipantRole::ROLE_ID,
+            Models\EventParticipantModel::RESOURCE_ID,
+            'edit',
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnApplicationAssertion(),
+                new Authorization\Assertions\IsRegistrationOpened()
+            )
+        );
+        $permission->allow(ContestRole::EventManager, Models\EventParticipantModel::RESOURCE_ID);
+    }
+
+    private static function createTeamApplications(Permission $permission): void
+    {
         $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID);
         $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID);
-        $permission->addRole(Authorization\Roles\Events\ParticipantRole::ROLE_ID);
-
-        $permission->addResource(Models\EventParticipantModel::RESOURCE_ID);
         $permission->addResource(Models\Fyziklani\TeamModel2::RESOURCE_ID);
 
         $permission->allow(
             BaseRole::Guest,
-            [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
-            'create'
+            Models\Fyziklani\TeamModel2::RESOURCE_ID,
+            'create',
+            new Authorization\Assertions\IsRegistrationOpened()
         );
         $permission->allow(
             [
                 Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID,
                 Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID,
-                Authorization\Roles\Events\ParticipantRole::ROLE_ID,
             ],
-            [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID],
-            ['detail', 'edit'],
-            new Authorization\Assertions\OwnApplicationAssertion()
+            Models\Fyziklani\TeamModel2::RESOURCE_ID,
+            'detail',
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnTeamAssertion()
+            )
         );
         $permission->allow(
-            ContestRole::EventManager,
-            [Models\Fyziklani\TeamModel2::RESOURCE_ID, Models\EventParticipantModel::RESOURCE_ID]
+            [
+                Authorization\Roles\Events\Fyziklani\TeamTeacherRole::ROLE_ID,
+                Authorization\Roles\Events\Fyziklani\TeamMemberRole::ROLE_ID,
+            ],
+            Models\Fyziklani\TeamModel2::RESOURCE_ID,
+            'edit',
+            new LogicAnd(
+                new Authorization\Assertions\NotDisqualified(),
+                new Authorization\Assertions\OwnTeamAssertion(),
+                new Authorization\Assertions\IsRegistrationOpened()
+            )
         );
+        $permission->allow(ContestRole::EventManager, Models\Fyziklani\TeamModel2::RESOURCE_ID);
     }
 
     private static function createUpload(
@@ -295,8 +342,8 @@ final class ACL
             Models\PaymentModel::RESOURCE_ID,
             'edit',
             new LogicAnd(
-                $selfAssertion, // @phpstan-ignore-line
-                new Authorization\Assertions\PaymentEditableAssertion() // @phpstan-ignore-line
+                $selfAssertion,
+                new Authorization\Assertions\PaymentEditableAssertion()
             )
         );
         $permission->allow(

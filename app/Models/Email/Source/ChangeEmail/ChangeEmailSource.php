@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\ChangeEmail;
 
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
-use FKSDB\Models\Email\Source\EmailSource;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
-use Fykosak\Utils\UI\Title;
+use Nette\Utils\DateTime;
 
 /**
  * @phpstan-extends EmailSource<array{
@@ -37,15 +35,8 @@ class ChangeEmailSource extends EmailSource
     }
 
     /**
-     * @throws NotImplementedException
-     */
-    public function getExpectedParams(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @throws ChangeInProgressException
+     * @throws \Throwable
      */
     protected function getSource(array $params): array
     {
@@ -55,8 +46,9 @@ class ChangeEmailSource extends EmailSource
 
         $token = $this->tokenService->createToken(
             $person->getLogin(),
-            AuthTokenType::from(AuthTokenType::CHANGE_EMAIL),
-            (new \DateTime())->modify('+20 minutes'),
+            AuthTokenType::from(AuthTokenType::ChangeEmail),
+            new DateTime(),
+            (new DateTime())->modify('+20 minutes'),
             $newEmail
         );
         $oldData = [
@@ -82,21 +74,5 @@ class ChangeEmailSource extends EmailSource
             ]
         ];
         return [$oldData, $newData];
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function title(): Title
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function description(): LocalizedString //@phpstan-ignore-line
-    {
-        throw new NotImplementedException();
     }
 }

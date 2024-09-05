@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
+use FKSDB\Components\EntityForms\Processing\DefaultTransition;
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
@@ -16,18 +17,22 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<PaymentModel>
+ * @phpstan-extends ModelForm<PaymentModel,array{
+ *      currency:string,
+ *      person_id:int,
+ *      want_invoice:bool,
+ *      event_items:array<array<int,bool>>}>
  */
-class PaymentForm extends EntityFormComponent
+class PaymentForm extends ModelForm
 {
     private bool $isOrganizer;
     private PaymentMachine $machine;
@@ -109,42 +114,35 @@ class PaymentForm extends EntityFormComponent
     /**
      * @throws \Throwable
      */
-    protected function handleFormSuccess(Form $form): void
+    protected function innerSuccess(array $values, Form $form): Model
     {
-        /** @phpstan-var array{
-         *     currency:string,
-         *     person_id:int,
-         *     want_invoice:bool,
-         *     event_items:array<array<int,bool>>} $values
-         */
-        $values = $form->getValues('array');
-        $connection = $this->paymentService->explorer->getConnection();
-        $connection->beginTransaction();
-        try {
-            $model = $this->paymentService->storeModel(
-                [
-                    'currency' => $values['currency'],
-                    'want_invoice' => $values['want_invoice'],
-                    'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
-                ],
-                $this->model
-            );
-            $this->schedulePaymentService->storeItems(
-                (array)$values['event_items'],
-                $model,
-                Language::from($this->translator->lang)
-            );
-            if (!isset($this->model)) {
-                $holder = $this->machine->createHolder($model);
-                $transition = Machine::selectTransition(Machine::filterAvailable($this->machine->transitions, $holder));
-                $this->machine->execute($transition, $holder);
-                $model = $holder->getModel();
-            }
-        } catch (\Throwable $exception) {
-            $connection->rollBack();
-            throw $exception;
+        $model = $this->paymentService->storeModel(
+            [
+                'currency' => $values['currency'],
+                'want_invoice' => $values['want_invoice'],
+                'person_id' => $this->isOrganizer ? $values['person_id'] : $this->loggedPerson->person_id,
+            ],
+            $this->model
+        );
+        $this->schedulePaymentService->storeItems(
+            (array)$values['event_items'],
+            $model,
+            Language::from($this->translator->lang)
+        );
+        return $model;
+    }
+
+    protected function getPostprocessing(): array
+    {
+        $processing = parent::getPostprocessing();
+        if (!isset($this->model)) {
+            $processing[] = new DefaultTransition($this->container, $this->machine); //@phpstan-ignore-line
         }
-        $connection->commit();
+        return $processing;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
         $this->getPresenter()->flashMessage(
             !isset($this->model)
                 ? _('Payment has been created.')

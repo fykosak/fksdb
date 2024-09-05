@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
-use FKSDB\Components\Controls\Inbox\PointsVariance\ChartComponent;
-use FKSDB\Components\Controls\Inbox\TaskImportFormComponent;
+use FKSDB\Components\Inbox\HandoutFormComponent;
+use FKSDB\Components\Inbox\PointsVariance\ChartComponent;
+use FKSDB\Components\Inbox\TaskImportFormComponent;
 use FKSDB\Components\Grids\TaskGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\TaskModel;

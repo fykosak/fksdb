@@ -82,7 +82,7 @@ abstract class EvaluationStrategy
         );
     }
 
-    final public function createContestant(PersonModel $person): ?ContestantModel
+    final public function createContestant(PersonModel $person): ContestantModel
     {
         $category = $this->studyYearsToCategory($person);
         /** @var ContestantModel $contestant */
@@ -95,7 +95,7 @@ abstract class EvaluationStrategy
         return $contestant;
     }
 
-    final public function updateCategory(ContestantModel $contestant): ?ContestantModel
+    final public function updateCategory(ContestantModel $contestant): ContestantModel
     {
         $category = $this->studyYearsToCategory($contestant->person);
         if ($category->contest_category_id === $contestant->contest_category_id) {
