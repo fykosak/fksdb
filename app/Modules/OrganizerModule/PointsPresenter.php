@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
-use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
-use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
+use FKSDB\Components\Inbox\PointPreview\PointsPreviewComponent;
+use FKSDB\Components\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\Models\{TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -81,7 +81,7 @@ final class PointsPresenter extends BasePresenter
             $this->flashMessage(_('Points invalidated.'), Message::LVL_INFO);
         } catch (\Throwable $exception) {
             $this->flashMessage(_('Error during invalidation.'), Message::LVL_ERROR);
-            Debugger::log($exception);
+            Debugger::log($exception, Debugger::EXCEPTION);
         }
 
         $this->redirect('this');
@@ -97,7 +97,7 @@ final class PointsPresenter extends BasePresenter
             $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
             $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);
-            Debugger::log($exception);
+            Debugger::log($exception, Debugger::EXCEPTION);
         }
 
         $this->redirect('this');
@@ -109,8 +109,8 @@ final class PointsPresenter extends BasePresenter
             $this->resultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Quiz points calculated.'), Message::LVL_INFO);
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('Error during calculation.'), Message::LVL_ERROR);
-            Debugger::log($exception);
+            $this->flashMessage(_('Error during calculation.'), Debugger::EXCEPTION);
+            Debugger::log($exception, Debugger::ERROR);
         }
     }
 

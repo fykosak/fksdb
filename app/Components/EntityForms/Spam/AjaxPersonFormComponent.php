@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -67,6 +68,9 @@ class AjaxPersonFormComponent extends AjaxComponent
         ];
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     protected function configure(): void
     {
         $this->addAction('save', 'save!');

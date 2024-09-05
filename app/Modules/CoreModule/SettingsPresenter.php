@@ -51,13 +51,13 @@ final class SettingsPresenter extends BasePresenter
     {
         if (
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::from(AuthTokenType::INITIAL_LOGIN)
+                AuthTokenType::from(AuthTokenType::InitialLogin)
             )
         ) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY))) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery))) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
@@ -69,9 +69,9 @@ final class SettingsPresenter extends BasePresenter
         $login = $this->getLoggedPerson()->getLogin();
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::from(AuthTokenType::INITIAL_LOGIN)
+                AuthTokenType::from(AuthTokenType::InitialLogin)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY));
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
 
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
@@ -152,9 +152,9 @@ final class SettingsPresenter extends BasePresenter
         $values = $form->getValues('array');
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::from(AuthTokenType::INITIAL_LOGIN)
+                AuthTokenType::from(AuthTokenType::InitialLogin)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::RECOVERY));
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
         $login = $this->getLoggedPerson()->getLogin();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);

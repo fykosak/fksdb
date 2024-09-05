@@ -3,7 +3,33 @@
 
 {block titleBody}
     {include parent}
-    {include titleButtons from '../AbstractApplication/blocks.latte' model:$model,isOrganizer:true}
+    <div class="d-flex align-items-center gap-2">
+        <a href="{plink edit id => $model->getPrimary()}"
+           class="btn btn-outline-primary">
+            <i class="fas fa-pencil me-2"></i>
+            {if $model instanceof FKSDB\Models\ORM\Models\Fyziklani\TeamModel2}
+                {_'button.team.edit'}
+            {else}
+                {_'button.participant.edit'}
+            {/if}
+        </a>
+        {control buttonTransition false}
+        {var $machineCode = $model->createMachineCode()}
+        {if $machineCode}
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-code me-2"></i>
+                    {_'Code'}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" style="min-width: 20rem">
+                    <div class="px-3 py-2">
+                        <label class="form-label">{_'Application code'}</label>
+                        <input type="text" class="form-control-sm form-control" value="{$machineCode}"/>
+                    </div>
+                </div>
+            </div>
+        {/if}
+    </div>
 {/block}
 
 {define personSchedule FKSDB\Models\ORM\Models\PersonModel $person}
@@ -53,7 +79,7 @@
         {php $teacherCounter++}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm::formatTeacherLabel($teacherCounter,$teacher)}</h2>
+                <h2>{FKSDB\Components\Applications\Team\Forms\FOFTeamForm::formatTeacherLabel($teacherCounter,$teacher)}</h2>
                 <a
                         class="btn btn-secondary btn-sm"
                         href="{plink :Organizer:Person:detail id=>$teacher->person_id,contestId=>$teacher->fyziklani_team->event->event_type->contest_id}"
@@ -68,7 +94,7 @@
         {php $counter++}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{FKSDB\Components\EntityForms\Fyziklani\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                <h2>{FKSDB\Components\Applications\Team\Forms\TeamForm::formatMemberLabel($counter,$member)}</h2>
                 <a
                         class="btn btn-secondary btn-sm"
                         href="{plink :Organizer:Person:detail id=>$member->person_id,contestId=>$member->fyziklani_team->event->event_type->contest_id}"

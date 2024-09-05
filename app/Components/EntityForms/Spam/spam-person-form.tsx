@@ -5,7 +5,7 @@ import {SpamPersonFormRequest, submitStart} from './actions';
 import {NetteActions} from 'vendor/fykosak/nette-frontend-component/src/NetteActions/nette-actions';
 import {useDispatch, useSelector} from 'react-redux';
 import { TranslatorContext } from '@translator/context';
-import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
+import { Store } from 'FKSDB/Components/Upload/AjaxSubmit/Reducers';
 
 export interface OwnProps {
     actions: NetteActions,

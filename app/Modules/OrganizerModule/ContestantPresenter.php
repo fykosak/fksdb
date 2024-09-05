@@ -103,10 +103,11 @@ final class ContestantPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->contestYearAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContestYear());
     }
 
     /**

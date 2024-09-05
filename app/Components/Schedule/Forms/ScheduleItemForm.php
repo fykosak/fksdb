@@ -4,23 +4,31 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Forms;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<ScheduleItemModel>
+ * @phpstan-extends ModelForm<ScheduleItemModel,array{container:array{
+ *                name_cs:string,
+ *                name_en:string,
+ *                description_cs:string|null,
+ *                description_en:string|null,
+ *                capacity:int|null,
+ *                price_czk:int|null,
+ *                price_eur:int|null,
+ *  }}>
  */
-class ScheduleItemForm extends EntityFormComponent
+class ScheduleItemForm extends ModelForm
 {
 
     public const CONTAINER = 'container';
@@ -40,26 +48,6 @@ class ScheduleItemForm extends EntityFormComponent
     final public function injectPrimary(ScheduleItemService $scheduleItemService): void
     {
         $this->scheduleItemService = $scheduleItemService;
-    }
-
-    protected function handleFormSuccess(Form $form): void
-    {
-        /**
-         * @phpstan-var array{container:array{
-         *               name_cs:string,
-         *               name_en:string,
-         *               description_cs:string|null,
-         *               description_en:string|null,
-         *               capacity:int|null,
-         *               price_czk:int|null,
-         *               price_eur:int|null,
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
-        $model = $this->scheduleItemService->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Item "#%d" has been saved.'), $model->schedule_item_id), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect(':Schedule:Group:detail', ['id' => $model->schedule_group_id]);
     }
 
     protected function setDefaults(Form $form): void
@@ -106,5 +94,18 @@ class ScheduleItemForm extends EntityFormComponent
         }
         $container->addSelect('schedule_group_id', _('Group'), $items);
         $form->addComponent($container, self::CONTAINER);
+    }
+
+    protected function innerSuccess(array $values, Form $form): ScheduleItemModel
+    {
+        /** @var ScheduleItemModel $model */
+        $model = $this->scheduleItemService->storeModel($values[self::CONTAINER], $this->model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->flashMessage(sprintf(_('Item "#%d" has been saved.'), $model->schedule_item_id), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect(':Schedule:Group:detail', ['id' => $model->schedule_group_id]);
     }
 }
