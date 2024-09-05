@@ -44,14 +44,17 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
             case self::SpamContest:
                 return new LangMap([
                     'cs' => 'Spam zo semináru a akcií FYKOSu a Výfuku',
+                    'en' => '',
                 ]);
             case self::SpamMff:
                 return new LangMap([
                     'cs' => 'Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK',
+                    'en' => '',
                 ]);
             case self::SpamOther:
                 return new LangMap([
                     'cs' => 'Spam od našich partnerov a sponzorov',
+                    'en' => '',
                 ]);
         }
         throw new InvalidStateException();

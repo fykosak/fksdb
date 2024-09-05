@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 
 /**
  * @property-read int $contest_category_id
  * @property-read string $label
  * @property-read string $name_cs
  * @property-read string $name_en
- * @property-read LocalizedString $name
+ * @property-read LangMap $name
  */
 final class ContestCategoryModel extends Model
 {
@@ -28,14 +28,14 @@ final class ContestCategoryModel extends Model
     public const ALL = 'ALL';
 
     /**
-     * @return LocalizedString|mixed
+     * @return LangMap|mixed
      * @throws \ReflectionException
      */
     public function &__get(string $key) // phpcs:ignore
     {
         switch ($key) {
             case 'name':
-                $value = new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
+                $value = new LangMap(['cs' => $this->name_cs, 'en' => $this->name_en]);
                 break;
             default:
                 $value = parent::__get($key);

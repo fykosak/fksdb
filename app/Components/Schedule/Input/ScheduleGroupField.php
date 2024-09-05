@@ -27,12 +27,12 @@ class ScheduleGroupField extends SelectBox
             parent::__construct(
                 sprintf(
                     _('%s -- end of registration: %s'),
-                    $group->name->getText($lang->value),
+                    $group->name->get($lang->value),
                     $group->registration_end->format(_('__date_time'))
                 )
             );
         } else {
-            parent::__construct($group->name->getText($lang->value));
+            parent::__construct($group->name->get($lang->value));
         }
 
         $this->group = $group;
@@ -44,8 +44,8 @@ class ScheduleGroupField extends SelectBox
         foreach ($this->group->getItems() as $item) {
             $items[$item->getPrimary()] = sprintf(
                 _('%s - %s'),
-                $item->name->getText($lang->value),
-                $item->description->getText($lang->value)
+                $item->name->get($lang->value),
+                $item->description->get($lang->value)
             );
             if (!$item->available) {
                 $disabled[] = $item->getPrimary();

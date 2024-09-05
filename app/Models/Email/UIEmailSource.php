@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email;
 
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\Forms\Form;
 
@@ -17,7 +17,10 @@ abstract class UIEmailSource extends EmailSource
 {
     abstract public function title(): Title;
 
-    abstract public function description(): LocalizedString;//@phpstan-ignore-line
+    /**
+     * @phpstan-return LangMap<'cs'|'en',string>
+     */
+    abstract public function description(): LangMap;
 
     abstract public function creatForm(Form $form): void;
 }

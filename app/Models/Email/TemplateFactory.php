@@ -20,11 +20,15 @@ use Nette\Http\IRequest;
  */
 final class TemplateFactory
 {
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
     private IRequest $request;
     private LatteFactory $latteTemplateFactory;
     private ?IPresenter $presenter;
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     public function __construct(
         LatteFactory $latteTemplateFactory,
         GettextTranslator $translator,

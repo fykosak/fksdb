@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Price\Currency;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
@@ -20,7 +20,7 @@ use Nette\Utils\DateTime;
  * @property-read string $state ENUM ('new','used','unpacked','damaged') NOT NULL,
  * @property-read string|null $description_cs
  * @property-read string|null $description_en
- * @property-read LocalizedString $description
+ * @property-read LangMap $description
  * @property-read string|null $data dalšie info
  * @property-read float|null $purchase_price pořizovací cena
  * @property-read string|null $purchase_currency pořizovací měna
@@ -56,7 +56,7 @@ final class ItemModel extends Model implements Resource
     {
         switch ($key) {
             case 'description':
-                $value = new LocalizedString(['cs' => $this->description_cs, 'en' => $this->description_en]);
+                $value = new LangMap(['cs' => $this->description_cs, 'en' => $this->description_en]);
                 break;
             default:
                 $value = parent::__get($key);

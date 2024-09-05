@@ -70,9 +70,9 @@ final class PersonScheduleForm extends ModelForm
             $subItems = [];
             /** @var ScheduleItemModel $item */
             foreach ($group->getItems() as $item) {
-                $subItems[$item->schedule_item_id] = $item->name->getText($this->translator->lang);
+                $subItems[$item->schedule_item_id] = $item->name->get($this->translator->lang);
             }
-            $items[$group->name->getText($this->translator->lang)] = $subItems;
+            $items[$group->name->get($this->translator->lang)] = $subItems;
         }
         $select = new SelectBox(_('Schedule item'), $items);
         $select->setRequired();

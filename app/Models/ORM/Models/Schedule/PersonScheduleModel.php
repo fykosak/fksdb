@@ -34,8 +34,8 @@ final class PersonScheduleModel extends Model implements Resource
     public function getLabel(Language $lang): string
     {
         return $this->person->getFullName() . ': '
-            . $this->schedule_item->schedule_group->name->getText($lang->value) . ' - '
-            . $this->schedule_item->name->getText($lang->value);
+            . $this->schedule_item->schedule_group->name->get($lang->value) . ' - '
+            . $this->schedule_item->name->get($lang->value);
     }
 
     public function isPaid(): bool

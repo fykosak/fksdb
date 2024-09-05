@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\Sous;
 
-use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Email\UIEmailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\Language;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -51,7 +51,7 @@ final class ReminderEmail extends UIEmailSource
             $events[$event->event_id] = sprintf(
                 '(%d) %s',
                 $event->begin->format('Y'),
-                $event->getName()->getText('cs')
+                $event->getName()->get('cs')
             );
         }
         $form->addSelect('event_id', _('Event'), $events);
@@ -88,8 +88,8 @@ final class ReminderEmail extends UIEmailSource
         return new Title(null, sprintf(_('Reminder %d'), $this->number));
     }
 
-    public function description(): LocalizedString//@phpstan-ignore-line
+    public function description(): LangMap
     {
-        return new LocalizedString(['cs' => '', 'en' => '']);
+        return new LangMap(['cs' => '', 'en' => '']);
     }
 }

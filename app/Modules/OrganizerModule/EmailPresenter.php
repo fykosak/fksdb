@@ -205,7 +205,7 @@ final class EmailPresenter extends BasePresenter
     {
         return new MassTransitionComponent(
             $this->getContext(),
-            $this->machineFactory->getEmailMachine(),
+            $this->machineFactory->getEmailMachine(), //@phpstan-ignore-line
             $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready)
         );
     }

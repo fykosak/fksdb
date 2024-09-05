@@ -55,7 +55,7 @@ final class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
+            sprintf(_('Group: %s'), $this->getEntity()->name->get($this->translator->lang)),
             $this->getEntity()->schedule_group_type->getIconName()
         );
     }
@@ -72,7 +72,7 @@ final class GroupPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit group: %s'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(_('Edit group: %s'), $this->getEntity()->name->get($this->translator->lang)),
             'fas fa-pen'
         );
     }

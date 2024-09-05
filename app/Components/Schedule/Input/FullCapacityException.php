@@ -17,7 +17,7 @@ class FullCapacityException extends ScheduleException
             sprintf(
                 _('The person %s could not be registered for "%s" because of full capacity.'),
                 $person->getFullName(),
-                $item->name->getText($lang->value)
+                $item->name->get($lang->value)
             )
         );
     }

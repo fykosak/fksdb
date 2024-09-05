@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\PersonEmailPreferenceOption;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonEmailPreferenceService;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
@@ -63,7 +63,7 @@ class EmailPreferenceForm extends ModelForm
     protected function successRedirect(Model $model): void
     {
         /** @phpstan-ignore-next-line */
-        $this->getPresenter()->flashMessage(new LocalizedString([
+        $this->getPresenter()->flashMessage(new LangMap([
             'en' => 'Preferences saved',
             'cs' => 'Preference byli uloženy',
         ]), Message::LVL_SUCCESS);

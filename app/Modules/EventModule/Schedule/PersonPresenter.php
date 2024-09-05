@@ -62,8 +62,8 @@ final class PersonPresenter extends BasePresenter
             null,
             sprintf(
                 _('%s@%s: %s'),
-                $model->schedule_item->name->getText($this->translator->lang),
-                $model->schedule_item->schedule_group->name->getText($this->translator->lang),
+                $model->schedule_item->name->get($this->translator->lang),
+                $model->schedule_item->schedule_group->name->get($this->translator->lang),
                 $model->person->getFullName()
             ),
             'fas fa-list'

@@ -9,7 +9,7 @@ use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
@@ -19,7 +19,7 @@ use Nette\Utils\Strings;
  * @property-read string $label
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
- * @property-read LocalizedString $name
+ * @property-read LangMap $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
@@ -69,7 +69,7 @@ final class TaskModel extends Model implements Resource
                     $label .= $this->series . Utils::ordinal($this->series) . ' series ';
                 }
         }
-        return $label . $this->label . ' - ' . $this->name->getText('en');
+        return $label . $this->label . ' - ' . $this->name->get($lang->value);
     }
 
     /**
@@ -121,7 +121,7 @@ final class TaskModel extends Model implements Resource
     {
         switch ($key) {
             case 'name':
-                $value = new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
+                $value = new LangMap(['cs' => $this->name_cs, 'en' => $this->name_en]);
                 break;
             default:
                 $value = parent::__get($key);

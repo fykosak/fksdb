@@ -27,6 +27,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
 
     /**
@@ -47,6 +48,9 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->configure();
     }
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     final public function injectServicePersonSchedule(
         PersonScheduleService $personScheduleService,
         GettextTranslator $translator
