@@ -8,7 +8,10 @@ use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOLCategoryProc
 use FKSDB\Components\Applications\Team\Forms\Processing\SchoolRequirement\FOLSchoolRequirementProcessing;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
@@ -19,9 +22,27 @@ class FOLTeamForm extends TeamForm
     protected function getPreprocessing(): array
     {
         return [
+            ...parent::getPreprocessing(),
             new FOLSchoolRequirementProcessing($this->container, $this->event),
             new FOLCategoryProcessing($this->container, $this->event),
         ];
+    }
+
+    protected function getPostprocessing(): array
+    {
+        $processing = parent::getPostprocessing();
+        $processing[] = function (TeamModel2 $model): void {
+            if ($model->state->value !== TeamState::Pending) {
+                $holder = $this->machine->createHolder($model);
+                // nieje čakajúci a nieje to editáci orga pošle to do čakajucich
+                $transition = $this->machine->getTransitions()
+                    ->filterByTarget(TeamState::from(TeamState::Pending))
+                    ->filterAvailable($holder)
+                    ->select();
+                $transition->execute($holder);
+            }
+        };
+        return $processing;
     }
 
     public function render(): void
