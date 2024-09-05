@@ -11,7 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
- * @phpstan-type TSupportedModel (
+ * @phpstan-type TSupportedModel = (
  *     \FKSDB\Models\ORM\Models\PersonModel
  *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2)
  */
@@ -25,9 +25,11 @@ final class MachineCode
      * @throws NotImplementedException
      * @throws BadRequestException
      */
-    public static function createHash(Model $model, string $salt): string
+    public static function createModelHash(Model $model, string $salt): string
     {
-        $code = openssl_encrypt(self::createCode($model), self::CIP_ALGO, $salt);
+        $type = MachineCodeType::fromModel($model);
+        $modelCode = $type->value . $model->getPrimary();
+        $code = openssl_encrypt($modelCode, self::CIP_ALGO, $salt);
         if ($code === false) {
             throw new MachineCodeException(_('Cannot encrypt code'));
         }
@@ -35,26 +37,13 @@ final class MachineCode
     }
 
     /**
-     * @phpstan-param TSupportedModel $model
-     * @throws MachineCodeException
-     * @throws NotImplementedException
-     * @throws BadRequestException
-     */
-    public static function createCode(Model $model): string
-    {
-        $type = MachineCodeType::fromModel($model);
-        return $type->value . $model->getPrimary();
-    }
-
-    /**
-     * Parse code and return model
-     * code must be in format AA123456...
      * @phpstan-return TSupportedModel $model
      * @throws MachineCodeException
      */
-    public static function parseCode(Container $container, string $code): Model
+    public static function parseModelHash(Container $container, string $code, string $salt): Model
     {
-        if (!preg_match('/([A-Z]{2})([0-9]+)/', $code, $matches)) {
+        $data = self::parseStringHash($code, $salt);
+        if (!preg_match('/([A-Z]{2})([0-9]+)/', $data, $matches)) {
             throw new MachineCodeException(_('Wrong format'));
         }
         [, $type, $id] = $matches;
@@ -69,15 +58,27 @@ final class MachineCode
     }
 
     /**
-     * @phpstan-return TSupportedModel $model
+     * @throws MachineCodeException
+     * @throws BadRequestException
+     */
+    public static function createStringHash(string $data, string $salt): string
+    {
+        $code = openssl_encrypt($data, self::CIP_ALGO, $salt);
+        if ($code === false) {
+            throw new MachineCodeException(_('Cannot encrypt code'));
+        }
+        return $code;
+    }
+
+    /**
      * @throws MachineCodeException
      */
-    public static function parseHash(Container $container, string $code, string $salt): Model
+    public static function parseStringHash(string $code, string $salt): string
     {
         $data = openssl_decrypt($code, self::CIP_ALGO, $salt);
         if ($data === false) {
             throw new MachineCodeException(_('Cannot decrypt code'));
         }
-        return self::parseCode($container, $data);
+        return $data;
     }
 }

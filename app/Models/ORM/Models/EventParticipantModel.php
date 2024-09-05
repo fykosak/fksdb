@@ -106,7 +106,7 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this->person, $this->event->getSalt());
+            return MachineCode::createModelHash($this->person, $this->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }
