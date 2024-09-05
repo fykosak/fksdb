@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
@@ -24,9 +25,12 @@ final class SchoolChangeTest extends Test
         return new Title(null, _('School change'));
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): ?LocalizedString
     {
-        return _('Checks if person changes primary school or high school during the study.');
+        return new LocalizedString([
+            'en' => 'Checks if person changes primary school or high school during the study.',
+            'cs' => '',
+        ]);
     }
 
     protected function innerRun(TestLogger $logger, Model $model, string $id): void

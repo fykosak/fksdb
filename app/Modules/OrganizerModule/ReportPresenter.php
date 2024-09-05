@@ -38,6 +38,6 @@ final class ReportPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), DataTestFactory::getContestYearTests($this->getContext()));
+        return new TestsList($this->getContext(), DataTestFactory::getContestYearTests($this->getContext()), true);
     }
 }
