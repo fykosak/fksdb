@@ -12,8 +12,8 @@ use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of Model
- * @phpstan-template TModelHelper of Model
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-template TModelHelper of \Fykosak\NetteORM\Model\Model
  * @phpstan-extends BaseItem<TModel>
  */
 class TemplateItem extends BaseItem
