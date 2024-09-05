@@ -66,6 +66,7 @@ final class DiplomasPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
+     * @throws \Throwable
      */
     public function handleCalculate(?string $category = null): void
     {
@@ -86,7 +87,7 @@ final class DiplomasPresenter extends BasePresenter
     public function handleValidate(?string $category = null): void
     {
         $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $category = $category ? TeamCategory::tryFrom($category) : null;
+        $category = $category ? TeamCategory::from($category) : null;
 
         $isValid = true;
 

@@ -311,6 +311,7 @@ final class ApplicationPresenter extends BasePresenter
     {
         return new MassTransitionComponent(
             $this->getContext(),
+            /** @phpstan-ignore-next-line */
             $this->eventDispatchFactory->getParticipantMachine($this->getEvent()),
             $this->getEvent()->getParticipants()
         );
