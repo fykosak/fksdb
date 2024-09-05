@@ -86,7 +86,7 @@ final class DiplomasPresenter extends BasePresenter
     public function handleValidate(?string $category = null): void
     {
         $rankingStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $category = $category ? TeamCategory::tryFrom($category) : null;
+        $category = $category ? TeamCategory::from($category) : null;
 
         $isValid = true;
 
