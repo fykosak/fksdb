@@ -66,6 +66,7 @@ final class DiplomasPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
+     * @throws \Throwable
      */
     public function handleCalculate(?string $category = null): void
     {
