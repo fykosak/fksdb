@@ -39,7 +39,7 @@ class EventOrganizerListComponent extends DetailComponent
         $row0 = $this->createRow();
         $row0->addComponent(new SimpleItem($this->container, '@event.name_new'), 'event__name');
         $row0->addComponent(
-            new SimpleItem($this->container, '@event.event_type'),
+            new SimpleItem($this->container, '@event_type.name'),
             'event__type'
         );
         $row1 = $this->createRow();

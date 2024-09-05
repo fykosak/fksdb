@@ -162,10 +162,6 @@ orm:
                 type: int
                 title: _('Contest year')
                 omitInputField: true
-            event_type:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
-                title: _('Event type')
             event_type_id:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
@@ -275,6 +271,11 @@ orm:
     event_type:
         service: FKSDB\Models\ORM\Services\EventTypeService
         model: FKSDB\Models\ORM\Models\EventTypeModel
+        columns:
+            name:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
+                title: _('Event type')
     flag:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
