@@ -483,7 +483,7 @@ final class PersonModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'gender':
-                $value = PersonGender::tryFrom($value);
+                $value = PersonGender::from($value);
                 break;
         }
         return $value;

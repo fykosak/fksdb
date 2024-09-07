@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\StudyYear;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
@@ -23,9 +24,12 @@ final class SetSchoolTest extends Test
         return new Title(null, _('School set'));
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): ?LocalizedString
     {
-        return _('Checks if school is filled when study year is filled.');
+        return new LocalizedString([
+            'en' => 'Checks if school is filled when study year is filled.',
+            'cs' => '',
+        ]);
     }
 
     protected function innerRun(TestLogger $logger, Model $model, string $id): void

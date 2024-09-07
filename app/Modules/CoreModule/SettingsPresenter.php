@@ -51,7 +51,7 @@ final class SettingsPresenter extends BasePresenter
     {
         if (
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::InitialLogin)
+                AuthTokenType::from(AuthTokenType::InitialLogin)
             )
         ) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
@@ -152,9 +152,9 @@ final class SettingsPresenter extends BasePresenter
         $values = $form->getValues('array');
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(
-                AuthTokenType::tryFrom(AuthTokenType::InitialLogin)
+                AuthTokenType::from(AuthTokenType::InitialLogin)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::tryFrom(AuthTokenType::Recovery));
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
         $login = $this->getLoggedPerson()->getLogin();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
