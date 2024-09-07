@@ -85,9 +85,9 @@ class RecoveryForm extends FormComponent
                         sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
                         Message::LVL_SUCCESS
                     );
-                    $this->getPresenter()->redirect('login');
                 }
             );
+            $this->getPresenter()->redirect('login');
         } catch (AuthenticationException | RecoveryException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }

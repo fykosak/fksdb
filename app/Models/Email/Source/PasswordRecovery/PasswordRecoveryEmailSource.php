@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\PasswordRecovery;
 
 use FKSDB\Models\Email\EmailSource;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends EmailSource<array{
