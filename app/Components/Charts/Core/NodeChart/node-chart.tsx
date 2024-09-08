@@ -35,12 +35,12 @@ interface OwnProps {
 export default function NodeChart({links, nodes, colors}: OwnProps) {
     const [alpha, setAlpha] = useState(0);
     const simulation = forceSimulation<Node>(nodes)
-        .force('link', forceLink(links))
-        .force('charge', forceManyBody())
-        .force('collide', forceCollide().radius(20))
-        .force('center', forceCenter())
-        .force('x', forceX())
-        .force('y', forceY())
+        .force('link', forceLink(links).strength(0.01))
+        .force('charge', forceManyBody().strength(-50))
+        .force('collide', forceCollide().radius(50))
+        .force('center', forceCenter().strength(0.01))
+        .force('x', forceX().strength(0.01))
+        .force('y', forceY().strength(0.01))
         .alphaMin(0.001);
 
     useEffect(() => {

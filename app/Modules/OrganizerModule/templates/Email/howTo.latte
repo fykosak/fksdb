@@ -9,8 +9,8 @@
                 </li>
                 <li><code class="text-success">subject</code> predmet emailu,</li>
                 <li><code class="text-success">sender</code> odosielatel emailov</li>
-                <li><code class="text-info">carbon_copy</code> CC</li>
-                <li><code class="text-info">blind_carbon_copy</code> BCC</li>
+                <li><code class="text-info">carbon_copy</code> CC videitľná kópia</li>
+                <li><code class="text-info">blind_carbon_copy</code> BCC skrytá kópia</li>
                 <li><code class="text-warning">recipient_person_id</code> person Id osoby, ktorej sa pošle email, FKSDB
                     si sama vytiahne email, preferované
                 </li>
@@ -18,7 +18,7 @@
                 <li><code class="text-success">reply_to</code></li>
                 <li><code class="text-success">state</code> Stav emailu viď <a href="#state">State</a></li>
                 <li><code class="text-info">priority</code> 1 alebo 0, či je email prioritný, rozhoduje o poradí
-                    posielania
+                    posielania, používať len vo výnimočných prípadoch, a u malého počtu emailov.
                 </li>
                 <li><code class="text-success">topic</code> Topic emailu, viď <a href="#topic">Topic</a></li>
                 <li><code class="text-success">lang</code> jazyk emaili <code>cs|en</code></li>
@@ -31,7 +31,7 @@
                 <li class="text-success">Povinné</li>
                 <li class="text-info">Nepovinné</li>
                 <li class="text-warning">Povinné práve jedno (XOR)</li>
-                <li class="text-danger">Nevyplňat/zakázané</li>
+                <li class="text-danger">Nevyplňat/nesmie obsahovať</li>
             </ul>
         </div>
     </div>
@@ -58,8 +58,7 @@
                             Čo sem patrí:
                             <ul>
                                 <li>Emily typu: posunul sa deadline, sú nahraté opravené riešenia, email o výbere odmien
-                                    za
-                                    seminár
+                                    za seminár
                                 </li>
                                 <li>Pozvánky na tábor/sústredko, vrátane posledných informácii pred akciou.</li>
                             </ul>
@@ -91,14 +90,14 @@
                         <div class="card-body">
                             Čo sem patrí:
                             <ul>
-                                <li>Emaily o prihlásení, zmene v prihláške.</li>
-                                <li>Emaily pred akciou, email po akcii napr. s feedbackom</li>
+                                <li>Emaily o vytvorní/zmene prihlášky.</li>
+                                <li>Emaily pred akciou, email po akcií napr. s feedbackom</li>
                             </ul>
                         </div>
                         <div class="card-body">
                             Čo sem nepatrí:
                             <ul>
-                                <li>Spam, že sme otvorili registráciu</li>
+                                <li>Emaily, že sme otvorili registráciu na dané akcie</li>
                                 <li>Informácie o sponzoroch a partneroch akcie</li>
                             </ul>
                         </div>
@@ -110,7 +109,7 @@
                             <h5 class="card-title">
                                 Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Internal)->badge()}</h5>
                             <p class="card-text">
-                                Sem patria automaticky generované emaily ako zmena hesla, zmena emailu.
+                                Sem patria automaticky generované emaily napr. zmena hesla, zmena emailu, reset hesla.
                             </p>
                         </div>
                         <div class="card-body">
@@ -118,15 +117,14 @@
                             <ul>
                                 <li>Automatické emaily z FKSDB (ak sa netýkajú topicov hore uvedených)</li>
                                 <li>Emaily pre orgov (stipká...)</li>
+                                <li>Informačné maily pre orgov (školy/zmeny v prihláškach)</li>
+                                <li>Dalšie maily pre organizátorov</li>
                             </ul>
                         </div>
                         <div class="card-body">
                             Čo sem nepatrí:
                             <ul>
-                                <li>Emaily sú vo väčšine generované priamo FKSDB, a nemal by sa používať na komunikáciu
-                                    s
-                                    účastníkmi
-                                </li>
+                                <li>Nemal by sa používať na komunikáciu s účastníkmi/riešiteľmi</li>
                             </ul>
                         </div>
                     </div>
@@ -212,7 +210,7 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
-            <h2 id="topic">Stavy emailu</h2
+            <h2 id="state">Stavy emailu</h2
             <p>
                Vzhľadom na komplikovanosť emailov a worklow aj tu použitý stavový automat.
             </p>

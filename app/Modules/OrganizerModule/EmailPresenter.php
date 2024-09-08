@@ -13,7 +13,6 @@ use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -63,9 +62,15 @@ final class EmailPresenter extends BasePresenter
         $this->template->source = $this->getEmailSource();
     }
 
-    public function titleTemplate(): PageTitle
+    /**
+     * @phpstan-return LangMap<'cs'|'en',PageTitle>
+     */
+    public function titleTemplate(): LangMap
     {
-        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
+        return new LangMap([
+            'cs' => new PageTitle(null, 'Předpřipravené emaily', 'fas fa-envelope'),
+            'en' => new PageTitle(null, 'Email templates', 'fas fa-envelope'),
+        ]);
     }
 
     /**
@@ -86,24 +91,18 @@ final class EmailPresenter extends BasePresenter
     public function titleHowTo(): LangMap
     {
         return new LangMap([
-            'cs' => new PageTitle(null, 'How to', 'fas fa-envelope-open'),
-            'en' => new PageTitle(null, 'How to', 'fas fa-envelope-open'),
+            'cs' => new PageTitle(null, 'Ako na emaily', 'fas fa-clipboard-question'),
+            'en' => new PageTitle(null, 'How to', 'fas fa-clipboard-question'),
         ]);
     }
 
     public function authorizedDetail(): bool
     {
-        $authorized = true;
-        /** @var ContestModel $contest */
-        foreach ($this->contestService->getTable() as $contest) {
-            $authorized = $authorized
-                && $this->contestAuthorizator->isAllowed(
-                    $this->getORMService()->getModelClassName()::RESOURCE_ID,
-                    'detail',
-                    $contest
-                );
-        }
-        return $authorized;
+        return $this->contestAuthorizator->isAllowed(
+            $this->getEntity(),
+            'detail',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -175,6 +174,7 @@ final class EmailPresenter extends BasePresenter
                 'Organizer:Email:list' => [],
                 'Organizer:Email:transition' => [],
                 'Organizer:Email:template' => [],
+                'Organizer:Email:howTo' => [],
             ],
         ];
     }

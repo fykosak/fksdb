@@ -79,8 +79,8 @@ final class ACL
         $service->allow([ContestRole::TaskManager, ContestRole::InboxManager], Models\SubmitModel::RESOURCE_ID);
         self::createUpload($service, $submitUploaderAssertion);
         //emails
-        $service->addResource(Models\EmailMessageModel::RESOURCE_ID);
-        $service->allow([ContestRole::DataManager, ContestRole::Boss], Models\EmailMessageModel::RESOURCE_ID, 'list');
+        self::createEmails($service);
+
         // events
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID);
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID, 'chart');
@@ -406,6 +406,16 @@ final class ACL
                 Models\Warehouse\ProductModel::RESOURCE_ID,
                 Models\Warehouse\ItemModel::RESOURCE_ID,
             ]
+        );
+    }
+
+    private static function createEmails(Permission $permission): void
+    {
+        $permission->addResource(Models\EmailMessageModel::RESOURCE_ID); // dashboard, detail, list, template, howTo
+        $permission->allow(
+            [ContestRole::DataManager, ContestRole::EventManager, ContestRole::Boss],
+            Models\EmailMessageModel::RESOURCE_ID,
+            ['dashboard', 'howTo', 'list', 'template']
         );
     }
 }
