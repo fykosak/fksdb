@@ -4,12 +4,14 @@ import {
     forceLink,
     forceManyBody,
     forceSimulation,
+    forceX,
+    forceY,
     SimulationLinkDatum,
     SimulationNodeDatum,
 } from 'd3-force';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
+import {useEffect, useState} from 'react';
+import {ChartComponent} from 'FKSDB/Components/Charts/Core/chart-component';
 import './node-chart.scss';
 
 export interface Link extends SimulationLinkDatum<Node> {
@@ -34,9 +36,11 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
     const [alpha, setAlpha] = useState(0);
     const simulation = forceSimulation<Node>(nodes)
         .force('link', forceLink(links))
-        .force('charge', forceManyBody().strength(-2000))
-        .force('collide', forceCollide())
+        .force('charge', forceManyBody())
+        .force('collide', forceCollide().radius(20))
         .force('center', forceCenter())
+        .force('x', forceX())
+        .force('y', forceY())
         .alphaMin(0.001);
 
     useEffect(() => {

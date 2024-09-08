@@ -24,7 +24,31 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
+
+        switch ($this->value) {
+            case self::SpamOther:
+            case self::SpamMff:
+            case self::SpamContest:
+                $behaviorType = 'warning';
+                break;
+            case self::Contest:
+                $behaviorType = 'primary';
+                break;
+            case self::FOF:
+                $behaviorType = 'fof';
+                break;
+            case self::FOL:
+                $behaviorType = 'fol';
+                break;
+            case self::DSEF:
+                $behaviorType = 'dsef';
+                break;
+            default:
+            case self::Internal:
+                $behaviorType = 'secondary';
+                break;
+        }
+        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $behaviorType])->addText($this->label());
     }
 
     public function label(): string
