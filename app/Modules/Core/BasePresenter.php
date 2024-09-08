@@ -359,9 +359,16 @@ abstract class BasePresenter extends Presenter
                     )
                 );
             }
-            $pageTitle = $reflectionMethod->invoke($this);
+            $return = $reflectionMethod->invoke($this);
+            if ($return instanceof PageTitle) {
+                $pageTitle = $return;
+            } elseif ($return instanceof LangMap) {
+                $pageTitle = $this->translator->getVariant($return);
+            } else {
+                throw new InvalidStateException('Title method should return PageTitle.');
+            }
             $pageTitle->subTitle = $pageTitle->subTitle ?? $this->getSubTitle();
-        } catch (\ReflectionException$exception) {
+        } catch (\ReflectionException $exception) {
             throw new InvalidStateException(
                 sprintf('Missing or invalid %s method in %s', 'title' . $this->getView(), $reflection->getName())
             );

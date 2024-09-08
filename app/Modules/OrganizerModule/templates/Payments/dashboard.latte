@@ -63,10 +63,10 @@
                                 <i class="{$rest->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Block'}
-                                    : </small>{$rest->schedule_item->schedule_group->name->getText($lang)}
+                                    : </small>{$rest->schedule_item->schedule_group->name->get($lang)}
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Variant'}
-                                    : </small>{$rest->schedule_item->name->getText($lang)}</div>
+                                    : </small>{$rest->schedule_item->name->get($lang)}</div>
                             <div class="col-3"><small class="text-muted">{_'Person'}
                                     : </small>{$rest->person->getFullName()}</div>
                             <div class="col-2">{$rest->schedule_item->getPrice()->__toString()}</div>

@@ -8,7 +8,7 @@
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Info'}</h2>
-                <p>{$event->report->getText($lang)}</p>
+                <p>{$event->report->get($lang)}</p>
                 {control columnTable [
                 'event_type.name',
                 'event.year',

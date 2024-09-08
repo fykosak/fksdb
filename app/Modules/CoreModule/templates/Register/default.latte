@@ -7,12 +7,12 @@
     <div class="col">
         <div class="card h-100 border-{$event->event_type->getSymbol()}">
             <img src="{$basePath}/images/contests/{$event->event_type->getSymbol()}.svg" class="card-img-top m-3"
-                 alt="{$event->getName()->getText($lang)}"
+                 alt="{$event->getName()->get($lang)}"
                  style="max-height: 7rem">
             <div class="card-body text-center">
-                <h3 class="card-title text-{$event->event_type->getSymbol()}">{$event->getName()->getText($lang)}</h3>
+                <h3 class="card-title text-{$event->event_type->getSymbol()}">{$event->getName()->get($lang)}</h3>
                 <p>{_'Registration end'} {$event->registration_end->format(_('__date_time'))}</p>
-                <p class="card-text">{$event->description->getText($lang)}</p>
+                <p class="card-text">{$event->description->get($lang)}</p>
                 {if $event->isTeamEvent()}
                     <a class="btn btn-{$event->event_type->getSymbol()}"
                        href="{plink ':Event:Team:create' ,'eventId'=>$event->event_id}">{_'Register team!'}</a>

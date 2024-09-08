@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\EmailsGrid;
@@ -19,6 +20,7 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
@@ -65,6 +67,30 @@ final class EmailPresenter extends BasePresenter
     {
         return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
     }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedHowTo(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(
+            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+            'howTo',
+            $this->getSelectedContest()
+        );
+    }
+
+    /**
+     * @phpstan-return LangMap<'cs'|'en',PageTitle>
+     */
+    public function titleHowTo(): LangMap
+    {
+        return new LangMap([
+            'cs' => new PageTitle(null, 'How to', 'fas fa-envelope-open'),
+            'en' => new PageTitle(null, 'How to', 'fas fa-envelope-open'),
+        ]);
+    }
+
     public function authorizedDetail(): bool
     {
         $authorized = true;
@@ -196,6 +222,11 @@ final class EmailPresenter extends BasePresenter
     protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
     {
         return new EmailProviderForm($this->getContext(), $this->getEmailSource());
+    }
+
+    protected function createComponentStateChart(): GraphComponent //@phpstan-ignore-line
+    {
+        return new GraphComponent($this->getContext(), $this->machineFactory->getEmailMachine());
     }
 
     /**

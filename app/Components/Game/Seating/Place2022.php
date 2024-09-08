@@ -60,7 +60,7 @@ final class Place2022 implements Place
 
     public function sectorName(string $language): string
     {
-        return self::getSectors()[$this->sector]->getText($language); //@phpstan-ignore-line
+        return self::getSectors()[$this->sector]->get($language); //@phpstan-ignore-line
     }
 
     public function layout(): string
