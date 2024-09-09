@@ -34,7 +34,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 final class TeamPresenter extends BasePresenter
 {
@@ -334,11 +333,12 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws NotImplementedException
-     * @phpstan-return MassTransitionComponent<TeamMachine>
+     * @phpstan-return MassTransitionComponent<TeamModel2>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
-        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        /** @phpstan-ignore-next-line */
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent()->getTeams());
     }
 
     /**
@@ -382,7 +382,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()), true);
     }
 
     /**

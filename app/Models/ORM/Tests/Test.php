@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Tests;
 
 use FKSDB\Components\DataTest\TestLogger;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
@@ -25,11 +26,18 @@ abstract class Test
         $container->callInjects($this);
     }
 
-    public function getDescription(): ?string
+    /**
+     * @return LocalizedString<'cs'|'en'>|null
+     */
+    public function getDescription(): ?LocalizedString
     {
         return null;
     }
 
+    public function getTreeId(): string
+    {
+        return $this->getId();
+    }
     /**
      * @phpstan-param TModel $model
      */

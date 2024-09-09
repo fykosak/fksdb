@@ -1,7 +1,14 @@
 {varType array $data}
+{varType bool $filered}
+{if $filtered}
+    {control form}
+    <hr/>
+{/if}
 {foreach $data as $datum}
     {var FKSDB\Models\ORM\Tests\Test $test = $datum['test']}
     {var FKSDB\Components\DataTest\TestMessage[] $messages = $datum[messages]}
+
+
     <h3>{$test->getTitle()->toHtml()}
         <span class="badge bg-{reset($messages)->level}">
                     {count($messages)} {php ngettext('Error','Errors',count($messages))}
