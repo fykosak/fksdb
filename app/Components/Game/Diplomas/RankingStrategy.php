@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Diplomas;
 
-use FKSDB\Components\EntityForms\Fyziklani\NoMemberException;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
+use FKSDB\Components\Applications\Team\Forms\NoMemberException;
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOFCategoryProcessing;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
@@ -43,23 +43,17 @@ final class RankingStrategy
 
     /**
      * @throws NotClosedTeamException
+     * @throws \Throwable
      */
     public function __invoke(?TeamCategory $category = null): Html
     {
         $connection = $this->teamService->explorer->getConnection();
-        try {
-            $connection->beginTransaction();
+        return $connection->transaction(function () use ($category): Html {
             $teams = $this->getAllTeams($category);
             $teamsData = $this->getTeamsStats($teams);
             usort($teamsData, self::getSortFunction());
-            $log = $this->saveResults($teamsData, is_null($category));
-            $connection->commit();
-        } catch (NoMemberException $exception) {
-            $connection->rollBack();
-            throw $exception;
-        }
-
-        return $log;
+            return $this->saveResults($teamsData, is_null($category));
+        });
     }
 
     /**

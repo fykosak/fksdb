@@ -6,8 +6,11 @@ namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 abstract class FormComponent extends BaseComponent
 {
@@ -37,11 +40,30 @@ abstract class FormComponent extends BaseComponent
     {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
-        $this->appendSubmitButton($control->getForm())
-            ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button->getForm());
+        $this->appendSubmitButton($control->getForm())->onClick[] =
+            function (SubmitButton $button): void {
+                try {
+                    $this->handleSuccess($button->getForm());
+                } catch (AbortException $exception) {
+                    throw $exception;
+                } catch (\Throwable $exception) {
+                    if (!$this->onException($exception)) {
+                        Debugger::log($exception, Debugger::EXCEPTION);
+                        $this->flashMessage(_('Error in the form.'), Message::LVL_ERROR);
+                    }
+                }
+            };
         return $control;
     }
 
+    /**
+     * @return bool
+     * return true if exception is handled by method, otherwise handled by default handler
+     */
+    protected function onException(\Throwable $exception): bool
+    {
+        return false;
+    }
     abstract protected function handleSuccess(Form $form): void;
 
     abstract protected function appendSubmitButton(Form $form): SubmitButton;

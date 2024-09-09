@@ -11,7 +11,7 @@ use FKSDB\Components\Event\CodeAttendance\CodeAttendance;
 use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\TeamSeating\Single;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\MachineCode\MachineCode;
@@ -150,7 +150,7 @@ final class AttendancePresenter extends BasePresenter
             return new CodeAttendance(
                 $this->getContext(),
                 $model,
-                TeamState::tryFrom(TeamState::Arrived),
+                TeamState::from(TeamState::Arrived),
                 $this->getMachine() //@phpstan-ignore-line
             );
         } else {
@@ -255,9 +255,9 @@ final class AttendancePresenter extends BasePresenter
     protected function createComponentTests(): TestsList
     {
         if ($this->getEvent()->isTeamEvent()) {
-            return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+            return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()), false);
         } else {
-            return new TestsList($this->getContext(), []); // @phpstan-ignore-line
+            return new TestsList($this->getContext(), [], false); // @phpstan-ignore-line
         }
     }
 }

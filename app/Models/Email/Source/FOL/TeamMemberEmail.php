@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Source\FOL;
 
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -31,24 +30,31 @@ final class TeamMemberEmail extends TransitionEmailSource
         $this->authTokenService = $authTokenService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(PersonModel $person, TeamHolder $holder): AuthTokenModel
     {
-        return $this->authTokenService->createToken(
+        return $this->authTokenService->createEventToken(
             $person->getLogin() ?? $this->loginService->createLogin($person),
-            AuthTokenType::from(AuthTokenType::EVENT_NOTIFY),
-            $holder->getModel()->event->registration_end,
-            null,
-            true
+            $holder->getModel()->event
         );
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         /**
          * @var TeamHolder $holder
          */
         $holder = $params['holder'];
-        $lang = Language::from(Language::EN);//TODO
+        $lang = Language::from($holder->getModel()->game_lang->value);
+        $sender = 'Physics Brawl Online <online@physicsbrawl.org>';
+        if ($lang == 'cs') {
+            $sender = 'Fyziklání Online <online@fyziklani.cz>';
+        }
         $emails = [];
         /** @var TeamMemberModel $member */
         foreach ($holder->getModel()->getMembers() as $member) {
@@ -63,7 +69,7 @@ final class TeamMemberEmail extends TransitionEmailSource
                 'lang' => $lang,
                 'data' => [
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
-                    'sender' => _('Physics Brawl Online <online@physicsbrawl.org>'),
+                    'sender' => $sender,
                     'recipient_person_id' => $member->person_id,
                 ],
             ];

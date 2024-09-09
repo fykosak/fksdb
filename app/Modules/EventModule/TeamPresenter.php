@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\SchoolCheckComponent;
+use FKSDB\Components\Applications\Team\Forms\FOFTeamForm;
+use FKSDB\Components\Applications\Team\Forms\FOLTeamForm;
+use FKSDB\Components\Applications\Team\Forms\TeamForm;
+use FKSDB\Components\Applications\Team\NoteForm;
+use FKSDB\Components\Applications\Team\SchoolCheckComponent;
+use FKSDB\Components\Applications\Team\TeamGrid;
+use FKSDB\Components\Applications\Team\TeamList;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
-use FKSDB\Components\EntityForms\Fyziklani\FOFTeamForm;
-use FKSDB\Components\EntityForms\Fyziklani\FOLTeamForm;
-use FKSDB\Components\EntityForms\Fyziklani\NoteForm;
-use FKSDB\Components\EntityForms\Fyziklani\TeamForm;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Game\NotSetGameParametersException;
-use FKSDB\Components\Grids\Application\TeamGrid;
-use FKSDB\Components\Grids\Application\TeamList;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Components\TeamSeating\Single;
+use FKSDB\Models\Authorization\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -74,10 +76,11 @@ final class TeamPresenter extends BasePresenter
 
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
-            || ($this->getEvent()->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'create', $this->getEvent())
-            );
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -194,10 +197,11 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+        return $this->eventAuthorizator->isAllowed(
+            $this->getEntity(),
+            'edit',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -241,6 +245,7 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     private function getMachine(): TeamMachine
     {
@@ -290,19 +295,17 @@ final class TeamPresenter extends BasePresenter
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 return new FOFTeamForm(
-                    $this->getMachine(),
-                    $this->getEvent(),
                     $this->getContext(),
                     $model,
-                    $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
+                    $this->getEvent(),
+                    $this->getLoggedPerson()
                 );
             case 9:
                 return new FOLTeamForm(
-                    $this->getMachine(),
-                    $this->getEvent(),
                     $this->getContext(),
                     $model,
-                    $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent())
+                    $this->getEvent(),
+                    $this->getLoggedPerson()
                 );
         }
         throw new InvalidStateException(_('Event type is not supported'));
@@ -316,6 +319,7 @@ final class TeamPresenter extends BasePresenter
      * @throws GoneException
      * @throws \ReflectionException
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -328,11 +332,13 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return MassTransitionComponent<TeamMachine>
+     * @throws NotImplementedException
+     * @phpstan-return MassTransitionComponent<TeamModel2>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
-        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        /** @phpstan-ignore-next-line */
+        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent()->getTeams());
     }
 
     /**
@@ -376,7 +382,7 @@ final class TeamPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()));
+        return new TestsList($this->getContext(), DataTestFactory::getTeamTests($this->getContext()), true);
     }
 
     /**

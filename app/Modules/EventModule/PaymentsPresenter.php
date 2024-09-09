@@ -88,9 +88,10 @@ final class PaymentsPresenter extends BasePresenter
     {
         $event = $this->getEvent();
         return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event)
-            || ($this->isPaymentAllowed()
+            || (
+                $this->isPaymentAllowed()
                 && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
-                && $this->getEntity()->canEdit());
+            ); // TODO
     }
 
     /**

@@ -25,7 +25,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Change email'), 'fas fa-envelope');
+        return new PageTitle(null, _('E-mail settings'), 'fas fa-envelope');
     }
 
     public function titleConfirm(): PageTitle
@@ -57,10 +57,7 @@ final class EmailPresenter extends BasePresenter
 
     private function handleChangeEmail(PersonModel $person, Logger $logger): void
     {
-        if (
-            !$person->getLogin()->getActiveTokens(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))->fetch()
-            || !$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::CHANGE_EMAIL))
-        ) {
+        if (!$this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::ChangeEmail))) {
             $logger->log(new Message(_('Invalid token'), Message::LVL_ERROR));
             // toto ma vypíčíť že nieje žiadny token na zmenu aktívny.
             //Možné príčiny: neskoro kliknutie na link; nebolo o zmenu vôbec požiuadané a nejak sa dostal sem.
@@ -70,7 +67,7 @@ final class EmailPresenter extends BasePresenter
             $newEmail = $this->tokenAuthenticator->getTokenData();
             ChangeEmailComponent::logEmailChange($person, $newEmail, false);
             $this->personInfoService->storeModel([
-                'email' => $this->tokenAuthenticator->getTokenData(),
+                'email' => $newEmail,
             ], $person->getInfo());
             $logger->log(new Message(_('Email has been changed.'), Message::LVL_SUCCESS));
             $this->tokenAuthenticator->disposeAuthToken();

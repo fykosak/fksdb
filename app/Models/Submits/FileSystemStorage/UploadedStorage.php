@@ -107,7 +107,7 @@ class UploadedStorage implements SubmitStorage
                             $processing->process($submit);
                             rename($dest, $working);
                         } catch (ProcessingException $exception) {
-                            Debugger::log($exception);
+                            Debugger::log($exception, 'upload');
                         }
                     }
 

@@ -100,7 +100,6 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
                 'send' => 'Save',
             ], $formData)
         );
-
         return $this->fixture->run($request);
     }
 
@@ -116,7 +115,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             ],
             'person_info' => [
                 'email' => $person->getInfo()->email,
-                'born' => $person->getInfo()->born,
+                'born' => $person->getInfo()->born ? $person->getInfo()->born->format('c') : null,
             ],
             'person_history' => $history ? [
                 'school_id__meta' => (string)$history->school_id,

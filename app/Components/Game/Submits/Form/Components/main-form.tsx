@@ -12,7 +12,7 @@ import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 're
 import { validate } from '../middleware';
 import AutoButton from 'FKSDB/Components/Game/Submits/Form/Components/auto-button';
 import { TranslatorContext } from '@translator/context';
-import { Store } from 'FKSDB/Components/Controls/Upload/AjaxSubmit/Reducers';
+import { Store } from 'FKSDB/Components/Upload/AjaxSubmit/Reducers';
 
 export interface OwnProps {
     tasks: TaskModel[];

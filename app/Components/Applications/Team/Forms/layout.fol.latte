@@ -1,0 +1,55 @@
+{layout '../../../Controls/FormComponent/layout.latte'}
+{varType FKSDB\Modules\Core\Language|null $lang}
+{block content}
+    <ul>
+        {if $lang->value === 'cs'}
+            <li>
+                Vyplněním této přihlášky přihlásíte tým na soutěž <strong>Fyziklání Online</strong>.
+                Každý člen týmu bude e-mailem informován o přihlášení a může přihlášku upravit.
+            </li>
+            <li>
+                Informace, které zadáte do přihlášky, lze měnit pouze do konce registrace
+                <strong>{$event->registration_end|date:'j. n. Y, H:i:s'}</strong>. Po konci registrace je již nebude
+                možné změnit a budou v této formě zaneseny na diplom vašeho týmu, doporučujeme je proto pečlivě zkontrolovat.
+            </li>
+            <li>
+                Při výběru školy zadejte několik prvních písmen a pokuste se ji najít v rozbalovací nabídce.
+                Pokud školu nenajdete, můžete ji vytvořit pomocí <a href={plink :Core:School:create}>formuláře</a>.
+            </li>
+            <li>
+                Informace, jak se přihlásit do herního systému, vám budou zaslány až během několika dní před soutěží.
+            </li>
+            <li>
+                Další informace a pravidla naleznete na stránce <a href="https://online.fyziklani.cz/">Fyziklání
+                    Online</a>.
+            </li>
+            <li>
+                Registrace je otevřena do <strong>{$event->registration_end|date:'r'}</strong>.
+            </li>
+        {else}
+            <li>
+                By filling out this application, you will register your team for <strong>Physics Brawl Online</strong>.
+                Each team member will receive an email about the registration and can modify this application.
+            </li>
+            <li>
+                The information you enter into the application can only be changed until the end of registration on <strong>{$event->registration_end|date:'r'}</strong>. After this period, it will no longer be possible
+                to modify it, and it will be included on your team's certificate. We recommend checking it carefully.
+            </li>
+            <li>
+                When choosing your school, type the first few letters and try to find it in the dropdown menu.
+                If you have trouble finding your school, you can create it in
+                <a href={plink :Core:School:create}>this form</a>.
+            </li>
+            <li>
+                Information on how to log into the game system will be sent to you a few days before the competition.
+            </li>
+            <li>
+                More information and rules are available at the <a href="https://physicsbrawl.org/"> Physics Brawl Online website</a>.
+            </li>
+            <li>
+                Registration is open until <strong>{$event->registration_end|date:'r'}</strong>.
+            </li>
+        {/if}
+    </ul>
+    {include parent}
+{/block}

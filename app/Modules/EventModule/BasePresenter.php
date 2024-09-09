@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Choosers\EventChooser;
+use FKSDB\Components\Choosers\EventChooser;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
@@ -75,7 +75,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     protected function getSubTitle(): ?string
     {
-        return $this->getEvent()->getName()->getText($this->translator->lang);// @phpstan-ignore-line
+        return $this->getEvent()->getName()->getText($this->translator->lang); // @phpstan-ignore-line
     }
 
     /**
