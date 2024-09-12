@@ -83,7 +83,6 @@ final class ACL
         $service->allow([ContestRole::DataManager, ContestRole::Boss], Models\EmailMessageModel::RESOURCE_ID, 'list');
         // events
         $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID);
-        $service->allow(ContestRole::EventManager, Models\EventModel::RESOURCE_ID, 'chart');
         $service->allow(ContestRole::Organizer, Models\EventModel::RESOURCE_ID, 'list');
         $service->allow(ContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
         $service->allow(BaseRole::Registered, Models\EventModel::RESOURCE_ID, 'dashboard');
@@ -235,7 +234,10 @@ final class ACL
                 new Authorization\Assertions\IsRegistrationOpened()
             )
         );
-        $permission->allow(ContestRole::EventManager, Models\EventParticipantModel::RESOURCE_ID);
+        $permission->allow(
+            [ContestRole::EventManager, Authorization\Roles\Events\EventRole::ApplicationManager],
+            Models\EventParticipantModel::RESOURCE_ID
+        );
     }
 
     private static function createTeamApplications(Permission $permission): void
@@ -275,7 +277,10 @@ final class ACL
                 new Authorization\Assertions\IsRegistrationOpened()
             )
         );
-        $permission->allow(ContestRole::EventManager, Models\Fyziklani\TeamModel2::RESOURCE_ID);
+        $permission->allow(
+            [ContestRole::EventManager, Authorization\Roles\Events\EventRole::ApplicationManager],
+            Models\Fyziklani\TeamModel2::RESOURCE_ID
+        );
     }
 
     private static function createUpload(

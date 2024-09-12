@@ -11,7 +11,8 @@ use Nette\Utils\Html;
 class EventRole implements Role
 {
     // phpcs:disable
-    public const GameInserter = 'game.inserter';
+    public const GameInserter = 'gameInserter';
+    public const ApplicationManager = 'applicationManager';
     // phpcs:enable
 
     protected EventModel $event;
