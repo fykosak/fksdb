@@ -20,7 +20,7 @@ abstract class UIEmailSource extends EmailSource
     /**
      * @phpstan-return LocalizedString<'cs'|'en'>
      */
-    abstract public function description(): LocalizedString;//@phpstan-ignore-line
+    abstract public function description(): LocalizedString;
 
     abstract public function creatForm(Form $form): void;
 }

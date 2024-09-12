@@ -40,7 +40,7 @@ final class TemplateFactory
 
     /**
      * @throws BadTypeException
-     * @phpstan-return callable(string,array):string
+     * @phpstan-return callable(string,mixed[]):string
      */
     public function create(Language $lang): callable
     {
