@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\LangMap;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
@@ -42,8 +42,11 @@ final class TaskModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'task';
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     public function getFullLabel(
-        Language $lang,
+        GettextTranslator $translator,
         bool $includeContest = false,
         bool $includeYear = false,
         bool $includeSeries = true
@@ -52,7 +55,7 @@ final class TaskModel extends Model implements Resource
         if ($includeContest) {
             $label .= $this->contest->name . ' ';
         }
-        switch ($lang->value) {
+        switch ($translator->lang) {
             case 'cs':
                 if ($includeYear) {
                     $label .= $this->year . '. ročník ';
@@ -69,7 +72,7 @@ final class TaskModel extends Model implements Resource
                     $label .= $this->series . Utils::ordinal($this->series) . ' series ';
                 }
         }
-        return $label . $this->label . ' - ' . $this->name->get($lang->value);
+        return $label . $this->label . ' - ' . $translator->getVariant($this->name);
     }
 
     /**

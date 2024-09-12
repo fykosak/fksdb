@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Seating;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\LangMap;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -198,9 +199,12 @@ final class Place2024 implements Place
         return $sectors[$x][$y];
     }
 
-    public function sectorName(string $language): string
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function sectorName(GettextTranslator $translator): string
     {
-        return self::getSectors()[$this->sector()]->get($language); //@phpstan-ignore-line
+        return $translator->getVariant(self::getSectors()[$this->sector()]);
     }
 
     public function layout(): string

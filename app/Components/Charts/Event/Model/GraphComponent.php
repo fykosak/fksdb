@@ -41,6 +41,7 @@ class GraphComponent extends FrontEndComponent implements Chart
                 foreach ($states as $state) {
                     $nodes[$state->value] = [
                         'label' => $state->label(),
+                        'behaviorType' => $state->behaviorType(),
                     ];
                 }
             }

@@ -58,7 +58,7 @@ final class SubmitsGrid extends BaseGrid
         $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -137,7 +137,7 @@ final class SubmitsGrid extends BaseGrid
             $this->flashMessage(
                 sprintf(
                     _('Submitting of task %s cancelled.'),
-                    $submit->task->getFullLabel(Language::from($this->translator->lang))
+                    $submit->task->getFullLabel($this->translator)
                 ),
                 Message::LVL_WARNING
             );

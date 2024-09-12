@@ -16,19 +16,22 @@ final class SubmitState extends FakeStringEnum implements EnumColumn
     public const Checked = 'checked';
     // phpcs:enable
 
-    public function badge(): Html
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::Checked:
-                return Html::el('span')
-                    ->addAttributes(['class' => 'badge bg-success'])
-                    ->addText($this->label());
+                return 'success';
             default:
             case self::NotChecked:
-                return Html::el('span')
-                    ->addAttributes(['class' => 'badge bg-danger'])
-                    ->addText($this->label());
+                return 'danger';
         }
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
     public function label(): string

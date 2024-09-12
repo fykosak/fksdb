@@ -57,6 +57,11 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         ];
     }
 
+    public function behaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
+
     /**
      * @throws NotImplementedException
      */

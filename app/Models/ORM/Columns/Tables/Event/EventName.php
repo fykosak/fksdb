@@ -16,6 +16,6 @@ class EventName extends AbstractColumnFactory
 {
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText($model->getName()->get($this->translator->lang));// @phpstan-ignore-line
+        return Html::el('span')->addText($this->translator->getVariant($model->getName()));
     }
 }

@@ -125,11 +125,11 @@ abstract class EmailSource
             throw new InvalidArgumentException(sprintf(_('Cannot find template "%s".'), $templateFile));
         }
         return [
-            'subject' => $this->templateFactory->create($lang)->renderToString(
+            'subject' => $this->templateFactory->create($lang)(
                 __DIR__ . '/subject.latte',
                 array_merge(['templateFile' => $templateFile], $data)
             ),
-            'inner_text' => $this->templateFactory->create($lang)->renderToString($templateFile, $data),
+            'inner_text' => $this->templateFactory->create($lang)($templateFile, $data),
         ];
     }
 }

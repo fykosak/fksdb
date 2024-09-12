@@ -27,7 +27,7 @@ final class EventChooser extends ChooserComponent
         /** @var EventModel $event */
         foreach ($query as $event) {
             $items[] = new NavItem(
-                new Title(null, $event->getName()->get($this->translator->lang)), // @phpstan-ignore-line
+                new Title(null, $this->translator->getVariant($event->getName())), // @phpstan-ignore-line
                 'this',
                 ['eventId' => $event->event_id],
                 [],
@@ -37,7 +37,7 @@ final class EventChooser extends ChooserComponent
         return new NavItem(
             new Title(
                 null,
-                $this->event->getName()->get($this->translator->lang)// @phpstan-ignore-line
+                $this->translator->getVariant($this->event->getName())// @phpstan-ignore-line
             ),
             '#',
             [],

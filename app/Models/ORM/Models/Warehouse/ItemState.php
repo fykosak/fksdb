@@ -16,24 +16,27 @@ final class ItemState extends FakeStringEnum implements EnumColumn
     public const UNPACKED = 'unpacked';
     public const DAMAGED = 'damaged';
 
-    public function badge(): Html
+    public function behaviorType(): string
     {
-        $badge = 'badge bg-color-5';
         switch ($this->value) {
             case self::NEW:
-                $badge = 'badge bg-color-3';
-                break;
+                return 'color-3';
             case self::USED:
-                $badge = 'badge bg-color-2';
-                break;
+                return 'color-2';
             case self::UNPACKED:
-                $badge = 'badge bg-color-1';
-                break;
+                return 'color-1';
             case self::DAMAGED:
-                $badge = 'badge bg-color-4';
-                break;
+                return 'color-4';
+            default:
+                return 'color-5';
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
     public function label(): string

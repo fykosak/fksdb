@@ -13,6 +13,7 @@ export interface Link {
 
 export interface Node {
     label: string;
+    behaviorType: string;
 }
 
 interface OwnProps {
@@ -30,12 +31,11 @@ export default function ModelChart({data: {links, nodes}}: OwnProps) {
     const simNodes: {
         [key: number]: SimNode;
     } = {};
-    const color = scaleOrdinal(schemeCategory10);
     for (const key in nodes) {
         if (Object.hasOwn(nodes, key)) {
             simNodes[key] = {
                 label: nodes[key].label,
-                color: color(key),
+                behaviorType: nodes[key].behaviorType,
             };
         }
     }

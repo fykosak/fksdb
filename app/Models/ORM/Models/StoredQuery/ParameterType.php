@@ -26,6 +26,11 @@ final class ParameterType extends FakeStringEnum implements EnumColumn
         return '';
     }
 
+    public function behaviorType(): string
+    {
+        return 'primary';
+    }
+
     public static function cases(): array
     {
         return [

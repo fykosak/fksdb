@@ -177,7 +177,7 @@ abstract class BasePresenter extends Presenter
     public function flashMessage($message, string $type = 'info'): \stdClass
     {
         if ($message instanceof LangMap) {
-            $message = $message->get($this->translator->lang);
+            $message = $this->translator->getVariant($message);
         }
         return parent::flashMessage($message, $type);
     }

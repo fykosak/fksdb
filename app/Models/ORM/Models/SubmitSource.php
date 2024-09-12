@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
@@ -14,6 +15,11 @@ final class SubmitSource extends FakeStringEnum implements EnumColumn
     public const UPLOAD = 'upload';
     public const POST = 'post';
     public const QUIZ = 'quiz';
+
+    public function behaviorType(): string
+    {
+        throw new NotImplementedException();
+    }
 
     public function badge(): Html
     {

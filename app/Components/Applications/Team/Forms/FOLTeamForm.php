@@ -27,7 +27,6 @@ class FOLTeamForm extends TeamForm
     public function render(): void
     {
         $this->template->event = $this->event;
-        $this->template->lang = Language::tryFrom($this->translator->lang);
         parent::render();
     }
 

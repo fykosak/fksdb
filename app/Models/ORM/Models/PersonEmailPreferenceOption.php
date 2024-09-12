@@ -19,7 +19,14 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
+    }
+
+    public function behaviorType(): string
+    {
+        return 'primary';
     }
 
     public function label(): string

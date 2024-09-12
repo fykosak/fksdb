@@ -23,7 +23,7 @@ export interface Link extends SimulationLinkDatum<Node> {
 
 export interface Node extends SimulationNodeDatum {
     label: string;
-    color: string;
+    behaviorType: string;
 }
 
 interface OwnProps {
@@ -60,7 +60,7 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
     nodes.forEach((node, key) => {
         nodesElements.push(
             <g fill="currentColor"
-               style={{'--color': node.color} as React.CSSProperties}
+               style={{'--color': 'var(--bs-' + node.behaviorType + ')'} as React.CSSProperties}
                key={key}
                transform={'translate(' + node.x + ',' + node.y + ')'}>
                 <circle r="7.5"/>

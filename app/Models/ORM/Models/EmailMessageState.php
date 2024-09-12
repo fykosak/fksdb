@@ -23,28 +23,30 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
+    }
+
+    public function behaviorType(): string
+    {
         switch ($this->value) {
             default:
             case self::Cancelled:
-                $badge = 'secondary';
-                break;
+                return 'secondary';
             case self::Rejected:
             case self::Failed:
-                $badge = 'danger';
-                break;
+                return 'danger';
             case self::Concept:
-                $badge = 'info';
-                break;
+                return 'info';
             case self::Sent:
-                $badge = 'success';
-                break;
+                return 'success';
             case self::Ready:
             case self::Waiting:
-                $badge = 'warning';
-                break;
+                return 'warning';
         }
-        return Html::el('span')->addAttributes(['class' => 'badge bg-' . $badge])->addText($this->label());
     }
+
 
     public function label(): string
     {

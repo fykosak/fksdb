@@ -59,7 +59,7 @@ final class DispatchGrid extends BaseGrid
         $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(EventModel $model) => $model->getName()->get($this->translator->lang), //@phpstan-ignore-line
+                fn(EventModel $model) => $this->translator->getVariant($model->getName()), //@phpstan-ignore-line
                 new Title(null, _('Event name'))
             ),
             'event_name'

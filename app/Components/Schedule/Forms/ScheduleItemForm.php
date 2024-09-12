@@ -88,7 +88,7 @@ class ScheduleItemForm extends ModelForm
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->group->event->getScheduleGroups() as $group) {
-            $items[$group->schedule_group_id] = $group->name->get($this->translator->lang)
+            $items[$group->schedule_group_id] = $this->translator->getVariant($group->name)
                 . '(' . $group->schedule_group_type->value . ')';
         }
         $container->addSelect('schedule_group_id', _('Group'), $items);
