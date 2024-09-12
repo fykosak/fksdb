@@ -21,6 +21,8 @@ dist/*
 www/**/.sass-cache/
 
 docker
+!docker/config/mysql-client.cnf
+!docker/config/apache.conf
 i18n/messages.pot
 i18n/i18n-data.ts
 i18n/**/*.po~

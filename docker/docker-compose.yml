@@ -1,7 +1,8 @@
 version: '3'
+name: fksdb
 
 services:
-  fksdb:
+  app:
     image: fksdb
     build:
       context: ..
@@ -12,26 +13,21 @@ services:
       TZ: 'Europe/Prague'
       NETTE_DEVEL: '1' # Nette log level, 1 to enable
     volumes:
-      - ./config/apache.conf:/etc/apache2/sites-available/000-default.conf # site config
-      - ./config/php.ini:/usr/local/etc/php/php-local.ini # php config
-      - ./config/config.neon:/var/www/fksdb/app/config/config.local.neon # nette config
-      - ./log:/var/www/fksdb/log
-      - ./upload:/var/www/fksdb/upload
-      - ../:/var/www/fksdb
+      - ./config/php.ini:/etc/php/8.1/apache2/php.ini # php config
+      - ../:/app
     ports:
       - 8080:80 # opened ports mapping, not needed with proxy
-    user: 1000:1000 # expects the main user as uid:pid
 
-  mysql:
-    image: mysql:8.0
-    container_name: fksdb_mysql
+  mariadb:
+    image: mariadb:lts
+    container_name: fksdb-mariadb
     restart: on-failure:3
     environment:
       TZ: 'Europe/Prague'
       MYSQL_DATABASE: 'fksdb'
       MYSQL_USER: 'fksdb'
-      MYSQL_PASSWORD: 'asdf'
-      MYSQL_ROOT_PASSWORD: 'asdf'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
     volumes:
       - ./mysql_data:/var/lib/mysql # path to dir with database data
       - ./config/mysql.cnf:/etc/mysql/my.cnf # mysql config

@@ -38,7 +38,7 @@ RUN echo 'cs_CZ.UTF-8 UTF-8' >> /etc/locale.gen && \
 	locale-gen
 
 USER www-data
-WORKDIR /var/www/fksdb
+WORKDIR /app
 RUN mkdir temp && chmod 777 temp
 COPY --chown=www-data --from=node-builder /usr/src/fksdb .
 RUN ./i18n/compile.sh

@@ -19,8 +19,8 @@ parameters:
         user:
         password:
     googleOAuth2:
-        clientId:
-        clientSecret:
+        clientId: ''
+        clientSecret: ''
     #send blank emails by spamMailer
     spamMailer:
         enabled: true
@@ -30,13 +30,13 @@ session:
     cookie_secure: true
 database:
     default:
-        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
-        user:
-        password:
+        dsn: 'mysql:host=mariadb;dbname=fksdb'
+        user: root
+        password: password
     ro:
-        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
-        user:
-        password:
+        dsn: 'mysql:host=mariadb;dbname=fksdb'
+        user: root
+        password: password
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
 #fksrouter:
