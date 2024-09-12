@@ -61,7 +61,7 @@ final class PrepareText implements Statement
                 $token = $this->authTokenService->createUnsubscribeToken(
                     $model->person->getLogin() ?? $this->loginService->createLogin($model->person)
                 );
-                $text = $template(
+                $text = $template->renderToString(
                     __DIR__ . "/../Containers/spam.person.{$model->lang->value}.latte",
                     [
                         'model' => $model,
@@ -73,7 +73,7 @@ final class PrepareText implements Statement
                     $model->recipient,
                     $this->container->getParameters()['machineCode']['salt']['unsubscribe']
                 );
-                $text = $template(
+                $text = $template->renderToString(
                     __DIR__ . "/../Containers/spam.anonymous.{$model->lang->value}.latte",
                     [
                         'model' => $model,
@@ -82,7 +82,7 @@ final class PrepareText implements Statement
                 );
             }
         } else {
-            $text = $template(
+            $text = $template->renderToString(
                 __DIR__ . '/../Containers/noSpam.latte',
                 [
                     'model' => $model,

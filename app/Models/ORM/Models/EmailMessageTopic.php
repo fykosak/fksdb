@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Localization\LangMap;
-use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -25,30 +24,7 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')
-            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
-            ->addText($this->label());
-    }
-
-    public function behaviorType(): string
-    {
-        switch ($this->value) {
-            case self::SpamOther:
-            case self::SpamMff:
-            case self::SpamContest:
-                return 'warning';
-            case self::Contest:
-                return 'primary';
-            case self::FOF:
-                return 'fof';
-            case self::FOL:
-                return 'fol';
-            case self::DSEF:
-                return 'dsef';
-            default:
-            case self::Internal:
-                return 'secondary';
-        }
+        return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
     }
 
     public function label(): string
@@ -118,34 +94,34 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>
+     * @phpstan-return LangMap<'cs'|'en',string>
      */
-    public function getReason(): LocalizedString
+    public function getReason(): LangMap
     {
         switch ($this->value) {
             case self::Contest:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
                     souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
                     'en' => '', // TODO
                 ]);
             case self::FOL:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => '',// TODO
                     'en' => '',// TODO
                 ]);
             case self::FOF:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => '',// TODO
                     'en' => '',// TODO
                 ]);
             case self::DSEF:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => '',// TODO
                     'en' => '',// TODO
                 ]);
             case self::Internal:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail ste dostali pretože ste on požiadali.',
                     'en' => '',
                 ]);

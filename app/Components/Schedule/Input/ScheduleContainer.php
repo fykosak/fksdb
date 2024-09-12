@@ -34,6 +34,7 @@ class ScheduleContainer extends ContainerWithOptions
     /** @var string[] */
     private array $types;
     private bool $required;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
     private string $label;
     private ?string $description;
@@ -62,6 +63,9 @@ class ScheduleContainer extends ContainerWithOptions
         $this->createContainers();
     }
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     public function inject(GettextTranslator $translator): void
     {
         $this->translator = $translator;
@@ -92,7 +96,7 @@ class ScheduleContainer extends ContainerWithOptions
             $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
-                $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
+                $field = new ScheduleGroupField($group, $this->translator);
                 if ($this->required) {
                     $field->setRequired(_('Field %label is required.'));
                 }

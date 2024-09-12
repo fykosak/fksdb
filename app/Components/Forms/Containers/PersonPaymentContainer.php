@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\Forms\Controls\Checkbox;
@@ -27,6 +26,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     private ?PaymentModel $model;
     private EventModel $event;
     private PersonModel $loggedPerson;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
 
     /**
@@ -47,6 +47,9 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->configure();
     }
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     final public function injectServicePersonSchedule(
         PersonScheduleService $personScheduleService,
         GettextTranslator $translator
@@ -97,7 +100,7 @@ class PersonPaymentContainer extends ContainerWithOptions
 
             $checkBox = $container->addCheckbox(
                 (string)$model->person_schedule_id,
-                $model->getLabel(Language::from($this->translator->lang))
+                $model->getLabel($this->translator)
                 . ' ('
                 . $model->schedule_item->getPrice()->__toString()
                 . ')'

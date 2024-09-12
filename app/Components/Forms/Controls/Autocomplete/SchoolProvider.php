@@ -60,7 +60,6 @@ class SchoolProvider implements FilteredDataProvider
             $schools->where('active IS NULL OR active = 1');
         }
         $schools->order('name_abbrev');
-
         if (count($schools) > self::LIMIT) {
             return [];
         }

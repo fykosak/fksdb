@@ -61,35 +61,31 @@ final class EmailPresenter extends BasePresenter
         $this->template->source = $this->getEmailSource();
     }
 
-    public function titleTemplate(): PageTitle
-    {
-        return new PageTitle(null, 'Email templates', 'fas fa-envelope');
-    }
-
     /**
      * @throws NoContestAvailable
      */
-    public function authorizedHowTo(): bool
+    public function authorizedTransition(): bool
     {
         return $this->contestAuthorizator->isAllowed(
             $this->getORMService()->getModelClassName()::RESOURCE_ID,
-            'howTo',
+            'transition',
             $this->getSelectedContest()
         );
-    }
-
-    public function titleHowTo(): PageTitle
-    {
-        return new PageTitle(null, 'How to', 'fas fa-clipboard-question');
     }
 
     public function authorizedDetail(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getEntity(),
-            'detail',
-            $this->getSelectedContest()
-        );
+        return new PageTitle(null, _('Transitions'), 'fas fa-envelope-open');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('E-mail dashboard'), 'fas fa-mail-bulk');
     }
 
     /**
@@ -133,7 +129,15 @@ final class EmailPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+        $this->template->root = [
+            'title' => new Title(null, _('Entities')),
+            'items' => [
+                'Organizer:Email:list' => [],
+                'Organizer:Email:transition' => [],
+                'Organizer:Email:template' => [],
+                'Organizer:Email:howTo' => [],
+            ],
+        ];
     }
 
     public function titleDefault(): PageTitle
@@ -161,7 +165,6 @@ final class EmailPresenter extends BasePresenter
                 'Organizer:Email:list' => [],
                 'Organizer:Email:transition' => [],
                 'Organizer:Email:template' => [],
-                'Organizer:Email:howTo' => [],
             ],
         ];
     }
@@ -214,6 +217,18 @@ final class EmailPresenter extends BasePresenter
     protected function createComponentStateChart(): GraphComponent //@phpstan-ignore-line
     {
         return new GraphComponent($this->getContext(), $this->machineFactory->getEmailMachine());
+    }
+
+    /**
+     * @return MassTransitionComponent<EmailMessageModel>
+     */
+    protected function createComponentMassTransition(): MassTransitionComponent
+    {
+        return new MassTransitionComponent(
+            $this->getContext(),
+            $this->machineFactory->getEmailMachine(), //@phpstan-ignore-line
+            $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready)
+        );
     }
 
     /**

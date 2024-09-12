@@ -6,18 +6,21 @@ namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\GettextTranslator;
 
 class FullCapacityException extends ScheduleException
 {
-    public function __construct(ScheduleItemModel $item, PersonModel $person, Language $lang)
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function __construct(ScheduleItemModel $item, PersonModel $person, GettextTranslator $translator)
     {
         parent::__construct(
             $item->schedule_group,
             sprintf(
                 _('The person %s could not be registered for "%s" because of full capacity.'),
                 $person->getFullName(),
-                $item->name->getText($lang->value)
+                $translator->getVariant($item->name)
             )
         );
     }

@@ -33,17 +33,22 @@ final class EmailMessageState extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             default:
             case self::Cancelled:
-                return 'secondary';
+                $badge = 'secondary';
+                break;
             case self::Rejected:
             case self::Failed:
-                return 'danger';
+                $badge = 'danger';
+                break;
             case self::Concept:
-                return 'info';
+                $badge = 'info';
+                break;
             case self::Sent:
-                return 'success';
+                $badge = 'success';
+                break;
             case self::Ready:
             case self::Waiting:
-                return 'warning';
+                $badge = 'warning';
+                break;
         }
     }
 

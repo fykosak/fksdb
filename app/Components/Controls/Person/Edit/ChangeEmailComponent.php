@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailEmail;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;

@@ -127,7 +127,7 @@ class PaymentForm extends ModelForm
         $this->schedulePaymentService->storeItems(
             (array)$values['event_items'],
             $model,
-            Language::from($this->translator->lang)
+            $this->translator
         );
         return $model;
     }

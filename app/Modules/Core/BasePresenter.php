@@ -25,6 +25,7 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -38,6 +39,7 @@ use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
+use Nette\Utils\Html;
 use Tracy\Debugger;
 
 /**
@@ -54,6 +56,7 @@ abstract class BasePresenter extends Presenter
     private string $language;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     protected GettextTranslator $translator;
     protected bool $authorized = true;
     /** @phpstan-var array<string,bool> */
@@ -67,6 +70,9 @@ abstract class BasePresenter extends Presenter
     protected ContestYearAuthorizator $contestYearAuthorizator;
     protected BaseAuthorizator $baseAuthorizator;
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     final public function injectBase(
         Container $diContainer,
         ContestService $contestService,
@@ -104,7 +110,8 @@ abstract class BasePresenter extends Presenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
+            // TODO test - teoreticky fixuje prihlásenie tokenom ak je uživateľ prihlásený
+            if (/*!$this->getUser()->isLoggedIn() && */ $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
             if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
@@ -162,6 +169,17 @@ abstract class BasePresenter extends Presenter
                 return false;
         }
         return false;
+    }
+
+    /**
+     * @param string|LangMap<'cs'|'en',string|Html>|Html $message
+     */
+    public function flashMessage($message, string $type = 'info'): \stdClass
+    {
+        if ($message instanceof LangMap) {
+            $message = $this->translator->getVariant($message);
+        }
+        return parent::flashMessage($message, $type);
     }
 
     /**
@@ -258,6 +276,7 @@ abstract class BasePresenter extends Presenter
 
     /**
      * @throws UnsupportedLanguageException
+     * @phpstan-return 'cs'|'en'
      */
     private function selectLang(): string
     {

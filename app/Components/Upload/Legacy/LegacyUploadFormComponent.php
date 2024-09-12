@@ -129,7 +129,7 @@ class LegacyUploadFormComponent extends FormComponent
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
 
-            $upload = $container->addUpload('file', $task->getFullLabel(Language::from($this->translator->lang)));
+            $upload = $container->addUpload('file', $task->getFullLabel($this->translator));
             $conditionedUpload = $upload
                 ->addCondition(Form::FILLED)
                 ->addRule(
