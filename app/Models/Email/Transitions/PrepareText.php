@@ -73,7 +73,6 @@ final class PrepareText implements Statement
                     $model->recipient,
                     $this->container->getParameters()['machineCode']['salt']['unsubscribe']
                 );
-                Debugger::barDump($code);
                 $text = $template->renderToString(
                     __DIR__ . "/../Containers/spam.anonymous.{$model->lang->value}.latte",
                     [

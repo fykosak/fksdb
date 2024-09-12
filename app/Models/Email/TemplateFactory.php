@@ -44,8 +44,9 @@ final class TemplateFactory
 
     /**
      * @throws BadTypeException
+     * @phpstan-return callable(string,mixed[]):string
      */
-    public function create(Language $lang): Template
+    public function create(Language $lang): callable
     {
         if (!$this->presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $this->presenter);
@@ -59,6 +60,12 @@ final class TemplateFactory
         $template->control = $this->presenter;
         $template->baseUrl = $this->request->getUrl()->getBaseUrl();
         $template->setTranslator($this->translator, $lang->value);
-        return $template;
+        return function (string $file, array $params = []) use ($template, $lang): string {
+            $oldLang = $this->translator->lang;
+            $this->translator->setLang($lang->value);
+            $text = $template->renderToString($file, $params);
+            $this->translator->setLang($oldLang);
+            return $text;
+        };
     }
 }
