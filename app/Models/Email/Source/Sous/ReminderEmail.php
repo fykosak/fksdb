@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\Sous;
 
 use FKSDB\Models\Email\UIEmailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
@@ -21,7 +22,7 @@ use Nette\Forms\Form;
  *      model: EventParticipantModel,
  * },array{event_id:int}>
  */
-final class ReminderEmailSource extends UIEmailSource
+final class ReminderEmail extends UIEmailSource
 {
     private EventParticipantService $eventParticipantService;
     private EventService $eventService;
@@ -70,11 +71,12 @@ final class ReminderEmailSource extends UIEmailSource
                         'model' => $participant,
                     ],
                 ],
-                'lang' => Language::from(Language::CS),
                 'data' => [
                     'recipient_person_id' => $participant->person_id,
                     'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
                     'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+                    'lang' => Language::from(Language::CS),
                 ],
             ];
         }
@@ -86,7 +88,7 @@ final class ReminderEmailSource extends UIEmailSource
         return new Title(null, sprintf(_('Reminder %d'), $this->number));
     }
 
-    public function description(): LocalizedString//@phpstan-ignore-line
+    public function description(): LocalizedString
     {
         return new LocalizedString(['cs' => '', 'en' => '']);
     }

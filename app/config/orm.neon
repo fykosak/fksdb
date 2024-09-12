@@ -72,9 +72,19 @@ orm:
             blind_carbon_copy:
                 type: email
                 title: _('Bcc')
+            inner_text:
+                type: text
+                title: _('Inner text')
             text:
                 type: text
                 title: _('Text')
+            topic:
+                type: enum
+                class: FKSDB\Models\ORM\Models\EmailMessageTopic
+                title: _('Topic')
+            lang:
+                type: string #TODO
+                title: _('Language')
             state:
                 type: enum
                 title: _('State')
@@ -85,6 +95,9 @@ orm:
             sent:
                 type: dateTime
                 title: _('Sent')
+    person_email_preference:
+        model: FKSDB\Models\ORM\Models\PersonEmailPreferenceModel
+        service: FKSDB\Models\ORM\Services\PersonEmailPreferenceService
     event:
         service: FKSDB\Models\ORM\Services\EventService
         model: FKSDB\Models\ORM\Models\EventModel
@@ -1206,7 +1219,7 @@ orm:
                 type: text
                 title: _('Note')
     unsubscribed_email:
-        model: Fykosak\NetteORM\DummyModel
+        model: Fykosak\NetteORM\Model\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
     person_mail:
         model: FKSDB\Models\ORM\Models\PersonMailModel

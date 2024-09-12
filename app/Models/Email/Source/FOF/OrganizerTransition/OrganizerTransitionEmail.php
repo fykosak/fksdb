@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Source\FOF\OrganizerTransition;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Models\Email\TransitionEmailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Tests\Test;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
@@ -15,7 +16,7 @@ use FKSDB\Modules\Core\Language;
 /**
  * @phpstan-extends TransitionEmailSource<TeamModel2,array{tests:Test<TeamModel2>[],model:TeamModel2}>
  */
-class OrganizerTransitionEmail extends TransitionEmailSource
+final class OrganizerTransitionEmail extends TransitionEmailSource
 {
     protected function getSource(array $params): array
     {
@@ -33,10 +34,11 @@ class OrganizerTransitionEmail extends TransitionEmailSource
                         'model' => $holder->getModel(),
                     ],
                 ],
-                'lang' => Language::from(Language::CS),
                 'data' => [
                     'sender' => 'Fyziklání <fyziklani@fykos.cz>',
                     'recipient' => 'Fyziklání <fyziklani@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                    'lang' => Language::from(Language::CS),
                 ]
             ]
         ];

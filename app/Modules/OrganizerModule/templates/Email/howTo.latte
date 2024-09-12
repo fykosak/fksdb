@@ -1,0 +1,283 @@
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Základné atributy emailu</h2>
+
+            <ul>
+                <li>
+                    <code class="text-success">inner_text</code> vlastný text emailu, môže byť HTML fragment alebo
+                    plain-text.
+                </li>
+                <li>
+                    <code class="text-success">subject</code> predmet emailu
+                </li>
+                <li>
+                    <code class="text-success">sender</code> odosielatel emailov
+                </li>
+                <li>
+                    <code class="text-info">carbon_copy</code> CC videitľná kópia
+                </li>
+                <li>
+                    <code class="text-info">blind_carbon_copy</code> BCC skrytá kópia
+                </li>
+                <li>
+                    <code class="text-warning">recipient_person_id</code> person Id osoby, ktorej sa pošle email, FKSDB
+                    si sama vytiahne email, preferované
+                </li>
+                <li>
+                    <code class="text-warning">recipient</code> konkrétny email, na ktorý sa email pošle
+                </li>
+                <li>
+                    <code class="text-success">reply_to</code>
+                </li>
+                <li>
+                    <code class="text-success">state</code> Stav emailu viď <a href="#state">State</a>
+                </li>
+                <li>
+                    <code class="text-info">priority</code> 1 alebo 0, či je email prioritný, rozhoduje o poradí
+                    posielania, používať len vo výnimočných prípadoch, a u malého počtu emailov.
+                </li>
+                <li>
+                    <code class="text-success">topic</code> Topic emailu, viď <a href="#topic">Topic</a>
+                </li>
+                <li>
+                    <code class="text-success">lang</code> jazyk emaili <code>cs|en</code>
+                </li>
+                <li>
+                    <code class="text-danger">text</code> Text emailu, ktor'sa poslal, vrátane patičky, nevyplňovať
+                </li>
+                <li>
+                    <code class="text-danger">created</code> časová značka kedy sa email vytvoril, nevyplňovať
+                </li>
+                <li>
+                    <code class="text-danger">sent</code> Časová značka kedy sa email odoslal, nevplňovať
+                </li>
+            </ul>
+            <h4>Legenda</h4>
+            <ul>
+                <li class="text-success"><b>Required</b> - Povinné</li>
+                <li class="text-info"><b>Optional</b> - Nepovinné</li>
+                <li class="text-warning"><b>One of</b> - Povinné práve jedno (XOR)</li>
+                <li class="text-danger"><b>Shall not</b> - Nevyplňat/nesmie obsahovať</li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2 id="topic">Topicy</h2
+            <p>
+                Každý email, ktorý sa pošle z FKSDB bude musieť mať od teraz topic. Topic hovorí o aký typ emailu sa
+                jedná a ako sa ma aplikovať unsubscribed politika.
+            </p>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="col">
+                    <div class="card" style="border-color: var(--fks-page-theme-color)">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Contest)->badge()}</h5>
+                            <p class="card-text">
+                                Sem spadajú všetky email týkajúce sa semináru, (FYKOSu a Výfuku) pre riešiteľov,
+                                zahrňuje to aj sústredka a
+                                tábory alebo ďalšie akcie, na ktoré sa nedá dostať inak ako riešením semináru.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>Emaily pre už prihlásených riešiteľov do semináru napr.
+                                    "Posunul sa deadline." "Sú nahraté opravené riešenia." "Výbere odmien za ročník."
+                                </li>
+                                <li>Emaily k akciam na ktoré sa nedá dostať inak ako reišením semináru (Tábor,
+                                    sústredenie)
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>Hormadné emaily (spam) o seminári</li>
+                                <li>Akcie s otvorenou registráciou (môže sa prihlásiť každý) napr. DSEF, FOL, FOF</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-fof">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topicy {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::FOL)->badge()}
+            {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::FOF)->badge()}
+            {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::DSEF)->badge()}
+                            </h5>
+                            <p class="card-text">
+                                Tieto topicy slúžia pre akcie s otvorenou registráciou (netreba riešiť seminár aby sa
+                                dalo prihlásiť). Slúžia výhradne pre prihlásených na súťaž, a emaily <b>nutné</b> pre
+                                ich účasť na akcii.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>Emaily o vytvorní/zmene prihlášky.</li>
+                                <li>Emaily pred akciou, email po akcií napr. s feedbackom</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>Emaily, že sme otvorili registráciu na dané akcie</li>
+                                <li>Informácie o sponzoroch a partneroch akcie</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-secondary">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Internal)->badge()}</h5>
+                            <p class="card-text">
+                                Sem patria automaticky generované emaily napr. zmena hesla, zmena emailu, reset hesla...
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>Automatické emaily z FKSDB (ak sa netýkajú topicov hore uvedených)</li>
+                                <li>Emaily pre orgov (stipká...)</li>
+                                <li>Informačné maily pre orgov (školy/zmeny v prihláškach)</li>
+                                <li>Dalšie maily pre organizátorov</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>Nemal by sa používať na komunikáciu s účastníkmi/riešiteľmi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamContest)->badge()}</h5>
+                            <p class="card-text">
+                                Ako napovedá názov je to prvý spamoidný topic, tento je určený pre naše akcie tj, ktoré
+                                poriadame my.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>Emaily, typu otvoril sme prihlasovanie na FOF, FOL, DSEF. Alebo je nový ročník.</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>Veci uvedené v nasledujúcich topicoch</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamMff)->badge()}</h5>
+                            <p class="card-text">
+                                Sú to akcie MFF, ktoré FYKOS priamo neorganizuje napr. matematický náboj, prip. nejaké
+                                DODy a pod.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>pozvánky na DODy a akcie MFF</li>
+                                <li>pozvánky na akcie iných seminárov vrámci MFF</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>pozvánky na akcie mimo MFF</li>
+                                <li>pozvánky na semináre mimo MFF</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamOther)->badge()}</h5>
+                            <p class="card-text">
+                                Teda všetko čo sa nedá nazadiť nikde inde a je to spam.
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            Čo sem patrí:
+                            <ul>
+                                <li>emaily o sponzoroch/partneroch</li>
+                                <li>emaily o seminároch/akciách mimo MFF</li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            Čo sem nepatrí:
+                            <ul>
+                                <li>toto je úplné dno, sem sa dá zahrnúť všetko</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2 id="state">Stavy emailu</h2
+            <p>
+               Vzhľadom na komplikovanosť emailov a worklow aj tu použitý stavový automat.
+            </p>
+            {control stateChart}
+            <ul>
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Concept)->badge()}
+                    Stav emailu po importovaní cez adminer, tento stav nemá žiadný extra význam, je to len pomocný stav, aby sa neimportovali emaily rovno do stavového automatu.</li>
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()} Toto je prvý stav v automate a tu email začína svoju cestu.
+                    Tento stav hovorí, že <code>inner_text</code> emailu je hotový vrátane všetkých ostatných povinných
+                    vecí.
+                </li>
+                  <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Waiting)->badge()}
+                  Tento stav hovorí, že mail má už vygenerovanú pätičku a čaká vo fronte emailov na odoslanie.</li>
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Sent)->badge()}
+                    Email bol úspešne odoslaný, neznamená, že bol úspešne doručený.
+                </li>
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Rejected)->badge()}
+                    Posielanie emailu bolo zastavné, pretože uživateľ tento typ emailov nechce, alebo je email v tab. <code>{FKSDB\Models\ORM\DbNames::TAB_UNSUBSCRIBED_EMAIL}</code></li>
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Failed)->badge()}
+                    Email nebol úspešne odoslaný, nastala tam nejaká chyba (pravdepodobne IT charakteru)</li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>Workflow posielania emailov cez adminera</h2>
+            <ol>
+                <li>Emaily sa nahrajú do adminera, buď vo forme csv, alebo SQL scriptu. Stav emailu pri nahrávaní musí
+                    byť {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Concept)->badge()}</li>
+                <li>Ak nahranie prebehlo v poriadku a emaily sú skontrolované a naozaj ich chceme odoslať, zmeníme iba
+                    emailom, ktoré chceme poslať stav
+                    na {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()}</li>
+                <li>Emaily teraz čakajú na priradenie patičky podľa topicu. Na to potreba ručne spustiť prechod
+                    {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()} -> {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Waiting)->badge()}
+                    <a href="{plink transition}">na tejto stránke</a>.
+                </li>
+                <li>Ak všetko prebehlo správne email sa zaradil do fronty a v poradí určených <code>priortiy</code> sa
+                    pošle, 1
+                    majú prednosť pred 0.
+                </li>
+            </ol>
+        </div>
+    </div>
+{/block}

@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Person\Edit;
 use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
-use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailSource;
+use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -111,7 +111,7 @@ class ChangeEmailComponent extends ModelForm
         if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::ChangeEmail))) {
             throw new ChangeInProgressException();
         }
-        $emailSource = new ChangeEmailSource($this->container);
+        $emailSource = new ChangeEmailEmail($this->container);
         $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
         return $this->model;
     }
