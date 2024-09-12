@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Event\Import;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Utils\CSVParser;
@@ -59,7 +58,6 @@ final class ImportComponent extends BaseComponent
     }
 
     /**
-     * @throws ConfigurationNotFoundException
      * @throws \Throwable
      */
     private function handleFormImport(Form $form): void
@@ -70,19 +68,18 @@ final class ImportComponent extends BaseComponent
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-            $this->connection->beginTransaction();
-            foreach ($parser as $row) {
-                $values = [];
-                foreach ($row as $columnName => $value) {
-                    $values[$columnName] = $value;
+            $this->connection->transaction(function () use ($parser): void {
+                foreach ($parser as $row) {
+                    $values = [];
+                    foreach ($row as $columnName => $value) {
+                        $values[$columnName] = $value;
+                    }
+                    $values['event_id'] = $this->event->event_id;
+                    $this->eventParticipantService->storeModel($values);
                 }
-                $values['event_id'] = $this->event->event_id;
-                $this->eventParticipantService->storeModel($values);
-            }
-            $this->connection->commit();
+            });
             $this->getPresenter()->flashMessage(_('Import successful.'), Message::LVL_SUCCESS);
         } catch (\Throwable $exception) {
-            $this->connection->rollBack();
             $this->getPresenter()->flashMessage(_('Import completed with errors.'), Message::LVL_WARNING);
         }
         $this->getPresenter()->redirect('this');

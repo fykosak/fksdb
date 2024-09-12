@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Closing\AlreadyClosedException;
 use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
-use FKSDB\Components\TeamSeating\Place;
-use FKSDB\Components\TeamSeating\Place2022;
-use FKSDB\Components\TeamSeating\Place2024;
+use FKSDB\Components\Game\Seating\Place;
+use FKSDB\Components\Game\Seating\Place2022;
+use FKSDB\Components\Game\Seating\Place2024;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -216,7 +216,7 @@ final class TeamModel2 extends Model implements Resource
     public function createMachineCode(): ?string
     {
         try {
-            return MachineCode::createHash($this, $this->event->getSalt());
+            return MachineCode::createModelHash($this, $this->event->getSalt());
         } catch (\Throwable $exception) {
             return null;
         }

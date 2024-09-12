@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
@@ -15,19 +15,19 @@ class PersonContainerResolver implements Resolver
 {
     use SmartObject;
 
-    private BaseHolder $holder;
-    /** @phpstan-var callable(BaseHolder):bool|bool */
+    private ParticipantHolder $holder;
+    /** @phpstan-var callable(ParticipantHolder):bool|bool */
     private $modifiableCondition;
-    /** @phpstan-var callable(BaseHolder):bool|bool */
+    /** @phpstan-var callable(ParticipantHolder):bool|bool */
     private $visibleCondition;
     private SelfResolver $selfResolver;
 
     /**
-     * @phpstan-param callable(BaseHolder):bool|bool $modifiableCondition
-     * @phpstan-param callable(BaseHolder):bool|bool $visibleCondition
+     * @phpstan-param callable(ParticipantHolder):bool|bool $modifiableCondition
+     * @phpstan-param callable(ParticipantHolder):bool|bool $visibleCondition
      */
     public function __construct(
-        BaseHolder $holder,
+        ParticipantHolder $holder,
         $modifiableCondition,
         $visibleCondition,
         SelfResolver $selfResolver
@@ -41,7 +41,7 @@ class PersonContainerResolver implements Resolver
     public function getResolutionMode(?PersonModel $person): ResolutionMode
     {
         if (!$person) {
-            return ResolutionMode::tryFrom(ResolutionMode::EXCEPTION);
+            return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         return ($this->isModifiable($person)) ? ResolutionMode::from(ResolutionMode::OVERWRITE)
             : ResolutionMode::from(ResolutionMode::EXCEPTION);

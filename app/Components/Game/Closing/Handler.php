@@ -26,6 +26,9 @@ final class Handler
         $this->teamService = $teamService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function close(MemoryLogger $logger, TeamModel2 $team, bool $checkRequirements = true): void
     {
         if ($checkRequirements) {
@@ -34,10 +37,11 @@ final class Handler
             }
             $team->canClose();
         }
-        $this->teamService->explorer->beginTransaction();
-        $sum = (int)$team->getNonRevokedSubmits()->sum('points');
-        $this->teamService->storeModel(['points' => $sum,], $team);
-        $this->teamService->explorer->commit();
+        $sum = $this->teamService->explorer->getConnection()->transaction(function () use ($team): int {
+            $sum = (int)$team->getNonRevokedSubmits()->sum('points');
+            $this->teamService->storeModel(['points' => $sum,], $team);
+            return $sum;
+        });
         $logger->log(
             new Message(
                 \sprintf(

@@ -12,7 +12,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -20,9 +20,22 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<SchoolModel>
+ * @phpstan-extends ModelForm<SchoolModel,array{school:array{
+ *      name_full:string,
+ *      name:string,
+ *      name_abbrev:string,
+ *      description:string,
+ *      email:string,
+ *      note:string,
+ *      address:array{
+ *           target?:string|null,
+ *           city?:string|null,
+ *           country_id?:int|null,
+ *           postal_code:string|null,
+ *  },
+ *  }}>
  */
-final class PublicSchoolForm extends EntityFormComponent
+final class PublicSchoolForm extends ModelForm
 {
     public function __construct(Container $container)
     {
@@ -65,42 +78,28 @@ final class PublicSchoolForm extends EntityFormComponent
         return $form->addSubmit('send', _('Create school'));
     }
 
-    /**
-     * @throws \PDOException
-     */
-    protected function handleFormSuccess(Form $form): void
+    protected function setDefaults(Form $form): void
     {
-        /** @phpstan-var array{school:array{
-         *     name_full:string,
-         *     name:string,
-         *     name_abbrev:string,
-         *     description:string,
-         *     email:string,
-         *     note:string,
-         *     address:array{
-         *          target?:string|null,
-         *          city?:string|null,
-         *          country_id?:int|null,
-         *          postal_code:string|null,
-         * },
-         * }} $values
-         */
-        $values = $form->getValues('array');
-        $handler = new AddressHandler($this->container);
+    }
 
-        $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
+    protected function innerSuccess(array $values, Form $form): SchoolModel
+    {
+        $handler = new AddressHandler($this->container);
+        $schoolData = $values[self::CONT_SCHOOL];
         $address = $handler->store($schoolData['address']);
         $schoolData['address_id'] = $address->address_id;
         $schoolData['verified'] = false;
-        $this->schoolService->storeModel($schoolData);
+        /** @var SchoolModel $school */
+        $school = $this->schoolService->storeModel($schoolData);
+        return $school;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
         $this->getPresenter()->flashMessage(
             _('School has been created'),
             Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('success');
-    }
-
-    protected function setDefaults(Form $form): void
-    {
     }
 }

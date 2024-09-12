@@ -35,23 +35,23 @@ class GraphComponent extends FrontEndComponent implements Chart
     {
         $edges = [];
         $nodes = [];
-        foreach ($this->machine->transitions as $transition) {
+        foreach ($this->machine->getTransitions()->toArray() as $transition) {
             if (!isset($nodes[$transition->source->value])) {
                 $nodes[$transition->source->value] = [
                     'label' => $transition->source->label(),
-                    'type' => $transition->source->value === Machine::STATE_INIT ? 'init' : 'default',
+                    'type' => 'default',
                 ];
             }
             if (!isset($nodes[$transition->target->value])) {
                 $nodes[$transition->target->value] = [
                     'label' => $transition->target->label(),
-                    'type' => $transition->target->value === Machine::STATE_INIT ? 'init' : 'default',
+                    'type' => 'default',
                 ];
             }
             $edges[] = [
                 'from' => $transition->source->value,
                 'to' => $transition->target->value,
-                'label' => $transition->label()->toHtml(),
+                'label' => $transition->label->toHtml(),
                 'behaviorType' => $transition->behaviorType->value,
             ];
         }

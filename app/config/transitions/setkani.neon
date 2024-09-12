@@ -1,0 +1,47 @@
+transitions:
+    setkani:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        transitions:
+            __init->pending:
+                label: _('Přihlásit účastníka')
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Setkani\TransitionEmail()
+                    - FKSDB\Models\Email\Source\Setkani\OrganizerTransitionEmail()
+            pending->applied:
+                behaviorType: success
+                label: _('Schválit účast')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Setkani\TransitionEmail()
+                    - FKSDB\Models\Email\Source\Setkani\OrganizerTransitionEmail()
+            pending->spare:
+                behaviorType: warning
+                label: _('Potvrdit jako náhradníka')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Setkani\TransitionEmail()
+                    - FKSDB\Models\Email\Source\Setkani\OrganizerTransitionEmail()
+            spare->applied:
+                behaviorType: success
+                label: _('Schválit účast')
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),le(FKSDB\Models\Events\Semantics\Count(['applied','participated']),FKSDB\Models\Events\Semantics\Parameter('capacity')))
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Setkani\TransitionEmail()
+                    - FKSDB\Models\Email\Source\Setkani\OrganizerTransitionEmail()
+            applied->participated:
+                label: _('Prezentovat')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+            applied->missed:
+                label: _('Nepřijel')
+                behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+            spare->cancelled:
+                label: _('Zrušit přihlášku')
+                behaviorType: danger
+            pending|applied->cancelled:
+                label: _('Zrušit přihlášku')
+                behaviorType: danger
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+

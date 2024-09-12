@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\Upload\AjaxSubmit\SubmitContainer;
-use FKSDB\Components\Controls\Upload\Legacy\LegacyUploadFormComponent;
-use FKSDB\Components\Controls\Upload\Quiz\QuizComponent;
+use FKSDB\Components\Upload\AjaxSubmit\SubmitContainer;
+use FKSDB\Components\Upload\Legacy\LegacyUploadFormComponent;
+use FKSDB\Components\Upload\Quiz\QuizComponent;
 use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\NotFoundException;

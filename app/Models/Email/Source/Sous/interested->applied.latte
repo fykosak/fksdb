@@ -1,0 +1,24 @@
+{layout none}
+
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+
+{define subject}Pozvánka na podzimní soustředění FYKOSu{/define}
+
+{block body}
+<p>
+    {if $model->person->gender->value == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo a Ty jsi projevil{if $model->person->gender->value == 'F'}a{/if} zájem o {$model->event->event_type->name} v obci
+    Lázně Libverda od {$model->event->begin|date:'j. n.'} do {$model->event->end|date:'j. n. Y'},
+    jsi nyní mezi pozvanými. Gratulujeme.
+</p>
+
+<p>
+    Brzy dostaneš další info. Pokud bys měl{if $model->person->gender->value == 'F'}a{/if} jakýkoliv dotaz nebo jsi zjistil{if $model->person->gender->value == 'F'}a{/if}, že již nemáš čas, neváhej se na nás
+    obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+</p>
+
+<p>
+    Za organizátory<br>
+    Vojtěch David
+</p>
+{/block}

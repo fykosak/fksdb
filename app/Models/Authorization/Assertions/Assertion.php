@@ -8,5 +8,5 @@ use Nette\Security\Permission;
 
 interface Assertion
 {
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool;
+    public function __invoke(Permission $acl): bool;
 }

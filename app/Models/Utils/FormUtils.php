@@ -6,24 +6,22 @@ namespace FKSDB\Models\Utils;
 
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
     /**
-     * @phpstan-template TArray of ArrayHash
+     * @phpstan-template TArray of array
      * @phpstan-param TArray $values
      * @phpstan-return TArray
      */
-    public static function emptyStrToNull(ArrayHash $values): ArrayHash
+    public static function toPrimitive(array $values): array
     {
-        /** @phpstan-var TArray $result */
-        $result = new ArrayHash();
+        $result = [];
         foreach ($values as $key => $value) {
-            if ($value instanceof ArrayHash) {
-                $result[$key] = self::emptyStrToNull($value);
-            } elseif ($value === '') {
-                $result[$key] = null;
+            if (is_iterable($value)) {
+                $result[$key] = self::toPrimitive((array)$value);
+            } elseif ($value instanceof \DateTimeInterface) {
+                $result[$key] = $value->format('c');
             } else {
                 $result[$key] = $value;
             }

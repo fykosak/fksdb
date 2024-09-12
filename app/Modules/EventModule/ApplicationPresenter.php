@@ -4,28 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Applications\Single\InvitedForms\SousForm;
+use FKSDB\Components\Applications\Single\OpenForms\DsefForm;
+use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
+use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
+use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\EntityForms\Single\DsefFormComponent;
-use FKSDB\Components\EntityForms\Single\SetkaniFormComponent;
-use FKSDB\Components\EntityForms\Single\SingleFormComponent;
-use FKSDB\Components\EntityForms\Single\TaborFormComponent;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
-use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Authorization\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Transitions\Holder\ParticipantHolder;
-use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -71,34 +69,13 @@ final class ApplicationPresenter extends BasePresenter
         return $this->eventParticipantService;
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
-    {
-        if (in_array($this->getAction(), ['create', 'edit'])) {
-            if (!in_array($this->getEvent()->event_type_id, [2, 14, 10, 11, 12])) {
-                $this->redirect(
-                    ':Public:Application:default',
-                    array_merge(['eventId' => $this->eventId], $this->getParameters())
-                );
-            }
-        }
-        parent::startup();
-    }
-
     public function authorizedCreate(): bool
     {
-        $event = $this->getEvent();
-        if ($event->event_type_id === 10) {
-            return $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event);
-        }
-        return
-            $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed(EventParticipantModel::RESOURCE_ID, 'create', $event)
-            );
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -172,10 +149,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event) || (
-                $event->isRegistrationOpened()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event));
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
     }
 
     /**
@@ -188,11 +162,6 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderEdit(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getModelResource(),
-            'organizer',
-            $this->getEvent()
-        );
         $this->template->model = $this->getEntity();
     }
 
@@ -247,16 +216,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>
-     */
-    private function getMachine(): EventParticipantMachine
-    {
-        return $this->eventDispatchFactory->getParticipantMachine($this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
      */
     protected function createComponentGrid(): SingleApplicationsGrid
     {
@@ -266,7 +225,7 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): SingleFormComponent
+    protected function createComponentCreateForm(): BaseComponent
     {
         return $this->createForm(null);
     }
@@ -278,7 +237,7 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws NotFoundException
      */
-    protected function createComponentEditForm(): SingleFormComponent
+    protected function createComponentEditForm(): BaseComponent
     {
         return $this->createForm($this->getEntity());
     }
@@ -286,33 +245,38 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    private function createForm(?EventParticipantModel $model): SingleFormComponent
+    private function createForm(?EventParticipantModel $model): BaseComponent
     {
         switch ($this->getEvent()->event_type_id) {
-            case 2:
-            case 14:
-                return new DsefFormComponent(
+            case 4:
+            case 5:
+                return new SousForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
+                    $this->getLoggedPerson()
+                );
+            case 2:
+            case 14:
+                return new DsefForm(
+                    $this->getContext(),
+                    $model,
+                    $this->getEvent(),
                     $this->getLoggedPerson()
                 );
             case 10:
-                return new TaborFormComponent(
+                return new TaborForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
                     $this->getLoggedPerson()
                 );
             case 11:
             case 12:
-                return new SetkaniFormComponent(
+                return new SetkaniForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
-                    $this->getMachine(), // @phpstan-ignore-line
                     $this->getLoggedPerson()
                 );
         }
@@ -327,23 +291,30 @@ final class ApplicationPresenter extends BasePresenter
      * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
         return new TransitionButtonsComponent(
             $this->getContext(),
-            $this->getMachine(), // @phpstan-ignore-line
+            $this->eventDispatchFactory->getParticipantMachine($this->getEvent()), // @phpstan-ignore-line
             $this->getEntity()
         );
     }
 
     /**
      * @throws EventNotFoundException
-     * @phpstan-return MassTransitionComponent<EventParticipantMachine<ParticipantHolder>|EventParticipantMachine<BaseHolder>>
+     * @throws NotImplementedException
+     * @phpstan-return MassTransitionComponent<EventParticipantModel>
      */
     protected function createComponentMassTransition(): MassTransitionComponent
     {
-        return new MassTransitionComponent($this->getContext(), $this->getMachine(), $this->getEvent());
+        return new MassTransitionComponent(
+            $this->getContext(),
+            /** @phpstan-ignore-next-line */
+            $this->eventDispatchFactory->getParticipantMachine($this->getEvent()),
+            $this->getEvent()->getParticipants()
+        );
     }
 
     /**
@@ -360,7 +331,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ConfigurationNotFoundException
      */
     protected function createComponentImport(): ImportComponent
     {

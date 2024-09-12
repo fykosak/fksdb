@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ProfileModule;
 
-use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
+use FKSDB\Components\Applications\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventParticipantModel;

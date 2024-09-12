@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
@@ -22,13 +23,13 @@ use Tracy\Debugger;
  */
 class TransitionButtonsComponent extends BaseComponent
 {
-    /** @phpstan-var Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> */
+    /** @phpstan-var Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> */
     protected Machine $machine;
     /** @phpstan-var TModel Model */
     private Model $model;
 
     /**
-     * @phpstan-param Machine<ModelHolder<(FakeStringEnum&EnumColumn),TModel>> $machine
+     * @phpstan-param Machine<ModelHolder<TModel,(FakeStringEnum&EnumColumn)>> $machine
      * @phpstan-param TModel $model
      */
     public function __construct(Container $container, Machine $machine, Model $model)
@@ -43,7 +44,7 @@ class TransitionButtonsComponent extends BaseComponent
         $holder = $this->machine->createHolder($this->model);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'buttons.latte', [
             'showInfo' => $showInfo,
-            'transitions' => Machine::filterAvailable($this->machine->transitions, $holder),
+            'transitions' => $this->machine->getTransitions()->filterAvailable($holder)->toArray(),
             'holder' => $holder,
         ]);
     }
@@ -55,16 +56,21 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $holder = $this->machine->createHolder($this->model);
         try {
-            $transition = $this->machine->getTransitionById($transitionName);
-            $this->machine->execute($transition, $holder);
+            $transition = $this->machine->getTransitions()->filterById($transitionName)->select();
+            $transition->execute($holder);
             $this->getPresenter()->flashMessage(
                 $transition->getSuccessLabel(),
                 Message::LVL_SUCCESS
             );
-        } catch (ApplicationHandlerException | ForbiddenRequestException | UnavailableTransitionsException $exception) {
+        } catch (
+            ApplicationHandlerException
+            | ForbiddenRequestException
+            | UnavailableTransitionsException
+            | UnavailableTransitionException $exception
+        ) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (\Throwable$exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'transitions');
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');

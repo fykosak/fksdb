@@ -401,12 +401,12 @@ CREATE TABLE IF NOT EXISTS `school`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `school_label`
 (
-    `school_label_id`  INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `school_label_id`  INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `school_label_key` VARCHAR(255) NOT NULL UNIQUE,
     `school_id`        INT UNSIGNED NULL,
     CONSTRAINT `fk__spam_school__school_id`
         FOREIGN KEY (`school_id`)
-        REFERENCES `school` (`school_id`)
+            REFERENCES `school` (`school_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
@@ -939,9 +939,9 @@ CREATE TABLE IF NOT EXISTS `person_history`
             REFERENCES `contest_year` (`ac_year`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk__person_history__school_label_key`
+    CONSTRAINT `fk__person_history__school_label`
         FOREIGN KEY (`school_label_key`)
-            REFERENCES `school_label_key` (`school_label_key`)
+            REFERENCES `school_label` (`school_label_key`)
             ON DELETE NO ACTION
             ON UPDATE CASCADE
 )
@@ -1508,6 +1508,53 @@ CREATE TABLE IF NOT EXISTS `person_mail`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
+
+CREATE TABLE IF NOT EXISTS `banned_person`
+(
+    `banned_person_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`        INT UNSIGNED NOT NULL,
+    `case_id`          VARCHAR(256) NULL DEFAULT NULL,
+    `note`             TEXT         NULL DEFAULT NULL,
+    `scope`            JSON         NULL DEFAULT NULL COMMENT 'pre zákazy neobsiahnuteľné v banned_person_scope',
+    CONSTRAINT `fk__banned_person__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_czech_ci;
+
+CREATE TABLE IF NOT EXISTS `banned_person_scope`
+(
+    `banned_person_scope_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `banned_person_id`       INT UNSIGNED NOT NULL,
+    `event_type_id`          INT UNSIGNED NULL DEFAULT NULL,
+    `contest_id`             INT UNSIGNED NULL DEFAULT NULL,
+    `begin`                  DATETIME     NOT NULL COMMENT 'dátum udelenia banu',
+    `end`                    DATETIME     NULL DEFAULT NULL COMMENT 'dátum konca banu, ak je doživotný null',
+    CHECK (`event_type_id` IS NULL XOR contest_id IS NULL),
+    UNIQUE KEY `uq__banned_person_scope__event_type` (`banned_person_id`, `event_type_id`),
+    UNIQUE KEY `uq__banned_person_scope__contest` (`banned_person_id`, contest_id),
+    CONSTRAINT fk__banned_person_scope__banned_person
+        FOREIGN KEY (`banned_person_id`)
+            REFERENCES `banned_person` (`banned_person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+    CONSTRAINT `fk__banned_person_scope__event`
+        FOREIGN KEY (`event_type_id`)
+            REFERENCES `event_type` (`event_type_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+    CONSTRAINT `fk__banned_person_scope__contest`
+        FOREIGN KEY (`contest_id`)
+            REFERENCES `contest` (`contest_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_czech_ci;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

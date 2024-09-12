@@ -9,6 +9,7 @@ use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
@@ -22,9 +23,12 @@ final class StudyYearFillTest extends Test
         return new Title(null, _('Filled study years'));
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): ?LocalizedString
     {
-        return _('Check if school has filled any of study types (study_* fields)');
+        return new LocalizedString([
+            'en' => 'Checks if school has filled any of study types (study_* fields).',
+            'cs' => '',
+        ]);
     }
 
     protected function innerRun(TestLogger $logger, Model $model, string $id): void

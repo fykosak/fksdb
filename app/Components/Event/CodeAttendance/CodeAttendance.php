@@ -24,7 +24,7 @@ use Nette\Utils\Html;
  *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
  * @phpstan-type TMachine (TModel is TeamModel2
  *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
- *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+ *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine)
  * @phpstan-extends CodeTransition<TModel>
  */
 final class CodeAttendance extends CodeTransition
@@ -55,12 +55,7 @@ final class CodeAttendance extends CodeTransition
     public function available(): bool
     {
         $holder = $this->machine->createHolder($this->model);
-        $hasTransition = count(
-            Machine::filterAvailable(
-                $this->getTransitions(),
-                $holder
-            )
-        );
+        $hasTransition = $this->getTransitions()->filterAvailable($holder)->count();
         return $hasTransition && $this->model->createMachineCode();
     }
 
@@ -74,7 +69,7 @@ final class CodeAttendance extends CodeTransition
         parent::configureForm($form);
         $el = Html::el('span');
         $el->addText(_('Processed') . ': ');
-        $transitions = Machine::filterByTarget($this->machine->transitions, $this->targetState);
+        $transitions = $this->machine->getTransitions()->filterByTarget($this->targetState)->toArray();
         foreach ($transitions as $transition) {
             $el->addHtml($transition->source->badge() . '->' . $transition->target->badge());
         }
@@ -96,7 +91,7 @@ final class CodeAttendance extends CodeTransition
             throw new BadRequestException(_('Wrong type of code.'));
         }
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
-            throw new BadRequestException(_('Modely sa nezhodujú')); // TODO
+            throw new BadRequestException(_('Models do not match')); // TODO
         }
         return $application; // @phpstan-ignore-line
     }

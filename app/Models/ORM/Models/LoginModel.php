@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Roles\BaseRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\Authorization\Roles\Events\ContestOrganizerRole;
 use FKSDB\Models\Authorization\Roles\Events\EventOrganizerRole;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
-use FKSDB\Models\Authorization\Roles\BaseRole;
-use FKSDB\Models\Authorization\Roles\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use Fykosak\NetteORM\Model\Model;
@@ -75,7 +75,7 @@ final class LoginModel extends Model implements IIdentity
     {
         if (!isset($this->contestRoles[$contest->contest_id])) {
             $this->contestRoles[$contest->contest_id] = [
-                ... $this->getExplicitContestRoles($contest),
+                ...$this->getExplicitContestRoles($contest),
                 ...$this->getImplicitContestRoles($contest),
             ];
         }
@@ -235,23 +235,22 @@ final class LoginModel extends Model implements IIdentity
     /**
      * @phpstan-return TypedGroupedSelection<AuthTokenModel>
      */
-    public function getTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    public function getTokens(AuthTokenType $type): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<AuthTokenModel> $query */
         $query = $this->related(DbNames::TAB_AUTH_TOKEN, 'login_id');
-        if (isset($type)) {
-            $query->where('type', $type);
-        }
+        $query->where('type', $type);
         return $query;
     }
 
-    /**
-     * @phpstan-return TypedGroupedSelection<AuthTokenModel>
-     */
-    public function getActiveTokens(?AuthTokenType $type = null): TypedGroupedSelection
+    public function hasActiveToken(AuthTokenType $type): bool
     {
-        $query = $this->getTokens($type);
-        $query->where('until > ?', new \DateTime());
-        return $query;
+        /** @var AuthTokenModel $token */
+        foreach ($this->getTokens($type) as $token) {
+            if ($token->isActive()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

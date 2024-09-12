@@ -16,15 +16,16 @@ use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends EntityFormComponent<TeacherModel>
+ * @phpstan-extends ModelForm<TeacherModel,array{}>
  */
-class RegisterTeacherFormComponent extends EntityFormComponent
+class RegisterTeacherFormComponent extends ModelForm
 {
     use ReferencedPersonTrait;
 
@@ -77,30 +78,6 @@ class RegisterTeacherFormComponent extends EntityFormComponent
         $form->addProtection(_('The form has expired. Please send it again.'));
     }
 
-    protected function handleFormSuccess(Form $form): void
-    {
-        $values = $form->getValues('array');
-        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
-        $referencedId = $form[self::CONT_TEACHER]['person_id'];
-        /** @var PersonModel $person */
-        $person = $referencedId->getModel();
-
-        $this->teacherService->storeModel($values, $person->getTeacher());
-        if (!$person->getLogin()) {
-            try {
-                $this->accountManager->sendLoginWithInvitation(
-                    $person,
-                    $person->getInfo()->email,
-                    Language::from($this->translator->lang)
-                );
-                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
-            } catch (\Throwable $exception) {
-                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
-            }
-        }
-        $this->getPresenter()->redirect(':Core:Dispatch:default');
-    }
-
     protected function setDefaults(Form $form): void
     {
         $form->setDefaults([
@@ -110,5 +87,32 @@ class RegisterTeacherFormComponent extends EntityFormComponent
                     : null,
             ],
         ]);
+    }
+
+    protected function innerSuccess(array $values, Form $form): TeacherModel
+    {
+        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+        $referencedId = $form[self::CONT_TEACHER]['person_id'];
+        /** @var PersonModel $person */
+        $person = $referencedId->getModel();
+        /** @var TeacherModel $teacher */
+        $teacher = $this->teacherService->storeModel($values, $person->getTeacher());
+        if (!$person->getLogin()) {
+            try {
+                $this->accountManager->sendLoginWithInvitation(
+                    $person,
+                    Language::from($this->translator->lang)
+                );
+                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            } catch (\Throwable $exception) {
+                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
+            }
+        }
+        return $teacher;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->redirect(':Core:Dispatch:default');
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Tests\Event\Team;
 
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOFCategoryProcessing;
+use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOFCategoryProcessing;
-use FKSDB\Components\EntityForms\Fyziklani\Processing\Category\FOLCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
@@ -22,9 +22,9 @@ final class CategoryCheck extends Test
     protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
         if ($model->event->event_type_id === 1) {
-            $processing = new FOFCategoryProcessing($this->container);
+            $processing = new FOFCategoryProcessing($this->container, $model->event);
         } elseif ($model->event->event_type_id === 9) {
-            $processing = new FOLCategoryProcessing($this->container);
+            $processing = new FOLCategoryProcessing($this->container, $model->event);
         } else {
             return;
         }

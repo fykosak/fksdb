@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
+use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -24,9 +27,32 @@ final class EmailPresenter extends BasePresenter
 
     private EmailMessageService $emailMessageService;
 
+    /** @persistent */
+    public ?int $source;
+
     final public function injectServiceEmailMessage(EmailMessageService $emailMessageService): void
     {
         $this->emailMessageService = $emailMessageService;
+    }
+
+    /**
+     * @return UIEmailSource[]
+     */
+    protected function getEmailSources(): array //@phpstan-ignore-line
+    {
+        return [
+            new ReminderEmailSource($this->getContext(), 1),
+            new ReminderEmailSource($this->getContext(), 2),
+            new ReminderEmailSource($this->getContext(), 3),
+        ];
+    }
+
+    protected function getEmailSource(): ?UIEmailSource //@phpstan-ignore-line
+    {
+        if (!isset($this->source)) {
+            return null;
+        }
+        return $this->getEmailSources()[$this->source] ?? null;
     }
 
     /**
@@ -40,6 +66,11 @@ final class EmailPresenter extends BasePresenter
             sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
             'fas fa-envelope-open'
         );
+    }
+
+    public function titleTemplate(): PageTitle
+    {
+        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
     }
 
     public function authorizedDetail(): bool
@@ -57,9 +88,27 @@ final class EmailPresenter extends BasePresenter
         return $authorized;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedTemplate(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(
+            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+            'template',
+            $this->getSelectedContest()
+        );
+    }
+
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+    }
+
+    public function renderTemplate(): void
+    {
+        $this->template->sources = $this->getEmailSources();
+        $this->template->source = $this->getEmailSource();
     }
 
     protected function getORMService(): EmailMessageService
@@ -89,6 +138,11 @@ final class EmailPresenter extends BasePresenter
     protected function createComponentGrid(): EmailsGrid
     {
         return new EmailsGrid($this->getContext());
+    }
+
+    protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
+    {
+        return new EmailProviderForm($this->getContext(), $this->getEmailSource());
     }
 
     /**

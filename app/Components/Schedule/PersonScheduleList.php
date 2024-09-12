@@ -62,7 +62,7 @@ final class PersonScheduleList extends BaseList
         )->group('person_id');
         try {
             if (isset($this->filterParams['code'])) {
-                $model = MachineCode::parseHash(
+                $model = MachineCode::parseModelHash(
                     $this->container,
                     $this->filterParams['code'],
                     $this->event->getSalt()

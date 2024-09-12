@@ -73,7 +73,7 @@ orm:
                 type: email
                 title: _('Bcc')
             text:
-                type: string
+                type: text
                 title: _('Text')
             state:
                 type: enum
@@ -162,10 +162,6 @@ orm:
                 type: int
                 title: _('Contest year')
                 omitInputField: true
-            event_type:
-                type: class
-                class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
-                title: _('Event type')
             event_type_id:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
@@ -267,7 +263,7 @@ orm:
                     id: event_participant_id
                 title: _('button.eventParticipant.detail')
             edit:
-                destination: :Public:Application:default
+                destination: :Event:Application:edit
                 params:
                     eventId: event_id
                     id: event_participant_id
@@ -275,6 +271,11 @@ orm:
     event_type:
         service: FKSDB\Models\ORM\Services\EventTypeService
         model: FKSDB\Models\ORM\Models\EventTypeModel
+        columns:
+            name:
+                type: class
+                class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
+                title: _('Event type')
     flag:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
@@ -321,7 +322,7 @@ orm:
             order:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Organizer\OrderColumnFactory
-                description: _('Pro řazení v seznamu organizátorů')
+                description: _('To order organizers in the list of organizers')
                 title: _('Order')
             tex_signature:
                 type: class
@@ -341,11 +342,11 @@ orm:
             allow_wiki:
                 type: bool
                 title: _('Allow wiki login')
-                description: _('Allow login in to internal wiki before or after period of active orgnize')
+                description: _('Allow login to internal wiki before or after period of active organizing')
             allow_pm:
                 type: bool
                 title: _('Allow PM login')
-                description: _('Allow login in to Problem manager before or after period of active orgnize')
+                description: _('Allow login to Problem Manager before or after period of active organizing')
         links:
             detail:
                 destination: :Organizer:Organizer:detail
@@ -440,16 +441,16 @@ orm:
                 permission: FULL
             display_name:
                 type: string
-                title: _('Display name')
-                description: _('Only if different from "Name Surname".')
+                title: _('Full name')
+                description: _('Only if different from "<First name> <Last name>".')
                 permission: BASIC
             family_name:
                 type: string
-                title: _('Family name')
+                title: _('Last name (family name or surname)')
                 permission: BASIC
             other_name:
                 type: string
-                title: _('Other name')
+                title: _('First name (given name)')
                 permission: BASIC
         links:
             detail:
@@ -580,7 +581,7 @@ orm:
                 permission: BASIC
             employer:
                 type: string
-                title: _('Zaměstnavatel')
+                title: _('Employer')
                 permission: FULL
             origin:
                 type: string
@@ -1217,3 +1218,28 @@ orm:
             mail_type:
                 type: string
                 title: _('Mail type')
+    banned_person:
+        model: FKSDB\Models\ORM\Models\BannedPersonModel
+        service: FKSDB\Models\ORM\Services\BannedPersonService
+        columns:
+            banned_person_id:
+                type: primaryKey
+                title: _('Id')
+            case_id:
+                type: string
+                title: _('Case Id')
+            note:
+                type: text
+                title: _('Description/Note')
+    banned_person_scope:
+        model: FKSDB\Models\ORM\Models\BannedPersonScopeModel
+        service: Fykosak\NetteORM\Service\DummyService
+        columns:
+            begin:
+                type: date
+                title: _('Begin')
+                format: 'd.M. Y'
+            end:
+                type: date
+                title: _('End')
+                format: 'd.M. Y'
