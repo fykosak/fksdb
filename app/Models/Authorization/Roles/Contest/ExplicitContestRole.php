@@ -2,16 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\Roles;
+namespace FKSDB\Models\Authorization\Roles\Contest;
 
+use FKSDB\Models\Authorization\Roles\ContestYear\ContestantRole;
 use FKSDB\Models\ORM\Models\ContestModel;
-use Nette\Security\Role;
 use Nette\Utils\Html;
 
-/**
- * POD for briefer encapsulation of granted roles (instead of ModelMGrant).
- */
-final class ContestRole implements Role
+final class ExplicitContestRole implements ContestRole
 {
     // phpcs:disable
     public const Webmaster = 'webmaster';
@@ -21,8 +18,6 @@ final class ContestRole implements Role
     public const EventManager = 'eventManager';
     public const InboxManager = 'inboxManager';
     public const Boss = 'boss';
-    public const Organizer = 'org';
-    public const Contestant = 'contestant';
     public const ExportDesigner = 'exportDesigner';
     public const Aesop = 'aesop';
     public const SchoolManager = 'schoolManager';
@@ -33,8 +28,12 @@ final class ContestRole implements Role
     // phpcs:enable
 
     private ContestModel $contest;
+    /** @phpstan-var self::* $roleId */
     private string $roleId;
 
+    /**
+     * @phpstan-param self::* $roleId
+     */
     public function __construct(string $roleId, ContestModel $contest)
     {
         $this->roleId = $roleId;
@@ -71,8 +70,8 @@ final class ContestRole implements Role
             case self::Boss:
                 $className = 'bg-color-4';
                 break;
-            case self::Organizer:
-            case self::Contestant:
+            case OrganizerRole::RoleId:
+            case ContestantRole::RoleId:
                 $className = 'bg-color-2';
                 break;
             case self::SchoolManager:
@@ -108,9 +107,9 @@ final class ContestRole implements Role
                 return 'příjemce řešení';
             case self::Boss:
                 return 'hlavní organizátor (šéf)';
-            case self::Organizer:
+            case OrganizerRole::RoleId:
                 return 'základní role organizátora';
-            case self::Contestant:
+            case ContestantRole::RoleId:
                 return 'řešitel semináře, role je automaticky přiřazována při vytvoření řešitele';
             case self::Aesop:
                 return 'oslizávač dat pro AESOP';
@@ -141,9 +140,9 @@ final class ContestRole implements Role
                 return 'Inbox manager';
             case self::Boss:
                 return 'Boss';
-            case self::Organizer:
+            case OrganizerRole::RoleId:
                 return 'Organizer';
-            case self::Contestant:
+            case ContestantRole::RoleId:
                 return 'Contestant';
             case self::Aesop:
                 return 'AESOP';

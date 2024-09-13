@@ -67,10 +67,10 @@ class PersonPaymentContainer extends ContainerWithOptions
             $teams = [];
             foreach ($roles as $role) {
                 if ($role instanceof TeamTeacherRole) {
-                    $teams += $role->teams;
+                    $teams[] = $role->getModel()->fyziklani_team;
                 }
                 if ($role instanceof TeamMemberRole) {
-                    $teams[] = $role->member->fyziklani_team;
+                    $teams[] = $role->getModel()->fyziklani_team;
                 }
             }
             $persons = [];

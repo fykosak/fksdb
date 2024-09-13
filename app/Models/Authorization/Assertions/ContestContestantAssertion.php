@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Roles\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYearRole;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use Nette\Security\Permission;
 
@@ -19,7 +18,7 @@ class ContestContestantAssertion implements Assertion
             throw new WrongAssertionException();
         }
         $grant = $acl->getQueriedRole();
-        if ($grant instanceof ContestRole) {
+        if ($grant instanceof ExplicitContestRole) {
             return $contestant->contest_id === $grant->getContest()->contest_id;
         }
         if ($grant instanceof ContestYearRole) {

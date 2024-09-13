@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Roles\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYearRole;
-use FKSDB\Models\Authorization\Roles\Events\EventRole;
+use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -25,11 +25,11 @@ class ContestRelatedAssertion implements Assertion
             throw new WrongAssertionException();
         }
         $role = $acl->getQueriedRole();
-        if ($role instanceof ContestRole) {
+        if ($role instanceof ExplicitContestRole) {
             $contest = $role->getContest();
         } elseif ($role instanceof ContestYearRole) {
             $contest = $role->getContestYear()->contest;
-        } elseif ($role instanceof EventRole) {
+        } elseif ($role instanceof ExplicitEventRole) {
             $contest = $role->getEvent()->event_type->contest;
         } else {
             return false;

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Authorizators;
 
-use FKSDB\Models\Authorization\Roles\BaseRole;
+use FKSDB\Models\Authorization\Roles\Base\GuestRole;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Permission;
 use Nette\Security\Resource;
 use Nette\Security\User;
@@ -26,9 +27,15 @@ final class BaseAuthorizator
     public function isAllowed($resource, ?string $privilege): bool
     {
         if (!$this->user->isLoggedIn()) {
-            return $this->permission->isAllowed(new BaseRole(BaseRole::Guest), $resource, $privilege);
-        } else {
-            return $this->permission->isAllowed(new BaseRole(BaseRole::Registered), $resource, $privilege);
+            return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
         }
+        /** @var LoginModel $login */
+        $login = $this->user->identity;
+        foreach ($login->getRoles() as $role) {
+            if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

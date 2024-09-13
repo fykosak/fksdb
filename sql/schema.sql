@@ -502,10 +502,12 @@ CREATE TABLE IF NOT EXISTS `event_grant`
     `event_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id`       INT UNSIGNED NOT NULL,
     `role`           ENUM (
-        'game.inserter',
-        'event.medic',
-        'event.cook',
-        'event.boss'
+        'event.gameInserter',
+        'event.applicationManager',
+        'event.teamMember',
+        'event.teamTeacher'
+        'event.organizer',
+        'event.participant'
         )                         NOT NULL,
     `event_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),

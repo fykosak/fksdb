@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Roles\Events\EventRole;
-use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -43,11 +43,11 @@ class SelfAssertion implements Assertion
         try {
             $grant = $acl->getQueriedRole();
             $contest = $model->getReferencedModel(ContestModel::class);
-            if ($grant instanceof ContestRole) {
+            if ($grant instanceof ExplicitContestRole) {
                 if ($contest->contest_id !== $grant->getContest()->contest_id) {
                     return false;
                 }
-            } elseif ($grant instanceof EventRole) {
+            } elseif ($grant instanceof ExplicitEventRole) {
                 if ($contest->contest_id !== $grant->getEvent()->event_type->contest_id) {
                     return false;
                 }

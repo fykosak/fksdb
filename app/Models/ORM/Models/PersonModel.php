@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
-    EventOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{EventOrganizerRole,
     EventRole,
+    ExplicitEventRole,
     Fyziklani\TeamMemberRole,
     Fyziklani\TeamTeacherRole,
-    ParticipantRole
-};
+    ParticipantRole};
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -313,29 +312,21 @@ final class PersonModel extends Model implements Resource
     {
         $roles = [];
         $teachers = $this->getTeamTeachers($event);
-        if ($teachers->count('*')) {
-            $teams = [];
-            /** @var TeamTeacherModel $row */
-            foreach ($teachers as $row) {
-                $teams[] = $row->fyziklani_team;
-            }
-            $roles[] = new TeamTeacherRole($event, $teams);
+        /** @var TeamTeacherModel $teacher */
+        foreach ($teachers as $teacher) {
+            $roles[] = new TeamTeacherRole($teacher);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
-            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
+            $roles[] = new EventOrganizerRole($eventOrganizer);
         }
         $eventParticipant = $this->getEventParticipant($event);
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($event, $eventParticipant);
+            $roles[] = new ParticipantRole($eventParticipant);
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new TeamMemberRole($event, $teamMember);
-        }
-        $organizer = $this->getActiveOrganizer($event->event_type->contest);
-        if (isset($organizer)) {
-            $roles[] = new ContestOrganizerRole($event, $organizer);
+            $roles[] = new TeamMemberRole($teamMember);
         }
         return $roles;
     }

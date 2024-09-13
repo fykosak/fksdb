@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -54,7 +54,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(string $roleId = ContestRole::Cartesian): void
+    protected function loginUser(string $roleId = ExplicitContestRole::Cartesian): void
     {
         $this->cartesianPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',

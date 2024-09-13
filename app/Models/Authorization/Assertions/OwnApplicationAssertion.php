@@ -18,7 +18,7 @@ class OwnApplicationAssertion implements Assertion
             throw new WrongAssertionException();
         }
         if ($queriedRole instanceof ParticipantRole) {
-            return $queriedRole->eventParticipant->event_participant_id === $application->event_participant_id;
+            return $queriedRole->getModel()->event_participant_id === $application->event_participant_id;
         }
         return false;
     }

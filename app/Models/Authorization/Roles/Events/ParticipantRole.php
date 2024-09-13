@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Roles\Events;
 
+use FKSDB\Models\Authorization\Roles\ImplicitRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
-final class ParticipantRole extends EventRole
+final class ParticipantRole implements EventRole, ImplicitRole
 {
-    public const ROLE_ID = 'event.participant';
-    public EventParticipantModel $eventParticipant;
+    public const RoleId = 'event.participant'; // phpcs:ignore
+    private EventParticipantModel $eventParticipant;
 
-    public function __construct(EventModel $event, EventParticipantModel $eventParticipant)
+    public function __construct(EventParticipantModel $eventParticipant)
     {
-        parent::__construct(self::ROLE_ID, $event);
         $this->eventParticipant = $eventParticipant;
     }
 
@@ -24,5 +25,20 @@ final class ParticipantRole extends EventRole
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-10'])
             ->addText(sprintf(_('Participant (%s)'), $this->eventParticipant->status->label()));
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->eventParticipant->event;
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
+    }
+
+    public function getModel(): EventParticipantModel
+    {
+        return $this->eventParticipant;
     }
 }
