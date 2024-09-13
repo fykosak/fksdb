@@ -6,10 +6,11 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Roles\Events\{EventOrganizerRole,
     EventRole,
-    ExplicitEventRole,
     Fyziklani\TeamMemberRole,
     Fyziklani\TeamTeacherRole,
-    ParticipantRole};
+    ParticipantRole,
+    ScheduleParticipant
+};
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -327,6 +328,11 @@ final class PersonModel extends Model implements Resource
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
             $roles[] = new TeamMemberRole($teamMember);
+        }
+        $personSchedules = $this->getScheduleForEvent($event);
+        /** @var PersonScheduleModel $personSchedule */
+        foreach ($personSchedules as $personSchedule) {
+            $roles[] = new ScheduleParticipant($personSchedule);
         }
         return $roles;
     }
