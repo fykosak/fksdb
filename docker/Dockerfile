@@ -39,6 +39,9 @@ RUN echo 'cs_CZ.UTF-8 UTF-8' >> /etc/locale.gen && \
 	echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
 	locale-gen
 
+# setup PHP
+COPY docker/config/php-development.ini /etc/php/${PHP_VERSION}/apache2/conf.d/90-fksdb.ini
+
 # setup Apache
 ENV APACHE_RUN_DIR=/var/run/apache2
 ENV APACHE_PID_FILE=${APACHE_RUN_DIR}/apache2.pid
@@ -51,7 +54,7 @@ COPY docker/config/apache.conf /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
 # install mariadb client config
-COPY docker/config/mysql-client.cnf /etc/mysql/mariadb.conf.d/90-client.cnf
+COPY docker/config/mariadb-client.cnf /etc/mysql/mariadb.conf.d/90-client.cnf
 
 # set bash to use colors
 ENV TERM xterm-256color

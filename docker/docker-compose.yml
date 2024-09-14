@@ -13,7 +13,6 @@ services:
       TZ: 'Europe/Prague'
       NETTE_DEVEL: '1' # Nette log level, 1 to enable
     volumes:
-      - ./config/php.ini:/etc/php/8.1/apache2/php.ini # php config
       - ../:/app
     ports:
       - 8080:80 # opened ports mapping, not needed with proxy
@@ -30,4 +29,3 @@ services:
       MYSQL_ROOT_PASSWORD: 'password'
     volumes:
       - ./mysql_data:/var/lib/mysql # path to dir with database data
-      - ./config/mysql.cnf:/etc/mysql/my.cnf # mysql config

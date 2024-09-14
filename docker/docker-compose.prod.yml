@@ -28,4 +28,3 @@ services:
       MYSQL_ROOT_PASSWORD: '' # CREATE STRONG CUSTOM PASSWORD
     volumes:
       - ./mysql_data:/var/lib/mysql # path to dir with database data
-      - ./config/mysql.cnf:/etc/mysql/my.cnf # mysql config
