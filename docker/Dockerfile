@@ -1,4 +1,3 @@
-#FROM php:8.2-apache-bookworm
 FROM debian:bookworm
 
 # add sury repo
@@ -18,6 +17,7 @@ RUN apt-get update && apt install -y --no-install-suggests \
 	php${PHP_VERSION}-common \
 	php${PHP_VERSION}-curl \
 	php${PHP_VERSION}-gd \
+	php${PHP_VERSION}-intl \
 	php${PHP_VERSION}-mbstring \
 	php${PHP_VERSION}-mysql \
 	php${PHP_VERSION}-opcache \
@@ -50,6 +50,7 @@ ENV APACHE_RUN_GROUP=fksdb
 ENV APACHE_LOG_DIR=/var/log/apache2
 
 COPY docker/config/apache.conf /etc/apache2/sites-available/000-default.conf
+EXPOSE 80
 
 RUN a2enmod rewrite
 

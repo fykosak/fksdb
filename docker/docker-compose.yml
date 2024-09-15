@@ -28,4 +28,4 @@ services:
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
     volumes:
-      - ./mysql_data:/var/lib/mysql # path to dir with database data
+      - ./mariadb_data:/var/lib/mysql # path to dir with database data

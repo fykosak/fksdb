@@ -16,8 +16,8 @@ parameters:
 
     astrid:
         host: astrid.fykos.cz
-        user:
-        password:
+        user: ''
+        password: ''
     googleOAuth2:
         clientId: ''
         clientSecret: ''

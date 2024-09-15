@@ -33,18 +33,18 @@ nebo jednorázově spustíme příkaz uvnitř kontajneru
 docker compose exec -it app <příkaz>
 ```
     - při prvním spuštění je potřeba nainstalovat balíčky, co FSKDB využívá
-        ```bash
-        composer install
-        npm install
-        ```
+```bash
+composer install
+npm install
+```
     - při prvním spuštění a každé změně SCSS nebo TS souborů je potřeba tyto soubory zkompilovat
-        ```bash
-        npm run build
-        ```
-        nebo je možné využít `dev` módu, když tyto soubory měníme často a chceme si je nechat kompilovat průběžně
-        ```bash
-        npm run dev
-        ```
+```bash
+npm run build
+```
+nebo je možné využít `dev` módu, když tyto soubory měníme často a chceme si je nechat kompilovat průběžně
+```bash
+npm run dev
+```
 
 5. otevřeme FKSDB v prohlížeči na adrese `localhost:8080`
 
