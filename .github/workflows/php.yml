@@ -31,11 +31,16 @@ jobs:
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
         run: composer install --no-progress --prefer-dist
-      - name: FKSDB configuration
-        run: "sed -e 's/user:/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
+      - name: FKSDB configuration user
+        run: sed -e 's/user: root/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon
+      - name: FKSDB configuration password
+        run: sed -e 's/password: password/password:/' app/config/config.local.neon
+      - name: FKSDB configuration for MySQL
+        if: ${{ startsWith(matrix.database, 'mysql' ) }}
+        run: sed -ie 's/mysql:host=mariadb/mysql:host=127.0.0.1/' app/config/config.local.neon
       - name: FKSDB configuration for MariaDB
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
-        run: sed -ie 's/mysql:host=127.0.0.1/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.tester.neon
+        run: sed -ie 's/mysql:host=mariadb/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.local.neon
       - name: i18n compile
         run: |
           sudo apt-get install gettext
