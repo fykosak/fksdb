@@ -91,8 +91,8 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
 
     public function getUsedCapacity(bool $removeRef = false): int
     {
-        //->where('state !=', PersonScheduleState::Cancelled)
-        $query = $this->getInterested();
+        //
+        $query = $this->getInterested()->where('state !=', PersonScheduleState::Cancelled);
         if ($removeRef) {
             $query->unsetRefCache();
         }

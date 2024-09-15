@@ -6,6 +6,7 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\Schedule\ConstantStrategy;
 use FKSDB\Modules\Core\BasePresenter;
 
 /**
@@ -43,6 +44,7 @@ final class DsefForm extends OpenApplicationForm
                     'types' => [ScheduleGroupType::Accommodation],
                     'required' => false,
                     'label' => _('Accommodation'),
+                    'timeoutStrategy' => new ConstantStrategy('+7days')
                 ],
             ]
         ];

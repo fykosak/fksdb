@@ -1268,10 +1268,12 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT UNSIGNED                   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT UNSIGNED                   NOT NULL,
-    `schedule_item_id`   INT UNSIGNED                   NOT NULL,
-    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
+    `person_schedule_id` INT UNSIGNED                              NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT UNSIGNED                              NOT NULL,
+    `schedule_item_id`   INT UNSIGNED                              NOT NULL,
+    `state`              ENUM ('participated','missed','canceled') NULL     DEFAULT NULL,
+    `timeout`            DATETIME                                  NULL     DEFAULT NULL,
+    `created`            TIMESTAMP                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
     CONSTRAINT `fk__person_schedule__schedule_item`
@@ -1482,7 +1484,7 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
 CREATE TABLE IF NOT EXISTS `unsubscribed_email`
 (
     `unsubscribed_email_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `created`               DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `created`               TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `email_hash`            CHAR(40)     NOT NULL COMMENT 'SHA1 hash of the email address in lowercase',
     `note`                  VARCHAR(255)          DEFAULT NULL,
     UNIQUE KEY `uq__unsubscribed_email__email_hash` (`email_hash`)

@@ -6,10 +6,12 @@ namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
@@ -18,6 +20,8 @@ class Handler
 {
     private PersonScheduleService $service;
     private GettextTranslator $translator;
+
+    private PersonScheduleMachine $machine;
 
     public function __construct(Container $container)
     {
@@ -54,6 +58,10 @@ class Handler
             }
         }
     }
+
+    /**
+     * @throws \Throwable
+     */
     public function saveGroup(PersonModel $person, ScheduleGroupModel $group, ?int $value): void
     {
         $personSchedule = $person->getScheduleByGroup($group);
@@ -62,42 +70,38 @@ class Handler
             return;
         }
         if ($value) {
-            if ($group->schedule_group_type->value === ScheduleGroupType::WeekendInfo) {
+            // može skupiny vybraný?
+            if (!$group->schedule_group_type->isSelectable()) {
                 throw new ScheduleException($group, _('Info block cannot be selected'));
             }
+            // existuje to ID a je v danej grupe
             /** @var ScheduleItemModel|null $item */
             $item = $group->getItems()->where('schedule_item_id', $value)->fetch();
             if (!$item) {
                 throw new ScheduleException($group, sprintf(_('Item with Id %s does not exists'), $value));
             }
+            // je item dostaupný cez GUI?
             if (!$item->available) {
                 throw new ScheduleException(
                     $group,
                     sprintf(_('Item with Id %s is not available'), $item->name->getText($this->translator->lang))
                 );
             }
-            // create
-            if ($personSchedule) {
-                if (!$group->isModifiable()) {
-                    throw new ScheduleException(
-                        $group,
-                        sprintf(
-                            _('Schedule "%s" is not allowed at this time'),
-                            $group->name->getText($this->translator->lang)
-                        )
-                    );
-                }
-                if ($personSchedule->getPayment()) {
-                    throw new ExistingPaymentException($personSchedule);
-                }
-            } elseif (!$group->isModifiable()) {
+            // dá sa ešte/už meniť skipina?
+            if (!$group->isModifiable()) {
                 throw new ScheduleException(
                     $group,
                     sprintf(
-                        _('Schedule "%s" is not available at this time'),
+                        _('Schedule "%s" is not allowed at this time'),
                         $group->name->getText($this->translator->lang)
                     )
                 );
+            }
+            // má položka vytvorenú platbu?
+            if ($personSchedule) {
+                if ($personSchedule->getPayment()) {
+                    throw new ExistingPaymentException($personSchedule);
+                }
             } elseif (!$group->hasFreeCapacity()) {
                 throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
             }
@@ -110,13 +114,20 @@ class Handler
                 $personSchedule
             );
         } elseif ($personSchedule) {
-            if (!$group->isModifiable()) {
-                throw new ScheduleException($group, _('Modification of this item is not allowed at this time'));
-            }
-            if ($personSchedule->getPayment()) {
-                throw new ExistingPaymentException($personSchedule);
-            }
-            $this->service->disposeModel($personSchedule);
+            $this->cancel($personSchedule);
         }
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    private function cancel(PersonScheduleModel $personSchedule): void
+    {
+        $holder = $this->machine->createHolder($personSchedule);
+        $transition = $this->machine->getTransitions()
+            ->filterByTarget(PersonScheduleState::from(PersonScheduleState::Cancelled))
+            ->filterAvailable($holder)
+            ->select();
+        $transition->execute($holder);
     }
 }
