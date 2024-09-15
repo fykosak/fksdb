@@ -6,7 +6,6 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\MailImportComponent;
 use FKSDB\Components\Grids\MailGrid;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonMailService;
@@ -14,7 +13,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\NotImplementedException;
 
 final class MailPresenter extends BasePresenter
 {
@@ -28,6 +26,9 @@ final class MailPresenter extends BasePresenter
         $this->personMailService = $personMailService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedImport(): bool
     {
         return $this->isAllowed(
@@ -36,30 +37,24 @@ final class MailPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Mail'), 'fas fa-envelope');
-    }
-
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Mail import'), 'fas fa-download');
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws NoContestAvailable
      */
-    protected function createComponentEditForm(): Control
+    public function authorizedList(): bool
     {
-        throw new NotImplementedException();
+        return $this->isAllowed(
+            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list'
+        );
     }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentCreateForm(): Control
+    public function titleList(): PageTitle
     {
-        throw new NotImplementedException();
+        return new PageTitle(null, _('Mail'), 'fas fa-envelope');
     }
 
     protected function createComponentGrid(): Control
@@ -75,14 +70,5 @@ final class MailPresenter extends BasePresenter
     protected function getORMService(): PersonMailService
     {
         return $this->personMailService;
-    }
-
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
     }
 }

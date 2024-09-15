@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Tests\Event;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
-use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
 use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model\Model;
 
@@ -46,5 +48,15 @@ final class TaskModel extends Model implements EventResource
     public function getEvent(): EventModel
     {
         return $this->event;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->getContestYear()->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->getEvent()->getContestYear();
     }
 }

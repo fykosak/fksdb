@@ -7,7 +7,6 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\Title;
-use Nette\Security\Resource;
 
 abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresenter
 {

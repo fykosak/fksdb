@@ -223,8 +223,8 @@ final class ACL
             Models\EventParticipantModel::RESOURCE_ID,
             'create',
             new LogicAnd(
-                new Authorization\Assertions\IsRegistrationOpened(),
-                new Authorization\Assertions\IsOpenEvent()
+                new Assertions\Events\IsRegistrationOpened(),
+                new Assertions\Events\IsOpenTypeEvent()
             )
         );
         $permission->allow(
@@ -232,8 +232,8 @@ final class ACL
             Models\EventParticipantModel::RESOURCE_ID,
             'detail',
             new LogicAnd(
-                new Authorization\Assertions\NotDisqualified(),
-                new Authorization\Assertions\OwnApplicationAssertion()
+                new Assertions\Events\NotDisqualified(),
+                new Assertions\Events\OwnParticipant()
             )
         );
         $permission->allow(
@@ -241,9 +241,9 @@ final class ACL
             Models\EventParticipantModel::RESOURCE_ID,
             'edit',
             new LogicAnd(
-                new Authorization\Assertions\NotDisqualified(),
-                new Authorization\Assertions\OwnApplicationAssertion(),
-                new Authorization\Assertions\IsRegistrationOpened()
+                new Assertions\Events\NotDisqualified(),
+                new Assertions\Events\OwnParticipant(),
+                new Assertions\Events\IsRegistrationOpened()
             )
         );
         $permission->allow(
@@ -261,7 +261,7 @@ final class ACL
             GuestRole::RoleId,
             Models\Fyziklani\TeamModel2::RESOURCE_ID,
             'create',
-            new Authorization\Assertions\IsRegistrationOpened()
+            new Assertions\Events\IsRegistrationOpened()
         );
         $permission->allow(
             [
@@ -271,8 +271,8 @@ final class ACL
             Models\Fyziklani\TeamModel2::RESOURCE_ID,
             'detail',
             new LogicAnd(
-                new Authorization\Assertions\NotDisqualified(),
-                new Authorization\Assertions\OwnTeamAssertion()
+                new Assertions\Events\NotDisqualified(),
+                new Assertions\Events\OwnTeam()
             )
         );
         $permission->allow(
@@ -283,9 +283,9 @@ final class ACL
             Models\Fyziklani\TeamModel2::RESOURCE_ID,
             'edit',
             new LogicAnd(
-                new Authorization\Assertions\NotDisqualified(),
-                new Authorization\Assertions\OwnTeamAssertion(),
-                new Authorization\Assertions\IsRegistrationOpened()
+                new Assertions\Events\NotDisqualified(),
+                new Assertions\Events\OwnTeam(),
+                new Assertions\Events\IsRegistrationOpened()
             )
         );
         $permission->allow(

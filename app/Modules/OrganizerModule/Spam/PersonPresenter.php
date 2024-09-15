@@ -8,14 +8,16 @@ use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonImportComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\Spam\PersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
 final class PersonPresenter extends BasePresenter
@@ -30,14 +32,39 @@ final class PersonPresenter extends BasePresenter
         $this->personHistoryService = $personHistoryService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized(
+        return $this->isAllowed(
             new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'import'
         );
     }
 
+    public function titleImport(): PageTitle
+    {
+        return new PageTitle(null, _('People import'), 'fas fa-download');
+    }
+
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            'import'
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     */
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
@@ -47,26 +74,52 @@ final class PersonPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create'
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create person'), 'fas fa-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list'
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Persons'), 'fas fa-user-group');
     }
 
-    public function titleImport(): PageTitle
-    {
-        return new PageTitle(null, _('People import'), 'fas fa-download');
-    }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     */
     protected function createComponentEditForm(): SpamPersonFormComponent
     {
         return new SpamPersonFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentCreateForm(): AjaxPersonFormComponent
     {
         //return new SpamPersonFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
@@ -78,6 +131,10 @@ final class PersonPresenter extends BasePresenter
         return new PersonGrid($this->getContext());
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     protected function createComponentImportForm(): SpamPersonImportComponent
     {
         return new SpamPersonImportComponent($this->getSelectedContestYear(), $this->getContext());
@@ -86,14 +143,5 @@ final class PersonPresenter extends BasePresenter
     protected function getORMService(): PersonHistoryService
     {
         return $this->personHistoryService;
-    }
-
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
     }
 }

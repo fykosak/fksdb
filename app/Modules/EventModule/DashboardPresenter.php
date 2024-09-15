@@ -6,7 +6,6 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;

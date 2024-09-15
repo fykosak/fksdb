@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Security\Resource;
 
 /**
- * @phpstan-template TModel of (ContestResource&Model)
+ * @phpstan-template TModel of (Resource&Model)
  * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
  */
 class AnyContestRole implements Statement
@@ -36,7 +36,7 @@ class AnyContestRole implements Statement
     {
         [$holder] = $args;
         return $this->contestAuthorizator->isAllowedAnyContest(
-            $holder->getModel(),
+            $holder->getModel()->getResourceId(),
             $this->privilege
         );
     }

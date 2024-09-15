@@ -115,6 +115,11 @@ final class ContestYearModel extends Model implements ContestYearResource
         return $this;
     }
 
+    public function getContest(): ContestModel
+    {
+        return $this->contest;
+    }
+
     public function getResourceId(): string
     {
         return ContestModel::RESOURCE_ID;

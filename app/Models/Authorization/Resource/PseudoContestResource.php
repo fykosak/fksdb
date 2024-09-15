@@ -6,10 +6,11 @@ namespace FKSDB\Models\Authorization\Resource;
 
 use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Security\Resource;
 
 final class PseudoContestResource implements ContestResource
 {
-    /** @var string|(Model&Resource) */
+    /** @var string|(Model&Resource) $resource */
     private $resource;
     private ContestModel $contest;
 

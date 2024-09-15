@@ -12,9 +12,9 @@ class PaymentEditableAssertion implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $payment = $acl->getQueriedResource();
-        if (!$payment instanceof PaymentModel) {
-            throw new WrongAssertionException();
+        if ($payment instanceof PaymentModel) {
+            return $payment->canEdit();
         }
-        return $payment->canEdit();
+        throw new WrongAssertionException();
     }
 }

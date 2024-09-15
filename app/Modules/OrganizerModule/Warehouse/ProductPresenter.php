@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
-use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class ProductPresenter extends BasePresenter
 {
@@ -23,14 +22,47 @@ final class ProductPresenter extends BasePresenter
 
     private ProductService $productService;
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(ProductModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list'
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Products'), 'fas fa-dolly');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            'edit'
+        );
+    }
     public function titleEdit(): PageTitle
     {
         return new PageTitle(null, _('Edit product'), 'fas fa-pen');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(ProductModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create'
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -65,14 +97,5 @@ final class ProductPresenter extends BasePresenter
     protected function getORMService(): ProductService
     {
         return $this->productService;
-    }
-
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
     }
 }

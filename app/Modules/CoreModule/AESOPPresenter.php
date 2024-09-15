@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
@@ -15,6 +16,7 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -36,11 +38,30 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
     }
 
     /**
+     * @throws NotImplementedException
+     */
+    public function titleContestant(): PageTitle
+    {
+        throw new NotImplementedException();
+    }
+    /**
      * @throws NoContestAvailable
      */
     public function authorizedEvent(): bool
     {
-        return $this->contestAuthorizator->isAllowed(self::AESOP_RESOURCE_ID, null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
+            null,
+            $this->getSelectedContest()
+        );
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function titleEvent(): PageTitle
+    {
+        throw new NotImplementedException();
     }
 
     /**

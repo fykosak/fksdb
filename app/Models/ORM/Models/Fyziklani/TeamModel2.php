@@ -12,6 +12,8 @@ use FKSDB\Components\Game\Seating\Place2024;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -274,5 +276,15 @@ final class TeamModel2 extends Model implements EventResource
     public function getEvent(): EventModel
     {
         return $this->event;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->getContestYear()->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->getEvent()->getContestYear();
     }
 }

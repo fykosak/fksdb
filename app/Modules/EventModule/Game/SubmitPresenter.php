@@ -7,7 +7,6 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\Form\FormComponent;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -40,6 +39,9 @@ final class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('Scoring'), 'fas fa-pen');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedList(): bool
     {
         return $this->eventAuthorizator->isAllowed(
@@ -53,6 +55,13 @@ final class SubmitPresenter extends BasePresenter
         return new PageTitle(null, _('List of submit'), 'fas fa-table');
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
+     */
     public function authorizedEdit(): bool
     {
         return $this->eventAuthorizator->isAllowed(
@@ -76,15 +85,6 @@ final class SubmitPresenter extends BasePresenter
     final public function renderEdit(): void
     {
         $this->template->model = $this->getEntity();
-    }
-
-    /**
-     * @param EventResource $resource
-     * @throws GoneException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        throw new GoneException();
     }
 
     /**

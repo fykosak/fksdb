@@ -6,19 +6,17 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
 use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
 
 final class EmailPresenter extends BasePresenter
 {
@@ -55,24 +53,6 @@ final class EmailPresenter extends BasePresenter
         return $this->getEmailSources()[$this->source] ?? null;
     }
 
-    /**
-     * @throws GoneException
-     * @throws NotFoundException
-     */
-    public function titleDetail(): PageTitle
-    {
-        return new PageTitle(
-            null,
-            sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
-            'fas fa-envelope-open'
-        );
-    }
-
-    public function titleTemplate(): PageTitle
-    {
-        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
-    }
-
     public function authorizedDetail(): bool
     {
         $authorized = true;
@@ -87,22 +67,42 @@ final class EmailPresenter extends BasePresenter
         }
         return $authorized;
     }
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
+            'fas fa-envelope-open'
+        );
+    }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function renderDetail(): void
+    {
+        $this->template->model = $this->getEntity();
+    }
     /**
      * @throws NoContestAvailable
      */
     public function authorizedTemplate(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+            new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
         );
     }
 
-    public function titleList(): PageTitle
+    public function titleTemplate(): PageTitle
     {
-        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+        return new PageTitle(null, _('Email templates'), 'fas fa-envelope-open');
     }
 
     public function renderTemplate(): void
@@ -111,29 +111,28 @@ final class EmailPresenter extends BasePresenter
         $this->template->source = $this->getEmailSource();
     }
 
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            'template',
+            $this->getSelectedContest()
+        );
+    }
+
     protected function getORMService(): EmailMessageService
     {
         return $this->emailMessageService;
     }
 
-    /**
-     * @throws GoneException
-     * @throws NotFoundException
-     */
-    final public function renderDetail(): void
-    {
-        $this->template->model = $this->getEntity();
-    }
-
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
 
     protected function createComponentGrid(): EmailsGrid
     {
@@ -143,14 +142,5 @@ final class EmailPresenter extends BasePresenter
     protected function createComponentTemplateForm(): EmailProviderForm //@phpstan-ignore-line
     {
         return new EmailProviderForm($this->getContext(), $this->getEmailSource());
-    }
-
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

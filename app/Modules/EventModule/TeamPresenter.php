@@ -19,7 +19,6 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -29,7 +28,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -40,22 +38,6 @@ final class TeamPresenter extends BasePresenter
 {
     /** @use EventEntityPresenterTrait<TeamModel2> */
     use EventEntityPresenterTrait;
-
-    private TeamService2 $teamService;
-
-    public function injectService(TeamService2 $service): void
-    {
-        $this->teamService = $service;
-    }
-
-    /**
-     * @param EventResource $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
 
     /**
      * @throws EventNotFoundException
@@ -70,11 +52,28 @@ final class TeamPresenter extends BasePresenter
         return $this->getAction() !== 'create';
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): TeamService2
     {
-        return $this->teamService;
+        throw new GoneException();
     }
 
+    protected function loadModel(): TeamModel2
+    {
+        /** @var TeamModel2|null $candidate */
+        $candidate = $this->getEvent()->getTeams()->where('fyziklani_team_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedCreate(): bool
     {
         return $this->eventAuthorizator->isAllowed(
@@ -89,6 +88,21 @@ final class TeamPresenter extends BasePresenter
         return new PageTitle(null, _('Create team'), 'fas fa-calendar-plus');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            $this->getEntity(),
+            'detail',
+            $this->getEvent()
+        );
+    }
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -139,11 +153,15 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
      */
     public function authorizedOrgDetail(): bool
     {
         return $this->eventAuthorizator->isAllowed(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            $this->getEntity(),
             'organizerDetail',
             $this->getEvent()
         );
@@ -235,14 +253,6 @@ final class TeamPresenter extends BasePresenter
             'list',
             $this->getEvent()
         );
-    }
-
-    /**
-     * @throws GoneException
-     */
-    public function authorizedList(): bool
-    {
-        throw new GoneException();
     }
 
     public function titleDefault(): PageTitle

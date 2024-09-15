@@ -8,17 +8,14 @@ use FKSDB\Components\Grids\TaskGrid;
 use FKSDB\Components\Inbox\HandoutFormComponent;
 use FKSDB\Components\Inbox\PointsVariance\ChartComponent;
 use FKSDB\Components\Inbox\TaskImportFormComponent;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
 
 final class TasksPresenter extends BasePresenter
 {
@@ -107,28 +104,9 @@ final class TasksPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
-    }
-
     protected function getORMService(): TaskService
     {
         return $this->taskService;
-    }
-
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
     }
 
     /**

@@ -15,6 +15,7 @@ use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -143,6 +144,7 @@ final class AttendancePresenter extends BasePresenter
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentAttendance(): CodeAttendance
     {
@@ -199,6 +201,7 @@ final class AttendancePresenter extends BasePresenter
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -211,6 +214,7 @@ final class AttendancePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      * @phpstan-return (TTeamEvent is true
      * ?\FKSDB\Models\Transitions\Machine\TeamMachine
      * :Machine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)

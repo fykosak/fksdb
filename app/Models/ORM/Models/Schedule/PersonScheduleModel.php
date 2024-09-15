@@ -6,6 +6,8 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
@@ -74,5 +76,15 @@ final class PersonScheduleModel extends Model implements EventResource
     public function getEvent(): EventModel
     {
         return $this->schedule_item->schedule_group->event;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->getContestYear()->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->getEvent()->getContestYear();
     }
 }

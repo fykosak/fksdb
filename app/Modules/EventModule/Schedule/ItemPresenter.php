@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Schedule;
 
-use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\CodeAttendance;
 use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
@@ -55,6 +52,17 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'detail', $this->getEvent());
+    }
+    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NotFoundException
@@ -88,6 +96,17 @@ final class ItemPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+    }
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -127,23 +146,6 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function getModelResource(): PseudoEventResource
-    {
-        return new PseudoEventResource(ScheduleItemModel::RESOURCE_ID, $this->getEvent());
-    }
-
-    /**
-     * @param EventResource $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
     protected function createComponentCreateForm(): ScheduleItemForm
     {
         return new ScheduleItemForm($this->getGroup(), $this->getContext(), null);
@@ -160,15 +162,6 @@ final class ItemPresenter extends BasePresenter
     protected function createComponentEditForm(): ScheduleItemForm
     {
         return new ScheduleItemForm($this->getGroup(), $this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @return never
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new NotImplementedException();
     }
 
     /**

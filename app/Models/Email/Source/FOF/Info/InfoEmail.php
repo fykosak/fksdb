@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Source\FOF\Info;
 
 use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -34,6 +33,9 @@ final class InfoEmail extends EmailSource
         $this->loginService = $loginService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         $holder = $params['holder'];

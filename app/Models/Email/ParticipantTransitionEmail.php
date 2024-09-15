@@ -52,6 +52,9 @@ abstract class ParticipantTransitionEmail extends TransitionEmailSource
         ];
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function createToken(ParticipantHolder $holder): AuthTokenModel
     {
         return $this->authTokenService->createEventToken(

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Authorizators;
 
 use FKSDB\Models\Authorization\Resource\ContestYearResource;
-use FKSDB\Models\Authorization\Resource\ContestYearToContestResource;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Permission;
@@ -45,7 +44,7 @@ final class ContestYearAuthorizator
             }
         }
         return $this->contestAuthorizator->isAllowed(
-            new ContestYearToContestResource($resource),
+            $resource,
             $privilege,
             $contestYear->contest
         );

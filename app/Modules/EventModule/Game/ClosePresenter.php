@@ -7,19 +7,16 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamList;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 
 /**
  * @method TeamModel2 getEntity()
@@ -75,15 +72,6 @@ final class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @param EventResource $resource
-     * @throws GoneException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        throw new GoneException();
-    }
-
-    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NotFoundException
@@ -96,9 +84,23 @@ final class ClosePresenter extends BasePresenter
         return new PreviewComponent($this->getContext(), $this->getEntity());
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): TeamService2
     {
-        return $this->teamService;
+        throw new GoneException();
+    }
+
+    protected function loadModel(): TeamModel2
+    {
+        /** @var TeamModel2|null $candidate */
+        $candidate = $this->getEvent()->getTeams()->where('fyziklani_team_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
     }
 
     /**
@@ -109,21 +111,6 @@ final class ClosePresenter extends BasePresenter
         return new TeamList($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
 
     /**
      * @throws EventNotFoundException
@@ -131,10 +118,5 @@ final class ClosePresenter extends BasePresenter
     protected function createComponentCodeCloseForm(): CodeCloseForm
     {
         return new CodeCloseForm($this->getContext(), $this->getEvent());
-    }
-
-    protected function getModelResource(): string
-    {
-        return 'game';
     }
 }

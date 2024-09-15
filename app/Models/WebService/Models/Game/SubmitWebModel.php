@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\WebModel;
 use Fykosak\Utils\Logging\Message;
-use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 /**

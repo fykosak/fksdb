@@ -7,8 +7,6 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\Forms\PersonScheduleForm;
 use FKSDB\Components\Schedule\PersonScheduleList;
-use FKSDB\Models\Authorization\Resource\ContestResource;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -19,7 +17,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class PersonPresenter extends BasePresenter
 {
@@ -33,10 +30,24 @@ final class PersonPresenter extends BasePresenter
         $this->service = $service;
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function authorizedDelete(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'delete', $this->getEvent());
+    }
+
+    public function titleDelete(): PageTitle
+    {
+        return new PageTitle(null, _('Remove person from schedule'), 'fas fa-user-edit');
+    }
     public function actionDelete(): void
     {
         try {
-            $this->traitHandleDelete();
+            $this->getORMService()->disposeModel($this->getEntity());
         } catch (\Throwable $exception) {
             $this->flashMessage(_('Error') . ': ' . $exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('list');
@@ -45,6 +56,15 @@ final class PersonPresenter extends BasePresenter
         $this->redirect('list');
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'detail', $this->getEvent());
+    }
     /**
      * @throws NotFoundException
      * @throws GoneException
@@ -73,22 +93,21 @@ final class PersonPresenter extends BasePresenter
         );
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Schedule'), 'fas fa-list');
-    }
-
     /**
-     * @param EventResource $resource
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    public function authorizedList(): bool
     {
         return $this->eventAuthorizator->isAllowed(
             new PseudoEventResource(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
-            $privilege,
+            'list',
             $this->getEvent()
         );
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Schedule'), 'fas fa-list');
     }
 
     protected function getORMService(): PersonScheduleService

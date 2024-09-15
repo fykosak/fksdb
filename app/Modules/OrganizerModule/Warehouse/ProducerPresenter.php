@@ -6,17 +6,14 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
-use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class ProducerPresenter extends BasePresenter
 {
@@ -30,21 +27,70 @@ final class ProducerPresenter extends BasePresenter
         $this->producerService = $producerService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(ProducerModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list'
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Producers'), 'fas fa-store-alt');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            'edit'
+        );
+    }
     public function titleEdit(): PageTitle
     {
         return new PageTitle(null, _('Edit producer'), 'fas fa-pen');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource(ProducerModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create'
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create producer'), 'fas fa-plus');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->isAllowed(
+            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            'detail'
+        );
+    }
+
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(null, _('Detail of producer'), 'fas fa-plus');
+    }
     /**
      * @throws NotFoundException
      * @throws GoneException
@@ -59,16 +105,6 @@ final class ProducerPresenter extends BasePresenter
         return $this->producerService;
     }
 
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
     protected function createComponentGrid(): ProducersGrid
     {
         return new ProducersGrid($this->getContext());
@@ -81,14 +117,5 @@ final class ProducerPresenter extends BasePresenter
     protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid
     {
         return new ProductsFromProducerGrid($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @param ContestResource $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
     }
 }

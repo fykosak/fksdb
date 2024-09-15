@@ -48,6 +48,9 @@ abstract class Handler
         }
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     public function create(
         TaskModel $task,
         TeamModel2 $team,

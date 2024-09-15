@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Resource;
 
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
@@ -36,5 +37,10 @@ final class PseudoContestYearResource implements ContestYearResource
     public function getResourceId(): string
     {
         return is_string($this->resource) ? $this->resource : $this->resource->getResourceId();
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contestYear->contest;
     }
 }

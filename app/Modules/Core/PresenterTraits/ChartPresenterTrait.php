@@ -7,6 +7,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
@@ -26,6 +27,7 @@ trait ChartPresenterTrait
      * @throws EventNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotImplementedException
      */
     final public function renderList(): void
     {
@@ -35,7 +37,6 @@ trait ChartPresenterTrait
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws BadTypeException
-     * @throws BadTypeException
      * @throws EventNotFoundException
      */
     abstract protected function getCharts(): array;
@@ -44,6 +45,7 @@ trait ChartPresenterTrait
      * @throws EventNotFoundException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotImplementedException
      */
     protected function registerCharts(): void
     {

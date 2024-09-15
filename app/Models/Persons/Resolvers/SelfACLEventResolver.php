@@ -4,35 +4,35 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
-use FKSDB\Models\Authorization\Resource\ContestResource;
-use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use Nette\DI\Container;
 use Nette\Security\User;
 
-class SelfACLResolver implements Resolver
+class SelfACLEventResolver implements Resolver
 {
-    private ContestResource $resource;
+    private EventResource $resource;
     private string $privilege;
-    private ContestModel $contest;
+    private EventModel $event;
     private User $user;
 
-    private ContestAuthorizator $contestAuthorizator;
+    private EventAuthorizator $eventAuthorizator;
 
-    public function __construct(ContestResource $resource, string $privilege, ContestModel $contest, Container $container)
+    public function __construct(EventResource $resource, string $privilege, EventModel $event, Container $container)
     {
-        $this->contest = $contest;
+        $this->event = $event;
         $this->resource = $resource;
         $this->privilege = $privilege;
         $container->callInjects($this);
     }
 
-    public function inject(ContestAuthorizator $contestAuthorizator, User $user): void
+    public function inject(EventAuthorizator $eventAuthorizator, User $user): void
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->eventAuthorizator = $eventAuthorizator;
         $this->user = $user;
     }
 
@@ -43,7 +43,7 @@ class SelfACLResolver implements Resolver
             return false;
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return true;
@@ -58,7 +58,7 @@ class SelfACLResolver implements Resolver
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
@@ -72,7 +72,7 @@ class SelfACLResolver implements Resolver
             return false;
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return true;

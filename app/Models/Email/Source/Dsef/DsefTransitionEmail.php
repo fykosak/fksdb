@@ -32,6 +32,9 @@ final class DsefTransitionEmail extends ParticipantTransitionEmail
         ];
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getTemplateData(ParticipantHolder $holder, Transition $transition): array
     {
         return [

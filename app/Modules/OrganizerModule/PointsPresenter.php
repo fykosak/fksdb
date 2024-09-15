@@ -98,6 +98,7 @@ final class PointsPresenter extends BasePresenter
 
     /**
      * @throws BadRequestException
+     * @throws \Throwable
      */
     public function handleRecalculateAll(): void
     {

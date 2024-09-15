@@ -7,6 +7,8 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\DateTime;
@@ -85,5 +87,15 @@ final class SubmitModel extends Model implements EventResource
     public function getEvent(): EventModel
     {
         return $this->fyziklani_team->event;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->getContestYear()->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->getEvent()->getContestYear();
     }
 }

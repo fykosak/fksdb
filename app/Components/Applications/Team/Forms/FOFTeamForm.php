@@ -18,7 +18,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
-use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Persons\Resolvers\SelfACLEventResolver;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -79,10 +79,10 @@ class FOFTeamForm extends TeamForm
                 $this->event->getContestYear(),
                 'email',
                 true,
-                new SelfACLResolver(
+                new SelfACLEventResolver(
                     $this->model ?? new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
-                    $this->event->event_type->contest,
+                        $this->event,
                     $this->container
                 ),
                 $this->event

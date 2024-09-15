@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
 use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
 use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
@@ -21,6 +23,9 @@ class ContestRelatedAssertion implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $person = $acl->getQueriedResource();
+        if ($person instanceof PseudoContestResource || $person instanceof PseudoContestYearResource) {
+            $person = $person->getModel();
+        }
         if (!$person instanceof PersonModel) {
             throw new WrongAssertionException();
         }

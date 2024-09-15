@@ -6,7 +6,6 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
 use FKSDB\Components\Grids\EventOrganizer\EventOrganizersGrid;
-use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -25,23 +24,49 @@ final class EventOrganizerPresenter extends BasePresenter
     /** @use EventEntityPresenterTrait<EventOrganizerModel> */
     use EventEntityPresenterTrait;
 
-    private EventOrganizerService $service;
-
-    final public function injectServiceEventOrganizer(EventOrganizerService $service): void
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedList(): bool
     {
-        $this->service = $service;
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
     }
-
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Organizers of event'), 'fas fa-user-tie');
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create organizer of event'), 'fas fa-user-plus');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+    }
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -60,12 +85,28 @@ final class EventOrganizerPresenter extends BasePresenter
     }
 
     /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedDelete(): bool
+    {
+        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'delete', $this->getEvent());
+    }
+
+    public function titleDelete(): PageTitle
+    {
+        return new PageTitle(null, _('Remove event organizer'), 'fas fa-user-edit');
+    }
+    /**
      * @throws \ReflectionException
      */
     public function actionDelete(): void
     {
         try {
-            $this->traitHandleDelete();
+            $this->getORMService()->disposeModel($this->getEntity());
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
@@ -75,25 +116,22 @@ final class EventOrganizerPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws GoneException
      */
-    protected function getModelResource(): PseudoEventResource
-    {
-        return new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent());
-    }
-
-    /**
-     * @param EventResource $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
-
     protected function getORMService(): EventOrganizerService
     {
-        return $this->service;
+        throw new GoneException();
+    }
+
+    protected function loadModel(): EventOrganizerModel
+    {
+        /** @var EventOrganizerModel|null $candidate */
+        $candidate = $this->getEvent()->getEventOrganizers()->where('e_org_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Recovery\RecoveryForm;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -42,9 +43,22 @@ final class AuthenticationPresenter extends BasePresenter
         return true;
     }
 
+    public function titleLogin(): PageTitle
+    {
+        return new PageTitle(null, _('Login'), 'fas fa-right-to-bracket');
+    }
+
     public function authorizedLogout(): bool
     {
         return true;
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function titleLogout(): PageTitle
+    {
+        throw new NotImplementedException();
     }
 
     public function authorizedRecover(): bool
@@ -52,19 +66,14 @@ final class AuthenticationPresenter extends BasePresenter
         return true;
     }
 
-    public function requiresLogin(): bool
-    {
-        return false;
-    }
-
-    public function titleLogin(): PageTitle
-    {
-        return new PageTitle(null, _('Login'), 'fas fa-right-to-bracket');
-    }
-
     public function titleRecover(): PageTitle
     {
         return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
+    }
+
+    public function requiresLogin(): bool
+    {
+        return false;
     }
 
     /**
