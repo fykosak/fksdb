@@ -29,6 +29,8 @@ RUN apt-get update && apt install -y --no-install-suggests \
 	php${PHP_VERSION}-xmlrpc \
 	# for translations
 	locales \
+	gettext \
+	python3 \
 	# for tests and local development
 	composer \
 	npm \

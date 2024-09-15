@@ -32,8 +32,10 @@ nebo jednorázově spustíme příkaz uvnitř kontajneru
 ```bash
 docker compose exec -it app <příkaz>
 ```
-    - při prvním spuštění je potřeba nainstalovat balíčky, co FSKDB využívá
+    - při prvním spuštění je potřeba nainstalovat balíčky, co FSKDB využívá a zkompilovat překlady
 ```bash
+./i18n/compile.sh
+python3 ./i18n/compile-js.py
 composer install
 npm install
 ```
@@ -48,7 +50,7 @@ npm run dev
 
 5. otevřeme FKSDB v prohlížeči na adrese `localhost:8080`
 
-6. přihlásíme se do adminera (`localhost:8080/adminer`), inicializujeme data a vyzkoušíme
+6. přihlásíme se do adminera (`localhost:8080/adminer`) (server `mariadb`, jméno `fksdb`, heslo `password`), inicializujeme data a vyzkoušíme
 
 7. vypneme kontejnery pomocí `CTRL-C`, pokud běží v popředí, `docker compose stop` pokud běží v pozadí
 
