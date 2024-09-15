@@ -3,5 +3,11 @@
   "dockerComposeFile": "../docker/docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/app",
-  "postCreateCommand": "./.devcontainer/post-create.sh"
+  "postCreateCommand": "./docker/post-create.sh",
+  "forwardPorts": [8080],
+	"portsAttributes": {
+		"8080": {
+			"label": "Apache"
+		}
+	}
 }

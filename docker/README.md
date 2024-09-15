@@ -3,6 +3,7 @@
 
 ## Vývoj
 ### První spuštění
+
 0. vnoříme se do `docker` složky, pokud zde už nejsme
 ```bash
 cd docker
@@ -28,18 +29,18 @@ docker compose up -d
 ```bash
 docker compose exec -it app bash
 ```
-nebo jednorázově spustíme příkaz uvnitř kontajneru
+nebo jednorázově spustíme příkaz uvnitř kontejneru
 ```bash
 docker compose exec -it app <příkaz>
 ```
-    - při prvním spuštění je potřeba nainstalovat balíčky, co FSKDB využívá a zkompilovat překlady
+- při prvním spuštění je potřeba nainstalovat balíčky, co FSKDB využívá a zkompilovat překlady
 ```bash
 ./i18n/compile.sh
 python3 ./i18n/compile-js.py
 composer install
 npm install
 ```
-    - při prvním spuštění a každé změně SCSS nebo TS souborů je potřeba tyto soubory zkompilovat
+- při prvním spuštění a každé změně SCSS nebo TS souborů je potřeba tyto soubory zkompilovat
 ```bash
 npm run build
 ```
