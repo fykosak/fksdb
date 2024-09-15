@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\Models\SoapWebModel;
@@ -50,7 +51,11 @@ class EventListWebModel extends WebModel implements SoapWebModel
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
-            if ($this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event)) {
+            if ($this->eventAuthorizator->isAllowed(
+                new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $event),
+                self::class,
+                $event
+            )) {
                 $events[$event->event_id] = $event->__toArray();
             }
         }

@@ -8,6 +8,8 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Components\Schedule\Attendance\CodeAttendance;
 use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -19,7 +21,6 @@ use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class ItemPresenter extends BasePresenter
 {
@@ -34,6 +35,18 @@ final class ItemPresenter extends BasePresenter
     final public function injectService(ScheduleItemService $service): void
     {
         $this->service = $service;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(ScheduleItemModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -112,7 +125,15 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function getModelResource(): PseudoEventResource
+    {
+        return new PseudoEventResource(ScheduleItemModel::RESOURCE_ID, $this->getEvent());
+    }
+
+    /**
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

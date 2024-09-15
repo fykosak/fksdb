@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -98,7 +99,7 @@ final class EventPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

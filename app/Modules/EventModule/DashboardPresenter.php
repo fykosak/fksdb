@@ -27,7 +27,7 @@ final class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'dashboard', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'dashboard', $this->getEvent());
     }
 
     /**

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Authorizators;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\EventToContestYearResource;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Permission;
-use Nette\Security\Resource;
 use Nette\Security\User;
 
 final class EventAuthorizator
@@ -23,11 +24,11 @@ final class EventAuthorizator
         $this->permission = $acl;
     }
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    public function isAllowed($resource, ?string $privilege, EventModel $event): bool
+    public function isAllowed(EventResource $resource, ?string $privilege, EventModel $event): bool
     {
+        if ($event->event_id !== $resource->getEvent()->event_id) {
+            return false;
+        }
         /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         if ($login) {
@@ -37,6 +38,10 @@ final class EventAuthorizator
                 }
             }
         }
-        return $this->contestYearAuthorizator->isAllowed($resource, $privilege, $event->getContestYear());
+        return $this->contestYearAuthorizator->isAllowed(
+            new EventToContestYearResource($resource),
+            $privilege,
+            $event->getContestYear()
+        );
     }
 }

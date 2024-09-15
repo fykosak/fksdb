@@ -7,6 +7,9 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\Forms\PersonScheduleForm;
 use FKSDB\Components\Schedule\PersonScheduleList;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -76,12 +79,16 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isAllowed(PersonScheduleModel::RESOURCE_ID, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
+            $privilege,
+            $this->getEvent()
+        );
     }
 
     protected function getORMService(): PersonScheduleService

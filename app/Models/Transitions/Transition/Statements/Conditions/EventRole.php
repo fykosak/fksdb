@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 
 /**
- * @phpstan-template TModel of (\Nette\Security\Resource&\Fykosak\NetteORM\Model\Model)
+ * @phpstan-template TModel of (EventResource&Model)
  * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
  */
 class EventRole implements Statement

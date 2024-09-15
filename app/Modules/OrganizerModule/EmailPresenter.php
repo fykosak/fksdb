@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
 use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
@@ -18,7 +19,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class EmailPresenter extends BasePresenter
 {
@@ -146,7 +146,7 @@ final class EmailPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

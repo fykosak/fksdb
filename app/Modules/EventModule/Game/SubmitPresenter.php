@@ -7,6 +7,8 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\Form\FormComponent;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -16,23 +18,49 @@ use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class SubmitPresenter extends BasePresenter
 {
     /** @phpstan-use EventEntityPresenterTrait<SubmitModel> */
     use EventEntityPresenterTrait;
 
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Scoring'), 'fas fa-pen');
     }
 
+    public function authorizedList(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of submit'), 'fas fa-table');
     }
 
+    public function authorizedEdit(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            $this->getEntity(),
+            'create',
+            $this->getEvent()
+        );
+    }
     public function titleEdit(): PageTitle
     {
         return new PageTitle(null, _('Change of scoring'), 'fas fa-pen');
@@ -51,12 +79,12 @@ final class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @throws EventNotFoundException
+     * @param EventResource $resource
+     * @throws GoneException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
+        throw new GoneException();
     }
 
     /**

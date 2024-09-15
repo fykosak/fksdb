@@ -8,6 +8,7 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -103,7 +104,7 @@ class Authorization extends FyziklaniTestCase
         ], []);
         $this->container->getByType(EventGrantService::class)->storeModel([
             'login_id' => $this->inserter->getLogin()->login_id,
-            'role' => 'game.inserter',
+            'role' => ExplicitEventRole::GameInserter,
             'event_id' => $this->event->event_id,
         ]);
     }

@@ -7,6 +7,8 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\FakeContestResource;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
@@ -16,7 +18,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 final class ExportPresenter extends BasePresenter
@@ -49,7 +50,11 @@ final class ExportPresenter extends BasePresenter
      */
     public function authorizedExecute(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new FakeContestResource($this->getStoredQuery(), $this->getSelectedContest()),
+            'execute',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -141,7 +146,7 @@ final class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

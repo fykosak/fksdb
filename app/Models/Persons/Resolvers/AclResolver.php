@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Resource\FakeContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
@@ -45,6 +46,6 @@ class AclResolver implements Resolver
 
     private function isAllowed(PersonModel $person, ?string $privilege): bool
     {
-        return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
+        return $this->contestAuthorizator->isAllowed(new FakeContestResource($person, $this->contest), $privilege, $this->contest);
     }
 }

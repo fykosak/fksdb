@@ -9,9 +9,10 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Event\CodeAttendance\CodeAttendance;
 use FKSDB\Components\Event\CodeSearch\CodeSearch;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\Game\Seating\Single;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\MachineCode\MachineCode;
@@ -90,13 +91,13 @@ final class AttendancePresenter extends BasePresenter
     {
         if ($this->getEvent()->isTeamEvent()) {
             return $this->eventAuthorizator->isAllowed(
-                TeamModel2::RESOURCE_ID,
+                new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );
         } else {
             return $this->eventAuthorizator->isAllowed(
-                EventParticipantModel::RESOURCE_ID,
+                new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );

@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -162,7 +163,7 @@ abstract class InvitationApplicationForm extends BaseComponent
             PersonSearchContainer::SEARCH_ID,
             false,
             new SelfACLResolver(
-                $this->model ?? EventParticipantModel::RESOURCE_ID,
+                $this->model ?? new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
                 $this->event->event_type->contest,
                 $this->container

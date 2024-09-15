@@ -14,7 +14,8 @@ use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -27,7 +28,6 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
-use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class ApplicationPresenter extends BasePresenter
@@ -43,7 +43,7 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -94,7 +94,7 @@ final class ApplicationPresenter extends BasePresenter
     public function renderDetail(): void
     {
         $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getModelResource(),
+            $this->getEntity(),
             'organizer',
             $this->getEvent()
         );
@@ -183,11 +183,14 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'import',
+            $this->getEvent()
+        );
     }
 
     public function titleImport(): PageTitle
@@ -202,11 +205,34 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
+    }
+
+    /**
      * @throws GoneException
+     */
+    public function authorizedList(): bool
+    {
+        throw new GoneException();
+    }
+
+    /**
+     * @throws EventNotFoundException
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'organizer',
+            $this->getEvent()
+        );
     }
 
     public function titleMass(): PageTitle

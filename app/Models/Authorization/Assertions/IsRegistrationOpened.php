@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\PseudoEventResource;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use Nette\Security\Permission;
 
 class IsRegistrationOpened implements Assertion
@@ -14,12 +12,8 @@ class IsRegistrationOpened implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $resource = $acl->getQueriedResource();
-        if (
-            $resource instanceof TeamModel2
-            || $resource instanceof EventParticipantModel
-            || $resource instanceof PseudoEventResource
-        ) {
-            return $resource->event->isRegistrationOpened();
+        if ($resource instanceof EventResource) {
+            return $resource->getEvent()->isRegistrationOpened();
         }
         throw new WrongAssertionException();
     }

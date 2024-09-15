@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 
 /**
  * @property-read PersonModel $person
@@ -20,7 +21,7 @@ use Nette\Security\Resource;
  * @property-read int $person_schedule_id
  * @property-read PersonScheduleState $state
  */
-final class PersonScheduleModel extends Model implements Resource
+final class PersonScheduleModel extends Model implements EventResource
 {
     public const RESOURCE_ID = 'event.schedule.person';
 
@@ -68,5 +69,10 @@ final class PersonScheduleModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->schedule_item->schedule_group->event;
     }
 }

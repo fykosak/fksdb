@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\TaskGrid;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
@@ -12,7 +14,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class TaskPresenter extends BasePresenter
 {
@@ -29,7 +30,11 @@ final class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'list', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TaskModel::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -41,7 +46,7 @@ final class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

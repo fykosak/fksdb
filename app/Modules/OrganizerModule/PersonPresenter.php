@@ -14,6 +14,9 @@ use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\FakeContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -25,7 +28,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
@@ -57,7 +59,11 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedSearch(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'search', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'search',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -78,13 +84,21 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        $full = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.full', $this->getSelectedContest());
+        $full = $this->contestAuthorizator->isAllowed(
+            new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+            'detail.full',
+            $this->getSelectedContest()
+        );
         $restrict = $this->contestAuthorizator->isAllowed(
-            $this->getEntity(),
+            new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
             'detail.restrict',
             $this->getSelectedContest()
         );
-        $basic = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.basic', $this->getSelectedContest());
+        $basic = $this->contestAuthorizator->isAllowed(
+            new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+            'detail.basic',
+            $this->getSelectedContest()
+        );
 
         return $full || $restrict || $basic;
     }
@@ -104,7 +118,11 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedEdit(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+            'edit',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -122,7 +140,11 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedPizza(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'pizza', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'pizza',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -151,7 +173,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedTests(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
+            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -165,7 +187,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
+            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -266,13 +288,25 @@ final class PersonPresenter extends BasePresenter
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.basic', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed(
+                    new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+                    'detail.basic',
+                    $this->getSelectedContest()
+                )) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.restrict', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed(
+                    new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+                    'detail.restrict',
+                    $this->getSelectedContest()
+                )) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.full', $this->getSelectedContest())) {
+                if ($this->contestAuthorizator->isAllowed(
+                    new FakeContestResource($this->getEntity(), $this->getSelectedContest()),
+                    'detail.full',
+                    $this->getSelectedContest()
+                )) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
             } catch (NotFoundException $exception) {
@@ -326,7 +360,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

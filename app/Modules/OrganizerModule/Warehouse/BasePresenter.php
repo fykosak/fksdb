@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\Title;
 use Nette\Security\Resource;
@@ -12,11 +13,9 @@ abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresente
 {
 
     /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
      * @throws NoContestAvailable
      */
-    protected function isAllowed($resource, ?string $privilege): bool
+    protected function isAllowed(ContestResource $resource, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }

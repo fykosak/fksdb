@@ -8,7 +8,6 @@ use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\Authorization\Roles\ImplicitRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 final class TeamTeacherRole implements EventRole, ImplicitRole

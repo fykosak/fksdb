@@ -8,6 +8,9 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentForm;
 use FKSDB\Components\Payments\PaymentList;
 use FKSDB\Components\Payments\PaymentQRCode;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\FakeEventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -17,7 +20,6 @@ use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class PaymentsPresenter extends BasePresenter
@@ -35,9 +37,17 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'organizer', $event)
+        return $this->eventAuthorizator->isAllowed(
+                new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
+                'organizer',
+                $event
+            )
             || ($this->isPaymentAllowed() &&
-                $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $event));
+                $this->eventAuthorizator->isAllowed(
+                    new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
+                    'create',
+                    $event
+                ));
     }
 
     public function titleCreate(): PageTitle
@@ -87,10 +97,18 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $event)
+        return $this->eventAuthorizator->isAllowed(
+                new FakeEventResource($this->getEntity(), $this->getEvent()),
+                'organizer',
+                $event
+            )
             || (
                 $this->isPaymentAllowed()
-                && $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $event)
+                && $this->eventAuthorizator->isAllowed(
+                    new FakeEventResource($this->getEntity(), $this->getEvent()),
+                    'edit',
+                    $event
+                )
             ); // TODO
     }
 
@@ -154,7 +172,7 @@ final class PaymentsPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -198,7 +216,11 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'organizer', $this->getEvent()),
+            $this->eventAuthorizator->isAllowed(
+                new PseudoEventResource(PaymentModel::RESOURCE_ID, $this->getEvent()),
+                'organizer',
+                $this->getEvent()
+            ),
             $this->getMachine(),
             null
         );
@@ -216,7 +238,11 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->eventAuthorizator->isAllowed($this->getEntity(), 'organizer', $this->getEvent()),
+            $this->eventAuthorizator->isAllowed(
+                new FakeEventResource($this->getEntity(), $this->getEvent()),
+                'organizer',
+                $this->getEvent()
+            ),
             $this->getMachine(),
             $this->getEntity()
         );

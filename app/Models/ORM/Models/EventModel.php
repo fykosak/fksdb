@@ -9,6 +9,9 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
@@ -27,7 +30,6 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 use Nette\Schema\Processor;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -75,7 +77,7 @@ use Nette\Utils\DateTime;
  *    }
  * }
  */
-final class EventModel extends Model implements Resource, NodeCreator
+final class EventModel extends Model implements EventResource, ContestResource, ContestYearResource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13, 17];
@@ -380,5 +382,15 @@ final class EventModel extends Model implements Resource, NodeCreator
         return [
             new NoRoleSchedule($container),
         ];
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->event_type->contest;
     }
 }

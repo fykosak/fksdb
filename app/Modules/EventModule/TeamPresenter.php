@@ -19,7 +19,8 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -28,11 +29,11 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
-use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class TeamPresenter extends BasePresenter
@@ -48,7 +49,7 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -141,7 +142,11 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedOrgDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'organizerDetail',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -180,7 +185,11 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDetailedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
     }
 
     public function titleDetailedList(): PageTitle
@@ -221,7 +230,19 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     */
+    public function authorizedList(): bool
+    {
+        throw new GoneException();
     }
 
     public function titleDefault(): PageTitle
@@ -231,11 +252,14 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'mass',
+            $this->getEvent()
+        );
     }
 
     public function titleMass(): PageTitle

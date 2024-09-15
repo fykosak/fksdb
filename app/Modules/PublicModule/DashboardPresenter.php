@@ -31,7 +31,7 @@ final class DashboardPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->contestYearAuthorizator->isAllowed(
-            $this->getSelectedContest(),
+            $this->getSelectedContestYear(),
             'contestantDashboard',
             $this->getSelectedContestYear()
         );

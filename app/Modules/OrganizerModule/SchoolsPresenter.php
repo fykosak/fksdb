@@ -8,6 +8,8 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -15,7 +17,6 @@ use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class SchoolsPresenter extends BasePresenter
 {
@@ -75,7 +76,11 @@ final class SchoolsPresenter extends BasePresenter
      */
     public function authorizedReport(): bool
     {
-        return $this->contestAuthorizator->isAllowed(SchoolModel::RESOURCE_ID, 'report', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            'report',
+            $this->getSelectedContest()
+        );
     }
 
     public function renderReport(): void
@@ -103,7 +108,7 @@ final class SchoolsPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

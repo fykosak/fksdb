@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
@@ -74,7 +75,7 @@ final class ItemPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Service\Service;
-use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -29,15 +28,11 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedCreate(): bool
     {
         return $this->traitIsAuthorized($this->getModelResource(), 'create');
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create an entity'), 'fas fa-plus');
     }
 
     /**
@@ -54,11 +49,6 @@ trait EntityPresenterTrait
         return $this->traitIsAuthorized($this->getEntity(), 'delete');
     }
 
-    public function titleDelete(): PageTitle
-    {
-        return new PageTitle(null, _('Delete an entity'), 'fas fa-minus');
-    }
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -71,11 +61,6 @@ trait EntityPresenterTrait
     public function authorizedDetail(): bool
     {
         return $this->traitIsAuthorized($this->getEntity(), 'detail');
-    }
-
-    public function titleDetail(): PageTitle
-    {
-        return new PageTitle(null, _('Detail of the entity'), 'fas fa-eye');
     }
 
     /**
@@ -92,45 +77,33 @@ trait EntityPresenterTrait
         return $this->traitIsAuthorized($this->getEntity(), 'edit');
     }
 
-    public function titleEdit(): PageTitle
-    {
-        return new PageTitle(null, _('Edit an entity'), 'fas fa-pencil');
-    }
-
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedList(): bool
     {
         return $this->traitIsAuthorized($this->getModelResource(), 'list');
     }
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('List of entities'), 'fas fa-table');
-    }
-
     /**
      * @throws EventNotFoundException
      * @throws GoneException
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedDefault(): bool
     {
         return $this->traitIsAuthorized($this->getModelResource(), 'list');
     }
 
-    public function titleDefault(): PageTitle
-    {
-        return new PageTitle(null, _('List of entities'), 'fas fa-table');
-    }
-
     /**
      * @throws GoneException
+     * @phpstan-return string
      */
-    protected function getModelResource(): string
+    protected function getModelResource()
     {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }

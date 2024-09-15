@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -12,7 +14,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @phpstan-template TContestYearModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TContestYearModel of (Model&ContestYearResource)
  */
 trait ContestYearEntityTrait
 {

@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -21,7 +22,6 @@ use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
-use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -80,7 +80,7 @@ abstract class OpenApplicationForm extends ModelForm
             PersonSearchContainer::SEARCH_EMAIL,
             true,
             new SelfACLResolver(
-                $this->model ?? EventParticipantModel::RESOURCE_ID,
+                $this->model ?? new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
                 $this->event->event_type->contest,
                 $this->container

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends EventWebModel<array{eventId:int,event_id:int},array<mixed>>
@@ -44,6 +43,10 @@ class ParticipantsWebModel extends EventWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
+            self::class,
+            $this->getEvent()
+        );
     }
 }

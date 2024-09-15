@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -240,7 +241,7 @@ abstract class TeamForm extends ModelForm
                 'email',
                 true,
                 new SelfACLResolver(
-                    $this->model ?? TeamModel2::RESOURCE_ID,
+                    $this->model ?? new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
                     $this->event->event_type->contest,
                     $this->container

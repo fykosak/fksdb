@@ -6,6 +6,8 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\MailImportComponent;
 use FKSDB\Components\Grids\MailGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonMailService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -13,7 +15,6 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\NotImplementedException;
-use Nette\Security\Resource;
 
 final class MailPresenter extends BasePresenter
 {
@@ -29,7 +30,10 @@ final class MailPresenter extends BasePresenter
 
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+        return $this->isAllowed(
+            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'import'
+        );
     }
 
     public function titleList(): PageTitle
@@ -74,7 +78,7 @@ final class MailPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

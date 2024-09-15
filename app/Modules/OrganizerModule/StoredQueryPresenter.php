@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
@@ -105,7 +106,7 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

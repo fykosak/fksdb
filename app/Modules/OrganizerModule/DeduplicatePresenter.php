@@ -7,6 +7,8 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\Models\Authorization\Resource\FakeContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -47,7 +49,11 @@ final class DeduplicatePresenter extends BasePresenter
      */
     public function authorizedPerson(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -72,8 +78,16 @@ final class DeduplicatePresenter extends BasePresenter
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
-            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+                new FakeContestResource($this->trunkPerson, $this->getSelectedContest()),
+                'merge',
+                $this->getSelectedContest()
+            ) &&
+            $this->contestAuthorizator->isAllowed(
+                new FakeContestResource($this->mergedPerson, $this->getSelectedContest()),
+                'merge',
+                $this->getSelectedContest()
+            );
     }
 
     public function titleMerge(): PageTitle

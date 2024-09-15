@@ -24,35 +24,33 @@ final class ACL
         Authorization\Assertions\SelfAssertion $selfAssertion,
         Authorization\Assertions\OwnSubmitAssertion $submitUploaderAssertion
     ): Permission {
-        $service = new Permission();
+        $permission = new Permission();
+// BaseRole -> implicit
+        $permission->addRole(GuestRole::RoleId);
+        $permission->addRole(LoggedInRole::RoleId, GuestRole::RoleId);
+// ContestRole -> implict
+        $permission->addRole(OrganizerRole::RoleId, LoggedInRole::RoleId);
+        // ContestRole -> explicit
+        $permission->addRole(ExplicitContestRole::Aesop);
+        $permission->addRole(ExplicitContestRole::Web);
+        $permission->addRole(ExplicitContestRole::Wiki);
 
-        $service->addResource(Models\EventModel::RESOURCE_ID);
-
-        $service->addRole(Authorization\Roles\Events\EventOrganizerRole::RoleId);
-
-        $service->addRole(GuestRole::RoleId);
-        $service->addRole(LoggedInRole::RoleId, GuestRole::RoleId);
-
-        $service->addRole(OrganizerRole::RoleId, LoggedInRole::RoleId);
-        $service->addRole(ExplicitContestRole::Webmaster, OrganizerRole::RoleId);
-        $service->addRole(ExplicitContestRole::TaskManager, OrganizerRole::RoleId);
-
-        self::createSchool($service);
-
-        $service->addRole(
+        $permission->addRole(ExplicitContestRole::Webmaster, OrganizerRole::RoleId);
+        $permission->addRole(ExplicitContestRole::TaskManager, OrganizerRole::RoleId);
+        $permission->addRole(ExplicitContestRole::SchoolManager);
+        $permission->addRole(
             ExplicitContestRole::InboxManager,
             [OrganizerRole::RoleId, ExplicitContestRole::SchoolManager]
         );
-        $service->addRole(
+        $permission->addRole(
             ExplicitContestRole::EventManager,
             [OrganizerRole::RoleId, ExplicitContestRole::SchoolManager]
         );
-        $service->addRole(Authorization\Roles\Events\ExplicitEventRole::ApplicationManager);
-        $service->addRole(
+        $permission->addRole(
             ExplicitContestRole::DataManager,
             [ExplicitContestRole::InboxManager, ExplicitContestRole::TaskManager, ExplicitContestRole::EventManager]
         );
-        $service->addRole(
+        $permission->addRole(
             ExplicitContestRole::Superuser,
             [
                 OrganizerRole::RoleId,
@@ -63,92 +61,84 @@ final class ACL
                 ExplicitContestRole::EventManager,
             ]
         );
-        $service->addRole(ExplicitContestRole::Boss, [ExplicitContestRole::Superuser]);
+        $permission->addRole(ExplicitContestRole::Boss, [ExplicitContestRole::Superuser]);
 
-        $service->addRole(ExplicitContestRole::Cartesian);
-
-        $service->addResource(Models\TeacherModel::RESOURCE_ID);
-        self::createApi($service);
+        $permission->addRole(ExplicitContestRole::Cartesian);
+        // ContestYearRole -> implicit
+        $permission->addRole(ContestantRole::RoleId, LoggedInRole::RoleId);
+        // EventRole -> implicit
+        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamTeacherRole::RoleId, LoggedInRole::RoleId);
+        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamMemberRole::RoleId, LoggedInRole::RoleId);
+        $permission->addRole(Authorization\Roles\Events\ParticipantRole::RoleId, LoggedInRole::RoleId);
+        $permission->addRole(Authorization\Roles\Events\EventOrganizerRole::RoleId, LoggedInRole::RoleId);
+        $permission->addRole(Authorization\Roles\Events\ScheduleParticipant::RoleId, LoggedInRole::RoleId);
+        // EventRole ->explicit
+        $permission->addRole(Authorization\Roles\Events\ExplicitEventRole::GameInserter, LoggedInRole::RoleId);
+        $permission->addRole(Authorization\Roles\Events\ExplicitEventRole::ApplicationManager, LoggedInRole::RoleId);
+// permissions
+        $permission->addResource(Models\EventModel::RESOURCE_ID);
+        self::createSchool($permission);
+        $permission->addResource(Models\TeacherModel::RESOURCE_ID);
+        self::createApi($permission);
 
         // tasks
-        $service->addResource(Models\TaskModel::RESOURCE_ID);
-        $service->allow(OrganizerRole::RoleId, Models\TaskModel::RESOURCE_ID, 'points');
-        $service->allow(
+        $permission->addResource(Models\TaskModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\TaskModel::RESOURCE_ID, 'points');
+        $permission->allow(
             [ExplicitContestRole::TaskManager, ExplicitContestRole::InboxManager],
             Models\TaskModel::RESOURCE_ID
         );
 
-        self::createContestant($service);
-        self::createPerson($service, $selfAssertion, $ownerAssertion);
+        self::createContestant($permission);
+        self::createPerson($permission, $selfAssertion, $ownerAssertion);
         // contest
-        $service->addResource(Models\ContestModel::RESOURCE_ID);
-        $service->allow(OrganizerRole::RoleId, Models\ContestModel::RESOURCE_ID, ['chart', 'organizerDashboard']);
-        $service->allow(ExplicitContestRole::Boss, Models\ContestModel::RESOURCE_ID, 'acl');
+        $permission->addResource(Models\ContestModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\ContestModel::RESOURCE_ID, ['chart', 'organizerDashboard']);
+        $permission->allow(ExplicitContestRole::Boss, Models\ContestModel::RESOURCE_ID, 'acl');
 
-        self::createOrganizer($service, $selfAssertion);
+        self::createOrganizer($permission, $selfAssertion);
         // submits
-        $service->addResource(Models\SubmitModel::RESOURCE_ID);
-        $service->allow(
+        $permission->addResource(Models\SubmitModel::RESOURCE_ID);
+        $permission->allow(
             [ExplicitContestRole::TaskManager, ExplicitContestRole::InboxManager],
             Models\SubmitModel::RESOURCE_ID
         );
-        self::createUpload($service, $submitUploaderAssertion);
+        self::createUpload($permission, $submitUploaderAssertion);
         //emails
-        $service->addResource(Models\EmailMessageModel::RESOURCE_ID);
-        $service->allow(
+        $permission->addResource(Models\EmailMessageModel::RESOURCE_ID);
+        $permission->allow(
             [ExplicitContestRole::DataManager, ExplicitContestRole::Boss],
             Models\EmailMessageModel::RESOURCE_ID,
             'list'
         );
         // events
-        $service->allow(ExplicitContestRole::EventManager, Models\EventModel::RESOURCE_ID);
-        $service->allow(OrganizerRole::RoleId, Models\EventModel::RESOURCE_ID, 'list');
-        $service->allow(ExplicitContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
-        $service->allow(LoggedInRole::RoleId, Models\EventModel::RESOURCE_ID, 'dashboard');
+        $permission->allow(ExplicitContestRole::EventManager, Models\EventModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\EventModel::RESOURCE_ID, 'list');
+        $permission->allow(ExplicitContestRole::Boss, Models\EventModel::RESOURCE_ID, 'acl');
+        $permission->allow(LoggedInRole::RoleId, Models\EventModel::RESOURCE_ID, 'dashboard');
         // event organizers
-        $service->addResource(Models\EventOrganizerModel::RESOURCE_ID);
-        $service->allow(ExplicitContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
+        $permission->addResource(Models\EventOrganizerModel::RESOURCE_ID);
+        $permission->allow(ExplicitContestRole::EventManager, Models\EventOrganizerModel::RESOURCE_ID);
 
-        self::createApplications($service);
-        self::createTeamApplications($service);
-        // schedule
-        $service->addResource(Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
-        $service->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
-        $service->addResource(Models\Schedule\PersonScheduleModel::RESOURCE_ID);
-        $service->allow(
-            Authorization\Roles\Events\EventOrganizerRole::RoleId,
-            Models\Schedule\ScheduleGroupModel::RESOURCE_ID,
-            ['list', 'detail']
-        ); // TODO
-        $service->allow(
-            Authorization\Roles\Events\EventOrganizerRole::RoleId,
-            Models\Schedule\ScheduleItemModel::RESOURCE_ID,
-            'detail'
-        ); // TODO
-        $service->allow(
-            Authorization\Roles\Events\EventOrganizerRole::RoleId,
-            Models\Schedule\PersonScheduleModel::RESOURCE_ID,
-            ['list', 'detail']
-        ); // TODO
-        $service->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
-        $service->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
-        $service->allow(ExplicitContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+        self::createApplications($permission);
+        self::createTeamApplications($permission);
+        self::createSchedule($permission);
 
         // spam
-        $service->addResource(Models\SchoolLabelModel::RESOURCE_ID);
-        $service->addResource(Models\PersonHistoryModel::RESOURCE_ID);
-        $service->addResource(Models\PersonMailModel::RESOURCE_ID);
+        $permission->addResource(Models\SchoolLabelModel::RESOURCE_ID);
+        $permission->addResource(Models\PersonHistoryModel::RESOURCE_ID);
+        $permission->addResource(Models\PersonMailModel::RESOURCE_ID);
 
-        $service->allow(OrganizerRole::RoleId, Models\SchoolLabelModel::RESOURCE_ID);
-        $service->allow(OrganizerRole::RoleId, Models\PersonHistoryModel::RESOURCE_ID);
-        $service->allow(OrganizerRole::RoleId, Models\PersonMailModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\SchoolLabelModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\PersonHistoryModel::RESOURCE_ID);
+        $permission->allow(OrganizerRole::RoleId, Models\PersonMailModel::RESOURCE_ID);
 
-        self::createPayment($service, $selfAssertion);
-        self::createGame($service);
-        self::createWarehouse($service);
+        self::createPayment($permission, $selfAssertion);
+        self::createGame($permission);
+        self::createWarehouse($permission);
 
-        $service->allow(ExplicitContestRole::Cartesian);
-        return $service;
+        $permission->allow(ExplicitContestRole::Cartesian);
+        return $permission;
     }
 
     private static function createPerson(
@@ -205,7 +195,7 @@ final class ACL
     private static function createSchool(Permission $permission): void
     {
         $permission->addResource(Models\SchoolModel::RESOURCE_ID);
-        $permission->addRole(ExplicitContestRole::SchoolManager);
+
         $permission->allow(OrganizerRole::RoleId, Models\SchoolModel::RESOURCE_ID, ['list', 'detail']);
         $permission->allow(ExplicitContestRole::SchoolManager, Models\SchoolModel::RESOURCE_ID);
     }
@@ -225,7 +215,7 @@ final class ACL
 
     private static function createApplications(Permission $permission): void
     {
-        $permission->addRole(Authorization\Roles\Events\ParticipantRole::RoleId);
+
         $permission->addResource(Models\EventParticipantModel::RESOURCE_ID);
 
         $permission->allow(
@@ -264,8 +254,7 @@ final class ACL
 
     private static function createTeamApplications(Permission $permission): void
     {
-        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamTeacherRole::RoleId);
-        $permission->addRole(Authorization\Roles\Events\Fyziklani\TeamMemberRole::RoleId);
+
         $permission->addResource(Models\Fyziklani\TeamModel2::RESOURCE_ID);
 
         $permission->allow(
@@ -309,7 +298,7 @@ final class ACL
         Permission $permission,
         Authorization\Assertions\OwnSubmitAssertion $submitUploaderAssertion
     ): void {
-        $permission->addRole(ContestantRole::RoleId, LoggedInRole::RoleId);
+
         $permission->allow(ContestantRole::RoleId, Models\ContestModel::RESOURCE_ID, ['contestantDashboard']);
         // contestatn upload
         $permission->allow(ContestantRole::RoleId, Models\SubmitModel::RESOURCE_ID, ['list', 'upload']);
@@ -323,9 +312,7 @@ final class ACL
 
     private static function createApi(Permission $permission): void
     {
-        $permission->addRole(ExplicitContestRole::Aesop);
-        $permission->addRole(ExplicitContestRole::Web);
-        $permission->addRole(ExplicitContestRole::Wiki);
+
 
         $permission->addResource('export.adhoc');
         $permission->addResource('export');
@@ -386,7 +373,7 @@ final class ACL
 
     private static function createGame(Permission $permission): void
     {
-        $permission->addRole(Authorization\Roles\Events\ExplicitEventRole::GameInserter);
+
 
         $permission->addResource('game');
         $permission->addResource(Models\Fyziklani\TaskModel::RESOURCE_ID);
@@ -434,5 +421,31 @@ final class ACL
                 Models\Warehouse\ItemModel::RESOURCE_ID,
             ]
         );
+    }
+
+    private static function createSchedule(Permission $permission): void
+    {
+        // schedule
+        $permission->addResource(Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
+        $permission->addResource(Models\Schedule\ScheduleItemModel::RESOURCE_ID);
+        $permission->addResource(Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+        $permission->allow(
+            Authorization\Roles\Events\EventOrganizerRole::RoleId,
+            Models\Schedule\ScheduleGroupModel::RESOURCE_ID,
+            ['list', 'detail']
+        ); // TODO
+        $permission->allow(
+            Authorization\Roles\Events\EventOrganizerRole::RoleId,
+            Models\Schedule\ScheduleItemModel::RESOURCE_ID,
+            'detail'
+        ); // TODO
+        $permission->allow(
+            Authorization\Roles\Events\EventOrganizerRole::RoleId,
+            Models\Schedule\PersonScheduleModel::RESOURCE_ID,
+            ['list', 'detail']
+        ); // TODO
+        $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
+        $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
+        $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
     }
 }

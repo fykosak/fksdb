@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
 use FKSDB\Components\Inbox\Corrected\CorrectedComponent;
 use FKSDB\Components\Inbox\Corrected\CorrectedFormComponent;
 use FKSDB\Components\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Inbox\SubmitsPreview\SubmitsPreviewComponent;
-use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -41,7 +42,11 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedInbox(): bool
     {
-        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
+            null,
+            $this->getSelectedContest()
+        );
     }
 
     public function titleList(): PageTitle
@@ -54,7 +59,11 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, 'list', $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
     }
 
     public function titleCorrected(): PageTitle
@@ -68,7 +77,7 @@ final class InboxPresenter extends BasePresenter
     public function authorizedCorrected(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            SubmitModel::RESOURCE_ID,
+            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             'corrected',
             $this->getSelectedContest()
         );

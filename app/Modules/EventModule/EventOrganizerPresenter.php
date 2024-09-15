@@ -6,6 +6,8 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
 use FKSDB\Components\Grids\EventOrganizer\EventOrganizersGrid;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -17,7 +19,6 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class EventOrganizerPresenter extends BasePresenter
 {
@@ -74,7 +75,15 @@ final class EventOrganizerPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function getModelResource(): PseudoEventResource
+    {
+        return new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent());
+    }
+
+    /**
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

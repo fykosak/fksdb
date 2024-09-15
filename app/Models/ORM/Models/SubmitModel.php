@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -21,7 +22,7 @@ use Nette\Utils\DateTime;
  * @property-read float|null $calc_points
  * @property-read int $corrected FUCK MARIADB
  */
-final class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements ContestYearResource, ContestResource
 {
     public const RESOURCE_ID = 'submit';
 
@@ -115,5 +116,15 @@ final class SubmitModel extends Model implements Resource
             'rawPoints' => $this->raw_points,
             'calcPoints' => $this->calc_points,
         ];
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contestant->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->contestant->getContestYear();
     }
 }

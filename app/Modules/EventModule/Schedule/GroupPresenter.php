@@ -7,16 +7,18 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Schedule\Forms\ScheduleGroupForm;
 use FKSDB\Components\Schedule\ItemGrid;
 use FKSDB\Components\Schedule\ScheduleList;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class GroupPresenter extends BasePresenter
 {
@@ -83,7 +85,14 @@ final class GroupPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function getModelResource(): PseudoEventResource
+    {
+        return new PseudoEventResource(ScheduleGroupModel::RESOURCE_ID, $this->getEvent());
+    }
+    /**
+     * @param EventResource $resource
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

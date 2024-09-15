@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
+use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Components\Upload\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Upload\Legacy\LegacyUploadFormComponent;
 use FKSDB\Components\Upload\Quiz\QuizComponent;
-use FKSDB\Components\Grids\Submits\QuizAnswersGrid;
-use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -64,7 +65,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->contestYearAuthorizator->isAllowed(
-            SubmitModel::RESOURCE_ID,
+            new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'upload',
             $this->getSelectedContestYear()
         );
@@ -105,19 +106,25 @@ final class SubmitPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedQuizDetail(): bool
     {
         $submit = $this->submitService->findByPrimary($this->id);
-        return $this->contestAuthorizator->isAllowed($submit, 'download', $this->getSelectedContest());
+        return $this->contestYearAuthorizator->isAllowed($submit, 'download', $this->getSelectedContestYear());
     }
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(SubmitModel::RESOURCE_ID, 'list', $this->getSelectedContest());
+        return $this->contestYearAuthorizator->isAllowed(
+            new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'list',
+            $this->getSelectedContestYear()
+        );
     }
 
     public function titleList(): PageTitle

@@ -7,7 +7,6 @@ namespace FKSDB\Models\Authorization\Roles\Events;
 use FKSDB\Models\Authorization\Roles\ImplicitRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 final class ParticipantRole implements EventRole, ImplicitRole

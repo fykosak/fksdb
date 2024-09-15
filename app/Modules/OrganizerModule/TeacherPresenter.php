@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TeacherModel;
@@ -91,7 +92,7 @@ final class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

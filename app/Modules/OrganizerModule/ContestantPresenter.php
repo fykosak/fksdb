@@ -9,6 +9,8 @@ use FKSDB\Components\Contestants\SubmitsGrid;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -101,7 +103,7 @@ final class ContestantPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestYearResource $resource
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */

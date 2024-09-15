@@ -6,8 +6,9 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Components\Game\Submits\AlreadyRevokedSubmitException;
 use FKSDB\Components\Game\Submits\ClosedSubmittingException;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -30,7 +31,7 @@ use Nette\Utils\DateTime;
  *      modified:string,
  * }
  */
-final class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements EventResource
 {
     public const RESOURCE_ID = 'game.submit';
 
@@ -79,5 +80,10 @@ final class SubmitModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->fyziklani_team->event;
     }
 }

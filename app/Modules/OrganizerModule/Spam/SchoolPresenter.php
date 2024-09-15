@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\SchoolLabelFormComponent;
 use FKSDB\Components\Grids\SchoolLabelGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolLabelModel;
@@ -69,7 +70,7 @@ final class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
 use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
@@ -27,7 +28,11 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     public function authorizedContestant(): bool
     {
-        return $this->contestAuthorizator->isAllowed(self::AESOP_RESOURCE_ID, null, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
+            null,
+            $this->getSelectedContest()
+        );
     }
 
     /**

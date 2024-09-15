@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Contests;
 
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\WebService\Models\SoapWebModel;
@@ -69,7 +70,11 @@ class OrganizersWebModel extends ContestWebModel implements SoapWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getContest());
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource(RestApiPresenter::RESOURCE_ID, $this->getContest()),
+            self::class,
+            $this->getContest()
+        );
     }
 
     /**

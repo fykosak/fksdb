@@ -7,6 +7,8 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamList;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -18,7 +20,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 /**
  * @method TeamModel2 getEntity()
@@ -28,18 +29,20 @@ final class ClosePresenter extends BasePresenter
     /** @phpstan-use EventEntityPresenterTrait<TeamModel2> */
     use EventEntityPresenterTrait;
 
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Close scoring'), 'fas fa-stamp');
-    }
-
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'close', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource('game', $this->getEvent()),
+            'close',
+            $this->getEvent()
+        );
+    }
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(null, _('Close scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -61,21 +64,23 @@ final class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedTeam(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'close', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource('game', $this->getEvent()),
+            'close',
+            $this->getEvent()
+        );
     }
 
-
     /**
-     * @param Resource|string|null $resource
-     * @throws EventNotFoundException
+     * @param EventResource $resource
+     * @throws GoneException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
+        throw new GoneException();
     }
 
     /**

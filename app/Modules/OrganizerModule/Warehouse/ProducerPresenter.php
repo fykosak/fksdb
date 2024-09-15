@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -83,7 +84,7 @@ final class ProducerPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

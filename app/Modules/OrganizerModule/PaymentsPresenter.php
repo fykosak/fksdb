@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Payments\AllPaymentList;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
@@ -38,7 +39,7 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedDashboard(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            PaymentModel::RESOURCE_ID,
+            new PseudoContestResource(PaymentModel::RESOURCE_ID, $this->getSelectedContest()),
             'dashboard',
             $this->getSelectedContest()
         );
@@ -93,7 +94,7 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->contestAuthorizator->isAllowed(
-            PaymentModel::RESOURCE_ID,
+            new PseudoContestResource(PaymentModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );

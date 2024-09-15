@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -15,18 +16,14 @@ use Nette\Security\User;
 
 class SelfACLResolver implements Resolver
 {
-    /** @var Resource|string */
-    private $resource;
+    private ContestResource $resource;
     private string $privilege;
     private ContestModel $contest;
     private User $user;
 
     private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * @param string|Resource $resource
-     */
-    public function __construct($resource, string $privilege, ContestModel $contest, Container $container)
+    public function __construct(ContestResource $resource, string $privilege, ContestModel $contest, Container $container)
     {
         $this->contest = $contest;
         $this->resource = $resource;

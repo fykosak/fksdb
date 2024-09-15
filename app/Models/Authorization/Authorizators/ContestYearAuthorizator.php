@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Authorizators;
 
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
+use FKSDB\Models\Authorization\Resource\ContestYearToContestResource;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Permission;
-use Nette\Security\Resource;
 use Nette\Security\User;
 
 final class ContestYearAuthorizator
@@ -26,13 +27,13 @@ final class ContestYearAuthorizator
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    public function isAllowed($resource, ?string $privilege, ContestYearModel $contestYear): bool
+    public function isAllowed(ContestYearResource $resource, ?string $privilege, ContestYearModel $contestYear): bool
     {
-        if ($this->contestAuthorizator->isAllowed($resource, $privilege, $contestYear->contest)) {
-            return true;
+        if (
+            $contestYear->contest_id !== $resource->getContestYear()->contest_id
+            || $contestYear->year !== $resource->getContestYear()->year
+        ) {
+            return false;
         }
         /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
@@ -43,6 +44,10 @@ final class ContestYearAuthorizator
                 }
             }
         }
-        return false;
+        return $this->contestAuthorizator->isAllowed(
+            new ContestYearToContestResource($resource),
+            $privilege,
+            $contestYear->contest
+        );
     }
 }

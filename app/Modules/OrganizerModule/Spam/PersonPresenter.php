@@ -8,13 +8,15 @@ use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonImportComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
-use FKSDB\Models\ORM\Services\Spam\SpamPersonService;
+use FKSDB\Models\ORM\Services\Spam\PersonService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class PersonPresenter extends BasePresenter
 {
@@ -30,7 +32,10 @@ final class PersonPresenter extends BasePresenter
 
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+        return $this->traitIsAuthorized(
+            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'import'
+        );
     }
 
     public function titleEdit(): PageTitle
@@ -84,7 +89,7 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
+     * @param ContestResource $resource
      * @throws NoContestAvailable
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

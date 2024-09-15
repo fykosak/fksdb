@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Schedule\ScheduleList;
+use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
@@ -27,7 +28,7 @@ class DashboardPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->eventAuthorizator->isAllowed(
-            EventModel::RESOURCE_ID,
+            new PseudoEventResource(EventModel::RESOURCE_ID, $this->getEvent()),
             'default',
             $this->getEvent()
         );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\ORM\Tests\ContestYear\InActiveContest;
@@ -19,7 +20,7 @@ use Nette\Utils\DateTime;
  * @property-read int $year
  * @property-read int $ac_year
  */
-final class ContestYearModel extends Model
+final class ContestYearModel extends Model implements ContestYearResource
 {
     /**
      * @phpstan-return TypedGroupedSelection<ContestantModel>
@@ -107,5 +108,15 @@ final class ContestYearModel extends Model
     {
         return (DateTime::fromParts($this->ac_year + 1, ContestYearService::FIRST_AC_MONTH, 1))
             ->modify('-1 second');
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this;
+    }
+
+    public function getResourceId(): string
+    {
+        return ContestModel::RESOURCE_ID;
     }
 }
