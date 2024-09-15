@@ -34,7 +34,7 @@ jobs:
       - name: FKSDB configuration user
         run: "sed -e 's/user: root/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
       - name: FKSDB configuration password
-        run: "sed -e 's/password: password/password:/' app/config/config.local.neon"
+        run: "sed -ie 's/password: password/password:/' app/config/config.local.neon"
       - name: FKSDB configuration for MySQL
         if: ${{ startsWith(matrix.database, 'mysql' ) }}
         run: "sed -ie 's/mysql:host=mariadb/mysql:host=127.0.0.1/' app/config/config.local.neon"
