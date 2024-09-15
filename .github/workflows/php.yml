@@ -32,7 +32,7 @@ jobs:
       - name: Composer install
         run: composer install --no-progress --prefer-dist
       - name: FKSDB configuration user
-        run: sed -e 's/user: root/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon
+        run: "sed -e 's/user: root/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
       - name: FKSDB configuration password
         run: sed -e 's/password: password/password:/' app/config/config.local.neon
       - name: FKSDB configuration for MySQL
