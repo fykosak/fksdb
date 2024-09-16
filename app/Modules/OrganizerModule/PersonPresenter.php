@@ -303,25 +303,31 @@ final class PersonPresenter extends BasePresenter
         if (!isset($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
-                if ($this->contestAuthorizator->isAllowed(
+                if (
+                    $this->contestAuthorizator->isAllowed(
                     new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
                     'detail.basic',
                     $this->getSelectedContest()
-                )) {
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
-                if ($this->contestAuthorizator->isAllowed(
+                if (
+                    $this->contestAuthorizator->isAllowed(
                     new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
                     'detail.restrict',
                     $this->getSelectedContest()
-                )) {
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->contestAuthorizator->isAllowed(
+                if (
+                    $this->contestAuthorizator->isAllowed(
                     new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
                     'detail.full',
                     $this->getSelectedContest()
-                )) {
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
             } catch (NotFoundException $exception) {

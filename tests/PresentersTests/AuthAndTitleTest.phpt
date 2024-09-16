@@ -44,8 +44,16 @@ class AuthAndTitleTest extends TestCase
                 }
             }
             foreach ($datum as $action => $methods) {
-                Assert::hasKey('auth', $methods, sprintf('Presenter %s:%s should contains auth method', $reflection->getName(), $action));
-                Assert::hasKey('title', $methods, sprintf('Presenter %s:%s should contains title method', $reflection->getName(), $action));
+                Assert::hasKey(
+                    'auth',
+                    $methods,
+                    sprintf('Presenter %s:%s should contains auth method', $reflection->getName(), $action)
+                );
+                Assert::hasKey(
+                    'title',
+                    $methods,
+                    sprintf('Presenter %s:%s should contains title method', $reflection->getName(), $action)
+                );
             }
         }
     }

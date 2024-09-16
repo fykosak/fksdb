@@ -43,12 +43,14 @@ final class PaymentsPresenter extends BasePresenter
                 'organizer',
                 $event
             )
-            || ($this->isPaymentAllowed() &&
+            || (
+                $this->isPaymentAllowed() &&
                 $this->eventAuthorizator->isAllowed(
                     new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
                     'create',
                     $event
-                ));
+                )
+            );
     }
 
     public function titleCreate(): PageTitle

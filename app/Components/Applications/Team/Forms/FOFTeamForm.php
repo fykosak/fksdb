@@ -82,7 +82,7 @@ class FOFTeamForm extends TeamForm
                 new SelfACLEventResolver(
                     $this->model ?? new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
-                        $this->event,
+                    $this->event,
                     $this->container
                 ),
                 $this->event

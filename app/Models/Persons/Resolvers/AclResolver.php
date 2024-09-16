@@ -46,6 +46,10 @@ class AclResolver implements Resolver
 
     private function isAllowed(PersonModel $person, ?string $privilege): bool
     {
-        return $this->contestAuthorizator->isAllowed(new PseudoContestResource($person, $this->contest), $privilege, $this->contest);
+        return $this->contestAuthorizator->isAllowed(
+            new PseudoContestResource($person, $this->contest),
+            $privilege,
+            $this->contest
+        );
     }
 }

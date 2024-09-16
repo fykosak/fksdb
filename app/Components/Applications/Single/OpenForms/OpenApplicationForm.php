@@ -82,7 +82,7 @@ abstract class OpenApplicationForm extends ModelForm
             new SelfACLEventResolver(
                 $this->model ?? new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
-                    $this->event,
+                $this->event,
                 $this->container
             ),
             $this->event

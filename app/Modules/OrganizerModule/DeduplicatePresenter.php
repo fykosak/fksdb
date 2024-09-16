@@ -26,7 +26,6 @@ use Nette\Utils\Html;
 
 final class DeduplicatePresenter extends BasePresenter
 {
-
     private PersonService $personService;
     private Merger $merger;
     private PersonInfoService $personInfoService;
@@ -86,7 +85,8 @@ final class DeduplicatePresenter extends BasePresenter
                 new PseudoContestResource($this->trunkPerson, $this->getSelectedContest()),
                 'merge',
                 $this->getSelectedContest()
-            ) &&
+            )
+            &&
             $this->contestAuthorizator->isAllowed(
                 new PseudoContestResource($this->mergedPerson, $this->getSelectedContest()),
                 'merge',

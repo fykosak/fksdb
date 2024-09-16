@@ -82,7 +82,11 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTable(): bool
     {
-        return $this->eventAuthorizator->isAllowed(new PseudoEventResource('game', $this->getEvent()), 'statistics.table', $this->getEvent());
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource('game', $this->getEvent()),
+            'statistics.table',
+            $this->getEvent()
+        );
     }
 
     /**

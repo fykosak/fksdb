@@ -51,11 +51,13 @@ class EventListWebModel extends WebModel implements SoapWebModel
         $events = [];
         /** @var EventModel $event */
         foreach ($query as $event) {
-            if ($this->eventAuthorizator->isAllowed(
-                new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $event),
-                self::class,
-                $event
-            )) {
+            if (
+                $this->eventAuthorizator->isAllowed(
+                    new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $event),
+                    self::class,
+                    $event
+                )
+            ) {
                 $events[$event->event_id] = $event->__toArray();
             }
         }

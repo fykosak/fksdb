@@ -165,7 +165,7 @@ abstract class InvitationApplicationForm extends BaseComponent
             new SelfACLEventResolver(
                 $this->model ?? new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
-                    $this->event,
+                $this->event,
                 $this->container
             ),
             $this->event

@@ -93,8 +93,8 @@ class TeamsWebModel extends EventWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->eventAuthorizator->isAllowed(new PseudoEventResource(
-            RestApiPresenter::RESOURCE_ID, $this->getEvent()),
+        return $this->eventAuthorizator->isAllowed(
+            new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
             self::class,
             $this->getEvent()
         );

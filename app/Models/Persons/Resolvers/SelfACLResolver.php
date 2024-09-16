@@ -22,8 +22,12 @@ class SelfACLResolver implements Resolver
 
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(ContestResource $resource, string $privilege, ContestModel $contest, Container $container)
-    {
+    public function __construct(
+        ContestResource $resource,
+        string $privilege,
+        ContestModel $contest,
+        Container $container
+    ) {
         $this->contest = $contest;
         $this->resource = $resource;
         $this->privilege = $privilege;
