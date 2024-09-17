@@ -1,16 +1,95 @@
 {layout none}
 {varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
-<div>
-    {$model->inner_text|noescape}
 
-    <footer style="background-color: #1175da; font-family: 'Inter', sans-serif; padding: 0.5rem; color: white; text-align: center;">
-        <div style="font-size: 0.9rem;">{block footer}{/block}</div>
-        <hr style="border-color: white; margin: 0.5rem 0; border-width: 0.5px;"/>
-        <div style="font-size: 0.9rem;">
-            Tento e-mail byl odeslán prostřednictvím
-            <a href="{plink '//:Core:Dispatch:default'}" style="color: #ffd700; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">
-                <img src="{$basePath}/images/logo/white.svg" alt="fksdb-logo" style="height: 1.5rem; margin-top: 0.5rem;"/>
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background-color: #1175da;
+            padding: 0.5rem 1rem; /* Reduced padding for a narrower header */
+            text-align: right;
+            color: white;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        .email-header img {
+            height: 1.5rem; /* Made the logo smaller */
+        }
+        .email-content {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+        .email-content p {
+            margin: 1rem 0;
+        }
+        .email-footer {
+            background-color: #1175da;
+            padding: 0.4rem;
+            color: white;
+            text-align: center;
+            font-size: 0.9rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .email-footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        .email-footer a:hover {
+            text-decoration: underline;
+        }
+        .email-footer img {
+            height: 1rem;
+            margin-top: 0.3rem;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 0.3rem 0;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="email-header">
+        <img src="{$basePath}/images/logo/white.svg" alt="fksdb logo">
+    </div>
+
+    <!-- Main content -->
+    <div class="email-content">
+        {$model->inner_text|noescape}
+    </div>
+
+    <!-- Footer -->
+    <footer class="email-footer">
+        <div>{block footer}{/block}</div>
+        <hr/>
+        <div>
+            Tento e-mail by odeslaný prostřednictvím
+            <a href="{plink '//:Core:Dispatch:default'}">
+                <img src="{$basePath}/images/logo/white.svg" alt="fksdb logo">
             </a>
         </div>
     </footer>
 </div>
+</body>
+</html>
