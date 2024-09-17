@@ -2,12 +2,15 @@
 {varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 <div>
     {$model->inner_text|noescape}
-    <footer style="background-color: #1175da; padding: 1rem;color:white;text-align: center">
-        <div>{block footer}{/block}</div>
-        <hr/>
-        <div>
-            Tento mail bol odoslaný prostredníctvom <a href="{plink '//:Core:Dispatch:default'}">FKSDB</a>
+
+    <footer style="background-color: #1175da; font-family: 'Inter', sans-serif; padding: 0.5rem; color: white; text-align: center;">
+        <div style="font-size: 0.9rem;">{block footer}{/block}</div>
+        <hr style="border-color: white; margin: 0.5rem 0; border-width: 0.5px;"/>
+        <div style="font-size: 0.9rem;">
+            Tento e-mail byl odeslán prostřednictvím
+            <a href="{plink '//:Core:Dispatch:default'}" style="color: #ffd700; text-decoration: none;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">
+                <img src="{$basePath}/images/logo/white.svg" alt="fksdb-logo" style="height: 1.5rem; margin-top: 0.5rem;"/>
+            </a>
         </div>
-        <img src="{$basePath}/images/logo/white.svg" alt="fksdb" style="height: 2rem"/>
     </footer>
 </div>
