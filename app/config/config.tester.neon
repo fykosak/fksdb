@@ -17,9 +17,3 @@ parameters:
         password: astrid
 application:
     silentLinks: false
-database:
-    default:
-        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
-    ro:
-        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
-
