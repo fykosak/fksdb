@@ -74,6 +74,7 @@ class Router
         $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
 
         self::addEventsModule($service->withPath('events/'));
+        self::addShopModule($service->withPath('shop/'));
 
         $service->addRoute(
             '<module event|game>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
@@ -153,5 +154,25 @@ class Router
                 'presenter' => 'Attendance',
             ]
         );
+    }
+
+    private static function addShopModule(RouteList $list): void
+    {
+        $list->addRoute('', [
+            'module' => 'Shop',
+            'presenter' => 'Home',
+        ]);
+        $list->addRoute('events/<eventId>/<action=default>', [
+            'module' => 'Shop',
+            'presenter' => 'Events',
+        ]);
+        $list->addRoute('admin/<action=default>', [
+            'module' => 'Shop',
+            'presenter' => 'Admin',
+        ]);
+        $list->addRoute('my-orders/<action=default>', [
+            'module' => 'Shop',
+            'presenter' => 'Event',
+        ]);
     }
 }

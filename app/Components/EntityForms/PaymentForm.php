@@ -39,11 +39,11 @@ class PaymentForm extends ModelForm
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private ReflectionFactory $reflectionFormFactory;
-    /** @phpstan-var array{EventModel} */
+    /** @phpstan-var EventModel[] */
     private array $sources;
     private PersonModel $loggedPerson;
 
-    /** @phpstan-param array{EventModel} $sources */
+    /** @phpstan-param EventModel[] $sources */
     public function __construct(
         Container $container,
         array $sources,

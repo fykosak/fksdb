@@ -1,0 +1,27 @@
+{layout '../../Core/templates/@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PaymentModel|null $payment}
+{block nav-right}
+    {if $payment}
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {$payment->getSchedulePayment()->count('*')}
+                </span>
+            </a>
+            <div class="dropdown-menu" style="min-width: 20rem">
+                {foreach $payment->getSchedulePayment() as $schedulePayment}
+                    {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
+                    <p class="mx-3">{$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</p>
+                {/foreach}
+                <div>
+                    <hr class="dropdown-divider">
+                </div>
+                <div class="dropdown-item">
+                    <a href="#" class="btn btn-primary">Detail</a>
+                </div>
+            </div>
+        </div>
+    {/if}
+    {include parent}
+{/block}
