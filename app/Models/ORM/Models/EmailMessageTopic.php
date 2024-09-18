@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
@@ -17,7 +16,8 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     public const SpamContest = 'spam_contest'; //phpcs:ignore
     public const SpamMff = 'spam_mff';//phpcs:ignore
     public const SpamOther = 'spam_other';//phpcs:ignore
-    public const Contest = 'contest';//phpcs:ignore
+    public const Fykos = 'fykos';//phpcs:igno
+    public const Vyfuk = 'vyfuk';//phpcs:ignorere
     public const FOF = 'fof';
     public const FOL = 'fol';
     public const DSEF = 'dsef';
@@ -37,8 +37,10 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
             case self::SpamMff:
             case self::SpamContest:
                 return 'warning';
-            case self::Contest:
-                return 'primary';
+            case self::Fykos:
+                return 'fykos';
+            case self::Vyfuk:
+                return 'vyfuk';
             case self::FOF:
                 return 'fof';
             case self::FOL:
@@ -60,8 +62,10 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
                 return _('Spam MFF');
             case self::SpamOther:
                 return _('Spam others');
-            case self::Contest:
-                return _('Contest');
+            case self::Fykos:
+                return _('FYKOS');
+            case self::Vyfuk:
+                return _('Výfuk');
             case self::FOF:
                 return _('FOF');
             case self::FOL:
@@ -85,7 +89,8 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
             new self(self::SpamContest),
             new self(self::SpamMff),
             new self(self::SpamOther),
-            new self(self::Contest),
+            new self(self::Fykos),
+            new self(self::Vyfuk),
             new self(self::FOF),
             new self(self::FOL),
             new self(self::DSEF),
@@ -123,7 +128,13 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     public function getReason(): LocalizedString
     {
         switch ($this->value) {
-            case self::Contest:
+            case self::Fykos:
+                return new LocalizedString([
+                    'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
+                    souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
+                    'en' => '', // TODO
+                ]);
+            case self::Vyfuk:
                 return new LocalizedString([
                     'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
                     souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',

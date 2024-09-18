@@ -1352,7 +1352,8 @@ CREATE TABLE IF NOT EXISTS `email_message`
         'spam_contest',
         'spam_mff',
         'spam_other',
-        'contest',
+        'fykos',
+        'vyfuk',
         'fof',
         'fol',
         'dsef'

@@ -28,7 +28,7 @@ final class TransitionEmail extends ParticipantTransitionEmail
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
-            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
             'lang' => Language::from(Language::CS),
         ];
     }
