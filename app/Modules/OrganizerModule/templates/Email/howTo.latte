@@ -283,4 +283,41 @@
             </ol>
         </div>
     </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>FAQ</h2>
+            <p>
+                Úplným základom je správne vyplniť topic. Ten rozhodne ako sa FKSDB naň bude dívať a čo s ním bude
+                robiť.
+            </p>
+            <h3>Aký je rozdiel medzi anonymným a personalizovaným emailom?</h3>
+            <p>
+                Anonymný email sa rozumie email smerovaný priamo na email, má vyplenený <code>recipient</code>.
+                Personalizovaný email je email, ktorý smeruje osobe vo FKSDB, má vyplnené
+                <code>recipient_person_id</code>.
+                Ak je to možné, emaily by sa mali posielať personalizované.
+            </p>
+            <h3>Posielam anonymný email a nie personalizovaný, čo ak je email niekomu už priradený?</h3>
+            <p>
+                FKSDB pred ostampovaním (pridaním hlavičky) pre emaily, ktoré majú vyplnené emailové adres a nie osoby
+                sa pokúsi nájsť túto osobu vo FKSDB. Ak osbu nájde zmení automaticky email z posielaného na email na
+                email posielaný na osobu. Tým je zabezpečené, že sa správne vyhodnotia nastavenia emailu
+            </p>
+            <h3>Môj email nieje spam, čo s ním FKSDB spraví?</h3>
+            <p>
+                Ak email nieje spam FKSDB len pridá pätičku, aby príjemca vedel prečo tento email dostal a email odošle.
+            </p>
+            <h3>Musím fitrovať emaily pri vytváraní?</h3>
+            <p>
+                Nie, o všetko sa postará FKSDB, tá zistí, čo email niemá email priradený záznam v
+                <code>{FKSDB\Models\ORM\DbNames::TAB_UNSUBSCRIBED_EMAIL}</code>, alebo aké ma uživateľ preferencie
+            </p>
+            <h3>Môj email je spam, aké sú rezdiely?</h3>
+            <p>
+                V zásade sú 2 rozdiely, ako prvé do pätičky sa pridajú linky na odhlásenie, a email sa pri posielaní
+                môže odmietnuť poslať ak si uživateľ nepraje posielať daný typ emailov.
+
+            </p>
+        </div>
+    </div>
 {/block}
