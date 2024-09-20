@@ -14,14 +14,14 @@ use Nette\Utils\Html;
 final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 {
     public const SpamContest = 'spam_contest'; //phpcs:ignore
-    public const SpamMff = 'spam_mff';//phpcs:ignore
-    public const SpamOther = 'spam_other';//phpcs:ignore
-    public const Fykos = 'fykos';//phpcs:ignore
-    public const Vyfuk = 'vyfuk';//phpcs:ignore
+    public const SpamMff = 'spam_mff'; //phpcs:ignore
+    public const SpamOther = 'spam_other'; //phpcs:ignore
+    public const Fykos = 'fykos'; //phpcs:ignore
+    public const Vyfuk = 'vyfuk'; //phpcs:ignore
     public const FOF = 'fof';
     public const FOL = 'fol';
     public const DSEF = 'dsef';
-    public const Internal = 'internal';//phpcs:ignore
+    public const Internal = 'internal'; //phpcs:ignore
 
     public function badge(): Html
     {
@@ -130,35 +130,35 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
         switch ($this->value) {
             case self::Fykos:
                 return new LocalizedString([
-                    'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
-                    souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
-                    'en' => '', // TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře FYKOS,
+                     případně FYKOSího soustředění.',
+                    'en' => 'You received this email because you are a participant in the FYKOS competition.',
                 ]);
             case self::Vyfuk:
                 return new LocalizedString([
-                    'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
-                    souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
-                    'en' => '', // TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře Výfuk,
+                     případně Výfučího tábora.',
+                    'en' => 'You received this email because you are a participant in the Výfuk competition.',
                 ]);
             case self::FOL:
                 return new LocalizedString([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání Online.',
+                    'en' => 'You received this email because you are registered for the Physics Brawl Online.',
                 ]);
             case self::FOF:
                 return new LocalizedString([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání.',
+                    'en' => 'You received this email because you are registered for the Fyziklani competition in Prague.',
                 ]);
             case self::DSEF:
                 return new LocalizedString([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni na DSEF.',
+                    'en' => 'You received this email because you are registered to DSEF.',
                 ]);
             case self::Internal:
                 return new LocalizedString([
-                    'cs' => 'Tento mail ste dostali pretože ste on požiadali.',
-                    'en' => '',
+                    'cs' => 'Tento mail jste dostali, protože jste ho potřebovali.',
+                    'en' => 'You received this email because you needed it.',
                 ]);
         }
         throw new InvalidStateException();
