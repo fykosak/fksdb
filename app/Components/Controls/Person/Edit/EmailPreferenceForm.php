@@ -65,7 +65,7 @@ class EmailPreferenceForm extends ModelForm
         /** @phpstan-ignore-next-line */
         $this->getPresenter()->flashMessage(new LocalizedString([
             'en' => 'Preferences saved',
-            'cs' => 'Preference byli uloženy',
+            'cs' => 'Preference byly uloženy',
         ]), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }

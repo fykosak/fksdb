@@ -26,7 +26,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('E-mail settings'), 'fas fa-envelope');
+        return new PageTitle(null, _('Email settings'), 'fas fa-envelope');
     }
 
     public function titleConfirm(): PageTitle
