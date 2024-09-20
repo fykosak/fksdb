@@ -63,10 +63,7 @@ class EmailPreferenceForm extends ModelForm
     protected function successRedirect(Model $model): void
     {
         /** @phpstan-ignore-next-line */
-        $this->getPresenter()->flashMessage(new LocalizedString([
-            'en' => 'Preferences saved',
-            'cs' => 'Preference byly uloženy',
-        ]), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Preferences saved'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 }
