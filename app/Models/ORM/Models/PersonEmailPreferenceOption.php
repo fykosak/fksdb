@@ -34,11 +34,11 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
     {
         switch ($this->value) {
             case self::SpamContest:
-                return _('Spam Contest');
+                return _('Our events');
             case self::SpamMff:
-                return _('Spam MFF');
+                return _('Events of MFF CUNI');
             case self::SpamOther:
-                return _('Spam Other');
+                return _('Other related events');
         }
         throw new InvalidStateException();
     }
@@ -51,18 +51,18 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
         switch ($this->value) {
             case self::SpamContest:
                 return new LocalizedString([
-                    'cs' => 'Spam zo semináru a akcií FYKOSu a Výfuku',
-                    'en' => '',
+                    'cs' => 'Informace o seminářích a akcích pořádaných FYKOSem a Výfukem',
+                    'en' => 'Information about competitions and events of FYKOS and Výfuk',
                 ]);
             case self::SpamMff:
                 return new LocalizedString([
-                    'cs' => 'Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK',
-                    'en' => '',
+                    'cs' => 'Informace o akcích, seminářích a táborech pořádaných ostatními semináři nebo MFF UK',
+                    'en' => 'Information about events, competitions and camps organized by other seminars or MFF CUNI',
                 ]);
             case self::SpamOther:
                 return new LocalizedString([
-                    'cs' => 'Spam od našich partnerov a sponzorov',
-                    'en' => '',
+                    'cs' => 'Relevantní informace od našich partnerů',
+                    'en' => 'Relevant information from our partners',
                 ]);
         }
         throw new InvalidStateException();
