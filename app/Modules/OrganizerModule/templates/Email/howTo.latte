@@ -5,52 +5,52 @@
 
             <ul>
                 <li>
-                    <code class="text-success">inner_text</code> vlastný text emailu, môže byť HTML fragment alebo
+                    <code class="text-success">inner_text</code>: <i>string | HTMLFragment</i> - vlastný text emailu, môže byť HTML fragment alebo
                     plain-text.
                 </li>
                 <li>
-                    <code class="text-success">subject</code> predmet emailu
+                    <code class="text-success">subject</code>: <i>string</i> - predmet emailu
                 </li>
                 <li>
-                    <code class="text-success">sender</code> odosielatel emailov
+                    <code class="text-success">sender</code>: <i>emailString</i> - odosielatel emailov
                 </li>
                 <li>
-                    <code class="text-info">carbon_copy</code> CC videitľná kópia
+                    <code class="text-info">carbon_copy</code>: <i>emailString</i> - CC videitľná kópia
                 </li>
                 <li>
-                    <code class="text-info">blind_carbon_copy</code> BCC skrytá kópia
+                    <code class="text-info">blind_carbon_copy</code>: <i>emailString</i> - BCC skrytá kópia
                 </li>
                 <li>
-                    <code class="text-warning">recipient_person_id</code> person Id osoby, ktorej sa pošle email, FKSDB
+                    <code class="text-warning">recipient_person_id</code>: <i>int</i> - person Id osoby, ktorej sa pošle email, FKSDB
                     si sama vytiahne email, preferované
                 </li>
                 <li>
-                    <code class="text-warning">recipient</code> konkrétny email, na ktorý sa email pošle
+                    <code class="text-warning">recipient</code>: <i>emailString</i> - konkrétny email, na ktorý sa email pošle
                 </li>
                 <li>
-                    <code class="text-success">reply_to</code>
+                    <code class="text-success">reply_to</code>: <i>emailString</i>
                 </li>
                 <li>
-                    <code class="text-success">state</code> Stav emailu viď <a href="#state">State</a>
+                    <code class="text-success">state</code>: <i>enum</i> - stav emailu viď <a href="#state">State</a>
                 </li>
                 <li>
-                    <code class="text-info">priority</code> 1 alebo 0, či je email prioritný, rozhoduje o poradí
+                    <code class="text-info">priority</code> <i>bool</i> či je email prioritný, rozhoduje o poradí
                     posielania, používať len vo výnimočných prípadoch, a u malého počtu emailov.
                 </li>
                 <li>
-                    <code class="text-success">topic</code> Topic emailu, viď <a href="#topic">Topic</a>
+                    <code class="text-success">topic</code>: <i>enum</i> - topic emailu, viď <a href="#topic">Topic</a>
                 </li>
                 <li>
-                    <code class="text-success">lang</code> jazyk emaili <code>cs|en</code>
+                    <code class="text-success">lang</code>: <i>enum(cs|en)</i> - jazyk emailu
                 </li>
                 <li>
-                    <code class="text-danger">text</code> Text emailu, ktor'sa poslal, vrátane patičky, nevyplňovať
+                    <code class="text-danger">text</code>: <i>HTMLFragment</i> - text emailu, ktorý sa poslal, vrátane patičky, nevyplňovať
                 </li>
                 <li>
-                    <code class="text-danger">created</code> časová značka kedy sa email vytvoril, nevyplňovať
+                    <code class="text-danger">created</code>: <i>DateTime</i> - časová značka kedy sa email vytvoril, nevyplňovať
                 </li>
                 <li>
-                    <code class="text-danger">sent</code> Časová značka kedy sa email odoslal, nevplňovať
+                    <code class="text-danger">sent</code>: <i>DateTime</i> - časová značka kedy sa email odoslal, nevplňovať
                 </li>
             </ul>
             <h4>Legenda</h4>
