@@ -22,13 +22,12 @@ use Nette\DI\Container;
  * required?:bool,
  * collapseSelf?:bool,
  * collapseChild?:bool,
- * groupBy?:self::GROUP_*}
+ * groupBy?:self::Group*}
  */
 class ScheduleContainer extends ContainerWithOptions
 {
-    public const GROUP_DATE = 'date';
-    public const GROUP_NONE = 'none';
-    public const GROUP_ACCOMMODATION = 'accommodation';
+    public const GroupBegin = 'date';// phpcs:ignore
+    public const GroupNone = 'none';// phpcs:ignore
 
     private EventModel $event;
     /** @var string[] */
@@ -38,7 +37,7 @@ class ScheduleContainer extends ContainerWithOptions
     private string $label;
     private ?string $description;
     private bool $collapseChild;
-    /** @phpstan-var self::GROUP_* */
+    /** @phpstan-var self::Group* */
     private string $groupBy;
 
     /**
@@ -58,7 +57,7 @@ class ScheduleContainer extends ContainerWithOptions
         $this->description = $meta['description'] ?? null;
         $this->collapseChild = $meta['collapseChild'] ?? false;
         $this->collapse = $meta['collapseSelf'] ?? false;
-        $this->groupBy = $meta['groupBy'] ?? self::GROUP_NONE;
+        $this->groupBy = $meta['groupBy'] ?? self::GroupNone;
         $this->createContainers();
     }
 
@@ -108,9 +107,9 @@ class ScheduleContainer extends ContainerWithOptions
     {
         switch ($this->groupBy) {
             default:
-            case self::GROUP_NONE:
+            case self::GroupNone:
                 return null;
-            case self::GROUP_DATE:
+            case self::GroupBegin:
                 return $group->start->format(_('__date'));
         }
     }
@@ -119,9 +118,9 @@ class ScheduleContainer extends ContainerWithOptions
     {
         switch ($this->groupBy) {
             default:
-            case self::GROUP_NONE:
+            case self::GroupNone:
                 return 'none';
-            case self::GROUP_DATE:
+            case self::GroupBegin:
                 return $group->start->format('Y_m_d');
         }
     }

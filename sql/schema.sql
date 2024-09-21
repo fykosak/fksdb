@@ -1207,10 +1207,8 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'transport',
         'ticket',
         'weekend',
-        'weekend_info',
-        'dsef_morning',
-        'dsef_afternoon',
-        'dsef_all_day'
+        'info',
+        'excursion'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,

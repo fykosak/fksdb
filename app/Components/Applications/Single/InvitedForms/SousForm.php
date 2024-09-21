@@ -77,7 +77,7 @@ class SousForm extends InvitationApplicationForm
                     'label' => _('T-shirt'),
                     'types' => ['apparel'],
                     'collapseChild' => false,
-                    'groupBy' => ScheduleContainer::GROUP_NONE,
+                    'groupBy' => ScheduleContainer::GroupNone,
                 ],
             ],
         ];
