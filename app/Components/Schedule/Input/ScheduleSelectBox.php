@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Input;
 
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
 
-class ScheduleGroupField extends SelectBox
+class ScheduleSelectBox extends SelectBox
 {
     use FrontEndComponentTrait;
 
@@ -21,18 +23,18 @@ class ScheduleGroupField extends SelectBox
     /**
      * @throws BadRequestException
      */
-    public function __construct(ScheduleGroupModel $group, Language $lang)
+    public function __construct(ScheduleGroupModel $group, GettextTranslator $translator)
     {
         if ($group->registration_end) {
             parent::__construct(
                 sprintf(
                     _('%s -- end of registration: %s'),
-                    $group->name->getText($lang->value),
+                    $group->name->getText($translator->lang),
                     $group->registration_end->format(_('__date_time'))
                 )
             );
         } else {
-            parent::__construct($group->name->getText($lang->value));
+            parent::__construct($group->name->getText($translator->lang));
         }
 
         $this->group = $group;
@@ -44,8 +46,8 @@ class ScheduleGroupField extends SelectBox
         foreach ($this->group->getItems() as $item) {
             $items[$item->getPrimary()] = sprintf(
                 _('%s - %s'),
-                $item->name->getText($lang->value),
-                $item->description->getText($lang->value)
+                $item->name->getText($translator->lang),
+                $item->description->getText($translator->lang)
             );
             if (!$item->available) {
                 $disabled[] = $item->getPrimary();
@@ -54,13 +56,18 @@ class ScheduleGroupField extends SelectBox
         $this->setItems($items)->setPrompt(_('Not selected'))->setDisabled($disabled);
     }
 
-    public function setModel(PersonScheduleModel $model): self
+    public function setPerson(?PersonModel $person): void
     {
-        /** @phpstan-ignore-next-line */
-        if (is_array($this->disabled) && isset($this->disabled[$model->schedule_item_id])) {
-            unset($this->disabled[$model->schedule_item_id]);
+        if ($person) {
+            $personSchedule = $person->getScheduleByGroup($this->group);
+            if ($personSchedule) {
+                /** @phpstan-ignore-next-line */
+                if (is_array($this->disabled) && isset($this->disabled[$personSchedule->schedule_item_id])) {
+                    unset($this->disabled[$personSchedule->schedule_item_id]);
+                }
+                parent::setDefaultValue($personSchedule->schedule_item_id);
+            }
         }
-        return parent::setValue($model->schedule_item_id);
     }
 
     /**

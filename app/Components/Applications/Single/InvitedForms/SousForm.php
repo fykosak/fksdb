@@ -10,6 +10,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
 use FKSDB\Models\Expressions\Logic\LogicOr;
 use FKSDB\Models\Expressions\Logic\Not;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole;
 
@@ -75,7 +76,9 @@ class SousForm extends InvitationApplicationForm
             'person_schedule' => [
                 'apparel' => [
                     'label' => _('T-shirt'),
-                    'types' => ['apparel'],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                    ],
                     'collapseChild' => false,
                     'groupBy' => ScheduleContainer::GroupNone,
                 ],

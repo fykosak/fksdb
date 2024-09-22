@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 
@@ -99,10 +98,10 @@ class Handler
                     )
                 );
             } elseif (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
             if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
 
             $this->service->storeModel(

@@ -7,22 +7,24 @@ namespace FKSDB\Components\Schedule\Input;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Modules\Core\Language;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\Schedule\PaymentDeadlineStrategy\PaymentDeadlineStrategy;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
  * @phpstan-type TMeta array{
- * types:string[],
+ * types:ScheduleGroupType[],
  * label:string,
  * description?:string,
  * required?:bool,
  * collapseSelf?:bool,
  * collapseChild?:bool,
- * groupBy?:self::Group*}
+ * groupBy?:self::Group*,
+ * paymentDeadline?:PaymentDeadlineStrategy,
+ * }
  */
 class ScheduleContainer extends ContainerWithOptions
 {
@@ -30,7 +32,7 @@ class ScheduleContainer extends ContainerWithOptions
     public const GroupNone = 'none';// phpcs:ignore
 
     private EventModel $event;
-    /** @var string[] */
+    /** @var ScheduleGroupType[] */
     private array $types;
     private bool $required;
     private GettextTranslator $translator;
@@ -72,7 +74,7 @@ class ScheduleContainer extends ContainerWithOptions
     public function createContainers(): void
     {
         $groups = $this->event->getScheduleGroups()
-            ->where('schedule_group_type', $this->types)
+            ->where('schedule_group_type', array_map(fn(ScheduleGroupType $case) => $case->value, $this->types))
             ->order('start, schedule_group_id');
 
         $this->setOption('label', $this->label);
@@ -91,7 +93,7 @@ class ScheduleContainer extends ContainerWithOptions
             $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
-                $field = new ScheduleGroupField($group, Language::from($this->translator->lang));
+                $field = new ScheduleSelectBox($group, $this->translator);
                 if ($this->required) {
                     $field->setRequired(_('Field %label is required.'));
                 }
@@ -125,26 +127,13 @@ class ScheduleContainer extends ContainerWithOptions
         }
     }
 
-    public function setModel(?PersonModel $person): void
+    public function setPerson(?PersonModel $person): void
     {
-        $data = [];
-        if ($person) {
-            $query = $person->getSchedule()
-                ->where('schedule_item.schedule_group.schedule_group_type', $this->types)
-                ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
-            /** @var PersonScheduleModel $personSchedule */
-            foreach ($query as $personSchedule) {
-                $group = $personSchedule->schedule_item->schedule_group;
-                $key = $this->getGroupKey($group);
-                /**
-                 * @var ScheduleGroupField $select
-                 * @phpstan-ignore-next-line
-                 */
-                $select = $this->getComponent($key)->getComponent((string)$group->schedule_group_id);
-                $select->setModel($personSchedule);
-            }
+        $components = $this->getComponents(true, ScheduleSelectBox::class);
+        /** @var ScheduleSelectBox $select $select */
+        foreach ($components as $select) {
+            $select->setPerson($person);
         }
-
-        $this->setDefaults($data);
+        $this->setDefaults([]);
     }
 }

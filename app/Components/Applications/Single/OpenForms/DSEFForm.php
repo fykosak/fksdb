@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Single\OpenForms;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
-use FKSDB\Components\Schedule\Input\ScheduleGroupField;
-use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Components\Schedule\Input\ScheduleSelectBox;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Forms\Form;
 
 /**
  * @method BasePresenter getPresenter($need = true)
+ * @phpstan-import-type TMeta from ScheduleContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 final class DSEFForm extends OpenApplicationForm
@@ -51,37 +50,42 @@ final class DSEFForm extends OpenApplicationForm
                     ])
                 ],
             ],
-            'person_schedule' => [
-                'schedule' => [
-                    'types' => [
-                        ScheduleGroupType::Excursion,
-                    ],
-                    'required' => false,
-                    'label' => _('Excursion'),
-                ],
-                'accommodation' => [
-                    'types' => [ScheduleGroupType::Accommodation],
-                    'required' => false,
-                    'label' => _('Accommodation'),
-                ],
-                'food' => [
-                    'types' => [ScheduleGroupType::Food],
-                    'required' => false,
-                    'label' => _('Food'),
-                ],
-            ]
+
+        ];
+    }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'excursion' => [
+                'types' => [ScheduleGroupType::from(ScheduleGroupType::Excursion)],
+                'required' => false,
+                'label' => _('Excursion'),
+            ],
+            'accommodation' => [
+                'types' => [ScheduleGroupType::from(ScheduleGroupType::Accommodation)],
+                'required' => false,
+                'label' => _('Accommodation'),
+                'paymentDeadline' => new ConstantIntervalStrategy(
+                    \DateInterval::createFromDateString('+14days')
+                )
+            ],
+            'food' => [
+                'types' => [ScheduleGroupType::from(ScheduleGroupType::Food)],
+                'required' => false,
+                'label' => _('Food'),
+                'paymentDeadline' => new ConstantIntervalStrategy(
+                    \DateInterval::createFromDateString('+14days')
+                )
+            ],
         ];
     }
 
     protected function configureForm(Form $form): void
     {
-        parent::configureForm($form);
-        /** @var ModelContainer $container */
-        $container = $form->getComponent('event_participant');
-        /**  @var ReferencedId<PersonModel> $personContainer */
-        $personContainer = $container->getComponent('person_id');
+        parent::configureForm($form);;
         /**  @var ScheduleContainer $scheduleContainer */
-        $scheduleContainer = $personContainer->referencedContainer['person_schedule']['schedule'];
+        $scheduleContainer = $form['event_participant']['schedule']['excursion']; // @phpstan-ignore-line
         $halfDayComponents = [];
         $fullDayComponents = [];
         /** @var ContainerWithOptions $component */
@@ -93,9 +97,9 @@ final class DSEFForm extends OpenApplicationForm
                 $fullDayComponents[] = $component->getComponent((string)$id);
             }
         }
-        /**  @var ScheduleGroupField $allDaySelect */
+        /**  @var ScheduleSelectBox $allDaySelect */
         foreach ($fullDayComponents as $allDaySelect) {
-            /**  @var ScheduleGroupField[] $halfDayComponents */
+            /**  @var ScheduleSelectBox[] $halfDayComponents */
             foreach ($halfDayComponents as $halfDayComponent) {
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
                     ->addRule(
@@ -126,9 +130,7 @@ final class DSEFForm extends OpenApplicationForm
      */
     final protected function getParticipantFieldsDefinition(): array
     {
-        return [
-            'lunch_count' => ['required' => false],
-        ];
+        return [];
     }
 }
 

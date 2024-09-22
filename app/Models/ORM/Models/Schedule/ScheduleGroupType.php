@@ -51,6 +51,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             new self(self::Apparel),
             new self(self::Transport),
             new self(self::Ticket),
+            new self(self::Food),
         ];
     }
 
