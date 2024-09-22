@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms;
+namespace FKSDB\Components\EntityForms\Payments;
 
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\Processing\DefaultTransition;
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;

@@ -1,7 +1,51 @@
+{varType FKSDB\Models\ORM\Models\PaymentModel[] $payments}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $scheduleRests}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
+            <h2>{_'On going payments'}</h2>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {foreach $payments as $payment}
+                    {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::CANCELED}
+                    {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+                    {var $behavior = $payment->state->behaviorType()}
+                    <div class="col">
+                        <div class="card border-{$behavior}">
+                            <h5 class="card-header">{_'Order No.'} {$payment->payment_id} {$payment->state->badge()}</h5>
+                            <div class="card-body">
+                                {if $payment->currency === Fykosak\Utils\Price\Currency::CZK}
+                                    {control columnTable [
+                                    'payment.constant_symbol',
+                                    'payment.variable_symbol',
+                                    'payment.bank_account',
+                                    'payment.bank_name',
+                                    'payment.recipient',
+                                    'payment.iban',
+                                    'payment.price',
+                                    ],$payment,1024}
+                                {else}
+                                    {control columnTable [
+                                    'payment.bank_name',
+                                    'payment.recipient',
+                                    'payment.iban',
+                                    'payment.swift',
+                                    'payment.price',
+                                    ],$payment,1024}
+                                {/if}
+                                <a class="btn btn-info" href="{plink ''}">{_'Detail'}</a>
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Rests for events'}</h2>
+            {foreach $scheduleRests as $rest}
 
+            {/foreach}
         </div>
     </div>
 {/block}

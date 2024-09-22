@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Source\Payment;
 
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Modules\Core\Language;
@@ -39,5 +40,13 @@ class PaymentTransitionEmail extends TransitionEmailSource
                 ],
             ]
         ];
+    }
+    /**
+     * @template TStaticHolder of ModelHolder
+     * @phpstan-param  Transition<TStaticHolder> $transition
+     */
+    public static function resolveLayoutName(Transition $transition): string
+    {
+        return $transition->source->value . '->' . $transition->target->value;
     }
 }

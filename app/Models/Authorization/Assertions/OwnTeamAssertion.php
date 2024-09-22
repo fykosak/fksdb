@@ -19,10 +19,8 @@ class OwnTeamAssertion implements Assertion
             throw new WrongAssertionException();
         }
         if ($queriedRole instanceof TeamTeacherRole) {
-            foreach ($queriedRole->teams as $team) {
-                if ($team->fyziklani_team_id === $application->fyziklani_team_id) {
-                    return true;
-                }
+            if ($queriedRole->teacher->fyziklani_team_id === $application->fyziklani_team_id) {
+                return true;
             }
             return false;
         }

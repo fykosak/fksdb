@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\ShopModule;
 
+use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Payments\AllPaymentList;
+use FKSDB\Components\Payments\PaymentList;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
@@ -20,13 +25,6 @@ final class AdminPresenter extends BasePresenter
     public function inject(ScheduleItemService $scheduleItemService): void
     {
         $this->scheduleItemService = $scheduleItemService;
-    }
-
-    public function getContest(): ContestModel
-    {
-        /** @var ContestModel $contest */
-        $contest = $this->contestService->findByPrimary(ContestModel::ID_FYKOS);
-        return $contest;
     }
 
     public function authorizedEvents(): bool
@@ -98,5 +96,27 @@ final class AdminPresenter extends BasePresenter
     protected function createComponentGrid(): AllPaymentList
     {
         return new AllPaymentList($this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentGrid2(): PaymentList
+    {
+        return new PaymentList($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @phpstan-return TransitionButtonsComponent<PaymentModel>
+     */
+    protected function createComponentButtonTransition(): TransitionButtonsComponent
+    {
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            $this->getMachine(), // @phpstan-ignore-line
+            $this->getEntity()
+        );
     }
 }

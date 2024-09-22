@@ -23,17 +23,10 @@ class SelfAssertion implements Assertion
 
     private UserStorage $userStorage;
 
-    public function __construct(UserStorage $userStorage, Container $container)
+    public function __construct(UserStorage $userStorage)
     {
-        $container->callInjects($this);
         $this->userStorage = $userStorage;
     }
-
-    public function inject(User $user): void
-    {
-
-    }
-
     /**
      * Check that the person is the person of logged user.
      *
@@ -44,8 +37,6 @@ class SelfAssertion implements Assertion
     {
         /** @var IIdentity $identity */
         [$state, $identity] = $this->userStorage->getState();
-        Debugger::barDump($acl);
-        Debugger::barDump($identity);
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }

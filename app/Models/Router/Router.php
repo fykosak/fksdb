@@ -162,7 +162,7 @@ class Router
             'module' => 'Shop',
             'presenter' => 'Home',
         ]);
-        $list->addRoute('events/<eventId>/<action=default>', [
+        $list->addRoute('events<eventId [0-9]+>[/<id [0-9]+>][/<action=default>]', [
             'module' => 'Shop',
             'presenter' => 'Events',
         ]);

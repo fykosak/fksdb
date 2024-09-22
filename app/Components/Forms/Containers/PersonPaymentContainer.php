@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -26,7 +23,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     private bool $isOrganizer;
     private ?PaymentModel $model;
     private EventModel $event;
-    private PersonModel $loggedPerson;
+    private ?PersonModel $loggedPerson;
     private GettextTranslator $translator;
 
     /**
@@ -35,7 +32,7 @@ class PersonPaymentContainer extends ContainerWithOptions
     public function __construct(
         Container $container,
         EventModel $event,
-        PersonModel $loggedPerson,
+        ?PersonModel $loggedPerson,
         bool $isOrganizer,
         ?PaymentModel $model
     ) {
@@ -63,21 +60,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (!$this->isOrganizer) {
-            $roles = $this->loggedPerson->getEventRoles($this->event);
-            $teams = [];
-            foreach ($roles as $role) {
-                if ($role instanceof TeamTeacherRole) {
-                    $teams += $role->teams;
-                }
-                if ($role instanceof TeamMemberRole) {
-                    $teams[] = $role->member->fyziklani_team;
-                }
-            }
-            $persons = [];
-            /** @var TeamModel2 $team */
-            foreach ($teams as $team) {
-                $persons = [...$persons, ...$team->getPersons()];
-            }
+            $persons = $this->loggedPerson->getEventRelatedPersons($this->event);
             $query->where('person.person_id', array_map(fn(PersonModel $person): int => $person->person_id, $persons));
         }
         $query->order('person.family_name ,person_id');
@@ -130,4 +113,5 @@ class PersonPaymentContainer extends ContainerWithOptions
             $component->setDefaultValue(true);
         }
     }
+
 }
