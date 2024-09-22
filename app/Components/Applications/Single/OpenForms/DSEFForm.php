@@ -85,7 +85,7 @@ final class DSEFForm extends OpenApplicationForm
     {
         parent::configureForm($form);;
         /**  @var ScheduleContainer $scheduleContainer */
-        $scheduleContainer = $form['event_participant']['schedule']['excursion']; // @phpstan-ignore-line
+        $scheduleContainer = $form['event_participant'][self::ScheduleContainer]['excursion']; // @phpstan-ignore-line
         $halfDayComponents = [];
         $fullDayComponents = [];
         /** @var ContainerWithOptions $component */

@@ -41,6 +41,8 @@ use Nette\Forms\Form;
  */
 abstract class OpenApplicationForm extends ModelForm
 {
+    protected const ScheduleContainer = 'schedule_container'; // phpcs:ignore
+
     protected ReferencedPersonFactory $referencedPersonFactory;
     protected EventParticipantService $eventParticipantService;
     protected EventParticipantMachine $machine;
@@ -99,7 +101,7 @@ abstract class OpenApplicationForm extends ModelForm
         $scheduleDefinition = $this->getScheduleDefinition();
         if ($scheduleDefinition) {
             $scheduleContainer = new ContainerWithOptions($this->container);
-            $container->addComponent($scheduleContainer, 'schedule');
+            $container->addComponent($scheduleContainer, self::ScheduleContainer);
             foreach ($scheduleDefinition as $key => $scheduleDatum) {
                 $scheduleSubContainer = new ScheduleContainer($this->container, $this->event, $scheduleDatum);
                 $scheduleContainer->addComponent($scheduleSubContainer, $key);
@@ -170,8 +172,7 @@ abstract class OpenApplicationForm extends ModelForm
         $person = $referencedId->getModel();
         $handler = new ScheduleHandler($this->container, $this->event);
         /** @phpstan-ignore-next-line */
-        $handler->handle($values['event_participant']['schedule'], $this->getScheduleDefinition(), $person);
-        throw new \Exception();
+        $handler->handle($values['event_participant'][self::ScheduleContainer], $this->getScheduleDefinition(), $person);
         return $this->eventParticipantService->storeModel(
             array_merge($values['event_participant'], [
                 'event_id' => $this->event->event_id,

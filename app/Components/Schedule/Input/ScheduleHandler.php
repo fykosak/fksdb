@@ -81,11 +81,10 @@ final class ScheduleHandler
             // Delete
             if ($personSchedule) {
                 $this->handleDelete($group, $personSchedule);
-            }
-            // do nothing
-            if (!$personSchedule) {
                 return;
             }
+            // do nothing
+            return;
         }
 
         /** @var ScheduleItemModel|null $item */
