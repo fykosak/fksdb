@@ -49,6 +49,7 @@ abstract class FormComponent extends BaseComponent
                 } catch (\Throwable $exception) {
                     if (!$this->onException($exception)) {
                         Debugger::log($exception, Debugger::EXCEPTION);
+                        Debugger::barDump($exception);
                         $this->flashMessage(_('Error in the form.'), Message::LVL_ERROR);
                     }
                 }
