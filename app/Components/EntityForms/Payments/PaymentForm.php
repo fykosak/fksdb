@@ -39,14 +39,12 @@ class PaymentForm extends ModelForm
     private PaymentService $paymentService;
     private SchedulePaymentService $schedulePaymentService;
     private ReflectionFactory $reflectionFormFactory;
-    /** @phpstan-var EventModel[] */
-    private array $sources;
+    private EventModel $source;
     private PersonModel $loggedPerson;
 
-    /** @phpstan-param EventModel[] $sources */
     public function __construct(
         Container $container,
-        array $sources,
+        EventModel $source,
         PersonModel $loggedPerson,
         bool $isOrganizer,
         PaymentMachine $machine,
@@ -55,7 +53,7 @@ class PaymentForm extends ModelForm
         parent::__construct($container, $model);
         $this->machine = $machine;
         $this->isOrganizer = $isOrganizer;
-        $this->sources = $sources;
+        $this->source = $source;
         $this->loggedPerson = $loggedPerson;
     }
 
@@ -95,20 +93,16 @@ class PaymentForm extends ModelForm
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
        // $form->addComponent($this->reflectionFormFactory->createField('payment', 'want_invoice'), 'want_invoice');
-        foreach ($this->sources as $source) {
-            if ($source instanceof EventModel) {
-                $form->addComponent(
-                    new PersonPaymentContainer(
-                        $this->getContext(),
-                        $source,
-                        $this->loggedPerson,
-                        $this->isOrganizer,
-                        $this->model
-                    ),
-                    'event_items'
-                );
-            }
-        }
+        $form->addComponent(
+            new PersonPaymentContainer(
+                $this->getContext(),
+                $this->source,
+                $this->loggedPerson,
+                $this->isOrganizer,
+                $this->model
+            ),
+            'event_items'
+        );
     }
 
     /**
