@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Email\Source\Dsef;
+namespace FKSDB\Models\Email\Source\DSEF;
 
 use FKSDB\Models\Email\ParticipantTransitionEmail;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
@@ -17,7 +17,7 @@ use FKSDB\Modules\Core\Language;
  *     token: AuthTokenModel,
  * }>
  */
-final class DsefTransitionEmail extends ParticipantTransitionEmail
+final class TransitionEmail extends ParticipantTransitionEmail
 {
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {

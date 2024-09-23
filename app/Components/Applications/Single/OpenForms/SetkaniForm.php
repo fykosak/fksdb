@@ -38,12 +38,17 @@ final class SetkaniForm extends OpenApplicationForm
             ],
             'person_schedule' => [
                 'apparel' => [
-                    'types' => [ScheduleGroupType::Apparel],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                    ],
                     'required' => true,
                     'label' => _('Apparel'),
                 ],
                 'transport' => [
-                    'types' => [ScheduleGroupType::Transport, ScheduleGroupType::Ticket],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Transport),
+                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                    ],
                     'required' => true,
                     'label' => _('Transport & Ticket'),
                 ],
