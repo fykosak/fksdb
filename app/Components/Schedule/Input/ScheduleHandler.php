@@ -67,7 +67,7 @@ final class ScheduleHandler
             ->where('schedule_group_id', $groupId)
             ->fetch();
         if (!$group) {
-            throw new ScheduleException(null, _('Schedule does not exists'));
+            throw new ScheduleException(null, _('Schedule does not exist'));
         }
         if ($group->schedule_group_type->value === ScheduleGroupType::Info) {
             throw new ScheduleException($group, _('Info block cannot be selected'));
