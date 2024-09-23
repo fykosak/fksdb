@@ -34,19 +34,19 @@ final class HomePresenter extends BasePresenter
         $events = [];
         $persons = [];
         /** @var EventModel $event */
-        foreach ($this->eventService->getTable()->where('event_id', self::AvailableEventIds) as $event) {
+        foreach ($this->eventService->getTable() as $event) {
             $events[$event->event_id] = $event;
             $relatedPersons = $this->getLoggedPerson()->getEventRelatedPersons($event);
             foreach ($relatedPersons as $person) {
-                $persons[$person->person_id] = $person;
-                $rests[$event->event_id][$person->person_id] = $person->getScheduleRestsForEvent($event);
+                $restArray = $person->getScheduleRestsForEvent($event);
+                if (count($restArray)) {
+                    $persons[$person->person_id] = $person;
+                    $rests[$event->event_id][$person->person_id] = $restArray;
+                }
             }
         }
 
         $this->template->payments = $this->getLoggedPerson()->getPayments();
-        Debugger::barDump($rests);
-        Debugger::barDump($events);
-        Debugger::barDump($persons);
         $this->template->rests = $rests;
         $this->template->events = $events;
         $this->template->persons = $persons;

@@ -7,7 +7,6 @@ namespace FKSDB\Modules\ShopModule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\Payments\PaymentForm;
 use FKSDB\Components\Payments\PaymentQRCode;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -33,9 +32,13 @@ final class EventsPresenter extends BasePresenter
         $this->paymentService = $paymentService;
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws NotImplementedException
+     */
     public function authorizedCreate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $this->getContest());
+        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $this->getEvent());
     }
 
     public function titleCreate(): PageTitle
@@ -44,13 +47,12 @@ final class EventsPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
      * @throws NotFoundException
-     * @throws NotFoundException
+     * @throws NotImplementedException
      */
     public function authorizedDetail(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getPayment(), 'detail', $this->getContest());
+        return $this->eventAuthorizator->isAllowed($this->getPayment(), 'detail', $this->getEvent());
     }
 
     /**
@@ -59,13 +61,11 @@ final class EventsPresenter extends BasePresenter
      */
     final public function renderDetail(): void
     {
-        $payment = $this->getPayment();
-        $this->template->model = $payment;
+        $this->template->model = $this->getPayment();
     }
 
     /**
      * @throws CannotAccessModelException
-     * @throws NotFoundException
      * @throws NotFoundException
      */
     public function titleDetail(): PageTitle
@@ -79,13 +79,12 @@ final class EventsPresenter extends BasePresenter
 
 
     /**
-     * @throws EventNotFoundException
      * @throws NotFoundException
-     * @throws NotFoundException
+     * @throws NotImplementedException
      */
     public function authorizedEdit(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getPayment(), 'edit', $this->getContest());
+        return $this->eventAuthorizator->isAllowed($this->getPayment(), 'edit', $this->getEvent());
     }
 
     /**
@@ -154,7 +153,7 @@ final class EventsPresenter extends BasePresenter
     {
         return new PaymentForm(
             $this->getContext(),
-            [$this->getEvent()],
+            $this->getEvent(),
             $this->getLoggedPerson(),
             false,
             $this->getMachine(),
@@ -170,7 +169,7 @@ final class EventsPresenter extends BasePresenter
     {
         return new PaymentForm(
             $this->getContext(),
-            [$this->getEvent()],
+            $this->getEvent(),
             $this->getLoggedPerson(),
             false,
             $this->getMachine(),
