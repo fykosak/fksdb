@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
         'approved',
         'auto.invited',
         'auto.spare',
-        'cancelled',
+        'canceled',
         'disqualified',
         'interested',
         'invited',
@@ -713,7 +713,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'participated',
         'missed',
         'disqualified',
-        'cancelled'
+        'canceled'
         )                                NOT NULL DEFAULT 'init',
     `category`          ENUM (
         'A',
@@ -1269,12 +1269,12 @@ CREATE TABLE IF NOT EXISTS `person_schedule`
     `person_schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `person_id`          INT UNSIGNED NOT NULL,
     `schedule_item_id`   INT UNSIGNED NOT NULL,
-    `payment_deadline`   DATETIME     NULl DEFAULT NULL,
+    `payment_deadline`   DATETIME     NULL DEFAULT NULL,
     `state`              ENUM (
         'applied',
         'participated',
         'missed',
-        'cancelled'
+        'canceled'
         )                             NULL DEFAULT NULL,
     UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
