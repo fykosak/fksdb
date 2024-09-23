@@ -38,7 +38,7 @@
                                 {var $event = $payment->getRelatedEvent()}
                                 {if $event}
                                     <a class="btn btn-info"
-                                       href="{plink ':Shop:Events:detail' eventId=>$event->event_id, id=>$payment->payment_id}">
+                                       href="{plink :Shop:Events:detail eventId=>$event->event_id, id=>$payment->payment_id}">
                                         {_'Detail'}
                                     </a>
                                 {/if}
@@ -69,17 +69,18 @@
                                     <div class="col-3"><small class="text-muted">{_'Variant'}
                                             : </small>{$personSchedule->schedule_item->name->getText($lang)}</div>
                                     <div class="col-2">{$personSchedule->schedule_item->getPrice()}</div>
-                                    {if $personSchedule->payment_deadline}
                                         <div class="col-2">
-                                            <small class="text-muted">{_'Payment deadline'}: </small>
-                                            {$personSchedule->payment_deadline->format(_('__date_time'))}
+                                            <small class="text-muted">{_'Payment'}: </small>
+                                            {control printer:column '@person_schedule.payment', $personSchedule,1024}
                                         </div>
-                                    {/if}
                                 </div>
                             </div>
                         </div>
                     {/foreach}
                 {/foreach}
+                <a class="btn btn-primary"
+                   href="{plink :Shop:Events:create eventId=>$events[$eventId]->event_id}">{_'Create payment'}</a>
+                <hr/>
             {/foreach}
         </div>
     </div>
