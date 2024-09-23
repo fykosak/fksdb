@@ -21,8 +21,8 @@ use Nette\Forms\Form;
  */
 final class DSEFForm extends OpenApplicationForm
 {
-    private const HalfDayIds = [149, 150];
-    private const FullDayIds = [152];
+    private const HalfDayIds = [196, 197];
+    private const FullDayIds = [198];
     /**
      * @phpstan-return EvaluatedFieldsDefinition
      */
@@ -133,4 +133,3 @@ final class DSEFForm extends OpenApplicationForm
         return [];
     }
 }
-

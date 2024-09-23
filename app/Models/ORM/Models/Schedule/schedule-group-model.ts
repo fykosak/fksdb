@@ -18,6 +18,7 @@ export type ScheduleGroupType =
     'accommodation'
     | 'accommodation_gender'
     | 'accommodation_teacher'
+    | 'food'
     | 'visa'
     | 'vaccination_covid'
     | 'teacher_present'
@@ -45,7 +46,7 @@ export const renderOptions = (type: ScheduleGroupType): Params => {
                 price: false,
                 groupTime: false,
             };
-        case  'accommodation':
+        case 'accommodation':
             return {
                 capacity: true,
                 groupLabel: true,
@@ -63,13 +64,20 @@ export const renderOptions = (type: ScheduleGroupType): Params => {
                 price: false,
                 groupTime: false,
             };
+        case 'food':
+            return {
+                capacity: false,
+                groupLabel: true,
+                price: true,
+                groupTime: false,
+            };
         case 'weekend':
             return {
                 capacity: true,
                 groupLabel: true,
                 price: true,
                 groupTime: true,
-            }
+            };
         case 'info':
         case 'apparel':
             return {
