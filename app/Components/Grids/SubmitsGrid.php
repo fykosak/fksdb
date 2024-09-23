@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
@@ -58,7 +57,7 @@ final class SubmitsGrid extends BaseGrid
         $this->addTableColumn(
             new RendererItem(
                 $this->container,
-                fn(SubmitModel $submit): string => $submit->task->getFullLabel(Language::from($this->translator->lang)),
+                fn(SubmitModel $submit): string => $submit->task->getFullLabel($this->translator),
                 new Title(null, _('Task'))
             ),
             'task'
@@ -137,7 +136,7 @@ final class SubmitsGrid extends BaseGrid
             $this->flashMessage(
                 sprintf(
                     _('Submitting of task %s cancelled.'),
-                    $submit->task->getFullLabel(Language::from($this->translator->lang))
+                    $submit->task->getFullLabel($this->translator)
                 ),
                 Message::LVL_WARNING
             );

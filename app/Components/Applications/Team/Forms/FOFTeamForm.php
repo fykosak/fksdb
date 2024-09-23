@@ -113,22 +113,25 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationTeacher],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                        ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
+                    ],
                     'required' => false,
                     'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_NONE,
+                    'groupBy' => ScheduleContainer::GroupNone,
                 ],
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::TeacherPresent,
-                        ScheduleGroupType::Weekend,
-                        ScheduleGroupType::WeekendInfo,
+                        ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
+                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                        ScheduleGroupType::from(ScheduleGroupType::Info),
                     ],
                     'required' => false,
                     'collapseChild' => true,
                     'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GroupBegin,
                 ],
             ],
         ];
@@ -159,18 +162,24 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationGender],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                        ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
+                    ],
                     'required' => false,
                     'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_NONE,
+                    'groupBy' => ScheduleContainer::GroupNone,
                 ],
                 'schedule' => [
-                    'types' => [ScheduleGroupType::Weekend, ScheduleGroupType::WeekendInfo],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                        ScheduleGroupType::from(ScheduleGroupType::Info),
+                    ],
                     'required' => false,
                     'collapseChild' => true,
                     'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GroupBegin,
                 ],
             ],
         ];

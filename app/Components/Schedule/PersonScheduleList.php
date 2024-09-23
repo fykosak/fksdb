@@ -124,7 +124,7 @@ final class PersonScheduleList extends BaseList
         /** @phpstan-ignore-next-line */
         $relatedTable->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new SimpleItem($this->container, '@payment.payment'),
+            new SimpleItem($this->container, '@person_schedule.payment'),
             'payment'
         );
         /** @phpstan-ignore-next-line */

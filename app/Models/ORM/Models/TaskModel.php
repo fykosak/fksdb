@@ -8,9 +8,9 @@ use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
@@ -44,7 +44,7 @@ final class TaskModel extends Model implements ContestYearResource, ContestResou
     public const RESOURCE_ID = 'task';
 
     public function getFullLabel(
-        Language $lang,
+        GettextTranslator $translator,
         bool $includeContest = false,
         bool $includeYear = false,
         bool $includeSeries = true
@@ -53,7 +53,7 @@ final class TaskModel extends Model implements ContestYearResource, ContestResou
         if ($includeContest) {
             $label .= $this->contest->name . ' ';
         }
-        switch ($lang->value) {
+        switch ($translator->lang) {
             case 'cs':
                 if ($includeYear) {
                     $label .= $this->year . '. ročník ';
