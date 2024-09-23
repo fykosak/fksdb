@@ -171,8 +171,8 @@ abstract class OpenApplicationForm extends ModelForm
         /** @var PersonModel $person */
         $person = $referencedId->getModel();
         $handler = new ScheduleHandler($this->container, $this->event);
-        /** @phpstan-ignore-next-line */
         $handler->handle(
+            /** @phpstan-ignore-next-line */
             $values['event_participant'][self::ScheduleContainer],
             $this->getScheduleDefinition(),
             $person
