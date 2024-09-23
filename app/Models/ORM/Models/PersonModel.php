@@ -315,7 +315,7 @@ final class PersonModel extends Model implements Resource
         $teachers = $this->getTeamTeachers($event);
         /** @var TeamTeacherModel $teacher */
         foreach ($teachers as $teacher) {
-            $roles[] = new TeamTeacherRole($event, $teacher->fyziklani_team);
+            $roles[] = new TeamTeacherRole($event, $teacher);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {

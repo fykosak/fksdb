@@ -77,17 +77,23 @@ class Router
         self::addShopModule($service->withPath('shop/'));
 
         $service->addRoute(
-            '<module event|game>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
-            ['presenter' => 'Dashboard']
+            'event/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+            [
+                'presenter' => 'Dashboard',
+                'module' => 'Event',
+            ]
+        );
+        $service->addRoute(
+            'game/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+            [
+                'presenter' => 'Dashboard',
+                'module' => 'EventGame',
+            ]
         );
 
         $service->addRoute(
             '<module event|game>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
-        );
-        $service->addRoute(
-            'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',
-            ['module' => 'Event', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
         );
         // phpcs:disable
         $service->addRoute(
@@ -108,36 +114,29 @@ class Router
         $list->addRoute(
             '<eventId [0-9]+>/schedule/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Dashboard',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/groups[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Group',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/groups/<groupId [0-9]+>/items[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Item',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/persons[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Person',
-            ]
-        );
-        $list->addRoute(
-            '<eventId [0-9]+>/payments[/<id [0-9]+>]/<action>',
-            [
-                'module' => 'Event',
-                'presenter' => 'Payments',
             ]
         );
         $list->addRoute(

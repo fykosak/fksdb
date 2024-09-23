@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ShopModule;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\UI\PageTitle;
 use Tracy\Debugger;

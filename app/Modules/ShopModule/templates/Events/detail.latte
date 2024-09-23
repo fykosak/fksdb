@@ -128,14 +128,20 @@
                             <div class="col-1">
                                 <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                             </div>
-                            <div class="col-3"><small class="text-muted">{_'Block'}
+                            <div class="col-2"><small class="text-muted">{_'Block'}
                                     : </small>{$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Variant'}
                                     : </small>{$schedulePayment->person_schedule->schedule_item->name->getText($lang)}</div>
-                            <div class="col-3"><small class="text-muted">{_'Person'}
+                            <div class="col-2"><small class="text-muted">{_'Person'}
                                     : </small>{$schedulePayment->person_schedule->person->getFullName()}</div>
                             <div class="col-2">{$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>
+                            {if $schedulePayment->person_schedule->payment_deadline}
+                                <div class="col-2">
+                                    <small class="text-muted">{_'Payment deadline'}: </small>
+                                    {$schedulePayment->person_schedule->payment_deadline->format(_('__date_time'))}
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 </div>

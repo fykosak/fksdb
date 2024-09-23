@@ -174,7 +174,7 @@ final class EventsPresenter extends BasePresenter
             $this->getLoggedPerson(),
             false,
             $this->getMachine(),
-            $this->getInProgressPayment()
+            $this->getPayment()
         );
     }
 

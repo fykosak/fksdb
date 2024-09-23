@@ -143,7 +143,7 @@ final class PersonScheduleList extends BaseList
                 $this->container,
                 $this->getPresenter(),
                 new Title(null, _('Detail')),
-                fn(PersonScheduleModel $model) => [':Schedule:Person:detail', ['id' => $model->person_schedule_id]]
+                fn(PersonScheduleModel $model) => [':EventSchedule:Person:detail', ['id' => $model->person_schedule_id]]
             ),
             'detail'
         );
@@ -154,7 +154,7 @@ final class PersonScheduleList extends BaseList
                 $this->container,
                 $this->getPresenter(),
                 new Title(null, _('Edit')),
-                fn(PersonScheduleModel $model) => [':Schedule:Person:edit', ['id' => $model->person_schedule_id]]
+                fn(PersonScheduleModel $model) => [':EventSchedule:Person:edit', ['id' => $model->person_schedule_id]]
             ),
             'edit'
         );

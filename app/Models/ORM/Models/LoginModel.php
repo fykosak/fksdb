@@ -206,7 +206,7 @@ final class LoginModel extends Model implements IIdentity
             $teachers = $this->person->getTeamTeachers($event);
             /** @var TeamTeacherModel $teacher */
             foreach ($teachers as $teacher) {
-                $roles[] = new TeamTeacherRole($event, $teacher->fyziklani_team);
+                $roles[] = new TeamTeacherRole($event, $teacher);
             }
             $eventOrganizer = $this->person->getEventOrganizer($event);
             if (isset($eventOrganizer)) {

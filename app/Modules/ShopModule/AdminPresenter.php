@@ -10,7 +10,6 @@ use FKSDB\Components\Payments\PaymentList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;

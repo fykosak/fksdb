@@ -1,5 +1,8 @@
+{varType string $lang}
 {varType FKSDB\Models\ORM\Models\PaymentModel[] $payments}
-{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $scheduleRests}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[][][] $rests}
+{varType FKSDB\Models\ORM\Models\EventModel[] $events}
+{varType FKSDB\Models\ORM\Models\PersonModel[] $persons}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
@@ -32,7 +35,13 @@
                                     'payment.price',
                                     ],$payment,1024}
                                 {/if}
-                                <a class="btn btn-info" href="{plink ''}">{_'Detail'}</a>
+                                {var $event = $payment->getRelatedEvent()}
+                                {if $event}
+                                    <a class="btn btn-info"
+                                       href="{plink ':Shop:Events:detail' eventId=>$event->event_id, id=>$payment->payment_id}">
+                                        {_'Detail'}
+                                    </a>
+                                {/if}
                             </div>
                         </div>
                     </div>
@@ -43,8 +52,34 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Rests for events'}</h2>
-            {foreach $scheduleRests as $rest}
-
+            {foreach $rests as $eventId => $eventRests}
+                <h3>{$events[$eventId]->getName()->getText($lang)}</h3>
+                {foreach $eventRests as $personId => $personRests}
+                    <h4>{$persons[$personId]->getFullName()}</h4>
+                    {foreach $personRests as $personSchedule}
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                                    </div>
+                                    <div class="col-2"><small class="text-muted">{_'Block'}
+                                            : </small>{$personSchedule->schedule_item->schedule_group->name->getText($lang)}
+                                    </div>
+                                    <div class="col-3"><small class="text-muted">{_'Variant'}
+                                            : </small>{$personSchedule->schedule_item->name->getText($lang)}</div>
+                                    <div class="col-2">{$personSchedule->schedule_item->getPrice()}</div>
+                                    {if $personSchedule->payment_deadline}
+                                        <div class="col-2">
+                                            <small class="text-muted">{_'Payment deadline'}: </small>
+                                            {$personSchedule->payment_deadline->format(_('__date_time'))}
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    {/foreach}
+                {/foreach}
             {/foreach}
         </div>
     </div>

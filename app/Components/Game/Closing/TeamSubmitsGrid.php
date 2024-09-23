@@ -53,7 +53,7 @@ final class TeamSubmitsGrid extends BaseGrid
         ]);
         if ($this->team->event->event_type_id === 1) {
             $this->addPresenterButton(
-                ':Game:Submit:edit',
+                ':EventGame:Submit:edit',
                 'edit',
                 new Title(null, _('button.edit')),
                 false,

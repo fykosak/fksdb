@@ -36,8 +36,8 @@ class DashboardPresenter extends BasePresenter
     public function renderDefault(): void
     {
         $this->template->items = [
-            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), ':Schedule:Group:create'),
-            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':Schedule:Person:list'),
+            new NavItem(new Title(null, _('Create group'), 'fas fa-plus'), ':EventSchedule:Group:create'),
+            new NavItem(new Title(null, _('All persons'), 'fas fa-users'), ':EventSchedule:Person:list'),
         ];
     }
 

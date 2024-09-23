@@ -9,6 +9,8 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Template;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
@@ -41,18 +43,32 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function createTemplate(): Template
     {
         $template = parent::createTemplate();
-        $template->payment = $this->getInProgressPayment();
+        $template->payments = $this->getInProgressPayments();
         return $template;
     }
 
-    public function getInProgressPayment(): ?PaymentModel
+    /**
+     * @return TypedGroupedSelection<PaymentModel>
+     */
+    public function getInProgressPayments(): TypedGroupedSelection
     {
-        static $payment;
-        if (!isset($payment)) {
+        static $payments;
+        if (!isset($payments)) {
             $person = $this->getLoggedPerson();
-            /** @var PaymentModel|null $payment */
-            $payment = $person->getPayments()->where('state', PaymentState::IN_PROGRESS)->fetch();
+            $payments = $person->getPayments()->where('state', PaymentState::IN_PROGRESS);
         }
-        return $payment;
+        return $payments;
+    }
+
+    protected function getNavRoots(): array
+    {
+        return [
+            [
+                'title' => new Title(null, _('Shop & payments')),
+                'items' => [
+                    'Shop:Home:default' => [],
+                ],
+            ],
+        ];
     }
 }

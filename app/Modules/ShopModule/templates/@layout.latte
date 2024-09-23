@@ -1,7 +1,7 @@
 {layout '../../Core/templates/@layout.latte'}
-{varType FKSDB\Models\ORM\Models\PaymentModel|null $payment}
+{varType FKSDB\Models\ORM\Models\PaymentModel[] $payments}
 {block nav-right}
-    {if $payment}
+    {foreach $payments as $payment}
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-shopping-cart"></i>
@@ -15,13 +15,19 @@
                     <p class="mx-3">{$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</p>
                 {/foreach}
                 <div>
-                    <hr class="dropdown-divider">
+                        <hr class="dropdown-divider">
                 </div>
-                <div class="dropdown-item">
-                    <a href="#" class="btn btn-primary">Detail</a>
-                </div>
+                {var $event = $payment->getRelatedEvent()}
+                {if $event}
+                    <div class="dropdown-item">
+                        <a class="btn btn-info"
+                           href="{plink ':Shop:Events:detail' eventId=>$event->event_id, id=>$payment->payment_id}">
+                            {_'Detail'}
+                        </a>
+                    </div>
+                {/if}
             </div>
         </div>
-    {/if}
+    {/foreach}
     {include parent}
 {/block}

@@ -47,6 +47,22 @@ final class PaymentModel extends Model implements Resource
         return $selection;
     }
 
+    public function getRelatedEvent(): ?EventModel
+    {
+        $event = null;
+        /** @var SchedulePaymentModel $schedulePayment */
+        foreach ($this->getSchedulePayment() as $schedulePayment) {
+            $newEvent = $schedulePayment->person_schedule->schedule_item->schedule_group->event;
+            if ($event && $newEvent->event_id !== $event->event_id) {
+                throw new \InvalidArgumentException('Payment related to more than one event');
+            }
+            if (!$event) {
+                $event = $newEvent;
+            }
+        }
+        return $event;
+    }
+
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;

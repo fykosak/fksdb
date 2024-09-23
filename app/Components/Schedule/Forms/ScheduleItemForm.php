@@ -106,6 +106,6 @@ class ScheduleItemForm extends ModelForm
     protected function successRedirect(Model $model): void
     {
         $this->flashMessage(sprintf(_('Item "#%d" has been saved.'), $model->schedule_item_id), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect(':Schedule:Group:detail', ['id' => $model->schedule_group_id]);
+        $this->getPresenter()->redirect(':EventSchedule:Group:detail', ['id' => $model->schedule_group_id]);
     }
 }
