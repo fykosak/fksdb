@@ -38,15 +38,15 @@ final class DSEFForm extends OpenApplicationForm
                 'born' => [
                     'required' => true,
                     'reason' => new LocalizedString([
-                        'cs' => 'Kvôli vstupu na pracoviská a pripadnému ubytovaniu',
-                        'en' => '',
+                        'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
+                        'en' => 'For entering laboratories and possibly accommodation',
                     ])
                 ],
                 'id_number' => [
                     'required' => true,
                     'reason' => new LocalizedString([
-                        'cs' => 'Kvôli vstupu na pracoviská a pripadnému ubytovaniu',
-                        'en' => '',
+                        'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
+                        'en' => 'For entering laboratories and possibly accommodation',
                     ])
                 ],
             ],
@@ -104,22 +104,22 @@ final class DSEFForm extends OpenApplicationForm
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
                     ->addRule(
                         Form::Blank,
-                        _('You must register both morning and afternoon groups or only the all day group.')
+                        _('You must register to both morning and afternoon group or only the all-day group.')
                     );
                 $allDaySelect->addConditionOn($halfDayComponent, Form::Blank)
                     ->addRule(
                         Form::Filled,
-                        _('You must register both morning and afternoon groups or only the all day group.')
+                        _('You must register to both morning and afternoon group or only the all-day group.')
                     );
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Filled)
                     ->addRule(
                         Form::Blank,
-                        _('You must register both morning and afternoon groups or only the all day group.')
+                        _('You must register to both morning and afternoon group or only the all-day group.')
                     );
                 $halfDayComponent->addConditionOn($allDaySelect, Form::Blank)
                     ->addRule(
                         Form::Filled,
-                        _('You must register both morning and afternoon groups or only the all day group.')
+                        _('You must register to both morning and afternoon group or only the all-day group.')
                     );
             }
         }
