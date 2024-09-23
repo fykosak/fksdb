@@ -123,7 +123,7 @@ abstract class OpenApplicationForm extends ModelForm
     {
         $processing = parent::getPostprocessing();
         if (!isset($this->model)) {
-            $processing[] = new DefaultTransition($this->container, $this->machine);//@phpstan-ignore-line
+            $processing[] = new DefaultTransition($this->container, $this->machine); //@phpstan-ignore-line
         }
         return $processing;
     }
@@ -172,7 +172,11 @@ abstract class OpenApplicationForm extends ModelForm
         $person = $referencedId->getModel();
         $handler = new ScheduleHandler($this->container, $this->event);
         /** @phpstan-ignore-next-line */
-        $handler->handle($values['event_participant'][self::ScheduleContainer], $this->getScheduleDefinition(), $person);
+        $handler->handle(
+            $values['event_participant'][self::ScheduleContainer],
+            $this->getScheduleDefinition(),
+            $person
+        );
         return $this->eventParticipantService->storeModel(
             array_merge($values['event_participant'], [
                 'event_id' => $this->event->event_id,

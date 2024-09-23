@@ -21,8 +21,8 @@ use Nette\Forms\Form;
  */
 final class DSEFForm extends OpenApplicationForm
 {
-    private const HalfDayIds = [196, 197];
-    private const FullDayIds = [198];
+    private const HALF_DAY_IDS = [196, 197];
+    private const FULL_DAY_IDS = [198];
     /**
      * @phpstan-return EvaluatedFieldsDefinition
      */
@@ -83,40 +83,40 @@ final class DSEFForm extends OpenApplicationForm
 
     protected function configureForm(Form $form): void
     {
-        parent::configureForm($form);;
+        parent::configureForm($form);
         /**  @var ScheduleContainer $scheduleContainer */
         $scheduleContainer = $form['event_participant'][self::ScheduleContainer]['excursion']; // @phpstan-ignore-line
         $halfDayComponents = [];
         $fullDayComponents = [];
         /** @var ContainerWithOptions $component */
         foreach ($scheduleContainer->getComponents() as $component) {
-            foreach (self::HalfDayIds as $id) {
+            foreach (self::HALF_DAY_IDS as $id) {
                 $halfDayComponents[] = $component->getComponent((string)$id);
             }
-            foreach (self::FullDayIds as $id) {
+            foreach (self::FULL_DAY_IDS as $id) {
                 $fullDayComponents[] = $component->getComponent((string)$id);
             }
         }
-        /**  @var ScheduleSelectBox $allDaySelect */
-        foreach ($fullDayComponents as $allDaySelect) {
+        /**  @var ScheduleSelectBox $fullDaySelect */
+        foreach ($fullDayComponents as $fullDaySelect) {
             /**  @var ScheduleSelectBox[] $halfDayComponents */
             foreach ($halfDayComponents as $halfDayComponent) {
-                $allDaySelect->addConditionOn($halfDayComponent, Form::Filled)
+                $fullDaySelect->addConditionOn($halfDayComponent, Form::Filled)
                     ->addRule(
                         Form::Blank,
                         _('You must register to both morning and afternoon group or only the all-day group.')
                     );
-                $allDaySelect->addConditionOn($halfDayComponent, Form::Blank)
+                $fullDaySelect->addConditionOn($halfDayComponent, Form::Blank)
                     ->addRule(
                         Form::Filled,
                         _('You must register to both morning and afternoon group or only the all-day group.')
                     );
-                $halfDayComponent->addConditionOn($allDaySelect, Form::Filled)
+                $halfDayComponent->addConditionOn($fullDaySelect, Form::Filled)
                     ->addRule(
                         Form::Blank,
                         _('You must register to both morning and afternoon group or only the all-day group.')
                     );
-                $halfDayComponent->addConditionOn($allDaySelect, Form::Blank)
+                $halfDayComponent->addConditionOn($fullDaySelect, Form::Blank)
                     ->addRule(
                         Form::Filled,
                         _('You must register to both morning and afternoon group or only the all-day group.')
