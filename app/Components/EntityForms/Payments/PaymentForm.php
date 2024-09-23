@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\SchedulePaymentService;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
@@ -128,7 +127,7 @@ class PaymentForm extends ModelForm
         $this->schedulePaymentService->storeItems(
             (array)$values['event_items'],
             $model,
-            Language::from($this->translator->lang)
+            $this->translator
         );
         return $model;
     }

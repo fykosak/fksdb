@@ -69,7 +69,7 @@ class QuizComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $quizQuestions = new QuizContainer($this->container, $this->task, $this->contestant);
-        $quizQuestions->setOption('label', $this->task->getFullLabel(Language::from($this->translator->lang)));
+        $quizQuestions->setOption('label', $this->task->getFullLabel($this->translator));
         $form->addComponent($quizQuestions, 'quiz_questions');
 
         // show contestant registration form if contestant is null

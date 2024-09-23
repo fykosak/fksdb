@@ -22,10 +22,8 @@ export type ScheduleGroupType =
     | 'vaccination_covid'
     | 'teacher_present'
     | 'weekend'
-    | 'weekend_info'
-    | 'dsef_morning'
-    | 'dsef_afternoon'
-    | 'dsef_all_day'
+    | 'info'
+    | 'excursion'
     | 'apparel'
     | 'transport'
     | 'ticket';
@@ -40,9 +38,7 @@ export interface Params {
 
 export const renderOptions = (type: ScheduleGroupType): Params => {
     switch (type) {
-        case 'dsef_morning':
-        case 'dsef_all_day':
-        case 'dsef_afternoon':
+        case 'excursion':
             return {
                 capacity: true,
                 groupLabel: false,
@@ -74,7 +70,7 @@ export const renderOptions = (type: ScheduleGroupType): Params => {
                 price: true,
                 groupTime: true,
             }
-        case 'weekend_info':
+        case 'info':
         case 'apparel':
             return {
                 capacity: false,
