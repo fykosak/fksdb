@@ -157,21 +157,13 @@ class Router
 
     private static function addShopModule(RouteList $list): void
     {
-        $list->addRoute('', [
-            'module' => 'Shop',
-            'presenter' => 'Home',
-        ]);
+
         $list->addRoute('events<eventId [0-9]+>[/<id [0-9]+>][/<action=default>]', [
             'module' => 'Shop',
             'presenter' => 'Events',
         ]);
-        $list->addRoute('admin/<action=default>', [
+        $list->addRoute('[<presenter=Home>[/<id [0-9]+>][/<action=default>]]', [
             'module' => 'Shop',
-            'presenter' => 'Admin',
-        ]);
-        $list->addRoute('my-orders/<action=default>', [
-            'module' => 'Shop',
-            'presenter' => 'Event',
         ]);
     }
 }

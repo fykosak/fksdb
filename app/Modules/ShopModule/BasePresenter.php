@@ -12,6 +12,7 @@ use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Template;
+use Tracy\Debugger;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -43,7 +44,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     protected function createTemplate(): Template
     {
         $template = parent::createTemplate();
-        $template->payments = $this->getInProgressPayments();
+        $template->inProgressPayments = $this->getInProgressPayments();
         return $template;
     }
 
@@ -67,6 +68,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                 'title' => new Title(null, _('Shop & payments')),
                 'items' => [
                     'Shop:Home:default' => [],
+                    'Shop:MyPayments:default' => [],
                 ],
             ],
         ];

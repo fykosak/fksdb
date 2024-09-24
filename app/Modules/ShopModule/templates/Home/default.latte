@@ -7,7 +7,7 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'On going payments'}</h2>
-            <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="row row-cols-1 row-cols-md-2 g-4 mb-3">
                 {foreach $payments as $payment}
                     {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::CANCELED}
                     {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
@@ -47,12 +47,14 @@
                     </div>
                 {/foreach}
             </div>
+            <a class="btn btn-primary" href="{plink :Shop:MyPayments:default}">{_'All payments'}</a>
         </div>
     </div>
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'Rests for events'}</h2>
             {foreach $rests as $eventId => $eventRests}
+                {continueIf $events[$eventId]->begin < new \DateTime()}
                 <h3>{$events[$eventId]->getName()->getText($lang)}</h3>
                 {foreach $eventRests as $personId => $personRests}
                     <h4>{$persons[$personId]->getFullName()}</h4>
@@ -72,6 +74,7 @@
                                         <div class="col-2">
                                             <small class="text-muted">{_'Payment'}: </small>
                                             {control printer:column '@person_schedule.payment', $personSchedule,1024}
+                                            {control printer:column '@payment.payment', $personSchedule,1024}
                                         </div>
                                 </div>
                             </div>

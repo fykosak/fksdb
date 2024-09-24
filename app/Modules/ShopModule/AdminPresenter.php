@@ -10,6 +10,7 @@ use FKSDB\Components\Payments\PaymentList;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
@@ -20,6 +21,14 @@ use Fykosak\Utils\UI\PageTitle;
 final class AdminPresenter extends BasePresenter
 {
     private ScheduleItemService $scheduleItemService;
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function startup(): void
+    {
+        throw new NotImplementedException();
+    }
 
     public function inject(ScheduleItemService $scheduleItemService): void
     {

@@ -7,6 +7,7 @@
     </div>
 {/block}
 {define info}
+    {varType FKSDB\Models\Authorization\Roles\Events\EventRole[] $roles}
     <div class="panel color-auto">
         <div class="container">
             {switch $lang}
@@ -52,6 +53,12 @@
                     If you need an official invoice, contact us at <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>. Items that are included in the generated payment will be on the invoice. If you want to split the invoice for different items, you must create multiple payments that will contain the desired items.
                 </p>
             {/switch}
+            <p>
+                roles:
+                {foreach $roles as $role}
+                    {$role->badge()}
+                {/foreach}
+            </p>
         </div>
     </div>
 {/define}

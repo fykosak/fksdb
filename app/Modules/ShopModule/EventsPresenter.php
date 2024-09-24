@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ShopModule;
 
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\EntityForms\Payments\PaymentForm;
 use FKSDB\Components\Payments\PaymentQRCode;
+use FKSDB\Components\Payments\SchedulePaymentForm;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -44,6 +44,15 @@ final class EventsPresenter extends BasePresenter
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create payment for events'), 'fas fa-credit-card');
+    }
+
+    /**
+     * @throws NotFoundException
+     * @throws NotImplementedException
+     */
+    public function renderCreate(): void
+    {
+        $this->template->roles = $this->getLoggedPerson()->getEventRoles($this->getEvent());
     }
 
     /**
@@ -90,10 +99,12 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     final public function renderEdit(): void
     {
         $this->template->model = $this->getPayment();
+        $this->template->roles = $this->getLoggedPerson()->getEventRoles($this->getEvent());
     }
 
     /**
@@ -149,9 +160,9 @@ final class EventsPresenter extends BasePresenter
      * @throws NotImplementedException
      * @throws NotFoundException
      */
-    protected function createComponentCreateForm(): PaymentForm
+    protected function createComponentCreateForm(): SchedulePaymentForm
     {
-        return new PaymentForm(
+        return new SchedulePaymentForm(
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),
@@ -165,9 +176,9 @@ final class EventsPresenter extends BasePresenter
      * @throws NotFoundException
      * @throws NotImplementedException
      */
-    protected function createComponentEditForm(): PaymentForm
+    protected function createComponentEditForm(): SchedulePaymentForm
     {
-        return new PaymentForm(
+        return new SchedulePaymentForm(
             $this->getContext(),
             $this->getEvent(),
             $this->getLoggedPerson(),

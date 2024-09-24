@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Components\EntityForms\Payments;
+namespace FKSDB\Components\Payments;
 
 use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\Processing\DefaultTransition;
@@ -32,7 +32,7 @@ use Nette\Forms\Form;
  *      want_invoice:bool,
  *      event_items:array<array<int,bool>>}>
  */
-class PaymentForm extends ModelForm
+class SchedulePaymentForm extends ModelForm
 {
     private bool $isOrganizer;
     private PaymentMachine $machine;

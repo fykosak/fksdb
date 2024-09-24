@@ -1,9 +1,9 @@
 {layout '../../Core/templates/@layout.latte'}
-{varType FKSDB\Models\ORM\Models\PaymentModel[] $payments}
+{varType FKSDB\Models\ORM\Models\PaymentModel[] $inProgressPayments}
 {block nav-right}
-    {foreach $payments as $payment}
+    {foreach $inProgressPayments as $payment}
         <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-{$payment->state->behaviorType()}" href="#" role="button"
+            <a class="nav-link dropdown-toggle" href="#" role="button"
                data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-shopping-cart"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
