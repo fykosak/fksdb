@@ -11,8 +11,7 @@
     <div style="max-width:640px;margin-left:auto;margin-right:auto;text-align:justify;text-justify:inter-word;padding-left:15px;padding-right:15px;line-height:1.4em;box-sizing:border-box">
         <p style="margin-top:1em;margin-bottom:1em">
             Ahoj,
-        </p>
-        <p style="margin-top:1em;margin-bottom:1em">
+            <br/><br/>
             potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci
             <em>{$model->event->getName()->getText('cs')}</em>,
             která se koná
@@ -21,8 +20,7 @@
             {else}
                 {$model->event->begin|date:'j. n. Y'}.
             {/if}
-        </p>
-        <p style="margin-top:1em;margin-bottom:1em">
+            <br/><br/>
             Případné změny lze provádět až do {$model->event->registration_end|date:'j. n. Y, H:i'}
             po <a n:href="//:Core:Authentication:login">přihlášení</a>
         v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
@@ -32,8 +30,7 @@
             'at'=>$token->token,
             'id'=>$model->getPrimary()])}
             <a href="{$link}">{$link}</a>.
-        </p>
-        <p style="margin-top:1em;margin-bottom:1em">
+            <br/><br/>
             S pozdravem<br>
             FKSDB
         </p>
