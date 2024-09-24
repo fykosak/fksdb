@@ -32,9 +32,7 @@ services:
     - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%)
     #auth
     - FKSDB\Models\Authorization\Authorizators\ContestAuthorizator
-    - FKSDB\Models\Authorization\Authorizators\EventAuthorizator
-    - FKSDB\Models\Authorization\Authorizators\BaseAuthorizator
-    - FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator
+    - FKSDB\Models\Authorization\Authorizators\Authorizator
     #DBreflection
     - FKSDB\Models\ORM\MetaDataFactory
     - FKSDB\Models\ORM\ReflectionFactory

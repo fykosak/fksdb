@@ -102,7 +102,7 @@ class EventDetailWebModel extends EventWebModel implements SoapWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
             self::class,
             $this->getEvent()

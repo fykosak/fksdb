@@ -37,7 +37,7 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDelete(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'delete', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'delete', $this->getEvent());
     }
 
     public function titleDelete(): PageTitle
@@ -63,7 +63,7 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
     }
     /**
      * @throws NotFoundException
@@ -98,7 +98,7 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()

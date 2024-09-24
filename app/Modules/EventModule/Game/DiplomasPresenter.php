@@ -27,7 +27,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'diplomas.results',
             $this->getEvent()
@@ -44,7 +44,7 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'diplomas.calculate',
             $this->getEvent()

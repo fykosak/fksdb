@@ -64,7 +64,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'upload',
             $this->getSelectedContestYear()
@@ -111,7 +111,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedQuizDetail(): bool
     {
         $submit = $this->submitService->findByPrimary($this->id);
-        return $this->contestYearAuthorizator->isAllowed($submit, 'download', $this->getSelectedContestYear());
+        return $this->authorizator->isAllowedContestYear($submit, 'download', $this->getSelectedContestYear());
     }
 
     /**
@@ -120,7 +120,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()

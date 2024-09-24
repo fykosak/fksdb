@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -22,22 +22,21 @@ use Nette\Utils\DateTime;
 
 class SubmitHandlerFactory
 {
-
     public CorrectedStorage $correctedStorage;
     public UploadedStorage $uploadedStorage;
     public SubmitService $submitService;
-    public ContestAuthorizator $contestAuthorizator;
+    public Authorizator $authorizator;
 
     public function __construct(
         CorrectedStorage $correctedStorage,
         UploadedStorage $uploadedStorage,
         SubmitService $submitService,
-        ContestAuthorizator $contestAuthorizator
+        Authorizator $authorizator
     ) {
         $this->correctedStorage = $correctedStorage;
         $this->uploadedStorage = $uploadedStorage;
         $this->submitService = $submitService;
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     /**
@@ -136,7 +135,7 @@ class SubmitHandlerFactory
      */
     private function checkPrivilege(SubmitModel $submit, string $privilege): void
     {
-        if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->contestant->contest)) {
+        if (!$this->authorizator->isAllowedContest($submit, $privilege, $submit->contestant->contest)) {
             throw new ForbiddenRequestException(_('Access denied'));
         }
     }

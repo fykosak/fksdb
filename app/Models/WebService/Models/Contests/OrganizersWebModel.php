@@ -70,7 +70,7 @@ class OrganizersWebModel extends ContestWebModel implements SoapWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(RestApiPresenter::RESOURCE_ID, $this->getContest()),
             self::class,
             $this->getContest()

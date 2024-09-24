@@ -39,7 +39,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedImport(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
             'insert',
             $this->getSelectedContest()
@@ -57,7 +57,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedDispatch(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'dispatch',
             $this->getSelectedContestYear()
@@ -75,7 +75,7 @@ final class TasksPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()

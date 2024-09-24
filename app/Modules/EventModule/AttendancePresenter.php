@@ -47,7 +47,7 @@ final class AttendancePresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModel(), 'attendance', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getModel(), 'attendance', $this->getEvent());
     }
 
     /**
@@ -91,13 +91,13 @@ final class AttendancePresenter extends BasePresenter
     public function authorizedSearch(): bool
     {
         if ($this->getEvent()->isTeamEvent()) {
-            return $this->eventAuthorizator->isAllowed(
+            return $this->authorizator->isAllowedEvent(
                 new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );
         } else {
-            return $this->eventAuthorizator->isAllowed(
+            return $this->authorizator->isAllowedEvent(
                 new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()

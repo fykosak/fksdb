@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Resource\PseudoContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -15,13 +15,12 @@ class AclResolver implements Resolver
 {
     use SmartObject;
 
-    private ContestAuthorizator $contestAuthorizator;
-
+    private Authorizator $authorizator;
     private ContestModel $contest;
 
-    public function __construct(ContestAuthorizator $contestAuthorizator, ContestModel $contest)
+    public function __construct(Authorizator $authorizator, ContestModel $contest)
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
         $this->contest = $contest;
     }
 
@@ -46,7 +45,7 @@ class AclResolver implements Resolver
 
     private function isAllowed(PersonModel $person, ?string $privilege): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($person, $this->contest),
             $privilege,
             $this->contest

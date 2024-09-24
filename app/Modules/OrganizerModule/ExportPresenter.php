@@ -46,7 +46,7 @@ final class ExportPresenter extends BasePresenter
      */
     public function authorizedExecute(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($this->getStoredQuery()->queryPattern, $this->getSelectedContest()),
             'execute',
             $this->getSelectedContest()

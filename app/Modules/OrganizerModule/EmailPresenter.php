@@ -59,7 +59,7 @@ final class EmailPresenter extends BasePresenter
         /** @var ContestModel $contest */
         foreach ($this->contestService->getTable() as $contest) {
             $authorized = $authorized
-                && $this->contestAuthorizator->isAllowed(
+                && $this->authorizator->isAllowedContest(
                     $this->getORMService()->getModelClassName()::RESOURCE_ID,
                     'detail',
                     $contest
@@ -93,7 +93,7 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedTemplate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
@@ -121,7 +121,7 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()

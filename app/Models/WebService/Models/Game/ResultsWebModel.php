@@ -78,7 +78,7 @@ class ResultsWebModel extends EventWebModel
     protected function isAuthorized(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $event),
             self::class,
             $event

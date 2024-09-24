@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -20,7 +20,7 @@ class SelfACLResolver implements Resolver
     private ContestModel $contest;
     private User $user;
 
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
 
     public function __construct(
         ContestResource $resource,
@@ -34,9 +34,9 @@ class SelfACLResolver implements Resolver
         $container->callInjects($this);
     }
 
-    public function inject(ContestAuthorizator $contestAuthorizator, User $user): void
+    public function inject(Authorizator $authorizator, User $user): void
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
         $this->user = $user;
     }
 
@@ -47,7 +47,7 @@ class SelfACLResolver implements Resolver
             return false;
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
             || $this->isSelf($person)
         ) {
             return true;
@@ -62,7 +62,7 @@ class SelfACLResolver implements Resolver
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
             || $this->isSelf($person)
         ) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
@@ -76,7 +76,7 @@ class SelfACLResolver implements Resolver
             return false;
         }
         if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
+            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
             || $this->isSelf($person)
         ) {
             return true;

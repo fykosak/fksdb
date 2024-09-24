@@ -37,7 +37,7 @@ final class StoredQueryPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
             'edit',
             $this->getSelectedContest()
@@ -58,7 +58,7 @@ final class StoredQueryPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
@@ -74,7 +74,7 @@ final class StoredQueryPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
@@ -92,7 +92,7 @@ final class StoredQueryPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
             'detail',
             $this->getSelectedContest()

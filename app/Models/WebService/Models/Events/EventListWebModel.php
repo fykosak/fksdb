@@ -52,7 +52,7 @@ class EventListWebModel extends WebModel implements SoapWebModel
         /** @var EventModel $event */
         foreach ($query as $event) {
             if (
-                $this->eventAuthorizator->isAllowed(
+                $this->authorizator->isAllowedEvent(
                     new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $event),
                     self::class,
                     $event

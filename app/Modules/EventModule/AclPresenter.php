@@ -15,7 +15,7 @@ final class AclPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'acl', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEvent(), 'acl', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle

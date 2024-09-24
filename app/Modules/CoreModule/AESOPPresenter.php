@@ -30,7 +30,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     public function authorizedContestant(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()
@@ -49,7 +49,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
      */
     public function authorizedEvent(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()

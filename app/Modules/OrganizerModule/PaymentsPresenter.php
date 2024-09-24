@@ -38,7 +38,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     public function authorizedDashboard(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(PaymentModel::RESOURCE_ID, $this->getSelectedContest()),
             'dashboard',
             $this->getSelectedContest()
@@ -93,7 +93,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(PaymentModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()

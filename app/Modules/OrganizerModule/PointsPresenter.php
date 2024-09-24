@@ -42,7 +42,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedEntry(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
             'points',
             $this->getSelectedContest()
@@ -59,7 +59,7 @@ final class PointsPresenter extends BasePresenter
      */
     public function authorizedPreview(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
             'points',
             $this->getSelectedContest()

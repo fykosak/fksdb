@@ -71,7 +71,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
@@ -92,7 +92,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
     }
     /**
      * @throws EventNotFoundException
@@ -104,7 +104,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function renderDetail(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
+        $this->template->isOrganizer = $this->authorizator->isAllowedEvent(
             $this->getEntity(),
             'organizer',
             $this->getEvent()
@@ -160,7 +160,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
     }
 
     /**
@@ -197,7 +197,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedImport(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'import',
             $this->getEvent()
@@ -219,7 +219,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -231,7 +231,7 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'organizer',
             $this->getEvent()

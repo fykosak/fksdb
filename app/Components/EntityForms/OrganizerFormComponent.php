@@ -6,7 +6,7 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -37,7 +37,7 @@ class OrganizerFormComponent extends ModelForm
 
     public const CONTAINER = 'container';
     private ContestYearModel $contestYear;
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
     private OrganizerService $service;
 
     public function __construct(Container $container, ContestYearModel $contestYear, ?OrganizerModel $model)
@@ -48,10 +48,10 @@ class OrganizerFormComponent extends ModelForm
 
     final public function injectPrimary(
         OrganizerService $service,
-        ContestAuthorizator $contestAuthorizator
+        Authorizator $contestAuthorizator
     ): void {
         $this->service = $service;
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $contestAuthorizator;
     }
 
     /**
@@ -65,7 +65,7 @@ class OrganizerFormComponent extends ModelForm
         $referencedId = $this->createPersonId(
             $this->contestYear,
             !isset($this->model),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            new AclResolver($this->authorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminOrganizer']
         );
         $container->addComponent($referencedId, 'person_id', 'since');

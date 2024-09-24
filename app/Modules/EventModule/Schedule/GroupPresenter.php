@@ -38,7 +38,7 @@ final class GroupPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
     }
     /**
      * @throws EventNotFoundException
@@ -79,7 +79,7 @@ final class GroupPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
     }
     /**
      * @throws EventNotFoundException
@@ -103,7 +103,7 @@ final class GroupPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(ScheduleGroupModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()

@@ -24,7 +24,7 @@ final class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(TaskModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()

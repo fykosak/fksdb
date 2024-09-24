@@ -26,7 +26,7 @@ final class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'dashboard', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEvent(), 'dashboard', $this->getEvent());
     }
 
     /**
@@ -34,7 +34,7 @@ final class DashboardPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
+        $this->template->isOrganizer = $this->authorizator->isAllowedEvent(
             $this->getEvent(),
             'edit',
             $this->getEvent()

@@ -15,7 +15,7 @@ final class HowToPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'howTo',
             $this->getEvent()

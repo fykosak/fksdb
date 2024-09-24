@@ -38,14 +38,14 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
             'organizer',
             $event
         )
             || (
                 $this->isPaymentAllowed() &&
-                $this->eventAuthorizator->isAllowed(
+                $this->authorizator->isAllowedEvent(
                     new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
                     'create',
                     $event
@@ -65,7 +65,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource($this->getEntity(), $this->getEvent()),
             'Detail',
             $this->getEvent()
@@ -113,14 +113,14 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource($this->getEntity(), $this->getEvent()),
             'organizer',
             $event
         )
             || (
                 $this->isPaymentAllowed()
-                && $this->eventAuthorizator->isAllowed(
+                && $this->authorizator->isAllowedEvent(
                     new PseudoEventResource($this->getEntity(), $this->getEvent()),
                     'edit',
                     $event
@@ -157,7 +157,7 @@ final class PaymentsPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(PaymentModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -233,7 +233,7 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->eventAuthorizator->isAllowed(
+            $this->authorizator->isAllowedEvent(
                 new PseudoEventResource(PaymentModel::RESOURCE_ID, $this->getEvent()),
                 'organizer',
                 $this->getEvent()
@@ -255,7 +255,7 @@ final class PaymentsPresenter extends BasePresenter
             $this->getContext(),
             [$this->getEvent()],
             $this->getLoggedPerson(),
-            $this->eventAuthorizator->isAllowed(
+            $this->authorizator->isAllowedEvent(
                 new PseudoEventResource($this->getEntity(), $this->getEvent()),
                 'organizer',
                 $this->getEvent()

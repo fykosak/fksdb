@@ -47,7 +47,7 @@ final class DeduplicatePresenter extends BasePresenter
      */
     public function authorizedPerson(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
@@ -81,13 +81,13 @@ final class DeduplicatePresenter extends BasePresenter
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($this->trunkPerson, $this->getSelectedContest()),
             'merge',
             $this->getSelectedContest()
         )
             &&
-            $this->contestAuthorizator->isAllowed(
+            $this->authorizator->isAllowedContest(
                 new PseudoContestResource($this->mergedPerson, $this->getSelectedContest()),
                 'merge',
                 $this->getSelectedContest()

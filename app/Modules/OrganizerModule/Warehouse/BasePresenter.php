@@ -16,7 +16,7 @@ abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresente
      */
     protected function isAllowed(ContestResource $resource, ?string $privilege): bool
     {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest($resource, $privilege, $this->getSelectedContest());
     }
 
     protected function getNavRoots(): array

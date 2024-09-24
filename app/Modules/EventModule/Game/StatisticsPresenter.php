@@ -31,7 +31,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedCorrelation(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'statistics.correlation',
             $this->getEvent()
@@ -48,7 +48,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'statistics.team',
             $this->getEvent()
@@ -65,7 +65,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTask(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'statistics.task',
             $this->getEvent()
@@ -82,7 +82,7 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTable(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'statistics.table',
             $this->getEvent()

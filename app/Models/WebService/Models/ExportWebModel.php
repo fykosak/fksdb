@@ -102,7 +102,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
         $contest = $this->contestService->findByPrimary(
             (int)$query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST]
         );
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource($query->queryPattern, $contest),
             'execute',
             $contest

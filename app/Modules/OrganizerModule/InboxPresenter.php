@@ -42,7 +42,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedInbox(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()
@@ -59,7 +59,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
@@ -76,7 +76,7 @@ final class InboxPresenter extends BasePresenter
      */
     public function authorizedCorrected(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             'corrected',
             $this->getSelectedContest()

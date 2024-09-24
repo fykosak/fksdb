@@ -26,7 +26,7 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'event.chart', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEvent(), 'event.chart', $this->getEvent());
     }
 
     /**

@@ -45,7 +45,7 @@ final class ContestantPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             $this->getEntity(),
             'edit',
             $this->getSelectedContestYear()
@@ -78,7 +78,7 @@ final class ContestantPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             $this->getEntity(),
             'detail',
             $this->getSelectedContestYear()
@@ -120,7 +120,7 @@ final class ContestantPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'create',
             $this->getSelectedContestYear()
@@ -137,7 +137,7 @@ final class ContestantPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()

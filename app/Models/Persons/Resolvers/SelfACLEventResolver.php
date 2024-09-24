@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -20,7 +20,7 @@ class SelfACLEventResolver implements Resolver
     private EventModel $event;
     private User $user;
 
-    private EventAuthorizator $eventAuthorizator;
+    private Authorizator $authorizator;
 
     public function __construct(EventResource $resource, string $privilege, EventModel $event, Container $container)
     {
@@ -30,9 +30,9 @@ class SelfACLEventResolver implements Resolver
         $container->callInjects($this);
     }
 
-    public function inject(EventAuthorizator $eventAuthorizator, User $user): void
+    public function inject(Authorizator $authorizator, User $user): void
     {
-        $this->eventAuthorizator = $eventAuthorizator;
+        $this->authorizator = $authorizator;
         $this->user = $user;
     }
 
@@ -43,7 +43,7 @@ class SelfACLEventResolver implements Resolver
             return false;
         }
         if (
-            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return true;
@@ -58,7 +58,7 @@ class SelfACLEventResolver implements Resolver
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
-            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
@@ -72,7 +72,7 @@ class SelfACLEventResolver implements Resolver
             return false;
         }
         if (
-            $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
             || $this->isSelf($person)
         ) {
             return true;

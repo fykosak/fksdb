@@ -30,7 +30,7 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getSelectedContest(), 'chart', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest($this->getSelectedContest(), 'chart', $this->getSelectedContest());
     }
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -21,7 +21,7 @@ use Nette\DI\Container;
  */
 class EventRole implements Statement
 {
-    protected EventAuthorizator $eventAuthorizator;
+    protected Authorizator $authorizator;
     protected ?string $privilege;
 
     public function __construct(string $privilege, Container $container)
@@ -30,9 +30,9 @@ class EventRole implements Statement
         $this->privilege = $privilege;
     }
 
-    public function inject(EventAuthorizator $eventAuthorizator): void
+    public function inject(Authorizator $authorizator): void
     {
-        $this->eventAuthorizator = $eventAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     /**
@@ -44,6 +44,6 @@ class EventRole implements Statement
         [$holder] = $args;
         /** @var EventModel $event */
         $event = $holder->getModel()->getReferencedModel(EventModel::class);
-        return $this->eventAuthorizator->isAllowed($holder->getModel(), $this->privilege, $event);
+        return $this->authorizator->isAllowedEvent($holder->getModel(), $this->privilege, $event);
     }
 }

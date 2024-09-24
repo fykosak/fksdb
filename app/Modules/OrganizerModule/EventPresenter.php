@@ -34,7 +34,7 @@ final class EventPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(EventModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
@@ -50,7 +50,7 @@ final class EventPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(EventModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
@@ -71,7 +71,7 @@ final class EventPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             $this->getEntity(),
             'edit',
             $this->getSelectedContest()

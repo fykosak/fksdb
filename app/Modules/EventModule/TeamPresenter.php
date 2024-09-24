@@ -76,7 +76,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
@@ -97,7 +97,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             $this->getEntity(),
             'detail',
             $this->getEvent()
@@ -160,7 +160,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedOrgDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             $this->getEntity(),
             'organizerDetail',
             $this->getEvent()
@@ -203,7 +203,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDetailedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -224,7 +224,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             $this->getEntity(),
             'edit',
             $this->getEvent()
@@ -248,7 +248,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -265,7 +265,7 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'mass',
             $this->getEvent()

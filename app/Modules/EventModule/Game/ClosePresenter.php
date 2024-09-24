@@ -31,7 +31,7 @@ final class ClosePresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'close',
             $this->getEvent()
@@ -64,7 +64,7 @@ final class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource('game', $this->getEvent()),
             'close',
             $this->getEvent()

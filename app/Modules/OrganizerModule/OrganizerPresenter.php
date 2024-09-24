@@ -38,7 +38,7 @@ final class OrganizerPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             $this->getEntity(),
             'edit',
             $this->getSelectedContest()
@@ -68,7 +68,7 @@ final class OrganizerPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             $this->getEntity(),
             'detail',
             $this->getSelectedContest()
@@ -95,7 +95,7 @@ final class OrganizerPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
@@ -111,7 +111,7 @@ final class OrganizerPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContest(
             new PseudoContestResource(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()

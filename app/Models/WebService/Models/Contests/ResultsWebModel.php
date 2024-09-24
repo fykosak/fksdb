@@ -96,7 +96,7 @@ class ResultsWebModel extends ContestYearWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedContestYear(
             new PseudoContestYearResource(RestApiPresenter::RESOURCE_ID, $this->getContestYear()),
             self::class,
             $this->getContestYear()

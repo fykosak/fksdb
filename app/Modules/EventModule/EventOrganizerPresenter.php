@@ -29,7 +29,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -45,7 +45,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
@@ -65,7 +65,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
     }
     /**
      * @throws EventNotFoundException
@@ -93,7 +93,7 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedDelete(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'delete', $this->getEvent());
+        return $this->authorizator->isAllowedEvent($this->getEntity(), 'delete', $this->getEvent());
     }
 
     public function titleDelete(): PageTitle

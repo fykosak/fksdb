@@ -28,7 +28,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
@@ -44,7 +44,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
@@ -64,7 +64,7 @@ final class SubmitPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
+        return $this->authorizator->isAllowedEvent(
             $this->getEntity(),
             'create',
             $this->getEvent()
