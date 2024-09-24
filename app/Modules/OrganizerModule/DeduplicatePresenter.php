@@ -82,10 +82,10 @@ final class DeduplicatePresenter extends BasePresenter
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
         return $this->contestAuthorizator->isAllowed(
-                new PseudoContestResource($this->trunkPerson, $this->getSelectedContest()),
-                'merge',
-                $this->getSelectedContest()
-            )
+            new PseudoContestResource($this->trunkPerson, $this->getSelectedContest()),
+            'merge',
+            $this->getSelectedContest()
+        )
             &&
             $this->contestAuthorizator->isAllowed(
                 new PseudoContestResource($this->mergedPerson, $this->getSelectedContest()),
