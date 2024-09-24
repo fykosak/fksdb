@@ -5,12 +5,13 @@
 {define subject}Registrace na DSEF – {$model->person->getFullName()}{/define}
 
 <p>
-    Potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci <em>{$model->event}</em>,
+    Potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci
+    <em>{$model->event->getName()->getText('cs')}</em>,
     která se koná
     {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
-        {$model->event->begin|date:'j. n. Y'}–{$model->event->end|date:'j. n. Y'}.
+    {$model->event->begin|date:'j. n. Y'} – {$model->event->end|date:'j. n. Y'}.
     {else}
-        {$model->event->begin|date:'j. n. Y'}.
+    {$model->event->begin|date:'j. n. Y'}.
     {/if}
 </p>
 
@@ -18,7 +19,7 @@
     Případné změny lze provádět až do {$model->event->registration_end|date:'j. n. Y, H:i'}
     po <a n:href="//:Core:Authentication:login">přihlášení</a>
     v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
-    nebo využitím soukromého odkazu níže:<br/>
+    nebo využitím soukromého odkazu níže:<br />
     {var string $link = $control->link('//:Event:Application:edit',
     ['eventId'=> $model->event->event_id,
     'at'=>$token->token,
@@ -27,6 +28,6 @@
 </p>
 
 <p>
-    S pozdravem,<br/>
+    S pozdravem,<br />
     FKSDB
 </p>
