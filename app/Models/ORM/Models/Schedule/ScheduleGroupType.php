@@ -136,6 +136,8 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return _('Accommodation gender');
             case self::AccommodationTeacher:
                 return _('Accommodation teacher');
+            case self::Food:
+                return _('Food');
             case self::TeacherPresent:
                 return _('Schedule during competition');
             case self::Visa:
