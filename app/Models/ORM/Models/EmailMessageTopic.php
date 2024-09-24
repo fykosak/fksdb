@@ -109,15 +109,15 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
         return false;
     }
 
-    public function mapToPreference(): ?PersonEmailPreferenceOption
+    public function mapToPreference(): ?PersonCorrespondencePreferenceOption
     {
         switch ($this->value) {
             case self::SpamContest:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamContest);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamContest);
             case self::SpamMff:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamMff);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamMff);
             case self::SpamOther:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamOther);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamOther);
         }
         return null;
     }

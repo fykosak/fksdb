@@ -475,12 +475,12 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
-     * @return TypedGroupedSelection<PersonEmailPreferenceModel>
+     * @return TypedGroupedSelection<PersonCorrespondencePreferenceModel>
      */
-    public function getEmailPreferences(): TypedGroupedSelection
+    public function getCorrespondencePreference(): TypedGroupedSelection
     {
-        /** @phpstan-var TypedGroupedSelection<PersonEmailPreferenceModel> $selection */
-        $selection = $this->related(DbNames::TAB_PERSON_EMAIL_PREFERENCE, 'person_id');
+        /** @phpstan-var TypedGroupedSelection<PersonCorrespondencePreferenceModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_CORRESPONDENCE_PREFERENCE, 'person_id');
         return $selection;
     }
 
