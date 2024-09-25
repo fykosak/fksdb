@@ -40,7 +40,7 @@ final class PersonCorrespondencePreferenceOption extends FakeStringEnum implemen
             case self::SpamOther:
                 return _('Other related events');
             case self::SpamPost:
-                return _('Post letters');
+                return _('Postal mail');
         }
         throw new InvalidStateException();
     }
@@ -68,8 +68,8 @@ final class PersonCorrespondencePreferenceOption extends FakeStringEnum implemen
                 ]);
             case self::SpamPost:
                 return new LocalizedString([
-                    'cs' => '',
-                    'en' => '',
+                    'cs' => 'Letáčky a další materiály zasílané fyzicky poštou',
+                    'en' => 'Posters and other materials sent by post'
                 ]);
         }
         throw new InvalidStateException();
