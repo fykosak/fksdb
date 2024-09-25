@@ -961,6 +961,10 @@ orm:
         service: FKSDB\Models\ORM\Services\Schedule\PersonScheduleService
         model: FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel
         columns:
+            payment:
+                type: class
+                title: _('Payment')
+                class: FKSDB\Models\ORM\Columns\Tables\Schedule\PersonSchedule\PaymentColumnFactory
             state:
                 type: enum
                 title: _('State')

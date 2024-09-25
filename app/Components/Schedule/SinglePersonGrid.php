@@ -54,7 +54,7 @@ final class SinglePersonGrid extends BaseGrid
             '@schedule_item.name',
             '@schedule_item.price_czk',
             '@schedule_item.price_eur',
-            '@payment.payment',
+            '@person_schedule.payment',
         ]);
     }
 }
