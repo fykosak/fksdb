@@ -44,7 +44,7 @@ transitions:
             # apply
             invited|invited1|invited2->applied:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
-                label: _('Potrvrdit učast')
+                label: _('Potvrdit účast')
                 afterExecute:
                     - FKSDB\Models\Email\Source\Tabor\AppliedEmail()
                     - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()

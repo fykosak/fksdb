@@ -22,6 +22,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -32,7 +33,12 @@ use Nette\InvalidArgumentException;
 /**
  * @phpstan-extends ReferencedContainer<PersonModel>
  * @phpstan-import-type TMeta from ScheduleContainer
- * @phpstan-type EvaluatedFieldMetaData array{required?:bool,caption?:string|null,description?:string|null}
+ * @phpstan-type EvaluatedFieldMetaData array{
+ *     required?:bool,
+ *     caption?:string|null,
+ *     description?:string|null,
+ *     reason?:LocalizedString<'cs'|'en'>
+ * }
  * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>> & array{
  * person_schedule?:array<string,TMeta>
  * }
@@ -182,7 +188,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
                     } elseif ($component instanceof ScheduleContainer) {
-                        $component->setModel($model);
+                        $component->setPerson($model);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
@@ -269,9 +275,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                         $control->caption = $value;
                     }
                     break;
-                case 'description':
+                default:
                     if ($value) {
-                        $control->setOption('description', $value);
+                        $control->setOption($key, $value);
                     }
             }
         }

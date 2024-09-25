@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\ORM\Tests\ContestYear\ContestYearToContestantsAdapter;
 use FKSDB\Models\ORM\Tests\School\SchoolsProviderAdapter;
 use FKSDB\Models\ORM\Tests\School\VerifiedSchoolTest;
-use FKSDB\Modules\Core\Language;
 use Nette\DI\Container;
 
 try {

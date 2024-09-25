@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
@@ -130,7 +129,7 @@ class AjaxSubmitComponent extends AjaxComponent
                 new Message(
                     \sprintf(
                         _('Uploading of task %s cancelled.'),
-                        $submit->task->getFullLabel(Language::from($this->translator->lang))
+                        $submit->task->getFullLabel($this->translator)
                     ),
                     Message::LVL_ERROR
                 )
