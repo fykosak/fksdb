@@ -6,7 +6,7 @@
         <table class="table table-striped">
             <tbody>
             {foreach $email as $key=>$value}
-                {continueIf $key === 'text'}
+                {continueIf $key === 'inner_text'}
                 <tr>
                     <th>{$key}</th>
                     <td>{$value}</td>
@@ -18,7 +18,7 @@
             <iframe
                     class="embed-responsive-item w-100"
                     style="min-height: 30rem"
-                    srcdoc="{$email['text']}"
+                    srcdoc="{$email['inner_text']}"
             ></iframe>
         </div>
         <hr/>

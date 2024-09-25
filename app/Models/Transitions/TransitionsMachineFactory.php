@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EmailMachine;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
@@ -55,6 +56,12 @@ class TransitionsMachineFactory
     {
         return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
     }
+
+    public function getEmailMachine(): EmailMachine
+    {
+        return $this->container->getService('transitions.email.machine'); //@phpstan-ignore-line
+    }
+
 
     public function getPaymentFactoryName(): ?string
     {

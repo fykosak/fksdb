@@ -41,7 +41,7 @@ class IsBannedFromContestYear extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Detect contestants, who are banned from event.'));
+        return new Title(null, _('Detect contestants banned from a contest year'));
     }
 
     public function getId(): string
