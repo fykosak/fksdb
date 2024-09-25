@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-21 14:46+0200\n"
+"POT-Creation-Date: 2024-09-25 21:31+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -693,7 +693,7 @@ msgid ""
 "link is active for 20 minutes."
 msgstr ""
 
-#: ../app/Components/Controls/Person/Edit/EmailPreferenceForm.php:66
+#: ../app/Components/Controls/Person/Edit/EmailPreferenceForm.php:65
 msgid "Preferences saved"
 msgstr ""
 
@@ -3200,19 +3200,24 @@ msgstr "Nová platba"
 msgid "Payment canceled"
 msgstr "Nová platba"
 
-#: ../app/Models/ORM/Models/PersonEmailPreferenceOption.php:37
+#: ../app/Models/ORM/Models/PersonCorrespondencePreferenceOption.php:37
 #, fuzzy
 msgid "Our events"
 msgstr "Uprava platby #%s"
 
-#: ../app/Models/ORM/Models/PersonEmailPreferenceOption.php:39
+#: ../app/Models/ORM/Models/PersonCorrespondencePreferenceOption.php:39
 #, fuzzy
 msgid "Events of MFF CUNI"
 msgstr "Zvoliť typ"
 
-#: ../app/Models/ORM/Models/PersonEmailPreferenceOption.php:41
+#: ../app/Models/ORM/Models/PersonCorrespondencePreferenceOption.php:41
 msgid "Other related events"
 msgstr ""
+
+#: ../app/Models/ORM/Models/PersonCorrespondencePreferenceOption.php:43
+#, fuzzy
+msgid "Postal mail"
+msgstr "Zvoliť typ"
 
 #: ../app/Models/ORM/Models/PersonGender.php:45
 #: ../app/Models/ORM/Models/Warehouse/ItemState.php:51
@@ -6292,15 +6297,18 @@ msgid "Pozvat náhradníka"
 msgstr "Prihlásiť"
 
 #: ../app/config/transitions/sous.neon.neon2php:20
+#: ../app/config/transitions/sous.neon.neon2php:37
 #: ../app/config/transitions/tabor.neon.neon2php:47
 #: ../data/events/soustredeni/sous37j.neon.neon2php:61
+#: ../data/events/soustredeni/sous37j.neon.neon2php:112
 #: ../data/events/tabor/tabor1-6.neon.neon2php:87
 #: ../data/events/tabor/tabor10.neon.neon2php:41
 #: ../data/events/tabor/tabor12.neon.neon2php:101
 #: ../data/events/tabor/tabor7.neon.neon2php:44
 #: ../data/events/tabor/tabor8.neon.neon2php:41
 #: ../data/events/tabor/tabor9.neon.neon2php:42
-msgid "Potrvrdit učast"
+#: ../data/events/tsaf/tsaf8.neon.neon2php:76
+msgid "Potvrdit účast"
 msgstr ""
 
 #: ../app/config/transitions/sous.neon.neon2php:23
@@ -6335,12 +6343,6 @@ msgstr ""
 #: ../data/events/tabor/tabor9.neon.neon2php:59
 #: ../data/events/tsaf/tsaf8.neon.neon2php:89
 msgid "Odmítnout účast"
-msgstr ""
-
-#: ../app/config/transitions/sous.neon.neon2php:37
-#: ../data/events/soustredeni/sous37j.neon.neon2php:112
-#: ../data/events/tsaf/tsaf8.neon.neon2php:76
-msgid "Potvrdit účast"
 msgstr ""
 
 #: ../app/config/transitions/sous.neon.neon2php:43

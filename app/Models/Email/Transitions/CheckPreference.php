@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Transitions;
 
-use FKSDB\Models\ORM\Models\PersonEmailPreferenceModel;
+use FKSDB\Models\ORM\Models\PersonCorrespondencePreferenceModel;
 use FKSDB\Models\ORM\Services\Exceptions\RejectedEmailException;
 use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use FKSDB\Models\Transitions\Holder\EmailHolder;
@@ -35,8 +35,8 @@ final class CheckPreference implements Statement
         if (isset($model->recipient_person_id)) {
             $preferenceType = $model->topic->mapToPreference();
             if ($preferenceType) {
-                /** @var PersonEmailPreferenceModel|null $preference */
-                $preference = $model->person->getEmailPreferences()->where('option', $preferenceType)->fetch();
+                /** @var PersonCorrespondencePreferenceModel|null $preference */
+                $preference = $model->person->getCorrespondencePreference()->where('option', $preferenceType)->fetch();
                 if ($preference && !$preference->value) {
                     throw new RejectedEmailException();
                 }

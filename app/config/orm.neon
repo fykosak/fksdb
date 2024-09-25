@@ -95,9 +95,9 @@ orm:
             sent:
                 type: dateTime
                 title: _('Sent')
-    person_email_preference:
-        model: FKSDB\Models\ORM\Models\PersonEmailPreferenceModel
-        service: FKSDB\Models\ORM\Services\PersonEmailPreferenceService
+    person_correspondence_preference:
+        model: FKSDB\Models\ORM\Models\PersonCorrespondencePreferenceModel
+        service: FKSDB\Models\ORM\Services\PersonCorrespondencePreferenceService
     event:
         service: FKSDB\Models\ORM\Services\EventService
         model: FKSDB\Models\ORM\Models\EventModel

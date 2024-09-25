@@ -1377,15 +1377,20 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 -- Table `email_preference`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `person_email_preference`
+CREATE TABLE IF NOT EXISTS `person_correspondence_preference`
 (
-    `person_email_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_correspondence_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `person_id`                  INT UNSIGNED                                  NOT NULL,
-    `option`                     ENUM ('spam_contest','spam_mff','spam_other') NOT NULL,
+    `option`                     ENUM (
+        'spam_contest',
+        'spam_mff',
+        'spam_other',
+        'spam_post' # hack pre poštový spam
+        ) NOT NULL,
     `value`                      BOOL                                          NOT NULL,
     `created`                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY `uq__email_preference__option` (`person_id`, `option`),
-    CONSTRAINT `fk__email_preference__person`
+    UNIQUE KEY `uq__person_correspondence_preference__option` (`person_id`, `option`),
+    CONSTRAINT `fk__person_correspondence_preference__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON UPDATE NO ACTION

@@ -17,7 +17,7 @@ transitions:
              # participant decides
             invited->applied:
                 condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
-                label: _('Potrvrdit učast')
+                label: _('Potvrdit účast')
             spare->interested:
                 condition: FKSDB\Models\Events\Semantics\RegOpen()
                 label: _('Chci jet')
