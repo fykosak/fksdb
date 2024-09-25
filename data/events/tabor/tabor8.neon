@@ -38,7 +38,7 @@ events:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/spare)
                     invited->applied:
                         condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
-                        label: _('Potrvrdit učast')
+                        label: _('Potvrdit účast')
                         afterExecute:
                             - FKSDB\Models\Events\Transitions\MailSender(tabor/confirm-applied)
                     spare->interested:

@@ -1,0 +1,5 @@
+{layout './@layout.latte'}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{block footer}
+    Pokud již nechcete dostávat podobné e-maily, klikněte <a href="{plink '//:Profile:Email:default' 'at'=>$token->token}">zde</a>.
+{/block}
