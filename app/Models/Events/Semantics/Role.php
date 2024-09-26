@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Semantics;
 
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Statement;
 
@@ -35,7 +36,7 @@ class Role implements Statement
         switch ($this->role) {
             case self::ADMIN:
                 return $this->authorizator->isAllowedEvent(
-                    $holder->getModel(),
+                    EventResourceHolder::fromOwnResource($holder->getModel()),
                     'organizer',
                     $holder->getModel()->event
                 );

@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Inbox\PointsForm\PointsFormComponent;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\{TaskContributionType, TaskModel};
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -43,7 +43,7 @@ final class PointsPresenter extends BasePresenter
     public function authorizedEntry(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
             'points',
             $this->getSelectedContest()
         );
@@ -60,7 +60,7 @@ final class PointsPresenter extends BasePresenter
     public function authorizedPreview(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
             'points',
             $this->getSelectedContest()
         );

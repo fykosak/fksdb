@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Email\Source\Sous\ReminderEmailSource;
 use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
@@ -94,7 +94,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedTemplate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
         );
@@ -122,7 +122,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
         );

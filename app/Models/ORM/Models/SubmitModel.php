@@ -22,7 +22,7 @@ use Nette\Utils\DateTime;
  * @property-read float|null $calc_points
  * @property-read int $corrected FUCK MARIADB
  */
-final class SubmitModel extends Model implements ContestYearResource, ContestResource
+final class SubmitModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'submit';
 

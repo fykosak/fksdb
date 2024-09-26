@@ -88,14 +88,4 @@ final class SubmitModel extends Model implements EventResource
     {
         return $this->fyziklani_team->event;
     }
-
-    public function getContest(): ContestModel
-    {
-        return $this->getContestYear()->contest;
-    }
-
-    public function getContestYear(): ContestYearModel
-    {
-        return $this->getEvent()->getContestYear();
-    }
 }

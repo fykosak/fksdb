@@ -16,7 +16,8 @@ class NotDisqualified implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {
-        $application = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $application = $holder->getResource();
         if ($application instanceof TeamModel2) {
             return $application->state->value !== TeamState::Disqualified;
         }

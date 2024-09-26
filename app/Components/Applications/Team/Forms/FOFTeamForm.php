@@ -12,7 +12,8 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -80,7 +81,9 @@ class FOFTeamForm extends TeamForm
                 'email',
                 true,
                 new SelfACLEventResolver(
-                    $this->model ?? new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->event),
+                    $this->model
+                        ? EventResourceHolder::fromOwnResource($this->model)
+                        : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
                     'organizer',
                     $this->event,
                     $this->container

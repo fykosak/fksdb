@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TeacherModel;
@@ -36,7 +36,7 @@ final class TeacherPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'edit',
             $this->getSelectedContest()
         );
@@ -60,7 +60,7 @@ final class TeacherPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -76,7 +76,7 @@ final class TeacherPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -94,7 +94,7 @@ final class TeacherPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail',
             $this->getSelectedContest()
         );

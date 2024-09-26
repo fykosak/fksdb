@@ -14,7 +14,7 @@ use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -72,7 +72,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -92,7 +92,11 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
     }
     /**
      * @throws EventNotFoundException
@@ -105,7 +109,7 @@ final class ApplicationPresenter extends BasePresenter
     public function renderDetail(): void
     {
         $this->template->isOrganizer = $this->authorizator->isAllowedEvent(
-            $this->getEntity(),
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'organizer',
             $this->getEvent()
         );
@@ -160,7 +164,11 @@ final class ApplicationPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -198,7 +206,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedImport(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'import',
             $this->getEvent()
         );
@@ -220,7 +228,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -232,7 +240,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedMass(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'organizer',
             $this->getEvent()
         );
@@ -376,13 +384,5 @@ final class ApplicationPresenter extends BasePresenter
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
         return new SinglePersonGrid($this->getContext(), $this->getEntity()->person, $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function getModelResource(): PseudoEventResource
-    {
-        return new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent());
     }
 }

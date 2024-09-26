@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
-use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -15,14 +15,14 @@ use Nette\Security\User;
 
 class SelfACLEventResolver implements Resolver
 {
-    private EventResource $resource;
+    private EventResourceHolder $resource;
     private string $privilege;
     private EventModel $event;
     private User $user;
 
     private Authorizator $authorizator;
 
-    public function __construct(EventResource $resource, string $privilege, EventModel $event, Container $container)
+    public function __construct(EventResourceHolder $resource, string $privilege, EventModel $event, Container $container)
     {
         $this->event = $event;
         $this->resource = $resource;
@@ -43,7 +43,11 @@ class SelfACLEventResolver implements Resolver
             return false;
         }
         if (
-            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent(
+                $this->resource,
+                $this->privilege,
+                $this->event
+            )
             || $this->isSelf($person)
         ) {
             return true;
@@ -58,7 +62,11 @@ class SelfACLEventResolver implements Resolver
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
         if (
-            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent(
+                $this->resource,
+                $this->privilege,
+                $this->event
+            )
             || $this->isSelf($person)
         ) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
@@ -72,7 +80,11 @@ class SelfACLEventResolver implements Resolver
             return false;
         }
         if (
-            $this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)
+            $this->authorizator->isAllowedEvent(
+                $this->resource,
+                $this->privilege,
+                $this->event
+            )
             || $this->isSelf($person)
         ) {
             return true;

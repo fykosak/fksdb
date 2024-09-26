@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\Closing\CodeCloseForm;
 use FKSDB\Components\Game\Closing\PreviewComponent;
 use FKSDB\Components\Game\Closing\TeamList;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -32,7 +32,7 @@ final class ClosePresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'close',
             $this->getEvent()
         );
@@ -65,7 +65,7 @@ final class ClosePresenter extends BasePresenter
     public function authorizedTeam(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'close',
             $this->getEvent()
         );

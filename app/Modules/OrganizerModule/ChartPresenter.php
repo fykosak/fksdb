@@ -11,6 +11,7 @@ use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Charts\SubmitsPerSeriesChart;
 use FKSDB\Components\Charts\TotalPersonsChart;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
@@ -30,7 +31,11 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->authorizator->isAllowedContest($this->getSelectedContest(), 'chart', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromOwnResource($this->getSelectedContest()),
+            'chart',
+            $this->getSelectedContest()
+        );
     }
 
     /**

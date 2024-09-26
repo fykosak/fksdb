@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\MailImportComponent;
 use FKSDB\Components\Grids\MailGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonMailService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -32,7 +32,7 @@ final class MailPresenter extends BasePresenter
     public function authorizedImport(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'import'
         );
     }
@@ -48,7 +48,7 @@ final class MailPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }

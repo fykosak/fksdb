@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -15,7 +16,7 @@ final class DashboardPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContest(
-            $this->getSelectedContest(),
+            ContestResourceHolder::fromOwnResource($this->getSelectedContest()),
             'organizerDashboard',
             $this->getSelectedContest()
         );

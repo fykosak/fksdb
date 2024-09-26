@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -32,7 +32,7 @@ final class StatisticsPresenter extends BasePresenter
     public function authorizedCorrelation(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'statistics.correlation',
             $this->getEvent()
         );
@@ -49,7 +49,7 @@ final class StatisticsPresenter extends BasePresenter
     public function authorizedTeam(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'statistics.team',
             $this->getEvent()
         );
@@ -66,7 +66,7 @@ final class StatisticsPresenter extends BasePresenter
     public function authorizedTask(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'statistics.task',
             $this->getEvent()
         );
@@ -83,7 +83,7 @@ final class StatisticsPresenter extends BasePresenter
     public function authorizedTable(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource('game', $this->getEvent()),
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
             'statistics.table',
             $this->getEvent()
         );

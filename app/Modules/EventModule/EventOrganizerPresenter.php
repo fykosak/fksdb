@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\EventOrganizerFormComponent;
 use FKSDB\Components\Grids\EventOrganizer\EventOrganizersGrid;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -30,7 +30,7 @@ final class EventOrganizerPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -46,7 +46,7 @@ final class EventOrganizerPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -65,7 +65,11 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getEvent()
+        );
     }
     /**
      * @throws EventNotFoundException
@@ -93,7 +97,11 @@ final class EventOrganizerPresenter extends BasePresenter
      */
     public function authorizedDelete(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'delete', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'delete',
+            $this->getEvent()
+        );
     }
 
     public function titleDelete(): PageTitle

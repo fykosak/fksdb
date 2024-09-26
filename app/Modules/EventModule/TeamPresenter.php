@@ -19,7 +19,7 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -77,7 +77,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -98,7 +98,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            $this->getEntity(),
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'detail',
             $this->getEvent()
         );
@@ -161,7 +161,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedOrgDetail(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            $this->getEntity(),
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'organizerDetail',
             $this->getEvent()
         );
@@ -204,7 +204,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedDetailedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -225,7 +225,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            $this->getEntity(),
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'edit',
             $this->getEvent()
         );
@@ -249,7 +249,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -266,7 +266,7 @@ final class TeamPresenter extends BasePresenter
     public function authorizedMass(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'mass',
             $this->getEvent()
         );

@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Statement;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 
 /**
- * @phpstan-template TModel of (Resource&Model)
- * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
+ * @phpstan-implements Statement<bool,ModelHolder<PaymentModel,FakeStringEnum&EnumColumn>>
  */
 class AnyContestRole implements Statement
 {
-    protected ContestAuthorizator $contestAuthorizator;
+    protected Authorizator $authorizator;
     protected ?string $privilege;
 
-    public function __construct(?string $privilege, ContestAuthorizator $contestAuthorizator)
+    public function __construct(?string $privilege, Authorizator $authorizator)
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
         $this->privilege = $privilege;
     }
 
@@ -35,9 +33,12 @@ class AnyContestRole implements Statement
     public function __invoke(...$args): bool
     {
         [$holder] = $args;
-        return $this->contestAuthorizator->isAllowedAnyContest(
-            $holder->getModel()->getResourceId(),
-            $this->privilege
-        );
+        /* return $this->authorizator->isAllowedEvent(
+             new PseudoEventResource($holder->getModel(), $holder->getModel()->getEvent()),
+             $this->privilege,
+             $holder->getModel()->getEvent()
+         );*/
+        // TODO
+        return false;
     }
 }

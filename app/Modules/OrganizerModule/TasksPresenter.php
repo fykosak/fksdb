@@ -8,8 +8,7 @@ use FKSDB\Components\Grids\TaskGrid;
 use FKSDB\Components\Inbox\HandoutFormComponent;
 use FKSDB\Components\Inbox\PointsVariance\ChartComponent;
 use FKSDB\Components\Inbox\TaskImportFormComponent;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
-use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
@@ -36,13 +35,14 @@ final class TasksPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedImport(): bool
     {
-        return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(TaskModel::RESOURCE_ID, $this->getSelectedContest()),
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'insert',
-            $this->getSelectedContest()
+            $this->getSelectedContestYear()
         );
     }
 
@@ -58,7 +58,7 @@ final class TasksPresenter extends BasePresenter
     public function authorizedDispatch(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'dispatch',
             $this->getSelectedContestYear()
         );
@@ -76,7 +76,7 @@ final class TasksPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()
         );

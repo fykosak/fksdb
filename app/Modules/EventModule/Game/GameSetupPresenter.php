@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\UI\PageTitle;
@@ -22,7 +23,7 @@ final class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEvent(), 'gameSetup', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(EventResourceHolder::fromOwnResource($this->getEvent()), 'gameSetup', $this->getEvent());
     }
 
     /**

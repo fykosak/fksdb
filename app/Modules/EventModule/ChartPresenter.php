@@ -9,6 +9,7 @@ use FKSDB\Components\Charts\Event\Applications\ProgressComponent;
 use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
@@ -26,7 +27,11 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEvent(), 'event.chart', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'event.chart',
+            $this->getEvent()
+        );
     }
 
     /**

@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Schedule\Forms\PersonScheduleForm;
 use FKSDB\Components\Schedule\PersonScheduleList;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -37,7 +37,11 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDelete(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'delete', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'delete',
+            $this->getEvent()
+        );
     }
 
     public function titleDelete(): PageTitle
@@ -63,7 +67,11 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
     }
     /**
      * @throws NotFoundException
@@ -99,7 +107,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );

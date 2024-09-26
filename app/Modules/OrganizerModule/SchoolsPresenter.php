@@ -8,7 +8,7 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -35,7 +35,7 @@ final class SchoolsPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -51,7 +51,7 @@ final class SchoolsPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
             'default',
             $this->getSelectedContest()
         );
@@ -69,7 +69,7 @@ final class SchoolsPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail',
             $this->getSelectedContest()
         );
@@ -104,7 +104,7 @@ final class SchoolsPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'edit',
             $this->getSelectedContest()
         );
@@ -124,7 +124,7 @@ final class SchoolsPresenter extends BasePresenter
     public function authorizedReport(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
             'report',
             $this->getSelectedContest()
         );

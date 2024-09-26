@@ -12,9 +12,9 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\ScheduleHandler;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -89,7 +89,9 @@ abstract class OpenApplicationForm extends ModelForm
             PersonSearchContainer::SEARCH_EMAIL,
             true,
             new SelfACLEventResolver(
-                $this->model ?? new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->event),
+                $this->model
+                    ? EventResourceHolder::fromOwnResource($this->model)
+                    : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
                 $this->event,
                 $this->container

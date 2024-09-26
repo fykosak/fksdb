@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
@@ -31,7 +31,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
     public function authorizedContestant(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()
         );
@@ -50,7 +50,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
     public function authorizedEvent(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(self::AESOP_RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()
         );

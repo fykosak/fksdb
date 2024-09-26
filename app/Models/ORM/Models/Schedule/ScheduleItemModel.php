@@ -200,14 +200,4 @@ final class ScheduleItemModel extends Model implements EventResource, NodeCreato
     {
         return $this->schedule_group->event;
     }
-
-    public function getContest(): ContestModel
-    {
-        return $this->getContestYear()->contest;
-    }
-
-    public function getContestYear(): ContestYearModel
-    {
-        return $this->getEvent()->getContestYear();
-    }
 }

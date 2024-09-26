@@ -49,14 +49,4 @@ final class TaskModel extends Model implements EventResource
     {
         return $this->event;
     }
-
-    public function getContest(): ContestModel
-    {
-        return $this->getContestYear()->contest;
-    }
-
-    public function getContestYear(): ContestYearModel
-    {
-        return $this->getEvent()->getContestYear();
-    }
 }

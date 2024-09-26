@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\TaskGrid;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
@@ -25,7 +25,7 @@ final class TaskPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(TaskModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );

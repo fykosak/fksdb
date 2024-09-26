@@ -17,8 +17,8 @@ use Nette\Application\ForbiddenRequestException;
  */
 trait ContestYearEntityTrait
 {
-    /** @phpstan-use ContestEntityTrait<TContestYearModel> */
-    use ContestEntityTrait {
+    /** @phpstan-use EntityPresenterTrait<TContestYearModel> */
+    use EntityPresenterTrait {
         getEntity as getContestEntity;
     }
 
@@ -41,6 +41,9 @@ trait ContestYearEntityTrait
             $contestYear = $model->getReferencedModel(ContestYearModel::class);
             if ($contestYear->year !== $this->getSelectedContestYear()->year) {
                 throw new ForbiddenRequestException(_('Editing entity outside chosen year.'));
+            }
+            if ($contestYear->contest_id !== $this->getSelectedContestYear()->contest_id) {
+                throw new ForbiddenRequestException(_('Editing entity outside chosen contest.'));
             }
         } catch (CannotAccessModelException $exception) {
             return $model;

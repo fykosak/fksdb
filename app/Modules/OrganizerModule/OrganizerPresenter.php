@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\OrganizerFormComponent;
 use FKSDB\Components\Grids\OrganizersGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
@@ -39,7 +39,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContest(
-            $this->getEntity(),
+            ContestResourceHolder::fromOwnResource($this->getEntity()),
             'edit',
             $this->getSelectedContest()
         );
@@ -69,7 +69,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContest(
-            $this->getEntity(),
+            ContestResourceHolder::fromOwnResource($this->getEntity()),
             'detail',
             $this->getSelectedContest()
         );
@@ -96,7 +96,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -112,7 +112,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -172,8 +172,8 @@ final class OrganizerPresenter extends BasePresenter
     /**
      * @throws NoContestAvailable
      */
-    protected function getModelResource(): PseudoContestResource
+    protected function getModelResource(): ContestResourceHolder
     {
-        return new PseudoContestResource(OrganizerModel::RESOURCE_ID, $this->getSelectedContest());
+        return ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest());
     }
 }

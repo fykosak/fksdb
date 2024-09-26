@@ -12,12 +12,13 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -241,7 +242,9 @@ abstract class TeamForm extends ModelForm
                 'email',
                 true,
                 new SelfACLEventResolver(
-                    $this->model ?? new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->event),
+                    $this->model
+                        ? EventResourceHolder::fromOwnResource($this->model)
+                        : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
                     'organizer',
                     $this->event,
                     $this->container

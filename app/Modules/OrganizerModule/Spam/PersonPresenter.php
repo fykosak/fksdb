@@ -8,7 +8,7 @@ use FKSDB\Components\EntityForms\Spam\AjaxPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonFormComponent;
 use FKSDB\Components\EntityForms\Spam\SpamPersonImportComponent;
 use FKSDB\Components\Grids\Spam\PersonGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
@@ -38,7 +38,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedImport(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'import'
         );
     }
@@ -56,7 +56,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'import'
         );
     }
@@ -80,7 +80,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'create'
         );
     }
@@ -95,7 +95,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }

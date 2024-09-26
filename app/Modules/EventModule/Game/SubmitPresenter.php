@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Game\Submits\AllSubmitsGrid;
 use FKSDB\Components\Game\Submits\Form\FormComponent;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -29,7 +29,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -45,7 +45,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(SubmitModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -65,7 +65,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            $this->getEntity(),
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'create',
             $this->getEvent()
         );

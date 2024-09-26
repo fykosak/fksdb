@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\StoredQuery\StoredQuery;
@@ -47,7 +47,7 @@ final class ExportPresenter extends BasePresenter
     public function authorizedExecute(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getStoredQuery()->queryPattern, $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getStoredQuery()->queryPattern, $this->getSelectedContest()),
             'execute',
             $this->getSelectedContest()
         );

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -103,7 +103,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
             (int)$query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST]
         );
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($query->queryPattern, $contest),
+            ContestResourceHolder::fromResource($query->queryPattern, $contest),
             'execute',
             $contest
         );

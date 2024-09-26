@@ -6,6 +6,7 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
@@ -43,7 +44,11 @@ class EventRole implements Statement
     {
         [$holder] = $args;
         /** @var EventModel $event */
-        $event = $holder->getModel()->getReferencedModel(EventModel::class);
-        return $this->authorizator->isAllowedEvent($holder->getModel(), $this->privilege, $event);
+        $event = $holder->getModel()->getEvent();
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($holder->getModel()),
+            $this->privilege,
+            $event
+        );
     }
 }

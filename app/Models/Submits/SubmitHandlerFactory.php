@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -135,7 +136,11 @@ class SubmitHandlerFactory
      */
     private function checkPrivilege(SubmitModel $submit, string $privilege): void
     {
-        if (!$this->authorizator->isAllowedContest($submit, $privilege, $submit->contestant->contest)) {
+        if (!$this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($submit),
+            $privilege,
+            $submit->contestant->getContestYear())
+        ) {
             throw new ForbiddenRequestException(_('Access denied'));
         }
     }

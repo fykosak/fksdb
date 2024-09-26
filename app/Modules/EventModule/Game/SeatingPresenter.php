@@ -7,6 +7,7 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\Seating\AllPlaces;
 use FKSDB\Components\Game\Seating\SeatingForm;
 use FKSDB\Components\Game\Seating\Single;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\UI\PageTitle;
@@ -37,7 +38,7 @@ final class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEvent(), 'seating', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(EventResourceHolder::fromOwnResource($this->getEvent()), 'seating', $this->getEvent());
     }
 
     public function titleDefault(): PageTitle

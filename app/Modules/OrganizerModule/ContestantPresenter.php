@@ -9,7 +9,7 @@ use FKSDB\Components\Contestants\SubmitsGrid;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -46,7 +46,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            $this->getEntity(),
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
             'edit',
             $this->getSelectedContestYear()
         );
@@ -79,7 +79,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            $this->getEntity(),
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
             'detail',
             $this->getSelectedContestYear()
         );
@@ -121,7 +121,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'create',
             $this->getSelectedContestYear()
         );
@@ -138,7 +138,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()
         );
@@ -222,14 +222,5 @@ final class ContestantPresenter extends BasePresenter
     protected function createComponentTests(): TestsList
     {
         return new TestsList($this->getContext(), DataTestFactory::getContestantTests($this->getContext()), true);
-    }
-
-    /**
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     */
-    protected function getModelResource(): PseudoContestYearResource
-    {
-        return new PseudoContestYearResource(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear());
     }
 }

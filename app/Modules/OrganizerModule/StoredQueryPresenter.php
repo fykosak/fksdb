@@ -7,7 +7,7 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
@@ -38,7 +38,7 @@ final class StoredQueryPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'edit',
             $this->getSelectedContest()
         );
@@ -59,7 +59,7 @@ final class StoredQueryPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -75,7 +75,7 @@ final class StoredQueryPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -93,7 +93,7 @@ final class StoredQueryPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail',
             $this->getSelectedContest()
         );

@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule\Schedule;
 use FKSDB\Components\Schedule\Attendance\CodeAttendance;
 use FKSDB\Components\Schedule\Forms\ScheduleItemForm;
 use FKSDB\Components\Schedule\PersonGrid;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -40,7 +40,7 @@ final class ItemPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(ScheduleItemModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(ScheduleItemModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -60,7 +60,11 @@ final class ItemPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
     }
     /**
      * @throws EventNotFoundException
@@ -105,7 +109,11 @@ final class ItemPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getEvent()
+        );
     }
     /**
      * @throws EventNotFoundException

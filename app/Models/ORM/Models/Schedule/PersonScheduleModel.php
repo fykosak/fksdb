@@ -78,14 +78,4 @@ final class PersonScheduleModel extends Model implements EventResource
     {
         return $this->schedule_item->schedule_group->event;
     }
-
-    public function getContest(): ContestModel
-    {
-        return $this->getContestYear()->contest;
-    }
-
-    public function getContestYear(): ContestYearModel
-    {
-        return $this->getEvent()->getContestYear();
-    }
 }

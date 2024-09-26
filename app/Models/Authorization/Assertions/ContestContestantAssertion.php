@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
+use FKSDB\Models\Authorization\Resource\ResourceHolder;
 use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
 use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -13,7 +14,8 @@ class ContestContestantAssertion implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {
-        $contestant = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $contestant = $holder->getResource();
         if (!$contestant instanceof ContestantModel) {
             throw new WrongAssertionException();
         }

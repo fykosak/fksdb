@@ -28,7 +28,8 @@ class OwnSubmitAssertion implements Assertion
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
-        $submit = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $submit = $holder->getResource();
         if (!$submit instanceof SubmitModel) {
             throw new BadTypeException(SubmitModel::class, $submit);
         }

@@ -10,7 +10,7 @@ use FKSDB\Components\Inbox\Corrected\CorrectedFormComponent;
 use FKSDB\Components\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Inbox\SubmitsPreview\SubmitsPreviewComponent;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -43,7 +43,7 @@ final class InboxPresenter extends BasePresenter
     public function authorizedInbox(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             null,
             $this->getSelectedContest()
         );
@@ -60,7 +60,7 @@ final class InboxPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -77,7 +77,7 @@ final class InboxPresenter extends BasePresenter
     public function authorizedCorrected(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getSelectedContest()),
             'corrected',
             $this->getSelectedContest()
         );

@@ -14,8 +14,9 @@ class OwnParticipant implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {
+        $holder = $acl->getQueriedResource();
+        $application = $holder->getResource();
         $queriedRole = $acl->getQueriedRole();
-        $application = $acl->getQueriedResource();
         if (!$application instanceof EventParticipantModel) {
             throw new WrongAssertionException();
         }

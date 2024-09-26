@@ -13,7 +13,8 @@ class IsOpenTypeEvent implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {
-        $resource = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $resource = $holder->getResource();
         if ($resource instanceof EventResource) {
             return $resource->getEvent()->event_type->isOpenType();
         }

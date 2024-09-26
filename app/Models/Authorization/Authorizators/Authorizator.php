@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Authorizators;
 
-use FKSDB\Models\Authorization\Resource\ContestResource;
-use FKSDB\Models\Authorization\Resource\ContestYearResource;
-use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\BaseResourceHolder;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Authorization\Roles\Base\GuestRole;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -18,91 +19,107 @@ use Nette\Security\User;
 
 final class Authorizator
 {
-    private User $user;
+    private ?LoginModel $login;
     private Permission $permission;
 
     public function __construct(User $user, Permission $permission)
     {
-        $this->user = $user;
+        /** @phpstan-ignore-next-line */
+        $this->login = $user->getIdentity();
         $this->permission = $permission;
     }
 
-    public function isAllowedEvent(EventResource $resource, ?string $privilege, EventModel $context): bool
+    public function isAllowedEvent(EventResourceHolder $resource, ?string $privilege, EventModel $context): bool
     {
-        if ($context->event_id !== $resource->getEvent()->event_id) {
+        if ($context->event_id !== $resource->getContext()->event_id) {
             return false;
         }
-        /** @var LoginModel|null $login */
-        $login = $this->user->getIdentity();
-        if ($login) {
-            foreach ($login->getEventRoles($context) as $role) {
-                if ($this->permission->isAllowed($role, $resource, $privilege)) {
-                    return true;
-                }
-            }
-        }
-        return $this->isAllowedContestYear(
-            $resource,
-            $privilege,
-            $context->getContestYear()
-        );
+        return $this->innerAllowedEvent($resource, $privilege, $context);
     }
 
     public function isAllowedContestYear(
-        ContestYearResource $resource,
+        ContestYearResourceHolder $resource,
         ?string $privilege,
         ContestYearModel $context
     ): bool {
-        if (
-            $context->contest_id !== $resource->getContestYear()->contest_id
-            || $context->year !== $resource->getContestYear()->year
-        ) {
+        if ($context->contest_id !== $resource->getContext()->contest_id
+            || $context->year !== $resource->getContext()->year) {
             return false;
         }
-        /** @var LoginModel|null $login */
-        $login = $this->user->getIdentity();
-        if ($login) {
-            foreach ($login->getImplicitContestYearRoles($context) as $role) {
+        return $this->innerAllowedContestYear($resource, $privilege, $context);
+    }
+
+    public function isAllowedContest(ContestResourceHolder $resource, ?string $privilege, ContestModel $context): bool
+    {
+        if ($context->contest_id !== $resource->getContext()->contest_id) {
+            return false;
+        }
+
+        return $this->innerAllowedContest($resource, $privilege, $context);
+    }
+
+    public function isAllowedBase(BaseResourceHolder $resource, ?string $privilege): bool
+    {
+        return $this->innerAllowedBase($resource, $privilege);
+    }
+
+    private function innerAllowedEvent(
+        Resource $resource,
+        ?string $privilege,
+        EventModel $context
+    ): bool {
+        if ($this->login) {
+            foreach ($this->login->getEventRoles($context->getEvent()) as $role) {
                 if ($this->permission->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }
             }
         }
-        return $this->isAllowedContest(
+        return $this->innerAllowedContestYear($resource, $privilege, $context->getContestYear());
+    }
+
+    private function innerAllowedContestYear(
+        Resource $resource,
+        ?string $privilege,
+        ContestYearModel $context
+    ): bool {
+        if ($this->login) {
+            foreach ($this->login->getContestYearRoles($context->getContestYear()) as $role) {
+                if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                    return true;
+                }
+            }
+        }
+        return $this->innerAllowedContest(
             $resource,
             $privilege,
             $context->contest
         );
     }
 
-    public function isAllowedContest(ContestResource $resource, ?string $privilege, ContestModel $context): bool
-    {
-        if ($context->contest_id !== $resource->getContest()->contest_id) {
-            return false;
-        }
-        /** @var LoginModel|null $login */
-        $login = $this->user->getIdentity();
-        if ($login) {
-            foreach ($login->getContestRoles($context) as $role) {
+    private function innerAllowedContest(
+        Resource $resource,
+        ?string $privilege,
+        ContestModel $context
+    ): bool {
+        if ($this->login) {
+            foreach ($this->login->getContestRoles($context->getContest()) as $role) {
                 if ($this->permission->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }
             }
         }
-        return $this->isAllowedBase($resource, $privilege);
+        return $this->innerAllowedBase($resource, $privilege);
     }
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    public function isAllowedBase($resource, ?string $privilege): bool
-    {
-        if (!$this->user->isLoggedIn()) {
+    private function innerAllowedBase(
+        Resource $resource,
+        ?string $privilege
+    ): bool {
+        if (!$this->login) {
             return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
         }
-        /** @var LoginModel $login */
-        $login = $this->user->identity;
-        foreach ($login->getRoles() as $role) {
+        foreach ($this->login->getRoles() as $role) {
             if ($this->permission->isAllowed($role, $resource, $privilege)) {
                 return true;
             }

@@ -12,7 +12,7 @@ use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -47,7 +47,11 @@ final class AttendancePresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->authorizator->isAllowedEvent($this->getModel(), 'attendance', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getModel()),
+            'attendance',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -92,13 +96,13 @@ final class AttendancePresenter extends BasePresenter
     {
         if ($this->getEvent()->isTeamEvent()) {
             return $this->authorizator->isAllowedEvent(
-                new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+                EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );
         } else {
             return $this->authorizator->isAllowedEvent(
-                new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+                EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );

@@ -26,7 +26,7 @@ use Nette\Utils\DateTime;
  * @property-read ContestCategoryModel|null $contest_category
  * @property-read DateTime $created
  */
-final class ContestantModel extends Model implements ContestResource, ContestYearResource
+final class ContestantModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'contestant';
 

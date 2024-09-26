@@ -39,7 +39,7 @@ use Nette\Utils\Strings;
  * }
  * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
-final class TaskModel extends Model implements ContestYearResource, ContestResource
+final class TaskModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'task';
 

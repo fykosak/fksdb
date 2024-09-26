@@ -38,8 +38,9 @@ class SelfAssertion implements Assertion
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
+        $holder = $acl->getQueriedResource();
         /** @var Model $model */
-        $model = $acl->getQueriedResource();
+        $model = $holder->getResource();
         try {
             $grant = $acl->getQueriedRole();
             $contest = $model->getReferencedModel(ContestModel::class);

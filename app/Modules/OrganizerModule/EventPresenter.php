@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -30,14 +30,15 @@ final class EventPresenter extends BasePresenter
     }
 
     /**
+     * @throws NoContestYearAvailable
      * @throws NoContestAvailable
      */
     public function authorizedList(): bool
     {
-        return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(EventModel::RESOURCE_ID, $this->getSelectedContest()),
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(EventModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
-            $this->getSelectedContest()
+            $this->getSelectedContestYear()
         );
     }
     public function titleList(): PageTitle
@@ -47,13 +48,14 @@ final class EventPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedCreate(): bool
     {
-        return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(EventModel::RESOURCE_ID, $this->getSelectedContest()),
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(EventModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'create',
-            $this->getSelectedContest()
+            $this->getSelectedContestYear()
         );
     }
     public function titleCreate(): PageTitle
@@ -71,10 +73,10 @@ final class EventPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->authorizator->isAllowedContest(
-            $this->getEntity(),
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
             'edit',
-            $this->getSelectedContest()
+            $this->getSelectedContestYear()
         );
     }
     /**
@@ -124,13 +126,5 @@ final class EventPresenter extends BasePresenter
     protected function getORMService(): EventService
     {
         return $this->eventService;
-    }
-
-    /**
-     * @throws NoContestAvailable
-     */
-    protected function getModelResource(): PseudoContestResource
-    {
-        return new PseudoContestResource(EventModel::RESOURCE_ID, $this->getSelectedContest());
     }
 }

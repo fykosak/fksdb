@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Events;
 
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -103,7 +103,7 @@ class EventDetailWebModel extends EventWebModel implements SoapWebModel
     protected function isAuthorized(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
             self::class,
             $this->getEvent()
         );

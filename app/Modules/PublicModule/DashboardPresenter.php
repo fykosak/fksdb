@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\News;
 use FKSDB\Modules\Core\Language;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
@@ -31,7 +32,7 @@ final class DashboardPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            $this->getSelectedContestYear(),
+            ContestYearResourceHolder::fromOwnResource($this->getSelectedContestYear()),
             'contestantDashboard',
             $this->getSelectedContestYear()
         );

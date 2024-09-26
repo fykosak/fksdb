@@ -7,7 +7,6 @@ namespace FKSDB\Models\WebService\Models;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Modules\CoreModule\RestApiPresenter;
 
 /**
  * @phpstan-type SerializedPaymentModel array{
@@ -80,6 +79,6 @@ class PaymentListWebModel extends WebModel
 
     protected function isAuthorized(): bool
     {
-        return $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, self::class);
+        return false;// $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, self::class);
     }
 }

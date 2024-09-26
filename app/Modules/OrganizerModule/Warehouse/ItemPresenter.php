@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
@@ -33,7 +33,7 @@ final class ItemPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }
@@ -49,7 +49,7 @@ final class ItemPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->isAllowed($this->getEntity(), 'edit');
+        return $this->isAllowed(ContestResourceHolder::fromOwnResource($this->getEntity()), 'edit');
     }
 
     public function titleEdit(): PageTitle
@@ -63,7 +63,7 @@ final class ItemPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
             'create'
         );
     }

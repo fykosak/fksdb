@@ -77,7 +77,7 @@ use Nette\Utils\DateTime;
  *    }
  * }
  */
-final class EventModel extends Model implements EventResource, ContestResource, ContestYearResource, NodeCreator
+final class EventModel extends Model implements EventResource, ContestYearResource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13, 17];

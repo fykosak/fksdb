@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Components\Upload\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Upload\Legacy\LegacyUploadFormComponent;
 use FKSDB\Components\Upload\Quiz\QuizComponent;
-use FKSDB\Models\Authorization\Resource\PseudoContestYearResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
@@ -65,7 +65,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'upload',
             $this->getSelectedContestYear()
         );
@@ -111,7 +111,11 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedQuizDetail(): bool
     {
         $submit = $this->submitService->findByPrimary($this->id);
-        return $this->authorizator->isAllowedContestYear($submit, 'download', $this->getSelectedContestYear());
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($submit),
+            'download',
+            $this->getSelectedContestYear()
+        );
     }
 
     /**
@@ -121,7 +125,7 @@ final class SubmitPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            new PseudoContestYearResource(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(SubmitModel::RESOURCE_ID, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()
         );

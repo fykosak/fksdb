@@ -7,7 +7,7 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -48,7 +48,7 @@ final class DeduplicatePresenter extends BasePresenter
     public function authorizedPerson(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -82,13 +82,13 @@ final class DeduplicatePresenter extends BasePresenter
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->trunkPerson, $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->trunkPerson, $this->getSelectedContest()),
             'merge',
             $this->getSelectedContest()
         )
             &&
             $this->authorizator->isAllowedContest(
-                new PseudoContestResource($this->mergedPerson, $this->getSelectedContest()),
+                ContestResourceHolder::fromResource($this->mergedPerson, $this->getSelectedContest()),
                 'merge',
                 $this->getSelectedContest()
             );

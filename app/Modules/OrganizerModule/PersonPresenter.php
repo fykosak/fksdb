@@ -13,7 +13,7 @@ use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -52,7 +52,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedSearch(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'search',
             $this->getSelectedContest()
         );
@@ -73,17 +73,17 @@ final class PersonPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         $full = $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail.full',
             $this->getSelectedContest()
         );
         $restrict = $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail.restrict',
             $this->getSelectedContest()
         );
         $basic = $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail.basic',
             $this->getSelectedContest()
         );
@@ -128,7 +128,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'edit',
             $this->getSelectedContest()
         );
@@ -153,7 +153,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -169,7 +169,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedPizza(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'pizza',
             $this->getSelectedContest()
         );
@@ -186,7 +186,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedTests(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -203,7 +203,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            new PseudoContestResource(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -305,7 +305,7 @@ final class PersonPresenter extends BasePresenter
             try {
                 if (
                     $this->authorizator->isAllowedContest(
-                        new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
                         'detail.basic',
                         $this->getSelectedContest()
                     )
@@ -314,7 +314,7 @@ final class PersonPresenter extends BasePresenter
                 }
                 if (
                     $this->authorizator->isAllowedContest(
-                        new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
                         'detail.restrict',
                         $this->getSelectedContest()
                     )
@@ -323,7 +323,7 @@ final class PersonPresenter extends BasePresenter
                 }
                 if (
                     $this->authorizator->isAllowedContest(
-                        new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
                         'detail.full',
                         $this->getSelectedContest()
                     )

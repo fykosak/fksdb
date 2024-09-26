@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\SchoolLabelFormComponent;
 use FKSDB\Components\Grids\SchoolLabelGrid;
-use FKSDB\Models\Authorization\Resource\PseudoContestResource;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolLabelModel;
@@ -37,7 +37,7 @@ final class SchoolPresenter extends BasePresenter
     public function authorizedEdit(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource($this->getEntity(), $this->getSelectedContest()),
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'edit'
         );
     }
@@ -57,7 +57,7 @@ final class SchoolPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(SchoolLabelModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SchoolLabelModel::RESOURCE_ID, $this->getSelectedContest()),
             'create'
         );
     }
@@ -72,7 +72,7 @@ final class SchoolPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            new PseudoContestResource(SchoolLabelModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(SchoolLabelModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }

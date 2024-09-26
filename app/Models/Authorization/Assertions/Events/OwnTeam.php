@@ -16,7 +16,8 @@ class OwnTeam implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $queriedRole = $acl->getQueriedRole();
-        $application = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $application = $holder->getResource();
         if (!$application instanceof TeamModel2) {
             throw new WrongAssertionException();
         }

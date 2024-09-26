@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\EntityForms\PaymentForm;
 use FKSDB\Components\Payments\PaymentList;
 use FKSDB\Components\Payments\PaymentQRCode;
-use FKSDB\Models\Authorization\Resource\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -39,14 +39,14 @@ final class PaymentsPresenter extends BasePresenter
     {
         $event = $this->getEvent();
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
+                EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $event),
             'organizer',
             $event
         )
             || (
                 $this->isPaymentAllowed() &&
                 $this->authorizator->isAllowedEvent(
-                    new PseudoEventResource(PaymentModel::RESOURCE_ID, $event),
+                    EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $event),
                     'create',
                     $event
                 )
@@ -66,7 +66,7 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource($this->getEntity(), $this->getEvent()),
+            EventResourceHolder::fromResource($this->getEntity(), $this->getEvent()),
             'Detail',
             $this->getEvent()
         );
@@ -114,14 +114,14 @@ final class PaymentsPresenter extends BasePresenter
     {
         $event = $this->getEvent();
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource($this->getEntity(), $this->getEvent()),
+            EventResourceHolder::fromResource($this->getEntity(), $this->getEvent()),
             'organizer',
             $event
         )
             || (
                 $this->isPaymentAllowed()
                 && $this->authorizator->isAllowedEvent(
-                    new PseudoEventResource($this->getEntity(), $this->getEvent()),
+                    EventResourceHolder::fromResource($this->getEntity(), $this->getEvent()),
                     'edit',
                     $event
                 )
@@ -158,7 +158,7 @@ final class PaymentsPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            new PseudoEventResource(PaymentModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -234,7 +234,7 @@ final class PaymentsPresenter extends BasePresenter
             [$this->getEvent()],
             $this->getLoggedPerson(),
             $this->authorizator->isAllowedEvent(
-                new PseudoEventResource(PaymentModel::RESOURCE_ID, $this->getEvent()),
+                EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
                 'organizer',
                 $this->getEvent()
             ),
@@ -256,7 +256,7 @@ final class PaymentsPresenter extends BasePresenter
             [$this->getEvent()],
             $this->getLoggedPerson(),
             $this->authorizator->isAllowedEvent(
-                new PseudoEventResource($this->getEntity(), $this->getEvent()),
+                EventResourceHolder::fromResource($this->getEntity(), $this->getEvent()),
                 'organizer',
                 $this->getEvent()
             ),
