@@ -44,6 +44,12 @@ final class UnsubscribePresenter extends BasePresenter
             $token,
             $this->getContext()->getParameters()['machineCode']['salt']['unsubscribe']
         );
-        $this->service->storeModel(['email_hash' => sha1(strtolower($email))]);
+
+        $emailHash = sha1(strtolower($email));
+
+        $unsubscribeMailModel = $this->service->getTable()->where('email_hash', $emailHash)->fetch();
+        if (!$unsubscribeMailModel) {
+            $this->service->storeModel(['email_hash' => $emailHash]);
+        }
     }
 }
