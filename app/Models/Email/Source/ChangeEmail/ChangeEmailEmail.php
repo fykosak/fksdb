@@ -8,6 +8,7 @@ use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Modules\Core\Language;
@@ -25,7 +26,7 @@ use Nette\Utils\DateTime;
  *      lang:Language,
  *  }>
  */
-class ChangeEmailSource extends EmailSource
+class ChangeEmailEmail extends EmailSource
 {
     private AuthTokenService $tokenService;
 
@@ -56,10 +57,11 @@ class ChangeEmailSource extends EmailSource
                 'file' => __DIR__ . '/email.old.latte',
                 'data' => ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail,],
             ],
-            'lang' => $lang,
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => (string)$person->getInfo()->email,
+                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'lang' => $lang,
             ]
         ];
         $newData = [
@@ -67,10 +69,11 @@ class ChangeEmailSource extends EmailSource
                 'file' => __DIR__ . '/email.new.latte',
                 'data' => ['lang' => $lang, 'person' => $person, 'newEmail' => $newEmail, 'token' => $token,],
             ],
-            'lang' => $lang,
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => $newEmail,
+                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'lang' => $lang,
             ]
         ];
         return [$oldData, $newData];

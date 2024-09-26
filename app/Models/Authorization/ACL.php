@@ -105,12 +105,8 @@ final class ACL
         );
         self::createUpload($permission, $submitUploaderAssertion);
         //emails
-        $permission->addResource(Models\EmailMessageModel::RESOURCE_ID);
-        $permission->allow(
-            [ExplicitContestRole::DataManager, ExplicitContestRole::Boss],
-            Models\EmailMessageModel::RESOURCE_ID,
-            'list'
-        );
+        self::createEmails($permission);
+
         // events
         $permission->allow(ExplicitContestRole::EventManager, Models\EventModel::RESOURCE_ID);
         $permission->allow(OrganizerRole::RoleId, Models\EventModel::RESOURCE_ID, 'list');
@@ -447,5 +443,16 @@ final class ACL
         $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleGroupModel::RESOURCE_ID);
         $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\ScheduleItemModel::RESOURCE_ID);
         $permission->allow(ExplicitContestRole::EventManager, Models\Schedule\PersonScheduleModel::RESOURCE_ID);
+    }
+
+    private static function createEmails(Permission $permission): void
+    {
+        $permission->addResource(Models\EmailMessageModel::RESOURCE_ID); // dashboard, detail, list, template, howTo
+        $permission->allow(
+            [ExplicitContestRole::DataManager, ExplicitContestRole::EventManager, ExplicitContestRole::Boss],
+            Models\EmailMessageModel::RESOURCE_ID,
+            ['dashboard', 'howTo', 'list', 'template']
+        );
+
     }
 }

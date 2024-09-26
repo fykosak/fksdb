@@ -6,6 +6,10 @@
 #
 
 parameters:
+    machineCode:
+        salt:
+            unsubscribe: 'totojesul'
+
     domain:
         cz: fykos.local
         org: fykos.localen

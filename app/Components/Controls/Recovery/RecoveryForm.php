@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmailSource;
+use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -73,7 +73,7 @@ class RecoveryForm extends FormComponent
                     if (!$person) {
                         throw new BadRequestException();
                     }
-                    $source = new PasswordRecoveryEmailSource($this->getContext());
+                    $source = new PasswordRecoveryEmail($this->getContext());
                     $source->createAndSend([
                         'token' => $token,
                         'person' => $person,

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\Sous;
 
 use FKSDB\Models\Email\ParticipantTransitionEmail;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
@@ -16,13 +17,15 @@ use FKSDB\Modules\Core\Language;
  *     model: EventParticipantModel,
  * }>
  */
-final class SousTransitionEmail extends ParticipantTransitionEmail
+final class TransitionEmail extends ParticipantTransitionEmail
 {
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
         return [
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Fykos),
+            'lang' => Language::from(Language::CS),
         ];
     }
 

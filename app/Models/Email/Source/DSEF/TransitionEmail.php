@@ -6,6 +6,7 @@ namespace FKSDB\Models\Email\Source\DSEF;
 
 use FKSDB\Models\Email\ParticipantTransitionEmail;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -29,6 +30,8 @@ final class TransitionEmail extends ParticipantTransitionEmail
         return [
             'blind_carbon_copy' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
             'sender' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::DSEF),
+            'lang' => Language::from(Language::CS),
         ];
     }
 

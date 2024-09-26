@@ -48,7 +48,7 @@ final class IsBannedFromEvent extends Test
 
     public function getTitle(): Title
     {
-        return new Title(null, _('Detect participant, team members or team teacher, who are banned from event.'));
+        return new Title(null, _('Detect participants, team members or team teachers banned from an event'));
     }
 
     public function getId(): string
