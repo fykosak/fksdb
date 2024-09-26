@@ -42,10 +42,10 @@ abstract class ParticipantTransitionEmail extends TransitionEmailSource
                     'file' => $this->getTemplatePath($holder, $transition),
                     'data' => $this->getTemplateData($holder, $transition),
                 ],
-                'lang' => $this->getLang($holder, $transition),
                 'data' => array_merge(
                     [
                         'recipient_person_id' => $holder->getModel()->person_id,
+                        'lang' => $this->getLang($holder, $transition),
                     ],
                     $this->getData($holder, $transition)
                 ),
