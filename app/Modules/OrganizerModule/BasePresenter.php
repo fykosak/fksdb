@@ -69,7 +69,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                     'Organizer:Event:list' => [],
                     'Organizer:Schools:default' => [],
                     'Organizer:StoredQuery:list' => [],
-                    'Organizer:Email:list' => [],
+                    'Organizer:Email:default' => [],
                     'Organizer:Payments:dashboard' => [],
                     'Spam:Dashboard:default' => [],
                 ],

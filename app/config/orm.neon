@@ -72,9 +72,19 @@ orm:
             blind_carbon_copy:
                 type: email
                 title: _('Bcc')
+            inner_text:
+                type: text
+                title: _('Inner text')
             text:
                 type: text
                 title: _('Text')
+            topic:
+                type: enum
+                class: FKSDB\Models\ORM\Models\EmailMessageTopic
+                title: _('Topic')
+            lang:
+                type: string #TODO
+                title: _('Language')
             state:
                 type: enum
                 title: _('State')
@@ -85,6 +95,9 @@ orm:
             sent:
                 type: dateTime
                 title: _('Sent')
+    person_correspondence_preference:
+        model: FKSDB\Models\ORM\Models\PersonCorrespondencePreferenceModel
+        service: FKSDB\Models\ORM\Services\PersonCorrespondencePreferenceService
     event:
         service: FKSDB\Models\ORM\Services\EventService
         model: FKSDB\Models\ORM\Models\EventModel
@@ -493,7 +506,7 @@ orm:
             email:
                 type: email
                 permission: RESTRICT
-                title:  _('E-mail')
+                title:  _('Email')
             health_insurance:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HealthInsuranceColumnFactory
@@ -525,11 +538,11 @@ orm:
                 permission: RESTRICT
             email_parent_m:
                 type: email
-                title: _('E-mail (mother)')
+                title: _('Email (mother)')
                 permission: RESTRICT
             email_parent_d:
                 type: email
-                title: _('E-mail (father)')
+                title: _('Email (father)')
                 permission: RESTRICT
             id_number:
                 type: class
@@ -648,7 +661,7 @@ orm:
                 description: _('Very short name.')
             email:
                 type: string
-                title: _('Contact e-mail')
+                title: _('Contact email')
             ic:
                 type: string
                 title: _('IČ (Czech schools only)')
@@ -905,7 +918,7 @@ orm:
             force_a:
                 type: bool
                 title: _('Force A')
-                description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ.')
+                description: _('Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu.')
             password:
                 type: class
                 class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
@@ -1210,7 +1223,7 @@ orm:
                 type: text
                 title: _('Note')
     unsubscribed_email:
-        model: Fykosak\NetteORM\DummyModel
+        model: Fykosak\NetteORM\Model\DummyModel
         service: FKSDB\Models\ORM\Services\UnsubscribedEmailService
     person_mail:
         model: FKSDB\Models\ORM\Models\PersonMailModel

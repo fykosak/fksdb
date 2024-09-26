@@ -52,7 +52,7 @@ class Router
             ]
         );
         $service->addRoute(
-            'auth/<action login|logout|fb-login|recover|google>',
+            'auth/<action login|logout|recover|google>',
             ['module' => 'Core', 'presenter' => 'Authentication']
         );
         $service->addRoute('profile/<presenter=Dashboard>/<action=default>', ['module' => 'Profile']);
@@ -71,7 +71,7 @@ class Router
             1
         );
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
-        $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
+        $service->addRoute('<presenter settings|school|unsubscribe>/<action=default>[/<id>]', ['module' => 'Core']);
 
         self::addEventsModule($service->withPath('events/'));
         self::addShopModule($service->withPath('shop/'));

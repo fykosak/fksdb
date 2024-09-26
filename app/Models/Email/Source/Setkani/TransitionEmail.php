@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Email\Source\Setkani;
 
 use FKSDB\Models\Email\ParticipantTransitionEmail;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -15,7 +16,7 @@ use FKSDB\Modules\Core\Language;
  *     model: EventParticipantModel,
  * }>
  */
-class TransitionEmail extends ParticipantTransitionEmail
+final class TransitionEmail extends ParticipantTransitionEmail
 {
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {
@@ -27,6 +28,8 @@ class TransitionEmail extends ParticipantTransitionEmail
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+            'lang' => Language::from(Language::CS),
         ];
     }
 

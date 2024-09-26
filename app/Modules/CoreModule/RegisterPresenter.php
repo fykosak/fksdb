@@ -121,7 +121,7 @@ final class RegisterPresenter extends CoreBasePresenter
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type e-mail'));
+        return new PageTitle(null, _('Register'), 'fas fa-edit', _('Type email'));
     }
 
     public function actionEmail(): void
@@ -219,7 +219,7 @@ final class RegisterPresenter extends CoreBasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $form->addText('email', _('E-mail'));
+        $form->addText('email', _('Email'));
         $form->addSubmit('submit', _('Find'));
         $form->onSuccess[] = fn(Form $form) => $this->redirect(
             'contestant',

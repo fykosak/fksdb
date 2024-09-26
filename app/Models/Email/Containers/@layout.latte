@@ -1,0 +1,14 @@
+{layout none}
+{varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
+
+<div style="max-width: 800px">
+        {$model->inner_text|noescape}
+    <!-- Footer -->
+    <footer>
+        <div style="text-align: center; color: grey; font-family: 'Inter', sans-serif; font-size: 1rem; padding-top: 0.5rem;">
+            {block footer}{/block}
+        </div>
+    </footer>
+</div>
+</body>
+</html>
