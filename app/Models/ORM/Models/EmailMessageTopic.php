@@ -148,7 +148,8 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
             case self::FOF:
                 return new LocalizedString([
                     'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání.',
-                    'en' => 'You received this email because you are registered for the Fyziklani competition in Prague.',
+                    'en' => 'You received this email because you are registered for the Fyziklani
+                    competition in Prague.',
                 ]);
             case self::DSEF:
                 return new LocalizedString([

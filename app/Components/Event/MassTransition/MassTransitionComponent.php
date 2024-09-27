@@ -17,6 +17,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * @phpstan-template TModel of Model
@@ -59,7 +60,7 @@ final class MassTransitionComponent extends BaseComponent
                 $transition->execute($holder);
             } catch (\Throwable $exception) {
                 $errored++;
-                Debugger::barDump($exception);
+                Debugger::log($exception, ILogger::EXCEPTION);
             }
         }
         $this->getPresenter()->flashMessage(
