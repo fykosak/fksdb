@@ -22,7 +22,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
-use Nette\Security\Resource;
 
 final class EmailPresenter extends BasePresenter
 {
@@ -140,15 +139,22 @@ final class EmailPresenter extends BasePresenter
         return new PageTitle(null, _('Transitions'), 'fas fa-envelope-open');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
     }
 
-    public function titleDefault(): PageTitle
-    {
-        return new PageTitle(null, _('Email dashboard'), 'fas fa-mail-bulk');
-    }
     /**
      * @throws NoContestAvailable
      */
@@ -159,6 +165,10 @@ final class EmailPresenter extends BasePresenter
             'dashboard',
             $this->getSelectedContest()
         );
+    }
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Email dashboard'), 'fas fa-mail-bulk');
     }
 
     public function renderDefault(): void
@@ -224,14 +234,5 @@ final class EmailPresenter extends BasePresenter
             $this->machineFactory->getEmailMachine(), //@phpstan-ignore-line
             $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready)
         );
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

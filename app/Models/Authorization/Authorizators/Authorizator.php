@@ -19,13 +19,12 @@ use Nette\Security\User;
 
 final class Authorizator
 {
-    private ?LoginModel $login;
+    private User $user;
     private Permission $permission;
 
     public function __construct(User $user, Permission $permission)
     {
-        /** @phpstan-ignore-next-line */
-        $this->login = $user->getIdentity();
+        $this->user = $user;
         $this->permission = $permission;
     }
 
@@ -42,8 +41,10 @@ final class Authorizator
         ?string $privilege,
         ContestYearModel $context
     ): bool {
-        if ($context->contest_id !== $resource->getContext()->contest_id
-            || $context->year !== $resource->getContext()->year) {
+        if (
+            $context->contest_id !== $resource->getContext()->contest_id
+            || $context->year !== $resource->getContext()->year
+        ) {
             return false;
         }
         return $this->innerAllowedContestYear($resource, $privilege, $context);
@@ -54,7 +55,6 @@ final class Authorizator
         if ($context->contest_id !== $resource->getContext()->contest_id) {
             return false;
         }
-
         return $this->innerAllowedContest($resource, $privilege, $context);
     }
 
@@ -68,8 +68,8 @@ final class Authorizator
         ?string $privilege,
         EventModel $context
     ): bool {
-        if ($this->login) {
-            foreach ($this->login->getEventRoles($context->getEvent()) as $role) {
+        if ($this->getLogin()) {
+            foreach ($this->getLogin()->getEventRoles($context->getEvent()) as $role) {
                 if ($this->permission->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }
@@ -83,8 +83,8 @@ final class Authorizator
         ?string $privilege,
         ContestYearModel $context
     ): bool {
-        if ($this->login) {
-            foreach ($this->login->getContestYearRoles($context->getContestYear()) as $role) {
+        if ($this->getLogin()) {
+            foreach ($this->getLogin()->getContestYearRoles($context->getContestYear()) as $role) {
                 if ($this->permission->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }
@@ -102,8 +102,8 @@ final class Authorizator
         ?string $privilege,
         ContestModel $context
     ): bool {
-        if ($this->login) {
-            foreach ($this->login->getContestRoles($context->getContest()) as $role) {
+        if ($this->getLogin()) {
+            foreach ($this->getLogin()->getContestRoles($context->getContest()) as $role) {
                 if ($this->permission->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }
@@ -116,14 +116,19 @@ final class Authorizator
         Resource $resource,
         ?string $privilege
     ): bool {
-        if (!$this->login) {
+        if (!$this->getLogin()) {
             return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
         }
-        foreach ($this->login->getRoles() as $role) {
+        foreach ($this->getLogin()->getRoles() as $role) {
             if ($this->permission->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private function getLogin(): ?LoginModel
+    {
+        return $this->user->getIdentity();//@phpstan-ignore-line
     }
 }

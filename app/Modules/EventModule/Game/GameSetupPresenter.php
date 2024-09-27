@@ -12,7 +12,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 final class GameSetupPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Fyziklani game setup'), 'fas fa-cogs');
@@ -23,7 +22,11 @@ final class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->authorizator->isAllowedEvent(EventResourceHolder::fromOwnResource($this->getEvent()), 'gameSetup', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'gameSetup',
+            $this->getEvent()
+        );
     }
 
     /**

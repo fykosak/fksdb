@@ -22,8 +22,12 @@ class SelfACLEventResolver implements Resolver
 
     private Authorizator $authorizator;
 
-    public function __construct(EventResourceHolder $resource, string $privilege, EventModel $event, Container $container)
-    {
+    public function __construct(
+        EventResourceHolder $resource,
+        string $privilege,
+        EventModel $event,
+        Container $container
+    ) {
         $this->event = $event;
         $this->resource = $resource;
         $this->privilege = $privilege;

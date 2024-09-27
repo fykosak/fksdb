@@ -369,8 +369,6 @@ final class ACL
 
     private static function createGame(Permission $permission): void
     {
-
-
         $permission->addResource('game');
         $permission->addResource(Models\Fyziklani\TaskModel::RESOURCE_ID);
         $permission->addResource(Models\Fyziklani\SubmitModel::RESOURCE_ID);
@@ -453,6 +451,5 @@ final class ACL
             Models\EmailMessageModel::RESOURCE_ID,
             ['dashboard', 'howTo', 'list', 'template']
         );
-
     }
 }

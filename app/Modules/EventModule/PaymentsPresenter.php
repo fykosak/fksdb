@@ -39,7 +39,7 @@ final class PaymentsPresenter extends BasePresenter
     {
         $event = $this->getEvent();
         return $this->authorizator->isAllowedEvent(
-                EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $event),
+            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $event),
             'organizer',
             $event
         )

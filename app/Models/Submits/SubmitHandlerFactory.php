@@ -136,10 +136,12 @@ class SubmitHandlerFactory
      */
     private function checkPrivilege(SubmitModel $submit, string $privilege): void
     {
-        if (!$this->authorizator->isAllowedContestYear(
-            ContestYearResourceHolder::fromOwnResource($submit),
-            $privilege,
-            $submit->contestant->getContestYear())
+        if (
+            !$this->authorizator->isAllowedContestYear(
+                ContestYearResourceHolder::fromOwnResource($submit),
+                $privilege,
+                $submit->contestant->getContestYear()
+            )
         ) {
             throw new ForbiddenRequestException(_('Access denied'));
         }

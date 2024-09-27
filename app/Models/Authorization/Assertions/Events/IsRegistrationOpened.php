@@ -6,7 +6,7 @@ namespace FKSDB\Models\Authorization\Assertions\Events;
 
 use FKSDB\Models\Authorization\Assertions\Assertion;
 use FKSDB\Models\Authorization\Assertions\WrongAssertionException;
-use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use Nette\Security\Permission;
 
 class IsRegistrationOpened implements Assertion
@@ -14,11 +14,9 @@ class IsRegistrationOpened implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $holder = $acl->getQueriedResource();
-        $resource = $holder->getResource();
-        if ($resource instanceof EventResource) {
-            return $resource->getEvent()->isRegistrationOpened();
+        if ($holder instanceof EventResourceHolder) {
+            return $holder->getContext()->isRegistrationOpened();
         }
-        var_dump(get_class($resource));
         throw new WrongAssertionException();
     }
 }

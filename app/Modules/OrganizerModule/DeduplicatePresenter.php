@@ -54,20 +54,66 @@ final class DeduplicatePresenter extends BasePresenter
         );
     }
 
-    /**
-     * @throws NoContestAvailable
-     * @throws NotFoundException
-     */
-    public function authorizedDontMerge(): bool
+    public function titlePerson(): PageTitle
     {
-        return $this->authorizedDontMerge();
+        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return false;
     }
 
     public function titleRecover(): PageTitle
     {
         return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
     }
+    /**
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     */
+    public function authorizedDontMerge(): bool
+    {
+        return $this->authorizedMerge();
+    }
 
+    public function titleDontMerge(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(
+                _('Merging persons %s (%d) and %s (%d)'),
+                $this->trunkPerson->getFullName(),
+                $this->trunkPerson->person_id,
+                $this->mergedPerson->getFullName(),
+                $this->mergedPerson->person_id
+            )
+        );
+    }
+
+    public function actionDontMerge(): void
+    {
+        $trunkId = $this->getParameter('trunkId');
+        $mergedId = $this->getParameter('mergedId');
+        $mergedPI = $this->personInfoService->findByPrimary($mergedId);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ','),
+            ],
+            $mergedPI
+        );
+
+        $trunkPI = $this->personInfoService->findByPrimary($trunkId);
+        $this->personInfoService->storeModel(
+            [
+                'duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ','),
+            ],
+            $trunkPI
+        );
+
+        $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
+        //$this->backLinkRedirect(true);
+    }
     /**
      * @throws NoContestAvailable
      * @throws NotFoundException
@@ -108,34 +154,6 @@ final class DeduplicatePresenter extends BasePresenter
         );
     }
 
-    public function titlePerson(): PageTitle
-    {
-        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
-    }
-
-    public function actionDontMerge(): void
-    {
-        $trunkId = $this->getParameter('trunkId');
-        $mergedId = $this->getParameter('mergedId');
-        $mergedPI = $this->personInfoService->findByPrimary($mergedId);
-        $this->personInfoService->storeModel(
-            [
-                'duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ','),
-            ],
-            $mergedPI
-        );
-
-        $trunkPI = $this->personInfoService->findByPrimary($trunkId);
-        $this->personInfoService->storeModel(
-            [
-                'duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ','),
-            ],
-            $trunkPI
-        );
-
-        $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
-        //$this->backLinkRedirect(true);
-    }
 
     public function actionMerge(): void
     {

@@ -513,7 +513,7 @@ CREATE TABLE IF NOT EXISTS `event_grant`
         'event.gameInserter',
         'event.applicationManager',
         'event.teamMember',
-        'event.teamTeacher'
+        'event.teamTeacher',
         'event.organizer',
         'event.participant'
         )                         NOT NULL,

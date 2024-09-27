@@ -38,7 +38,11 @@ final class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->authorizator->isAllowedEvent(EventResourceHolder::fromOwnResource($this->getEvent()), 'seating', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'seating',
+            $this->getEvent()
+        );
     }
 
     public function titleDefault(): PageTitle
