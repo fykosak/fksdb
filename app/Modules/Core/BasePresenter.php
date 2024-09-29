@@ -11,8 +11,7 @@ use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authentication\Authenticator;
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -58,8 +57,7 @@ abstract class BasePresenter extends Presenter
     private array $authorizedCache = [];
     private Container $diContainer;
 
-    protected TokenAuthenticator $tokenAuthenticator;
-    protected PasswordAuthenticator $passwordAuthenticator;
+    protected Authenticator $authenticator;
 
     protected ContestAuthorizator $contestAuthorizator;
     protected Authorizator $authorizator;
@@ -69,19 +67,16 @@ abstract class BasePresenter extends Presenter
         ContestService $contestService,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator,
-        TokenAuthenticator $tokenAuthenticator,
-        PasswordAuthenticator $passwordAuthenticator
+        Authenticator $authenticator
     ): void {
         $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
         $this->diContainer = $diContainer;
-        $this->tokenAuthenticator = $tokenAuthenticator;
-        $this->passwordAuthenticator = $passwordAuthenticator;
+        $this->authenticator = $authenticator;
     }
 
     public function injectAuthorizators(
-        ContestAuthorizator $contestAuthorizator,
         Authorizator $authorizator
     ): void {
         $this->authorizator = $authorizator;
@@ -390,14 +385,14 @@ abstract class BasePresenter extends Presenter
      */
     private function tryAuthToken(): void
     {
-        $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
+        $tokenData = $this->getParameter(Authenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
             return;
         }
 
         try {
-            $login = $this->tokenAuthenticator->authenticate($tokenData);
+            $login = $this->authenticator->authenticateToken($tokenData);
             Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'auth-token');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
             $this->getUser()->login($login);
@@ -417,7 +412,7 @@ abstract class BasePresenter extends Presenter
             return;
         }
         try {
-            $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $login = $this->authenticator->authenticatePassword($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
             Debugger::log(sprintf('%s signed in using HTTP authentication.', $login), 'auth-http');
             $this->getUser()->login($login);
             $method = $this->formatAuthorizedMethod();

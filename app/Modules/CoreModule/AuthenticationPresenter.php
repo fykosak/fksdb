@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Login\LoginForm;
 use FKSDB\Components\Controls\Recovery\RecoveryForm;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
-use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -28,13 +27,9 @@ final class AuthenticationPresenter extends BasePresenter
     /** @persistent */
     public ?string $backlink = '';
     private Google $googleProvider;
-    private GoogleAuthenticator $googleAuthenticator;
 
-    final public function injectTernary(
-        GoogleAuthenticator $googleAuthenticator,
-        GoogleProvider $googleProvider
-    ): void {
-        $this->googleAuthenticator = $googleAuthenticator;
+    final public function injectGoogle(GoogleProvider $googleProvider): void
+    {
         $this->googleProvider = $googleProvider;
     }
 
@@ -163,7 +158,7 @@ final class AuthenticationPresenter extends BasePresenter
                 ]
             );
             $ownerDetails = $this->googleProvider->getResourceOwner($token); // @phpstan-ignore-line
-            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray()); // @phpstan-ignore-line
+            $login = $this->authenticator->authenticateGoogle($ownerDetails->toArray()); // @phpstan-ignore-line
             $this->getUser()->login($login);
             $this->initialRedirect();
         } catch (UnknownLoginException $exception) {

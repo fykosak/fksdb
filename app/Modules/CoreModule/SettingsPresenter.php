@@ -50,14 +50,14 @@ final class SettingsPresenter extends BasePresenter
     final public function renderDefault(): void
     {
         if (
-            $this->tokenAuthenticator->isAuthenticatedByToken(
+            $this->authenticator->isAuthenticatedByToken(
                 AuthTokenType::from(AuthTokenType::InitialLogin)
             )
         ) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery))) {
+        if ($this->authenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery))) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
@@ -68,10 +68,10 @@ final class SettingsPresenter extends BasePresenter
         $form = $control->getForm();
         $login = $this->getLoggedPerson()->getLogin();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(
+            $this->authenticator->isAuthenticatedByToken(
                 AuthTokenType::from(AuthTokenType::InitialLogin)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
+            $this->authenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
 
         $group = $form->addGroup(_('Authentication'));
         $loginContainer = $this->createLogin(
@@ -151,10 +151,10 @@ final class SettingsPresenter extends BasePresenter
          */
         $values = $form->getValues('array');
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(
+            $this->authenticator->isAuthenticatedByToken(
                 AuthTokenType::from(AuthTokenType::InitialLogin)
             ) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
+            $this->authenticator->isAuthenticatedByToken(AuthTokenType::from(AuthTokenType::Recovery));
         $login = $this->getLoggedPerson()->getLogin();
 
         $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
@@ -167,7 +167,7 @@ final class SettingsPresenter extends BasePresenter
         $this->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);
         if ($tokenAuthentication) {
             $this->flashMessage(_('Password changed.'), Message::LVL_SUCCESS);
-            $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
+            $this->authenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
     }

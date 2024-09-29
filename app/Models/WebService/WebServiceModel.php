@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService;
 
-use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\Authenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
 use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
 use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
@@ -25,7 +25,7 @@ final class WebServiceModel
 
     public const SOAP_RESOURCE_ID = 'soap';
 
-    private PasswordAuthenticator $authenticator;
+    private Authenticator $authenticator;
     private Container $container;
     private ContestAuthorizator $contestAuthorizator;
     private User $user;
@@ -41,7 +41,7 @@ final class WebServiceModel
 
     public function __construct(
         Container $container,
-        PasswordAuthenticator $authenticator,
+        Authenticator $authenticator,
         ContestAuthorizator $contestAuthorizator,
         User $user
     ) {
@@ -65,7 +65,7 @@ final class WebServiceModel
             throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
-            $login = $this->authenticator->authenticate($args->username, $args->password);
+            $login = $this->authenticator->authenticatePassword($args->username, $args->password);
             $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
             if (!$this->contestAuthorizator->isAllowedAnyContest(self::SOAP_RESOURCE_ID, 'default')) {

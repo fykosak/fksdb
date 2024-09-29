@@ -20,9 +20,7 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%)
     #auth
-    - FKSDB\Models\Authentication\PasswordAuthenticator
-    - FKSDB\Models\Authentication\TokenAuthenticator
-    - FKSDB\Models\Authentication\GoogleAuthenticator
+    - FKSDB\Models\Authentication\Authenticator
     - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%)
     - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%)
     #auth + ACL
