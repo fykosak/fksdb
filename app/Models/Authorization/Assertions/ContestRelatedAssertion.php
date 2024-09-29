@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
-use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
-use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
-use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -23,20 +19,13 @@ class ContestRelatedAssertion implements Assertion
     public function __invoke(Permission $acl): bool
     {
         $holder = $acl->getQueriedResource();
-        $person = $holder->getResource();
-
-        if (!$person instanceof PersonModel) {
+        if (!$holder instanceof ContestResourceHolder) {
             throw new WrongAssertionException();
         }
-        $role = $acl->getQueriedRole();
-        if ($role instanceof ContestYearRole) {
-            $contest = $role->getContestYear()->contest;
-        } elseif ($role instanceof ContestRole) {
-            $contest = $role->getContest();
-        } elseif ($role instanceof EventRole) {
-            $contest = $role->getEvent()->event_type->contest;
-        } else {
-            return false;
+        $contest = $holder->getContext();
+        $person = $holder->getResource();
+        if (!$person instanceof PersonModel) {
+            throw new WrongAssertionException();
         }
 
         if ($person->getContestants($contest)->fetch()) {

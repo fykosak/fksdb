@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Resource\ResourceHolder;
 use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
 use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
 use FKSDB\Models\ORM\Models\ContestantModel;
