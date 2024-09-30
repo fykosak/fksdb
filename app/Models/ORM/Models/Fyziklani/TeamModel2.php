@@ -166,7 +166,7 @@ final class TeamModel2 extends Model implements EventResource
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $rest = $person->getScheduleRests($this->event, $types);
+            $rest = $person->getScheduleRestsForEvent($this->event, $types);
             if (count($rest)) {
                 $toPay[] = $rest;
             }

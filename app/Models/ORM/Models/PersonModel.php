@@ -337,6 +337,28 @@ final class PersonModel extends Model implements Resource
         return $roles;
     }
 
+    /**
+     * @return PersonModel[]
+     */
+    public function getEventRelatedPersons(EventModel $event): array
+    {
+        $persons = [$this];
+        $teams = [];
+        $roles = $this->getEventRoles($event);
+        foreach ($roles as $role) {
+            if ($role instanceof TeamTeacherRole) {
+                $teams[] = $role->getModel()->fyziklani_team;
+            }
+            if ($role instanceof TeamMemberRole) {
+                $teams[] = $role->getModel()->fyziklani_team;
+            }
+        }
+        /** @var TeamModel2 $team */
+        foreach ($teams as $team) {
+            $persons = [...$persons, ...$team->getPersons()];
+        }
+        return $persons;
+    }
 
     /**
      * @phpstan-return OrganizerModel[] indexed by contest_id
@@ -454,7 +476,7 @@ final class PersonModel extends Model implements Resource
      * @phpstan-param string[] $types
      * @phpstan-return PersonScheduleModel[]
      */
-    public function getScheduleRests(
+    public function getScheduleRestsForEvent(
         EventModel $event,
         array $types = [
             ScheduleGroupType::Accommodation,

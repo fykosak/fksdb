@@ -23,15 +23,8 @@ final class ItemPresenter extends BasePresenter
     /** @phpstan-use EntityPresenterTrait<ScheduleItemModel> */
     use EntityPresenterTrait;
 
-    private ScheduleItemService $service;
-
     /** @persistent */
     public ?int $groupId = null;
-
-    final public function injectService(ScheduleItemService $service): void
-    {
-        $this->service = $service;
-    }
 
     /**
      * @throws EventNotFoundException

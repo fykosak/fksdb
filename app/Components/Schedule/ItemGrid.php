@@ -87,7 +87,7 @@ final class ItemGrid extends BaseGrid
                 $presenter,
                 new Title(null, _('button.scheduleItem.detail')),
                 fn(ScheduleItemModel $model) => [
-                    ':Schedule:Item:detail',
+                    ':EventSchedule:Item:detail',
                     [
                         'id' => $model->schedule_item_id,
                         'groupId' => $model->schedule_group_id,

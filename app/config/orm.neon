@@ -1010,12 +1010,12 @@ orm:
                 title: _('Modification end')
         links:
             detail:
-                destination: :Schedule:Group:detail
+                destination: :EventSchedule:Group:detail
                 params:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.detail')
             edit:
-                destination: :Schedule:Group:edit
+                destination: :EventSchedule:Group:edit
                 params:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.edit')
@@ -1096,13 +1096,13 @@ orm:
                 title: _('Progress bar')
         links:
             detail:
-                destination: :Schedule:Item:detail
+                destination: :EventSchedule:Item:detail
                 params:
                     groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.detail')
             edit:
-                destination: :Schedule:Item:edit
+                destination: :EventSchedule:Item:edit
                 params:
                     groupId: schedule_group_id
                     id: schedule_item_id

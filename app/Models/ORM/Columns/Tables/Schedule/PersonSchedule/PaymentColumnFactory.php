@@ -33,15 +33,12 @@ class PaymentColumnFactory extends AbstractColumnFactory
                 ->addAttributes(['class' => 'badge bg-info'])
                 ->addText(_('Onsite payment'));
         }
-        if ($model->getPayment()) {
-            return $model->getPayment()->state->badge();
-        }
         if ($model->payment_deadline) {
             return Html::el('span')
                 ->addAttributes(['class' => 'badge bg-danger'])
                 ->addText(sprintf(_('Payment deadline %s'), $model->payment_deadline->format(_('__date_time'))));
         }
-        return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText(_('Payment not found'));
+        return Html::el('')->setText('-');
     }
 
     protected function renderNullModel(): Html

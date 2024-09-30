@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Modules\ProfileModule;
+namespace FKSDB\Modules\ShopModule;
 
-use FKSDB\Components\Payments\MyPaymentList;
+use FKSDB\Components\Payments\MyPaymentsList;
 use Fykosak\Utils\UI\PageTitle;
 
 final class MyPaymentsPresenter extends BasePresenter
@@ -19,8 +19,8 @@ final class MyPaymentsPresenter extends BasePresenter
         return true;
     }
 
-    protected function createComponentMyPaymentGrid(): MyPaymentList
+    protected function createComponentMyPaymentGrid(): MyPaymentsList
     {
-        return new MyPaymentList($this->getContext(), $this->getLoggedPerson());
+        return new MyPaymentsList($this->getContext(), $this->getLoggedPerson());
     }
 }

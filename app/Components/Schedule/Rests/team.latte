@@ -2,7 +2,7 @@
     {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team}
     {var $hasRest = false}
     {foreach $team->getPersons() as $person}
-        {var array $rests = $person->getScheduleRests($team->event)}
+        {var array $rests = $person->getScheduleRestsForEvent($team->event)}
         {if count($rests)}
             {php $hasRest = true}
             {include content from './person.latte' rests:$rests,person:$person}

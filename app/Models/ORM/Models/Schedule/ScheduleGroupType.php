@@ -116,6 +116,10 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return 'fas fa-calendar';
             case self::Info:
                 return 'fas fa-info';
+            case self::Excursion:
+                return 'fas fa-flask';
+            case self::Food:
+                return 'fas fa-utensils';
         }
         return '';
     }

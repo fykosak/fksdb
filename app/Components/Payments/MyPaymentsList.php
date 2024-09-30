@@ -16,7 +16,7 @@ use Nette\DI\Container;
  *     vs?:string,
  * }>
  */
-final class MyPaymentList extends BaseList
+final class MyPaymentsList extends BaseList
 {
     use PaymentListTrait;
 

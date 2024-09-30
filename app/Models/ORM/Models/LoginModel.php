@@ -96,7 +96,7 @@ final class LoginModel extends Model implements IIdentity
         $query = $this->related(DbNames::TabBaseGrant, 'login_id');
         /** @var BaseGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitBaseRole($grant->role);//@phpstan-ignore-line
+            $grants[] = new ExplicitBaseRole($grant->role);
         }
         return $grants;
     }
@@ -217,7 +217,7 @@ final class LoginModel extends Model implements IIdentity
             ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitEventRole($grant->role, $grant->event);//@phpstan-ignore-line
+            $grants[] = new ExplicitEventRole($grant->role, $grant->event);
         }
         return $grants;
     }

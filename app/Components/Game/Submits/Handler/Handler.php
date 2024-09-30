@@ -178,7 +178,7 @@ abstract class Handler
     protected function getTaskEditLink(SubmitModel $submit): Html
     {
         $link = $this->linkGenerator->link(
-            'Game:Submit:edit',
+            'EventGame:Submit:edit',
             [
                 'eventId' => $submit->fyziklani_task->event_id,
                 'id' => $submit->fyziklani_submit_id

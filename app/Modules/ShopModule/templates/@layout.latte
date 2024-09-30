@@ -1,0 +1,34 @@
+{layout '../../Core/templates/@layout.latte'}
+{varType FKSDB\Models\ORM\Models\PaymentModel[] $inProgressPayments}
+{block nav-right}
+    {foreach $inProgressPayments as $payment}
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                    {$payment->getSchedulePayment()->count('*')}
+                </span>
+            </a>
+            <div class="dropdown-menu" style="min-width: 20rem">
+                {foreach $payment->getSchedulePayment() as $schedulePayment}
+                    {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
+                    <p class="mx-3">{$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}</p>
+                {/foreach}
+                <div>
+                        <hr class="dropdown-divider">
+                </div>
+                {var $event = $payment->getRelatedEvent()}
+                {if $event}
+                    <div class="dropdown-item">
+                        <a class="btn btn-info"
+                           href="{plink :Shop:Events:detail eventId=>$event->event_id, id=>$payment->payment_id}">
+                            {_'Detail'}
+                        </a>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    {/foreach}
+    {include parent}
+{/block}
