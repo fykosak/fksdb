@@ -11,7 +11,7 @@ use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Security\Permission;
 
-class OwnTeam implements Assertion
+class OwnTeamApplication implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {

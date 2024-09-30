@@ -14,15 +14,14 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 
 final class ItemPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<ScheduleItemModel> */
-    use EventEntityPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<ScheduleItemModel> */
+    use EntityPresenterTrait;
 
     private ScheduleItemService $service;
 
@@ -54,8 +53,6 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws NotFoundException
      * @throws GoneException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedDetail(): bool
@@ -68,11 +65,9 @@ final class ItemPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -81,11 +76,9 @@ final class ItemPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
      * @throws CannotAccessModelException
-     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -103,8 +96,6 @@ final class ItemPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedEdit(): bool
@@ -117,11 +108,9 @@ final class ItemPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -132,27 +121,43 @@ final class ItemPresenter extends BasePresenter
         );
     }
 
-
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): ScheduleItemService
     {
-        return $this->service;
+        throw new GoneException();
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws NotFoundException
      */
-    private function getGroup(): ?ScheduleGroupModel
+    private function getGroup(): ScheduleGroupModel
     {
-        if (!$this->groupId) {
-            return null;
+        /** @var ScheduleGroupModel|null $candidate */
+        $candidate = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->groupId)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
         }
-        /** @var ScheduleGroupModel|null $group */
-        $group = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->groupId)->fetch();
-        return $group;
+    }
+
+    protected function loadModel(): ScheduleItemModel
+    {
+        /** @var ScheduleItemModel|null $candidate */
+        $candidate = $this->getGroup()->getItems()->where('schedule_item_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
     }
 
     /**
      * @throws EventNotFoundException
+     * @throws NotFoundException
      */
     protected function createComponentCreateForm(): ScheduleItemForm
     {
@@ -161,11 +166,9 @@ final class ItemPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleItemForm
     {
@@ -174,11 +177,9 @@ final class ItemPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentPersonsGrid(): PersonGrid
     {
@@ -187,10 +188,8 @@ final class ItemPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentCode(): CodeAttendance
     {

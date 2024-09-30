@@ -12,6 +12,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\Message;
@@ -21,8 +22,8 @@ use Nette\Application\ForbiddenRequestException;
 
 final class EventOrganizerPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<EventOrganizerModel> */
-    use EventEntityPresenterTrait;
+    /** @use EntityPresenterTrait<EventOrganizerModel> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -59,8 +60,6 @@ final class EventOrganizerPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedEdit(): bool
@@ -73,10 +72,8 @@ final class EventOrganizerPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
@@ -90,10 +87,8 @@ final class EventOrganizerPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function authorizedDelete(): bool
     {
@@ -108,9 +103,7 @@ final class EventOrganizerPresenter extends BasePresenter
     {
         return new PageTitle(null, _('Remove event organizer'), 'fas fa-user-edit');
     }
-    /**
-     * @throws \ReflectionException
-     */
+
     public function actionDelete(): void
     {
         try {
@@ -160,10 +153,8 @@ final class EventOrganizerPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentEditForm(): EventOrganizerFormComponent

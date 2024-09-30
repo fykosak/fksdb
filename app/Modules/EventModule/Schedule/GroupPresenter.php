@@ -12,28 +12,18 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 
 final class GroupPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
-    use EventEntityPresenterTrait;
-
-    private ScheduleGroupService $service;
-
-    final public function injectService(ScheduleGroupService $service): void
-    {
-        $this->service = $service;
-    }
+    /** @phpstan-use EntityPresenterTrait<ScheduleGroupModel> */
+    use EntityPresenterTrait;
 
     /**
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedDetail(): bool
@@ -46,11 +36,9 @@ final class GroupPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -59,11 +47,9 @@ final class GroupPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
      * @throws CannotAccessModelException
-     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -77,8 +63,6 @@ final class GroupPresenter extends BasePresenter
     /**
      * @throws NotFoundException
      * @throws GoneException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedEdit(): bool
@@ -91,11 +75,9 @@ final class GroupPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -126,9 +108,23 @@ final class GroupPresenter extends BasePresenter
         return new PageTitle(null, _('Create group'), 'fas fa-pen');
     }
 
+    protected function loadModel(): ScheduleGroupModel
+    {
+        /** @var ScheduleGroupModel|null $candidate */
+        $candidate = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
+    }
+
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): ScheduleGroupService
     {
-        return $this->service;
+        throw new GoneException();
     }
 
     /**
@@ -141,11 +137,9 @@ final class GroupPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleGroupForm
     {
@@ -154,11 +148,9 @@ final class GroupPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentItemsGrid(): ItemGrid
     {

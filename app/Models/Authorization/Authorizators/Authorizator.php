@@ -119,7 +119,7 @@ final class Authorizator
         if (!$this->getLogin()) {
             return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
         }
-        foreach ($this->getLogin()->getRoles() as $role) {
+        foreach ($this->getLogin()->getBaseRoles() as $role) {
             if ($this->permission->isAllowed($role, $resource, $privilege)) {
                 return true;
             }

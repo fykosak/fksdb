@@ -9,14 +9,15 @@ use FKSDB\Models\Authorization\Assertions\ContestRelatedAssertion;
 use FKSDB\Models\Authorization\Assertions\Events\IsOpenTypeEvent;
 use FKSDB\Models\Authorization\Assertions\Events\IsRegistrationOpened;
 use FKSDB\Models\Authorization\Assertions\Events\NotDisqualified;
-use FKSDB\Models\Authorization\Assertions\Events\OwnParticipant;
-use FKSDB\Models\Authorization\Assertions\Events\OwnTeam;
+use FKSDB\Models\Authorization\Assertions\Events\OwnApplication;
+use FKSDB\Models\Authorization\Assertions\Events\OwnTeamApplication;
 use FKSDB\Models\Authorization\Assertions\IsSelfPersonAssertion;
 use FKSDB\Models\Authorization\Assertions\OwnSubmitAssertion;
 use FKSDB\Models\Authorization\Assertions\Payments\OwnPaymentAssertion;
 use FKSDB\Models\Authorization\Assertions\Payments\PaymentEditableAssertion;
 use FKSDB\Models\Authorization\Assertions\SelfAssertion;
 use FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion;
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\Authorization\Roles\Base\GuestRole;
 use FKSDB\Models\Authorization\Roles\Base\LoggedInRole;
 use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
@@ -63,45 +64,46 @@ final class ACL
     public static function create(): Permission
     {
         $permission = new Permission();
-// BaseRole -> implicit
+        // BaseRole -> implicit
         $permission->addRole(GuestRole::RoleId);
         $permission->addRole(LoggedInRole::RoleId, GuestRole::RoleId);
-// ContestRole -> implict
+        // BaseRole -> explicit
+        $permission->addRole(ExplicitBaseRole::Cartesian);
+        $permission->addRole(ExplicitBaseRole::SchoolManager);
+        // ContestRole -> implict
         $permission->addRole(OrganizerRole::RoleId, LoggedInRole::RoleId);
         // ContestRole -> explicit
         $permission->addRole(ExplicitContestRole::Aesop);
         $permission->addRole(ExplicitContestRole::Web);
         $permission->addRole(ExplicitContestRole::Wiki);
-
         $permission->addRole(ExplicitContestRole::Webmaster, OrganizerRole::RoleId);
         $permission->addRole(ExplicitContestRole::TaskManager, OrganizerRole::RoleId);
-        $permission->addRole(ExplicitContestRole::SchoolManager);
         $permission->addRole(
             ExplicitContestRole::InboxManager,
-            [OrganizerRole::RoleId, ExplicitContestRole::SchoolManager]
+            [OrganizerRole::RoleId, ExplicitBaseRole::SchoolManager]
         );
         $permission->addRole(
             ExplicitContestRole::EventManager,
-            [OrganizerRole::RoleId, ExplicitContestRole::SchoolManager]
+            [OrganizerRole::RoleId, ExplicitBaseRole::SchoolManager]
         );
         $permission->addRole(
             ExplicitContestRole::DataManager,
             [ExplicitContestRole::InboxManager, ExplicitContestRole::TaskManager, ExplicitContestRole::EventManager]
         );
+        $permission->addRole(ExplicitContestRole::Treasurer);
         $permission->addRole(
-            ExplicitContestRole::Superuser,
+            ExplicitContestRole::Boss,
             [
                 OrganizerRole::RoleId,
+                ExplicitContestRole::Treasurer,
                 ExplicitContestRole::TaskManager,
-                ExplicitContestRole::SchoolManager,
+                ExplicitBaseRole::SchoolManager,
                 ExplicitContestRole::InboxManager,
                 ExplicitContestRole::DataManager,
                 ExplicitContestRole::EventManager,
             ]
         );
-        $permission->addRole(ExplicitContestRole::Boss, [ExplicitContestRole::Superuser]);
 
-        $permission->addRole(ExplicitContestRole::Cartesian);
         // ContestYearRole -> implicit
         $permission->addRole(ContestantRole::RoleId, LoggedInRole::RoleId);
         // EventRole -> implicit
@@ -113,7 +115,9 @@ final class ACL
         // EventRole ->explicit
         $permission->addRole(ExplicitEventRole::GameInserter, LoggedInRole::RoleId);
         $permission->addRole(ExplicitEventRole::ApplicationManager, LoggedInRole::RoleId);
+
 // permissions
+
         $permission->addResource(EventModel::RESOURCE_ID);
         self::createSchool($permission);
         $permission->addResource(TeacherModel::RESOURCE_ID);
@@ -171,7 +175,7 @@ final class ACL
         self::createGame($permission);
         self::createWarehouse($permission);
 
-        $permission->allow(ExplicitContestRole::Cartesian);
+        $permission->allow(ExplicitBaseRole::Cartesian);
         return $permission;
     }
 
@@ -224,16 +228,15 @@ final class ACL
     private static function createSchool(Permission $permission): void
     {
         $permission->addResource(SchoolModel::RESOURCE_ID);
-
         $permission->allow(OrganizerRole::RoleId, SchoolModel::RESOURCE_ID, ['list', 'detail']);
-        $permission->allow(ExplicitContestRole::SchoolManager, SchoolModel::RESOURCE_ID);
+        $permission->allow(ExplicitBaseRole::SchoolManager, SchoolModel::RESOURCE_ID);
     }
 
     private static function createContestant(Permission $permission): void
     {
         $permission->addResource(ContestantModel::RESOURCE_ID);
         $permission->allow(OrganizerRole::RoleId, ContestantModel::RESOURCE_ID, 'list');
-        $permission->allow(ExplicitContestRole::InboxManager, ContestantModel::RESOURCE_ID, ['list', 'create']);
+        $permission->allow(ExplicitContestRole::InboxManager, ContestantModel::RESOURCE_ID, ['create']);
         $permission->allow(
             ExplicitContestRole::InboxManager,
             ContestantModel::RESOURCE_ID,
@@ -244,9 +247,7 @@ final class ACL
 
     private static function createApplications(Permission $permission): void
     {
-
         $permission->addResource(EventParticipantModel::RESOURCE_ID);
-
         $permission->allow(
             GuestRole::RoleId,
             EventParticipantModel::RESOURCE_ID,
@@ -262,7 +263,7 @@ final class ACL
             'detail',
             new LogicAnd(
                 new NotDisqualified(),
-                new OwnParticipant()
+                new OwnApplication()
             )
         );
         $permission->allow(
@@ -271,7 +272,7 @@ final class ACL
             'edit',
             new LogicAnd(
                 new NotDisqualified(),
-                new OwnParticipant(),
+                new OwnApplication(),
                 new IsRegistrationOpened()
             )
         );
@@ -283,9 +284,7 @@ final class ACL
 
     private static function createTeamApplications(Permission $permission): void
     {
-
         $permission->addResource(TeamModel2::RESOURCE_ID);
-
         $permission->allow(
             GuestRole::RoleId,
             TeamModel2::RESOURCE_ID,
@@ -301,7 +300,7 @@ final class ACL
             'detail',
             new LogicAnd(
                 new NotDisqualified(),
-                new OwnTeam()
+                new OwnTeamApplication()
             )
         );
         $permission->allow(
@@ -313,7 +312,7 @@ final class ACL
             'edit',
             new LogicAnd(
                 new NotDisqualified(),
-                new OwnTeam(),
+                new OwnTeamApplication(),
                 new IsRegistrationOpened()
             )
         );
@@ -325,7 +324,6 @@ final class ACL
 
     private static function createUpload(Permission $permission): void
     {
-
         $permission->allow(ContestantRole::RoleId, ContestModel::RESOURCE_ID, ['contestantDashboard']);
         // contestatn upload
         $permission->allow(ContestantRole::RoleId, SubmitModel::RESOURCE_ID, ['list', 'upload']);
@@ -339,8 +337,6 @@ final class ACL
 
     private static function createApi(Permission $permission): void
     {
-
-
         $permission->addResource('export.adhoc');
         $permission->addResource('export');
         $permission->addResource(RestApiPresenter::RESOURCE_ID);
@@ -374,7 +370,6 @@ final class ACL
     private static function createPayment(Permission $permission): void
     {
         $permission->addResource(PaymentModel::RESOURCE_ID);
-
         $permission->allow(
             LoggedInRole::RoleId,
             PaymentModel::RESOURCE_ID,
@@ -394,11 +389,12 @@ final class ACL
             [
                 TeamMemberRole::RoleId,
                 TeamTeacherRole::RoleId,
+                ScheduleParticipant::RoleId,
             ],
             PaymentModel::RESOURCE_ID,
             'create'
         );
-        $permission->allow(ExplicitContestRole::EventManager, PaymentModel::RESOURCE_ID);
+        $permission->allow(ExplicitContestRole::Treasurer, PaymentModel::RESOURCE_ID);
     }
 
     private static function createGame(Permission $permission): void
@@ -440,7 +436,6 @@ final class ACL
         $permission->addResource(ProducerModel::RESOURCE_ID);
         $permission->addResource(ProductModel::RESOURCE_ID);
         $permission->addResource(ItemModel::RESOURCE_ID);
-
         $permission->allow(
             OrganizerRole::RoleId,
             [

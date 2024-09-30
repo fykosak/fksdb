@@ -10,7 +10,7 @@ use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Security\Permission;
 
-class OwnParticipant implements Assertion
+class OwnApplication implements Assertion
 {
     public function __invoke(Permission $acl): bool
     {

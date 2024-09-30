@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\Authorization\Roles\Base\LoggedInRole;
 use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
 use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
@@ -14,6 +15,9 @@ use FKSDB\Models\Authorization\Roles\Events\EventRole;
 use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\Authorization\Roles\Role;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
+use FKSDB\Models\ORM\Models\Grant\ContestGrantModel;
+use FKSDB\Models\ORM\Models\Grant\EventGrantModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
@@ -66,6 +70,36 @@ final class LoginModel extends Model implements IIdentity
         ];
     }
 
+    /** @var Role[] */
+    private array $baseRoles;
+
+    /**
+     * @phpstan-return Role[]
+     */
+    public function getBaseRoles(): array
+    {
+        if (!isset($this->baseRoles)) {
+            $this->baseRoles = [
+                ...$this->getExplicitBaseRoles(),
+                ...$this->getRoles(),
+            ];
+        }
+        return $this->baseRoles;
+    }
+
+    /**
+     * @phpstan-return ExplicitBaseRole[]
+     */
+    public function getExplicitBaseRoles(): array
+    {
+        $grants = [];
+        $query = $this->related(DbNames::TabBaseGrant, 'login_id');
+        /** @var BaseGrantModel $grant */
+        foreach ($query as $grant) {
+            $grants[] = new ExplicitBaseRole($grant->role);//@phpstan-ignore-line
+        }
+        return $grants;
+    }
     /** @var ContestRole[][] */
     private array $contestRoles = [];
 
@@ -95,7 +129,7 @@ final class LoginModel extends Model implements IIdentity
         }
         /** @var ContestGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitContestRole($grant->role, $grant->contest);//@phpstan-ignore-line
+            $grants[] = new ExplicitContestRole($grant->role, $grant->contest);
         }
         return $grants;
     }

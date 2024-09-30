@@ -27,17 +27,16 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 final class TeamPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<TeamModel2> */
-    use EventEntityPresenterTrait;
+    /** @use EntityPresenterTrait<TeamModel2> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -91,8 +90,6 @@ final class TeamPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedDetail(): bool
@@ -105,11 +102,9 @@ final class TeamPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function renderDetail(): void
     {
@@ -131,7 +126,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \Throwable
      */
@@ -153,10 +147,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function authorizedOrgDetail(): bool
     {
@@ -169,11 +161,9 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function renderOrgDetail(): void
     {
@@ -182,7 +172,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \Throwable
      */
@@ -217,10 +206,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
     {
@@ -233,10 +220,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -311,10 +296,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): TeamForm
     {
@@ -347,11 +330,9 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @phpstan-return TransitionButtonsComponent<TeamModel2>
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotImplementedException
      */
@@ -377,10 +358,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentRests(): TeamRestsComponent
     {
@@ -389,10 +368,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentSeating(): Single
     {
@@ -401,10 +378,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
@@ -421,10 +396,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentNoteForm(): NoteForm
     {

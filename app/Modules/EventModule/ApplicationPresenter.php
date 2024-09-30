@@ -21,6 +21,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -31,8 +32,8 @@ use Nette\Utils\Html;
 
 final class ApplicationPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<EventParticipantModel> */
-    use EventEntityPresenterTrait;
+    /** @use EntityPresenterTrait<EventParticipantModel> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -86,8 +87,6 @@ final class ApplicationPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
-     * @throws ForbiddenRequestException
      * @throws EventNotFoundException
      */
     public function authorizedDetail(): bool
@@ -100,10 +99,8 @@ final class ApplicationPresenter extends BasePresenter
     }
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function renderDetail(): void
@@ -137,7 +134,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -156,9 +152,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      * @throws NotFoundException
      */
@@ -173,10 +167,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function renderEdit(): void
@@ -186,9 +178,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
@@ -269,9 +259,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentEditForm(): BaseComponent
@@ -322,10 +310,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws NotImplementedException
@@ -356,9 +342,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentRests(): PersonRestComponent
@@ -376,9 +360,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid

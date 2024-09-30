@@ -13,18 +13,14 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 
-/**
- * @method TeamModel2 getEntity()
- */
 final class ClosePresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<TeamModel2> */
-    use EventEntityPresenterTrait;
+    /** @phpstan-use EntityPresenterTrait<TeamModel2> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -44,11 +40,9 @@ final class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleTeam(): PageTitle
     {
@@ -73,11 +67,9 @@ final class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentTeamControl(): PreviewComponent
     {
