@@ -41,8 +41,7 @@ final class AdminPresenter extends BasePresenter
     public function injectServices(
         PaymentService $paymentService,
         ScheduleItemService $scheduleItemService
-    ): void
-    {
+    ): void {
         $this->paymentService = $paymentService;
         $this->scheduleItemService = $scheduleItemService;
     }

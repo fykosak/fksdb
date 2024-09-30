@@ -10,8 +10,8 @@ use Nette\Utils\Html;
 
 final class ExplicitBaseRole implements Role
 {
-    public const Cartesian = 'base.cartesian';
-    public const SchoolManager = 'base.schoolManager';
+    public const Cartesian = 'base.cartesian';//phpcs:ignore
+    public const SchoolManager = 'base.schoolManager';//phpcs:ignore
 
     /** @phpstan-var self::* $roleId */
     private string $roleId;

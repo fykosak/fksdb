@@ -112,13 +112,13 @@ class Authorization extends FyziklaniTestCase
     public function getTestData(): array
     {
         return [
-            [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->person, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->contestOrganizer, 'Game:Submit', ['create', 'list'], false], # TODO 'edit',
-            [fn() => $this->contestOrganizerOther, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->contestant, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->eventOrganizer, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->inserter, 'Game:Submit', ['create', 'edit', 'list'], true],
+            [fn() => null, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->person, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestOrganizer, 'EventGame:Submit', ['create', 'list'], false], # TODO 'edit',
+            [fn() => $this->contestOrganizerOther, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestant, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->eventOrganizer, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->inserter, 'EventGame:Submit', ['create', 'edit', 'list'], true],
         ];
     }
 

@@ -485,7 +485,7 @@ CREATE TABLE IF NOT EXISTS `contest_grant`
         'contest.inboxManager',
         'contest.boss',
         'contest.exportDesigner',
-        'contest.treasurer'
+        'contest.treasurer',
         'contest.aesop',
         'contest.web',
         'contest.wiki'

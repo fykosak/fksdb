@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\Grant\ContestGrantService;
+use FKSDB\Models\ORM\Services\Grant\BaseGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -34,8 +34,8 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
         $this->login = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->person->person_id, 'active' => 1]
         );
-        $this->container->getByType(ContestGrantService::class)->storeModel(
-            ['login_id' => $this->login->login_id, 'role' => ExplicitContestRole::Cartesian, 'contest_id' => 1]
+        $this->container->getByType(BaseGrantService::class)->storeModel(
+            ['login_id' => $this->login->login_id, 'role' => ExplicitBaseRole::Cartesian]
         );
         $this->authenticateLogin($this->login);
     }
