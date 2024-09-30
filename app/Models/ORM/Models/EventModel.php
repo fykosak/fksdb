@@ -9,7 +9,6 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Submits\Handler\CtyrbojHandler;
 use FKSDB\Components\Game\Submits\Handler\FOFHandler;
 use FKSDB\Components\Game\Submits\Handler\Handler;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCodeException;
@@ -168,7 +167,10 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     public function getPossiblyAttendingTeams(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
-        $selection = $this->getTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
+        $selection = $this->getTeams()->where(
+            'state',
+            array_map(fn(TeamState $case): string => $case->value, TeamState::possiblyAttendingCases())
+        );
         return $selection;
     }
 
@@ -387,10 +389,5 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     public function getEvent(): EventModel
     {
         return $this;
-    }
-
-    public function getContest(): ContestModel
-    {
-        return $this->event_type->contest;
     }
 }
