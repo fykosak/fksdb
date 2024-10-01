@@ -479,13 +479,11 @@ CREATE TABLE IF NOT EXISTS `contest_grant`
     `role`             ENUM (
         'contest.webmaster',
         'contest.taskManager',
-        'contest.dispatcher',
         'contest.dataManager',
         'contest.eventManager',
         'contest.inboxManager',
-        'contest.boss',
-        'contest.exportDesigner',
         'contest.treasurer',
+        'contest.boss',
         'contest.aesop',
         'contest.web',
         'contest.wiki'

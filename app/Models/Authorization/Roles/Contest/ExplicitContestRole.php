@@ -13,15 +13,13 @@ final class ExplicitContestRole implements ContestRole
     // phpcs:disable
     public const Webmaster = 'contest.webmaster';
     public const TaskManager = 'contest.taskManager';
-    public const Dispatcher = 'contest.dispatcher';
     public const DataManager = 'contest.dataManager';
     public const EventManager = 'contest.eventManager';
     public const InboxManager = 'contest.inboxManager';
     public const Treasurer = 'contest.treasurer';
     public const Boss = 'contest.boss';
-    public const ExportDesigner = 'contest.exportDesigner';
-    public const Aesop = 'contest.aesop';
 
+    public const Aesop = 'contest.aesop';
     public const Web = 'contest.web';
     public const Wiki = 'contest.wiki';
 
