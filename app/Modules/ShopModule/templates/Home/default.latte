@@ -7,42 +7,42 @@
     <div class="panel color-auto">
         <div class="container">
             <h2>{_'On going payments'}</h2>
-            <div class="row row-cols-1 row-cols-md-2 g-4 mb-3">
+            <div class="row row-cols-1 row-cols-md-1 g-4 mb-3">
                 {foreach $payments as $payment}
                     {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::CANCELED}
                     {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
                     {var $behavior = $payment->state->behaviorType()}
                     <div class="col">
                         <div class="card border-{$behavior}">
-                            <h5 class="card-header">{_'Order No.'} {$payment->payment_id} {$payment->state->badge()}</h5>
+                            <div class="card-header">
+                                <h3>{$payment->state->badge()}</h3>
+                                <small class="text-end">{_'Order No.'} {$payment->payment_id}</small>
+                            </div>
+                            {if $payment->hasGeneratedSymbols()}
+                                <div class="card-body">
+                                    <h5 class="card-title">{_'Bank connection'}</h5>
+                                    {include bankConnection from ../blocks/bankConnection.latte model:$payment}
+                                </div>
+                            {/if}
                             <div class="card-body">
-                                {if $payment->currency === Fykosak\Utils\Price\Currency::CZK}
-                                    {control columnTable [
-                                    'payment.constant_symbol',
-                                    'payment.variable_symbol',
-                                    'payment.bank_account',
-                                    'payment.bank_name',
-                                    'payment.recipient',
-                                    'payment.iban',
-                                    'payment.price',
-                                    ],$payment,1024}
-                                {else}
-                                    {control columnTable [
-                                    'payment.bank_name',
-                                    'payment.recipient',
-                                    'payment.iban',
-                                    'payment.swift',
-                                    'payment.price',
-                                    ],$payment,1024}
-                                {/if}
+                                    <h5 class="card-title">{_'Contains'}</h5>
+                                    <div class="row"></div>
+                                    {foreach $payment->getSchedulePayment() as $schedulePayment}
+                                        <div class="col">
+                                            {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
+                                        {$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}
+                                        </div>
+                                    {/foreach}
+                            </div>
                                 {var $event = $payment->getRelatedEvent()}
                                 {if $event}
+                                <div class="card-body">
                                     <a class="btn btn-info"
                                        href="{plink :Shop:Events:detail eventId=>$event->event_id, id=>$payment->payment_id}">
                                         {_'Detail'}
                                     </a>
-                                {/if}
-                            </div>
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 {/foreach}

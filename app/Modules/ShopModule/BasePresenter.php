@@ -16,8 +16,6 @@ use Tracy\Debugger;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
-    protected const AvailableEventIds = [182]; //phpcs:ignore
-
     protected TransitionsMachineFactory $machineFactory;
 
     public function injectMachineFactory(TransitionsMachineFactory $machineFactory): void

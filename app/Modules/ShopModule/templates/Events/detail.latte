@@ -86,26 +86,8 @@
     {if $model->hasGeneratedSymbols()}
         <div class="panel color-auto">
             <div class="container">
-                <h2>{_'Payment info'}</h2>
-                {if $model->currency === Fykosak\Utils\Price\Currency::CZK}
-                    {control columnTable [
-                    'payment.constant_symbol',
-                    'payment.variable_symbol',
-                    'payment.bank_account',
-                    'payment.bank_name',
-                    'payment.recipient',
-                    'payment.iban',
-                    'payment.price',
-                    ],$model,1024}
-                {else}
-                    {control columnTable [
-                    'payment.bank_name',
-                    'payment.recipient',
-                    'payment.iban',
-                    'payment.swift',
-                    'payment.price',
-                    ],$model,1024}
-                {/if}
+                <h2>{_'Bank connection'}</h2>
+                {include bankConnection from ../blocks/bankConnection.latte model:$model}
             </div>
         </div>
     {/if}

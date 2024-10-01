@@ -34,7 +34,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function authorizedCreate(): bool
     {
@@ -48,7 +47,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function renderCreate(): void
     {
@@ -57,7 +55,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function authorizedDetail(): bool
     {
@@ -89,7 +86,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function authorizedEdit(): bool
     {
@@ -99,7 +95,6 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     final public function renderEdit(): void
     {
@@ -122,13 +117,9 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     private function getEvent(): EventModel
     {
-        if (!in_array($this->eventId, self::AvailableEventIds)) {
-            throw new NotImplementedException();
-        }
         $event = $this->eventService->findByPrimary($this->eventId);
         if (!$event) {
             throw new NotFoundException();
@@ -157,7 +148,6 @@ final class EventsPresenter extends BasePresenter
     }
 
     /**
-     * @throws NotImplementedException
      * @throws NotFoundException
      */
     protected function createComponentCreateForm(): SchedulePaymentForm
@@ -174,7 +164,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     protected function createComponentEditForm(): SchedulePaymentForm
     {
