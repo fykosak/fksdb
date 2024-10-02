@@ -34,10 +34,7 @@ final class ScheduleParticipant implements EventRole, ImplicitRole
     {
         return Html::el('span')
             ->addAttributes(['class' => 'badge bg-color-10'])
-            ->addText(sprintf(
-                _('Schedule participant (%s)'),
-                $this->personSchedule->state->label()
-            )); // TODO
+            ->addText(_('Schedule participant'));
     }
 
     public function getRoleId(): string

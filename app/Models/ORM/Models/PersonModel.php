@@ -333,6 +333,7 @@ final class PersonModel extends Model implements Resource
         /** @var PersonScheduleModel $personSchedule */
         foreach ($personSchedules as $personSchedule) {
             $roles[] = new ScheduleParticipant($personSchedule);
+            break;
         }
         return $roles;
     }
