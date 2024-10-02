@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\LocalizedString;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 
@@ -38,7 +39,7 @@ use Nette\Utils\Strings;
  * }
  * @phpstan-type TaskStatsType array{solversCount:int,averagePoints:float|null}
  */
-final class TaskModel extends Model implements Resource
+final class TaskModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'task';
 
@@ -103,14 +104,9 @@ final class TaskModel extends Model implements Resource
         return (bool)$this->getCategories()->where('contest_category_id', $category->contest_category_id)->fetch();
     }
 
-    public function getContestYear(): ?ContestYearModel
+    public function getContestYear(): ContestYearModel
     {
-        /** @var ContestYearModel|null $contestYear */
-        $contestYear = $this->contest->related(DbNames::TAB_CONTEST_YEAR, 'contest_id')->where(
-            'year',
-            $this->year
-        )->fetch();
-        return $contestYear;
+        return $this->contest->getContestYear($this->year);
     }
 
     /**
@@ -212,5 +208,10 @@ final class TaskModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contest;
     }
 }

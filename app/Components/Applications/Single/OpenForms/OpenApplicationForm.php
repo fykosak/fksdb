@@ -14,6 +14,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\ScheduleHandler;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -22,7 +23,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\BasePresenter;
@@ -87,10 +88,12 @@ abstract class OpenApplicationForm extends ModelForm
             $this->event->getContestYear(),
             PersonSearchContainer::SEARCH_EMAIL,
             true,
-            new SelfACLResolver(
-                $this->model ?? EventParticipantModel::RESOURCE_ID,
+            new SelfEventACLResolver(
+                $this->model
+                    ? EventResourceHolder::fromOwnResource($this->model)
+                    : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
-                $this->event->event_type->contest,
+                $this->event,
                 $this->container
             ),
             $this->event

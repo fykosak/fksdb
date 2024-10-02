@@ -6,7 +6,6 @@ namespace FKSDB\Components\Payments;
 
 use FKSDB\Components\Grids\Components\BaseList;
 use FKSDB\Components\Grids\Components\Button\Button;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\PaymentService;
@@ -25,13 +24,11 @@ final class PaymentList extends BaseList
 {
     use PaymentListTrait;
 
-    private EventModel $event;
     private PaymentService $paymentService;
 
-    public function __construct(Container $container, EventModel $event)
+    public function __construct(Container $container)
     {
         parent::__construct($container, 1024);
-        $this->event = $event;
     }
 
     public function inject(PaymentService $paymentService): void
@@ -45,10 +42,6 @@ final class PaymentList extends BaseList
     protected function getModels(): TypedSelection
     {
         $query = $this->paymentService->getTable();
-        $query->where(
-            ':schedule_payment.person_schedule.schedule_item.schedule_group.event_id',
-            $this->event->event_id
-        );
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;
@@ -88,8 +81,10 @@ final class PaymentList extends BaseList
                 new Title(null, _('button.payment.detail')),
                 fn(PaymentModel $model): array => [
                     ':Event:Payments:detail',
-                    ['id' => $model->payment_id, 'eventId' => $this->event->event_id],
-                ]
+                    ['id' => $model->payment_id, 'eventId' => $model->getRelatedEvent()->event_id],
+                ],
+                null,
+                fn(PaymentModel $model): bool => (bool)$model->getRelatedEvent()
             ),
             'detail'
         );

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Tests\PersonHistory\SetSchoolTest;
 use FKSDB\Models\ORM\Tests\PersonHistory\StudyTypeTest;
 use FKSDB\Models\ORM\Tests\Test;

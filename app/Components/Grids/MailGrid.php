@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonMailService;
 use Fykosak\NetteORM\Selection\TypedSelection;
-use Fykosak\Utils\UI\Title;
 
 /**
  * @phpstan-extends BaseGrid<PersonMailModel,array{}>

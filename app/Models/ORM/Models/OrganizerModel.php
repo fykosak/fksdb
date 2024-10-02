@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidArgumentException;
-use Nette\Security\Resource;
 
 /**
  * @property-read int $org_id
@@ -24,7 +24,7 @@ use Nette\Security\Resource;
  * @property-read int $allow_wiki
  * @property-read int $allow_pm
  */
-final class OrganizerModel extends Model implements Resource
+final class OrganizerModel extends Model implements ContestResource
 {
     public const RESOURCE_ID = 'organizer';
 
@@ -39,5 +39,10 @@ final class OrganizerModel extends Model implements Resource
             throw new InvalidArgumentException();
         }
         return $this->since <= $contestYear->year && ($this->until === null || $this->until >= $contestYear->year);
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contest;
     }
 }

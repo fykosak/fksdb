@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
-    EventOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{EventOrganizerRole,
     EventRole,
     Fyziklani\TeamMemberRole,
     Fyziklani\TeamTeacherRole,
-    ParticipantRole
+    ParticipantRole,
+    ScheduleParticipant
 };
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
@@ -315,23 +315,25 @@ final class PersonModel extends Model implements Resource
         $teachers = $this->getTeamTeachers($event);
         /** @var TeamTeacherModel $teacher */
         foreach ($teachers as $teacher) {
-            $roles[] = new TeamTeacherRole($event, $teacher);
+            $roles[] = new TeamTeacherRole($teacher);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
-            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
+            $roles[] = new EventOrganizerRole($eventOrganizer);
         }
         $eventParticipant = $this->getEventParticipant($event);
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($event, $eventParticipant);
+            $roles[] = new ParticipantRole($eventParticipant);
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new TeamMemberRole($event, $teamMember);
+            $roles[] = new TeamMemberRole($teamMember);
         }
-        $organizer = $this->getActiveOrganizer($event->event_type->contest);
-        if (isset($organizer)) {
-            $roles[] = new ContestOrganizerRole($event, $organizer);
+        $personSchedules = $this->getScheduleForEvent($event);
+        /** @var PersonScheduleModel $personSchedule */
+        foreach ($personSchedules as $personSchedule) {
+            $roles[] = new ScheduleParticipant($personSchedule);
+            break;
         }
         return $roles;
     }
@@ -346,10 +348,10 @@ final class PersonModel extends Model implements Resource
         $roles = $this->getEventRoles($event);
         foreach ($roles as $role) {
             if ($role instanceof TeamTeacherRole) {
-                $teams[] = $role->teacher->fyziklani_team;
+                $teams[] = $role->getModel()->fyziklani_team;
             }
             if ($role instanceof TeamMemberRole) {
-                $teams[] = $role->member->fyziklani_team;
+                $teams[] = $role->getModel()->fyziklani_team;
             }
         }
         /** @var TeamModel2 $team */

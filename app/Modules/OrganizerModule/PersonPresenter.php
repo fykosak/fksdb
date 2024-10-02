@@ -13,10 +13,9 @@ use FKSDB\Components\EntityForms\AddressFormComponent;
 use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonSelectBox;
-use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
@@ -25,7 +24,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
@@ -47,26 +45,22 @@ final class PersonPresenter extends BasePresenter
         $this->personService = $personService;
     }
 
-    public function titleSearch(): PageTitle
-    {
-        return new PageTitle(null, _('Find person'), 'fas fa-search');
-    }
 
     /**
      * @throws NoContestAvailable
      */
     public function authorizedSearch(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'search', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'search',
+            $this->getSelectedContest()
+        );
     }
 
-    /**
-     * @throws GoneException
-     * @throws NotFoundException
-     */
-    public function titleDetail(): PageTitle
+    public function titleSearch(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fas fa-eye');
+        return new PageTitle(null, _('Find person'), 'fas fa-search');
     }
 
     /**
@@ -78,13 +72,21 @@ final class PersonPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        $full = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.full', $this->getSelectedContest());
-        $restrict = $this->contestAuthorizator->isAllowed(
-            $this->getEntity(),
+        $full = $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'detail.full',
+            $this->getSelectedContest()
+        );
+        $restrict = $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
             'detail.restrict',
             $this->getSelectedContest()
         );
-        $basic = $this->contestAuthorizator->isAllowed($this->getEntity(), 'detail.basic', $this->getSelectedContest());
+        $basic = $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'detail.basic',
+            $this->getSelectedContest()
+        );
 
         return $full || $restrict || $basic;
     }
@@ -93,36 +95,9 @@ final class PersonPresenter extends BasePresenter
      * @throws GoneException
      * @throws NotFoundException
      */
-    public function titleEdit(): PageTitle
+    public function titleDetail(): PageTitle
     {
-        return new PageTitle(
-            null,
-            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
-            'fas fa-user-edit'
-        );
-    }
-
-    public function authorizedEdit(): bool
-    {
-        return $this->contestAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getSelectedContest());
-    }
-
-    public function titleCreate(): PageTitle
-    {
-        return new PageTitle(null, _('Create person'), 'fas fa-user-plus');
-    }
-
-    public function titlePizza(): PageTitle
-    {
-        return new PageTitle(null, _('Pizza'), 'fas fa-pizza-slice');
-    }
-
-    /**
-     * @throws NoContestAvailable
-     */
-    public function authorizedPizza(): bool
-    {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'pizza', $this->getSelectedContest());
+        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fas fa-eye');
     }
 
     /**
@@ -146,12 +121,72 @@ final class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'edit',
+            $this->getSelectedContest()
+        );
+    }
+
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
+            'fas fa-user-edit'
+        );
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create',
+            $this->getSelectedContest()
+        );
+    }
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create person'), 'fas fa-user-plus');
+    }
+
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedPizza(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'pizza',
+            $this->getSelectedContest()
+        );
+    }
+    public function titlePizza(): PageTitle
+    {
+        return new PageTitle(null, _('Pizza'), 'fas fa-pizza-slice');
+    }
+
+
+    /**
      * @throws NoContestAvailable
      */
     public function authorizedTests(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -162,10 +197,13 @@ final class PersonPresenter extends BasePresenter
         return new PageTitle(null, _('Test data'), 'fas fa-tasks');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            PersonModel::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
             'data-test',
             $this->getSelectedContest()
         );
@@ -265,14 +303,31 @@ final class PersonPresenter extends BasePresenter
         if (!isset($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
-                $person = $this->getEntity();
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.basic', $this->getSelectedContest())) {
+                if (
+                    $this->authorizator->isAllowedContest(
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+                        'detail.basic',
+                        $this->getSelectedContest()
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.restrict', $this->getSelectedContest())) {
+                if (
+                    $this->authorizator->isAllowedContest(
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+                        'detail.restrict',
+                        $this->getSelectedContest()
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->contestAuthorizator->isAllowed($person, 'detail.full', $this->getSelectedContest())) {
+                if (
+                    $this->authorizator->isAllowedContest(
+                        ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+                        'detail.full',
+                        $this->getSelectedContest()
+                    )
+                ) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
             } catch (NotFoundException $exception) {
@@ -311,26 +366,8 @@ final class PersonPresenter extends BasePresenter
         return new PersonTestComponent($this->getContext());
     }
 
-    /**
-     * @return never
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new NotImplementedException();
-    }
-
     protected function getORMService(): PersonService
     {
         return $this->personService;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

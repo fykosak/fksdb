@@ -7,11 +7,10 @@ namespace FKSDB\Models\WebService\Models\Events;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends EventWebModel<array{eventId:int},(array{level:string,text:string})[]>
@@ -40,6 +39,10 @@ class ReportsWebModel extends EventWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(RestApiPresenter::RESOURCE_ID, $this->getEvent()),
+            self::class,
+            $this->getEvent()
+        );
     }
 }

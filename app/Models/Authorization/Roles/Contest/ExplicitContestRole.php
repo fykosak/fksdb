@@ -2,39 +2,36 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\Roles;
+namespace FKSDB\Models\Authorization\Roles\Contest;
 
 use FKSDB\Models\ORM\Models\ContestModel;
-use Nette\Security\Role;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-/**
- * POD for briefer encapsulation of granted roles (instead of ModelMGrant).
- */
-final class ContestRole implements Role
+final class ExplicitContestRole implements ContestRole
 {
     // phpcs:disable
-    public const Webmaster = 'webmaster';
-    public const TaskManager = 'taskManager';
-    public const Dispatcher = 'dispatcher';
-    public const DataManager = 'dataManager';
-    public const EventManager = 'eventManager';
-    public const InboxManager = 'inboxManager';
-    public const Boss = 'boss';
-    public const Organizer = 'org';
-    public const Contestant = 'contestant';
-    public const ExportDesigner = 'exportDesigner';
-    public const Aesop = 'aesop';
-    public const SchoolManager = 'schoolManager';
-    public const Web = 'web';
-    public const Wiki = 'wiki';
-    public const Superuser = 'superuser';
-    public const Cartesian = 'cartesian';
+    public const Webmaster = 'contest.webmaster';
+    public const TaskManager = 'contest.taskManager';
+    public const DataManager = 'contest.dataManager';
+    public const EventManager = 'contest.eventManager';
+    public const InboxManager = 'contest.inboxManager';
+    public const Treasurer = 'contest.treasurer';
+    public const Boss = 'contest.boss';
+
+    public const Aesop = 'contest.aesop';
+    public const Web = 'contest.web';
+    public const Wiki = 'contest.wiki';
+
     // phpcs:enable
 
     private ContestModel $contest;
+    /** @phpstan-var self::* $roleId */
     private string $roleId;
 
+    /**
+     * @phpstan-param self::* $roleId
+     */
     public function __construct(string $roleId, ContestModel $contest)
     {
         $this->roleId = $roleId;
@@ -71,23 +68,10 @@ final class ContestRole implements Role
             case self::Boss:
                 $className = 'bg-color-4';
                 break;
-            case self::Organizer:
-            case self::Contestant:
-                $className = 'bg-color-2';
-                break;
-            case self::SchoolManager:
-                $className = 'bg-color-5';
-                break;
             case self::Aesop:
             case self::Web:
             case self::Wiki:
                 $className = 'bg-color-10';
-                break;
-            case self::Superuser:
-                $className = 'bg-color-3';
-                break;
-            case self::Cartesian:
-                $className = 'bg-color-11';
                 break;
         }
         return Html::el('span')
@@ -108,24 +92,14 @@ final class ContestRole implements Role
                 return 'příjemce řešení';
             case self::Boss:
                 return 'hlavní organizátor (šéf)';
-            case self::Organizer:
-                return 'základní role organizátora';
-            case self::Contestant:
-                return 'řešitel semináře, role je automaticky přiřazována při vytvoření řešitele';
             case self::Aesop:
                 return 'oslizávač dat pro AESOP';
-            case self::SchoolManager:
-                return 'správce dat škol';
             case self::Web:
                 return 'Dokuwiki uživatel pro fksdbexport';
             case self::Wiki:
                 return 'Uživatel neveřejné Dokuwiki pro fksdbexport';
-            case self::Superuser:
-                return 'složení všech rolí, ACL pro authfksdb Dokuwiki plugin';
-            case self::Cartesian:
-                return 'cokoli s čímkoli';
         }
-        return '';
+        throw new InvalidStateException();
     }
 
     public function label(): string
@@ -141,23 +115,13 @@ final class ContestRole implements Role
                 return 'Inbox manager';
             case self::Boss:
                 return 'Boss';
-            case self::Organizer:
-                return 'Organizer';
-            case self::Contestant:
-                return 'Contestant';
             case self::Aesop:
                 return 'AESOP';
-            case self::SchoolManager:
-                return 'School manager';
             case self::Web:
                 return 'web';
             case self::Wiki:
                 return 'wiki';
-            case self::Superuser:
-                return 'superuser';
-            case self::Cartesian:
-                return 'Cartesian';
         }
-        return 'unknown role';
+        throw new InvalidStateException();
     }
 }

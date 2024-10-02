@@ -106,6 +106,19 @@ final class TeamState extends FakeStringEnum implements EnumColumn
         ];
     }
 
+    /**
+     * @return self[]
+     */
+    public static function possiblyAttendingCases(): array
+    {
+        return [
+            new self(self::Participated),
+            new self(self::Spare),
+            new self(self::Applied),
+            new self(self::Arrived),
+        ];
+    }
+
     public function title(): Title
     {
         return new Title(null, $this->label());

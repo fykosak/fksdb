@@ -9,6 +9,7 @@ use FKSDB\Components\Contestants\SubmitsGrid;
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
@@ -21,7 +22,6 @@ use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
-use Nette\Security\Resource;
 
 final class ContestantPresenter extends BasePresenter
 {
@@ -35,6 +35,22 @@ final class ContestantPresenter extends BasePresenter
         $this->contestantService = $contestantService;
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getSelectedContestYear()
+        );
+    }
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
@@ -57,6 +73,39 @@ final class ContestantPresenter extends BasePresenter
      * @throws GoneException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getSelectedContestYear()
+        );
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(_('Detail of the contestant %s'), $this->getEntity()->person->getFullName()),
+            'fas fa-user'
+        );
+    }
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      * @throws \ReflectionException
      * @throws NotFoundException
      */
@@ -65,11 +114,35 @@ final class ContestantPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'create',
+            $this->getSelectedContestYear()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle('contestant-create', _('Create contestant'), 'fas fa-user-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'list',
+            $this->getSelectedContestYear()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle('contestant-list', _('Contestants'), 'fas fa-user-graduate');
@@ -99,17 +172,6 @@ final class ContestantPresenter extends BasePresenter
             }
         }
     }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     * @throws NoContestYearAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestYearAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContestYear());
-    }
-
     /**
      * @throws NoContestYearAvailable
      * @throws NoContestAvailable
