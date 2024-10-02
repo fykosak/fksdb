@@ -18,7 +18,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -244,7 +243,7 @@ abstract class TeamForm extends ModelForm
                 new SelfEventACLResolver(
                     $this->model
                         ? EventResourceHolder::fromOwnResource($this->model)
-                        : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
+                        : EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
                     $this->event,
                     $this->container

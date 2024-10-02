@@ -83,7 +83,7 @@ class FOFTeamForm extends TeamForm
                 new SelfEventACLResolver(
                     $this->model
                         ? EventResourceHolder::fromOwnResource($this->model)
-                        : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
+                        : EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
                     $this->event,
                     $this->container
