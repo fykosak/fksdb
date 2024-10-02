@@ -33,7 +33,7 @@ final class HomePresenter extends BasePresenter
         $events = [];
         $persons = [];
         /** @var EventModel $event */
-        foreach ($this->eventService->getTable() as $event) {
+        foreach ($this->eventService->getTable()->where(':schedule_group:schedule_item.payable') as $event) {
             $events[$event->event_id] = $event;
             $relatedPersons = $this->getLoggedPerson()->getEventRelatedPersons($event);
             foreach ($relatedPersons as $person) {

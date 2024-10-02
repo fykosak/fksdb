@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Services\OrganizerService;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -65,7 +65,7 @@ class OrganizerFormComponent extends ModelForm
         $referencedId = $this->createPersonId(
             $this->contestYear,
             !isset($this->model),
-            new AclResolver($this->authorizator, $this->contestYear->contest),
+            new ContestACLResolver($this->authorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminOrganizer']
         );
         $container->addComponent($referencedId, 'person_id', 'since');

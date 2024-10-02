@@ -25,7 +25,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Persons\Resolvers\SelfACLEventResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Model\Model;
@@ -241,7 +241,7 @@ abstract class TeamForm extends ModelForm
                 $this->event->getContestYear(),
                 'email',
                 true,
-                new SelfACLEventResolver(
+                new SelfEventACLResolver(
                     $this->model
                         ? EventResourceHolder::fromOwnResource($this->model)
                         : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),

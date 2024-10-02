@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use Nette\SmartObject;
 
-class AclResolver implements Resolver
+class ContestACLResolver implements Resolver
 {
     use SmartObject;
 
@@ -26,7 +26,14 @@ class AclResolver implements Resolver
 
     public function isVisible(?PersonModel $person): bool
     {
-        return !$person || $this->isAllowed($person, 'edit');
+        if (!$person) {
+            return true;
+        }
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($person, $this->contest),
+            'edit',
+            $this->contest
+        );
     }
 
     public function getResolutionMode(?PersonModel $person): ResolutionMode
@@ -34,20 +41,23 @@ class AclResolver implements Resolver
         if (!$person) {
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
-        return $this->isAllowed($person, 'edit') ? ResolutionMode::from(ResolutionMode::OVERWRITE)
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($person, $this->contest),
+            'edit',
+            $this->contest
+        )
+            ? ResolutionMode::from(ResolutionMode::OVERWRITE)
             : ResolutionMode::from(ResolutionMode::EXCEPTION);
     }
 
     public function isModifiable(?PersonModel $person): bool
     {
-        return !$person || $this->isAllowed($person, 'edit');
-    }
-
-    private function isAllowed(PersonModel $person, ?string $privilege): bool
-    {
+        if (!$person) {
+            return true;
+        }
         return $this->authorizator->isAllowedContest(
             ContestResourceHolder::fromResource($person, $this->contest),
-            $privilege,
+            'edit',
             $this->contest
         );
     }

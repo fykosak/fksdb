@@ -9,7 +9,7 @@ use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -48,7 +48,7 @@ class EventOrganizerFormComponent extends ModelForm
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
             !isset($this->model),
-            new AclResolver($this->authorizator, $this->event->getContestYear()->contest),
+            new ContestACLResolver($this->authorizator, $this->event->getContestYear()->contest),
             $this->getContext()->getParameters()['forms']['adminEventOrganizer']
         );
         $container->addComponent($referencedId, 'person_id');

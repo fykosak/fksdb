@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons\Resolvers;
 
 use FKSDB\Models\Authorization\Authorizators\Authorizator;
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -47,10 +46,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return true;
         }
         return false;
@@ -62,10 +61,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
-        if (
-            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return ResolutionMode::from(ResolutionMode::OVERWRITE);
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
         }
         return ResolutionMode::from(ResolutionMode::EXCEPTION);
@@ -76,10 +75,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return true;
         }
         return false;

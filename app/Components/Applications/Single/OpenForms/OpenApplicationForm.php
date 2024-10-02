@@ -23,7 +23,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
-use FKSDB\Models\Persons\Resolvers\SelfACLEventResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\BasePresenter;
@@ -88,7 +88,7 @@ abstract class OpenApplicationForm extends ModelForm
             $this->event->getContestYear(),
             PersonSearchContainer::SEARCH_EMAIL,
             true,
-            new SelfACLEventResolver(
+            new SelfEventACLResolver(
                 $this->model
                     ? EventResourceHolder::fromOwnResource($this->model)
                     : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),

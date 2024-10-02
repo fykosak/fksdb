@@ -27,7 +27,7 @@ use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use FKSDB\Models\Persons\Resolvers\SelfACLEventResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
@@ -162,7 +162,7 @@ abstract class InvitationApplicationForm extends BaseComponent
             $this->event->getContestYear(),
             PersonSearchContainer::SEARCH_ID,
             false,
-            new SelfACLEventResolver(
+            new SelfEventACLResolver(
                 $this->model
                     ? EventResourceHolder::fromOwnResource($this->model)
                     : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),

@@ -13,7 +13,7 @@ use FKSDB\Models\Persons\ResolutionMode;
 use Nette\DI\Container;
 use Nette\Security\User;
 
-class SelfACLEventResolver implements Resolver
+class SelfEventACLResolver implements Resolver
 {
     private EventResourceHolder $resource;
     private string $privilege;
@@ -46,14 +46,10 @@ class SelfACLEventResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->authorizator->isAllowedEvent(
-                $this->resource,
-                $this->privilege,
-                $this->event
-            )
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)) {
             return true;
         }
         return false;
@@ -65,14 +61,10 @@ class SelfACLEventResolver implements Resolver
         if (!$person) {
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
-        if (
-            $this->authorizator->isAllowedEvent(
-                $this->resource,
-                $this->privilege,
-                $this->event
-            )
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return ResolutionMode::from(ResolutionMode::OVERWRITE);
+        }
+        if ($this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
         }
         return ResolutionMode::from(ResolutionMode::EXCEPTION);
@@ -83,14 +75,10 @@ class SelfACLEventResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->authorizator->isAllowedEvent(
-                $this->resource,
-                $this->privilege,
-                $this->event
-            )
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedEvent($this->resource, $this->privilege, $this->event)) {
             return true;
         }
         return false;

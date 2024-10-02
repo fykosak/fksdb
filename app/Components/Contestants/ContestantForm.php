@@ -12,7 +12,7 @@ use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -49,7 +49,7 @@ final class ContestantForm extends ModelForm
         $referencedId = $this->createPersonId(
             $this->contestYear,
             !isset($this->model),
-            new AclResolver($this->authorizator, $this->contestYear->contest),
+            new ContestACLResolver($this->authorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminContestant']
         );
         $container->addComponent($referencedId, 'person_id');
