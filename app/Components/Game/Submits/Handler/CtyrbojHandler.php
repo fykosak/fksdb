@@ -12,12 +12,14 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Nette\Application\UI\InvalidLinkException;
 
 class CtyrbojHandler extends Handler
 {
     /**
      * @throws PointsMismatchException
      * @throws ClosedSubmittingException
+     * @throws InvalidLinkException
      */
     public function handle(TeamModel2 $team, TaskModel $task, ?int $points): void
     {

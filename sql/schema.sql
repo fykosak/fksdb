@@ -54,19 +54,6 @@ CREATE TABLE IF NOT EXISTS `contest_year`
     COMMENT = 'mapování ročníků semináře na akademické roky';
 
 -- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16)  NOT NULL,
-    `description` TEXT         NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_czech_ci;
-
--- -----------------------------------------------------
 -- Table `country`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `country`
@@ -458,33 +445,50 @@ CREATE TABLE IF NOT EXISTS `org`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
+-- -----------------------------------------------------
+-- Table `base_grant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `base_grant`
+(
+    `base_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`      INT UNSIGNED NOT NULL,
+    `role`          ENUM (
+        'base.schoolManager',
+        'base.cartesian'
+        )                        NOT NULL,
+    UNIQUE INDEX `uq__base_grant__role` (`role` ASC, `login_id` ASC),
+    INDEX `idx__base_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__base_grant__login`
+        FOREIGN KEY (`login_id`)
+            REFERENCES `login` (`login_id`)
+            ON DELETE CASCADE
+            ON UPDATE RESTRICT
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 
 -- -----------------------------------------------------
--- Table `grant`
+-- Table `contest_grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest_grant`
 (
-    `grant_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`   INT UNSIGNED NOT NULL,
-    `role`       ENUM (
-        'webmaster',
-        'taskManager',
-        'dispatcher',
-        'dataManager',
-        'eventManager',
-        'inboxManager',
-        'boss',
-        'organizer',
-        'contestant',
-        'exportDesigner',
-        'aesop',
-        'schoolManager',
-        'web',
-        'wiki',
-        'superuser',
-        'cartesian'
-        )                     NOT NULL,
-    `contest_id` INT UNSIGNED NOT NULL,
+    `contest_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`         INT UNSIGNED NOT NULL,
+    `role`             ENUM (
+        'contest.webmaster',
+        'contest.taskManager',
+        'contest.dataManager',
+        'contest.eventManager',
+        'contest.inboxManager',
+        'contest.treasurer',
+        'contest.boss',
+        'contest.aesop',
+        'contest.web',
+        'contest.wiki'
+        )                           NOT NULL,
+    `contest_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
     INDEX `idx__contest_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__contest_grant__login`
@@ -510,10 +514,8 @@ CREATE TABLE IF NOT EXISTS `event_grant`
     `event_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id`       INT UNSIGNED NOT NULL,
     `role`           ENUM (
-        'game.inserter',
-        'event.medic',
-        'event.cook',
-        'event.boss'
+        'event.gameInserter',
+        'event.applicationManager'
         )                         NOT NULL,
     `event_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),

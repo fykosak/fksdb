@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Nette\Schema\Elements\Structure;
 use Nette\Security\User;
 use Tracy\Debugger;
 
@@ -97,11 +98,14 @@ class ExportWebModel extends WebModel implements SoapWebModel
         if (!isset($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowed(
-            $query,
+        /** @var ContestModel $contest */
+        $contest = $this->contestService->findByPrimary(
+            (int)$query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST]
+        );
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($query->queryPattern, $contest),
             'execute',
-            /** @phpstan-ignore-next-line */
-            $this->contestService->findByPrimary($query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST])
+            $contest
         );
     }
     protected function log(string $msg): void

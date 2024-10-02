@@ -7,7 +7,7 @@ namespace FKSDB\Modules\ShopModule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Payments\AllPaymentList;
 use FKSDB\Components\Payments\PaymentList;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -15,12 +15,20 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\Utils\UI\PageTitle;
 
 final class AdminPresenter extends BasePresenter
 {
+    private PaymentService $paymentService;
     private ScheduleItemService $scheduleItemService;
+
+    /** @persistent */
+    public int $eventId;
+    /** @persistent */
+    public ?int $id;
 
     /**
      * @throws NotImplementedException
@@ -30,15 +38,18 @@ final class AdminPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
-    public function inject(ScheduleItemService $scheduleItemService): void
-    {
+    public function injectServices(
+        PaymentService $paymentService,
+        ScheduleItemService $scheduleItemService
+    ): void {
+        $this->paymentService = $paymentService;
         $this->scheduleItemService = $scheduleItemService;
     }
 
     public function authorizedEvents(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            PaymentModel::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
             'dashboard',
             $this->getContest()
         );
@@ -89,8 +100,8 @@ final class AdminPresenter extends BasePresenter
 
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            PaymentModel::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
             'list',
             $this->getContest()
         );
@@ -101,21 +112,29 @@ final class AdminPresenter extends BasePresenter
         return new PageTitle(null, _('List of payments'), 'fas fa-credit-card');
     }
 
+    /**
+     * @throws NotFoundException
+     */
+    public function getPayment(): PaymentModel
+    {
+        $payment = $this->paymentService->findByPrimary($this->id);
+        if (!$payment) {
+            throw new NotFoundException();
+        }
+        return $payment;
+    }
+
     protected function createComponentGrid(): AllPaymentList
     {
         return new AllPaymentList($this->getContext());
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
     protected function createComponentGrid2(): PaymentList
     {
-        return new PaymentList($this->getContext(), $this->getEvent());
+        return new PaymentList($this->getContext());
     }
 
     /**
-     * @throws GoneException
      * @throws NotFoundException
      * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
@@ -124,7 +143,7 @@ final class AdminPresenter extends BasePresenter
         return new TransitionButtonsComponent(
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
-            $this->getEntity()
+            $this->getPayment()
         );
     }
 }

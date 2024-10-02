@@ -7,6 +7,7 @@ namespace FKSDB\Modules\ShopModule;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Payments\PaymentQRCode;
 use FKSDB\Components\Payments\SchedulePaymentForm;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
@@ -37,7 +38,11 @@ final class EventsPresenter extends BasePresenter
      */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(PaymentModel::RESOURCE_ID, 'create', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     public function titleCreate(): PageTitle
@@ -58,12 +63,17 @@ final class EventsPresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getPayment(), 'detail', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getPayment()),
+            'detail',
+            $this->getEvent()
+        );
     }
 
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     final public function renderDetail(): void
     {
@@ -73,6 +83,7 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     public function titleDetail(): PageTitle
     {
@@ -89,7 +100,11 @@ final class EventsPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getPayment(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getPayment()),
+            'edit',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -105,6 +120,7 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     public function titleEdit(): PageTitle
     {
@@ -129,6 +145,7 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     public function getPayment(): PaymentModel
     {
@@ -136,11 +153,15 @@ final class EventsPresenter extends BasePresenter
         if (!$payment) {
             throw new NotFoundException();
         }
+        if (!$payment->getRelatedEvent() || $payment->getRelatedEvent()->event_id !== $this->getEvent()->event_id) {
+            throw new NotFoundException();
+        }
         return $payment;
     }
 
     /**
      * @throws NotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentPaymentQRCode(): PaymentQRCode
     {
@@ -179,6 +200,7 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
+     * @throws NotImplementedException
      * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent

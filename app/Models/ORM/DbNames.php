@@ -24,6 +24,7 @@ class DbNames
     public const TAB_PERSON_HISTORY = 'person_history';
     public const TAB_PERSON_INFO = 'person_info';
     /* ACL */
+    public const TabBaseGrant = 'base_grant'; //phpcs:ignore
     public const TAB_CONTEST_GRANT = 'contest_grant';
     public const TAB_EVENT_GRANT = 'event_grant';
     /* extended person */

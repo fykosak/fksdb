@@ -6,6 +6,7 @@ namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\ResultsAndStatistics\ResultsAndStatisticsComponent;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
 
@@ -30,7 +31,11 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedCorrelation(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'statistics.correlation', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'statistics.correlation',
+            $this->getEvent()
+        );
     }
 
     public function titleTeam(): PageTitle
@@ -43,7 +48,11 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTeam(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'statistics.team', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'statistics.team',
+            $this->getEvent()
+        );
     }
 
     public function titleTask(): PageTitle
@@ -56,7 +65,11 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTask(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'statistics.task', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'statistics.task',
+            $this->getEvent()
+        );
     }
 
     public function titleTable(): PageTitle
@@ -69,7 +82,11 @@ final class StatisticsPresenter extends BasePresenter
      */
     public function authorizedTable(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'statistics.table', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'statistics.table',
+            $this->getEvent()
+        );
     }
 
     /**

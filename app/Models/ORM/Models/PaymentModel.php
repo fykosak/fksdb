@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
-use Nette\Security\Resource;
+use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 
 /**
@@ -33,7 +34,7 @@ use Nette\Utils\DateTime;
  * @property-read int $want_invoice
  * @property-read string|null $invoice_id
  */
-final class PaymentModel extends Model implements Resource
+final class PaymentModel extends Model implements EventResource
 {
     public const RESOURCE_ID = 'payment';
 
@@ -112,5 +113,14 @@ final class PaymentModel extends Model implements Resource
             || $this->bank_account
             || $this->bank_name
             || $this->recipient;
+    }
+
+    public function getEvent(): EventModel
+    {
+        $event = $this->getRelatedEvent();
+        if (!$event) {
+            throw new InvalidStateException();
+        }
+        return $event;
     }
 }

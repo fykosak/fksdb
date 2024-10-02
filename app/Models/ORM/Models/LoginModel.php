@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\BaseRole;
-use FKSDB\Models\Authorization\Roles\ContestRole;
-use FKSDB\Models\Authorization\Roles\ContestYearRole;
-use FKSDB\Models\Authorization\Roles\Events\ContestOrganizerRole;
-use FKSDB\Models\Authorization\Roles\Events\EventOrganizerRole;
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
+use FKSDB\Models\Authorization\Roles\Base\LoggedInRole;
+use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
+use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\Authorization\Roles\Contest\OrganizerRole;
+use FKSDB\Models\Authorization\Roles\ContestYear\ContestantRole;
+use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
-use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamMemberRole;
-use FKSDB\Models\Authorization\Roles\Events\Fyziklani\TeamTeacherRole;
-use FKSDB\Models\Authorization\Roles\Events\ParticipantRole;
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
+use FKSDB\Models\Authorization\Roles\Role;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
+use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
+use FKSDB\Models\ORM\Models\Grant\ContestGrantModel;
+use FKSDB\Models\ORM\Models\Grant\EventGrantModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\Security\IIdentity;
@@ -58,13 +61,45 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return BaseRole[]
+     * @phpstan-return Role[]
      */
     public function getRoles(): array
     {
-        return [new BaseRole(BaseRole::Registered)];
+        return [
+            new LoggedInRole($this),
+        ];
     }
 
+    /** @var Role[] */
+    private array $baseRoles;
+
+    /**
+     * @phpstan-return Role[]
+     */
+    public function getBaseRoles(): array
+    {
+        if (!isset($this->baseRoles)) {
+            $this->baseRoles = [
+                ...$this->getExplicitBaseRoles(),
+                ...$this->getRoles(),
+            ];
+        }
+        return $this->baseRoles;
+    }
+
+    /**
+     * @phpstan-return ExplicitBaseRole[]
+     */
+    public function getExplicitBaseRoles(): array
+    {
+        $grants = [];
+        $query = $this->related(DbNames::TabBaseGrant, 'login_id');
+        /** @var BaseGrantModel $grant */
+        foreach ($query as $grant) {
+            $grants[] = new ExplicitBaseRole($grant->role);
+        }
+        return $grants;
+    }
     /** @var ContestRole[][] */
     private array $contestRoles = [];
 
@@ -83,7 +118,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return ContestRole[]
+     * @phpstan-return ExplicitContestRole[]
      */
     public function getExplicitContestRoles(?ContestModel $contest = null): array
     {
@@ -94,7 +129,7 @@ final class LoginModel extends Model implements IIdentity
         }
         /** @var ContestGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ContestRole($grant->role, $grant->contest);
+            $grants[] = new ExplicitContestRole($grant->role, $grant->contest);
         }
         return $grants;
     }
@@ -108,19 +143,13 @@ final class LoginModel extends Model implements IIdentity
         if ($this->person) {
             foreach ($this->person->getActiveOrganizers() as $organizer) {
                 if ($organizer->contest_id === $contest->contest_id) {
-                    $roles[] = new ContestRole(
-                        ContestRole::Organizer,
-                        $organizer->contest,
-                    );
+                    $roles[] = new OrganizerRole($organizer);
                 }
             }
             /** @var ContestantModel $contestant */
             foreach ($this->person->getContestants() as $contestant) {
                 if ($contestant->contest_id === $contest->contest_id) {
-                    $roles[] = new ContestRole(
-                        ContestRole::Contestant,
-                        $contestant->contest,
-                    );
+                    $roles[] = new ContestantRole($contestant);
                 }
             }
         }
@@ -154,10 +183,7 @@ final class LoginModel extends Model implements IIdentity
             /** @var ContestantModel $contestant */
             foreach ($this->person->getContestants() as $contestant) {
                 if ($contestant->contest_id === $contestYear->contest_id && $contestant->year === $contestYear->year) {
-                    $roles[] = new ContestYearRole(
-                        ContestRole::Contestant,
-                        $contestant->getContestYear(),
-                    );
+                    $roles[] = new ContestantRole($contestant);
                 }
             }
         }
@@ -182,7 +208,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return EventRole[]
+     * @phpstan-return ExplicitEventRole[]
      */
     public function getExplicitEventRoles(EventModel $event): array
     {
@@ -191,7 +217,7 @@ final class LoginModel extends Model implements IIdentity
             ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new EventRole($grant->role, $grant->event);
+            $grants[] = new ExplicitEventRole($grant->role, $grant->event);
         }
         return $grants;
     }
@@ -201,31 +227,10 @@ final class LoginModel extends Model implements IIdentity
      */
     public function getImplicitEventRoles(EventModel $event): array
     {
-        $roles = [];
         if ($this->person) {
-            $teachers = $this->person->getTeamTeachers($event);
-            /** @var TeamTeacherModel $teacher */
-            foreach ($teachers as $teacher) {
-                $roles[] = new TeamTeacherRole($event, $teacher);
-            }
-            $eventOrganizer = $this->person->getEventOrganizer($event);
-            if (isset($eventOrganizer)) {
-                $roles[] = new EventOrganizerRole($event, $eventOrganizer);
-            }
-            $eventParticipant = $this->person->getEventParticipant($event);
-            if (isset($eventParticipant)) {
-                $roles[] = new ParticipantRole($event, $eventParticipant);
-            }
-            $teamMember = $this->person->getTeamMember($event);
-            if ($teamMember) {
-                $roles[] = new TeamMemberRole($event, $teamMember);
-            }
-            $organizer = $this->person->getActiveOrganizer($event->event_type->contest);
-            if (isset($organizer)) {
-                $roles[] = new ContestOrganizerRole($event, $organizer);
-            }
+            return $this->person->getEventRoles($event);
         }
-        return $roles;
+        return [];
     }
 
     /**

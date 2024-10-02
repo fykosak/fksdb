@@ -113,5 +113,4 @@ class PersonPaymentContainer extends ContainerWithOptions
             $component->setDefaultValue(true);
         }
     }
-
 }

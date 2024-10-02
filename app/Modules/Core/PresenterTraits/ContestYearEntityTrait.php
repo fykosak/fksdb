@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
@@ -12,12 +13,12 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @phpstan-template TContestYearModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TContestYearModel of (Model&ContestYearResource)
  */
 trait ContestYearEntityTrait
 {
-    /** @phpstan-use ContestEntityTrait<TContestYearModel> */
-    use ContestEntityTrait {
+    /** @phpstan-use EntityPresenterTrait<TContestYearModel> */
+    use EntityPresenterTrait {
         getEntity as getContestEntity;
     }
 
@@ -40,6 +41,9 @@ trait ContestYearEntityTrait
             $contestYear = $model->getReferencedModel(ContestYearModel::class);
             if ($contestYear->year !== $this->getSelectedContestYear()->year) {
                 throw new ForbiddenRequestException(_('Editing entity outside chosen year.'));
+            }
+            if ($contestYear->contest_id !== $this->getSelectedContestYear()->contest_id) {
+                throw new ForbiddenRequestException(_('Editing entity outside chosen contest.'));
             }
         } catch (CannotAccessModelException $exception) {
             return $model;
