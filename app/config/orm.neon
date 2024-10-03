@@ -964,6 +964,9 @@ orm:
         service: FKSDB\Models\ORM\Services\Schedule\PersonScheduleService
         model: FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel
         columns:
+            payment_deadline:
+                type: dateTime
+                title: _('Payment deadline')
             payment:
                 type: class
                 title: _('Payment')

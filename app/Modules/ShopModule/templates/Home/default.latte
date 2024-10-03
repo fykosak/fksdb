@@ -4,7 +4,7 @@
 {varType FKSDB\Models\ORM\Models\EventModel[] $events}
 {varType FKSDB\Models\ORM\Models\PersonModel[] $persons}
 {block outerContent}
-    <div class="panel color-auto">
+    <div class="panel color-auto" xmlns="http://www.w3.org/1999/html">
         <div class="container">
             <h2>{_'On going payments'}</h2>
             <div class="row row-cols-1 row-cols-md-1 g-4 mb-3">
@@ -26,13 +26,39 @@
                             {/if}
                             <div class="card-body">
                                     <h5 class="card-title">{_'Contains'}</h5>
-                                    <div class="row"></div>
-                                    {foreach $payment->getSchedulePayment() as $schedulePayment}
-                                        <div class="col">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>{_'Block'}</th>
+                                            <th>{_'Variant'}</th>
+                                            <th></th>
+                                            <th>{_'Payment deadline'}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {foreach $payment->getSchedulePayment() as $schedulePayment}
                                             {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
-                                        {$schedulePayment->person_schedule->getLabel(FKSDB\Modules\Core\Language::from($lang))}
-                                        </div>
-                                    {/foreach}
+                                            <tr>
+                                                <td>
+                                                    <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                                                </td>
+                                                <td>
+                                                    {$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
+                                                </td>
+                                                <td>
+                                                    {$schedulePayment->person_schedule->schedule_item->name->getText($lang)}
+                                                </td>
+                                                <td>
+                                                    {$schedulePayment->person_schedule->schedule_item->getPrice()}
+                                                </td>
+                                                <td>
+                                                    {control printer:column '@person_schedule.payment_deadline', $schedulePayment->person_schedule,1024}
+                                                </td>
+                                            </tr>
+                                        {/foreach}
+                                        </tbody>
+                                    </table>
                             </div>
                                 {var $event = $payment->getRelatedEvent()}
                                 {if $event}
@@ -54,32 +80,45 @@
         <div class="container">
             <h2>{_'Rests for events'}</h2>
             {foreach $rests as $eventId => $eventRests}
-                {continueIf $events[$eventId]->begin < new \DateTime()}
                 <h3>{$events[$eventId]->getName()->getText($lang)}</h3>
                 {foreach $eventRests as $personId => $personRests}
                     <h4>{$persons[$personId]->getFullName()}</h4>
-                    {foreach $personRests as $personSchedule}
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-1">
-                                        <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
-                                    </div>
-                                    <div class="col-2"><small class="text-muted">{_'Block'}
-                                            : </small>{$personSchedule->schedule_item->schedule_group->name->getText($lang)}
-                                    </div>
-                                    <div class="col-3"><small class="text-muted">{_'Variant'}
-                                            : </small>{$personSchedule->schedule_item->name->getText($lang)}</div>
-                                    <div class="col-2">{$personSchedule->schedule_item->getPrice()}</div>
-                                        <div class="col-2">
-                                            <small class="text-muted">{_'Payment'}: </small>
-                                            {control printer:column '@person_schedule.payment', $personSchedule,1024}
-                                            {control printer:column '@payment.payment', $personSchedule,1024}
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                    {/foreach}
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>{_'Block'}</th>
+                            <th>{_'Variant'}</th>
+                            <th></th>
+                            <th>{_'Payment deadline'}</th>
+                            <th>{_'Assigned payment'}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tbody>
+                        {foreach $personRests as $personSchedule}
+                            <tr>
+                                <td>
+                                    <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                                </td>
+                                <td>
+                                    {$personSchedule->schedule_item->schedule_group->name->getText($lang)}
+                                </td>
+                                <td>
+                                    {$personSchedule->schedule_item->name->getText($lang)}</td>
+                                <td>
+                                    {$personSchedule->schedule_item->getPrice()}
+                                </td>
+                                <td>
+                                    {control printer:column '@person_schedule.payment_deadline', $personSchedule,1024}
+                                </td>
+                                <td>
+                                    {control printer:column '@payment.payment', $personSchedule,1024}
+                                </td>
+                            </tr>
+                        {/foreach}
+                        </tbody>
+                    </table>
                 {/foreach}
                 <a class="btn btn-primary"
                    href="{plink :Shop:Events:create eventId=>$events[$eventId]->event_id}">{_'Create payment'}</a>

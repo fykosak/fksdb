@@ -25,6 +25,9 @@ class OwnSubmitAssertion implements Assertion
         if ($submit instanceof SubmitModel) {
             return $submit->contestant->contestant_id === $role->contestant->contestant_id;
         }
+        if ($submit === SubmitModel::RESOURCE_ID) {
+            return false;
+        }
         throw new WrongAssertionException();
     }
 }
