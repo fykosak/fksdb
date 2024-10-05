@@ -21,6 +21,7 @@ use Nette\DI\Container;
 final class ScheduleHandler
 {
     private PersonScheduleService $service;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
     private EventModel $event;
 
@@ -30,6 +31,7 @@ final class ScheduleHandler
         $this->event = $event;
     }
 
+    /** @phpstan-param GettextTranslator<'cs'|'en'> $translator */
     public function inject(PersonScheduleService $service, GettextTranslator $translator): void
     {
         $this->service = $service;

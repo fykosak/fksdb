@@ -45,7 +45,6 @@ final class TemplateFactory
     /**
      * @throws BadTypeException
      * @phpstan-template TParams of array
-     * @phpstan-param Language<'cs'|'en'> $lang
      * @phpstan-return callable(string,TParams):string
      */
     public function create(Language $lang): callable
