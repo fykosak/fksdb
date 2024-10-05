@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Applications\Single\InvitedForms\SousForm;
-use FKSDB\Components\Applications\Single\OpenForms\DsefForm;
+use FKSDB\Components\Applications\Single\OpenForms\DSEFForm;
 use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
 use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
 use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
@@ -258,7 +258,7 @@ final class ApplicationPresenter extends BasePresenter
                 );
             case 2:
             case 14:
-                return new DsefForm(
+                return new DSEFForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),

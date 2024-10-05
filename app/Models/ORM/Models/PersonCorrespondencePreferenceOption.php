@@ -11,11 +11,12 @@ use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumColumn
+final class PersonCorrespondencePreferenceOption extends FakeStringEnum implements EnumColumn
 {
     public const SpamContest = 'spam_contest'; //phpcs:ignore
     public const SpamMff = 'spam_mff';//phpcs:ignore
     public const SpamOther = 'spam_other';//phpcs:ignore
+    public const SpamPost = 'spam_post';//phpcs:ignore
 
     public function badge(): Html
     {
@@ -33,11 +34,13 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
     {
         switch ($this->value) {
             case self::SpamContest:
-                return _('Spam Contest');
+                return _('Our events');
             case self::SpamMff:
-                return _('Spam MFF');
+                return _('Events of MFF CUNI');
             case self::SpamOther:
-                return _('Spam Other');
+                return _('Other related events');
+            case self::SpamPost:
+                return _('Postal mail');
         }
         throw new InvalidStateException();
     }
@@ -50,18 +53,23 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
         switch ($this->value) {
             case self::SpamContest:
                 return new LangMap([
-                    'cs' => 'Spam zo semináru a akcií FYKOSu a Výfuku',
-                    'en' => '',
+                    'cs' => 'Informace o seminářích a akcích pořádaných FYKOSem a Výfukem',
+                    'en' => 'Information about competitions and events of FYKOS and Výfuk',
                 ]);
             case self::SpamMff:
                 return new LangMap([
-                    'cs' => 'Spam o akciach, seminároch a táboroch poradaných inými seminármi vŕamci MFF UK',
-                    'en' => '',
+                    'cs' => 'Informace o akcích, seminářích a táborech pořádaných ostatními semináři nebo MFF UK',
+                    'en' => 'Information about events, competitions and camps organized by other seminars or MFF CUNI',
                 ]);
             case self::SpamOther:
                 return new LangMap([
-                    'cs' => 'Spam od našich partnerov a sponzorov',
-                    'en' => '',
+                    'cs' => 'Relevantní informace od našich partnerů',
+                    'en' => 'Relevant information from our partners',
+                ]);
+            case self::SpamPost:
+                return new LangMap([
+                    'cs' => 'Letáčky a další materiály zasílané fyzicky poštou',
+                    'en' => 'Posters and other materials sent by post'
                 ]);
         }
         throw new InvalidStateException();
@@ -72,12 +80,24 @@ final class PersonEmailPreferenceOption extends FakeStringEnum implements EnumCo
         return new Title(null, $this->label());
     }
 
+    /**
+     * @return self[]
+     */
+    public static function emailCases(): array
+    {
+        return [
+            new self(self::SpamContest),
+            new self(self::SpamMff),
+            new self(self::SpamOther),
+        ];
+    }
     public static function cases(): array
     {
         return [
             new self(self::SpamContest),
             new self(self::SpamMff),
             new self(self::SpamOther),
+            new self(self::SpamPost),
         ];
     }
 }

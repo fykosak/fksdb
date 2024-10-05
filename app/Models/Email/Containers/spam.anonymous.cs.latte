@@ -1,7 +1,7 @@
 {layout './@layout.latte'}
 {varType string $code}
 {block footer}
-    Kliknutím <a
-        href="{plink '//:Core:Unsubscribe:default' 'token'=>$code}">zde</a> se odhlásite z dostávania týchto emailov.
+    Pokud již nechcete dostávat podobné e-maily, klikněte <a
+        href="{plink '//:Core:Unsubscribe:default' 'token'=>$code}">zde</a>.
 {/block}
 

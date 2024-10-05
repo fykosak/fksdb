@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Person\Edit;
 
 use FKSDB\Components\EntityForms\ModelForm;
-use FKSDB\Models\ORM\Models\PersonEmailPreferenceModel;
-use FKSDB\Models\ORM\Models\PersonEmailPreferenceOption;
+use FKSDB\Models\ORM\Models\PersonCorrespondencePreferenceModel;
+use FKSDB\Models\ORM\Models\PersonCorrespondencePreferenceOption;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\PersonEmailPreferenceService;
+use FKSDB\Models\ORM\Services\PersonCorrespondencePreferenceService;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
@@ -19,16 +18,16 @@ use Nette\Forms\Form;
  */
 class EmailPreferenceForm extends ModelForm
 {
-    private PersonEmailPreferenceService $emailPreferenceService;
+    private PersonCorrespondencePreferenceService $correspondencePreferenceService;
 
-    public function inject(PersonEmailPreferenceService $emailPreferenceService): void
+    public function inject(PersonCorrespondencePreferenceService $correspondencePreferenceService): void
     {
-        $this->emailPreferenceService = $emailPreferenceService;
+        $this->correspondencePreferenceService = $correspondencePreferenceService;
     }
 
     protected function configureForm(Form $form): void
     {
-        foreach (PersonEmailPreferenceOption::cases() as $case) {
+        foreach (PersonCorrespondencePreferenceOption::emailCases() as $case) {
             $input = $form->addCheckbox($case->value, $case->label());
             $input->setOption('description', $case->description());
         }
@@ -37,9 +36,9 @@ class EmailPreferenceForm extends ModelForm
     protected function setDefaults(Form $form): void
     {
         $defaults = [];
-        foreach (PersonEmailPreferenceOption::cases() as $case) {
-            /** @var PersonEmailPreferenceModel|null $preference */
-            $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
+        foreach (PersonCorrespondencePreferenceOption::emailCases() as $case) {
+            /** @var PersonCorrespondencePreferenceModel|null $preference */
+            $preference = $this->model->getCorrespondencePreference()->where('option', $case->value)->fetch();
             $defaults[$case->value] = $preference ? $preference->value : true;
         }
         $form->setDefaults($defaults);
@@ -47,11 +46,11 @@ class EmailPreferenceForm extends ModelForm
 
     protected function innerSuccess(array $values, Form $form): Model
     {
-        foreach (PersonEmailPreferenceOption::cases() as $case) {
-            /** @var PersonEmailPreferenceModel|null $preference */
-            $preference = $this->model->getEmailPreferences()->where('option', $case->value)->fetch();
+        foreach (PersonCorrespondencePreferenceOption::emailCases() as $case) {
+            /** @var PersonCorrespondencePreferenceModel|null $preference */
+            $preference = $this->model->getCorrespondencePreference()->where('option', $case->value)->fetch();
             $value = $values[$case->value];
-            $this->emailPreferenceService->storeModel([
+            $this->correspondencePreferenceService->storeModel([
                 'person_id' => $this->model->person_id,
                 'option' => $case->value,
                 'value' => $value,
@@ -62,11 +61,7 @@ class EmailPreferenceForm extends ModelForm
 
     protected function successRedirect(Model $model): void
     {
-        /** @phpstan-ignore-next-line */
-        $this->getPresenter()->flashMessage(new LangMap([
-            'en' => 'Preferences saved',
-            'cs' => 'Preference byli uloženy',
-        ]), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Preferences saved'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 }

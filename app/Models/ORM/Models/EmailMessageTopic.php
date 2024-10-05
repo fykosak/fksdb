@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Localization\LangMap;
-use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -15,13 +14,14 @@ use Nette\Utils\Html;
 final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 {
     public const SpamContest = 'spam_contest'; //phpcs:ignore
-    public const SpamMff = 'spam_mff';//phpcs:ignore
-    public const SpamOther = 'spam_other';//phpcs:ignore
-    public const Contest = 'contest';//phpcs:ignore
+    public const SpamMff = 'spam_mff'; //phpcs:ignore
+    public const SpamOther = 'spam_other'; //phpcs:ignore
+    public const Fykos = 'fykos'; //phpcs:ignore
+    public const Vyfuk = 'vyfuk'; //phpcs:ignore
     public const FOF = 'fof';
     public const FOL = 'fol';
     public const DSEF = 'dsef';
-    public const Internal = 'internal';//phpcs:ignore
+    public const Internal = 'internal'; //phpcs:ignore
 
     public function badge(): Html
     {
@@ -37,8 +37,10 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
             case self::SpamMff:
             case self::SpamContest:
                 return 'warning';
-            case self::Contest:
-                return 'primary';
+            case self::Fykos:
+                return 'fykos';
+            case self::Vyfuk:
+                return 'vyfuk';
             case self::FOF:
                 return 'fof';
             case self::FOL:
@@ -60,8 +62,10 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
                 return _('Spam MFF');
             case self::SpamOther:
                 return _('Spam others');
-            case self::Contest:
-                return _('Contest');
+            case self::Fykos:
+                return _('FYKOS');
+            case self::Vyfuk:
+                return _('Výfuk');
             case self::FOF:
                 return _('FOF');
             case self::FOL:
@@ -85,7 +89,8 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
             new self(self::SpamContest),
             new self(self::SpamMff),
             new self(self::SpamOther),
-            new self(self::Contest),
+            new self(self::Fykos),
+            new self(self::Vyfuk),
             new self(self::FOF),
             new self(self::FOL),
             new self(self::DSEF),
@@ -104,15 +109,15 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
         return false;
     }
 
-    public function mapToPreference(): ?PersonEmailPreferenceOption
+    public function mapToPreference(): ?PersonCorrespondencePreferenceOption
     {
         switch ($this->value) {
             case self::SpamContest:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamContest);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamContest);
             case self::SpamMff:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamMff);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamMff);
             case self::SpamOther:
-                return PersonEmailPreferenceOption::from(PersonEmailPreferenceOption::SpamOther);
+                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamOther);
         }
         return null;
     }
@@ -123,31 +128,38 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     public function getReason(): LangMap
     {
         switch ($this->value) {
-            case self::Contest:
+            case self::Fykos:
                 return new LangMap([
-                    'cs' => 'Tento mail dostávate pretože ste prihlasený do semináru FYKOS, 
-                    souteže Výfuku, na soustředení FYKOSu alebo tábor Výfuku.',
-                    'en' => '', // TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře FYKOS,
+                     případně FYKOSího soustředění.',
+                    'en' => 'You received this email because you are a participant in the FYKOS competition.',
+                ]);
+            case self::Vyfuk:
+                return new LangMap([
+                    'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře Výfuk,
+                     případně Výfučího tábora.',
+                    'en' => 'You received this email because you are a participant in the Výfuk competition.',
                 ]);
             case self::FOL:
                 return new LangMap([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání Online.',
+                    'en' => 'You received this email because you are registered for the Physics Brawl Online.',
                 ]);
             case self::FOF:
                 return new LangMap([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání.',
+                    'en' => 'You received this email because you are registered for the Fyziklani
+                    competition in Prague.',
                 ]);
             case self::DSEF:
                 return new LangMap([
-                    'cs' => '',// TODO
-                    'en' => '',// TODO
+                    'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni na DSEF.',
+                    'en' => 'You received this email because you are registered to DSEF.',
                 ]);
             case self::Internal:
                 return new LangMap([
-                    'cs' => 'Tento mail ste dostali pretože ste on požiadali.',
-                    'en' => '',
+                    'cs' => 'Tento mail jste dostali, protože jste ho potřebovali.',
+                    'en' => 'You received this email because you needed it.',
                 ]);
         }
         throw new InvalidStateException();

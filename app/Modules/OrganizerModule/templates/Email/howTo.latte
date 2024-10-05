@@ -5,52 +5,52 @@
 
             <ul>
                 <li>
-                    <code class="text-success">inner_text</code> vlastný text emailu, môže byť HTML fragment alebo
+                    <code class="text-success">inner_text</code>: <i>string | HTMLFragment</i> - vlastný text emailu, môže byť HTML fragment alebo
                     plain-text.
                 </li>
                 <li>
-                    <code class="text-success">subject</code> predmet emailu
+                    <code class="text-success">subject</code>: <i>string</i> - predmet emailu
                 </li>
                 <li>
-                    <code class="text-success">sender</code> odosielatel emailov
+                    <code class="text-success">sender</code>: <i>emailString</i> - odosielatel emailov
                 </li>
                 <li>
-                    <code class="text-info">carbon_copy</code> CC videitľná kópia
+                    <code class="text-info">carbon_copy</code>: <i>emailString</i> - CC videitľná kópia
                 </li>
                 <li>
-                    <code class="text-info">blind_carbon_copy</code> BCC skrytá kópia
+                    <code class="text-info">blind_carbon_copy</code>: <i>emailString</i> - BCC skrytá kópia
                 </li>
                 <li>
-                    <code class="text-warning">recipient_person_id</code> person Id osoby, ktorej sa pošle email, FKSDB
+                    <code class="text-warning">recipient_person_id</code>: <i>int</i> - person Id osoby, ktorej sa pošle email, FKSDB
                     si sama vytiahne email, preferované
                 </li>
                 <li>
-                    <code class="text-warning">recipient</code> konkrétny email, na ktorý sa email pošle
+                    <code class="text-warning">recipient</code>: <i>emailString</i> - konkrétny email, na ktorý sa email pošle
                 </li>
                 <li>
-                    <code class="text-success">reply_to</code>
+                    <code class="text-success">reply_to</code>: <i>emailString</i>
                 </li>
                 <li>
-                    <code class="text-success">state</code> Stav emailu viď <a href="#state">State</a>
+                    <code class="text-success">state</code>: <i>enum</i> - stav emailu viď <a href="#state">State</a>
                 </li>
                 <li>
-                    <code class="text-info">priority</code> 1 alebo 0, či je email prioritný, rozhoduje o poradí
+                    <code class="text-info">priority</code> <i>bool</i> či je email prioritný, rozhoduje o poradí
                     posielania, používať len vo výnimočných prípadoch, a u malého počtu emailov.
                 </li>
                 <li>
-                    <code class="text-success">topic</code> Topic emailu, viď <a href="#topic">Topic</a>
+                    <code class="text-success">topic</code>: <i>enum</i> - topic emailu, viď <a href="#topic">Topic</a>
                 </li>
                 <li>
-                    <code class="text-success">lang</code> jazyk emaili <code>cs|en</code>
+                    <code class="text-success">lang</code>: <i>enum(cs|en)</i> - jazyk emailu
                 </li>
                 <li>
-                    <code class="text-danger">text</code> Text emailu, ktor'sa poslal, vrátane patičky, nevyplňovať
+                    <code class="text-danger">text</code>: <i>HTMLFragment</i> - text emailu, ktorý sa poslal, vrátane patičky, nevyplňovať
                 </li>
                 <li>
-                    <code class="text-danger">created</code> časová značka kedy sa email vytvoril, nevyplňovať
+                    <code class="text-danger">created</code>: <i>DateTime</i> - časová značka kedy sa email vytvoril, nevyplňovať
                 </li>
                 <li>
-                    <code class="text-danger">sent</code> Časová značka kedy sa email odoslal, nevplňovať
+                    <code class="text-danger">sent</code>: <i>DateTime</i> - časová značka kedy sa email odoslal, nevplňovať
                 </li>
             </ul>
             <h4>Legenda</h4>
@@ -74,7 +74,10 @@
                     <div class="card" style="border-color: var(--fks-page-theme-color)">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Contest)->badge()}</h5>
+                                Topicy
+                                {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Fykos)->badge()}
+                                 {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Vyfuk)->badge()}
+                            </h5>
                             <p class="card-text">
                                 Sem spadajú všetky email týkajúce sa semináru, (FYKOSu a Výfuku) pre riešiteľov,
                                 zahrňuje to aj sústredka a
@@ -278,6 +281,43 @@
                     majú prednosť pred 0.
                 </li>
             </ol>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>FAQ</h2>
+            <p>
+                Úplným základom je správne vyplniť topic. Ten rozhodne ako sa FKSDB naň bude dívať a čo s ním bude
+                robiť.
+            </p>
+            <h3>Aký je rozdiel medzi anonymným a personalizovaným emailom?</h3>
+            <p>
+                Anonymný email sa rozumie email smerovaný priamo na email, má vyplenený <code>recipient</code>.
+                Personalizovaný email je email, ktorý smeruje osobe vo FKSDB, má vyplnené
+                <code>recipient_person_id</code>.
+                Ak je to možné, emaily by sa mali posielať personalizované.
+            </p>
+            <h3>Posielam anonymný email a nie personalizovaný, čo ak je email niekomu už priradený?</h3>
+            <p>
+                FKSDB pred ostampovaním (pridaním hlavičky) pre emaily, ktoré majú vyplnené emailové adres a nie osoby
+                sa pokúsi nájsť túto osobu vo FKSDB. Ak osbu nájde zmení automaticky email z posielaného na email na
+                email posielaný na osobu. Tým je zabezpečené, že sa správne vyhodnotia nastavenia emailu
+            </p>
+            <h3>Môj email nieje spam, čo s ním FKSDB spraví?</h3>
+            <p>
+                Ak email nieje spam FKSDB len pridá pätičku, aby príjemca vedel prečo tento email dostal a email odošle.
+            </p>
+            <h3>Musím fitrovať emaily pri vytváraní?</h3>
+            <p>
+                Nie, o všetko sa postará FKSDB, tá zistí, čo email niemá email priradený záznam v
+                <code>{FKSDB\Models\ORM\DbNames::TAB_UNSUBSCRIBED_EMAIL}</code>, alebo aké ma uživateľ preferencie
+            </p>
+            <h3>Môj email je spam, aké sú rezdiely?</h3>
+            <p>
+                V zásade sú 2 rozdiely, ako prvé do pätičky sa pridajú linky na odhlásenie, a email sa pri posielaní
+                môže odmietnuť poslať ak si uživateľ nepraje posielať daný typ emailov.
+
+            </p>
         </div>
     </div>
 {/block}

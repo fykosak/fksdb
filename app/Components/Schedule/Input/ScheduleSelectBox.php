@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Input;
 
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
@@ -12,7 +12,7 @@ use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SelectBox;
 
-class ScheduleGroupField extends SelectBox
+class ScheduleSelectBox extends SelectBox
 {
     use FrontEndComponentTrait;
 
@@ -55,13 +55,18 @@ class ScheduleGroupField extends SelectBox
         $this->setItems($items)->setPrompt(_('Not selected'))->setDisabled($disabled);
     }
 
-    public function setModel(PersonScheduleModel $model): self
+    public function setPerson(?PersonModel $person): void
     {
-        /** @phpstan-ignore-next-line */
-        if (is_array($this->disabled) && isset($this->disabled[$model->schedule_item_id])) {
-            unset($this->disabled[$model->schedule_item_id]);
+        if ($person) {
+            $personSchedule = $person->getScheduleByGroup($this->group);
+            if ($personSchedule) {
+                /** @phpstan-ignore-next-line */
+                if (is_array($this->disabled) && isset($this->disabled[$personSchedule->schedule_item_id])) {
+                    unset($this->disabled[$personSchedule->schedule_item_id]);
+                }
+                parent::setDefaultValue($personSchedule->schedule_item_id);
+            }
         }
-        return parent::setValue($model->schedule_item_id);
     }
 
     /**

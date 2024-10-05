@@ -122,7 +122,7 @@ final class EmailPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
+            sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()),
             'fas fa-envelope-open'
         );
     }
@@ -151,7 +151,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('E-mail dashboard'), 'fas fa-mail-bulk');
+        return new PageTitle(null, _('Email dashboard'), 'fas fa-mail-bulk');
     }
 
     /**

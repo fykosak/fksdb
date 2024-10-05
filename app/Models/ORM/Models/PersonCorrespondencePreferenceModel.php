@@ -8,13 +8,13 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\DateTime;
 
 /**
- * @property-read int $email_preference_id
+ * @property-read int $person_correspondence_preference_id
  * @property-read int $person_id
  * @property-read PersonModel $person
- * @property-read PersonEmailPreferenceOption $option
+ * @property-read PersonCorrespondencePreferenceOption $option
  * @property-read bool $value
  * @property-read DateTime $created
  */
-class PersonEmailPreferenceModel extends Model
+class PersonCorrespondencePreferenceModel extends Model
 {
 }

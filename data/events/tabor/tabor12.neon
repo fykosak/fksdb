@@ -98,7 +98,7 @@ events:
                 # participant wants to go
                 invited|invited1|invited2->applied:
                     condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Events\Semantics\Role('admin'))
-                    label: _('Potrvrdit učast')
+                    label: _('Potvrdit účast')
                     afterExecute:
                         - FKSDB\Models\Transitions\Callbacks\Tabor\AppliedMailCallback()
                 spare|spare1|spare2->interested:

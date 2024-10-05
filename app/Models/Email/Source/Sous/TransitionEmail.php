@@ -24,7 +24,7 @@ final class TransitionEmail extends ParticipantTransitionEmail
         return [
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
-            'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Fykos),
             'lang' => Language::from(Language::CS),
         ];
     }

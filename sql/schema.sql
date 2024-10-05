@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
         'approved',
         'auto.invited',
         'auto.spare',
-        'cancelled',
+        'canceled',
         'disqualified',
         'interested',
         'invited',
@@ -721,7 +721,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'participated',
         'missed',
         'disqualified',
-        'cancelled'
+        'canceled'
         )                                NOT NULL DEFAULT 'init',
     `category`          ENUM (
         'A',
@@ -1215,10 +1215,8 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'transport',
         'ticket',
         'weekend',
-        'weekend_info',
-        'dsef_morning',
-        'dsef_afternoon',
-        'dsef_all_day'
+        'info',
+        'excursion'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
@@ -1276,10 +1274,16 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT UNSIGNED                   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT UNSIGNED                   NOT NULL,
-    `schedule_item_id`   INT UNSIGNED                   NOT NULL,
-    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
+    `person_schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT UNSIGNED NOT NULL,
+    `schedule_item_id`   INT UNSIGNED NOT NULL,
+    `payment_deadline`   DATETIME     NULL DEFAULT NULL,
+    `state`              ENUM (
+        'applied',
+        'participated',
+        'missed',
+        'canceled'
+        )                             NULL DEFAULT NULL,
     UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
     CONSTRAINT `fk__person_schedule__schedule_item`
@@ -1352,7 +1356,8 @@ CREATE TABLE IF NOT EXISTS `email_message`
         'spam_contest',
         'spam_mff',
         'spam_other',
-        'contest',
+        'fykos',
+        'vyfuk',
         'fof',
         'fol',
         'dsef'
@@ -1376,15 +1381,20 @@ CREATE TABLE IF NOT EXISTS `email_message`
 -- -----------------------------------------------------
 -- Table `email_preference`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `person_email_preference`
+CREATE TABLE IF NOT EXISTS `person_correspondence_preference`
 (
-    `person_email_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_correspondence_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `person_id`                  INT UNSIGNED                                  NOT NULL,
-    `option`                     ENUM ('spam_contest','spam_mff','spam_other') NOT NULL,
+    `option`                     ENUM (
+        'spam_contest',
+        'spam_mff',
+        'spam_other',
+        'spam_post' # hack pre poštový spam
+        ) NOT NULL,
     `value`                      BOOL                                          NOT NULL,
     `created`                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY `uq__email_preference__option` (`person_id`, `option`),
-    CONSTRAINT `fk__email_preference__person`
+    UNIQUE KEY `uq__person_correspondence_preference__option` (`person_id`, `option`),
+    CONSTRAINT `fk__person_correspondence_preference__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON UPDATE NO ACTION

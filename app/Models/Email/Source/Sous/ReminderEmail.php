@@ -75,7 +75,7 @@ final class ReminderEmail extends UIEmailSource
                     'recipient_person_id' => $participant->person_id,
                     'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
                     'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Contest),
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Fykos),
                     'lang' => Language::from(Language::CS),
                 ],
             ];

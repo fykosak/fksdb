@@ -95,7 +95,7 @@ class QuizComponent extends FormComponent
     /**
      * @throws BadTypeException
      * @throws BadRequestException
-     *
+     * @throws \Throwable
      */
     protected function handleSuccess(Form $form): void
     {

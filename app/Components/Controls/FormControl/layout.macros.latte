@@ -1,4 +1,5 @@
 {varType Fykosak\Utils\Localization\GettextTranslator $translator}
+{varType string $lang}
 {define errors}
     {var array $fieldErrors = []}
     {foreach $form->getControls() as $cont}
@@ -19,12 +20,20 @@
     {var string|Nette\Utils\Html|Fykosak\Utils\Localization\LangMap $description = $field->getOption('description')}
     {if $description}
         <span class="form-text">
+            <i class="fas fa-info-circle me-2"></i>
             {if $description instanceof Fykosak\Utils\Localization\LangMap}
                 {$translator->getVariant($description)}
             {else}
                 {$description}
             {/if}
         </span>
+    {/if}
+    {var Fykosak\Utils\Localization\LangMap|null $reason = $field->getOption('reason')}
+    {if $reason}
+        <div class="form-text">
+            <i class="fas fa-user-lock me-2"></i>
+            {$reason->getText($lang)}
+        </div>
     {/if}
 {/define}
 

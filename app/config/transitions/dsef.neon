@@ -8,7 +8,7 @@ transitions:
                 label: _('Register')
                 icon: 'fas fa-plus'
                 afterExecute:
-                    - FKSDB\Models\Email\Source\Dsef\TransitionEmail()
+                    - FKSDB\Models\Email\Source\DSEF\TransitionEmail()
             applied->participated:
                 condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'), FKSDB\Models\Events\Semantics\EventWas())
                 label: _('Prezentovat')

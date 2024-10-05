@@ -23,7 +23,7 @@ interface OwnProps {
 export default function Group({group}: OwnProps) {
     const params = renderOptions(group.scheduleGroupType);
     const translator = useContext(TranslatorContext);
-    if (group.scheduleGroupType === 'weekend_info') {
+    if (group.scheduleGroupType === 'info') {
         return <GroupInfo group={group}/>;
     }
     return <div className="ms-3">
