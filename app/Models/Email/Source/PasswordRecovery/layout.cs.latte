@@ -1,0 +1,18 @@
+{layout none}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType FKSDB\Modules\Core\Language $lang}
+
+{define subject}{_'Password recovery'}{/define}
+<p>
+    Bylo zažádáno o obnovu hesla na fykos.cz pro uživatele <em>{$person->getFullName()}</em>. Pokud jste žádali vy,
+    tak použijte odkaz pro změnu hesla:<br/>
+    <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
+</p>
+<p>
+    Odkaz je platný do <strong>{$token->until}</strong>.
+</p>
+<p>
+    S pozdravem,<br/>
+    FKSDB
+</p>

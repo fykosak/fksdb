@@ -12,6 +12,7 @@ use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Service\Service;
+use Fykosak\Utils\Localization\GettextTranslator;
 
 /**
  * @phpstan-extends Service<SchedulePaymentModel>
@@ -26,7 +27,7 @@ final class SchedulePaymentService extends Service
      * @throws \PDOException
      * @throws DuplicatePaymentException
      */
-    public function storeItems(array $data, PaymentModel $payment, Language $lang): void
+    public function storeItems(array $data, PaymentModel $payment, GettextTranslator $translator): void
     {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
@@ -46,7 +47,7 @@ final class SchedulePaymentService extends Service
                 throw new DuplicatePaymentException(
                     sprintf(
                         _('Item "%s" has already another payment.'),
-                        $model->person_schedule->getLabel($lang)
+                        $model->person_schedule->getLabel(Language::from($translator->lang))
                     )
                 );
             }

@@ -1,0 +1,14 @@
+{layout none}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+{varType FKSDB\Modules\Core\Language $lang}
+{define subject}{_'Create an account'}{/define}
+
+<p>Hi,<br/>
+    an account has been made for you on fykos.cz. To login for the first time and to set up your password use the
+    following link:<br/>
+    <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
+</p>
+<p>
+    With kind regards,<br/>
+    FKSDB
+</p>

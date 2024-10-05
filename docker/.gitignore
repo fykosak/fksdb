@@ -1,3 +1,5 @@
-mysql_data
+mariadb_data
 log
-config/config.neon
+temp
+upload
+config.neon

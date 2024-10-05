@@ -103,10 +103,10 @@ class Handler
                     throw new ExistingPaymentException($personSchedule);
                 }
             } elseif (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
             if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
 
             $this->service->storeModel(

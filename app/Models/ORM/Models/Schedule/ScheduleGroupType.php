@@ -22,13 +22,12 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
     public const TeacherPresent = 'teacher_present';
 
     public const Weekend = 'weekend';
-    public const WeekendInfo = 'weekend_info';
+    public const Info = 'info';
 
-    public const DSEFMorning = 'dsef_morning';
-    public const DSEFAfternoon = 'dsef_afternoon';
-    public const DSEFAllDay = 'dsef_all_day';
+    public const Excursion = 'excursion';
 
     public const Apparel = 'apparel';
+    public const Food = 'food';
 
     public const Transport = 'transport';
     public const Ticket = 'ticket';
@@ -46,14 +45,13 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             new self(self::Visa),
             new self(self::VaccinationCovid),
             new self(self::TeacherPresent),
-            new self(self::WeekendInfo),
+            new self(self::Info),
             new self(self::Weekend),
-            new self(self::DSEFMorning),
-            new self(self::DSEFAllDay),
-            new self(self::DSEFAfternoon),
+            new self(self::Excursion),
             new self(self::Apparel),
             new self(self::Transport),
             new self(self::Ticket),
+            new self(self::Food),
         ];
     }
 
@@ -82,13 +80,11 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
             case self::VaccinationCovid:
                 $badge = 'badge bg-color-6';
                 break;
-            case self::DSEFMorning:
-            case self::DSEFAfternoon:
-            case self::DSEFAllDay:
+            case self::Excursion:
             case self::Weekend:
                 $badge = 'badge bg-color-7';
                 break;
-            case self::WeekendInfo:
+            case self::Info:
                 $badge = 'badge bg-color-8';
                 break;
             case self::Apparel:
@@ -118,7 +114,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return 'fas fa-bed';
             case self::Weekend:
                 return 'fas fa-calendar';
-            case self::WeekendInfo:
+            case self::Info:
                 return 'fas fa-info';
         }
         return '';
@@ -136,20 +132,20 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
                 return _('Accommodation gender');
             case self::AccommodationTeacher:
                 return _('Accommodation teacher');
+            case self::Food:
+                return _('Food');
             case self::TeacherPresent:
                 return _('Schedule during competition');
             case self::Visa:
                 return _('Visa');
             case self::VaccinationCovid:
                 return _('Covid-19 Vaccination');
-            case self::WeekendInfo:
+            case self::Info:
                 return _('Info');
             case self::Weekend:
                 return _('Schedule');
-            case self::DSEFMorning:
-            case self::DSEFAfternoon:
-            case self::DSEFAllDay:
-                return _('DSEF');
+            case self::Excursion:
+                return _('Excursion');
             case self::Apparel:
                 return _('Apparel');
             case self::Transport:

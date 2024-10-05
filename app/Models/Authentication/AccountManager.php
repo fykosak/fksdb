@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authentication;
 
-use FKSDB\Models\Email\Source\LoginInvitation\LoginInvitationEmailSource;
+use FKSDB\Models\Email\Source\LoginInvitation\LoginInvitationEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -54,7 +54,7 @@ class AccountManager
             new DateTime(),
             $until
         );
-        $email = new LoginInvitationEmailSource($this->container);
+        $email = new LoginInvitationEmail($this->container);
         $email->createAndSend([
             'token' => $token,
             'person' => $person,
