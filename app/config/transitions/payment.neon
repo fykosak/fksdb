@@ -26,7 +26,7 @@ transitions:
             in_progress->waiting:
                 label: _('Generate payment')
                 behaviorType: success
-                successLabel: _('Payment information has been succefully created')
+                successLabel: _('Payment instructions have been successfully generated')
                 beforeExecute:
                     - @fykosPayment.symbolGenerator
                     - @priceCalculator
