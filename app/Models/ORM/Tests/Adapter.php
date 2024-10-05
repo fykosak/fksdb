@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Tests;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\LinkGenerator;
 use Nette\DI\Container;
@@ -43,7 +43,7 @@ abstract class Adapter extends Test
         return $this->test->getTitle();
     }
 
-    final public function getDescription(): ?LocalizedString
+    final public function getDescription(): ?LangMap
     {
         return $this->test->getDescription();
     }

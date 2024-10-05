@@ -153,6 +153,7 @@ final class SubmitPresenter extends BasePresenter
      */
     protected function createComponentQuizDetail(): QuizAnswersGrid
     {
+        /** @var SubmitModel $submit */
         $submit = $this->submitService->findByPrimary($this->id); //TODO!!!!
         $deadline = $submit->task->submit_deadline;
         return new QuizAnswersGrid(

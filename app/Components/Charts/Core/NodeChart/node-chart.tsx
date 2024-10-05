@@ -4,12 +4,14 @@ import {
     forceLink,
     forceManyBody,
     forceSimulation,
+    forceX,
+    forceY,
     SimulationLinkDatum,
     SimulationNodeDatum,
 } from 'd3-force';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { ChartComponent } from 'FKSDB/Components/Charts/Core/chart-component';
+import {useEffect, useState} from 'react';
+import {ChartComponent} from 'FKSDB/Components/Charts/Core/chart-component';
 import './node-chart.scss';
 
 export interface Link extends SimulationLinkDatum<Node> {
@@ -21,7 +23,7 @@ export interface Link extends SimulationLinkDatum<Node> {
 
 export interface Node extends SimulationNodeDatum {
     label: string;
-    color: string;
+    behaviorType: string;
 }
 
 interface OwnProps {
@@ -33,10 +35,12 @@ interface OwnProps {
 export default function NodeChart({links, nodes, colors}: OwnProps) {
     const [alpha, setAlpha] = useState(0);
     const simulation = forceSimulation<Node>(nodes)
-        .force('link', forceLink(links))
-        .force('charge', forceManyBody().strength(-2000))
-        .force('collide', forceCollide())
-        .force('center', forceCenter())
+        .force('link', forceLink(links).strength(0.01))
+        .force('charge', forceManyBody().strength(-50))
+        .force('collide', forceCollide().radius(50))
+        .force('center', forceCenter().strength(0.01))
+        .force('x', forceX().strength(0.01))
+        .force('y', forceY().strength(0.01))
         .alphaMin(0.001);
 
     useEffect(() => {
@@ -56,7 +60,7 @@ export default function NodeChart({links, nodes, colors}: OwnProps) {
     nodes.forEach((node, key) => {
         nodesElements.push(
             <g fill="currentColor"
-               style={{'--color': node.color} as React.CSSProperties}
+               style={{'--color': 'var(--bs-' + node.behaviorType + ')'} as React.CSSProperties}
                key={key}
                transform={'translate(' + node.x + ',' + node.y + ')'}>
                 <circle r="7.5"/>

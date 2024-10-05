@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -100,10 +99,7 @@ final class RegisterContestantForm extends ModelForm
         $email = $person->getInfo()->email;
         if ($email && !$person->getLogin()) {
             try {
-                $this->accountManager->sendLoginWithInvitation(
-                    $person,
-                    Language::from($this->translator->lang)
-                );
+                $this->accountManager->sendLoginWithInvitation($person, $this->translator);
                 $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
             } catch (\Throwable $exception) {
                 $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);

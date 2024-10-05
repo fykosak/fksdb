@@ -29,24 +29,21 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string|Html}>}
+     * @phpstan-return array{nodes:array<string,array{label:string}>,links:array<int,array{from:string,to:string,label:string|Html}>}
      */
     final public function getData(): array
     {
         $edges = [];
         $nodes = [];
         foreach ($this->machine->getTransitions()->toArray() as $transition) {
-            if (!isset($nodes[$transition->source->value])) {
-                $nodes[$transition->source->value] = [
-                    'label' => $transition->source->label(),
-                    'type' => 'default',
-                ];
-            }
-            if (!isset($nodes[$transition->target->value])) {
-                $nodes[$transition->target->value] = [
-                    'label' => $transition->target->label(),
-                    'type' => 'default',
-                ];
+            if (count($nodes) === 0) {
+                $states = $transition->source->cases();
+                foreach ($states as $state) {
+                    $nodes[$state->value] = [
+                        'label' => $state->label(),
+                        'behaviorType' => $state->behaviorType(),
+                    ];
+                }
             }
             $edges[] = [
                 'from' => $transition->source->value,

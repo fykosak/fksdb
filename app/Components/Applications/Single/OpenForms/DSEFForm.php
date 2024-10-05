@@ -11,7 +11,7 @@ use FKSDB\Components\Schedule\Input\ScheduleSelectBox;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
 use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Forms\Form;
 
 /**
@@ -37,14 +37,14 @@ final class DSEFForm extends OpenApplicationForm
                 'email' => ['required' => true],
                 'born' => [
                     'required' => true,
-                    'reason' => new LocalizedString([
+                    'reason' => new LangMap([
                         'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
                         'en' => 'For entering laboratories and possibly accommodation',
                     ])
                 ],
                 'id_number' => [
                     'required' => true,
-                    'reason' => new LocalizedString([
+                    'reason' => new LangMap([
                         'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
                         'en' => 'For entering laboratories and possibly accommodation',
                     ])

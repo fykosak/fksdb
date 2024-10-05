@@ -32,10 +32,10 @@ final class TeamScholarship extends FakeStringEnum implements EnumColumn
                 return 'info';
             case self::Half:
                 return 'warning';
+            default:
             case self::None:
                 return 'secondary';
         }
-        return '';
     }
 
     public function label(): string

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Seating;
 
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Utils\Html;
 
 final class Place2022 implements Place
@@ -31,15 +32,15 @@ final class Place2022 implements Place
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>[]
+     * @phpstan-return LangMap<'cs'|'en',string>[]
      */
     public static function getSectors(): array
     {
         return [
-            'A' => new LocalizedString(['cs' => 'Zelený', 'en' => 'Green']),
-            'B' => new LocalizedString(['cs' => 'Modrý', 'en' => 'Blue']),
-            'C' => new LocalizedString(['cs' => 'Žlutý', 'en' => 'Yellow']),
-            'D' => new LocalizedString(['cs' => 'Červený', 'en' => 'Red']),
+            'A' => new LangMap(['cs' => 'Zelený', 'en' => 'Green']),
+            'B' => new LangMap(['cs' => 'Modrý', 'en' => 'Blue']),
+            'C' => new LangMap(['cs' => 'Žlutý', 'en' => 'Yellow']),
+            'D' => new LangMap(['cs' => 'Červený', 'en' => 'Red']),
         ];
     }
 
@@ -58,9 +59,12 @@ final class Place2022 implements Place
         return $this->sector;
     }
 
-    public function sectorName(string $language): string
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function sectorName(GettextTranslator $translator): string
     {
-        return self::getSectors()[$this->sector]->getText($language); //@phpstan-ignore-line
+        return $translator->getVariant(self::getSectors()[$this->sector()]);
     }
 
     public function layout(): string

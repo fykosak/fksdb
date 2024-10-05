@@ -10,7 +10,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
@@ -23,7 +23,7 @@ use Nette\Utils\DateTime;
  * @property-read DateTime $end
  * @property-read string $name_cs
  * @property-read string $name_en
- * @property-read LocalizedString $name
+ * @property-read LangMap $name
  * @property-read DateTime|null $registration_begin
  * @property-read DateTime|null $registration_end
  * @phpstan-type SerializedScheduleGroupModel array{
@@ -106,7 +106,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
                 $value = ScheduleGroupType::from(parent::__get($key));
                 break;
             case 'name':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->name_cs,
                     'en' => $this->name_en,
                 ]);

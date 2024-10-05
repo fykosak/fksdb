@@ -15,21 +15,24 @@ final class TaskContributionType extends FakeStringEnum implements EnumColumn
     public const SOLUTION = 'solution';
     public const GRADE = 'grade';
 
-    public function badge(): Html
+    public function behaviorType(): string
     {
         switch ($this->value) {
             case self::SOLUTION:
-                $badge = 'badge bg-color-1';
-                break;
+                return 'color-1';
             case self::GRADE:
             default:
-                $badge = 'badge bg-color-2';
-                break;
+                return 'color-2';
             case self::AUTHOR:
-                $badge = 'badge bg-color-3';
-                break;
+                return 'color-3';
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-'.$this->behaviorType()])
+            ->addText($this->label());
     }
 
     public function label(): string

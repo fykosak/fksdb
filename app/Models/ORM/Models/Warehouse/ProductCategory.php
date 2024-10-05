@@ -19,20 +19,24 @@ final class ProductCategory extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = 'badge bg-color-4';
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
+    }
+
+    public function behaviorType(): string
+    {
         switch ($this->value) {
             case self::APPAREL:
-                $badge = 'badge bg-color-2';
-                break;
+                return 'color-2';
             case self::GAME:
             case self::GAME_EXTENSION:
-                $badge = 'badge bg-color-1';
-                break;
+                return 'color-1';
             case self::BOOK:
-                $badge = 'badge bg-color-3';
-                break;
+                return 'color-3';
+            default:
+                return 'color-4';
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
     public function label(): string

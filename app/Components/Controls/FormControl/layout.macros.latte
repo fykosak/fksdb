@@ -1,7 +1,9 @@
+{varType Fykosak\Utils\Localization\GettextTranslator $translator}
 {varType string $lang}
 {define errors}
     {var array $fieldErrors = []}
     {foreach $form->getControls() as $cont}
+        {varType Nette\Forms\Controls\BaseControl $cont}
         {foreach $cont->getErrors() as $error}
             {php $fieldErrors[$error] = 1}
         {/foreach}
@@ -15,13 +17,23 @@
     {foreach $field->getErrors() as $error}
         <div class="invalid-feedback">{$error}</div>
     {/foreach}
-    {var string|Nette\Utils\Html $description = $field->getOption('description')}
+    {var string|Nette\Utils\Html|Fykosak\Utils\Localization\LangMap $description = $field->getOption('description')}
     {if $description}
-        <div class="form-text"><i class="fas fa-info-circle me-2"></i>{$description}</div>
+        <span class="form-text">
+            <i class="fas fa-info-circle me-2"></i>
+            {if $description instanceof Fykosak\Utils\Localization\LangMap}
+                {$translator->getVariant($description)}
+            {else}
+                {$description}
+            {/if}
+        </span>
     {/if}
-    {var Fykosak\Utils\Localization\LocalizedString|null $reason = $field->getOption('reason')}
+    {var Fykosak\Utils\Localization\LangMap|null $reason = $field->getOption('reason')}
     {if $reason}
-        <div class="form-text"><i class="fas fa-user-lock me-2"></i>{$reason->getText($lang)}</div>
+        <div class="form-text">
+            <i class="fas fa-user-lock me-2"></i>
+            {$reason->getText($lang)}
+        </div>
     {/if}
 {/define}
 

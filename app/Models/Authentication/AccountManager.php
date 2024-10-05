@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
@@ -42,8 +43,9 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      * @throws \Throwable
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
      */
-    public function sendLoginWithInvitation(PersonModel $person, Language $lang): LoginModel
+    public function sendLoginWithInvitation(PersonModel $person, GettextTranslator $translator): LoginModel
     {
         $login = $this->loginService->createLogin($person);
 
@@ -58,7 +60,7 @@ class AccountManager
         $email->createAndSend([
             'token' => $token,
             'person' => $person,
-            'lang' => Language::from($person->getPreferredLang() ?? $lang->value),
+            'lang' => Language::from($person->getPreferredLang() ?? $translator->lang),
         ]);
         return $login;
     }

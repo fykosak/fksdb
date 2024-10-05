@@ -119,7 +119,7 @@ final class HandoutFormComponent extends FormComponent
             $control = new PersonSelectBox(
                 false,
                 $provider,
-                $task->label . ' ' . $task->name->getText($this->translator->lang)
+                $task->label . ' ' . $this->translator->getVariant($task->name)
             );
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);

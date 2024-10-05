@@ -6,6 +6,7 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Utils\Html;
 
 final class Language extends FakeStringEnum
@@ -58,5 +59,19 @@ final class Language extends FakeStringEnum
             new self(self::EN),
             new self(self::CS),
         ];
+    }
+
+    /**
+     * @phpstan-template TValue
+     * @phpstan-param array<'cs'|'en',TValue>|LangMap<'cs'|'en',TValue> $map
+     * @phpstan-return TValue
+     */
+    final public function getVariant($map)
+    {
+        if ($map instanceof LangMap) {
+            return $map->get($this->value);//@phpstan-ignore-line
+        } else {
+            return $map[$this->value];
+        }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
@@ -20,6 +21,11 @@ final class PersonGender extends FakeStringEnum implements EnumColumn
     public function badge(): Html
     {
         return Html::el('span')->addAttributes(['class' => $this->iconClassName()]);
+    }
+
+    public function behaviorType(): string
+    {
+        throw new NotImplementedException();
     }
 
     public function iconClassName(): string

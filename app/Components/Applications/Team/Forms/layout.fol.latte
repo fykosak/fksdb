@@ -1,8 +1,9 @@
 {layout '../../../Controls/FormComponent/layout.latte'}
-{varType FKSDB\Modules\Core\Language|null $lang}
+{varType Fykosak\Utils\Localization\GettextTranslator $translator}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {block content}
     <ul>
-        {if $lang->value === 'cs'}
+        {if $translator->lang === 'cs'}
             <li>
                 Vyplněním této přihlášky přihlásíte tým na soutěž <strong>Fyziklání Online</strong>.
                 Každý člen týmu bude e-mailem informován o přihlášení a může přihlášku upravit.

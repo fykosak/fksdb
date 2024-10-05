@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Person\Edit;
 
-use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Models\Authentication\Exceptions\ChangeInProgressException;
 use FKSDB\Models\Email\Source\ChangeEmail\ChangeEmailEmail;
+use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -42,7 +42,6 @@ class ChangeEmailComponent extends ModelForm
     public function render(): void
     {
         $login = $this->model->getLogin();
-        $this->template->lang = Language::tryFrom($this->translator->lang);
         $this->template->changeActive = $login
             && $login->hasActiveToken(AuthTokenType::from(AuthTokenType::ChangeEmail));
         parent::render();
@@ -101,7 +100,6 @@ class ChangeEmailComponent extends ModelForm
      */
     protected function innerSuccess(array $values, Form $form): PersonModel
     {
-        $lang = Language::from($this->translator->lang);
         $newEmail = $values['new_email'];
         self::logEmailChange($this->model, $newEmail, true);
         $login = $this->model->getLogin();
@@ -112,7 +110,7 @@ class ChangeEmailComponent extends ModelForm
             throw new ChangeInProgressException();
         }
         $emailSource = new ChangeEmailEmail($this->container);
-        $emailSource->createAndSend(['lang' => $lang, 'person' => $this->model, 'newEmail' => $newEmail]);
+        $emailSource->createAndSend(['lang' => Language::from($this->translator->lang), 'person' => $this->model, 'newEmail' => $newEmail]);
         return $this->model;
     }
 

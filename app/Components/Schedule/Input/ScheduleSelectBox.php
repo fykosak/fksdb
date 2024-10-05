@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -22,6 +20,7 @@ class ScheduleSelectBox extends SelectBox
 
     /**
      * @throws BadRequestException
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
      */
     public function __construct(ScheduleGroupModel $group, GettextTranslator $translator)
     {
@@ -29,12 +28,12 @@ class ScheduleSelectBox extends SelectBox
             parent::__construct(
                 sprintf(
                     _('%s -- end of registration: %s'),
-                    $group->name->getText($translator->lang),
+                    $translator->getVariant($group->name),
                     $group->registration_end->format(_('__date_time'))
                 )
             );
         } else {
-            parent::__construct($group->name->getText($translator->lang));
+            parent::__construct($translator->getVariant($group->name));
         }
 
         $this->group = $group;
@@ -46,8 +45,8 @@ class ScheduleSelectBox extends SelectBox
         foreach ($this->group->getItems() as $item) {
             $items[$item->getPrimary()] = sprintf(
                 _('%s - %s'),
-                $item->name->getText($translator->lang),
-                $item->description->getText($translator->lang)
+                $translator->getVariant($item->name),
+                $translator->getVariant($item->description)
             );
             if (!$item->available) {
                 $disabled[] = $item->getPrimary();

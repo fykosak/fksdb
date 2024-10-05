@@ -9,6 +9,8 @@ use Nette\Utils\Html;
 
 interface EnumColumn
 {
+    public function behaviorType(): string;
+
     public function badge(): Html;
 
     public function label(): string;

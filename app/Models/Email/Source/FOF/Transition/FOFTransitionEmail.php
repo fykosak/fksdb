@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\Transitions\Holder\TeamHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
-use FKSDB\Modules\Core\Language;
 
 /**
  * @phpstan-extends TransitionEmailSource<TeamModel2,array{token:AuthTokenModel,model:TeamModel2}>
@@ -71,7 +70,7 @@ final class FOFTransitionEmail extends TransitionEmailSource
                     'recipient_person_id' => $member->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
-                    'lang' => Language::from($gameLang->value),
+                    'lang' => $gameLang->toLanguage(),
                 ],
             ];
         }
@@ -89,7 +88,7 @@ final class FOFTransitionEmail extends TransitionEmailSource
                     'recipient_person_id' => $teacher->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
-                    'lang' => Language::from($gameLang->value),
+                    'lang' => $gameLang->toLanguage(),
                 ],
             ];
         }

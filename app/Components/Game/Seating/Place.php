@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Game\Seating;
 
+use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\Utils\Html;
 
 interface Place
@@ -18,7 +19,10 @@ interface Place
 
     public function label(): string;
 
-    public function sectorName(string $language): string;
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function sectorName(GettextTranslator $translator): string;
 
     public function layout(): string;
 

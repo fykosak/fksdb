@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
@@ -35,9 +35,9 @@ final class ParticipantsDurationTest extends Test
         return new Title(null, _('Participation duration'));
     }
 
-    public function getDescription(): ?LocalizedString
+    public function getDescription(): ?LangMap
     {
-        return new LocalizedString([
+        return new LangMap([
             'en' => 'Check how long person participated in events of the contest.',
             'cs' => '',
         ]);

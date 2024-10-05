@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Referenced\TemplateItem;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\NetteORM\Selection\TypedSelection;
@@ -37,10 +38,19 @@ final class EmailsGrid extends BaseGrid
         $this->filtered = false;
         $this->addSimpleReferencedColumns([
             '@email_message.email_message_id',
-            '@email_message.recipient',
-            '@person.full_name',
+        ]);
+        /** @phpstan-ignore-next-line */
+        $this->table->addColumn(new TemplateItem(
+            $this->container,
+            '@email_message.recipient/@person.full_name',
+            '@email_message.recipient:title'
+        ), 'recipient');
+        $this->addSimpleReferencedColumns([
             '@email_message.subject',
             '@email_message.state',
+            '@email_message.lang',
+            '@email_message.topic',
+            '@email_message.sent',
         ]);
         $this->addPresenterButton(
             'detail',

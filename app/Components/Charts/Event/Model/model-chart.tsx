@@ -1,8 +1,8 @@
 import * as React from 'react';
-import NodeChart, { Link as SimLink, Node as SimNode } from '../../Core/NodeChart/node-chart';
-import { scaleOrdinal } from 'd3-scale';
-import { schemeCategory10 } from 'd3-scale-chromatic';
-import { Translator } from '@translator/translator';
+import NodeChart, {Link as SimLink, Node as SimNode} from '../../Core/NodeChart/node-chart';
+import {scaleOrdinal} from 'd3-scale';
+import {schemeCategory10} from 'd3-scale-chromatic';
+import {Translator} from '@translator/translator';
 
 export interface Link {
     from: string;
@@ -13,7 +13,7 @@ export interface Link {
 
 export interface Node {
     label: string;
-    type: 'init' | 'terminated' | 'default';
+    behaviorType: string;
 }
 
 interface OwnProps {
@@ -31,12 +31,11 @@ export default function ModelChart({data: {links, nodes}}: OwnProps) {
     const simNodes: {
         [key: number]: SimNode;
     } = {};
-    const color = scaleOrdinal(schemeCategory10);
     for (const key in nodes) {
         if (Object.hasOwn(nodes, key)) {
             simNodes[key] = {
                 label: nodes[key].label,
-                color: color(key),
+                behaviorType: nodes[key].behaviorType,
             };
         }
     }
@@ -50,5 +49,5 @@ export default function ModelChart({data: {links, nodes}}: OwnProps) {
         };
     });
     return <NodeChart links={simLinks} nodes={Object.values(simNodes)}
-                      colors={['var(--bs-gray)', ...['success', 'danger', 'warning', 'info', 'primary'].map((value) => 'var(--bs-' + value + ')')]}/>;
+                      colors={['var(--bs-gray)', ...['success', 'danger', 'warning', 'info', 'primary', 'secondary'].map((value) => 'var(--bs-' + value + ')')]}/>;
 }

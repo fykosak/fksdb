@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Control;
@@ -61,9 +62,15 @@ final class EmailPresenter extends BasePresenter
         $this->template->source = $this->getEmailSource();
     }
 
-    public function titleTemplate(): PageTitle
+    /**
+     * @phpstan-return LangMap<'cs'|'en',PageTitle>
+     */
+    public function titleTemplate(): LangMap
     {
-        return new PageTitle(null, 'Email templates', 'fas fa-envelope');
+        return new LangMap([
+            'cs' => new PageTitle(null, 'Předpřipravené emaily', 'fas fa-envelope'),
+            'en' => new PageTitle(null, 'Email templates', 'fas fa-envelope'),
+        ]);
     }
 
     /**
@@ -78,9 +85,15 @@ final class EmailPresenter extends BasePresenter
         );
     }
 
-    public function titleHowTo(): PageTitle
+    /**
+     * @phpstan-return LangMap<'cs'|'en',PageTitle>
+     */
+    public function titleHowTo(): LangMap
     {
-        return new PageTitle(null, 'How to', 'fas fa-clipboard-question');
+        return new LangMap([
+            'cs' => new PageTitle(null, 'Ako na emaily', 'fas fa-clipboard-question'),
+            'en' => new PageTitle(null, 'How to', 'fas fa-clipboard-question'),
+        ]);
     }
 
     public function authorizedDetail(): bool

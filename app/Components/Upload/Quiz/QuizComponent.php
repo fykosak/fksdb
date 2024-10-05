@@ -95,7 +95,7 @@ class QuizComponent extends FormComponent
     /**
      * @throws BadTypeException
      * @throws BadRequestException
-     *
+     * @throws \Throwable
      */
     protected function handleSuccess(Form $form): void
     {
@@ -125,7 +125,7 @@ class QuizComponent extends FormComponent
                 if ($email && !$person->getLogin()) {
                     $this->accountManager->sendLoginWithInvitation(
                         $person,
-                        Language::from($this->translator->lang)
+                        $this->translator
                     );
                 }
             }

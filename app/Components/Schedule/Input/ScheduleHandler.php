@@ -21,6 +21,7 @@ use Nette\DI\Container;
 final class ScheduleHandler
 {
     private PersonScheduleService $service;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> $translator */
     private GettextTranslator $translator;
     private EventModel $event;
 
@@ -30,6 +31,7 @@ final class ScheduleHandler
         $this->event = $event;
     }
 
+    /** @phpstan-param GettextTranslator<'cs'|'en'> $translator */
     public function inject(PersonScheduleService $service, GettextTranslator $translator): void
     {
         $this->service = $service;
@@ -96,7 +98,7 @@ final class ScheduleHandler
         if (!$item->available) {
             throw new ScheduleException(
                 $group,
-                sprintf(_('Item with Id %s is not available'), $item->name->getText($this->translator->lang))
+                sprintf(_('Item with Id %s is not available'), $this->translator->getVariant($item->name))
             );
         }
         // is modifiable?
@@ -105,7 +107,7 @@ final class ScheduleHandler
                 $group,
                 sprintf(
                     _('Schedule "%s" is not allowed at this time'),
-                    $group->name->getText($this->translator->lang)
+                    $this->translator->getVariant($group->name)
                 )
             );
         }

@@ -69,16 +69,16 @@ class RecoveryForm extends FormComponent
                         $until
                     );
 
-                    $person = $login->person;
-                    if (!$person) {
-                        throw new BadRequestException();
-                    }
-                    $source = new PasswordRecoveryEmail($this->getContext());
-                    $source->createAndSend([
-                        'token' => $token,
-                        'person' => $person,
-                        'lang' => Language::from($login->person->getPreferredLang() ?? $this->translator->lang),
-                    ]);
+            $person = $login->person;
+            if (!$person) {
+                throw new BadRequestException();
+            }
+            $source = new PasswordRecoveryEmail($this->getContext());
+            $source->createAndSend([
+                'token' => $token,
+                'person' => $person,
+                'lang' => Language::from($login->person->getPreferredLang() ?? $this->translator->lang),
+            ]);
 
                     $email = Utils::cryptEmail($login->person->getInfo()->email);
                     $this->getPresenter()->flashMessage(

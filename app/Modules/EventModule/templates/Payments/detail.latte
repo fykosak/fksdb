@@ -129,10 +129,10 @@
                                 <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Block'}
-                                    : </small>{$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
+                                    : </small>{$schedulePayment->person_schedule->schedule_item->schedule_group->name->get($lang)}
                             </div>
                             <div class="col-3"><small class="text-muted">{_'Variant'}
-                                    : </small>{$schedulePayment->person_schedule->schedule_item->name->getText($lang)}</div>
+                                    : </small>{$schedulePayment->person_schedule->schedule_item->name->get($lang)}</div>
                             <div class="col-3"><small class="text-muted">{_'Person'}
                                     : </small>{$schedulePayment->person_schedule->person->getFullName()}</div>
                             <div class="col-2">{$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}</div>

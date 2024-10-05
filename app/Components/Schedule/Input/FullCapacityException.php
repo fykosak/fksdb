@@ -10,6 +10,9 @@ use Fykosak\Utils\Localization\GettextTranslator;
 
 class FullCapacityException extends ScheduleException
 {
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     public function __construct(ScheduleItemModel $item, PersonModel $person, GettextTranslator $translator)
     {
         parent::__construct(
@@ -17,7 +20,7 @@ class FullCapacityException extends ScheduleException
             sprintf(
                 _('The person %s could not be registered for "%s" because of full capacity.'),
                 $person->getFullName(),
-                $item->name->getText($translator->lang)
+                $translator->getVariant($item->name),
             )
         );
     }
