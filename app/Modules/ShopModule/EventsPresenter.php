@@ -47,7 +47,7 @@ final class EventsPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(null, _('Create payment for events'), 'fas fa-credit-card');
+        return new PageTitle(null, _('Create an event payment'), 'fas fa-credit-card');
     }
 
     /**

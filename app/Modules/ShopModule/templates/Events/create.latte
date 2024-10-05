@@ -12,49 +12,44 @@
         <div class="container">
             {switch $lang}
                 {case 'cs'}
-                <h2>Jak zaplatit za ubytování a program?</h2>
+                <h2>Jak zaplatit za ubytování a bagety?</h2>
                 <p>
-                    Vyberte položky, které chcete zaplatit (můžete zaplatit i za položky vícero osob).
+                    Vyberte měnu a položky, které chcete zaplatit (můžete zaplatit i za položky ostatních osob).
                 </p>
-                <ul>
+                {* <ul>
                     <li>V případě, že jste doprovod týmu, měl(a) byste vidět všechny nezaplacené položky pro všechny vaše týmy.</li>
                     <li>V případě, že jste člen(ka) týmu, zobrazují se všechny nezaplacené položky daného týmu.</li>
-                </ul>
+                </ul>*}
 
                 <p>
-                    Po vytvoření platby již nelze daný program nebo ubytování v přihlášce zrušit či změnit. V případě nutnosti změny (např. při změně člena týmu) nás kontaktujte na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+                    Po vytvoření platby již nelze placené položky v přihlášce zrušit či změnit. V případě nutnosti změny či zrušení nás kontaktujte na <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>.
                 </p>
+
                 <p>
-                    Pokud je váš program (spolu)financovaný v rámci programu Scholarship, <strong>platbu
-                        nevytvářejte!</strong>
-                </p>
-                <p>
-                    Pokud potřebujete fakturu, napište nám na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>. Položky, které jsou zahrnuté ve vygenerované platbě, budou na faktuře. Pokud chcete fakturu rozdělit pro různé položky, musíte vytvořit vícero plateb, které budou jednotlivé položky obsahovat.
+                    Potřebujete-li fakturu, napište nám na <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>. Položky, které jsou zahrnuté ve vygenerované platbě, budou na faktuře. <strong>Pokud chcete fakturu rozdělit na různé položky (např. ubytování a jídlo), musíte vytvořit vícero plateb, které budou jednotlivé položky obsahovat.</strong>
                 </p>
 
             {default}
-                <h2>How to pay for accommodation and accompanying program?</h2>
+                <h2>How to pay for accommodation and baguettes?</h2>
                 <p>
-                    Choose the items that you want to pay for. You can choose items belonging to other people as well:
+                    Choose the items that you want to pay for. You can even choose items belonging to other people.
                 </p>
-                <ul>
+                {* <ul>
                     <li>As a teacher you can choose items of all your teams.</li>
                     <li>As a member you can choose only items of your team.</li>
-                </ul>
+                </ul> *}
 
                 <p>
-                    Once the payment has been created, the given program or accommodation in the application cannot be canceled or changed. If a change is necessary (e.g. when a team member is replaced), contact us at <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>.
+                    Once the payment has been created, the given items in the application cannot be canceled or changed. If a change or cancellation is necessary (e.g. you find out you cannot attend the event), contact us at <a href="mailto:dsef@fykos.org">dsef@fykos.org</a>.
                 </p>
+
                 <p>
-                    If your stay is partially or fully funded via our Scholarship Program, please <strong>don't create any
-                        payment!</strong>
-                </p>
-                <p>
-                    If you need an official invoice, contact us at <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>. Items that are included in the generated payment will be on the invoice. If you want to split the invoice for different items, you must create multiple payments that will contain the desired items.
+                    If you need an official invoice, contact us at <a href="mailto:dsef@fykos.org">fyziklani@fykos.org</a>. Items that are included in the generated payment will be on the invoice. <strong>If you want to split the invoice for different items (e.g. accommodation and food), you must create multiple payments that will contain the desired items.</strong>
                 </p>
             {/switch}
             <p>
-                roles:
+                {switch $lang}
+                {case 'cs'}Vaše role:{default}Your roles:{/switch}
                 {foreach $roles as $role}
                     {$role->badge()}
                 {/foreach}

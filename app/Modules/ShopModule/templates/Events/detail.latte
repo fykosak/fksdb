@@ -29,28 +29,27 @@
                 {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
                 {if $lang === 'cs'}
                     <p>
-                        O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte
-                        do týdne od provedení převodu, kontaktujte nás na <a href="mailto:fyziklani@fykos.cz">fyziklani@fykos.cz</a>.
+                        O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte zhruba
+                        do týdne od provedení převodu, kontaktujte nás na <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>.
                     </p>
                 {else}
                     <p>
-                        You will be informed by email about the acceptance and successful processing of your payment. If
+                        We will send you an email about the acceptance and successful processing of your payment. If
                         you do not receive a confirmation within one week of making the transfer, please contact us at
-                        <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>.
+                        <a href="mailto:dsef@fykos.org">dsef@fykos.org</a>.
                     </p>
                 {/if}
             {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
                 {if $lang === 'cs'}
                     <p>
-                        Platba stále nebyla vytvořena; pokud jste vybrali všechny položky, které chcete zaplatit,
-                        přejděte k
-                        vytvoření platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
+                        Platba je nyní rozpracovaná; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k
+                        vygenerování platebních pokynů. Po tomto kroku už nelze platbu měnit, pouze celou zrušit.
                     </p>
                 {else}
                     <p>
-                        The payment has still not been created; if you have selected all the items you want to pay for,
-                        proceed to create the payment instructions. After this step, the payment cannot be changed, only
-                        completely cancelled.
+                        The payment is now in progress; if you have selected all the items you want to pay for,
+                        proceed to generate the payment instructions. After this step, the payment cannot be changed, only
+                        completely canceled.
                     </p>
                 {/if}
             {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
@@ -63,13 +62,11 @@
             {if $model->want_invoice}
                 {if $lang === 'cs'}
                     <p>
-                        U této platby evidujeme požadavek na vytvoření faktury. Do několika dní od obdržení platby ji
-                        pošleme na váš e-mail.
+                        U této platby evidujeme požadavek na vytvoření faktury. Do týdne od obdržení platby ji pošleme na váš e-mail.
                     </p>
                 {else}
                     <p>
-                        We have a request for an invoice for this payment. We will send it to your email a few days
-                        after receiving the payment.
+                        We have a request for an invoice for this payment. We will send it to your email within a week after receiving the payment.
                     </p>
                 {/if}
             {/if}

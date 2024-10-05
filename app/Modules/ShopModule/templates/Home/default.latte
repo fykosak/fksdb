@@ -6,7 +6,7 @@
 {block outerContent}
     <div class="panel color-auto" xmlns="http://www.w3.org/1999/html">
         <div class="container">
-            <h2>{_'On going payments'}</h2>
+            <h2>{_'Ongoing payments'}</h2>
             <div class="row row-cols-1 row-cols-md-1 g-4 mb-3">
                 {foreach $payments as $payment}
                     {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::CANCELED}
