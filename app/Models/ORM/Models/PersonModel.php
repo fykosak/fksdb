@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Tests\Person\BornDateTest;
 use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
@@ -475,18 +474,11 @@ final class PersonModel extends Model implements Resource
 
     /**
      * @phpstan-param string[] $types
-     * @phpstan-return PersonScheduleModel[]
      */
-    public function getScheduleRestsForEvent(
-        EventModel $event,
-        array $types = [
-            ScheduleGroupType::Accommodation,
-            ScheduleGroupType::Weekend,
-        ]
-    ): array {
+    public function getScheduleRestsForEvent(EventModel $event): array
+    {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
-            ->where('schedule_item.schedule_group.schedule_group_type', $types)
             ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         /** @var PersonScheduleModel $pSchedule */
         foreach ($schedule as $pSchedule) {
