@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\Schedule\TimeoutStrategy;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Schedule\PaymentDeadlineStrategy\PaymentDeadlineStrategy;
 use Fykosak\Utils\Localization\GettextTranslator;
@@ -41,6 +42,7 @@ class ScheduleContainer extends ContainerWithOptions
     private bool $collapseChild;
     /** @phpstan-var self::Group* */
     private string $groupBy;
+    private ?TimeoutStrategy $timeoutStrategy;
 
     /**
      * @phpstan-param TMeta $meta
@@ -60,6 +62,7 @@ class ScheduleContainer extends ContainerWithOptions
         $this->collapseChild = $meta['collapseChild'] ?? false;
         $this->collapse = $meta['collapseSelf'] ?? false;
         $this->groupBy = $meta['groupBy'] ?? self::GroupNone;
+        $this->timeoutStrategy = $meta['timeoutStrategy'] ?? null;
         $this->createContainers();
     }
 
