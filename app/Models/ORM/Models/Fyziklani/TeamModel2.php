@@ -12,12 +12,9 @@ use FKSDB\Components\Game\Seating\Place2024;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
 use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool;
@@ -161,12 +158,11 @@ final class TeamModel2 extends Model implements EventResource
      * @phpstan-param string[] $types
      * @phpstan-return PersonScheduleModel[][]
      */
-    public function getScheduleRest(
-        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
-    ): array {
+    public function getScheduleRest(): array
+    {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $rest = $person->getScheduleRestsForEvent($this->event, $types);
+            $rest = $person->getScheduleRestsForEvent($this->event);
             if (count($rest)) {
                 $toPay[] = $rest;
             }
