@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Single\InvitedForms;
 
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Events\Semantics\State;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\Logic\LogicAnd;
@@ -80,7 +80,7 @@ class SousForm extends InvitationApplicationForm
                         ScheduleGroupType::from(ScheduleGroupType::Apparel),
                     ],
                     'collapseChild' => false,
-                    'groupBy' => ScheduleContainer::GroupNone,
+                    'groupBy' => SectionContainer::GroupNone,
                 ],
             ],
         ];

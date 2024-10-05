@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -24,6 +25,7 @@ use Nette\Forms\Form;
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type TMeta from SectionContainer
  */
 class FOFTeamForm extends TeamForm
 {
@@ -43,7 +45,7 @@ class FOFTeamForm extends TeamForm
             $genderField = $component['person']['gender'];//@phpstan-ignore-line
             /** @var BaseControl $idNumberField */
             $idNumberField = $component['person_info']['id_number'];//@phpstan-ignore-line
-            /** @var ScheduleContainer $accommodationField */
+            /** @var SectionContainer $accommodationField */
             $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
             /** @var BaseControl $bornField */
             $bornField = $component['person_info']['born'];//@phpstan-ignore-line
@@ -73,7 +75,15 @@ class FOFTeamForm extends TeamForm
         $teacherCount = isset($this->model) ? max($this->model->getTeachers()->count('*'), 1) : 1;
 
         for ($teacherIndex = 0; $teacherIndex < $teacherCount; $teacherIndex++) {
-            $teacherContainer = $this->referencedPersonFactory->createReferencedPerson(
+            $teacherContainer = new ContainerWithOptions($this->container);
+            $scheduleDefinition = $this->getTeacherScheduleDefinition();
+            if ($scheduleDefinition) {
+                $teacherContainer->addComponent(
+                    new ScheduleContainer($this->container, $scheduleDefinition, $this->event),
+                    self::ScheduleContainer
+                );
+            }
+            $personContainer = $this->referencedPersonFactory->createReferencedPerson(
                 $this->getTeacherFieldsDefinition(),
                 $this->event->getContestYear(),
                 'email',
@@ -86,8 +96,9 @@ class FOFTeamForm extends TeamForm
                 ),
                 $this->event
             );
-            $teacherContainer->searchContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
-            $teacherContainer->referencedContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
+            $personContainer->searchContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
+            $personContainer->referencedContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
+            $teacherContainer->addComponent($personContainer, self::PersonSubContainer);
             $form->addComponent($teacherContainer, 'teacher_' . $teacherIndex);
         }
     }
@@ -110,28 +121,35 @@ class FOFTeamForm extends TeamForm
                 'academic_degree_prefix' => ['required' => false],
                 'academic_degree_suffix' => ['required' => false],
             ],
-            'person_schedule' => [
-                'accommodation' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                        ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
-                    ],
-                    'required' => false,
-                    'collapseSelf' => true,
-                    'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GroupNone,
+        ];
+    }
+
+    /**
+     * @phpstan-return array<string,TMeta>
+     */
+    protected function getTeacherScheduleDefinition(): array
+    {
+        return [
+            'accommodation' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                    ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
                 ],
-                'schedule' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
-                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                        ScheduleGroupType::from(ScheduleGroupType::Info),
-                    ],
-                    'required' => false,
-                    'collapseChild' => true,
-                    'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GroupBegin,
+                'required' => false,
+                'collapseSelf' => true,
+                'label' => _('Accommodation'),
+                'groupBy' => SectionContainer::GroupNone,
+            ],
+            'schedule' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
+                    ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                    ScheduleGroupType::from(ScheduleGroupType::Info),
                 ],
+                'required' => false,
+                'collapseChild' => true,
+                'label' => _('Schedule'),
+                'groupBy' => SectionContainer::GroupBegin,
             ],
         ];
     }
@@ -159,27 +177,31 @@ class FOFTeamForm extends TeamForm
                     'flag' => 'ALL',
                 ],
             ],
-            'person_schedule' => [
-                'accommodation' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                        ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
-                    ],
-                    'required' => false,
-                    'collapseSelf' => true,
-                    'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GroupNone,
+        ];
+    }
+
+    protected function getMemberScheduleDefinition(): ?array
+    {
+        return [
+            'accommodation' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                    ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
                 ],
-                'schedule' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                        ScheduleGroupType::from(ScheduleGroupType::Info),
-                    ],
-                    'required' => false,
-                    'collapseChild' => true,
-                    'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GroupBegin,
+                'required' => false,
+                'collapseSelf' => true,
+                'label' => _('Accommodation'),
+                'groupBy' => SectionContainer::GroupNone,
+            ],
+            'schedule' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                    ScheduleGroupType::from(ScheduleGroupType::Info),
                 ],
+                'required' => false,
+                'collapseChild' => true,
+                'label' => _('Schedule'),
+                'groupBy' => SectionContainer::GroupBegin,
             ],
         ];
     }
@@ -192,7 +214,25 @@ class FOFTeamForm extends TeamForm
 
     private function saveTeachers(TeamModel2 $team, Form $form): void
     {
-        $persons = self::getTeacherFromForm($form);
+        $persons = [];
+        $teacherIndex = 0;
+        while (true) {
+            /** @var ContainerWithOptions|null $teacherContainer */
+            $teacherContainer = $form->getComponent('teacher_' . $teacherIndex, false);
+            if (!$teacherContainer) {
+                break;
+            }
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            $referencedId = $teacherContainer->getComponent(self::PersonSubContainer);
+            /** @var ScheduleContainer $scheduleContainer */
+            $scheduleContainer = $teacherContainer->getComponent(self::ScheduleContainer);
+            $person = $referencedId->getModel();
+            if ($person) {
+                $scheduleContainer->save($person);
+                $persons[$person->person_id] = $person;
+            }
+            $teacherIndex++;
+        }
 
         $oldMemberQuery = $team->getTeachers();
         if (count($persons)) {

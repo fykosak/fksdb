@@ -8,10 +8,14 @@ use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\Processing\DefaultTransition;
 use FKSDB\Components\EntityForms\Processing\Postprocessing;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\ScheduleHandler;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -39,9 +43,13 @@ use Tracy\Debugger;
  * @phpstan-extends ModelForm<TeamModel2,array{team:array{category:string,name:string}}>
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type TMeta from SectionContainer
  */
 abstract class TeamForm extends ModelForm
 {
+    protected const ScheduleContainer = 'schedule'; //phpcs:ignore
+    protected const PersonSubContainer = 'person_id';
+
     protected ReflectionFactory $reflectionFormFactory;
     protected TeamMachine $machine;
     protected ReferencedPersonFactory $referencedPersonFactory;
@@ -230,11 +238,23 @@ abstract class TeamForm extends ModelForm
      * @phpstan-return EvaluatedFieldsDefinition
      */
     abstract protected function getMemberFieldsDefinition(): array;
+    /**
+     * @phpstan-return array<string,TMeta>|null
+     */
+    abstract protected function getMemberScheduleDefinition(): ?array;
 
     protected function appendMemberFields(Form $form): void
     {
         for ($member = 0; $member < 5; $member++) {
-            $memberContainer = $this->referencedPersonFactory->createReferencedPerson(
+            $memberContainer = new ContainerWithOptions($this->container);
+            $scheduleDefinition = $this->getMemberFieldsDefinition();
+            if ($scheduleDefinition) {
+                $memberContainer->addComponent(
+                    new ScheduleContainer($this->container, $scheduleDefinition, $this->event),
+                    self::ScheduleContainer
+                );
+            }
+            $personContainer = $this->referencedPersonFactory->createReferencedPerson(
                 $this->getMemberFieldsDefinition(),
                 $this->event->getContestYear(),
                 'email',
@@ -247,16 +267,30 @@ abstract class TeamForm extends ModelForm
                 ),
                 $this->event
             );
-            $memberContainer->referencedContainer->collapse = true;
-            $memberContainer->searchContainer->setOption('label', self::formatMemberLabel($member + 1));
-            $memberContainer->referencedContainer->setOption('label', self::formatMemberLabel($member + 1));
+            $personContainer->referencedContainer->collapse = true;
+            $personContainer->searchContainer->setOption('label', self::formatMemberLabel($member + 1));
+            $personContainer->referencedContainer->setOption('label', self::formatMemberLabel($member + 1));
+            $memberContainer->addComponent($personContainer, self::PersonSubContainer);
             $form->addComponent($memberContainer, 'member_' . $member);
         }
     }
 
     protected function saveMembers(TeamModel2 $team, Form $form): void
     {
-        $persons = self::getFormMembers($form);
+        $persons = [];
+        for ($member = 0; $member < 5; $member++) {
+            /** @var ContainerWithOptions $memberContainer */
+            $memberContainer = $form->getComponent('member_' . $member);
+            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            $referencedId = $memberContainer->getComponent(self::PersonSubContainer);
+            /** @var ScheduleContainer $scheduleContainer */
+            $scheduleContainer = $memberContainer->getComponent(self::ScheduleContainer);
+            $person = $referencedId->getModel();
+            if ($person) {
+                $scheduleContainer->save($person);
+                $persons[$person->person_id] = $person;
+            }
+        }
         if (!count($persons)) {
             throw new NoMemberException();
         }
@@ -264,6 +298,7 @@ abstract class TeamForm extends ModelForm
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
             $this->teamMemberService->disposeModel($oldMember);
         }
+        $handler = new ScheduleHandler($this->container, $this->event);
         foreach ($persons as $person) {
             $oldMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
             if (!$oldMember) {
@@ -297,7 +332,7 @@ abstract class TeamForm extends ModelForm
         $persons = [];
         for ($member = 0; $member < 5; $member++) {
             /** @phpstan-var ReferencedId<PersonModel> $referencedId */
-            $referencedId = $form->getComponent('member_' . $member);
+            $referencedId = $form->getComponent('member_' . $member)['person_id'];
             $person = $referencedId->getModel();
             if ($person) {
                 $persons[$person->person_id] = $person;

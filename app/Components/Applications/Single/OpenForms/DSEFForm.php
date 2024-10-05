@@ -6,7 +6,7 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Components\Schedule\Input\ScheduleSelectBox;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 
 /**
  * @method BasePresenter getPresenter($need = true)
- * @phpstan-import-type TMeta from ScheduleContainer
+ * @phpstan-import-type TMeta from SectionContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 final class DSEFForm extends OpenApplicationForm
@@ -84,7 +84,7 @@ final class DSEFForm extends OpenApplicationForm
     protected function configureForm(Form $form): void
     {
         parent::configureForm($form);
-        /**  @var ScheduleContainer $scheduleContainer */
+        /**  @var SectionContainer $scheduleContainer */
         $scheduleContainer = $form['event_participant'][self::ScheduleContainer]['excursion']; // @phpstan-ignore-line
         $halfDayComponents = [];
         $fullDayComponents = [];
