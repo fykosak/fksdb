@@ -12,10 +12,10 @@
         </p>
         {include './items.latte', lang: 'cs'}
         <p>
-            Prosíme o její uhrazení převodem na účet co nejdříve, nejpozději do {$model->payment_deadline}. Jakmile platbu zaregistrujeme, bude Ti na tento e-mail zasláno potvrzení.
+            Prosíme o její uhrazení převodem na účet co nejdříve, nejpozději do deadlinu {*{$model->payment_deadline}*}. Jakmile platbu zaregistrujeme, bude Ti na tento e-mail zasláno potvrzení.
         </p>
         <p>
-            Pro snadné zpracování prosím uveď v platbě Váš variabilní a konstantní symbol, jinak nebudeme vědět, že je platba od Tebe. Pokud Tvoje banka nenabízí možnost uvedení symbolů, uveď je prosím do zprávy příjemce, například "VS: 123456".
+            Pro snadné zpracování prosím uveď v platbě svůj variabilní a konstantní symbol, jinak nebudeme vědět, že je platba od Tebe. Pokud Tvoje banka nenabízí možnost uvedení symbolů, uveď je prosím do zprávy příjemce, například "VS: 123456".
         </p>
         {include './parameters.latte', lang: 'cs'}
         <p>

@@ -1,43 +1,14 @@
 {layout none}
-{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
-{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
-
-{define subject}Registrace na DSEF{/define}
-{* TODO: rewrite with DSEF layout template*}
-
 <div style="font-family:'Inter',sans-serif;text-align:center;margin:0px">
     <div style="background:#f2b72b;color:white;text-align:left;padding:0px;height:40px">
         <a href="https://dsef.cz" style="text-decoration:none"><img
                 src="https://static.fykos.cz/email/dsef_logo_white.png" height="40"
                 style="padding-top:10px;padding-bottom:10px;margin-left:15px;vertical-align:middle;box-sizing:border-box"></a>
     </div>
-    <div
-        style="text-align:justify;text-justify:inter-word;padding-left:15px;padding-right:15px;line-height:1.4em;box-sizing:border-box">
-        <p style="margin-top:1em;margin-bottom:1em">
-            Ahoj,
-            <br /><br />
-            potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci
-            <strong>{$model->event->getName()->getText('cs')}</strong>, která se koná
-            {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
-            {$model->event->begin|date:'j. n. Y'} – {$model->event->end|date:'j. n. Y'}.
-            {else}
-            {$model->event->begin|date:'j. n. Y'}.
-            {/if}
-            <br /><br />
-            Případné změny lze provádět až do {$model->event->registration_end|date:'j. n. Y, H:i'}
-            po přihlášení v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
-            nebo využitím soukromého odkazu níže:<br />
-            {var string $link = $control->link('//:Event:Application:edit',
-            ['eventId'=> $model->event->event_id,
-            'at'=>$token->token,
-            'id'=>$model->getPrimary()])}
-            <a href="{$link}">{$link}</a>.
-            <br /><br />
-            S pozdravem<br>
-            FKSDB
-        </p>
+    <div style="text-align:justify;text-justify:inter-word;padding-left:15px;padding-right:15px;line-height:1.4em;box-sizing:border-box">
+        {block body}
     </div>
-
+{*TODO: patička se nepropíše do mailu, jen to nad blokem mailu*}
     <div style="background:#f2b72b;color:white;display:flex;height:40px">
         <div style="margin-left:15px;padding-top:10px;padding-bottom:15px;text-align:left;width:85%">
             <p style="padding-top:0px;padding-bottom:5px;margin:0px">

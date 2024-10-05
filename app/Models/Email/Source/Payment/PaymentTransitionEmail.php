@@ -35,9 +35,9 @@ class PaymentTransitionEmail extends TransitionEmailSource
                 ],
                 'data' => [
                     'recipient_person_id' => $holder->getModel()->person_id,
-                    'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
-                    'sender' => 'Fyziklani <fyziklani@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                    'blind_carbon_copy' => 'DSEF <dsef@fykos.cz>',
+                    'sender' => 'DSEF <dsef@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::DSEF),
                     'lang' => Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN),
                 ],
             ]
