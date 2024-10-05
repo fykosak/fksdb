@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Team\Forms\Processing\Category;
 
-use Nette\InvalidStateException;
+use FKSDB\Components\EntityForms\Processing\ProcessingException;
 
-class OldMemberException extends InvalidStateException
+class OldMemberException extends ProcessingException
 {
     public function __construct(\Throwable $previous = null)
     {

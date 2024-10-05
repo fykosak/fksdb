@@ -50,10 +50,9 @@ class BannedPersonModel extends Model implements Resource
     public function getBanForContestYear(ContestYearModel $contestYear): ?BannedPersonScopeModel
     {
         /** @var BannedPersonScopeModel|null $model */
-        $model = $this->getScopes()
+        $model = $this->getScopes() // TODO tests
             ->where('contest_id', $contestYear->contest_id)
-            ->where('begin < ?', $contestYear->begin())
-            ->where('end > ? OR end IS NULL', $contestYear->begin())
+            ->where('begin < ? AND (end > ? OR end IS NULL)', $contestYear->end(), $contestYear->begin())
             ->fetch();
         return $model;
     }

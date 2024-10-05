@@ -7,6 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Components\EntityForms\Processing\Postprocessing;
 use FKSDB\Components\EntityForms\Processing\Preprocessing;
+use FKSDB\Components\EntityForms\Processing\ProcessingException;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -59,6 +60,10 @@ abstract class ModelForm extends FormComponent
             } else {
                 $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
+            return true;
+        }
+        if ($exception instanceof ProcessingException) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return true;
         }
         return false;

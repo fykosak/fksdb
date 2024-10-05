@@ -74,7 +74,6 @@ final class PaymentModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
      * @return PaymentState|mixed|null
      * @throws \ReflectionException
      */
@@ -83,7 +82,7 @@ final class PaymentModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = PaymentState::tryFrom($value);
+                $value = PaymentState::from($value);
                 break;
         }
         return $value;

@@ -159,6 +159,6 @@ final class ContestantPresenter extends BasePresenter
      */
     protected function createComponentTests(): TestsList
     {
-        return new TestsList($this->getContext(), DataTestFactory::getContestantTests($this->getContext()));
+        return new TestsList($this->getContext(), DataTestFactory::getContestantTests($this->getContext()), true);
     }
 }

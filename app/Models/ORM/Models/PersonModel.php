@@ -402,6 +402,23 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
+     * @phpstan-return array<int,int>
+     * @phpstan-param string[] $type
+     */
+    public function getSerializedSchedule2(EventModel $event, array $type): array
+    {
+        $query = $this->getSchedule()
+            ->where('schedule_item.schedule_group.event_id', $event->event_id)
+            ->where('schedule_item.schedule_group.schedule_group_type', $type);
+        $items = [];
+        /** @var PersonScheduleModel $model */
+        foreach ($query as $model) {
+            $items[$model->schedule_item->schedule_group_id] = $model->schedule_item->schedule_item_id;
+        }
+        return $items;
+    }
+
+    /**
      * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
      */
     public function getScheduleForEvent(EventModel $event): TypedGroupedSelection
@@ -475,6 +492,16 @@ final class PersonModel extends Model implements Resource
     }
 
     /**
+     * @return TypedGroupedSelection<PersonCorrespondencePreferenceModel>
+     */
+    public function getCorrespondencePreference(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PersonCorrespondencePreferenceModel> $selection */
+        $selection = $this->related(DbNames::TAB_PERSON_CORRESPONDENCE_PREFERENCE, 'person_id');
+        return $selection;
+    }
+
+    /**
      * @return PersonGender|mixed|null
      * @throws \ReflectionException
      */
@@ -483,7 +510,7 @@ final class PersonModel extends Model implements Resource
         $value = parent::__get($key);
         switch ($key) {
             case 'gender':
-                $value = PersonGender::tryFrom($value);
+                $value = PersonGender::from($value);
                 break;
         }
         return $value;

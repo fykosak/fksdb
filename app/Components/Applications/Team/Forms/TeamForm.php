@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Applications\Team\Forms;
 
-use FKSDB\Components\Applications\Team\Forms\Processing\SchoolsPerTeam\SchoolsPerTeamException;
 use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\Processing\DefaultTransition;
 use FKSDB\Components\EntityForms\Processing\Postprocessing;
@@ -143,7 +142,7 @@ abstract class TeamForm extends ModelForm
                 return true;
             }
         }
-        if ($exception instanceof DuplicateMemberException || $exception instanceof SchoolsPerTeamException) {
+        if ($exception instanceof DuplicateMemberException || $exception instanceof NoMemberException) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return true;
         }

@@ -103,7 +103,7 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
     {
         switch ($key) {
             case 'schedule_group_type':
-                $value = ScheduleGroupType::tryFrom(parent::__get($key));
+                $value = ScheduleGroupType::from(parent::__get($key));
                 break;
             case 'name':
                 $value = new LocalizedString([

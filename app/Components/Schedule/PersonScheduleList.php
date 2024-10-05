@@ -62,7 +62,7 @@ final class PersonScheduleList extends BaseList
         )->group('person_id');
         try {
             if (isset($this->filterParams['code'])) {
-                $model = MachineCode::parseHash(
+                $model = MachineCode::parseModelHash(
                     $this->container,
                     $this->filterParams['code'],
                     $this->event->getSalt()
@@ -127,7 +127,7 @@ final class PersonScheduleList extends BaseList
         /** @phpstan-ignore-next-line */
         $relatedTable->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new SimpleItem($this->container, '@payment.payment'),
+            new SimpleItem($this->container, '@person_schedule.payment'),
             'payment'
         );
         /** @phpstan-ignore-next-line */

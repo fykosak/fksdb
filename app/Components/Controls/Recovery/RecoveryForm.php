@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmailSource;
+use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Services\AuthTokenService;
@@ -52,41 +52,44 @@ class RecoveryForm extends FormComponent
              * @phpstan-var array{id:string} $values
              */
             $values = $form->getValues('array');
-            $connection->beginTransaction();
-            $login = $this->passwordAuthenticator->findLogin($values['id']);
-            if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::Recovery))) {
-                throw new RecoveryExistsException();
-            }
 
-            $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
-            $token = $this->authTokenService->createToken(
-                $login,
-                AuthTokenType::from(AuthTokenType::Recovery),
-                new DateTime(),
-                $until
+            $connection->transaction(
+                function () use ($values): void {
+                    $login = $this->passwordAuthenticator->findLogin($values['id']);
+                    if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::Recovery))) {
+                        throw new RecoveryExistsException();
+                    }
+
+                    $until = DateTime::from($this->getContext()->getParameters()['recovery']['expiration']);
+
+                    $token = $this->authTokenService->createToken(
+                        $login,
+                        AuthTokenType::from(AuthTokenType::Recovery),
+                        new DateTime(),
+                        $until
+                    );
+
+                    $person = $login->person;
+                    if (!$person) {
+                        throw new BadRequestException();
+                    }
+                    $source = new PasswordRecoveryEmail($this->getContext());
+                    $source->createAndSend([
+                        'token' => $token,
+                        'person' => $person,
+                        'lang' => Language::from($login->person->getPreferredLang() ?? $this->translator->lang),
+                    ]);
+
+                    $email = Utils::cryptEmail($login->person->getInfo()->email);
+                    $this->getPresenter()->flashMessage(
+                        sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
+                        Message::LVL_SUCCESS
+                    );
+                }
             );
-
-            $person = $login->person;
-            if (!$person) {
-                throw new BadRequestException();
-            }
-            $source = new PasswordRecoveryEmailSource($this->getContext());
-            $source->createAndSend([
-                'token' => $token,
-                'person' => $person,
-                'lang' => Language::from($login->person->getPreferredLang() ?? $this->translator->lang),
-            ]);
-
-            $email = Utils::cryptEmail($login->person->getInfo()->email);
-            $this->getPresenter()->flashMessage(
-                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
-                Message::LVL_SUCCESS
-            );
-            $connection->commit();
             $this->getPresenter()->redirect('login');
         } catch (AuthenticationException | RecoveryException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
         }
     }
 

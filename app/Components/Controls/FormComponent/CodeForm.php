@@ -21,7 +21,7 @@ abstract class CodeForm extends FormComponent
         /** @phpstan-var array{code:string} $values */
         $values = $form->getValues('array');
         try {
-            $model = MachineCode::parseHash(
+            $model = MachineCode::parseModelHash(
                 $this->container,
                 $values['code'],
                 $this->getSalt()

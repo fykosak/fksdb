@@ -18,6 +18,7 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read int $schedule_item_id
  * @property-read int $person_schedule_id
+ * @property-read \DateTime|null $payment_deadline
  * @property-read PersonScheduleState $state
  */
 final class PersonScheduleModel extends Model implements Resource

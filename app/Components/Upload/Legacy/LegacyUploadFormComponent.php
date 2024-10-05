@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Logging\Message;
@@ -129,7 +128,7 @@ class LegacyUploadFormComponent extends FormComponent
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
 
-            $upload = $container->addUpload('file', $task->getFullLabel(Language::from($this->translator->lang)));
+            $upload = $container->addUpload('file', $task->getFullLabel($this->translator));
             $conditionedUpload = $upload
                 ->addCondition(Form::FILLED)
                 ->addRule(
