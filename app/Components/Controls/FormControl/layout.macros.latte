@@ -1,3 +1,4 @@
+{varType string $lang}
 {define errors}
     {var array $fieldErrors = []}
     {foreach $form->getControls() as $cont}
@@ -16,7 +17,11 @@
     {/foreach}
     {var string|Nette\Utils\Html $description = $field->getOption('description')}
     {if $description}
-        <span class="form-text">{$description}</span>
+        <div class="form-text"><i class="fas fa-info-circle me-2"></i>{$description}</div>
+    {/if}
+    {var Fykosak\Utils\Localization\LocalizedString|null $reason = $field->getOption('reason')}
+    {if $reason}
+        <div class="form-text"><i class="fas fa-user-lock me-2"></i>{$reason->getText($lang)}</div>
     {/if}
 {/define}
 

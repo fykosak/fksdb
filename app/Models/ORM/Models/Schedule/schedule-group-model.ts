@@ -18,14 +18,13 @@ export type ScheduleGroupType =
     'accommodation'
     | 'accommodation_gender'
     | 'accommodation_teacher'
+    | 'food'
     | 'visa'
     | 'vaccination_covid'
     | 'teacher_present'
     | 'weekend'
-    | 'weekend_info'
-    | 'dsef_morning'
-    | 'dsef_afternoon'
-    | 'dsef_all_day'
+    | 'info'
+    | 'excursion'
     | 'apparel'
     | 'transport'
     | 'ticket';
@@ -40,16 +39,14 @@ export interface Params {
 
 export const renderOptions = (type: ScheduleGroupType): Params => {
     switch (type) {
-        case 'dsef_morning':
-        case 'dsef_all_day':
-        case 'dsef_afternoon':
+        case 'excursion':
             return {
                 capacity: true,
                 groupLabel: false,
                 price: false,
                 groupTime: false,
             };
-        case  'accommodation':
+        case 'accommodation':
             return {
                 capacity: true,
                 groupLabel: true,
@@ -67,14 +64,21 @@ export const renderOptions = (type: ScheduleGroupType): Params => {
                 price: false,
                 groupTime: false,
             };
+        case 'food':
+            return {
+                capacity: false,
+                groupLabel: true,
+                price: true,
+                groupTime: false,
+            };
         case 'weekend':
             return {
                 capacity: true,
                 groupLabel: true,
                 price: true,
                 groupTime: true,
-            }
-        case 'weekend_info':
+            };
+        case 'info':
         case 'apparel':
             return {
                 capacity: false,

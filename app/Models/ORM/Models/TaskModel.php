@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
-use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Security\Resource;
 use Nette\Utils\DateTime;
@@ -43,7 +43,7 @@ final class TaskModel extends Model implements Resource
     public const RESOURCE_ID = 'task';
 
     public function getFullLabel(
-        Language $lang,
+        GettextTranslator $translator,
         bool $includeContest = false,
         bool $includeYear = false,
         bool $includeSeries = true
@@ -52,7 +52,7 @@ final class TaskModel extends Model implements Resource
         if ($includeContest) {
             $label .= $this->contest->name . ' ';
         }
-        switch ($lang->value) {
+        switch ($translator->lang) {
             case 'cs':
                 if ($includeYear) {
                     $label .= $this->year . '. ročník ';
