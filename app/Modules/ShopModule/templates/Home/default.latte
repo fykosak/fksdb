@@ -60,11 +60,11 @@
                                         </tbody>
                                     </table>
                             </div>
-                                {var $event = $payment->getRelatedEvent()}
+                                {var $event = $payment->getScheduleEvent()}
                                 {if $event}
                                 <div class="card-body">
                                     <a class="btn btn-info"
-                                       href="{plink :Shop:Events:detail eventId=>$event->event_id, id=>$payment->payment_id}">
+                                       href="{plink :Shop:Schedule:detail eventId=>$event->event_id, id=>$payment->payment_id}">
                                         {_'Detail'}
                                     </a>
                                 </div>
@@ -121,7 +121,7 @@
                     </table>
                 {/foreach}
                 <a class="btn btn-primary"
-                   href="{plink :Shop:Events:create eventId=>$events[$eventId]->event_id}">{_'Create payment'}</a>
+                   href="{plink :Shop:Schedule:create eventId=>$events[$eventId]->event_id}">{_'Create payment'}</a>
                 <hr/>
             {/foreach}
         </div>

@@ -48,7 +48,7 @@ final class PaymentModel extends Model implements EventResource
         return $selection;
     }
 
-    public function getRelatedEvent(): ?EventModel
+    public function getScheduleEvent(): ?EventModel
     {
         $event = null;
         /** @var SchedulePaymentModel $schedulePayment */
@@ -117,7 +117,7 @@ final class PaymentModel extends Model implements EventResource
 
     public function getEvent(): EventModel
     {
-        $event = $this->getRelatedEvent();
+        $event = $this->getScheduleEvent();
         if (!$event) {
             throw new InvalidStateException();
         }

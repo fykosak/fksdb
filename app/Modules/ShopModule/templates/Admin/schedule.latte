@@ -1,0 +1,62 @@
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $rests}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>{_'Event'}</th>
+                    <th></th>
+                    <th>{_'Block'}</th>
+                    <th>{_'Variant'}</th>
+                    <th>{_'Person'}</th>
+                    <th></th>
+                    <th>{_'Payment deadline'}</th>
+                    <th>{_'Assigned payment'}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                {foreach $rests as $rest}
+                    {varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel $rest}
+                    {var $payment = $rest->getPayment()}
+                    {continueIf $rest->isPaid()}
+                    {if $payment && $payment->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                        {var $className = 'table-warning'}
+                    {elseif $payment && $payment->state->value === FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
+                        {var $className = 'table-info'}
+                    {else}
+                        {var $className = 'table-danger'}
+                    {/if}
+                    <tr class="{$className}">
+                        <td>
+                            {$rest->schedule_item->schedule_group->event->getName()->getText($lang)}
+                        </td>
+                        <td>
+                            <i class="{$rest->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                        </td>
+                        <td>
+                            {$rest->schedule_item->schedule_group->name->getText($lang)}
+                        </td>
+                        <td>
+                            {$rest->schedule_item->name->getText($lang)}
+                        </td>
+                        <td>
+                            {$rest->person->getFullName()}
+                        </td>
+                        <td>
+                            {$rest->schedule_item->getPrice()}
+                        </td>
+                        <td>
+                            {control printer:column '@person_schedule.payment_deadline', $rest,1024}
+                        </td>
+                        <td>
+                            {control printer:column '@payment.payment', $rest,1024}
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{/block}

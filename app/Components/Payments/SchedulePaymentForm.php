@@ -30,10 +30,12 @@ use Nette\Forms\Form;
  *      currency:string,
  *      person_id:int,
  *      want_invoice:bool,
- *      event_items:array<array<int,bool>>}>
+ *      items_container:array<array<int,bool>>}>
  */
 class SchedulePaymentForm extends ModelForm
 {
+    private const ItemsContainer = 'items_container';//phpscs:ignore
+
     private bool $isOrganizer;
     private PaymentMachine $machine;
     private PaymentService $paymentService;
@@ -101,7 +103,7 @@ class SchedulePaymentForm extends ModelForm
                 $this->isOrganizer,
                 $this->model
             ),
-            'event_items'
+            self::ItemsContainer
         );
     }
 
@@ -119,7 +121,7 @@ class SchedulePaymentForm extends ModelForm
             $this->model
         );
         $this->schedulePaymentService->storeItems(
-            (array)$values['event_items'],
+            (array)$values[self::ItemsContainer],
             $model,
             $this->translator
         );
@@ -150,7 +152,7 @@ class SchedulePaymentForm extends ModelForm
         if (isset($this->model)) {
             $form->setDefaults($this->model->toArray());
             /** @var PersonPaymentContainer $itemContainer */
-            $itemContainer = $form->getComponent('event_items');
+            $itemContainer = $form->getComponent(self::ItemsContainer);
             $itemContainer->setPayment($this->model);
         }
     }

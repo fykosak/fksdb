@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Services\PaymentService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 
-final class EventsPresenter extends BasePresenter
+final class SchedulePresenter extends BasePresenter
 {
     private EventService $eventService;
     private PaymentService $paymentService;
@@ -73,7 +73,6 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     final public function renderDetail(): void
     {
@@ -83,7 +82,6 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function titleDetail(): PageTitle
     {
@@ -93,7 +91,6 @@ final class EventsPresenter extends BasePresenter
             'fas fa-credit-card'
         );
     }
-
 
     /**
      * @throws NotFoundException
@@ -120,7 +117,6 @@ final class EventsPresenter extends BasePresenter
     /**
      * @throws CannotAccessModelException
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function titleEdit(): PageTitle
     {
@@ -145,7 +141,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     public function getPayment(): PaymentModel
     {
@@ -153,7 +148,7 @@ final class EventsPresenter extends BasePresenter
         if (!$payment) {
             throw new NotFoundException();
         }
-        if (!$payment->getRelatedEvent() || $payment->getRelatedEvent()->event_id !== $this->getEvent()->event_id) {
+        if (!$payment->getScheduleEvent() || $payment->getScheduleEvent()->event_id !== $this->getEvent()->event_id) {
             throw new NotFoundException();
         }
         return $payment;
@@ -161,7 +156,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      */
     protected function createComponentPaymentQRCode(): PaymentQRCode
     {
@@ -200,7 +194,6 @@ final class EventsPresenter extends BasePresenter
 
     /**
      * @throws NotFoundException
-     * @throws NotImplementedException
      * @phpstan-return TransitionButtonsComponent<PaymentModel>
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent

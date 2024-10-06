@@ -1,0 +1,88 @@
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+{varType string $lang}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payer information'}</h2>
+            {control columnTable ['person.full_name','person_info.email'], $model, 1024}
+        </div>
+    </div>
+
+    {if $model->hasGeneratedSymbols()}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Bank connection'}</h2>
+                {include bankConnection from ../blocks/bankConnection.latte model:$model}
+            </div>
+        </div>
+    {/if}
+    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Scan and pay'}</h2>
+                {control paymentQRCode}
+            </div>
+        </div>
+    {/if}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Payments contains'}</h2>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>{_'Block'}</th>
+                    <th>{_'Variant'}</th>
+                    <th>{_'Person'}</th>
+                    <th></th>
+                    <th>{_'Payment deadline'}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $model->getSchedulePayment() as $schedulePayment}
+                    {varType FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel $schedulePayment}
+                    <tr>
+                        <td>
+                            <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
+                        </td>
+                        <td>
+                            {$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
+                        </td>
+                        <td>
+                            {$schedulePayment->person_schedule->schedule_item->name->getText($lang)}
+                        </td>
+                        <td>
+                            {$schedulePayment->person_schedule->person->getFullName()}
+                        </td>
+                        <td>
+                            {$schedulePayment->person_schedule->schedule_item->getPrice()->getPrice($model->getCurrency())->__toString()}
+                        </td>
+                        <td>
+                            {control printer:column '@person_schedule.payment_deadline', $schedulePayment->person_schedule,1024}
+                        </td>
+                    </tr>
+                {/foreach}
+                {if isset($model->price)}
+                    <tr class="table-primary">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{_'Total'}</td>
+                        <td>{$model->getPrice()->__toString()}</td>
+                        <td></td>
+                    </tr>
+                {/if}
+                </tbody>
+            </table>
+            {if $model->getScheduleEvent()}
+                <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary(),'eventId'=>$model->getScheduleEvent()->event_id}">{_'Edit items'}</a>
+            {/if}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Actions'}</h2>
+            {control buttonTransition}
+        </div>
+    </div>
+{/block}

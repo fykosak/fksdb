@@ -158,9 +158,9 @@ class Router
     private static function addShopModule(RouteList $list): void
     {
 
-        $list->addRoute('events<eventId [0-9]+>[/<id [0-9]+>][/<action=default>]', [
+        $list->addRoute('schedule<eventId [0-9]+>[/<id [0-9]+>][/<action=default>]', [
             'module' => 'Shop',
-            'presenter' => 'Events',
+            'presenter' => 'Schedule',
         ]);
         $list->addRoute('[<presenter=Home>[/<id [0-9]+>][/<action=default>]]', [
             'module' => 'Shop',

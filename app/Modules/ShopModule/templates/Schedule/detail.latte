@@ -147,7 +147,9 @@
                 </tbody>
             </table>
             {if $model->canEdit()}
-                <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary()}">{_'Edit items'}</a>
+                {if $model->getScheduleEvent()}
+                    <a class="btn-outline-primary btn" href="{plink 'edit', 'id'=>$model->getPrimary(),'eventId'=>$model->getScheduleEvent()->event_id}">{_'Edit items'}</a>
+                {/if}
             {/if}
         </div>
     </div>

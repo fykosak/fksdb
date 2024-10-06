@@ -18,11 +18,11 @@
                 <div>
                         <hr class="dropdown-divider">
                 </div>
-                {var $event = $payment->getRelatedEvent()}
+                {var $event = $payment->getScheduleEvent()}
                 {if $event}
                     <div class="dropdown-item">
                         <a class="btn btn-info"
-                           href="{plink :Shop:Events:detail eventId=>$event->event_id, id=>$payment->payment_id}">
+                           href="{plink :Shop:Schedule:detail eventId=>$event->event_id, id=>$payment->payment_id}">
                             {_'Detail'}
                         </a>
                     </div>

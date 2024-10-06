@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace FKSDB\Components\Payments;
 
 use FKSDB\Components\Grids\Components\BaseList;
+use FKSDB\Components\Grids\Components\Button\Button;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\PaymentService;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
  * @phpstan-extends BaseList<PaymentModel,array{state:string|null,vs:string|null}>
  */
-class AllPaymentList extends BaseList
+class AdminPaymentList extends BaseList
 {
     use PaymentListTrait;
 
@@ -69,5 +71,19 @@ class AllPaymentList extends BaseList
         $this->counter = true;
         $this->mode = self::ModePanel;
         $this->traitConfigure();
+        $this->addButton(
+            new Button(
+                $this->container,
+                $this->getPresenter(),
+                new Title(null, _('button.payment.detail')),
+                fn(PaymentModel $model): array => [
+                    ':Shop:Admin:detail',
+                    ['id' => $model->payment_id, 'eventId' => $model->getScheduleEvent()->event_id],
+                ],
+                null,
+                fn(PaymentModel $model): bool => (bool)$model->getScheduleEvent()
+            ),
+            'detail'
+        );
     }
 }

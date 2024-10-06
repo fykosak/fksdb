@@ -5,111 +5,166 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ShopModule;
 
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\Payments\AllPaymentList;
-use FKSDB\Components\Payments\PaymentList;
+use FKSDB\Components\Payments\AdminPaymentList;
+use FKSDB\Components\Payments\PaymentQRCode;
+use FKSDB\Components\Payments\SchedulePaymentForm;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
-use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 
 final class AdminPresenter extends BasePresenter
 {
     private PaymentService $paymentService;
     private ScheduleItemService $scheduleItemService;
+    private EventService $eventService;
 
-    /** @persistent */
-    public int $eventId;
     /** @persistent */
     public ?int $id;
 
-    /**
-     * @throws NotImplementedException
-     */
-    public function startup(): void
-    {
-        throw new NotImplementedException();
-    }
-
     public function injectServices(
         PaymentService $paymentService,
+        EventService $eventService,
         ScheduleItemService $scheduleItemService
     ): void {
         $this->paymentService = $paymentService;
+        $this->eventService = $eventService;
         $this->scheduleItemService = $scheduleItemService;
     }
 
-    public function authorizedEvents(): bool
+    /**
+     * @throws NotFoundException
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
+            'organizer',
+            $this->getEvent()
+        );
+    }
+
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(null, _('Create an event payment'), 'fas fa-credit-card');
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function authorizedDetail(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
-            'dashboard',
+            ContestResourceHolder::fromResource($this->getPayment(), $this->getContest()),
+            'organizer',
             $this->getContest()
         );
     }
 
-    public function titleEvents(): PageTitle
+    /**
+     * @throws CannotAccessModelException
+     * @throws NotFoundException
+     */
+    final public function renderDetail(): void
     {
-        return new PageTitle(null, _('Payment dashboard'), 'fas fa-dashboard');
+        $this->template->model = $this->getPayment();
     }
 
-    public function renderEvents(): void
+    /**
+     * @throws CannotAccessModelException
+     * @throws NotFoundException
+     */
+    public function titleDetail(): PageTitle
     {
-        $data = [];
-        $paidCount = 0;
-        $waitingCount = 0;
-        $inProgressCount = 0;
-        $noPaymentCount = 0;
-        /** @var ScheduleItemModel $item */
-        foreach ($this->scheduleItemService->getTable() as $item) {
-            if ($item->payable) {
-                /** @var PersonScheduleModel $personSchedule */
-                foreach ($item->getInterested() as $personSchedule) {
-                    $data[] = $personSchedule;
-                    $payment = $personSchedule->getPayment();
-                    if ($payment) {
-                        switch ($payment->state->value) {
-                            case PaymentState::RECEIVED:
-                                $paidCount++;
-                                break;
-                            case PaymentState::WAITING:
-                                $waitingCount++;
-                                break;
-                            case PaymentState::IN_PROGRESS:
-                                $inProgressCount++;
-                        }
-                    } else {
-                        $noPaymentCount++;
-                    }
-                }
-            }
-        }
-        $this->template->paidCount = $paidCount;
-        $this->template->waitingCount = $waitingCount;
-        $this->template->noPaymentCount = $noPaymentCount;
-        $this->template->inProgressCount = $inProgressCount;
-        $this->template->rests = $data;
+        return new PageTitle(
+            null,
+            \sprintf(_('Detail of the payment %s'), $this->getPayment()->payment_id),
+            'fas fa-credit-card'
+        );
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getPayment(), $this->getContest()),
+            'organizer',
+            $this->getContest()
+        );
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws NotFoundException
+     */
+    final public function renderEdit(): void
+    {
+        $this->template->model = $this->getPayment();
+        $this->template->roles = $this->getLoggedPerson()->getEventRoles($this->getEvent());
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws NotFoundException
+     */
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            \sprintf(_('Edit payment #%s'), $this->getPayment()->payment_id),
+            'fas fa-credit-card'
+        );
     }
 
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContest(
             ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
-            'list',
+            'organizer',
             $this->getContest()
         );
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('List of payments'), 'fas fa-credit-card');
+        return new PageTitle(null, _('Payment dashboard'), 'fas fa-dashboard');
+    }
+
+    public function authorizedSchedule(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
+            'organizer',
+            $this->getContest()
+        );
+    }
+
+    public function titleSchedule(): PageTitle
+    {
+        return new PageTitle(null, _('Schedule payment dashboard'), 'fas fa-dashboard');
+    }
+
+    public function renderSchedule(): void
+    {
+        $data = [];
+        /** @var ScheduleItemModel $item */
+        foreach ($this->scheduleItemService->getTable()->where('payable = TRUE') as $item) {
+            /** @var PersonScheduleModel $personSchedule */
+            foreach ($item->getInterested() as $personSchedule) {
+                $data[] = $personSchedule;
+            }
+        }
+        $this->template->rests = $data;
     }
 
     /**
@@ -124,14 +179,22 @@ final class AdminPresenter extends BasePresenter
         return $payment;
     }
 
-    protected function createComponentGrid(): AllPaymentList
+    /**
+     * @throws NotFoundException
+     */
+    private function getEvent(): EventModel
     {
-        return new AllPaymentList($this->getContext());
+        $eventId = $this->getParameter('eventId');
+        $event = $this->eventService->findByPrimary($eventId);
+        if (!$event) {
+            throw new NotFoundException();
+        }
+        return $event;
     }
 
-    protected function createComponentGrid2(): PaymentList
+    protected function createComponentGrid(): AdminPaymentList
     {
-        return new PaymentList($this->getContext());
+        return new AdminPaymentList($this->getContext());
     }
 
     /**
@@ -143,6 +206,44 @@ final class AdminPresenter extends BasePresenter
         return new TransitionButtonsComponent(
             $this->getContext(),
             $this->getMachine(), // @phpstan-ignore-line
+            $this->getPayment()
+        );
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function createComponentPaymentQRCode(): PaymentQRCode
+    {
+        return new PaymentQRCode($this->getContext(), $this->getPayment());
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function createComponentCreateForm(): SchedulePaymentForm
+    {
+        return new SchedulePaymentForm(
+            $this->getContext(),
+            $this->getEvent(),
+            $this->getLoggedPerson(),
+            true,
+            $this->getMachine(),
+            null
+        );
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    protected function createComponentEditForm(): SchedulePaymentForm
+    {
+        return new SchedulePaymentForm(
+            $this->getContext(),
+            $this->getEvent(),
+            $this->getLoggedPerson(),
+            true,
+            $this->getMachine(),
             $this->getPayment()
         );
     }

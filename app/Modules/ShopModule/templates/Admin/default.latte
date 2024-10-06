@@ -1,13 +1,8 @@
-{varType FKSDB\Modules\EventModule\PaymentsPresenter $control}
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {if $control->authorized('create')}
-                {var $pageTitle = $control->titleCreate()}
-                <a href="{plink create}" class="btn btn-outline-primary"><i
-                            class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
-            {/if}
-        </div>
+            <a href="{plink :Shop:Admin:schedule}">{_'Schedule payment dashboard'}</a>
+    </div>
     </div>
     {control grid}
 {/block}
