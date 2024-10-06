@@ -16,7 +16,7 @@ use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 
 /**
- * @phpstan-import-type TMeta from ScheduleContainer
+ * @phpstan-import-type TMeta from SectionContainer
  */
 final class ScheduleHandler
 {

@@ -46,26 +46,31 @@ final class TaborForm extends OpenApplicationForm
             ],
             'person_history' => [
                 'school_id' => ['required' => true]
-            ],
-            'person_schedule' => [
-                'apparel' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
-                    ],
-                    'required' => true,
-                    'label' => _('Apparel'),
-                ],
-                'transport' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
-                    ],
-                    'required' => true,
-                    'label' => _('Transport & Ticket'),
-                ],
             ]
         ];
     }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'apparel' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                ],
+                'required' => true,
+                'label' => _('Apparel'),
+            ],
+            'transport' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Transport),
+                    ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                ],
+                'required' => true,
+                'label' => _('Transport & Ticket'),
+            ],
+        ];
+    }
+
 
     /**
      * @phpstan-return array<string, array<string, mixed>>
