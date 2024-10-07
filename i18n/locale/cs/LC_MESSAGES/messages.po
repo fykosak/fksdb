@@ -6088,8 +6088,8 @@ msgid "Add to card"
 msgstr "Přidat do košíku"
 
 #: ../app/config/transitions/payment.neon.neon2php:29
-msgid "Payment information has been succefully created"
-msgstr "Informace platby byly úspěšně uloženy"
+msgid "Payment instructions have been successfully generated"
+msgstr "Instrukce k platbě byly úspěšně vygenerovány"
 
 #: ../app/config/transitions/payment.neon.neon2php:36
 msgid "Cancel payment"

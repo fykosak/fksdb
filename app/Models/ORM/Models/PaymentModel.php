@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use Cassandra\Date;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
@@ -18,6 +19,7 @@ use Nette\Utils\DateTime;
  * @property-read int $person_id
  * @property-read PersonModel $person
  * @property-read int $payment_id
+ * @property-read DateTime|null $payment_deadline
  * @property-read PaymentState $state
  * @property-read float|null $price
  * @property-read string|null $currency

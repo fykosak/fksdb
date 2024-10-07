@@ -1,12 +1,23 @@
 {layout none}
 {varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
 {varType FKSDB\Modules\Core\Language $lang}
-{define subject}{_'Create an account'}{/define}
+{define subject}Nový účet ve FKSDB{/define}
+
+<div style="font-family:\'Inter\',sans-serif;font-size: 1rem;text-align:center;margin:0px">
+    <div
+            style="max-width:800px;background:#1175da;color:white;margin-left:auto;margin-right:auto;text-align:left;padding:0px;height:50px">
+        <a href="https://db.fykos.cz" style="text-decoration:none"><img
+                    src="https://static.fykos.cz/email/fykos_logo_white.png" height="50"
+                    style="padding-top:10px;padding-bottom:10px;margin-left:15px;vertical-align:middle;box-sizing:border-box"></a>
+    </div>
+    <div
+            style="max-width:800px;margin-left:auto;margin-right:auto;text-align:justify;text-justify:inter-word;padding-left:15px;padding-right:15px;line-height:1.4rem;box-sizing:border-box">
+
 <p>Ahoj,<br/>
-    byl Ti vytvořen účet na fykos.cz. Pro první přihlášení a nastavení hesla použij prosím tento odkaz:<br/>
+    byl Ti vytvořen účet ve <a href="https://db.fykos.cz">FKSDB</a>. Pro první přihlášení a nastavení hesla použij prosím tento odkaz:<br/>
     <a n:href="//:Core:Settings:, at => $token->token">{link //:Core:Settings:, at => $token->token}</a>
 </p>
 <p>
-    S pozdravem,<br/>
+    S pozdravem<br/>
     FKSDB
 </p>
