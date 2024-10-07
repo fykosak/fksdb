@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Selection\TypedSelection;
 use Nette\Database\Table\Selection;
 
 /**
- * @phpstan-extends BaseGrid<PersonScheduleModel>
+ * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
  */
 class AllRestsComponent extends BaseGrid
 {
