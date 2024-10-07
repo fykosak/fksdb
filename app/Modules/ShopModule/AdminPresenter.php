@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
 use FKSDB\Components\Payments\AdminPaymentList;
 use FKSDB\Components\Payments\PaymentQRCode;
 use FKSDB\Components\Payments\SchedulePaymentForm;
+use FKSDB\Components\Schedule\Rests\AllRestsComponent;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -154,19 +155,6 @@ final class AdminPresenter extends BasePresenter
         return new PageTitle(null, _('Schedule payment dashboard'), 'fas fa-dashboard');
     }
 
-    public function renderSchedule(): void
-    {
-        $data = [];
-        /** @var ScheduleItemModel $item */
-        foreach ($this->scheduleItemService->getTable()->where('payable = TRUE') as $item) {
-            /** @var PersonScheduleModel $personSchedule */
-            foreach ($item->getInterested() as $personSchedule) {
-                $data[] = $personSchedule;
-            }
-        }
-        $this->template->rests = $data;
-    }
-
     /**
      * @throws NotFoundException
      */
@@ -216,6 +204,11 @@ final class AdminPresenter extends BasePresenter
     protected function createComponentPaymentQRCode(): PaymentQRCode
     {
         return new PaymentQRCode($this->getContext(), $this->getPayment());
+    }
+
+    protected function createComponentAllRests(): AllRestsComponent
+    {
+        return new AllRestsComponent($this->getContext());
     }
 
     /**
