@@ -155,7 +155,6 @@ final class TeamModel2 extends Model implements EventResource
     }
 
     /**
-     * @phpstan-param string[] $types
      * @phpstan-return PersonScheduleModel[][]
      */
     public function getScheduleRest(): array

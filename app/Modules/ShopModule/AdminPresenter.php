@@ -14,18 +14,14 @@ use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\PaymentService;
-use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
 
 final class AdminPresenter extends BasePresenter
 {
     private PaymentService $paymentService;
-    private ScheduleItemService $scheduleItemService;
     private EventService $eventService;
 
     /** @persistent */
@@ -33,12 +29,10 @@ final class AdminPresenter extends BasePresenter
 
     public function injectServices(
         PaymentService $paymentService,
-        EventService $eventService,
-        ScheduleItemService $scheduleItemService
+        EventService $eventService
     ): void {
         $this->paymentService = $paymentService;
         $this->eventService = $eventService;
-        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
