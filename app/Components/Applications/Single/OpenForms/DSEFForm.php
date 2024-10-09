@@ -77,7 +77,8 @@ final class DSEFForm extends OpenApplicationForm
                 'required' => false,
                 'label' => _('Food'),
                 'paymentDeadline' => new ConstantIntervalStrategy(
-                    \DateInterval::createFromDateString('+14days'), new \DateTime('2024-10-18 23:59:59')
+                    \DateInterval::createFromDateString('+14days'),
+                    new \DateTime('2024-10-18 23:59:59')
                 )
             ],
         ];
