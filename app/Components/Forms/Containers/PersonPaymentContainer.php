@@ -93,9 +93,7 @@ class PersonPaymentContainer extends ContainerWithOptions
                 $checkBox->setDisabled();
                 $checkBox->setOption(
                     'description',
-                    Html::el('small')->addHtml(
-                        Html::el('i')->addAttributes(['class' => 'fas fa-info me-2 text-info'])
-                    )->addText(
+                    Html::el('small')->addText(
                         _('This item has already assigned another payment')
                     )
                 );
