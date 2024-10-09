@@ -472,6 +472,9 @@ final class PersonModel extends Model implements Resource
         return $selection;
     }
 
+    /**
+     * @return PersonScheduleModel[]
+     */
     public function getScheduleRestsForEvent(EventModel $event): array
     {
         $toPay = [];
