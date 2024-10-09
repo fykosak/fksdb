@@ -4,18 +4,13 @@
 {define subject}Potvrzení přijetí platby{/define}
 
 {block body}
-<div>
-    <p>
-        Dobrý den,<br/><br/>
-        potvrzujeme, že jsme úspěšně přijali Vaši platbu #{$model->payment_id} za Fyziklání 2024 v hodnotě <b>{$model->getPrice()->__toString()}</b>.
+    <p style="margin-top:1em;margin-bottom:1em">
+        Ahoj,<br/><br/>
+        potvrzujeme, že jsme úspěšně přijali Tvoji platbu #{$model->payment_id} za DSEF 2024 v hodnotě <b>{$model->getPrice()->__toString()}</b>. Pro rekapitulaci, platba zahrnovala následující:
     </p>
-
-    <p>
-        Pro rekapitulaci, platba zahrnovala následující:
-    </p>
-
     {include './items.latte', lang: 'cs'}
-
-    {include './signature.cs.latte'}
-</div>
+    <p style="margin-top:1em;margin-bottom:1em">
+        S pozdravem<br/>
+        FKSDB
+    </p>
 {/block}

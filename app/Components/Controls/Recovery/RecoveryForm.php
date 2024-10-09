@@ -20,6 +20,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 class RecoveryForm extends FormComponent
 {

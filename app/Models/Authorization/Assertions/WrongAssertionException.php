@@ -8,5 +8,4 @@ use Nette\InvalidStateException;
 
 class WrongAssertionException extends InvalidStateException
 {
-
 }

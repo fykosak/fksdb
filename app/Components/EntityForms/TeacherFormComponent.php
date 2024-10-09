@@ -7,13 +7,13 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\SchoolSelectField;
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\TeacherService;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
@@ -37,7 +37,7 @@ class TeacherFormComponent extends ModelForm
 
     private TeacherService $teacherService;
     private ContestYearModel $contestYear;
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
     private LinkGenerator $linkGenerator;
 
     public function __construct(Container $container, ContestYearModel $contestYear, ?Model $model)
@@ -48,11 +48,11 @@ class TeacherFormComponent extends ModelForm
 
     final public function injectPrimary(
         TeacherService $teacherService,
-        ContestAuthorizator $contestAuthorizator,
+        Authorizator $authorizator,
         LinkGenerator $linkGenerator
     ): void {
         $this->teacherService = $teacherService;
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
         $this->linkGenerator = $linkGenerator;
     }
 
@@ -70,7 +70,7 @@ class TeacherFormComponent extends ModelForm
         $referencedId = $this->createPersonId(
             $this->contestYear,
             isset($this->model),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            new ContestACLResolver($this->authorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminTeacher']
         );
         $container->addComponent($referencedId, 'person_id', 'state');

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Price\Currency;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -31,7 +31,7 @@ use Nette\Utils\DateTime;
  * @property-read float|null $price price in FYKOS Coins
  * @property-read string|null $note neverejná poznámka
  */
-final class ItemModel extends Model implements Resource
+final class ItemModel extends Model implements ContestResource
 {
     public const RESOURCE_ID = 'warehouse.item';
 
@@ -68,5 +68,10 @@ final class ItemModel extends Model implements Resource
                 break;
         }
         return $value;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contest;
     }
 }

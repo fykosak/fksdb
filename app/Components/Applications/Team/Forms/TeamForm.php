@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -23,7 +24,7 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Model\Model;
@@ -239,10 +240,12 @@ abstract class TeamForm extends ModelForm
                 $this->event->getContestYear(),
                 'email',
                 true,
-                new SelfACLResolver(
-                    $this->model ?? TeamModel2::RESOURCE_ID,
+                new SelfEventACLResolver(
+                    $this->model
+                        ? EventResourceHolder::fromOwnResource($this->model)
+                        : EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
-                    $this->event->event_type->contest,
+                    $this->event,
                     $this->container
                 ),
                 $this->event

@@ -27,6 +27,9 @@ final class FOLSchoolRequirementProcessing extends Preprocessing
         $this->event = $event;
     }
 
+    /**
+     * @throws SchoolRequirementProcessingException
+     */
     public function __invoke(array $values, Form $form, ?Model $model): array
     {
         $members = TeamForm::getFormMembers($form);

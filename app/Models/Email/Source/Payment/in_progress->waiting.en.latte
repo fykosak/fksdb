@@ -1,28 +1,26 @@
 {layout './layout.latte'}
 {varType FKSDB\Models\ORM\Models\PaymentModel $model}
 
-{define subject}Fyziklani payment{/define}
+{define subject}DSEF Payment{/define}
 
 {block body}
-    <div>
-        <p>
-            Hello,<br/><br/>
-            The payment number #{$model->payment_id} in total sum of <b>{$model->getPrice()->__toString()}</b> has been created for Fyziklani 2024.
-        </p>
-        <p>
-            The payment includes:
-        </p>
-        {include './items.latte', lang: 'en'}
-        <p>
-            Please transfer the money to the bank account below as soon as possible, no later than by the end of the registration. As soon as we receive the payment, we will send you a confirmation e-mail.
-        </p>
-        <p>
-            Please use the variable symbol which has been assigned to your payment, otherwise we will not be able to recognize the payment is from you. Write it into the reference of the payment, e.g. as "VS: 123456".
-        </p>
-        {include './parameters.latte', lang: 'en'}
-        <p>
-            The payment processing time is about one week. In case of any questions do not hesitate to contact us at <a href="mailto:fyziklani@fykos.org">fyziklani@fykos.org</a>.
-        </p>
-        {include './signature.en.latte'}
-    </div>
+    <p style="margin-top:1em;margin-bottom:1em">
+        Hello,<br/><br/>
+        The payment number #{$model->payment_id} in total sum of <b>{$model->getPrice()->__toString()}</b> has been created for DSEF 2024. The payment includes the following items:
+    </p>
+    {include './items.latte', lang: 'en'}
+    <p style="margin-top:1em;margin-bottom:1em">
+        Please transfer the money to the bank account below as soon as possible, no later than by 18. 10. 2024. As soon as we receive the payment, we will send you a confirmation email.
+    </p>
+    <p style="margin-top:1em;margin-bottom:1em">
+        Please use the variable symbol which has been assigned to your payment, otherwise we will not be able to recognize the payment is from you. Write it into the reference of the payment, e.g. as "VS: 123456".
+    </p>
+    {include './parameters.latte', lang: 'en'}
+    <p style="margin-top:1em;margin-bottom:1em">
+        The payment processing time is about one week. In case of any questions do not hesitate to contact us at <a href="mailto:dsef@fykos.org">dsef@fykos.org</a>.
+    </p>
+    <p style="margin-top:1em;margin-bottom:1em">
+        Best regards,<br/>
+        FKSDB
+    </p>
 {/block}

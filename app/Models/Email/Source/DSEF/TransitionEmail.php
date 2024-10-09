@@ -35,6 +35,9 @@ final class TransitionEmail extends ParticipantTransitionEmail
         ];
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getTemplateData(ParticipantHolder $holder, Transition $transition): array
     {
         return [

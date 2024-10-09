@@ -30,6 +30,9 @@ final class FOFCategoryProcessing extends Preprocessing
         $this->event = $event;
     }
 
+    /**
+     * @throws OldMemberException
+     */
     public function __invoke(array $values, Form $form, ?Model $model): array
     {
         $members = TeamForm::getFormMembers($form);
@@ -122,6 +125,9 @@ final class FOFCategoryProcessing extends Preprocessing
         return $sum / $cnt;
     }
 
+    /**
+     * @throws OldMemberException
+     */
     public function test(TeamModel2 $team): TeamCategory
     {
         $members = [];

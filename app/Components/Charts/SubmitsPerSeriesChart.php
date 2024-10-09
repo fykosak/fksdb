@@ -77,6 +77,6 @@ class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
 
     public function getDescription(): ?string
     {
-        return _('Graph shows the cummulative number of submits per series in time before deadline.');
+        return _('Graph shows the cumulative number of submits per series in time before deadline.');
     }
 }

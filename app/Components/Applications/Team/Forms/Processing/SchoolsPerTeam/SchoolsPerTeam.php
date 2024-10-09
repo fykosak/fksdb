@@ -25,6 +25,9 @@ final class SchoolsPerTeam extends Preprocessing
         $this->event = $event;
     }
 
+    /**
+     * @throws SchoolsPerTeamException
+     */
     public function __invoke(array $values, Form $form, ?Model $model): array
     {
         $members = TeamForm::getFormMembers($form);

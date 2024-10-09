@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Spam;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use Fykosak\NetteORM\Selection\TypedSelection;

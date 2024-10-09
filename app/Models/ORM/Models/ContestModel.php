@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Nette\Security\Resource;
 
 /**
  * @property-read int $contest_id
  * @property-read string $name
  */
-final class ContestModel extends Model implements Resource
+final class ContestModel extends Model implements ContestResource
 {
     public const RESOURCE_ID = 'contest';
 
@@ -125,5 +125,10 @@ final class ContestModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this;
     }
 }

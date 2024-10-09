@@ -25,6 +25,7 @@ class PointsFormComponent extends SeriesTableFormComponent
      * @throws ForbiddenRequestException
      * @throws \PDOException
      * @throws BadRequestException
+     * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {

@@ -47,21 +47,21 @@ class FyziklaniModule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Game:Close', 'list'],
-            ['Game:Dashboard', 'default'],
-            ['Game:Diplomas', 'default',],
-            ['Game:Diplomas', 'results'],
-            ['Game:GameSetup', 'default'],
-            ['Game:Statistics', 'table'],
-            ['Game:Statistics', 'team'],
-            ['Game:Statistics', 'task'],
-            ['Game:Statistics', 'correlation'],
-            ['Game:Presentation', 'default'],
-            ['Game:Submit', 'create'],
-            ['Game:Submit', 'list'],
-            ['Game:Task', 'list'],
-            ['Game:Seating', 'default'],
-            ['Game:Seating', 'print'],
+            ['EventGame:Close', 'list'],
+            ['EventGame:Dashboard', 'default'],
+            ['EventGame:Diplomas', 'default',],
+            ['EventGame:Diplomas', 'results'],
+            ['EventGame:GameSetup', 'default'],
+            ['EventGame:Statistics', 'table'],
+            ['EventGame:Statistics', 'team'],
+            ['EventGame:Statistics', 'task'],
+            ['EventGame:Statistics', 'correlation'],
+            ['EventGame:Presentation', 'default'],
+            ['EventGame:Submit', 'create'],
+            ['EventGame:Submit', 'list'],
+            ['EventGame:Task', 'list'],
+            ['EventGame:Seating', 'default'],
+            ['EventGame:Seating', 'print'],
         ];
     }
 }
