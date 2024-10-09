@@ -10,10 +10,12 @@ use Nette\Utils\DateTime;
 class ConstantIntervalStrategy implements PaymentDeadlineStrategy
 {
     private \DateInterval $interval;
+    private \DateTime $hardDeadline;
 
-    public function __construct(\DateInterval $interval)
+    public function __construct(\DateInterval $interval, \DateTime $hardDeadline)
     {
         $this->interval = $interval;
+        $this->hardDeadline = $hardDeadline;
     }
 
     public function invoke(ScheduleItemModel $item): ?DateTime
@@ -23,6 +25,6 @@ class ConstantIntervalStrategy implements PaymentDeadlineStrategy
         }
         $deadline = new DateTime();
         $deadline->add($this->interval);
-        return $deadline;
+        return min($deadline, $this->hardDeadline);
     }
 }
