@@ -23,7 +23,7 @@ final class PersonRestComponent extends BaseComponent
         $this->template->render(
             __DIR__ . DIRECTORY_SEPARATOR . 'person.latte',
             [
-                'rests' => $this->eventParticipant->person->getScheduleRests($this->eventParticipant->event),
+                'rests' => $this->eventParticipant->person->getScheduleRestsForEvent($this->eventParticipant->event),
                 'person' => $this->eventParticipant->person,
             ]
         );

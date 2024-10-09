@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\OrganizerFormComponent;
 use FKSDB\Components\Grids\OrganizersGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\OrganizerModel;
@@ -15,7 +16,6 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class OrganizerPresenter extends BasePresenter
 {
@@ -29,6 +29,21 @@ final class OrganizerPresenter extends BasePresenter
         $this->service = $service;
     }
 
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getSelectedContest()
+        );
+    }
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException|\ReflectionException
@@ -47,6 +62,21 @@ final class OrganizerPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws \ReflectionException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getSelectedContest()
+        );
+    }
+    /**
+     * @throws ForbiddenRequestException
+     * @throws GoneException
      * @throws \ReflectionException
      * @throws NoContestAvailable
      * @throws NotFoundException
@@ -60,11 +90,33 @@ final class OrganizerPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create',
+            $this->getSelectedContest()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create an organizer'), 'fas fa-user-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Organizers'), 'fas fa-user-tie');
@@ -118,11 +170,10 @@ final class OrganizerPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
      * @throws NoContestAvailable
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    protected function getModelResource(): ContestResourceHolder
     {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest());
     }
 }

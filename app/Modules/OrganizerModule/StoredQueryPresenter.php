@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
@@ -15,7 +16,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class StoredQueryPresenter extends BasePresenter
 {
@@ -31,6 +31,20 @@ final class StoredQueryPresenter extends BasePresenter
     }
 
     /**
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'edit',
+            $this->getSelectedContest()
+        );
+    }
+
+    /**
      * @throws GoneException
      * @throws NotFoundException
      */
@@ -39,16 +53,51 @@ final class StoredQueryPresenter extends BasePresenter
         return new PageTitle(null, sprintf(_('Edit query %s'), $this->getEntity()->name), 'fas fa-pen');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create',
+            $this->getSelectedContest()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create query'), 'fas fa-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(QueryModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Exports'), 'fas fa-file-csv');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'detail',
+            $this->getSelectedContest()
+        );
+    }
     /**
      * @throws GoneException
      * @throws NotFoundException
@@ -102,14 +151,5 @@ final class StoredQueryPresenter extends BasePresenter
     protected function getORMService(): QueryService
     {
         return $this->storedQueryService;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

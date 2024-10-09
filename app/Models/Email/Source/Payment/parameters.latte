@@ -1,59 +1,41 @@
 {varType FKSDB\Models\ORM\Models\PaymentModel $model}
 {varType string $lang}
 
-<div>
+<p style="margin-top:1em;margin-bottom:1em">
     {if $model->constant_symbol}
-        <div>
-            <b>{switch $lang}{case 'cs'}Konstantní symbol{default}Constant symbol{/switch}:</b>
-            <span>{$model->constant_symbol}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Konstantní symbol{default}Constant symbol{/switch}:</b>
+        <span>{$model->constant_symbol}</span><br/>
     {/if}
     {if $model->variable_symbol}
-        <div>
-            <b>{switch $lang}{case 'cs'}Variabilní symbol{default}Variable symbol{/switch}:</b>
-            <span>{$model->variable_symbol}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Variabilní symbol{default}Variable symbol{/switch}:</b>
+        <span>{$model->variable_symbol}</span><br/>
     {/if}
     {if $model->specific_symbol}
-        <div>
-            <b>{switch $lang}{case 'cs'}Specifický symbol{default}Specific symbol{/switch}:</b>
-            <span>{$model->specific_symbol}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Specifický symbol{default}Specific symbol{/switch}:</b>
+        <span>{$model->specific_symbol}</span><br/>
     {/if}
     {if $model->bank_account}
-        <div>
-            <b>{switch $lang}{case 'cs'}Účet{default}Bank account{/switch}:</b>
-            <span>{$model->bank_account}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Účet{default}Bank account{/switch}:</b>
+        <span>{$model->bank_account}</span><br/>
     {/if}
     {if $model->bank_name}
-        <div>
-            <b>{switch $lang}{case 'cs'}Název banky{default}Bank name{/switch}:</b>
-            <span>{$model->bank_name}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Název banky{default}Bank name{/switch}:</b>
+        <span>{$model->bank_name}</span><br/>
     {/if}
     {if $model->recipient}
-        <div>
-            <b>{switch $lang}{case 'cs'}Příjemce{default}Recipient{/switch}:</b>
-            <span>{$model->recipient}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Příjemce{default}Recipient{/switch}:</b>
+        <span>{$model->recipient}</span><br/>
     {/if}
     {if $model->iban}
-        <div class="row">
-            <b>{switch $lang}{case 'cs'}IBAN{default}IBAN{/switch}:</b>
-            <span>{$model->iban}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}IBAN{default}IBAN{/switch}:</b>
+        <span>{$model->iban}</span><br/>
     {/if}
     {if $model->swift}
-        <div>
-            <b>{switch $lang}{case 'cs'}SWIFT{default}SWIFT{/switch}:</b>
-            <span>{$model->swift}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}SWIFT{default}SWIFT{/switch}:</b>
+        <span>{$model->swift}</span><br/>
     {/if}
     {if $model->price}
-        <div>
-            <b>{switch $lang}{case 'cs'}Částka{default}Amount{/switch}:</b>
-            <span>{$model->getPrice()->__toString()}</span>
-        </div>
+        <b>{switch $lang}{case 'cs'}Částka{default}Amount{/switch}:</b>
+        <span>{$model->getPrice()->__toString()}</span><br/>
     {/if}
-</div>
+</p>

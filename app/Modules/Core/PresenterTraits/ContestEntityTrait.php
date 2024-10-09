@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestModel;
@@ -12,7 +13,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @phpstan-template TContestModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TContestModel of (Model&ContestResource)
  */
 trait ContestEntityTrait
 {

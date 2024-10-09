@@ -6,37 +6,39 @@ namespace FKSDB\Modules\EventModule\Schedule;
 
 use FKSDB\Components\Schedule\Forms\ScheduleGroupForm;
 use FKSDB\Components\Schedule\ItemGrid;
-use FKSDB\Components\Schedule\ScheduleList;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class GroupPresenter extends BasePresenter
 {
-    /** @phpstan-use EventEntityPresenterTrait<ScheduleGroupModel> */
-    use EventEntityPresenterTrait;
-
-    private ScheduleGroupService $service;
-
-    final public function injectService(ScheduleGroupService $service): void
-    {
-        $this->service = $service;
-    }
+    /** @phpstan-use EntityPresenterTrait<ScheduleGroupModel> */
+    use EntityPresenterTrait;
 
     /**
+     * @throws GoneException
+     * @throws NotFoundException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
+    }
+    /**
+     * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -45,11 +47,9 @@ final class GroupPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
      * @throws CannotAccessModelException
-     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -61,12 +61,23 @@ final class GroupPresenter extends BasePresenter
     }
 
     /**
+     * @throws NotFoundException
+     * @throws GoneException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getEvent()
+        );
+    }
+    /**
+     * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -77,18 +88,43 @@ final class GroupPresenter extends BasePresenter
         );
     }
 
-    protected function getORMService(): ScheduleGroupService
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedCreate(): bool
     {
-        return $this->service;
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(ScheduleGroupModel::RESOURCE_ID, $this->getEvent()),
+            'create',
+            $this->getEvent()
+        );
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @throws EventNotFoundException
+     * @throws CannotAccessModelException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    public function titleCreate(): PageTitle
     {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
+        return new PageTitle(null, _('Create group'), 'fas fa-pen');
+    }
+
+    protected function loadModel(): ScheduleGroupModel
+    {
+        /** @var ScheduleGroupModel|null $candidate */
+        $candidate = $this->getEvent()->getScheduleGroups()->where('schedule_group_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function getORMService(): ScheduleGroupService
+    {
+        throw new GoneException();
     }
 
     /**
@@ -101,11 +137,9 @@ final class GroupPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleGroupForm
     {
@@ -113,20 +147,10 @@ final class GroupPresenter extends BasePresenter
     }
 
     /**
-     * @throws GoneException
-     */
-    protected function createComponentGrid(): ScheduleList
-    {
-        throw new GoneException();
-    }
-
-    /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentItemsGrid(): ItemGrid
     {

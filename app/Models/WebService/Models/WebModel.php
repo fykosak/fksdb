@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
-use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
-use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\Application\ForbiddenRequestException;
@@ -28,10 +26,8 @@ abstract class WebModel
 
     protected Container $container;
 
-    protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
-    protected BaseAuthorizator $baseAuthorizator;
-    protected ContestYearAuthorizator $contestYearAuthorizator;
+    protected Authorizator $authorizator;
     /**
      * @phpstan-var TParams
      */
@@ -54,15 +50,11 @@ abstract class WebModel
     }
 
     public function injectAuthorizators(
-        EventAuthorizator $eventAuthorizator,
         ContestAuthorizator $contestAuthorizator,
-        BaseAuthorizator $baseAuthorizator,
-        ContestYearAuthorizator $contestYearAuthorizator
+        Authorizator $authorizator
     ): void {
-        $this->eventAuthorizator = $eventAuthorizator;
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->baseAuthorizator = $baseAuthorizator;
-        $this->contestYearAuthorizator = $contestYearAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
 

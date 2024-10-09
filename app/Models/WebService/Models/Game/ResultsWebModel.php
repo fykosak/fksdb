@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
@@ -77,6 +78,10 @@ class ResultsWebModel extends EventWebModel
     protected function isAuthorized(): bool
     {
         $event = $this->getEvent();
-        return $this->eventAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $event);
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(RestApiPresenter::RESOURCE_ID, $event),
+            self::class,
+            $event
+        );
     }
 }

@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\LocalizedString;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -37,7 +39,7 @@ use Nette\Utils\DateTime;
  *      end:string,
  * }
  */
-final class ScheduleGroupModel extends Model implements Resource, NodeCreator
+final class ScheduleGroupModel extends Model implements EventResource, NodeCreator
 {
     public const RESOURCE_ID = 'event.schedule.group';
 
@@ -135,5 +137,10 @@ final class ScheduleGroupModel extends Model implements Resource, NodeCreator
             'name' => $this->name->__serialize(),
         ], $document, $node);
         return $node;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->event;
     }
 }

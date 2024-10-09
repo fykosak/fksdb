@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Recovery\RecoveryForm;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -21,7 +22,6 @@ use Nette\Security\UserStorage;
 
 final class AuthenticationPresenter extends BasePresenter
 {
-
     /** @const Reason why the user has been logged out. */
     public const PARAM_REASON = 'reason';
     /** @persistent */
@@ -37,46 +37,19 @@ final class AuthenticationPresenter extends BasePresenter
         $this->googleProvider = $googleProvider;
     }
 
-    public function authorizedLogin(): bool
-    {
-        return true;
-    }
-
-    public function authorizedLogout(): bool
-    {
-        return true;
-    }
-
-    public function authorizedRecover(): bool
-    {
-        return true;
-    }
-
     public function requiresLogin(): bool
     {
         return false;
     }
 
+    public function authorizedLogin(): bool
+    {
+        return true;
+    }
+
     public function titleLogin(): PageTitle
     {
         return new PageTitle(null, _('Login'), 'fas fa-right-to-bracket');
-    }
-
-    public function titleRecover(): PageTitle
-    {
-        return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function actionLogout(): void
-    {
-        if ($this->getUser()->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity
-        }
-        $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
-        $this->redirect('login');
     }
 
     /**
@@ -107,15 +80,39 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
+    public function authorizedLogout(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function titleLogout(): PageTitle
+    {
+        throw new NotImplementedException();
+    }
+
     /**
      * @throws \Exception
      */
-    private function initialRedirect(): void
+    public function actionLogout(): void
     {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
+        if ($this->getUser()->isLoggedIn()) {
+            $this->getUser()->logout(true); //clear identity
         }
-        $this->redirect(':Core:Dispatch:');
+        $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
+        $this->redirect('login');
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return true;
+    }
+
+    public function titleRecover(): PageTitle
+    {
+        return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
     }
 
     /**
@@ -128,6 +125,26 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
+    /**
+     * @throws \Exception
+     */
+    private function initialRedirect(): void
+    {
+        if ($this->backlink) {
+            $this->restoreRequest($this->backlink);
+        }
+        $this->redirect(':Core:Dispatch:');
+    }
+
+    public function authorizedGoogle(): bool
+    {
+        return true;
+    }
+
+    public function titleGoogle(): PageTitle
+    {
+        return new PageTitle(null, _('Google'), 'fas fa-hammer');
+    }
     /**
      * @throws \Exception
      */

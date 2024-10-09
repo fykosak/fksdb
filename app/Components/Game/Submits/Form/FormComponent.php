@@ -49,6 +49,9 @@ class FormComponent extends AjaxComponent
         $this->addAction('save', 'save!');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handleSave(): void
     {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());

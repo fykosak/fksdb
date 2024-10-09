@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{ContestOrganizerRole,
-    EventOrganizerRole,
+use FKSDB\Models\Authorization\Roles\Events\{EventOrganizerRole,
     EventRole,
     Fyziklani\TeamMemberRole,
     Fyziklani\TeamTeacherRole,
-    ParticipantRole
+    ParticipantRole,
+    ScheduleParticipant
 };
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Tests\Person\BornDateTest;
 use FKSDB\Models\ORM\Tests\Person\GenderFromBornNumberTest;
@@ -313,33 +312,53 @@ final class PersonModel extends Model implements Resource
     {
         $roles = [];
         $teachers = $this->getTeamTeachers($event);
-        if ($teachers->count('*')) {
-            $teams = [];
-            /** @var TeamTeacherModel $row */
-            foreach ($teachers as $row) {
-                $teams[] = $row->fyziklani_team;
-            }
-            $roles[] = new TeamTeacherRole($event, $teams);
+        /** @var TeamTeacherModel $teacher */
+        foreach ($teachers as $teacher) {
+            $roles[] = new TeamTeacherRole($teacher);
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
-            $roles[] = new EventOrganizerRole($event, $eventOrganizer);
+            $roles[] = new EventOrganizerRole($eventOrganizer);
         }
         $eventParticipant = $this->getEventParticipant($event);
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($event, $eventParticipant);
+            $roles[] = new ParticipantRole($eventParticipant);
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new TeamMemberRole($event, $teamMember);
+            $roles[] = new TeamMemberRole($teamMember);
         }
-        $organizer = $this->getActiveOrganizer($event->event_type->contest);
-        if (isset($organizer)) {
-            $roles[] = new ContestOrganizerRole($event, $organizer);
+        $personSchedules = $this->getScheduleForEvent($event);
+        /** @var PersonScheduleModel $personSchedule */
+        foreach ($personSchedules as $personSchedule) {
+            $roles[] = new ScheduleParticipant($personSchedule);
+            break;
         }
         return $roles;
     }
 
+    /**
+     * @return PersonModel[]
+     */
+    public function getEventRelatedPersons(EventModel $event): array
+    {
+        $persons = [$this];
+        $teams = [];
+        $roles = $this->getEventRoles($event);
+        foreach ($roles as $role) {
+            if ($role instanceof TeamTeacherRole) {
+                $teams[] = $role->getModel()->fyziklani_team;
+            }
+            if ($role instanceof TeamMemberRole) {
+                $teams[] = $role->getModel()->fyziklani_team;
+            }
+        }
+        /** @var TeamModel2 $team */
+        foreach ($teams as $team) {
+            $persons = [...$persons, ...$team->getPersons()];
+        }
+        return $persons;
+    }
 
     /**
      * @phpstan-return OrganizerModel[] indexed by contest_id
@@ -455,18 +474,11 @@ final class PersonModel extends Model implements Resource
 
     /**
      * @phpstan-param string[] $types
-     * @phpstan-return PersonScheduleModel[]
      */
-    public function getScheduleRests(
-        EventModel $event,
-        array $types = [
-            ScheduleGroupType::Accommodation,
-            ScheduleGroupType::Weekend,
-        ]
-    ): array {
+    public function getScheduleRestsForEvent(EventModel $event): array
+    {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
-            ->where('schedule_item.schedule_group.schedule_group_type', $types)
             ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         /** @var PersonScheduleModel $pSchedule */
         foreach ($schedule as $pSchedule) {
