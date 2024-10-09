@@ -37,7 +37,7 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\AnyContestRole('edit')
                 behaviorType: danger
             waiting->received:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\AnyContestRole('organizer')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Paid')
                 behaviorType: success
                 afterExecute:
