@@ -18,6 +18,9 @@ class ConstantIntervalStrategy implements PaymentDeadlineStrategy
         $this->hardDeadline = $hardDeadline;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function invoke(ScheduleItemModel $item): ?DateTime
     {
         if (!$item->payable) {
@@ -25,6 +28,7 @@ class ConstantIntervalStrategy implements PaymentDeadlineStrategy
         }
         $deadline = new DateTime();
         $deadline->add($this->interval);
-        return min($deadline, $this->hardDeadline);
+        $minDeadline = min($deadline, $this->hardDeadline);
+        return new DateTime($minDeadline->format('Y-m-d H:i:s'));
     }
 }
