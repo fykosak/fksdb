@@ -28,6 +28,7 @@ class AllRestsComponent extends BaseGrid
     {
         $this->counter = false;
         $this->paginate = false;
+        $this->filtered = false;
         /** @phpstan-ignore-next-line */
         $this->addTableColumn(new SimpleItem($this->container, '@event.name'), 'event');
         /** @phpstan-ignore-next-line */
@@ -55,6 +56,15 @@ class AllRestsComponent extends BaseGrid
                 ':schedule_payment.payment.payment_id IS NULL',
                 ':schedule_payment.payment.state NOT ?' => PaymentState::RECEIVED
             ]);
+        /*     foreach ($this->filterParams as $key => $param) {
+                 if (!$param) {
+                     continue;
+                 }
+                 switch ($key) {
+                     case 'event_id':
+                         $query->where('schedule_item.schedule_group.event_id', $param);
+                 }
+             }*/
         return $query;
     }
 }
