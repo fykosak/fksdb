@@ -34,7 +34,7 @@ use Nette\Forms\Form;
  */
 class SchedulePaymentForm extends ModelForm
 {
-    private const ItemsContainer = 'items_container';//phpscs:ignore
+    private const ItemsContainer = 'items_container';//phpcs:ignore
 
     private bool $isOrganizer;
     private PaymentMachine $machine;
