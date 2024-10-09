@@ -84,6 +84,7 @@ abstract class BasePresenter extends Presenter
         ContestAuthorizator $contestAuthorizator,
         Authorizator $authorizator
     ): void {
+        $this->contestAuthorizator = $contestAuthorizator;
         $this->authorizator = $authorizator;
     }
 
