@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-05 22:46+0200\n"
+"POT-Creation-Date: 2024-10-10 17:04+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -82,7 +82,7 @@ msgid "T-shirt"
 msgstr ""
 
 #: ../app/Components/Applications/Single/InvitedForms/SousForm.php:93
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:76
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:78
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:140
 #: ../app/Modules/EventModule/ApplicationPresenter.php:130
 #: ../data/events/soustredeni/sous37j.neon.neon2php:208
@@ -117,22 +117,22 @@ msgid ""
 "about?"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:63
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:64
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:152
 msgid "Excursion"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:68
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:69
 #: ../app/Components/Applications/Team/Forms/FOFTeamForm.php:125
 #: ../app/Components/Applications/Team/Forms/FOFTeamForm.php:174
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:134
 msgid "Accommodation"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:107
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:112
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:117
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:122
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:110
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:115
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:120
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:125
 msgid ""
 "You must register to both morning and afternoon group or only the all-day "
 "group."
@@ -221,8 +221,7 @@ msgstr "Detail"
 #: ../app/Components/Applications/Single/SingleApplicationsGrid.php:114
 #: ../app/Components/Applications/Team/TeamTrait.php:72
 #: ../app/Components/Game/Submits/AllSubmitsGrid.php:201
-#: ../app/Components/Payments/AllPaymentList.php:61
-#: ../app/Components/Payments/PaymentList.php:66
+#: ../app/Components/Payments/AdminPaymentList.php:63
 msgid "Select state"
 msgstr ""
 
@@ -529,7 +528,7 @@ msgstr ""
 
 #: ../app/Components/Contestants/RegisterContestantForm.php:74
 #: ../app/Components/Controls/Login/LoginForm.php:80
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:105
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:106
 #: ../app/Components/EntityForms/RegisterTeacherFormComponent.php:78
 msgid "The form has expired. Please send it again."
 msgstr ""
@@ -584,7 +583,7 @@ msgid "Login or e-mail"
 msgstr ""
 
 #: ../app/Components/Controls/Login/LoginForm.php:62
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:104
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:105
 msgid "Insert login or email address."
 msgstr ""
 
@@ -748,11 +747,11 @@ msgstr ""
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:57
 #: ../app/Components/Forms/Controls/Autocomplete/PersonSelectBox.php:14
 #: ../app/Components/Inbox/layout.latte.latte2php:10
-#: ../app/Components/Payments/SchedulePaymentForm.php:85
+#: ../app/Components/Payments/SchedulePaymentForm.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:15
 #: ../app/Modules/OrganizerModule/PersonPresenter.php:233
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:70
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:111
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:36
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:108
 #: ../app/config/orm.neon.neon2php:440
 #: ../data/events/council/council1.neon.neon2php:8
 #: ../data/events/council/councilDefault.neon.neon2php:51
@@ -799,16 +798,16 @@ msgid_plural "Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:85
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:86
 #, php-format
 msgid "Further instructions for the recovery have been sent to %s."
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:98
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:99
 msgid "Continue"
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:103
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:104
 msgid "Login or e-mail address"
 msgstr ""
 
@@ -1329,7 +1328,7 @@ msgstr ""
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:99
+#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:97
 msgid "This item has already assigned another payment"
 msgstr ""
 
@@ -2229,13 +2228,13 @@ msgid_plural "%d solutions"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/Components/Payments/AllPaymentList.php:62
-#: ../app/Components/Payments/PaymentList.php:67
+#: ../app/Components/Payments/AdminPaymentList.php:64
 #: ../app/config/orm.neon.neon2php:410
 msgid "Variable symbol"
 msgstr ""
 
-#: ../app/Components/Payments/PaymentList.php:81
+#: ../app/Components/Payments/AdminPaymentList.php:78
+#: ../app/Components/Payments/MyPaymentsList.php:52
 msgid "button.payment.detail"
 msgstr "Detail"
 
@@ -2268,23 +2267,23 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:72
+#: ../app/Components/Payments/SchedulePaymentForm.php:74
 msgid "Proceed to summary"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:72
+#: ../app/Components/Payments/SchedulePaymentForm.php:74
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:93
+#: ../app/Components/Payments/SchedulePaymentForm.php:95
 msgid "Please select currency"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:142
+#: ../app/Components/Payments/SchedulePaymentForm.php:144
 msgid "Payment has been created."
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:143
+#: ../app/Components/Payments/SchedulePaymentForm.php:145
 msgid "Payment has been updated."
 msgstr ""
 
@@ -3110,7 +3109,7 @@ msgid "Waiting for paying"
 msgstr ""
 
 #: ../app/Models/ORM/Models/PaymentState.php:35
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:25
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:25
 msgid "Payment received"
 msgstr ""
 
@@ -3752,6 +3751,14 @@ msgstr ""
 msgid "No transitions available"
 msgstr ""
 
+#: ../app/Models/UI/price-printer.tsx.tsx2php:14
+msgid "CZK"
+msgstr ""
+
+#: ../app/Models/UI/price-printer.tsx.tsx2php:17
+msgid "EUR"
+msgstr "€"
+
 #: ../app/Models/UI/price-printer.tsx.tsx2php:20
 msgid "for free"
 msgstr ""
@@ -3761,7 +3768,7 @@ msgstr ""
 msgid "The file %s cannot be read."
 msgstr ""
 
-#: ../app/Modules/Core/BasePresenter.php:402
+#: ../app/Modules/Core/BasePresenter.php:403
 msgid "Successful token authentication."
 msgstr ""
 
@@ -5030,12 +5037,30 @@ msgstr ""
 msgid "Submited solutions"
 msgstr ""
 
-#: ../app/Modules/ShopModule/AdminPresenter.php:60
+#: ../app/Modules/ShopModule/AdminPresenter.php:52
+#: ../app/Modules/ShopModule/SchedulePresenter.php:50
+msgid "Create an event payment"
+msgstr ""
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:84
+#: ../app/Modules/ShopModule/SchedulePresenter.php:90
+#, php-format
+msgid "Detail of the payment %s"
+msgstr ""
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:119
+#: ../app/Modules/ShopModule/SchedulePresenter.php:125
+#, php-format
+msgid "Edit payment #%s"
+msgstr ""
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:135
 msgid "Payment dashboard"
 msgstr ""
 
-#: ../app/Modules/ShopModule/AdminPresenter.php:112
-msgid "List of payments"
+#: ../app/Modules/ShopModule/AdminPresenter.php:149
+#: ../app/Modules/ShopModule/templates/Admin/default.latte.latte2php:4
+msgid "Schedule payment dashboard"
 msgstr ""
 
 #: ../app/Modules/ShopModule/BasePresenter.php:66
@@ -5043,80 +5068,65 @@ msgstr ""
 msgid "Shop & payments"
 msgstr ""
 
-#: ../app/Modules/ShopModule/EventsPresenter.php:50
-msgid "Create payment for events"
-msgstr ""
-
-#: ../app/Modules/ShopModule/EventsPresenter.php:92
-#, php-format
-msgid "Detail of the payment %s"
-msgstr ""
-
-#: ../app/Modules/ShopModule/EventsPresenter.php:129
-#, php-format
-msgid "Edit payment #%s"
-msgstr ""
-
 #: ../app/Modules/ShopModule/MyPaymentsPresenter.php:14
 msgid "My payments"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:65
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:109
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:33
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:90
-msgid "Block"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:68
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:110
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:34
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:91
-msgid "Variant"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:17
-msgid "Select items"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:21
-#: ../app/config/transitions/payment.neon.neon2php:27
-msgid "Generate payment"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:81
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:6
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:78
 msgid "Payer information"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:89
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:14
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:23
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:86
 msgid "Bank connection"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:97
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:22
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:94
 msgid "Scan and pay"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:104
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:29
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:101
 msgid "Payments contains"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:113
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:34
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:33
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:90
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:106
+msgid "Block"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:35
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:34
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:91
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:107
+msgid "Variant"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:38
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:36
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:93
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:110
 #: ../app/config/orm.neon.neon2php:969
 msgid "Payment deadline"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:145
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:70
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:142
 msgid "Total"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:153
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:78
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:151
 msgid "Edit items"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:159
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:84
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:158
 msgid "Actions"
 msgstr ""
 
@@ -5146,6 +5156,15 @@ msgstr ""
 
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:124
 msgid "Create payment"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:17
+msgid "Select items"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:21
+#: ../app/config/transitions/payment.neon.neon2php:27
+msgid "Generate payment"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:21
@@ -6059,7 +6078,7 @@ msgid "Add to card"
 msgstr ""
 
 #: ../app/config/transitions/payment.neon.neon2php:29
-msgid "Payment information has been succefully created"
+msgid "Payment instructions have been successfully generated"
 msgstr ""
 
 #: ../app/config/transitions/payment.neon.neon2php:36
@@ -6630,81 +6649,11 @@ msgstr ""
 "longer-term problems... Do you take any medication? What are they? Are there "
 "any other information about your health condition, what should we know?"
 
-#~ msgid "řešitelů"
-#~ msgstr "contestants"
+#~ msgid "Jakou barvu trička bys chtěl?"
+#~ msgstr "What colour of T-shirt would you like?"
 
-#~ msgid "řešitelé"
-#~ msgstr "contestants"
-
-#~ msgid "řešitel"
-#~ msgstr "contestant"
-
-#~ msgid "Čas příjezdu"
-#~ msgstr "Time of arrival"
-
-#~ msgid "Čas odjezdu"
-#~ msgstr "Departure time"
-
-#~ msgid "à 30 Kč"
-#~ msgstr "30 CZK/pc"
-
-#~ msgid "Účastník"
-#~ msgstr "Participant"
-
-#~ msgid "záznamů"
-#~ msgstr "records"
-
-#~ msgid "bodů"
-#~ msgstr "points"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "Zvolená osoba je již přihlášená."
-#~ msgstr "Chosen person is already registered to the event."
-
-#~ msgid "Z jakého místa chceš odjíždět?"
-#~ msgstr "From where would you like to depart?"
-
-#~ msgid "Ubytování"
-#~ msgstr "Accommodation"
-
-#~ msgid "Smazat přihlášku"
-#~ msgstr "Delete application"
-
-#~ msgid "Předpokládaný příjezd"
-#~ msgstr "Estimated arrival"
-
-#~ msgid "Předpokládaný odjezd"
-#~ msgstr "Estimated departure"
-
-#~ msgid "Program akce"
-#~ msgstr "Event program"
-
-#~ msgid "Pro řazení v seznamu organizátorů"
-#~ msgstr "For ranking among organiser list"
-
-#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-#~ msgstr ""
-#~ "To calculate category. Leave empty if you are not a high school student."
-
-#~ msgid "Pouze pro české a slovenské studenty."
-#~ msgstr ""
-#~ "Only for Czech and Slovak students. So if you are from abroad, please "
-#~ "leave it empty as it is."
-
-#~ msgid ""
-#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
-#~ "       a ASCII znaky."
-#~ msgstr ""
-#~ "The name of the team can be composed only from latin, greek, cyrilic and "
-#~ "ASCII."
-
-#~ msgid "Na jaké místo přijedeš?"
-#~ msgstr "Where do you arrive?"
+#~ msgid "Jaké tričko nosíš?"
+#~ msgstr "What T-shirt size do you wear?"
 
 #~ msgid ""
 #~ "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na "
@@ -6720,8 +6669,78 @@ msgstr ""
 #~ "they? Are there any other information about your health condition, what "
 #~ "should we know?"
 
-#~ msgid "Jaké tričko nosíš?"
-#~ msgstr "What T-shirt size do you wear?"
+#~ msgid "Na jaké místo přijedeš?"
+#~ msgstr "Where do you arrive?"
 
-#~ msgid "Jakou barvu trička bys chtěl?"
-#~ msgstr "What colour of T-shirt would you like?"
+#~ msgid ""
+#~ "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici\n"
+#~ "       a ASCII znaky."
+#~ msgstr ""
+#~ "The name of the team can be composed only from latin, greek, cyrilic and "
+#~ "ASCII."
+
+#~ msgid "Pouze pro české a slovenské studenty."
+#~ msgstr ""
+#~ "Only for Czech and Slovak students. So if you are from abroad, please "
+#~ "leave it empty as it is."
+
+#~ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
+#~ msgstr ""
+#~ "To calculate category. Leave empty if you are not a high school student."
+
+#~ msgid "Pro řazení v seznamu organizátorů"
+#~ msgstr "For ranking among organiser list"
+
+#~ msgid "Program akce"
+#~ msgstr "Event program"
+
+#~ msgid "Předpokládaný odjezd"
+#~ msgstr "Estimated departure"
+
+#~ msgid "Předpokládaný příjezd"
+#~ msgstr "Estimated arrival"
+
+#~ msgid "Smazat přihlášku"
+#~ msgstr "Delete application"
+
+#~ msgid "Ubytování"
+#~ msgstr "Accommodation"
+
+#~ msgid "Z jakého místa chceš odjíždět?"
+#~ msgstr "From where would you like to depart?"
+
+#~ msgid "Zvolená osoba je již přihlášená."
+#~ msgstr "Chosen person is already registered to the event."
+
+#~ msgid "bod"
+#~ msgstr "point"
+
+#~ msgid "body"
+#~ msgstr "points"
+
+#~ msgid "bodů"
+#~ msgstr "points"
+
+#~ msgid "záznamů"
+#~ msgstr "records"
+
+#~ msgid "Účastník"
+#~ msgstr "Participant"
+
+#~ msgid "à 30 Kč"
+#~ msgstr "30 CZK/pc"
+
+#~ msgid "Čas odjezdu"
+#~ msgstr "Departure time"
+
+#~ msgid "Čas příjezdu"
+#~ msgstr "Time of arrival"
+
+#~ msgid "řešitel"
+#~ msgstr "contestant"
+
+#~ msgid "řešitelé"
+#~ msgstr "contestants"
+
+#~ msgid "řešitelů"
+#~ msgstr "contestants"

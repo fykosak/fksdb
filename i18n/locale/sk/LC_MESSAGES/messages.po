@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-05 22:46+0200\n"
+"POT-Creation-Date: 2024-10-10 17:04+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -82,7 +82,7 @@ msgid "T-shirt"
 msgstr ""
 
 #: ../app/Components/Applications/Single/InvitedForms/SousForm.php:93
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:76
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:78
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:140
 #: ../app/Modules/EventModule/ApplicationPresenter.php:130
 #: ../data/events/soustredeni/sous37j.neon.neon2php:208
@@ -117,22 +117,22 @@ msgid ""
 "about?"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:63
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:64
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:152
 msgid "Excursion"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:68
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:69
 #: ../app/Components/Applications/Team/Forms/FOFTeamForm.php:125
 #: ../app/Components/Applications/Team/Forms/FOFTeamForm.php:174
 #: ../app/Models/ORM/Models/Schedule/ScheduleGroupType.php:134
 msgid "Accommodation"
 msgstr ""
 
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:107
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:112
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:117
-#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:122
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:110
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:115
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:120
+#: ../app/Components/Applications/Single/OpenForms/DSEFForm.php:125
 msgid ""
 "You must register to both morning and afternoon group or only the all-day "
 "group."
@@ -216,8 +216,7 @@ msgstr ""
 #: ../app/Components/Applications/Single/SingleApplicationsGrid.php:114
 #: ../app/Components/Applications/Team/TeamTrait.php:72
 #: ../app/Components/Game/Submits/AllSubmitsGrid.php:201
-#: ../app/Components/Payments/AllPaymentList.php:61
-#: ../app/Components/Payments/PaymentList.php:66
+#: ../app/Components/Payments/AdminPaymentList.php:63
 #, fuzzy
 msgid "Select state"
 msgstr "Zvoliť typ"
@@ -537,7 +536,7 @@ msgstr "Registrácia"
 
 #: ../app/Components/Contestants/RegisterContestantForm.php:74
 #: ../app/Components/Controls/Login/LoginForm.php:80
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:105
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:106
 #: ../app/Components/EntityForms/RegisterTeacherFormComponent.php:78
 msgid "The form has expired. Please send it again."
 msgstr ""
@@ -592,7 +591,7 @@ msgid "Login or e-mail"
 msgstr ""
 
 #: ../app/Components/Controls/Login/LoginForm.php:62
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:104
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:105
 msgid "Insert login or email address."
 msgstr ""
 
@@ -761,11 +760,11 @@ msgstr ""
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:57
 #: ../app/Components/Forms/Controls/Autocomplete/PersonSelectBox.php:14
 #: ../app/Components/Inbox/layout.latte.latte2php:10
-#: ../app/Components/Payments/SchedulePaymentForm.php:85
+#: ../app/Components/Payments/SchedulePaymentForm.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:15
 #: ../app/Modules/OrganizerModule/PersonPresenter.php:233
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:70
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:111
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:36
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:108
 #: ../app/config/orm.neon.neon2php:440
 #: ../data/events/council/council1.neon.neon2php:8
 #: ../data/events/council/councilDefault.neon.neon2php:51
@@ -812,16 +811,16 @@ msgid_plural "Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:85
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:86
 #, php-format
 msgid "Further instructions for the recovery have been sent to %s."
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:98
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:99
 msgid "Continue"
 msgstr ""
 
-#: ../app/Components/Controls/Recovery/RecoveryForm.php:103
+#: ../app/Components/Controls/Recovery/RecoveryForm.php:104
 msgid "Login or e-mail address"
 msgstr ""
 
@@ -1372,7 +1371,7 @@ msgstr ""
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:99
+#: ../app/Components/Forms/Containers/PersonPaymentContainer.php:97
 msgid "This item has already assigned another payment"
 msgstr ""
 
@@ -2310,13 +2309,13 @@ msgid_plural "%d solutions"
 msgstr[0] "Zoznam platieb"
 msgstr[1] "Zoznam platieb"
 
-#: ../app/Components/Payments/AllPaymentList.php:62
-#: ../app/Components/Payments/PaymentList.php:67
+#: ../app/Components/Payments/AdminPaymentList.php:64
 #: ../app/config/orm.neon.neon2php:410
 msgid "Variable symbol"
 msgstr ""
 
-#: ../app/Components/Payments/PaymentList.php:81
+#: ../app/Components/Payments/AdminPaymentList.php:78
+#: ../app/Components/Payments/MyPaymentsList.php:52
 msgid "button.payment.detail"
 msgstr ""
 
@@ -2349,23 +2348,23 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:72
+#: ../app/Components/Payments/SchedulePaymentForm.php:74
 msgid "Proceed to summary"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:72
+#: ../app/Components/Payments/SchedulePaymentForm.php:74
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:93
+#: ../app/Components/Payments/SchedulePaymentForm.php:95
 msgid "Please select currency"
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:142
+#: ../app/Components/Payments/SchedulePaymentForm.php:144
 msgid "Payment has been created."
 msgstr ""
 
-#: ../app/Components/Payments/SchedulePaymentForm.php:143
+#: ../app/Components/Payments/SchedulePaymentForm.php:145
 msgid "Payment has been updated."
 msgstr ""
 
@@ -3220,7 +3219,7 @@ msgid "Waiting for paying"
 msgstr ""
 
 #: ../app/Models/ORM/Models/PaymentState.php:35
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:25
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:25
 #, fuzzy
 msgid "Payment received"
 msgstr "Nová platba"
@@ -3891,6 +3890,14 @@ msgstr ""
 msgid "No transitions available"
 msgstr ""
 
+#: ../app/Models/UI/price-printer.tsx.tsx2php:14
+msgid "CZK"
+msgstr ""
+
+#: ../app/Models/UI/price-printer.tsx.tsx2php:17
+msgid "EUR"
+msgstr ""
+
 #: ../app/Models/UI/price-printer.tsx.tsx2php:20
 msgid "for free"
 msgstr ""
@@ -3900,7 +3907,7 @@ msgstr ""
 msgid "The file %s cannot be read."
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/Modules/Core/BasePresenter.php:402
+#: ../app/Modules/Core/BasePresenter.php:403
 msgid "Successful token authentication."
 msgstr ""
 
@@ -5243,14 +5250,34 @@ msgstr ""
 msgid "Submited solutions"
 msgstr "Časový vývoj prihlášiek"
 
-#: ../app/Modules/ShopModule/AdminPresenter.php:60
+#: ../app/Modules/ShopModule/AdminPresenter.php:52
+#: ../app/Modules/ShopModule/SchedulePresenter.php:50
+#, fuzzy
+msgid "Create an event payment"
+msgstr "Nová platba"
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:84
+#: ../app/Modules/ShopModule/SchedulePresenter.php:90
+#, fuzzy, php-format
+msgid "Detail of the payment %s"
+msgstr "Zoznam akcií"
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:119
+#: ../app/Modules/ShopModule/SchedulePresenter.php:125
+#, php-format
+msgid "Edit payment #%s"
+msgstr "Uprava platby #%s"
+
+#: ../app/Modules/ShopModule/AdminPresenter.php:135
 #, fuzzy
 msgid "Payment dashboard"
 msgstr "Nová platba"
 
-#: ../app/Modules/ShopModule/AdminPresenter.php:112
-msgid "List of payments"
-msgstr "Zoznam platieb"
+#: ../app/Modules/ShopModule/AdminPresenter.php:149
+#: ../app/Modules/ShopModule/templates/Admin/default.latte.latte2php:4
+#, fuzzy
+msgid "Schedule payment dashboard"
+msgstr "Uprava platby #%s"
 
 #: ../app/Modules/ShopModule/BasePresenter.php:66
 #: ../app/Modules/ShopModule/HomePresenter.php:27
@@ -5258,88 +5285,70 @@ msgstr "Zoznam platieb"
 msgid "Shop & payments"
 msgstr "Nová platba"
 
-#: ../app/Modules/ShopModule/EventsPresenter.php:50
-#, fuzzy
-msgid "Create payment for events"
-msgstr "Nová platba"
-
-#: ../app/Modules/ShopModule/EventsPresenter.php:92
-#, fuzzy, php-format
-msgid "Detail of the payment %s"
-msgstr "Zoznam akcií"
-
-#: ../app/Modules/ShopModule/EventsPresenter.php:129
-#, php-format
-msgid "Edit payment #%s"
-msgstr "Uprava platby #%s"
-
 #: ../app/Modules/ShopModule/MyPaymentsPresenter.php:14
 #, fuzzy
 msgid "My payments"
 msgstr "Nová platba"
 
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:65
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:109
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:33
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:90
-msgid "Block"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Admin/events.latte.latte2php:68
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:110
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:34
-#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:91
-msgid "Variant"
-msgstr ""
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:17
-#, fuzzy
-msgid "Select items"
-msgstr "Zvoliť typ"
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:21
-#: ../app/config/transitions/payment.neon.neon2php:27
-#, fuzzy
-msgid "Generate payment"
-msgstr "Nová platba"
-
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:81
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:6
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:78
 #, fuzzy
 msgid "Payer information"
 msgstr "Zoznam platieb"
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:89
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:14
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:23
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:86
 msgid "Bank connection"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:97
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:22
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:94
 msgid "Scan and pay"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:104
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:29
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:101
 #, fuzzy
 msgid "Payments contains"
 msgstr "Nová platba"
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:113
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:34
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:33
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:90
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:106
+msgid "Block"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:35
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:34
+#: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:91
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:107
+msgid "Variant"
+msgstr ""
+
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:38
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:36
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:93
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:110
 #: ../app/config/orm.neon.neon2php:969
 #, fuzzy
 msgid "Payment deadline"
 msgstr "Nová platba"
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:145
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:70
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:142
 msgid "Total"
 msgstr ""
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:153
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:78
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:151
 #, fuzzy
 msgid "Edit items"
 msgstr "Uprava platby #%s"
 
-#: ../app/Modules/ShopModule/templates/Events/detail.latte.latte2php:159
+#: ../app/Modules/ShopModule/templates/Admin/detail.latte.latte2php:84
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:158
 msgid "Actions"
 msgstr ""
 
@@ -5375,6 +5384,17 @@ msgstr "Nová platba"
 #: ../app/Modules/ShopModule/templates/Home/default.latte.latte2php:124
 #, fuzzy
 msgid "Create payment"
+msgstr "Nová platba"
+
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:17
+#, fuzzy
+msgid "Select items"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/ShopModule/templates/Schedule/detail.latte.latte2php:21
+#: ../app/config/transitions/payment.neon.neon2php:27
+#, fuzzy
+msgid "Generate payment"
 msgstr "Nová platba"
 
 #: ../app/config/orm.neon.neon2php:21
@@ -6337,7 +6357,7 @@ msgstr ""
 
 #: ../app/config/transitions/payment.neon.neon2php:29
 #, fuzzy
-msgid "Payment information has been succefully created"
+msgid "Payment instructions have been successfully generated"
 msgstr "Registrácia"
 
 #: ../app/config/transitions/payment.neon.neon2php:36
@@ -6916,299 +6936,31 @@ msgid ""
 msgstr ""
 
 #, fuzzy
-#~ msgid "validate!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solutions"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "solution"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "sectors"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "recalculateAll!"
+#~ msgid "Contest organizer"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "navigation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "badge bg-info"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "application code"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Zvolená osoba je již přihlášená."
-#~ msgstr "Stránka požaduje prihlásenie."
-
-#, fuzzy
-#~ msgid "Validation"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Usually the first part of your name. For example, \"Albert\"."
-#~ msgstr " "
-
-#, fuzzy
-#~ msgid "Unknown application."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "The second part of your name. For example, \"Einstein\"."
-#~ msgstr " "
-
-#, fuzzy
-#~ msgid "Team applications time progress"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Teacher: %s (%s)"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Submit!"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "State of application \"%s\" changed."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Skip the application and continue."
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Show application!"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Select the number of points given."
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Select test"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Select role"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Scan 2D code for group \"%s\""
+#~ msgid "Edit an entity"
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "Registration is not open."
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to Výfuk"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register to %s!"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register into competition"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Register for the next year"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Přihlásit se"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Potvrdit jako účastnika"
-#~ msgstr "Prihlásiť"
-
-#, fuzzy
-#~ msgid "Person not found"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Person info is not set"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Person has been updated."
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Payment on the spot"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Parcipant"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "Only check state"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Number of brochures"
+#~ msgid "List of entities"
 #~ msgstr "Zoznam akcií"
 
 #, fuzzy
-#~ msgid "No items found."
-#~ msgstr "Časový vývoj prihlášiek"
+#~ msgid "#nav-contests"
+#~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "No error found"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Models are not the same!"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "List of rooms"
+#~ msgid "#nav-validation"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "List of groups"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "List of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "In team \"%s\"(%d): "
+#~ msgid "%s at event %s"
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "Import of applications"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Game has not started yet."
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Event web-site"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event orgs"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Event org: %s"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Edit group"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Edit application"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Detailed list of payments"
-#~ msgstr "Zoznam akcií"
-
-#, fuzzy
-#~ msgid "Correctors D"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors C"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors B"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Correctors A"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Cooperation status"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Content-Type"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Check submit"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "Cancel the application"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Applications detail"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Application state \"%s\" changed."
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Application detail \"%s\""
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Application \"%s\" saved."
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "Already participated"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "All tests"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "All teams"
-#~ msgstr "Zvoliť typ"
-
-#, fuzzy
-#~ msgid "Action"
-#~ msgstr "Zoznam platieb"
-
-#, fuzzy
-#~ msgid "Accommodation for %s from %s to %s"
-#~ msgstr "Ubytnovanie neexistuje"
-
-#, fuzzy
-#~ msgid "<?php _('Remove parameter') ?>"
-#~ msgstr "Nová platba"
-
-#, fuzzy
-#~ msgid "<?php _('Execute query') ?>"
-#~ msgstr "Uprava platby #%s"
-
-#, fuzzy
-#~ msgid ":Public:Register:"
-#~ msgstr "Registrácia"
-
-#, fuzzy
-#~ msgid "//:Core:MyApplications:default"
-#~ msgstr "Časový vývoj prihlášiek"
-
-#, fuzzy
-#~ msgid "--Select state--"
+#~ msgid "-- select event type --"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
@@ -7216,29 +6968,304 @@ msgstr ""
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "-- select event type --"
+#~ msgid "--Select state--"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "%s at event %s"
+#~ msgid "//:Core:MyApplications:default"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid ":Public:Register:"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "<?php _('Execute query') ?>"
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "#nav-validation"
+#~ msgid "<?php _('Remove parameter') ?>"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Accommodation for %s from %s to %s"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "Action"
 #~ msgstr "Zoznam platieb"
 
 #, fuzzy
-#~ msgid "#nav-contests"
+#~ msgid "All teams"
 #~ msgstr "Zvoliť typ"
 
 #, fuzzy
-#~ msgid "List of entities"
+#~ msgid "All tests"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Already participated"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Application \"%s\" saved."
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Application detail \"%s\""
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Application state \"%s\" changed."
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Applications detail"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Cancel the application"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Check submit"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Content-Type"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Cooperation status"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors A"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors B"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors C"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Correctors D"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Detailed list of payments"
 #~ msgstr "Zoznam akcií"
 
 #, fuzzy
-#~ msgid "Edit an entity"
+#~ msgid "Edit application"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Edit group"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Event org: %s"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event orgs"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Event web-site"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Game has not started yet."
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Import of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "In team \"%s\"(%d): "
 #~ msgstr "Uprava platby #%s"
 
 #, fuzzy
-#~ msgid "Contest organizer"
+#~ msgid "List of applications"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "List of groups"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "List of rooms"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Models are not the same!"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "No error found"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "No items found."
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Number of brochures"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Only check state"
 #~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Parcipant"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Payment on the spot"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Person has been updated."
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Person info is not set"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Person not found"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "Potvrdit jako účastnika"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Přihlásit se"
+#~ msgstr "Prihlásiť"
+
+#, fuzzy
+#~ msgid "Register for the next year"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register into competition"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to %s!"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Register to Výfuk"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Registration is not open."
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Scan 2D code for group \"%s\""
+#~ msgstr "Uprava platby #%s"
+
+#, fuzzy
+#~ msgid "Select role"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Select test"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Select the number of points given."
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Show application!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Skip the application and continue."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "State of application \"%s\" changed."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Submit!"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Teacher: %s (%s)"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "Team applications time progress"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "The second part of your name. For example, \"Einstein\"."
+#~ msgstr " "
+
+#, fuzzy
+#~ msgid "Unknown application."
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Usually the first part of your name. For example, \"Albert\"."
+#~ msgstr " "
+
+#, fuzzy
+#~ msgid "Validation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Zvolená osoba je již přihlášená."
+#~ msgstr "Stránka požaduje prihlásenie."
+
+#, fuzzy
+#~ msgid "application code"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "badge bg-info"
+#~ msgstr "Nová platba"
+
+#, fuzzy
+#~ msgid "navigation"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "recalculateAll!"
+#~ msgstr "Zvoliť typ"
+
+#, fuzzy
+#~ msgid "sectors"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solution"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "solutions"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "validate!"
+#~ msgstr "Zoznam platieb"
+
+#, fuzzy
+#~ msgid "Create payment for events"
+#~ msgstr "Nová platba"
+
+#~ msgid "List of payments"
+#~ msgstr "Zoznam platieb"
