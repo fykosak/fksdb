@@ -4,51 +4,66 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use Cassandra\Date;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
-use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
-use Nette\Security\Resource;
-use Fykosak\NetteORM\Model;
+use Nette\InvalidStateException;
+use Nette\Utils\DateTime;
 
 /**
- * @property-read int person_id
- * @property-read PersonModel person
- * @property-read int payment_id
- * @property-read EventModel event
- * @property-read int event_id
- * @property-read PaymentState state
- * @property-read float price
- * @property-read string currency
- * @property-read \DateTimeInterface created
- * @property-read \DateTimeInterface received
- * @property-read string constant_symbol
- * @property-read string variable_symbol
- * @property-read string specific_symbol
- * @property-read string bank_account
- * @property-read string bank_name
- * @property-read string recipient
- * @property-read string iban
- * @property-read string swift
+ * @property-read int $person_id
+ * @property-read PersonModel $person
+ * @property-read int $payment_id
+ * @property-read DateTime|null $payment_deadline
+ * @property-read PaymentState $state
+ * @property-read float|null $price
+ * @property-read string|null $currency
+ * @property-read DateTime|null $created
+ * @property-read DateTime|null $received
+ * @property-read string|null $constant_symbol
+ * @property-read string|null $variable_symbol
+ * @property-read string|null $specific_symbol
+ * @property-read string|null $bank_account
+ * @property-read string|null $bank_name
+ * @property-read string|null $recipient
+ * @property-read string|null $iban
+ * @property-read string|null $swift
+ * @property-read int $want_invoice
+ * @property-read string|null $invoice_id
  */
-class PaymentModel extends Model implements Resource
+final class PaymentModel extends Model implements EventResource
 {
-    public const RESOURCE_ID = 'event.payment';
+    public const RESOURCE_ID = 'payment';
 
     /**
-     * @return PersonScheduleModel[]
+     * @phpstan-return TypedGroupedSelection<SchedulePaymentModel>
      */
-    public function getRelatedPersonSchedule(): array
+    public function getSchedulePayment(): TypedGroupedSelection
     {
-        $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
-        $items = [];
-        /** @var SchedulePaymentModel $row */
-        foreach ($query as $row) {
-            $items[] = $row->person_schedule;
+        /** @phpstan-var TypedGroupedSelection<SchedulePaymentModel> $selection */
+        $selection = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
+        return $selection;
+    }
+
+    public function getScheduleEvent(): ?EventModel
+    {
+        $event = null;
+        /** @var SchedulePaymentModel $schedulePayment */
+        foreach ($this->getSchedulePayment() as $schedulePayment) {
+            $newEvent = $schedulePayment->person_schedule->schedule_item->schedule_group->event;
+            if ($event && $newEvent->event_id !== $event->event_id) {
+                throw new \InvalidArgumentException('Payment related to more than one event');
+            }
+            if (!$event) {
+                $event = $newEvent;
+            }
         }
-        return $items;
+        return $event;
     }
 
     public function getResourceId(): string
@@ -56,14 +71,9 @@ class PaymentModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getPaymentId(): string
-    {
-        return \sprintf('%d%04d', $this->event_id, $this->payment_id);
-    }
-
     public function canEdit(): bool
     {
-        return $this->state->value == PaymentState::NEW;
+        return $this->state->value === PaymentState::IN_PROGRESS;
     }
 
     /**
@@ -83,39 +93,18 @@ class PaymentModel extends Model implements Resource
     }
 
     /**
-     * @param string $key
-     * @return PaymentState|FakeStringEnum|mixed|null
+     * @return PaymentState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = PaymentState::tryFrom($value);
+                $value = PaymentState::from($value);
                 break;
         }
         return $value;
-    }
-
-    public function __toArray(): array
-    {
-        return [
-            'personId' => $this->person_id,
-            'paymentId' => $this->payment_id,
-            'paymentUId' => $this->getPaymentId(),
-            'state' => $this->state->value,
-            'price' => $this->price,
-            'currency' => $this->currency,
-            'constantSymbol' => $this->constant_symbol,
-            'variableSymbol' => $this->variable_symbol,
-            'specificSymbol' => $this->specific_symbol,
-            'bankAccount' => $this->bank_account,
-            'bankName' => $this->bank_name,
-            'recipient' => $this->recipient,
-            'iban' => $this->iban,
-            'swift' => $this->swift,
-        ];
     }
 
     public function hasGeneratedSymbols(): bool
@@ -126,5 +115,14 @@ class PaymentModel extends Model implements Resource
             || $this->bank_account
             || $this->bank_name
             || $this->recipient;
+    }
+
+    public function getEvent(): EventModel
+    {
+        $event = $this->getScheduleEvent();
+        if (!$event) {
+            throw new InvalidStateException();
+        }
+        return $event;
     }
 }

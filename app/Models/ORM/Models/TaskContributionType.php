@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class TaskContributionType extends FakeStringEnum implements EnumColumn
+final class TaskContributionType extends FakeStringEnum implements EnumColumn
 {
     public const AUTHOR = 'author';
     public const SOLUTION = 'solution';
@@ -44,12 +45,17 @@ class TaskContributionType extends FakeStringEnum implements EnumColumn
         }
     }
 
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
+    }
+
     public static function cases(): array
     {
         return [
-            new static(self::AUTHOR),
-            new static(self::SOLUTION),
-            new static(self::GRADE),
+            new self(self::AUTHOR),
+            new self(self::SOLUTION),
+            new self(self::GRADE),
         ];
     }
 }

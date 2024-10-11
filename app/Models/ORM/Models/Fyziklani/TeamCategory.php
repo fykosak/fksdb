@@ -8,9 +8,10 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class TeamCategory extends FakeStringEnum implements EnumColumn
+final class TeamCategory extends FakeStringEnum implements EnumColumn
 {
     public const A = 'A';
     public const B = 'B';
@@ -19,7 +20,7 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     public const F = 'F';
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function cases(): array
     {
@@ -36,13 +37,13 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     {
         switch ($this->value) {
             case self::A:
-                return _('High-school students A');
+                return 'A';
             case self::B:
-                return _('High-school students B');
+                return 'B';
             case self::C:
-                return _('High-school students C');
+                return 'C';
             case self::F:
-                return _('Abroad high-school students');
+                return 'F';
             case self::O:
                 return _('Open');
             default:
@@ -51,7 +52,7 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @return self[]
+     * @phpstan-return self[]
      */
     public static function casesForEvent(EventModel $event): array
     {
@@ -81,14 +82,35 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
                     new self(self::O),
                     new self(self::F),
                 ];
+            case 17:
+                return [
+                    new self(self::A),
+                ];
         }
         return [];
     }
 
+    public function behaviorType(): string
+    {
+        switch ($this->value) {
+            case self::A:
+                return 'danger';
+            case self::B:
+                return 'warning';
+            case self::C:
+                return 'success';
+            case self::O:
+                return 'primary';
+            default:
+                return 'dark';
+        }
+    }
+
     public function badge(): Html
     {
-        // TODO
-        return Html::el('span')->addText($this->label());
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
     }
 
     /**
@@ -98,5 +120,10 @@ class TeamCategory extends FakeStringEnum implements EnumColumn
     public function __toString(): string
     {
         return $this->value;
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

@@ -5,55 +5,52 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\LoginModel;
-use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{
-    FyziklaniResultsWebModel,
-    PaymentListWebModel,
-    WebModel,
-    OrganizersWebModel,
-    EventListWebModel,
-    EventWebModel,
-    ExportWebModel,
-    SignaturesWebModel,
-    ResultsWebModel,
-    StatsWebModel,
-};
-use Nette\Application\BadRequestException;
-use Nette\Application\Responses\JsonResponse;
+use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
+use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
+use FKSDB\Models\WebService\Models\Events\EventListWebModel;
+use FKSDB\Models\WebService\Models\ExportWebModel;
+use FKSDB\Models\WebService\Models\ResultsWebModel;
+use FKSDB\Models\WebService\Models\SoapWebModel;
+use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
-use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
+use Nette\Security\User;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
-class WebServiceModel
+final class WebServiceModel
 {
     use SmartObject;
 
-    private LoginModel $authenticatedLogin;
+    public const SOAP_RESOURCE_ID = 'soap';
+
     private PasswordAuthenticator $authenticator;
     private Container $container;
+    private ContestAuthorizator $contestAuthorizator;
+    private User $user;
 
     private const WEB_MODELS = [
-        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
-        'GetEvent' => EventWebModel::class,
+        'GetEvent' => EventDetailWebModel::class,
         'GetExport' => ExportWebModel::class,
-        'GetSignatures' => SignaturesWebModel::class,
         'GetResults' => ResultsWebModel::class,
-        'GetStats' => StatsWebModel::class,
-        'GetPaymentList' => PaymentListWebModel::class,
+        'GetSeriesResults' => ResultsWebModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator)
-    {
+    public function __construct(
+        Container $container,
+        PasswordAuthenticator $authenticator,
+        ContestAuthorizator $contestAuthorizator,
+        User $user
+    ) {
         $this->authenticator = $authenticator;
         $this->container = $container;
+        $this->contestAuthorizator = $contestAuthorizator;
+        $this->user = $user;
     }
+
 
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
@@ -68,8 +65,13 @@ class WebServiceModel
             throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
-            $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
+            $login = $this->authenticator->authenticate($args->username, $args->password);
+            $this->user->login($login);
             $this->log('Successfully authenticated for web service request.');
+            if (!$this->contestAuthorizator->isAllowedAnyContest(self::SOAP_RESOURCE_ID, 'default')) {
+                $this->log('Unauthorized.');
+                throw new \SoapFault('Sender', 'Unauthorized.');
+            }
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new \SoapFault('Sender', 'Invalid credentials.');
@@ -77,18 +79,19 @@ class WebServiceModel
     }
 
     /**
-     * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
+     * @phpstan-ignore-next-line
      */
     public function __call(string $name, array $args): \SoapVar
     {
-        $this->checkAuthentication(__FUNCTION__);
+        $this->checkAuthentication($name . ': ' . json_encode($args));
         $webModel = $this->getWebModel($name);
+
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
-        return $webModel->getResponse(...$args);
+        return $webModel->getSOAPResponse(...$args);
     }
 
     /**
@@ -96,69 +99,49 @@ class WebServiceModel
      */
     private function checkAuthentication(string $nameService): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
             $this->log(sprintf('Called %s ', $nameService));
         }
+        if (!$this->contestAuthorizator->isAllowedAnyContest(self::SOAP_RESOURCE_ID, 'default')) {
+            $this->log(sprintf('Unauthorized %s ', $nameService));
+            throw new \SoapFault('Sender', 'Unauthorized');
+        }
     }
 
     private function log(string $msg): void
     {
-        if (!isset($this->authenticatedLogin)) {
+        if (!$this->user->isLoggedIn()) {
             $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . '@';
+            $message = $this->user->getIdentity()->__toString() . '@'; // @phpstan-ignore-line
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
-        Debugger::log($message);
+        Debugger::log($message, 'soap');
     }
 
     /**
      * @throws \ReflectionException
+     * @phpstan-return (WebModel<array<mixed>,array<mixed>>&SoapWebModel)|null
      */
     private function getWebModel(string $name): ?WebModel
     {
-        $name = ucfirst($name);
-        if (isset(self::WEB_MODELS[$name])) {
+        $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
+        if ($webModelClass) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            /** @var WebModel $model */
-            $model = $reflection->newInstance($this->container);
-            $model->setLogin($this->authenticatedLogin ?? null);
+            if (!$reflection->isSubclassOf(SoapWebModel::class)) {
+                return null;
+            }
+            /** @phpstan-var WebModel<array<mixed>,array<mixed>>&SoapWebModel $model */
+            $model = $reflection->newInstance($this->container, null);
             return $model;
         }
         return null;
-    }
-
-    /**
-     * @throws \ReflectionException|BadRequestException
-     */
-    public function getJsonResponse(string $name, array $arguments): JsonResponse
-    {
-        $webModel = $this->getWebModel($name);
-        if (!$webModel) {
-            throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
-        }
-        $arguments = $this->processArguments($webModel, $arguments);
-        return new JsonResponse($webModel->getJsonResponse($arguments));
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    private function processArguments(WebModel $webModel, array $arguments): array
-    {
-        static $processor;
-        if (!isset($processor)) {
-            $processor = new Processor();
-        }
-        $schema = $webModel->getExpectedParams();
-        $schema->otherItems()->castTo('array');
-        return $processor->process($schema, $arguments);
     }
 }

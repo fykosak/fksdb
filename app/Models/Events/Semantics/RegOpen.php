@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Expressions\EvaluatedExpression;
-use Nette\SmartObject;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 
-class RegOpen extends EvaluatedExpression
+/**
+ * @implements Statement<bool,ParticipantHolder>
+ */
+class RegOpen implements Statement
 {
-    use SmartObject;
-    use WithEventTrait;
-
     public function __invoke(...$args): bool
     {
-        $event = $this->getEvent($args[0]);
-        return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time())
-            && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
-    }
-
-    public function __toString(): string
-    {
-        return 'regOpen';
+        /** @var ParticipantHolder $holder */
+        [$holder] = $args;
+        return $holder->getModel()->event->isRegistrationOpened();
     }
 }

@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FKSDB\Components\Contestants;
+
+use FKSDB\Components\EntityForms\ModelForm;
+use FKSDB\Components\EntityForms\ReferencedPersonTrait;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\Persons\Resolvers\SelfPersonResolver;
+use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Modules\Core\Language;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
+use Nette\DI\Container;
+use Nette\Forms\Form;
+
+/**
+ * @phpstan-extends ModelForm<ContestantModel,array{}>
+ */
+final class RegisterContestantForm extends ModelForm
+{
+    use ReferencedPersonTrait;
+
+    public const CONT_CONTESTANT = 'contestant';
+
+    private ContestYearModel $contestYear;
+    private ?PersonModel $person;
+
+    private AccountManager $accountManager;
+
+    public function __construct(
+        Container $container,
+        ContestYearModel $contestYear,
+        ?PersonModel $person
+    ) {
+        parent::__construct($container, null);
+        $this->person = $person;
+        $this->contestYear = $contestYear;
+    }
+
+    final public function inject(AccountManager $accountManager): void
+    {
+        $this->accountManager = $accountManager;
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $container = new ContainerWithOptions($this->container);
+
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getContext()->getParameters()['forms']['registerContestant' .
+            ucfirst($this->contestYear->contest->getContestSymbol())],
+            $this->contestYear,
+            PersonSearchContainer::SEARCH_NONE,
+            false,
+            new SelfPersonResolver($this->person)
+        );
+        $container->addComponent($referencedId, 'person_id');
+        $form->addComponent($container, self::CONT_CONTESTANT);
+        if (!$this->person) {
+            $captcha = new CaptchaBox();
+            $form->addComponent($captcha, 'captcha');
+        }
+
+        $form->addProtection(_('The form has expired. Please send it again.'));
+    }
+
+    protected function setDefaults(Form $form): void
+    {
+        $form->setDefaults([
+            self::CONT_CONTESTANT => [
+                'person_id' => isset($this->person) ? $this->person->person_id
+                    : ReferencedId::VALUE_PROMISE,
+            ],
+        ]);
+    }
+
+    /**
+     * @throws BadRequestException
+     */
+    protected function innerSuccess(array $values, Form $form): ContestantModel
+    {
+        $form->getValues();//trigger RPC
+        /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+        $referencedId = $form[self::CONT_CONTESTANT]['person_id']; //@phpstan-ignore-line
+        /** @var PersonModel $person */
+        $person = $referencedId->getModel();
+        $strategy = ResultsModelFactory::findEvaluationStrategy($this->getContext(), $this->contestYear);
+        $contestant = $strategy->createContestant($person);
+
+        $email = $person->getInfo()->email;
+        if ($email && !$person->getLogin()) {
+            try {
+                $this->accountManager->sendLoginWithInvitation(
+                    $person,
+                    Language::from($this->translator->lang)
+                );
+                $this->getPresenter()->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
+            } catch (\Throwable $exception) {
+                $this->getPresenter()->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
+            }
+        }
+        return $contestant;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->redirect(':Core:Dispatch:default');
+    }
+}

@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\ORM\Services\OrgService;
-use Nette\Application\BadRequestException;
+use FKSDB\Models\ORM\Services\Grant\EventGrantService;
+use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -23,75 +29,96 @@ use Tester\Assert;
 
 class Authorization extends FyziklaniTestCase
 {
-    private PersonModel $perPerson;
-    private PersonModel $perOrg;
-    private PersonModel $perOrgOther;
-    private PersonModel $perContestant;
+    private PersonModel $person;
+    private PersonModel $contestOrganizer;
+    private PersonModel $contestOrganizerOther;
+    private PersonModel $contestant;
+    private PersonModel $eventOrganizer;
+    private PersonModel $inserter;
+
     private SubmitModel $submit;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
+        $this->person = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
 
-        $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
+        $this->contestOrganizer = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
-            ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
+        $this->container->getByType(OrganizerService::class)->storeModel(
+            ['person_id' => $this->contestOrganizer, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
-        $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
+        $this->contestOrganizerOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
-            ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
+        $this->container->getByType(OrganizerService::class)->storeModel(
+            ['person_id' => $this->contestOrganizerOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
-        $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
+
+        $this->contestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ContestantService::class)->createNewModel(
-            ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
+        $this->container->getByType(ContestantService::class)->storeModel(
+            ['person_id' => $this->contestant, 'contest_id' => 1, 'year' => 1, 'contest_category_id' => 1]
         );
 
         $this->event = $this->createEvent([]);
-        $task = $this->getContainer()->getByType(TaskService::class)->createNewModel([
+        /** @var TaskModel $task */
+        $task = $this->container->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
-
-        $team = $this->getContainer()->getByType(TeamService2::class)->createNewModel([
+        /** @var TeamModel2 $team */
+        $team = $this->container->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submit = $this->getContainer()->getByType(SubmitService::class)->createNewModel([
+        $this->submit = $this->container->getByType(SubmitService::class)->storeModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
             'points' => 5,
         ]);
-
-        $this->mockApplication();
+        $this->eventOrganizer = $this->createPerson('Karkulka', 'Červená', [
+            'email' => 'karkulka5@les.cz',
+            'born' => DateTime::from('2000-01-01'),
+        ], []);
+        $this->container->getByType(EventOrganizerService::class)->storeModel(
+            ['person_id' => $this->eventOrganizer, 'event_id' => $this->event->event_id]
+        );
+        $this->inserter = $this->createPerson('Karkulka', 'Červená', [
+            'email' => 'karkulka6@les.cz',
+            'born' => DateTime::from('2000-01-01'),
+        ], []);
+        $this->container->getByType(EventGrantService::class)->storeModel([
+            'login_id' => $this->inserter->getLogin()->login_id,
+            'role' => ExplicitEventRole::GameInserter,
+            'event_id' => $this->event->event_id,
+        ]);
     }
 
     public function getTestData(): array
     {
         return [
-            [fn() => null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perPerson, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perOrg, 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
-            [fn() => $this->perOrgOther, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->perContestant, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => null, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->person, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestOrganizer, 'EventGame:Submit', ['create', 'list'], false], # TODO 'edit',
+            [fn() => $this->contestOrganizerOther, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestant, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->eventOrganizer, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->inserter, 'EventGame:Submit', ['create', 'edit', 'list'], true],
         ];
     }
 
@@ -99,8 +126,8 @@ class Authorization extends FyziklaniTestCase
     {
         $params = [
             'lang' => 'cs',
-            'contestId' => (string)1,
-            'year' => (string)1,
+            'contestId' => '1',
+            'year' => '1',
             'eventId' => (string)$this->event->event_id,
             'action' => $action,
             'id' => (string)$this->submit->fyziklani_submit_id,
@@ -114,12 +141,6 @@ class Authorization extends FyziklaniTestCase
      */
     public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
-        if (!is_array($actions)) {
-            $actions = [$actions];
-        }
-        if (!is_array($results)) {
-            $results = array_fill(0, count($actions), $results);
-        }
         $presenter = $this->createPresenter($presenterName);
         if ($person()) {
             /* Use indirect access because data provider is called before test set up. */
@@ -128,32 +149,28 @@ class Authorization extends FyziklaniTestCase
 
         foreach ($actions as $i => $action) {
             $request = $this->createGetRequest($presenterName, $action);
-            $forbidden = false;
             $response = null;
+
             try {
                 $response = $presenter->run($request);
             } catch (ForbiddenRequestException $e) {
-                $forbidden = true;
-                $response = $e->getCode();
-            } catch (BadRequestException $e) {
-                $forbidden = ($e->getCode() == 403);
-                $response = $e->getCode();
-            }
-            if ($results[$i]) {
-                if (is_object($response)) {
-                    Assert::type(TextResponse::class, $response);
-                } else {
-                    Assert::notSame(403, $response);
+                if (!$results) {
+                    continue;
                 }
-            } elseif (!$forbidden) {
-                Assert::type(RedirectResponse::class, $response);
+                Assert::null($e);
+            }
+            if ($results) {
+                Assert::type(TextResponse::class, $response);
+            } else {
                 /** @var RedirectResponse $response */
+                Assert::type(RedirectResponse::class, $response);
                 $url = $response->getUrl();
                 Assert::contains('login', $url);
             }
         }
     }
 }
-
+// phpcs:disable
 $testCase = new Authorization($container);
 $testCase->run();
+// phpcs:enable

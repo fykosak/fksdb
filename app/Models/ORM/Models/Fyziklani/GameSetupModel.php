@@ -4,27 +4,31 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\DateTime;
 
 /**
- * @property-read int event_id
- * @property-read \DateTimeInterface game_start
- * @property-read \DateTimeInterface game_end
- * @property-read \DateTimeInterface result_display
- * @property-read \DateTimeInterface result_hide
- * @property-read int refresh_delay
- * @property-read bool result_hard_display
- * @property-read int tasks_on_board
- * @property-read string available_points
+ * @property-read int $event_id
+ * @property-read DateTime $game_start
+ * @property-read DateTime $game_end
+ * @property-read DateTime $result_display
+ * @property-read DateTime $result_hide
+ * @property-read int $refresh_delay
+ * @property-read int $result_hard_display
+ * @property-read int $tasks_on_board
+ * @property-read string $available_points
  */
-class GameSetupModel extends Model
+final class GameSetupModel extends Model
 {
     /**
-     * @return int[]
+     * @phpstan-return int[]
      */
     public function getAvailablePoints(): array
     {
-        return \array_map(fn(string $value): int => +trim($value), \explode(',', $this->available_points));
+        return $this->available_points ? \array_map(
+            fn (string $value): int => (int)trim($value),
+            \explode(',', $this->available_points)
+        ) : [];
     }
 
     /**
@@ -38,5 +42,20 @@ class GameSetupModel extends Model
         $before = (time() < $this->result_hide->getTimestamp());
         $after = (time() > $this->result_display->getTimestamp());
         return ($before && $after);
+    }
+
+    /**
+     * @note Check if current time is in between the midnight before game_start
+     * and midnight after game_end.
+     * @throws \Exception
+     */
+    public function isGameTimeRange(): bool
+    {
+        $startMidnight = new \DateTimeImmutable($this->game_start->format('Y-m-d'));
+        $afterStartMidnight = ($startMidnight->getTimestamp() < time());
+
+        $endMidnight = $this->game_end->modifyClone('+1 day');
+        $beforeEndMidnight = (time() < $endMidnight->getTimestamp());
+        return ($afterStartMidnight && $beforeEndMidnight);
     }
 }

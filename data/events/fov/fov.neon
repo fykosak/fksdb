@@ -1,8 +1,8 @@
 parameters:
     events:
         fov:
-            appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            requiredCond: or(and(neg(FKSDB\Models\Events\Semantics\Role('admin')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('interested'))), FKSDB\Models\Events\Semantics\State('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
             person:
                 person:
                     other_name:
@@ -11,98 +11,54 @@ parameters:
                         required: true
                 person_history:
                     school_id:
-                        required: state('participated')
+                        required: FKSDB\Models\Events\Semantics\State('participated')
                         description: "If you cannot find your school, email the webmaster."
-            states:
-                - invited
-                - auto.invited
-                - applied
-                - participated
-                - rejected
-                - missed
-                - cancelled
 
 events:
     fov:
-        event_type_id: [16]
+        eventTypeIds: [16]
         #eventYears: [] # specify for which years this machine is valid, by default all years
         formLayout: fov.form
-        paramScheme:
-            notifyBcc:
-                default: soustredeni@fykos.cz
-            notifyFrom:
-                default: soustredeni@fykos.cz
-            deadline:
-                default: 1970-01-01 00:00:00
-            letterWhere:
-                default: nikde
-            letterSignature:
-                default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
-
-        baseMachines:
-            PARTICIPANT:
-                service: @orm.event_participant.service
-
-                states: %events.fov.states%
-
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->invited:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     auto.invited->invited: # this must be duplicate of __init->invited
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Invite participant')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited)
                     invited->applied:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Confirm participation')
                     invited->rejected:
-                        condition: or(before(param('deadline')),role('admin'))
+                        condition: or(before(FKSDB\Models\Events\Semantics\Parameter('deadline')),FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Decline participation')
                         behaviorType: danger
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Participated')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Missed')
                     invited|auto.invited|applied->cancelled:
-                        condition: role('admin')
+                        condition: FKSDB\Models\Events\Semantics\Role('admin')
                         label: _('Cancel application')
-
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Delete application')
-
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.fov.appCond%
-                        default: null
-                        factory: RefPerson(%events.fov.person%, email, role('admin'), role('admin'), false)
-
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
-                    label: _('Participant')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.fov.appCond%
+                    default: null
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.fov.person%, email, FKSDB\Models\Events\Semantics\Role('admin'), FKSDB\Models\Events\Semantics\Role('admin'), false)
+            modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Events\Semantics\Role('admin'))
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy
 
             processings:

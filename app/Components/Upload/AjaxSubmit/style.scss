@@ -1,0 +1,29 @@
+.drop-input {
+  background-color: white;
+  padding: .5rem;
+
+  &.dragged {
+    background-color: var(--fks-page-theme-color);
+    color: white;
+
+    .drop-input-inner {
+      border-color: white;
+    }
+  }
+
+  .drop-input-inner {
+    border: gray dashed;
+  }
+}
+
+@keyframes upload {
+  0% {
+    opacity: .5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .5;
+  }
+}

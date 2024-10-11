@@ -1,0 +1,59 @@
+{block outerContent}
+    {include info}
+    <div class="panel color-auto">
+        <div class="container">
+            {control createForm}
+        </div>
+    </div>
+{/block}
+{define info}
+    {varType FKSDB\Models\Authorization\Roles\Events\EventRole[] $roles}
+    <div class="panel color-auto">
+        <div class="container">
+            {switch $lang}
+                {case 'cs'}
+                <h2>Jak zaplatit za ubytování a bagety?</h2>
+                <p>
+                    Vyberte měnu a položky, které chcete zaplatit (můžete zaplatit i za položky ostatních osob).
+                </p>
+                {* <ul>
+                    <li>V případě, že jste doprovod týmu, měl(a) byste vidět všechny nezaplacené položky pro všechny vaše týmy.</li>
+                    <li>V případě, že jste člen(ka) týmu, zobrazují se všechny nezaplacené položky daného týmu.</li>
+                </ul>*}
+
+                <p>
+                    Po vytvoření platby již nelze placené položky v přihlášce zrušit či změnit. V případě nutnosti změny či zrušení nás kontaktujte na <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>.
+                </p>
+
+                <p>
+                    Potřebujete-li fakturu, napište nám na <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>. Položky, které jsou zahrnuté ve vygenerované platbě, budou na faktuře. <strong>Pokud chcete fakturu rozdělit na různé položky (např. ubytování a jídlo), musíte vytvořit vícero plateb, které budou jednotlivé položky obsahovat.</strong>
+                </p>
+
+            {default}
+                <h2>How to pay for accommodation and baguettes?</h2>
+                <p>
+                    Choose the items that you want to pay for. You can even choose items belonging to other people.
+                </p>
+                {* <ul>
+                    <li>As a teacher you can choose items of all your teams.</li>
+                    <li>As a member you can choose only items of your team.</li>
+                </ul> *}
+
+                <p>
+                    Once the payment has been created, the given items in the application cannot be canceled or changed. If a change or cancellation is necessary (e.g. you find out you cannot attend the event), contact us at <a href="mailto:dsef@fykos.org">dsef@fykos.org</a>.
+                </p>
+
+                <p>
+                    If you need an official invoice, contact us at <a href="mailto:dsef@fykos.org">fyziklani@fykos.org</a>. Items that are included in the generated payment will be on the invoice. <strong>If you want to split the invoice for different items (e.g. accommodation and food), you must create multiple payments that will contain the desired items.</strong>
+                </p>
+            {/switch}
+            <p>
+                {switch $lang}
+                {case 'cs'}Vaše role:{default}Your roles:{/switch}
+                {foreach $roles as $role}
+                    {$role->badge()}
+                {/foreach}
+            </p>
+        </div>
+    </div>
+{/define}

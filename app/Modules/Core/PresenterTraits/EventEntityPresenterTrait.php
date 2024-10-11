@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
+/**
+ * @phpstan-template TEventModel of (Model&EventResource)
+ */
 trait EventEntityPresenterTrait
 {
+    /** @phpstan-use EntityPresenterTrait<TEventModel> */
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -23,14 +27,17 @@ trait EventEntityPresenterTrait
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @throws NotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
+     * @phpstan-return TEventModel
      */
     protected function getEntity(): Model
     {
+        /** @phpstan-var TEventModel $model */
         $model = $this->getBaseEntity();
         /** @var EventModel $event */
-        $event = ReferencedAccessor::accessModel($model, EventModel::class);
+        $event = $model->getReferencedModel(EventModel::class);
         if ($event->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }

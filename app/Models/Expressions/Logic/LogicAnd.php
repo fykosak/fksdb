@@ -6,10 +6,13 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
 
+/**
+ * @phpstan-template ArgType
+ * @phpstan-extends VariadicExpression<ArgType>
+ */
 class LogicAnd extends VariadicExpression
 {
-
-    protected function evaluate(...$args): bool
+    public function __invoke(...$args): bool
     {
         foreach ($this->arguments as $argument) {
             if (!$this->evaluateArgument($argument, ...$args)) {
@@ -17,10 +20,5 @@ class LogicAnd extends VariadicExpression
             }
         }
         return true;
-    }
-
-    protected function getInfix(): string
-    {
-        return '&&';
     }
 }

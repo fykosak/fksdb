@@ -83,7 +83,7 @@ parameters:
             rows:
                 - person_history.ac_year
                 - school.school
-                - person_history.study_year
+                - person_history.study_year_new
                 - person_history.class
         task_contribution:
             layout: grid
@@ -91,40 +91,19 @@ parameters:
             table: task_contribution
             links: []
             rows:
-                - task.fq_name
+                - task.name
                 - task_contribution.type
                 - contest.contest
                 - task.year
                 - task.series
 
-        org:
-            layout: multi
-            label: Org
-            minimalPermission: 128
-            table: org
-            links:
-                - org.detail
-                - org.edit
-            itemHeadline: contest.contest
-            rows:
-                - org.org_id
-                - org.since
-                - org.until
-                - org.role
-                - org.order
-                - org.contribution
-                - org.tex_signature
-                - org.domain_alias
         payment:
             layout: grid
             label: Payment
             minimalPermission: 128
             table: payment
-            links:
-                - payment.detail
             rows:
-                - payment.payment_uid
-                - event.event
+                - payment.payment_id
                 - payment.price
                 - payment.state
         contestant:
@@ -146,17 +125,18 @@ parameters:
                 - event_participant.edit
             rows:
                 - event_participant.event_participant_id
-                - event.event
+                - event.name_new
                 - event_participant.status
         fyziklani_team_member:
             layout: grid
             minimalPermission: 128
             table: fyziklani_team_member
-            links: []
             rows:
-                - event.name
                 - fyziklani_team.name
-                - fyziklani_team.state
+                #- fyziklani_team.state
+                - event.name_new
+            links:
+                - fyziklani_team.detail
         event_org:
             layout: grid
             minimalPermission: 128
@@ -166,27 +146,27 @@ parameters:
                 - event_org.detail
             rows:
                 - event_org.event_org_id
-                - event.event
+                - event.name_new
                 - contest.contest
                 - event_org.note
-        event_teacher:
+        fyziklani_team_teacher:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: fyziklani_team_teacher
             links:
                 - fyziklani_team.detail
             rows:
                 - fyziklani_team.name
-                - event.event
-                - fyziklani_team.state
+                #- fyziklani_team.state
+                - event.name_new
         schedule_item:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: person_schedule
             links: []
             rows:
                 - schedule_item.name
-                - event.name
+                - event.name_new
                 - schedule_group.schedule_group_type
                 - schedule_group.start
                 - schedule_group.end
@@ -194,7 +174,7 @@ parameters:
                 - schedule_item.price_eur
         email_message:
             layout: grid
-            minimalPermission: 16
+            minimalPermission: 128
             table: email_message
             rows:
                 - email_message.email_message_id

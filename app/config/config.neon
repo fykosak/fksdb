@@ -6,9 +6,6 @@ parameters:
     # Various logs
     logDir: %appDir%/../log
 
-    # Auxiliar data (templates etc.)
-    dataDir: %appDir%/../data
-
     # WDSL file defining provided services.
     wsdlUrl: https://db.fykos.cz/FKSDBWebServices.wsdl
 
@@ -21,11 +18,6 @@ parameters:
     inverseContestMapping:
         fykos: 1
         vyfuk: 2
-
-    # Configuration of sent emails.
-    email:
-        templatesDir: %dataDir%/emails
-        from: FKSDB <noreply@%domain.cz%>
 
     # Navigation settings
     navigation:
@@ -65,16 +57,12 @@ parameters:
             1: [8,9,1,2,3,4]
             # Výfuk
             2: [6,7,8,9]
-
+        defaultCategories:
+            1: [1,2,3,4]
+            2: [6,7,8,9]
         # Paths for search of new XML files, including trailing slash.
         # Arguments: contestName, year, series
         paths: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
-
-    # Generic parameters for Fyziklani
-    fyziklani:
-        # Paths to CSV file with team distribution to rooms
-        # Arguments: contestName, year
-        roomsPath: '/%1$s%2$d/fyziklani/out/teams.csv'
 
     # Various e-mail invitations
     invitation:
@@ -100,11 +88,6 @@ parameters:
         # default language when not set explicitly
         defaultLanguage: cs
 
-    # Events
-    events:
-        # where locale files are stored
-        templateDir: %dataDir%/events
-
     # Parameters used for automated testing
     tester: []
 
@@ -122,14 +105,6 @@ parameters:
 
             # Weight for email address similarity [0, 1].
             emailWeight: 0.04
-
-    # Maintenance
-    updater:
-        # absolute path to install script
-        installScript: %appDir%/../install.sh
-
-        # system user who should run the install script
-        installUser: fksdb-updater
 php:
     date.timezone: Europe/Prague
     session.gc_maxlifetime: 1213200
@@ -137,32 +112,35 @@ php:
 
 database:
     reflection: discovered
+    options:
+        supportBooleans: true
 application:
     errorPresenter: Core:Error
     mapping:
-        Fyziklani: FKSDB\Modules\EventModule\Fyziklani\*Presenter
-        Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
+        EventGame: FKSDB\Modules\EventModule\Game\*Presenter
+        EventSchedule: FKSDB\Modules\EventModule\Schedule\*Presenter
+        Warehouse: FKSDB\Modules\OrganizerModule\Warehouse\*Presenter
+        Spam: FKSDB\Modules\OrganizerModule\Spam\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days
    autoStart: true
 extensions:
-    fksrouter: FKSDB\Models\Router\RouterExtension
-    acl: FKSDB\Models\Authorization\ACLExtension
-    navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
-    events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    #payment: FKSDB\Models\Payment\PaymentExtension
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
 includes:
     - router.neon
-    - acl.neon
     - orm.neon
     - services.neon
-    - navigation.neon
-    - contests.neon
+    - forms.neon
     - stalking.neon
-    #- payment.neon
-    - payments/common.neon
-    - fyziklani/default.neon
+    - transitions/payment.neon
+    - transitions/fof.neon
+    - transitions/fol.neon
+    - transitions/dsef.neon
+    - transitions/setkani.neon
+    - transitions/tabor.neon
+    - transitions/personSchedule.neon
+    - transitions/sous.neon
+    - transitions/email.neon

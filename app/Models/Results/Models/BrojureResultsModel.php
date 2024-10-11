@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
 /**
@@ -15,7 +15,7 @@ class BrojureResultsModel extends AbstractResultsModel
 {
 
     public const COL_SERIES_PREFIX = 's';
-    /** @var int[] */
+    /** @phpstan-var int[] */
     protected array $series;
     /**
      * Number of (single) series that is listed in detail
@@ -23,21 +23,17 @@ class BrojureResultsModel extends AbstractResultsModel
      */
     protected int $listedSeries;
     /**
-     * Cache
-     * @var array
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
      */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
-    public function getDataColumns(ModelCategory $category): array
+    public function getDataColumns(ContestCategoryModel $category): array
     {
-        if ($this->series === null) {
-            throw new InvalidStateException('Series not specified.');
-        }
-
-        if (!isset($this->dataColumns[$category->value])) {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);
             $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
@@ -52,6 +48,7 @@ class BrojureResultsModel extends AbstractResultsModel
 
             foreach ($this->getSeries() as $series) {
                 $points = null;
+                /** @var TaskModel $task */
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
@@ -76,18 +73,21 @@ class BrojureResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sumLimit,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->value] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->value];
+        return $this->dataColumns[$category->label];
     }
 
+    /**
+     * @phpstan-return int[]
+     */
     public function getSeries(): array
     {
         return $this->series;
     }
 
     /**
-     * @param int[] $series
+     * @phpstan-param int[] $series
      */
     public function setSeries(array $series): void
     {
@@ -109,19 +109,14 @@ class BrojureResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return ModelCategory[]
+     * @return literal-string
      */
-    public function getCategories(): array
-    {
-        return $this->evaluationStrategy->getCategories();
-    }
-
-    protected function composeQuery(ModelCategory $category): string
+    protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
-        if (array_search($this->listedSeries, $this->series) === false) {
+        if (!in_array($this->listedSeries, $this->series)) {
             throw new InvalidStateException('Listed series is not among series.');
         }
 
@@ -161,29 +156,26 @@ class BrojureResultsModel extends AbstractResultsModel
             . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $from = ' from v_contestant ct
+        $query = 'select ' . implode(', ', $select);
+        $query .= ' from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_id';
 
-        $conditions = [
+        $where = $this->conditionsToWhere([
             'ct.year' => $this->contestYear->year,
             'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
-            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
-        ];
-
-        $query = 'select ' . implode(', ', $select);
-        $query .= $from;
-
-        $where = $this->conditionsToWhere($conditions);
+            'ct.study_year_new' => $this->evaluationStrategy->categoryToStudyYears($category),
+        ]);
         $query .= " where $where";
 
         $query .= ' group by p.person_id, sch.name_abbrev '; //abuse MySQL misimplementation of GROUP BY
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
+        /** @phpstan-ignore-next-line */
         return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias."
             . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM
             . ' is null and @prevSum is null), @rank, @rownum) AS `' . self::DATA_RANK_FROM
@@ -194,28 +186,25 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
     /**
      * Returns total points of Student Pilny (without multiplication for first two tasks) for given series
      *
-     * @return int sum of Student Pilny points
+     * @return float sum of Student Pilny points
      */
-    private function getSumLimitForStudentPilny(): int
+    private function getSumLimitForStudentPilny(): float
     {
-        return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::CAT_HS_4));
+        return $this->getSumLimit($this->contestCategoryService->findByLabel(ContestCategoryModel::FYKOS_4));
     }
 
     /**
      * Returns total points for given category and series
-     * @return int sum of points
+     * @return float sum of points
      */
-    private function getSumLimit(ModelCategory $category): int
+    private function getSumLimit(ContestCategoryModel $category): float
     {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
-            // sum points as sum of tasks
-            $points = null;
             /** @var TaskModel $task */
             foreach ($this->getTasks($series) as $task) {
-                $points += $this->evaluationStrategy->getTaskPoints($task, $category);
+                $sum += $this->evaluationStrategy->getTaskPoints($task, $category);
             }
-            $sum += $points;
         }
         return $sum;
     }

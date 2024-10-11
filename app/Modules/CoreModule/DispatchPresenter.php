@@ -4,97 +4,98 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\InvalidLinkException;
-use Tracy\Debugger;
+use Fykosak\Utils\UI\Title;
 
-class DispatchPresenter extends BasePresenter
+final class DispatchPresenter extends BasePresenter
 {
-
-    private array $contestsProperty;
-
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Menu'), 'fa fa-home');
+        return new PageTitle(null, _('Home'), 'fas fa-home');
     }
 
-    /**
-     * @throws InvalidLinkException
-     */
+    public function authorizedDefault(): bool
+    {
+        return true;
+    }
+
     final public function renderDefault(): void
     {
-        /** @var LoginModel $login */
-        $login = $this->getUser()->getIdentity();
-        $person = $login->person;
-        $this->template->contestants = $person ? $this->getAllContestants($person) : [];
-        $this->template->orgs = $this->getAllOrganisers($login);
-        $this->template->contestsProperty = $this->getContestsProperty();
+        $person = $this->getLoggedPerson();
+        $this->template->contestants = $this->getAllContestants($person);
+        $this->template->organizers = $this->getAllOrganizers($person->getLogin());
+        $this->template->payments = [new NavItem(
+            new Title(null, _('Payments'), 'fas fa-credit-card'),
+            ':Shop:Home:default',
+            ['eventId' => 180]
+        )];
     }
 
     /**
-     * @throws InvalidLinkException
+     * @phpstan-return NavItem[]
      */
     private function getAllContestants(PersonModel $person): array
     {
         $result = [];
-        foreach ($person->getActiveContestants() as $contestId => $contestant) {
-            $result[$contestId] = [
-                'link' => $this->link(
-                    ':Public:Dashboard:default',
-                    [
-                        'contestId' => $contestId,
-                    ]
+
+        $result[] = new NavItem(
+            new Title(null, _('Register'), 'fas fa-user-plus'),
+            ':Core:Register:default'
+        );
+        $result[] = new NavItem(
+            new Title(null, _('My applications'), 'fas fa-calendar-days'),
+            ':Profile:MyApplications:default'
+        );
+        $result[] = new NavItem(
+            new Title(null, _('My Profile'), 'fas fa-user'),
+            ':Profile:Dashboard:default'
+        );
+        /** @var ContestantModel $contestant */
+        foreach ($person->getContestants() as $contestant) {
+            $acYear = $contestant->getContestYear()->ac_year;
+            $result[] = new NavItem(
+                new Title(
+                    null,
+                    sprintf(_('Contestant in %dth year (%d/%d)'), $contestant->year, $acYear, $acYear + 1),
+                    'icon icon-' . $contestant->contest->getContestSymbol()
                 ),
-                'title' => sprintf(_('Contestant %s'), $contestant->contest->name),
-            ];
+                ':Public:Dashboard:default',
+                [
+                    'contestId' => $contestant->contest_id,
+                    'year' => $contestant->year,
+                ]
+            );
         }
         return $result;
     }
 
     /**
-     * @throws InvalidLinkException
+     * @phpstan-return NavItem[]
      */
-    private function getAllOrganisers(LoginModel $login): array
+    private function getAllOrganizers(LoginModel $login): array
     {
         $results = [];
-        foreach ($login->person->getActiveOrgs() as $contestId => $org) {
-            $results[$contestId] = [
-                'link' => $this->link(
-                    ':Org:Dashboard:default',
-                    [
-                        'contestId' => $contestId,
-                    ]
+        foreach ($login->person->getActiveOrganizers() as $contestId => $organizer) {
+            $results[$contestId] = new NavItem(
+                new Title(
+                    null,
+                    sprintf(_('Organizer %s'), $organizer->contest->name),
+                    'icon icon-' . $organizer->contest->getContestSymbol()
                 ),
-                'title' => sprintf(_('Organiser %s'), $org->contest->name),
-            ];
+                ':Organizer:Dashboard:default',
+                [
+                    'contestId' => $contestId,
+                ]
+            );
         }
+        $results[] = new NavItem(
+            new Title(null, _('Events'), 'fas fa-calendar-days'),
+            ':Event:Dispatch:default'
+        );
         return $results;
-    }
-
-    private function getContestsProperty(): array
-    {
-        if (!isset($this->contestsProperty)) {
-            $this->contestsProperty = [];
-            $query = $this->contestService->getTable();
-            /** @var ContestModel $contest */
-            foreach ($query as $contest) {
-                $this->contestsProperty[$contest->contest_id] = [
-                    'symbol' => $contest->getContestSymbol(),
-                    'model' => $contest,
-                    'icon' => 'fa fa-' . $contest->getContestSymbol(),
-                ];
-            }
-        }
-        return $this->contestsProperty;
-    }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-        parent::beforeRender();
     }
 }

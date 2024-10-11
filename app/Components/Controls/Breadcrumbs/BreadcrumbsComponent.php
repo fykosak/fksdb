@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\ComponentReflection;
@@ -48,14 +48,9 @@ class BreadcrumbsComponent extends BaseComponent
     private IPresenterFactory $presenterFactory;
     /**
      * Prevents multiple storing the current request.
-     *
-     * @var bool
      */
     private bool $storedRequest = false;
 
-    /**
-     * Breadcrumbs constructor.
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);
@@ -78,12 +73,7 @@ class BreadcrumbsComponent extends BaseComponent
         $this->presenterFactory = $presenterFactory;
     }
 
-    /*     * **********************
-     * Public API
-     * ********************** */
-
     /**
-     * @throws \ReflectionException
      * @throws BadTypeException
      */
     public function setBackLink(AppRequest $request): void
@@ -93,10 +83,10 @@ class BreadcrumbsComponent extends BaseComponent
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
 
-        $requestKey = $this->getRequestKey($request);
-        $backLinkId = $this->getBackLinkId($requestKey);
-        $originalBackLink = $presenter->setBackLink($backLinkId);
-        $this->storeRequest($originalBackLink);
+       // $requestKey = $this->getRequestKey($request);
+       // $backLinkId = $this->getBackLinkId($requestKey);
+       // $originalBackLink = $presenter->setBackLink($backLinkId);
+       // $this->storeRequest($originalBackLink);
     }
 
     public function reset(): void
@@ -113,10 +103,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /* ***********************
-     * Rendering
-     * ********************** */
-
     final public function render(): void
     {
         $request = $this->getPresenter()->getRequest();
@@ -129,13 +115,8 @@ class BreadcrumbsComponent extends BaseComponent
                 'title' => $naviRequest->title,
             ];
         }
-        $this->template->path = $path;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte', ['path' => $path]);
     }
-
-    /*     * **********************
-     * Path traversal
-     * ********************** */
 
     public function getBackLinkUrl(): ?string
     {
@@ -160,7 +141,7 @@ class BreadcrumbsComponent extends BaseComponent
     }
 
     /**
-     * @return NaviRequest[]
+     * @phpstan-return NaviRequest[]
      */
     private function getTraversePath(AppRequest $request, ?int $maxLen = null): array
     {
@@ -208,27 +189,27 @@ class BreadcrumbsComponent extends BaseComponent
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
-            /** @var Presenter $presenterClassName */
+            /** @phpstan-var class-string<Presenter> $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
-            $action = $parameters[Presenter::ACTION_KEY];
-            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
+            // $action = $parameters[Presenter::ACTION_KEY];
+            // $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
-            $rc = ($presenterClassName)::getReflection();
-            if ($rc->hasMethod($methodName)) {
+            // $rc = ($presenterClassName)::getReflection();
+          /*  if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {
                     $identifyingParameters[] = $param->name;
                 }
-            }
+            }*/
             $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];
-            $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
+        //    $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
             foreach ($identifyingParameters as $param) {
-                if ($param == $backLinkParameter) {
+           /*     if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
-                }
+                }*/
                 $filteredParameters[$param] = $parameters[$param] ?? null;
             }
 
@@ -251,10 +232,6 @@ class BreadcrumbsComponent extends BaseComponent
         }
     }
 
-    /*     * **********************
-     * Storing requests and their IDs
-     * ********************** */
-
     /**
      * @throws \ReflectionException
      */
@@ -264,7 +241,7 @@ class BreadcrumbsComponent extends BaseComponent
             return;
         }
         $this->storedRequest = true;
-
+        /** @var BasePresenter $presenter */
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 
@@ -323,17 +300,13 @@ class BreadcrumbsComponent extends BaseComponent
     {
         $result = [];
         foreach ($parameters as $key => $value) {
-            if ($key == Presenter::FLASH_KEY) {
+            if ($key === Presenter::FLASH_KEY) {
                 continue;
             }
             $result[$key] = $value;
         }
         return $result;
     }
-
-    /* ***********************
-     * Cache stored in session  *
-     * ********************** */
 
     protected function getRequestsSection(): SessionSection
     {

@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace FKSDB;
 
 use Nette\Configurator;
-use Nette\Utils\Finder;
 
-// phpcs:disable
-// Load Nette Framework
-require LIBS_DIR . '/../vendor/autoload.php';
-// phpcs:enable
 class Bootstrap
 {
     public static function boot(): Configurator
     {
         $configurator = new Configurator();
+
+        if (getenv('NETTE_DEVEL') === '1') {
+            $configurator->setDebugMode(true);
+        }
 
         // Enable Nette Debugger for error visualisation & logging
         $configurator->enableTracy(__DIR__ . '/../log');
@@ -25,18 +24,14 @@ class Bootstrap
         $configurator->setTempDirectory(__DIR__ . '/../temp');
         // Enable RobotLoader - this will load all classes automatically
         $configurator->createRobotLoader()
-            ->addDirectory(APP_DIR)
-            ->addDirectory(LIBS_DIR)
+            ->addDirectory(__DIR__)
+            ->addDirectory(__DIR__ . '/../libs/')
             ->register();
 
         // Create Dependency Injection container from config.neon file
-        $configurator->addConfig(APP_DIR . '/config/config.neon');
-        $configurator->addConfig(APP_DIR . '/config/config.local.neon');
+        $configurator->addConfig(__DIR__ . '/config/config.neon');
+        $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
-        // Load all .neon files in events data directory
-        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
-            $configurator->addConfig($filename);
-        }
         return $configurator;
     }
 }

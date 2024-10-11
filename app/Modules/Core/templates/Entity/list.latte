@@ -1,10 +1,13 @@
 {varType FKSDB\Modules\Core\BasePresenter|FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait $control}
-{block content}
-    {if $control->authorized('create')}
-        {var $pageTitle = $control->titleCreate()}
-        <a href="{plink create}" class="btn btn-outline-primary"><i
-                    class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
-    {/if}
-    <hr/>
-    {control grid}
+{block outerContent}
+    <div class="container mb-5">
+        {if $control->authorized('create')}
+            {var Fykosak\Utils\UI\PageTitle $pageTitle = $control->titleCreate()}
+            <a href="{plink create}" class="btn btn-outline-primary">
+                <i class="{$pageTitle->icon} me-1"></i>{$pageTitle->title}</a>
+        {/if}
+    </div>
+    <div class="container">
+        {control grid}
+    </div>
 {/block}

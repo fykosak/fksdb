@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         script: [ 'testPSR12' ]
-        php: [ '7.4' , '8.0' , '8.1' ]
+        php: [ '7.4' ]
     steps:
       - uses: actions/checkout@v2
         name: Checkout
@@ -27,9 +27,3 @@ jobs:
         run: composer install --no-progress --prefer-dist
       - run: composer run-script ${{ matrix.script }}
         name: Test
-      - if: failure()
-        name: Failure output
-        uses: actions/upload-artifact@v2
-        with:
-          name: output
-          path: tests/**/*.actual

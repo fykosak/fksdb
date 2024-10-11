@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Exports;
 
 use FKSDB\Models\Exports\Formats\CSVFormat;
-use FKSDB\Models\ORM\Services\ContestService;
-use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\StoredQuery\StoredQuery;
-use FKSDB\Models\StoredQuery\StoredQueryFactory;
-use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -20,23 +16,11 @@ class ExportFormatFactory
     public const CSV_HEADLESS = 'csv';
     public const CSV_HEAD = 'csvh';
     public const CSV_QUOTE_HEAD = 'csvqh';
-
-    private Container $container;
-    private StoredQueryFactory $storedQueryFactory;
-    private EventService $eventService;
-    private ContestService $contestService;
+    /** @phpstan-var array{csv:string,csvh:string,csvqh:string} */
     public array $defaultFormats;
 
-    public function __construct(
-        Container $container,
-        StoredQueryFactory $storedQueryFactory,
-        EventService $eventService,
-        ContestService $contestService
-    ) {
-        $this->container = $container;
-        $this->storedQueryFactory = $storedQueryFactory;
-        $this->eventService = $eventService;
-        $this->contestService = $contestService;
+    public function __construct()
+    {
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Save CSV (without head)'),
@@ -54,7 +38,7 @@ class ExportFormatFactory
             case self::CSV_QUOTE_HEAD:
                 return $this->createCSV($storedQuery, true, true);
             default:
-                throw new InvalidArgumentException('Unknown format \'' . $name . '\'.');
+                throw new InvalidArgumentException(sprintf(_('Unknown format "%s".'), $name));
         }
     }
 

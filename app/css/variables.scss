@@ -1,0 +1,93 @@
+$fof-color: #e6060d;
+$fol-color: #00ae6b;
+$fykos-color: #1175da;
+$dsef-color: #f2b72b;
+$vyfuk-color: #ff4800;
+$ctyrboj-color: #00a6cc;
+$naboj-color: #c22d86;
+
+$contest-colors: (
+        "fof": $fof-color,
+        "fol": $fol-color,
+        "fykos": $fykos-color,
+        "vyfuk": $vyfuk-color,
+        "dsef": $dsef-color,
+        "ctyrboj": $ctyrboj-color,
+        "naboj": $naboj-color,
+);
+// from d3
+$other-colors: (
+        "color-1": #1f77b4,
+        "color-2": #ff7f0e,
+        "color-3": #2ca02c,
+        "color-4": #d62728,
+        "color-5": #9467bd,
+        "color-6": #8c564b,
+        "color-7": #e377c2,
+        "color-8": #cccccc,
+        "color-9": #bcbd22,
+        "color-10": #17becf,
+        "color-11": #000000,
+);
+
+$custom-colors: map-merge($contest-colors, $other-colors);
+
+$contest-colors-text-emphasis: (
+        "fof": shade-color($fof-color, 60%),
+        "fol": shade-color($fol-color, 60%),
+        "fykos": shade-color($fykos-color, 60%),
+        "vyfuk": shade-color($vyfuk-color, 60%),
+        "dsef": shade-color($dsef-color, 60%),
+        "ctyrboj":shade-color($ctyrboj-color, 60%),
+        "naboj":shade-color($naboj-color, 60%),
+);
+
+$contest-colors-bg-subtle: (
+        "fof": tint-color($fof-color, 80%),
+        "fol":tint-color($fol-color, 80%),
+        "fykos":tint-color($fykos-color, 80%),
+        "vyfuk": tint-color($vyfuk-color, 80%),
+        "dsef": tint-color($dsef-color, 80%),
+        "ctyrboj": tint-color($ctyrboj-color, 80%),
+        "naboj":tint-color($naboj-color, 80%),
+);
+
+$contest-colors-border-subtle: (
+        "fof": tint-color($fof-color, 60%),
+        "fol": tint-color($fol-color, 60%),
+        "fykos": tint-color($fykos-color, 60%),
+        "vyfuk": tint-color($vyfuk-color, 60%),
+        "dsef": tint-color($dsef-color, 60%),
+        "ctyrboj": tint-color($ctyrboj-color, 60%),
+        "naboj":tint-color($naboj-color, 60%),
+);
+
+$contest-colors-text-dark: (
+        "fof": tint-color($fof-color, 40%),
+        "fol":tint-color($fol-color, 40%),
+        "fykos":tint-color($fykos-color, 40%),
+        "vyfuk": tint-color($vyfuk-color, 40%),
+        "dsef": tint-color($dsef-color, 40%),
+        "ctyrboj": tint-color($ctyrboj-color, 40%),
+        "naboj":tint-color($naboj-color, 40%),
+);
+
+$contest-colors-bg-subtle-dark: (
+        "fof": shade-color($fof-color, 80%),
+        "fol": shade-color($fol-color, 80%),
+        "fykos": shade-color($fykos-color, 80%),
+        "vyfuk": shade-color($vyfuk-color, 80%),
+        "dsef": shade-color($dsef-color, 80%),
+        "ctyrboj":shade-color($ctyrboj-color, 80%),
+        "naboj":shade-color($naboj-color, 80%),
+);
+
+$contest-colors-border-subtle-dark: (
+        "fof": shade-color($fof-color, 40%),
+        "fol": shade-color($fol-color, 40%),
+        "fykos": shade-color($fykos-color, 40%),
+        "vyfuk": shade-color($vyfuk-color, 40%),
+        "dsef": shade-color($dsef-color, 40%),
+        "ctyrboj":shade-color($ctyrboj-color, 40%),
+        "naboj":shade-color($naboj-color, 40%),
+);

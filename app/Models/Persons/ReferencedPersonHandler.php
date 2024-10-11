@@ -4,33 +4,31 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\EntityForms\PersonFormComponent;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
-use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Components\Schedule\Input\Handler;
+use FKSDB\Components\Schedule\Input\ScheduleException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\PostContactType;
-use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Models\PersonInfoModel;
-use FKSDB\Models\ORM\Models\PostContactModel;
-use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\FlagService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHasFlagService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
+use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-class ReferencedPersonHandler implements ReferencedHandler
+/**
+ * @phpstan-extends ReferencedHandler<PersonModel>
+ */
+class ReferencedPersonHandler extends ReferencedHandler
 {
     use SmartObject;
 
@@ -40,85 +38,68 @@ class ReferencedPersonHandler implements ReferencedHandler
     private PersonService $personService;
     private PersonInfoService $personInfoService;
     private PersonHistoryService $personHistoryService;
-
-    private AddressService $addressService;
     private PostContactService $postContactService;
 
     private PersonHasFlagService $personHasFlagService;
-    private ContestYearModel $contestYear;
+    private ?ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
     private FlagService $flagService;
+    private Container $container;
 
     private EventModel $event;
 
-    private string $resolution;
-
-    public function __construct(
-        ContestYearModel $contestYear,
-        string $resolution
-    ) {
+    public function __construct(?ContestYearModel $contestYear, ResolutionMode $resolution)
+    {
         $this->contestYear = $contestYear;
         $this->resolution = $resolution;
     }
 
     public function inject(
+        Container $container,
         Handler $eventScheduleHandler,
         PersonService $personService,
         PersonInfoService $personInfoService,
         PersonHistoryService $personHistoryService,
         PersonHasFlagService $personHasFlagService,
-        AddressService $addressService,
         PostContactService $postContactService,
         FlagService $flagService
     ): void {
+        $this->container = $container;
         $this->eventScheduleHandler = $eventScheduleHandler;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
         $this->personHistoryService = $personHistoryService;
         $this->personHasFlagService = $personHasFlagService;
-        $this->addressService = $addressService;
         $this->postContactService = $postContactService;
         $this->flagService = $flagService;
     }
 
-    public function getResolution(): string
-    {
-        return $this->resolution;
-    }
-
-    public function setResolution(string $resolution): void
-    {
-        $this->resolution = $resolution;
-    }
-
     /**
-     * @throws ExistingPaymentException
-     * @throws FullCapacityException
+     * @param PersonModel|null $model
+     * @phpstan-param array{
+     *     person_info:array{email?:string},
+     *     person:array<string,mixed>,
+     * }|array<string,array<string,mixed>> $values
+     * @throws \PDOException
      * @throws ModelDataConflictException
-     * @throws ModelException
-     * @throws NotImplementedException
+     * @throws ScheduleException
      * @throws StorageException
-     */
-    public function createFromValues(array $values): PersonModel
-    {
-        $person = $this->findBySecondaryKey($values['person_info']['email'] ?? null);
-        $person = $this->storePerson($person, $values);
-        $this->store($person, $values);
-        return $person;
-    }
-
-    /**
-     * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws ModelDataConflictException
-     * @throws ModelException
-     * @throws NotImplementedException
-     * @throws StorageException
+     * @throws \Throwable
+     * @throws \Throwable
      */
-    public function update(Model $model, array $values): void
+    public function store(array $values, ?Model $model = null): PersonModel
     {
-        /** @var PersonModel $model */
-        $this->store($model, $values);
+        if (isset($model)) {
+            $this->innerStore($model, $values);
+            return $model;
+        } else {
+            $person = $this->personService->findByEmail($values['person_info']['email'] ?? null);
+            /** @phpstan-ignore-next-line */
+            $person = $this->storePerson($person, (array)$values['person']);
+            $this->innerStore($person, $values);
+            return $person;
+        }
     }
 
     public function setEvent(EventModel $event): void
@@ -127,286 +108,154 @@ class ReferencedPersonHandler implements ReferencedHandler
     }
 
     /**
-     * @throws ModelException
+     * @throws \PDOException
      * @throws ModelDataConflictException
-     * @throws ExistingPaymentException
+     * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
-     * @throws NotImplementedException
+     * @throws \Throwable
+     * @phpstan-param array<string,array<string,mixed>> $data
      */
-    private function store(PersonModel &$person, array $data): void
+    private function innerStore(PersonModel $person, array $data): void
     {
-        /*
-         * Process data
-         */
-        try {
-            $this->beginTransaction();
-            /*
-             * Person & its extensions
-             */
-
-            $models = [
-                'person' => &$person,
-                'person_info' => $person->getInfo(),
-                'person_history' => $person->getHistoryByContestYear($this->contestYear),
-                'person_schedule' => ((
-                    isset($this->event)
-                    && isset($data['person_schedule'])
-                    && $person->getSerializedSchedule(
-                        $this->event,
-                        \array_keys((array)$data['person_schedule'])[0]
-                    )) ?: null),
-                self::POST_CONTACT_DELIVERY => $person->getPostContact(
-                    PostContactType::tryFrom(PostContactType::DELIVERY)
-                ),
-                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(false),
-            ];
-            $originalModels = \array_keys($data);
-
-            $this->prepareFlagModels($person, $data, $models);
-
-            $this->preparePostContactModels($models);
-            $this->resolvePostContacts($data);
-
-            $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
-            $conflicts = $this->getConflicts($models, $data);
-            if ($this->resolution === self::RESOLUTION_EXCEPTION) {
-                if (count($conflicts)) {
-                    throw new ModelDataConflictException($conflicts);
-                }
-            } elseif ($this->resolution === self::RESOLUTION_KEEP) {
-                $data = $this->removeConflicts($data, $conflicts);
+        $connection = $this->personService->explorer->getConnection();
+        $data = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data));
+        $connection->transaction(function () use ($person, $data): void {
+            if (isset($data['person'])) {
+                /** @phpstan-ignore-next-line */
+                $this->storePerson($person, (array)$data['person']);
             }
-            // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
-            //    $data = $conflicts;
-            /** @var PostContactModel|PersonModel|Model|PersonInfoModel|PersonHistoryModel $model */
-            foreach ($models as $t => $model) {
-                if (!isset($data[$t])) {
-                    if (
-                        in_array($t, $originalModels)
-                        && in_array(
-                            $t,
-                            [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT]
-                        )
-                    ) {
-                        // delete only post contacts, other "children" could be left all-nulls
 
-                        if ($model) {
-                            /** @var PostContactModel $model */
-                            $this->postContactService->disposeModel($model);
-                            $this->addressService->disposeModel($model->address);
-                        }
-                    }
-                    continue;
-                }
-                switch ($t) {
-                    case 'person':
-                        $this->storePerson($model, (array)$data);
-                        continue 2;
-                    case 'person_info':
-                        $this->personInfoService->storeModel(
-                            array_merge((array)$data['person_info'], ['person_id' => $person->person_id]),
-                            $model
-                        );
-                        continue 2;
-                    case 'person_history':
-                        $this->personHistoryService->storeModel(
-                            array_merge((array)$data['person_history'], [
-                                'ac_year' => $this->contestYear->ac_year,
-                                'person_id' => $person->person_id,
-                            ]),
-                            $model
-                        );
-                        continue 2;
-                    case 'person_schedule':
-                        $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
-                        continue 2;
-                    case self::POST_CONTACT_PERMANENT:
-                    case self::POST_CONTACT_DELIVERY:
-                        $this->storePostContact($person, $model, (array)$data[$t], $t);
-                        continue 2;
-                    case 'person_has_flag':
-                        foreach ($data[$t] as $flagId => $flagValue) {
-                            $flag = $this->flagService->findByFid($flagId);
-                            $this->personHasFlagService->storeModel([
-                                'value' => $flagValue,
-                                'flag_id' => $flag->flag_id,
-                                'person_id' => $person->person_id,
-                            ], $model[$flagId]);
-                        }
-                        continue 2;
+            foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $key) {
+                if (isset($data[$key])) {
+                    $type = self::mapAddressContainerNameToType($key);
+                    $this->storePostContact(
+                        $person,
+                        (array)$data[$key],
+                        $type,
+                        $key
+                    );
                 }
             }
-            $this->commit();
-        } catch (ModelDataConflictException | StorageException | ModelException$exception) {
-            $this->rollback();
-            throw $exception;
-        }
+
+            if (isset($data['person_info'])) {
+                $this->storePersonInfo($person, (array)$data['person_info']);
+            }
+
+            if (isset($data['person_history'])) {
+                $this->storePersonHistory($person, (array)$data['person_history']);
+            }
+            if (isset($data['person_has_flag'])) {
+                $this->storeFlags($person, (array)$data['person_has_flag']);
+            }
+
+            if (isset($data['person_schedule'])) {
+                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event);
+            }
+        });
     }
 
-    private function storePostContact(PersonModel $person, ?PostContactModel $model, array $data, string $type): void
+    /**
+     * @phpstan-param array<string,mixed> $infoData
+     */
+    private function storePersonInfo(PersonModel $person, array $infoData): void
     {
+        $info = $person->getInfo();
+        $this->personInfoService->storeModel(
+            array_merge(
+                $info ? $this->findModelConflicts($info, $infoData, 'person_info') : $infoData,
+                ['person_id' => $person->person_id]
+            ),
+            $info
+        );
+    }
+
+    /**
+     * @phpstan-param array<string,mixed> $historyData
+     */
+    private function storePersonHistory(PersonModel $person, array $historyData): void
+    {
+        if (!isset($this->contestYear)) {
+            throw new \InvalidArgumentException('Cannot store person_history without ContestYear');
+        }
+        $history = $person->getHistory($this->contestYear);
+        $this->personHistoryService->storeModel(
+            array_merge(
+                $history ? $this->findModelConflicts($history, $historyData, 'person_history') : $historyData,
+                [
+                    'ac_year' => $this->contestYear->ac_year,
+                    'person_id' => $person->person_id,
+                ]
+            ),
+            $history
+        );
+    }
+
+    /**
+     * @phpstan-param array<string,mixed> $flagData
+     */
+    private function storeFlags(PersonModel $person, array $flagData): void
+    {
+        foreach ($flagData as $flagId => $flagValue) {
+            if (isset($flagValue)) {
+                $flag = $this->flagService->findByFid($flagId);
+                $personFlag = $person->hasFlag($flagId);
+                $this->personHasFlagService->storeModel([
+                    'value' => $flagValue,
+                    'flag_id' => $flag->flag_id,
+                    'person_id' => $person->person_id,
+                ], $personFlag);
+            }
+        }
+    }
+    /**
+     * @phpstan-param array<string,mixed> $data
+     */
+    private function storePostContact(
+        PersonModel $person,
+        array $data,
+        PostContactType $type,
+        string $key
+    ): void {
+        $model = $person->getPostContact($type);
         if ($model) {
-            $this->addressService->updateModel($model->address, $data);
-            $this->postContactService->updateModel($model, $data);
-        } else {
-            $data = array_merge($data, [
-                'person_id' => $person->person_id,
-                'type' => PersonFormComponent::mapAddressContainerNameToType($type)->value,
-            ]);
-            $mainModel = $this->addressService->createNewModel($data);
-            $data['address_id'] = $mainModel->address_id;
-            $this->postContactService->createNewModel($data);
+            $data = $this->findModelConflicts($model, $data, $key);
         }
-    }
-
-    private bool $outerTransaction = false;
-
-    private function getConflicts(array $models, array $values): array
-    {
-        $conflicts = [];
-        foreach ($values as $key => $value) {
-            if ($key === 'person_has_flag') {
-                continue;
-            }
-            if (isset($models[$key])) {
-                if ($models[$key] instanceof ActiveRow) {
-                    $subConflicts = $this->getModelConflicts($models[$key], (array)$value);
-                    if (count($subConflicts)) {
-                        $conflicts[$key] = $subConflicts;
-                    }
-                } elseif (!is_null($models[$key]) && $models[$key] != $value) {
-                    $conflicts[$key] = $value;
-                }
-            }
-        }
-
-        return $conflicts;
-    }
-
-    private function getModelConflicts(ActiveRow $model, array $values): array
-    {
-        $conflicts = [];
-        foreach ($values as $key => $value) {
-            if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
-                $conflicts[$key] = $value;
-            }
-        }
-        return $conflicts;
-    }
-
-    private function storePerson(?PersonModel $person, array $data): PersonModel
-    {
-        return $this->personService->storeModel((array)$data['person'], $person);
-    }
-
-    private function removeConflicts(iterable $data, iterable $conflicts): iterable
-    {
-        $result = $data;
-        foreach ($conflicts as $key => $value) {
-            if (isset($data[$key])) {
-                if (is_iterable($data[$key])) {
-                    $result[$key] = $this->removeConflicts($data[$key], $value);
-                } else {
-                    unset($data[$key]);
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * @param PostContactModel[] $models
-     */
-    private function preparePostContactModels(array &$models): void
-    {
-        if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
-            $data = array_merge(
-                $models[self::POST_CONTACT_DELIVERY]->toArray(),
-                $models[self::POST_CONTACT_DELIVERY]->address->toArray()
-            );
-
-            unset($data['post_contact_id']);
-            unset($data['address_id']);
-            unset($data['type']);
-
-            $addressModel = $this->addressService->createNewModel($data);
-            $data['address_id'] = $addressModel->address_id;
-            $joinedModel = $this->postContactService->createNewModel($data);
-            $models[self::POST_CONTACT_PERMANENT] = $joinedModel;
-        }
-    }
-
-    private function resolvePostContacts(array &$data): void
-    {
-        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
-            if (!isset($data[$type])) {
-                continue;
-            }
-            $cleared = FormUtils::removeEmptyValues(FormUtils::emptyStrToNull2($data[$type]), true);
-            if (!isset($cleared['address'])) {
-                unset($data[$type]);
-                continue;
-            }
-            $data[$type] = $data[$type]['address']; // flatten
-            switch ($type) {
-                case self::POST_CONTACT_DELIVERY:
-                    $data[$type]['type'] = PostContactType::DELIVERY;
-                    break;
-                case self::POST_CONTACT_PERMANENT:
-                    $data[$type]['type'] = PostContactType::PERMANENT;
-                    break;
-            }
-        }
-    }
-
-    /**
-     * @throws ModelException
-     */
-    private function prepareFlagModels(PersonModel $person, array &$data, array &$models): void
-    {
-        if (!isset($data['person_has_flag'])) {
+        $handler = new AddressHandler($this->container);
+        $address = $handler->store($data['address'], $model ? $model->address : null);
+        if (!$address) {
             return;
         }
-        $models['person_has_flag'] = [];
-        foreach ($data['person_has_flag'] as $fid => $value) {
-            if ($value === null) {
-                unset($data['person_has_flag'][$fid]);
-                continue;
-            }
-            $models['person_has_flag'][$fid] = $person->hasPersonFlag($fid);
-        }
-    }
-
-    private function beginTransaction(): void
-    {
-        $connection = $this->personService->explorer->getConnection();
-        if (!$connection->getPdo()->inTransaction()) {
-            $connection->beginTransaction();
+        if ($model) {
+            $this->postContactService->storeModel($data, $model);
         } else {
-            $this->outerTransaction = true;
+            $data['address_id'] = $address->address_id;
+            $data['person_id'] = $person->person_id;
+            $data['type'] = $type->value;
+            $this->postContactService->storeModel($data);
         }
     }
 
-    private function commit(): void
+    public static function mapAddressContainerNameToType(string $containerName): PostContactType
     {
-        $connection = $this->personService->explorer->getConnection();
-        if (!$this->outerTransaction) {
-            $connection->commit();
+        switch ($containerName) {
+            case self::POST_CONTACT_PERMANENT:
+                return PostContactType::from(PostContactType::PERMANENT);
+            case self::POST_CONTACT_DELIVERY:
+                return PostContactType::from(PostContactType::DELIVERY);
+            default:
+                throw new InvalidArgumentException();
         }
     }
 
-    private function rollback(): void
+    /**
+     * @phpstan-param array{gender?:string,family_name:string} $personData
+     */
+    private function storePerson(?PersonModel $person, array $personData): PersonModel
     {
-        $connection = $this->personService->explorer->getConnection();
-        if (!$this->outerTransaction) {
-            $connection->rollBack();
-        }
-        //else: TODO ? throw an exception?
-    }
-
-    public function findBySecondaryKey(string $key): ?PersonModel
-    {
-        return $this->personService->findByEmail($key);
+        return $this->personService->storeModel(
+            $person ? $this->findModelConflicts($person, $personData, 'person') : $personData,
+            $person
+        );
     }
 }

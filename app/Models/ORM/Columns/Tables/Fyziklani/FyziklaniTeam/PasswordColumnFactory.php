@@ -4,20 +4,32 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ValuePrinters\HashPrinter;
-use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\UI\HashPrinter;
+use Fykosak\NetteORM\Model\Model;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<TeamModel2,never>
+ */
 class PasswordColumnFactory extends ColumnFactory
 {
     /**
-     * @param TeamModel|TeamModel2 $model
+     * @param TeamModel2 $model
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return (new HashPrinter())($model->password);
+        return HashPrinter::getHtml($model->password);
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function createFormControl(...$args): BaseControl
+    {
+        throw new GoneException();
     }
 }

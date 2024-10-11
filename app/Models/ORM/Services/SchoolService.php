@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\RegionModel;
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use Fykosak\NetteORM\Service\Service;
 
-class SchoolService extends Service
+/**
+ * @phpstan-extends Service<SchoolModel>
+ */
+final class SchoolService extends Service
 {
 
     public function isCzSkSchool(?int $schoolId): bool
@@ -15,8 +18,10 @@ class SchoolService extends Service
         if (is_null($schoolId)) {
             return false;
         }
-        /** @var RegionModel|null $country */
-        $country = $this->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
-        return in_array($country->country_iso, ['CZ', 'SK']);
+        try {
+            return in_array($this->findByPrimary($schoolId)->address->country->alpha_2, ['CZ', 'SK']);
+        } catch (\Throwable $exception) {
+            return false;
+        }
     }
 }

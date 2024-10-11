@@ -4,18 +4,51 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Models\Transitions\Transition\Statements\Statement;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Statement;
+use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
+use Nette\DI\Container;
 
-abstract class EventRole extends Statement
+/**
+ * @phpstan-template TModel of (EventResource&Model)
+ * @phpstan-implements Statement<bool,ModelHolder<TModel,FakeStringEnum&EnumColumn>>
+ */
+class EventRole implements Statement
 {
-
-    protected EventAuthorizator $eventAuthorizator;
+    protected Authorizator $authorizator;
     protected ?string $privilege;
 
-    public function __construct(EventAuthorizator $eventAuthorizator, ?string $privilege)
+    public function __construct(string $privilege, Container $container)
     {
-        $this->eventAuthorizator = $eventAuthorizator;
+        $container->callInjects($this);
         $this->privilege = $privilege;
+    }
+
+    public function inject(Authorizator $authorizator): void
+    {
+        $this->authorizator = $authorizator;
+    }
+
+    /**
+     * @throws CannotAccessModelException
+     * @throws \ReflectionException
+     */
+    public function __invoke(...$args): bool
+    {
+        [$holder] = $args;
+        /** @var EventModel $event */
+        $event = $holder->getModel()->getEvent();
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($holder->getModel()),
+            $this->privilege,
+            $event
+        );
     }
 }

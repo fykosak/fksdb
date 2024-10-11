@@ -4,138 +4,116 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
+use FKSDB\Models\Transitions\FailHandler;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Fykosak\Utils\UI\Title;
+use Nette\Database\Explorer;
 use Nette\SmartObject;
 
+/**
+ * @phpstan-template THolder of ModelHolder
+ * @phpstan-type Enum (THolder is \FKSDB\Models\Transitions\Holder\ParticipantHolder
+ * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
+ * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
+ *     ? \FKSDB\Models\ORM\Models\PaymentState
+ *     : (THolder is \FKSDB\Models\Transitions\Holder\TeamHolder
+ *     ? \FKSDB\Models\ORM\Models\Fyziklani\TeamState
+ *     : (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ *      )
+ *     )
+ * )
+ */
 class Transition
 {
     use SmartObject;
 
-    /** @var callable|bool */
-    protected $condition;
-    private ?BehaviorType $behaviorType = null;
-    private string $label;
-    /** @var TransitionCallback[] */
+    /** @phpstan-var (callable(THolder):bool)|bool|null */
+    public $condition;
+    public BehaviorType $behaviorType;
+    public Title $label;
+    private ?string $successLabel;
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $beforeExecute = [];
-    /** @var TransitionCallback[] */
+    /** @phpstan-var (callable(THolder,Transition<THolder>):void)[] */
     public array $afterExecute = [];
 
-    public ?EnumColumn $sourceStateEnum; // null for INIT
-    public ?EnumColumn $targetStateEnum; // null for TERMINATED
-    protected ExpressionEvaluator $evaluator;
+    /** @phpstan-var FailHandler<THolder>[] */
+    public array $onFail = [];
 
-    public function setSourceStateEnum(?EnumColumn $sourceState): void
+    public bool $validation;
+    /** @phpstan-var Enum */
+    public EnumColumn $source;
+    /** @phpstan-var Enum */
+    public EnumColumn $target;
+
+    private Explorer $explorer;
+
+    public function __construct(Explorer $explorer)
     {
-        $this->sourceStateEnum = $sourceState;
+        $this->explorer = $explorer;
     }
 
-    public function setTargetStateEnum(?EnumColumn $targetState): void
+    public function setSuccessLabel(?string $successLabel): void
     {
-        $this->targetStateEnum = $targetState;
+        $this->successLabel = $successLabel;
     }
 
-    final public function matchSource(?EnumColumn $source): bool
+    public function getSuccessLabel(): string
     {
-        if (is_null($source) && is_null($this->sourceStateEnum)) {
-            return true;
-        }
-        if ($source->value === $this->sourceStateEnum->value) {
-            return true;
-        }
-        return false;
-    }
-
-    public function isCreating(): bool
-    {
-        return is_null($this->sourceStateEnum);
-    }
-
-    public function isTerminating(): bool
-    {
-        return is_null($this->sourceStateEnum);
+        return $this->successLabel ?? _('Transition successful');
     }
 
     public function getId(): string
     {
-        return static::createId($this->sourceStateEnum, $this->targetStateEnum);
+        return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
     }
 
-    public static function createId(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    /**
+     * @throws UnavailableTransitionException
+     * @throws \Throwable
+     * @phpstan-param THolder $holder
+     */
+    final public function execute(ModelHolder $holder): void
     {
-        return ($sourceState ? $sourceState->value : 'init') . '__' .
-            ($targetState ? $targetState->value : 'terminated');
-    }
-
-    public function getBehaviorType(): BehaviorType
-    {
-        if ($this->isTerminating()) {
-            return new BehaviorType(BehaviorType::DANGEROUS);
+        if (!$this->canExecute($holder)) {
+            throw new UnavailableTransitionException($this, $holder);
         }
-        if ($this->isCreating()) {
-            return new BehaviorType(BehaviorType::SUCCESS);
+        $this->explorer->getConnection()->transaction(function () use ($holder): void {
+            try {
+                foreach ($this->beforeExecute as $callback) {
+                    $callback($holder, $this);
+                }
+                $holder->setState($this->target);
+                foreach ($this->afterExecute as $callback) {
+                    $callback($holder, $this);
+                }
+            } catch (\Throwable $exception) {
+                if (count($this->onFail)) {
+                    foreach ($this->onFail as $failHandler) {
+                        $failHandler->handle($exception, $holder, $this);
+                    }
+                } else {
+                    throw $exception;
+                }
+            }
+        });
+    }
+
+    /**
+     * @phpstan-param THolder $holder
+     */
+    public function canExecute(ModelHolder $holder): bool
+    {
+        if ($this->source->value !== $holder->getState()->value) {
+            return false;
         }
-        return $this->behaviorType;
-    }
-
-    public function setBehaviorType(string $behaviorType): void
-    {
-        $this->behaviorType = new BehaviorType($behaviorType);
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
-    }
-
-    public function getLabel(): string
-    {
-        return _($this->label);
-    }
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
-    }
-
-    public function setCondition(?callable $callback): void
-    {
-        $this->condition = $callback;
-    }
-
-    protected function isConditionFulfilled(...$args): bool
-    {
-        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, ...$args);
-    }
-
-    public function canExecute2(ModelHolder $holder): bool
-    {
-        return $this->isConditionFulfilled($holder);
-    }
-
-    public function addBeforeExecute(callable $callBack): void
-    {
-        $this->beforeExecute[] = $callBack;
-    }
-
-    public function addAfterExecute(callable $callBack): void
-    {
-        $this->afterExecute[] = $callBack;
-    }
-
-    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
-    {
-        foreach ($this->beforeExecute as $callback) {
-            $callback($holder, ...$args);
+        if (!isset($this->condition)) {
+            return true;
         }
-    }
-
-    final public function callAfterExecute(...$args): void
-    {
-        foreach ($this->afterExecute as $callback) {
-            $callback(...$args);
+        if (is_callable($this->condition)) {
+            return (bool)($this->condition)($holder);
         }
+        return (bool)$this->condition;
     }
 }

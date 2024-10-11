@@ -1,0 +1,37 @@
+{varType FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel $model}
+
+{block titleBody}
+    {include parent}
+    {control printer:column '@schedule_item.capacity_progress', $model,1024}
+
+{/block}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'schedule_item.schedule_item_id',
+            'schedule_item.price_eur',
+            'schedule_item.price_czk',
+            'schedule_item.name',
+            'schedule_item.description',
+            'schedule_item.capacity',
+            'schedule_item.used_capacity',
+            'schedule_item.free_capacity',
+            ],$model,1024}
+            {control printer:button 'schedule_group.detail', $model}
+            {control printer:button 'schedule_item.edit', $model}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Attendance'}</h2>
+            {control code}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Persons'}</h2>
+            {control personsGrid}
+        </div>
+    </div>
+{/block}

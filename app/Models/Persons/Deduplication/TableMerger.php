@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
@@ -22,13 +22,17 @@ class TableMerger
     private string $table;
     private Merger $merger;
     private Explorer $explorer;
-    private ActiveRow $trunkRow;
-    private ActiveRow $mergedRow;
-    /** @var MergeStrategy[] */
+    private Model $trunkRow;
+    private Model $mergedRow;
+    /** @phpstan-var array<string,MergeStrategy<mixed>> */
     private array $columnMergeStrategies = [];
+    /** @phpstan-var MergeStrategy<mixed> */
     private MergeStrategy $globalMergeStrategy;
     private Logger $logger;
 
+    /**
+     * @phpstan-param MergeStrategy<mixed> $globalMergeStrategy
+     */
     public function __construct(
         string $table,
         Merger $merger,
@@ -43,16 +47,16 @@ class TableMerger
         $this->logger = $logger;
     }
 
-    /*     * ******************************
-     * Merging
-     * ****************************** */
-
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
+    public function setMergedPair(Model $trunkRow, Model $mergedRow): void
     {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
+    /**
+     * @phpstan-template TLocalValue
+     * @phpstan-param MergeStrategy<TLocalValue>|null $mergeStrategy
+     */
     public function setColumnMergeStrategy(string $column, ?MergeStrategy $mergeStrategy = null): void
     {
         if (!$mergeStrategy) {
@@ -118,17 +122,15 @@ class TableMerger
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
                     $refTrunk = $groupedTrunks[$secondaryKey] ?? null;
-                    /** @var ActiveRow|null $refMerged */
+                    /** @var Model|null $refMerged */
                     $refMerged = $groupedMerged[$secondaryKey] ?? null;
                     if ($refTrunk && $refMerged) {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
-                        if ($referencingMerger->trunkRow) {
-                            $referencingMerger->setMergedPair(
-                                $referencingMerger->trunkRow,
-                                $referencingMerger->mergedRow
-                            );
-                        }
+                        $referencingMerger->setMergedPair(
+                            $referencingMerger->trunkRow,
+                            $referencingMerger->mergedRow
+                        );
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
                         $refMerged->update($newParent); //TODO allow delete refMerged
@@ -137,7 +139,7 @@ class TableMerger
             } else {
                 /* Redirect dependant to the new parent. */
                 foreach ($mergedDependants as $dependant) {
-                    $this->logUpdate($dependant, $newParent);
+                    $this->logUpdate($dependant, $newParent); // @phpstan-ignore-line
                     $dependant->update($newParent);
                 }
             }
@@ -186,7 +188,7 @@ class TableMerger
         return $result;
     }
 
-    private function getSecondaryKeyValue(ActiveRow $row, string $parentColumn): string
+    private function getSecondaryKeyValue(Model $row, string $parentColumn): string
     {
         $key = [];
         foreach ($this->getSecondaryKey() as $column) {
@@ -198,11 +200,7 @@ class TableMerger
         return implode('_', $key);
     }
 
-    /*     * ******************************
-     * Logging sugar
-     * ****************************** */
-
-    private function logUpdate(ActiveRow $row, iterable $changes): void
+    private function logUpdate(Model $row, iterable $changes): void
     {
         $msg = [];
         foreach ($changes as $column => $value) {
@@ -225,7 +223,7 @@ class TableMerger
         }
     }
 
-    private function logDelete(ActiveRow $row): void
+    private function logDelete(Model $row): void
     {
         $this->logger->log(
             new Message(
@@ -235,7 +233,7 @@ class TableMerger
         );
     }
 
-    private function logTrunk(ActiveRow $row): void
+    private function logTrunk(Model $row): void
     {
         $this->logger->log(
             new Message(
@@ -244,10 +242,6 @@ class TableMerger
             )
         );
     }
-
-    /* ******************************
-     * DB reflection
-     * ****************************** */
 
     private ?array $refTables;
     private static bool $refreshReferencing = true;

@@ -5,20 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\RegionModel;
-use FKSDB\Models\ORM\Services\RegionService;
+use FKSDB\Models\ORM\Models\CountryModel;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Services\CountryService;
+use FKSDB\Models\UI\StringPrinter;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<PersonInfoModel,never>
+ */
 class CitizenshipColumnFactory extends ColumnFactory
 {
-    private RegionService $regionService;
+    private CountryService $countryService;
 
-    public function __construct(RegionService $regionService, MetaDataFactory $metaDataFactory)
+    public function injectService(CountryService $countryService): void
     {
-        parent::__construct($metaDataFactory);
-        $this->regionService = $regionService;
+        $this->countryService = $countryService;
     }
 
     protected function createFormControl(...$args): BaseControl
@@ -29,14 +34,24 @@ class CitizenshipColumnFactory extends ColumnFactory
         return $control;
     }
 
+    /**
+     * @phpstan-return array<string,string>
+     */
     private function getCountries(): array
     {
-        $countries = $this->regionService->getCountries();
         $results = [];
-        /** @var RegionModel $country */
-        foreach ($countries as $country) {
-            $results[$country->country_iso] = $country->name;
+        /** @var CountryModel $country */
+        foreach ($this->countryService->getTable() as $country) {
+            $results[$country->alpha_2] = $country->name;
         }
         return $results;
+    }
+
+    /**
+     * @param PersonInfoModel $model
+     */
+    protected function createHtmlValue(Model $model): Html
+    {
+        return StringPrinter::getHtml($model->citizenship);
     }
 }

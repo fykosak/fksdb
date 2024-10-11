@@ -4,30 +4,36 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Warehouse;
 
-use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use Nette\Application\UI\Presenter;
-use Nette\DI\Container;
-use NiftyGrid\DuplicateColumnException;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
-class ProducersGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<ProducerModel,array{}>
+ */
+class ProducersGrid extends BaseGrid
 {
-    public function __construct(Container $container)
+    private ProducerService $service;
+
+    public function inject(ProducerService $service): void
     {
-        parent::__construct($container, ProducerService::class, [
-            'warehouse_producer.producer_id',
-            'warehouse_producer.name',
-        ]);
+        $this->service = $service;
     }
 
     /**
-     * @throws DuplicateColumnException
-     * @throws BadTypeException
+     * @phpstan-return TypedSelection<ProducerModel>
      */
-    protected function configure(Presenter $presenter): void
+    protected function getModels(): TypedSelection
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('name');
+        return $this->service->getTable()->order('name');
+    }
+
+    protected function configure(): void
+    {
+        $this->addSimpleReferencedColumns([
+            '@warehouse_producer.producer_id',
+            '@warehouse_producer.name',
+        ]);
     }
 }

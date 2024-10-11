@@ -4,95 +4,89 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
 class EventDispatchFactory
 {
-    private array $definitions = [];
-
     private Container $container;
-
-    private string $templateDir;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
     }
 
-    public function setTemplateDir(string $templateDir): void
+    /**
+     * @throws MissingServiceException
+     * @throws NotImplementedException
+     */
+    public function getParticipantMachine(EventModel $event): EventParticipantMachine
     {
-        $this->templateDir = $templateDir;
+        switch ($event->event_type_id) {
+            case 4:
+            case 5:
+                return $this->container->getService('transitions.sous.machine'); //@phpstan-ignore-line
+            case 2:
+            case 14:
+                return $this->container->getService('transitions.dsef.machine'); //@phpstan-ignore-line
+            case 10:
+                return $this->container->getService('transitions.tabor.machine'); //@phpstan-ignore-line
+            case 11:
+            case 12:
+                return $this->container->getService('transitions.setkani.machine'); //@phpstan-ignore-line
+            default:
+                throw new NotImplementedException();
+        }
     }
 
-    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
+    public function getPaymentMachine(): PaymentMachine
     {
-        $this->definitions[] = [
-            'keys' => $key,
-            'holderMethod' => $holderMethodName,
-            'machineName' => $machineName,
-            'formLayout' => $formLayout,
-        ];
+        return $this->container->getService($this->getPaymentFactoryName() . '.machine'); //@phpstan-ignore-line
+    }
+
+    public function getPersonScheduleMachine(): PersonScheduleMachine
+    {
+        return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
+    }
+
+    public function getPaymentFactoryName(): ?string
+    {
+        return 'transitions.fykosPayment';
+    }
+
+    public function getTeamMachine(EventModel $event): TeamMachine
+    {
+        switch ($event->event_type_id) {
+            case 1:
+                $machine = $this->container->getService('transitions.fof.machine');
+                break;
+            case 9:
+                $machine = $this->container->getService('transitions.fol.machine');
+                break;
+            default:
+                throw new InvalidStateException();
+        }
+        return $machine; //@phpstan-ignore-line
     }
 
     /**
-     * @throws ConfigurationNotFoundException
-     * @throws MissingServiceException
+     * @phpstan-return EventParticipantMachine|TeamMachine
+     * @throws NotImplementedException
      */
     public function getEventMachine(EventModel $event): Machine
     {
-        $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName']);
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     */
-    public function getFormLayout(EventModel $event): string
-    {
-        $definition = $this->findDefinition($event);
-        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     */
-    private function findDefinition(EventModel $event): array
-    {
-        $key = $this->createKey($event);
-        foreach ($this->definitions as $definition) {
-            if (in_array($key, $definition['keys'])) {
-                return $definition;
-            }
+        if ($event->isTeamEvent()) {
+            return $this->getTeamMachine($event);
+        } else {
+            return $this->getParticipantMachine($event);
         }
-        foreach ($this->definitions as $definition) {
-            if (in_array((string)$event->event_type_id, $definition['keys'])) {
-                return $definition;
-            }
-        }
-        throw new ConfigurationNotFoundException($event);
-    }
-
-    /**
-     * @throws ConfigurationNotFoundException
-     * @throws NeonSchemaException
-     */
-    public function getDummyHolder(EventModel $event): Holder
-    {
-        $definition = $this->findDefinition($event);
-        /** @var Holder $holder */
-        $holder = $this->container->{$definition['holderMethod']}();
-        $holder->inferEvent($event);
-        return $holder;
-    }
-
-    private function createKey(EventModel $event): string
-    {
-        return $event->event_type_id . '-' . $event->event_year;
     }
 }

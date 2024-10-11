@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
+use Fykosak\NetteORM\Service\Service;
 
-class TagTypeService extends Service
+/**
+ * @phpstan-extends Service<TagTypeModel>
+ */
+final class TagTypeService extends Service
 {
 }

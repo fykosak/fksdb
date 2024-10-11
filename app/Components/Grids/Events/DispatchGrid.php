@@ -4,41 +4,86 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Components\Grids\Components\Renderer\RendererItem;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventTypeModel;
 use FKSDB\Models\ORM\Services\EventService;
-use Nette\Application\UI\Presenter;
-use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
+use FKSDB\Models\ORM\Services\EventTypeService;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
+use Nette\Forms\Form;
 
-class DispatchGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<EventModel,array{
+ *     event_type?:int,
+ * }>
+ */
+final class DispatchGrid extends BaseGrid
 {
+    private EventService $service;
+    private EventTypeService $eventTypeService;
 
-    public function __construct(Container $container)
+    public function inject(EventService $service, EventTypeService $eventTypeService): void
     {
-        parent::__construct(
-            $container,
-            EventService::class,
-            [
-                'event.event_id',
-                'event.name',
-                'contest.contest',
-                'event.year',
-                'event.role',
-            ],
-        );
+        $this->service = $service;
+        $this->eventTypeService = $eventTypeService;
     }
 
     /**
-     * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @phpstan-return TypedSelection<EventModel>
      */
-    protected function configure(Presenter $presenter): void
+    protected function getModels(): TypedSelection
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('begin DESC');
-        $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
+        $query = $this->service->getTable()->order('begin DESC');
+        foreach ($this->filterParams as $key => $filterParam) {
+            if (!$filterParam) {
+                continue;
+            }
+            switch ($key) {
+                case 'event_type':
+                    $query->where('event_type_id', $filterParam);
+            }
+        }
+        return $query;
+    }
+
+    protected function configure(): void
+    {
+        $this->filtered = true;
+        $this->paginate = true;
+        $this->counter = false;
+        $this->addSimpleReferencedColumns([
+            '@event.event_id',
+        ]);
+        $this->addTableColumn(
+            new RendererItem(
+                $this->container,
+                fn(EventModel $model) => $model->getName()->getText($this->translator->lang), //@phpstan-ignore-line
+                new Title(null, _('Event name'))
+            ),
+            'event_name'
+        );
+        $this->addSimpleReferencedColumns([
+            '@contest.contest',
+            '@event.year',
+        ]);
+        $this->addPresenterButton(
+            'Dashboard:default',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['eventId' => 'event_id']
+        );
+    }
+
+    protected function configureForm(Form $form): void
+    {
+        $items = [];
+        /** @var EventTypeModel $eventType */
+        foreach ($this->eventTypeService->getTable() as $eventType) {
+            $items[(string)$eventType->event_type_id] = $eventType->name;
+        }
+        $form->addSelect('event_type', _('Event type'), $items)->setPrompt(_('Select event type'));
     }
 }

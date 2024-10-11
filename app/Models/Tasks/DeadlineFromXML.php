@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Services\TaskService;
+use FKSDB\Models\Pipeline\Stage;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Services\TaskService;
 use Nette\Utils\DateTime;
-use FKSDB\Models\Pipeline\Stage;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
+ * @phpstan-extends Stage<SeriesData>
  */
 class DeadlineFromXML extends Stage
 {
     private TaskService $taskService;
 
-    public function __construct(TaskService $taskService)
+    public function inject(TaskService $taskService): void
     {
         $this->taskService = $taskService;
     }
 
     /**
-     * @param MemoryLogger $logger
      * @param SeriesData $data
-     * @return SeriesData
      */
     public function __invoke(MemoryLogger $logger, $data): SeriesData
     {
@@ -37,7 +36,7 @@ class DeadlineFromXML extends Stage
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
         foreach ($data->getTasks() as $task) {
-            $this->taskService->updateModel($task, ['submit_deadline' => $datetime]);
+            $this->taskService->storeModel(['submit_deadline' => $datetime], $task);
         }
         return $data;
     }

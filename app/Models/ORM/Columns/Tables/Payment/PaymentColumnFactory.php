@@ -4,61 +4,27 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Model;
-use Nette\Forms\Controls\BaseControl;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
-class PaymentColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel>
+ */
+class PaymentColumnFactory extends AbstractColumnFactory
 {
-    private ORMFactory $reflectionFactory;
-
-    public function __construct(ORMFactory $reflectionFactory, MetaDataFactory $metaDataFactory)
-    {
-        parent::__construct($metaDataFactory);
-        $this->reflectionFactory = $reflectionFactory;
-    }
-
-    /**
-     * @throws AbstractColumnException
-     */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new AbstractColumnException();
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function prerenderOriginalModel(Model $originalModel): ?Html
-    {
-        if ($originalModel instanceof PersonScheduleModel && !$originalModel->schedule_item->isPayable()) {
-            return Html::el('span')
-                ->addAttributes(['class' => 'badge bg-info'])
-                ->addText(_('Not payable'));
-        }
-        return null;
-    }
-
     /**
      * @param PaymentModel $model
-     * @throws BadTypeException
      * @throws CannotAccessModelException
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
-        $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
+        $html = $model->state->badge();
         $text = $html->getText();
-        $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
+        $html->setText(sprintf('#%d %s', $model->payment_id, $text));
         return $html;
     }
 

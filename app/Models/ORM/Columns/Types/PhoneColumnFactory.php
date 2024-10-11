@@ -4,38 +4,33 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\DataTest\TestLogger;
+use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
-use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\NetteORM\Model;
-use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\TestedColumnFactory;
+use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
+use FKSDB\Models\UI\NotSetBadge;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-extends ColumnFactory<TModel,ArgType>
+ */
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
 {
-
     protected PhoneNumberFactory $phoneNumberFactory;
 
-    private bool $isWriteOnly = true;
-
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory)
+    public function injectFactory(PhoneNumberFactory $phoneNumberFactory): void
     {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($metaDataFactory);
-    }
-
-    public function setWriteOnly(bool $isWriteOnly): void
-    {
-        $this->isWriteOnly = $isWriteOnly;
     }
 
     protected function createFormControl(...$args): BaseControl
@@ -45,7 +40,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         } else {
             $control = new TextInput($this->getTitle());
         }
-        $control->setHtmlAttribute('placeholder', _('+XXXXXXXXXXXX'));
+        $control->setHtmlAttribute('placeholder', '+XXXXXXXXXXXX');
         $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
@@ -58,31 +53,33 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         return $control;
     }
 
-    final public function runTest(Logger $logger, Model $model): void
+    /**
+     * @phpstan-param TModel $model
+     */
+    final public function runTest(TestLogger $logger, Model $model, string $id): void
     {
 
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
             $logger->log(
-                new TestLog(
-                    $this->getTitle(),
-                    \sprintf('%s number (%s) is not valid', $this->getTitle(), $value),
+                new TestMessage(
+                    $id,
+                    \sprintf(_('%s number (%s) is not valid'), $this->getTitle(), $value),
                     Message::LVL_ERROR
                 )
-            );
-        } else {
-            $logger->log(
-                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS)
             );
         }
     }
 
+    /**
+     * @phpstan-param TModel $model
+     */
     protected function createHtmlValue(Model $model): Html
     {
-        $value = $model->{$this->getModelAccessKey()};
+        $value = $model->{$this->modelAccessKey};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
         } else {

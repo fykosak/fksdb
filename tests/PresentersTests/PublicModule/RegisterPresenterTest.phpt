@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
+use FKSDB\Modules\CoreModule\RegisterPresenter;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -16,22 +18,23 @@ use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase
 {
-
-    private IPresenter $fixture;
+    private RegisterPresenter $fixture;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
-        $this->fixture = $presenterFactory->createPresenter('Public:Register');
+        $presenterFactory = $this->container->getByType(IPresenterFactory::class);
+        /** @var RegisterPresenter $presenter */
+        $presenter = $presenterFactory->createPresenter('Core:Register');
+        $this->fixture = $presenter;
         $this->fixture->autoCanonicalize = false;
     }
 
     public function testDispatch(): void
     {
-        $request = new Request('Public:Register', 'GET', [
-            'action' => 'contest',
+        $request = new Request('Core:Register', 'GET', [
+            'action' => 'default',
             'lang' => 'en',
         ]);
 
@@ -42,12 +45,12 @@ class RegisterPresenterTest extends DatabaseTestCase
         Assert::type(Template::class, $source);
 
         $html = (string)$source;
-        Assert::contains('Select contest', $html);
+        Assert::contains('Register', $html);
     }
 
-    public function testForm()
+    public function testForm(): void
     {
-        $request = new Request('Public:Register', 'GET', [
+        $request = new Request('Core:Register', 'GET', [
             'action' => 'contestant',
             'contestId' => 1,
             'year' => 1,
@@ -64,6 +67,7 @@ class RegisterPresenterTest extends DatabaseTestCase
         Assert::contains('contestant application', $html);
     }
 }
-
+// phpcs:disable
 $testCase = new RegisterPresenterTest($container);
 $testCase->run();
+// phpcs:enable

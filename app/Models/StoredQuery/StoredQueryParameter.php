@@ -27,10 +27,9 @@ class StoredQueryParameter
     }
 
     /**
-     * StoredQueryParameter constructor.
      * @param mixed $defaultValue
      */
-    public function __construct(string $name, $defaultValue, ParameterType $type, ?string $description)
+    public function __construct(string $name, $defaultValue, ParameterType $type, ?string $description = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -59,7 +58,7 @@ class StoredQueryParameter
                 $this->defaultValue = (string)$value;
                 break;
             default:
-                throw new InvalidStateException("Unsupported parameter type '$this->type->value'.");
+                throw new InvalidStateException(sprintf(_('Unsupported parameter type "%s".'), $this->type->value));
         }
     }
 }

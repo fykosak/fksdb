@@ -4,25 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Models\PersonInfoModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\CountryService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\YearCalculator;
-use FKSDB\Tests\MockEnvironment\MockApplication;
-use FKSDB\Tests\MockEnvironment\MockPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Explorer;
@@ -34,7 +30,7 @@ use Tester\TestCase;
 
 abstract class DatabaseTestCase extends TestCase
 {
-    private Container $container;
+    protected Container $container;
     protected Explorer $explorer;
     private int $instanceNo;
     protected SchoolModel $genericSchool;
@@ -48,30 +44,26 @@ abstract class DatabaseTestCase extends TestCase
         $this->explorer->query('USE fksdb_test' . $this->instanceNo);
     }
 
-    protected function getContainer(): Container
-    {
-        return $this->container;
-    }
-
     protected function setUp(): void
     {
-        Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel(
-            ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
+        Environment::lock(LOCK_DB . $this->instanceNo, \FKSDB\Tests\TEMP_DIR);
+        /** @var AddressModel $address */
+        $address = $this->container->getByType(AddressService::class)->storeModel(
+            ['target' => 'nikde', 'city' => 'nicov', 'country_id' => CountryService::CZECH_REPUBLIC]
         );
-        $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->createNewModel(
+        $this->genericSchool = $this->container->getByType(SchoolService::class)->storeModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
-        $serviceContestYear = $this->getContainer()->getByType(ContestYearService::class);
+        $serviceContestYear = $this->container->getByType(ContestYearService::class);
         $fykosData = [
             'contest_id' => ContestModel::ID_FYKOS,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $vyfukData = [
             'contest_id' => ContestModel::ID_VYFUK,
             'year' => 1,
-            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+            'ac_year' => ContestYearService::getCurrentAcademicYear(),
         ];
         $serviceContestYear->storeModel(
             $fykosData,
@@ -87,6 +79,9 @@ abstract class DatabaseTestCase extends TestCase
     {
         $tables = [
             DbNames::TAB_EMAIL_MESSAGE,
+
+            DbNames::TAB_SUBMIT_QUESTION_ANSWER,
+            DbNames::TAB_SUBMIT_QUESTION,
             DbNames::TAB_SUBMIT,
             DbNames::TAB_TASK,
 
@@ -97,26 +92,25 @@ abstract class DatabaseTestCase extends TestCase
             DbNames::TAB_SCHEDULE_ITEM,
             DbNames::TAB_SCHEDULE_GROUP,
 
-            DbNames::TAB_E_DSEF_PARTICIPANT,
-            DbNames::TAB_E_DSEF_GROUP,
-            DbNames::TAB_E_FYZIKLANI_PARTICIPANT,
             DbNames::TAB_EVENT_PARTICIPANT,
             DbNames::TAB_FYZIKLANI_TEAM_TEACHER,
             DbNames::TAB_FYZIKLANI_TEAM_MEMBER,
             DbNames::TAB_FYZIKLANI_TEAM,
-            DbNames::TAB_E_FYZIKLANI_TEAM,
             DbNames::TAB_FYZIKLANI_GAME_SETUP,
-            DbNames::TAB_EVENT_ORG,
+            DbNames::TAB_EVENT_GRANT,
+            DbNames::TAB_EVENT_ORGANIZER,
             DbNames::TAB_EVENT,
 
-            DbNames::TAB_ORG,
+            DbNames::TAB_ORGANIZER,
             DbNames::TAB_PERSON_HISTORY,
             DbNames::TAB_CONTESTANT,
             DbNames::TAB_CONTEST_YEAR,
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
             DbNames::TAB_AUTH_TOKEN,
+            DbNames::TAB_CONTEST_GRANT,
             DbNames::TAB_LOGIN,
+            DbNames::TAB_PERSON_INFO,
             DbNames::TAB_PERSON,
         ];
         foreach ($tables as $table) {
@@ -130,72 +124,60 @@ abstract class DatabaseTestCase extends TestCase
         ?array $info = null,
         ?array $loginData = null
     ): PersonModel {
-        $person = $this->getContainer()->getByType(PersonService::class)->createNewModel(
+        $person = $this->container->getByType(PersonService::class)->storeModel(
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
-        if ($info) {
+        if (!is_null($info)) {
             $info['person_id'] = $person->person_id;
-            $this->getContainer()->getByType(PersonInfoService::class)->createNewModel($info);
+            $this->container->getByType(PersonInfoService::class)->storeModel($info);
         }
-
         if (!is_null($loginData)) {
-            $data = [
-                'login_id' => $person->person_id,
-                'person_id' => $person->person_id,
-                'active' => 1,
-            ];
-            $loginData = array_merge($data, $loginData);
-
-            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->createNewModel($loginData);
-
-            if (isset($pseudoLogin->hash)) {
-                $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
-                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
-            }
+            $this->createLogin($person, $loginData);
         }
 
         return $person;
     }
 
-    protected function assertPersonInfo(PersonModel $person): PersonInfoModel
+    protected function createLogin(PersonModel $person, array $loginData): LoginModel
     {
-        return $person->getInfo();
+        $data = [
+            'login_id' => $person->person_id,
+            'person_id' => $person->person_id,
+            'active' => 1,
+        ];
+
+        $pseudoLogin = $this->container->getByType(LoginService::class)->storeModel(
+            array_merge($data, $loginData)
+        );
+
+        if (isset($pseudoLogin->hash)) {
+            $hash = $pseudoLogin->calculateHash($loginData['hash']);
+            $this->container->getByType(LoginService::class)->storeModel(['hash' => $hash], $pseudoLogin);
+        }
+        return $pseudoLogin;
     }
 
     protected function createPersonHistory(
         PersonModel $person,
         int $acYear,
         ?SchoolModel $school = null,
-        ?int $studyYear = null,
+        string $studyYear = null,
         ?string $class = null
     ): PersonHistoryModel {
-        return $this->getContainer()->getByType(PersonHistoryService::class)->createNewModel([
+        return $this->container->getByType(PersonHistoryService::class)->storeModel([
             'person_id' => $person->person_id,
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,
             'class' => $class,
-            'study_year' => $studyYear,
+            'study_year_new' => $studyYear,
         ]);
     }
 
-    protected function mockApplication(): void
-    {
-        $mockPresenter = new MockPresenter();
-        $application = new MockApplication($mockPresenter);
-        $this->getContainer()->callInjects($mockPresenter);
-        $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
-        $mailFactory->injectApplication($application);
-    }
-
-    /**
-     * @param $token
-     * @param null $timeout
-     */
-    protected function fakeProtection($token, $timeout = null): void
+    protected function fakeProtection(string $token, int $timeout = null): void
     {
         /** @var Session $session */
-        $session = $this->getContainer()->getService('session');
+        $session = $this->container->getService('session');
         $section = $session->getSection('Nette.Forms.Form/CSRF');
         $key = "key$timeout";
         $section->$key = $token;
@@ -204,11 +186,20 @@ abstract class DatabaseTestCase extends TestCase
     protected function authenticateLogin(LoginModel $login, ?Presenter $presenter = null): void
     {
         /** @var UserStorage $storage */
-        $storage = $this->getContainer()->getByType(UserStorage::class);
+        $storage = $this->container->getByType(UserStorage::class);
         $storage->saveAuthentication($login);
 
         if ($presenter) {
             $presenter->getUser()->login($login);
+        }
+    }
+
+    protected function logOut(?Presenter $presenter = null): void
+    {
+        $storage = $this->container->getByType(UserStorage::class);
+        $storage->clearAuthentication(true);
+        if ($presenter) {
+            $presenter->getUser()->logout(true);
         }
     }
 
@@ -220,7 +211,7 @@ abstract class DatabaseTestCase extends TestCase
     protected function createPresenter(string $presenterName): Presenter
     {
         $_COOKIE['_nss'] = '1';
-        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
+        $presenterFactory = $this->container->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
         return $presenter;

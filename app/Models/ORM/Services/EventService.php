@@ -4,29 +4,41 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\TypedSelection;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @method EventModel createNewModel(array $data)
- * @method EventModel|null findByPrimary($key)
+ * @phpstan-extends Service<EventModel>
  */
-class EventService extends Service
+final class EventService extends Service
 {
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
+    public function getEventsWithOpenRegistration(): TypedSelection
+    {
+        return $this->getTable()
+            ->where('registration_begin <= NOW()')
+            ->where('registration_end >= NOW()');
+    }
 
+    /**
+     * @phpstan-return TypedSelection<EventModel>
+     */
     public function getEvents(ContestYearModel $contestYear): TypedSelection
     {
         // TODO to related
         return $this->getTable()
-            ->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contestYear->contest_id)
-            ->where(DbNames::TAB_EVENT . '.year', $contestYear->year);
+            ->where('event_type.contest_id', $contestYear->contest_id)
+            ->where('year', $contestYear->year);
     }
 
     public function getByEventTypeId(ContestYearModel $contestYear, int $eventTypeId): ?EventModel
     {
-        return $this->getEvents($contestYear)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+        /** @var EventModel|null $event */
+        $event = $this->getEvents($contestYear)->where('event_type_id', $eventTypeId)->fetch();
+        return $event;
     }
 }

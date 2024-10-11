@@ -6,64 +6,84 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-class EmailMessageState extends FakeStringEnum implements EnumColumn
+final class EmailMessageState extends FakeStringEnum implements EnumColumn
 {
-    public const SAVED = 'saved'; // uložená, na ďalšiu úpravu
-    public const WAITING = 'waiting'; //čaká na poslanie
-    public const SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
-    public const FAILED = 'failed'; // posielanie zlyhalo
-    public const CANCELED = 'canceled'; // posielanie zrušené
-    public const REJECTED = 'rejected'; // zastavené kvôli GDPR
+    //phpcs:disable
+    public const Concept = 'concept'; // uložená, na ďalšiu úpravu
+    public const Ready = 'ready'; // dokončený čaká na pridanie unsubscribed options
+    public const Waiting = 'waiting'; //čaká na poslanie
+    public const Sent = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
+    public const Failed = 'failed'; // posielanie zlyhalo
+    public const Cancelled = 'canceled'; // posielanie zrušené
+    public const Rejected = 'rejected'; // zastavené kvôli GDPR
+    //phpcs:enable
 
     public function badge(): Html
     {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-' . $this->behaviorType()])
+            ->addText($this->label());
+    }
+
+    public function behaviorType(): string
+    {
         switch ($this->value) {
             default:
-            case self::CANCELED:
-                $badge = 'badge bg-color-6';
-                break;
-            case self::FAILED:
-                $badge = 'badge bg-color-4';
-                break;
-            case self::REJECTED:
-                $badge = 'badge bg-color-7';
-                break;
-            case self::SAVED:
-                $badge = 'badge bg-color-1';
-                break;
-            case self::SENT:
-                $badge = 'badge bg-color-3';
-                break;
-            case self::WAITING:
-                $badge = 'badge bg-color-2';
-                break;
+            case self::Cancelled:
+                return 'secondary';
+            case self::Rejected:
+            case self::Failed:
+                return 'danger';
+            case self::Concept:
+                return 'info';
+            case self::Sent:
+                return 'success';
+            case self::Ready:
+            case self::Waiting:
+                return 'warning';
         }
-        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
+
 
     public function label(): string
     {
         switch ($this->value) {
+            case self::Ready:
+                return _('Ready');
             default:
-            case self::CANCELED:
+            case self::Cancelled:
                 return _('Canceled');
-            case self::FAILED:
+            case self::Failed:
                 return _('Failed');
-            case self::REJECTED:
+            case self::Rejected:
                 return _('Rejected');
-            case self::SAVED:
-                return _('Saved');
-            case self::SENT:
+            case self::Concept:
+                return _('Concept');
+            case self::Sent:
                 return _('Sent');
-            case self::WAITING:
+            case self::Waiting:
                 return _('Waiting');
         }
     }
 
     public static function cases(): array
     {
-        return [];// TODO
+        return [
+            new self(self::Concept),
+            new self(self::Ready),
+            new self(self::Waiting),
+            new self(self::Sent),
+            new self(self::Failed),
+            new self(self::Cancelled),
+            new self(self::Rejected),
+        ];
+    }
+
+    public function title(): Title
+    {
+        return new Title(null, $this->label());
     }
 }

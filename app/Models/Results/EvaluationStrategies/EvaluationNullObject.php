@@ -4,32 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
  */
-class EvaluationNullObject implements EvaluationStrategy
+class EvaluationNullObject extends EvaluationStrategy
 {
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function getCategories(): array
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function categoryToStudyYears(ModelCategory $category): array
-    {
-        throw new NotImplementedException();
-    }
-
     /**
      * @throws NotImplementedException
      */
@@ -49,7 +33,7 @@ class EvaluationNullObject implements EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): ?float
     {
         throw new NotImplementedException();
     }
@@ -57,7 +41,24 @@ class EvaluationNullObject implements EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function getSubmitPoints(SubmitModel $submit): ?float
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     * @phpstan-return never
+     */
+    protected function getCategoryMap(): array
     {
         throw new NotImplementedException();
     }

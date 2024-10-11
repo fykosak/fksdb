@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Utils\FakeStringEnum;
-use Nette\Security\Resource;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
+use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\DateTime;
 
 /**
- * @property-read int submit_id
- * @property-read int contestant_id
- * @property-read ContestantModel contestant
- * @property-read int task_id
- * @property-read TaskModel task
- * @property-read \DateTimeInterface submitted_on
- * @property-read SubmitSource source
- * @property-read string note
- * @property-read float raw_points
- * @property-read float calc_points
- * @property-read bool corrected
+ * @property-read int $submit_id
+ * @property-read int $contestant_id
+ * @property-read ContestantModel $contestant
+ * @property-read int $task_id
+ * @property-read TaskModel $task
+ * @property-read DateTime|null $submitted_on
+ * @property-read SubmitSource $source
+ * @property-read string|null $note
+ * @property-read float|null $raw_points
+ * @property-read float|null $calc_points
+ * @property-read int $corrected FUCK MARIADB
  */
-class SubmitModel extends Model implements Resource
+final class SubmitModel extends Model implements ContestYearResource
 {
-
     public const RESOURCE_ID = 'submit';
 
     public function getResourceId(): string
@@ -36,7 +36,7 @@ class SubmitModel extends Model implements Resource
         return md5(
             implode(':', [
                 $this->submit_id,
-                $this->submitted_on,
+                $this->submitted_on->format('c'),
                 $this->source,
                 $this->note,
                 $this->raw_points,
@@ -55,23 +55,76 @@ class SubmitModel extends Model implements Resource
         return ($now <= $deadline) && ($now >= $start);
     }
 
+    public function calculateQuestionSum(): ?int
+    {
+        // task does not have questions
+        if (!$this->isQuiz()) {
+            return null;
+        }
+
+        $sum = 0;
+        // TODO rewrite to do sum directly in sql
+        /** @var SubmitQuestionModel $question */
+        foreach ($this->task->getQuestions() as $question) {
+            $answer = $this->contestant->getAnswer($question);
+            if (!isset($answer)) {
+                continue;
+            }
+            if ($answer->answer === $question->answer) {
+                $sum += $question->points;
+            }
+        }
+
+        return $sum;
+    }
+
     public function isQuiz(): bool
     {
         return $this->source->value === SubmitSource::QUIZ;
     }
 
     /**
-     * @return SubmitSource|FakeStringEnum|mixed|null
+     * @return SubmitSource|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key)
+    public function &__get(string $key) // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'source':
-                $value = SubmitSource::tryFrom($value);
+                $value = SubmitSource::from($value);
                 break;
         }
         return $value;
+    }
+
+    /**
+     * @phpstan-return array{
+     * submitId:int,
+     * taskId:int,
+     * source:string,
+     * rawPoints:float|null,
+     * calcPoints:float|null,
+     * }
+     */
+    public function __toArray(): array
+    {
+        return [
+            'submitId' => $this->submit_id,
+            'taskId' => $this->task_id,
+            'source' => $this->source->value,
+            'rawPoints' => $this->raw_points,
+            'calcPoints' => $this->calc_points,
+        ];
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contestant->contest;
+    }
+
+    public function getContestYear(): ContestYearModel
+    {
+        return $this->contestant->getContestYear();
     }
 }

@@ -5,94 +5,62 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\Controls\Events\ExpressionPrinter;
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
+use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
+use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TMachine of Machine
+ */
 class GraphComponent extends FrontEndComponent implements Chart
 {
+    /** @phpstan-var TMachine */
+    private Machine $machine;
 
-    private BaseMachine $baseMachine;
-    private ExpressionPrinter $expressionPrinter;
-
-    public function __construct(Container $container, BaseMachine $baseMachine)
+    /**
+     * @phpstan-param TMachine $machine
+     */
+    public function __construct(Container $container, Machine $machine)
     {
         parent::__construct($container, 'event.model.graph');
-        $this->baseMachine = $baseMachine;
+        $this->machine = $machine;
     }
 
-    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void
-    {
-        $this->expressionPrinter = $expressionPrinter;
-    }
-
+    /**
+     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string|Html}>}
+     */
     final public function getData(): array
     {
-        return [
-            'nodes' => $this->prepareNodes(),
-            'links' => $this->prepareTransitions(),
-        ];
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getAllStates(): array
-    {
-        return array_merge(
-            $this->baseMachine->getStates(),
-            [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]
-        );
-    }
-
-    /**
-     * @return array[]
-     */
-    private function prepareNodes(): array
-    {
-        $states = $this->getAllStates();
+        $edges = [];
         $nodes = [];
-        foreach ($states as $state) {
-            $nodes[$state] = [
-                'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === AbstractMachine::STATE_INIT
-                    ? 'init'
-                    : ($state === AbstractMachine::STATE_TERMINATED ? 'terminated'
-                        : 'default'),
+        foreach ($this->machine->getTransitions()->toArray() as $transition) {
+            if (!isset($nodes[$transition->source->value])) {
+                $nodes[$transition->source->value] = [
+                    'label' => $transition->source->label(),
+                    'type' => 'default',
+                ];
+            }
+            if (!isset($nodes[$transition->target->value])) {
+                $nodes[$transition->target->value] = [
+                    'label' => $transition->target->label(),
+                    'type' => 'default',
+                ];
+            }
+            $edges[] = [
+                'from' => $transition->source->value,
+                'to' => $transition->target->value,
+                'label' => $transition->label->toHtml(),
+                'behaviorType' => $transition->behaviorType->value,
             ];
         }
-        return $nodes;
+        return ['nodes' => $nodes, 'links' => $edges];
     }
 
-    /**
-     * @return array[]
-     */
-    private function prepareTransitions(): array
+    public function getTitle(): Title
     {
-        $states = $this->getAllStates();
-        $edges = [];
-        /** @var Transition $transition */
-        foreach ($this->baseMachine->getTransitions() as $transition) {
-            foreach ($states as $state) {
-                if ($transition->matches($state)) {
-                    $edges[] = [
-                        'from' => $state,
-                        'to' => $transition->target,
-                        'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
-                        'label' => $transition->getLabel(),
-                    ];
-                }
-            }
-        }
-        return $edges;
-    }
-
-    public function getTitle(): string
-    {
-        return _('Model of event');
+        return new Title(null, _('Model of event'), 'fas fa-diagram-project');
     }
 
     public function getDescription(): ?string

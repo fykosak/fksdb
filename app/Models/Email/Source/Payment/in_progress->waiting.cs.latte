@@ -1,0 +1,28 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\PaymentModel $model}
+
+{define subject}Platba na DSEF{/define}
+
+{block body}
+    <p style="margin-top:1em;margin-bottom:1em">
+        Ahoj,<br/><br/>
+        byla Ti vytvořena platba #{$model->payment_id} za DSEF 2024 na částku
+        <b>{$model->getPrice()->__toString()}</b>. Platba zahrnuje následující:
+    </p>
+    {include './items.latte', lang: 'cs'}
+    <p style="margin-top:1em;margin-bottom:1em">
+        Prosíme o její uhrazení převodem na účet co nejdříve, nejpozději tak, aby přišla do pátku 18. října 2024. Jakmile platbu zaregistrujeme, bude Ti na tento e-mail zasláno potvrzení.
+    </p>
+    <p style="margin-top:1em;margin-bottom:1em">
+        Pro snadné zpracování prosím uveď v platbě svůj variabilní a konstantní symbol, jinak nebudeme vědět, že je platba od Tebe. Pokud Tvoje banka nenabízí možnost uvedení symbolů, uveď je prosím do zprávy příjemce, například "/VS/123456".
+    </p>
+    {include './parameters.latte', lang: 'cs'}
+    <p style="margin-top:1em;margin-bottom:1em">
+        Doba vyřízení transakce je přibližně týden. V případě potíží nám můžeš napsat na
+        <a href="mailto:dsef@fykos.cz">dsef@fykos.cz</a>.
+    </p>
+    <p style="margin-top:1em;margin-bottom:1em">
+        S pozdravem<br/>
+        FKSDB
+    </p>
+{/block}

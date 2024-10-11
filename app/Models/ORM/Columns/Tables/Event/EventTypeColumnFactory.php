@@ -4,39 +4,35 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\EventTypeService;
+use FKSDB\Models\ORM\Models\EventTypeModel;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<EventModel|EventTypeModel,ContestModel>
+ */
 class EventTypeColumnFactory extends ColumnFactory
 {
-    private EventTypeService $eventTypeService;
-
-    public function __construct(EventTypeService $eventTypeService, MetaDataFactory $metaDataFactory)
-    {
-        parent::__construct($metaDataFactory);
-        $this->eventTypeService = $eventTypeService;
-    }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws BadTypeException
      */
     protected function createFormControl(...$args): BaseControl
     {
         [$contest] = $args;
         if (!$contest instanceof ContestModel) {
-            throw new \InvalidArgumentException();
+            throw new BadTypeException(ContestModel::class, $contest);
         }
 
         $element = new SelectBox($this->getTitle());
 
-        $types = $this->eventTypeService->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
+        $types = $contest->getEventTypes()->fetchPairs(
             'event_type_id',
             'name'
         );
@@ -47,10 +43,13 @@ class EventTypeColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param EventModel $model
+     * @param EventModel|EventTypeModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText($model->event_type->name);
+        if ($model instanceof EventModel) {
+            $model = $model->event_type;
+        }
+        return Html::el('span')->addText($model->name);
     }
 }

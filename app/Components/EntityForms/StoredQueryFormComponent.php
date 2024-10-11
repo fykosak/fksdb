@@ -6,30 +6,34 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ParameterService;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
-use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use FKSDB\Modules\OrganizerModule\BasePresenter;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Logging\Message;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use Nette\Forms\Container;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property QueryModel|null $model
+ * @phpstan-extends ModelForm<QueryModel,array{sql:array<mixed>,params:array<mixed>,main:array<mixed>}>
+ * @method BasePresenter getPresenter()
  */
-class StoredQueryFormComponent extends EntityFormComponent
+class StoredQueryFormComponent extends ModelForm
 {
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
@@ -38,54 +42,23 @@ class StoredQueryFormComponent extends EntityFormComponent
     private TagService $storedQueryTagService;
     private ParameterService $storedQueryParameterService;
     private StoredQueryFactory $storedQueryFactory;
-    private SingleReflectionFormFactory $reflectionFormFactory;
 
     final public function injectPrimary(
         QueryService $storedQueryService,
         TagService $storedQueryTagService,
         ParameterService $storedQueryParameterService,
-        StoredQueryFactory $storedQueryFactory,
-        SingleReflectionFormFactory $reflectionFormFactory
+        StoredQueryFactory $storedQueryFactory
     ): void {
         $this->storedQueryService = $storedQueryService;
         $this->storedQueryTagService = $storedQueryTagService;
         $this->storedQueryParameterService = $storedQueryParameterService;
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->reflectionFormFactory = $reflectionFormFactory;
-    }
-
-    /**
-     * @throws ModelException
-     */
-    protected function handleFormSuccess(Form $form): void
-    {
-        $values = FormUtils::emptyStrToNull2($form->getValues());
-        $connection = $this->storedQueryService->explorer->getConnection();
-        $connection->beginTransaction();
-
-        $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
-
-        if (isset($this->model)) {
-            $model = $this->model;
-            $this->storedQueryService->updateModel($model, $data);
-        } else {
-            $model = $this->storedQueryService->createNewModel($data);
-        }
-
-        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
-        $this->saveParameters($values[self::CONT_PARAMS], $model);
-
-        $connection->commit();
-        $this->getPresenter()->flashMessage(
-            isset($this->model) ? _('Query has been edited') : _('Query has been created'),
-            Message::LVL_SUCCESS
-        );
-        $this->getPresenter()->redirect('list');
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -93,6 +66,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         $form->addComponent($this->createConsole($group), self::CONT_SQL);
 
         $group = $form->addGroup(_('Parameters'));
+        /** @phpstan-ignore-next-line */
         $form->addComponent($this->createParametersMetadata($group), self::CONT_PARAMS);
 
         $group = $form->addGroup(_('Metadata'));
@@ -109,13 +83,16 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     private function createMetadata(?ControlGroup $group = null): ModelContainer
     {
-        $container = $this->reflectionFormFactory->createContainer(
-            'stored_query',
-            ['name', 'qid', 'tags', 'description']
-        );
+        $container = new ModelContainer($this->container, 'stored_query');
+
+        $container->addField('name', ['required' => true]);
+        $container->addField('qid', ['required' => false]);
+        $container->addField('tags', ['required' => false]);
+        $container->addField('description', ['required' => false]);
         $container->setCurrentGroup($group);
         return $container;
     }
@@ -123,50 +100,54 @@ class StoredQueryFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
-    private function createConsole(?ControlGroup $group = null): ModelContainer
+    private function createConsole(?ControlGroup $group = null): ContainerWithOptions
     {
-        $container = new ModelContainer();
+        $container = new ModelContainer($this->container, 'stored_query');
         $container->setCurrentGroup($group);
-        $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
-        $container->addComponent($control, 'sql');
+        $container->addField('sql');
         return $container;
     }
 
+    /**
+     * @phpstan-param int[] $tags
+     */
     private function saveTags(array $tags, QueryModel $query): void
     {
-        $this->storedQueryTagService->getTable()->where([
-            'query_id' => $query->query_id,
-        ])->delete();
+        /** @var TagModel $tag */
+        foreach ($query->getTags() as $tag) {
+            $this->storedQueryTagService->disposeModel($tag);
+        }
         foreach ($tags as $tagTypeId) {
-            $this->storedQueryTagService->createNewModel([
+            $this->storedQueryTagService->storeModel([
                 'query_id' => $query->query_id,
                 'tag_type_id' => $tagTypeId,
             ]);
         }
     }
-
+    /** @phpstan-ignore-next-line */
     private function createParametersMetadata(?ControlGroup $group = null): Replicator
     {
-        $replicator = new Replicator(function (Container $replContainer) use ($group) {
+        /** @phpstan-ignore-next-line */
+        $replicator = new Replicator(function (ContainerWithOptions $replContainer) use ($group): void {
             $this->buildParameterMetadata($replContainer, $group);
 
             $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
-            $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger btn-sm']);
-            $submit->addRemoveOnClick();
-        }, 0, true);
-        $replicator->containerClass = ModelContainer::class;
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger']);
+            $submit->addRemoveOnClick();// @phpstan-ignore-line
+        }, $this->container, 0, true);
+        /** @phpstan-ignore-next-line */
         $replicator->setCurrentGroup($group);
+        /** @phpstan-ignore-next-line */
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-outline-success']);
-
-        $submit->setValidationScope(null)
-            ->addCreateOnClick();
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-success']);
+        $submit->setValidationScope(null)->addCreateOnClick();
 
         return $replicator;
     }
 
-    private function buildParameterMetadata(Container $container, ControlGroup $group): void
+    private function buildParameterMetadata(ContainerWithOptions $container, ControlGroup $group): void
     {
         $container->setCurrentGroup($group);
 
@@ -194,10 +175,15 @@ class StoredQueryFormComponent extends EntityFormComponent
         $container->addText('default', _('Default value'));
     }
 
+    /**
+     * @phpstan-param array<array<string,mixed>> $parameters
+     */
     private function saveParameters(array $parameters, QueryModel $query): void
     {
-        $this->storedQueryParameterService->getTable()
-            ->where(['query_id' => $query->query_id])->delete();
+        /** @var ParameterModel $parameter */
+        foreach ($query->getParameters2() as $parameter) {
+            $this->storedQueryParameterService->disposeModel($parameter);
+        }
 
         foreach ($parameters as $paramMetaData) {
             $data = (array)$paramMetaData;
@@ -206,14 +192,11 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $data,
                 ParameterModel::setInferDefaultValue($data['type'], $paramMetaData['default'])
             );
-            $this->storedQueryParameterService->createNewModel($data);
+            $this->storedQueryParameterService->storeModel($data);
         }
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
             $values = [];
@@ -226,7 +209,7 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS][] = $paramData;
             }
-            $this->getForm()->setDefaults($values);
+            $form->setDefaults($values);
         }
     }
 
@@ -237,15 +220,20 @@ class StoredQueryFormComponent extends EntityFormComponent
         return $grid;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     private function handleComposeExecute(Form $form): void
     {
-        $data = $form->getValues(true);
+        /** @phpstan-var array{params:array{name:string,default:mixed,type:string},sql:array{sql:string}} $data */
+        $data = $form->getValues('array');
         $parameters = [];
         foreach ($data[self::CONT_PARAMS] as $paramMetaData) {
             $parameters[] = new StoredQueryParameter(
                 $paramMetaData['name'],
                 $paramMetaData['default'],
-                ParameterType::tryFrom($paramMetaData['type'])
+                ParameterType::from($paramMetaData['type'])
             );
         }
         $query = $this->storedQueryFactory->createQueryFromSQL(
@@ -261,5 +249,25 @@ class StoredQueryFormComponent extends EntityFormComponent
     protected function getTemplatePath(): string
     {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
+    }
+
+    protected function innerSuccess(array $values, Form $form): QueryModel
+    {
+        $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
+        /** @var QueryModel $model */
+        $model = $this->storedQueryService->storeModel($data);
+
+        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
+        $this->saveParameters($values[self::CONT_PARAMS], $model);
+        return $model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Query has been edited') : _('Query has been created'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

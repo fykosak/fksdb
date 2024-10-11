@@ -1,0 +1,44 @@
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
+{varType bool $rankVisible}
+
+{block titleBody}
+    {include parent}
+    <div class="d-flex align-items-center gap-2">
+        {if $model->event->isRegistrationOpened()}
+            <a href="{plink edit id => $model->getPrimary()}"
+               class="btn btn-outline-primary">
+                <i class="fas fa-pencil me-2"></i> {_'button.team.edit'}
+            </a>
+        {/if}
+    </div>
+{/block}
+
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Info'}</h2>
+                {control columnTable [
+                'fyziklani_team.category',
+                ],$model,1024}
+        </div>
+    </div>
+    {if $rankVisible}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{_'Rank & points'}</h2>
+                {control columnTable ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'],$model,1024}
+            </div>
+        </div>
+    {/if}
+    {var $counter = 0;}
+    {foreach $model->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
+        {php $counter++}
+        <div class="panel color-auto">
+            <div class="container">
+                <h2>{FKSDB\Components\Applications\Team\Forms\TeamForm::formatMemberLabel($counter,$member)}</h2>
+                {control columnTable ['person_history.study_year_new','school.school'],$member->getPersonHistory(),1024}
+            </div>
+        </div>
+    {/foreach}
+{/block}

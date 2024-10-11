@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns;
 
-use Fykosak\NetteORM\Model;
-use Fykosak\Utils\Logging\Logger;
+use FKSDB\Components\DataTest\TestLogger;
+use Fykosak\NetteORM\Model\Model;
 
 interface TestedColumnFactory
 {
-    public function runTest(Logger $logger, Model $model): void;
+    public function runTest(TestLogger $logger, Model $model, string $id): void;
 }

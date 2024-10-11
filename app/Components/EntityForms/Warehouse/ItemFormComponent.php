@@ -4,28 +4,44 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms\Warehouse;
 
-use FKSDB\Components\EntityForms\EntityFormComponent;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Components\EntityForms\ModelForm;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
+use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 
-class ItemFormComponent extends EntityFormComponent
+/**
+ * @phpstan-extends ModelForm<ItemModel,array{container:array{
+ *       state:string,
+ *       description_cs:string,
+ *       description_en:string,
+ *       data:string,
+ *       purchase_price:float,
+ *       purchase_currency:string,
+ *       placement:string,
+ *       note:string,
+ *      contest_id?:int,
+ *  }}>
+ */
+final class ItemFormComponent extends ModelForm
 {
 
-    protected ProductService $productService;
-    protected ItemService $itemService;
+    private ProductService $productService;
+    private ItemService $itemService;
     private ContestModel $contest;
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public const CONTAINER = 'container';
 
@@ -37,12 +53,10 @@ class ItemFormComponent extends EntityFormComponent
 
     public function injectServiceProducer(
         ProductService $productService,
-        ItemService $itemService,
-        SingleReflectionFormFactory $singleReflectionFormFactory
+        ItemService $itemService
     ): void {
         $this->productService = $productService;
         $this->itemService = $itemService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
     /**
@@ -99,32 +113,30 @@ class ItemFormComponent extends EntityFormComponent
         );
         $this->getPresenter()->redirect('list');
     }
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
+            $form->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('warehouse_item', [
-            'state',
-            'description_cs',
-            'description_en',
-            'data',
-            'purchase_price',
-            'purchase_currency',
-            'placement',
-            'note'
-        ]);
+        $container = new ModelContainer($this->container, 'warehouse_item');
+        $container->addField('state', ['required' => true]);
+        $container->addField('description_cs', ['required' => true]);
+        $container->addField('description_en', ['required' => true]);
+        $container->addField('data', ['required' => true]);
+        $container->addField('purchase_price', ['required' => true]);
+        $container->addField('purchase_currency', ['required' => true]);
+        $container->addField('placement', ['required' => true]);
+        $container->addField('note', ['required' => true]);
         $products = [];
         /** @var ProductModel $product */
         foreach ($this->productService->getTable() as $product) {
@@ -142,5 +154,25 @@ class ItemFormComponent extends EntityFormComponent
             $form->addSubmit('editAll', _('Edit all items'))
             ->onClick[] = fn(SubmitButton $button) => $this->handleSuccess($button);
         }
+    }
+
+    protected function innerSuccess(array $values, Form $form): ItemModel
+    {
+        $data = $values[self::CONTAINER];
+        if (!isset($data['contest_id'])) {
+            $data['contest_id'] = $this->contest->contest_id;
+        }
+        /** @var ItemModel $item */
+        $item = $this->itemService->storeModel($data, $this->model);
+        return $item;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Item has been updated.') : _('Item has been created.'),
+            Message::LVL_SUCCESS
+        );
+        $this->getPresenter()->redirect('list');
     }
 }

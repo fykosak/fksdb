@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PePa;
 
 use Nette\Application\IResponse;
@@ -16,11 +18,13 @@ use Nette\SmartObject;
  * @see http://tools.ietf.org/html/rfc4180 (not fully implemented)
  *
  * @package Nette\Application\Responses
+ * @template TData
  */
-class CSVResponse implements IResponse {
-
+class CSVResponse implements IResponse
+{
     use SmartObject;
 
+    /** @phpstan-var iterable<TData> */
     private iterable $data;
 
     private ?string $name;
@@ -36,12 +40,14 @@ class CSVResponse implements IResponse {
     private bool $quotes;
 
     /**
-     * @param iterable  data (array of arrays - rows/columns)
-     * @param string|null  imposed file name
-     * @param string|null  glue between columns (comma or a semi-colon)
-     * @param string|null  MIME content type
+     * @phpstan-param iterable<TData> $data
      */
-    public function __construct(iterable $data, ?string $name = null, ?string $charset = null, ?string $contentType = null) {
+    public function __construct(
+        iterable $data,
+        string $name = null,
+        ?string $charset = null,
+        ?string $contentType = null
+    ) {
         // ----------------------------------------------------
         $this->data = $data;
         $this->name = $name;
@@ -52,53 +58,57 @@ class CSVResponse implements IResponse {
 
     /**
      * Returns the file name.
-     * @return string
      */
-    final public function getName(): ?string {
+    final public function getName(): ?string
+    {
         // ----------------------------------------------------
         return $this->name;
     }
 
     /**
      * Returns the MIME content type of a downloaded content.
-     * @return string
      */
-    final public function getContentType(): string {
+    final public function getContentType(): string
+    {
         // ----------------------------------------------------
         return $this->contentType;
     }
 
-    public function getGlue(): string {
+    public function getGlue(): string
+    {
         return $this->glue;
     }
 
-    public function setGlue(string $glue): void {
+    public function setGlue(string $glue): void
+    {
         $this->glue = $glue;
     }
 
-    public function getQuotes(): bool {
+    public function getQuotes(): bool
+    {
         return $this->quotes;
     }
 
-    public function setQuotes(bool $quotes): void {
+    public function setQuotes(bool $quotes): void
+    {
         $this->quotes = $quotes;
     }
 
-    public function getAddHeading(): bool {
+    public function getAddHeading(): bool
+    {
         return $this->addHeading;
     }
 
-    public function setAddHeading(bool $addHeading): void {
+    public function setAddHeading(bool $addHeading): void
+    {
         $this->addHeading = $addHeading;
     }
 
     /**
      * Sends response to output.
-     * @param IRequest $httpRequest
-     * @param IHttpResponse $httpResponse
-     * @return void
      */
-    public function send(IRequest $httpRequest, IHttpResponse $httpResponse): void {
+    public function send(IRequest $httpRequest, IHttpResponse $httpResponse): void
+    {
         // ----------------------------------------------------
         $httpResponse->setContentType($this->contentType, $this->charset);
 
@@ -110,11 +120,12 @@ class CSVResponse implements IResponse {
 
         $data = $this->formatCsv();
 
-        $httpResponse->setHeader('Content-Length', strlen($data));
+        $httpResponse->setHeader('Content-Length', (string)strlen($data));
         print $data;
     }
 
-    public function formatCsv(): string {
+    public function formatCsv(): string
+    {
         // ----------------------------------------------------
         if (empty($this->data)) {
             return '';
@@ -134,7 +145,7 @@ class CSVResponse implements IResponse {
 
         if ($this->addHeading) {
             if (!is_array($firstRow)) {
-                $firstRow = iterator_to_array($firstRow);
+                $firstRow = iterator_to_array($firstRow); //@phpstan-ignore-line
             }
 
             $labels = array_keys($firstRow);

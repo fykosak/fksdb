@@ -1,0 +1,151 @@
+@import "../../../../css/variables";
+
+.game-presentation {
+  font-size: 1.1vw;
+
+  .subheader {
+    font-weight: bold;
+    color: black;
+  }
+
+  h1 {
+    font-weight: bold;
+    font-size: 3.5vw;
+  }
+
+  .head-row {
+    padding: 0 .5rem;
+    font-weight: bold;
+  }
+
+  .team-row {
+    border-bottom: solid #ccc 1px;
+
+    &:nth-child(even) {
+      background-color: #eee;
+    }
+
+    .team-name-col {
+      text-align: justify;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .team-progress {
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  .head-row, .team-row {
+    text-align: center;
+    padding: 0.2rem 0;
+  }
+
+
+  &.game-fof {
+    background-color: white;
+
+    h1 {
+      color: $fof-color;
+    }
+
+    .head-row {
+      color: $fof-color;
+      border-bottom: solid $fof-color 1px;
+    }
+
+    .progress {
+      width: 100%;
+
+      .progress-bar {
+        &[data-points="5"] {
+          background-color: var(--color-fof-points-5);
+        }
+
+        &[data-points="3"] {
+          background-color: var(--color-fof-points-3);
+        }
+
+        &[data-points="2"] {
+          background-color: var(--color-fof-points-2);
+        }
+
+        &[data-points="1"] {
+          background-color: var(--color-fof-points-1);
+        }
+      }
+    }
+
+    .progress-row{
+      height: 5px;
+    }
+  }
+
+  &.game-ctyrboj {
+    background-color: $ctyrboj-color;
+
+    h1 {
+      color: $ctyrboj-color;
+    }
+
+    .head-row {
+      color: $ctyrboj-color;
+      border-bottom: solid $ctyrboj-color 1px;
+    }
+
+    [data-ctyrboj-label] {
+      margin: -0.5rem;
+      justify-items: center;
+
+      & > * > * {
+
+        border: solid 2px #aaa;
+        border-radius: .5rem;
+        display: inline-block;
+        height: 2rem;
+        width: 2rem;
+      }
+    }
+
+    [data-ctyrboj-label="A"] {
+      background-color: #ccffd6;
+
+      [data-points] {
+        border-color: #00cc26;
+        background-color: #00cc26;
+      }
+    }
+
+    [data-ctyrboj-label="B"] {
+      background-color: #ffd6cc;
+
+      [data-points] {
+        background-color: #cc2600;
+        border-color: #cc2600;
+      }
+    }
+
+    [data-ctyrboj-label="C"] {
+      background-color: #ccf6ff;
+
+      [data-points] {
+        border-color: #00a6cc;
+        background-color: #00a6cc;
+      }
+    }
+
+    [data-ctyrboj-label="D"] {
+      background-color: #ffb8f2;
+
+      [data-points] {
+        border-color: #cc00a6;
+        background-color: #cc00a6;
+      }
+    }
+  }
+
+}
+
+

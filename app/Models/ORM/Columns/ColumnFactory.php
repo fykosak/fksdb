@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Components\Badges\NotSetBadge;
-use FKSDB\Components\Badges\PermissionDeniedBadge;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use Fykosak\NetteORM\Model;
-use FKSDB\Models\ValuePrinters\StringPrinter;
+use FKSDB\Models\UI\NotSetBadge;
+use FKSDB\Models\UI\PermissionDeniedBadge;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-template TModel of Model
+ * @phpstan-template ArgType
+ * @phpstan-import-type TMetaData from MetaDataFactory
+ */
 abstract class ColumnFactory
 {
     use SmartObject;
@@ -25,23 +29,37 @@ abstract class ColumnFactory
     public const PERMISSION_ALLOW_BASIC = 16;
     public const PERMISSION_ALLOW_RESTRICT = 128;
     public const PERMISSION_ALLOW_FULL = 1024;
-    private string $title;
-    private string $tableName;
-    private string $modelAccessKey;
-    private ?string $description;
-    private array $metaData;
-    private bool $required = false;
-    private bool $omitInputField = false;
-    private FieldLevelPermission $permission;
-    private MetaDataFactory $metaDataFactory;
-    private string $modelClassName;
+    protected string $title;
+    protected string $tableName;
+    protected string $modelAccessKey;
+    protected ?string $description;
+    /**
+     * @phpstan-var TMetaData
+     */
+    protected array $metaData;
+    protected bool $required = false;
+    protected bool $omitInputField = false;
+    protected bool $isWriteOnly = true;
+    public FieldLevelPermission $permission;
+    protected MetaDataFactory $metaDataFactory;
+    protected GettextTranslator $translator;
+    /** @phpstan-var class-string<TModel> */
+    protected string $modelClassName;
 
-    public function __construct(MetaDataFactory $metaDataFactory)
+    public function __construct(Container $container)
     {
-        $this->metaDataFactory = $metaDataFactory;
-        $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
+        $container->callInjects($this);
     }
 
+    final public function injectMeta(MetaDataFactory $metaDataFactory, GettextTranslator $translator): void
+    {
+        $this->metaDataFactory = $metaDataFactory;
+        $this->translator = $translator;
+    }
+
+    /**
+     * @phpstan-param class-string<TModel> $modelClassName
+     */
     final public function setUp(
         string $tableName,
         string $modelClassName,
@@ -58,6 +76,7 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
     final public function createField(...$args): BaseControl
     {
@@ -74,12 +93,17 @@ abstract class ColumnFactory
         return $field;
     }
 
-    final public function setPermissionValue(array $values): void
+    final public function setPermissionValue(string $value): void
     {
         $this->permission = new FieldLevelPermission(
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
-            constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
+            constant(self::class . '::PERMISSION_ALLOW_' . $value),
+            constant(self::class . '::PERMISSION_ALLOW_' . $value)
         );
+    }
+
+    public function setWriteOnly(bool $isWriteOnly): void
+    {
+        $this->isWriteOnly = $isWriteOnly;
     }
 
     final public function setRequired(bool $value): void
@@ -92,11 +116,6 @@ abstract class ColumnFactory
         $this->omitInputField = $omit;
     }
 
-    final public function getPermission(): FieldLevelPermission
-    {
-        return $this->permission;
-    }
-
     final public function getTitle(): string
     {
         return _($this->title);
@@ -107,16 +126,9 @@ abstract class ColumnFactory
         return $this->description ? _($this->description) : null;
     }
 
-    final protected function getModelAccessKey(): string
-    {
-        return $this->modelAccessKey;
-    }
-
-    final protected function getTableName(): string
-    {
-        return $this->tableName;
-    }
-
+    /**
+     * @phpstan-return TMetaData
+     */
     final protected function getMetaData(): array
     {
         if (!isset($this->metaData)) {
@@ -127,19 +139,18 @@ abstract class ColumnFactory
 
     /**
      * @throws OmittedControlException
+     * @phpstan-param ArgType $args
      */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new OmittedControlException();
-    }
+    abstract protected function createFormControl(...$args): BaseControl;
 
-    protected function createHtmlValue(Model $model): Html
-    {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
-    }
+    /**
+     * @param TModel $model
+     */
+    abstract protected function createHtmlValue(Model $model): Html;
 
     /**
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     final public function render(Model $originalModel, int $userPermissionsLevel): Html
     {
@@ -163,21 +174,23 @@ abstract class ColumnFactory
     }
 
     /**
+     * @phpstan-return TModel|null
+     * @throws \ReflectionException
      * @throws CannotAccessModelException
      */
     protected function resolveModel(Model $modelSingle): ?Model
     {
-        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
+        return $modelSingle->getReferencedModel($this->modelClassName);
     }
 
     final public function hasReadPermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->read;
+        return $userValue >= $this->permission->read;
     }
 
     final public function hasWritePermissions(int $userValue): bool
     {
-        return $userValue >= $this->getPermission()->write;
+        return $userValue >= $this->permission->write;
     }
 
     protected function renderNullModel(): Html

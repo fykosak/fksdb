@@ -77,7 +77,7 @@ class CorrectedStorage implements SubmitStorage
 
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
-            /** @var \SplFileInfo[] $files */
+            /** @phpstan-var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
         } catch (\UnexpectedValueException $exception) {
             return null;
@@ -86,7 +86,9 @@ class CorrectedStorage implements SubmitStorage
         if (count($files) == 0) {
             return null;
         } elseif (count($files) > 1) {
-            throw new InvalidStateException("Ambiguity in file database for submit #$submit->submit_id.");
+            throw new InvalidStateException(
+                sprintf(_('Ambiguity in file database for submit #%d.'), $submit->submit_id)
+            );
         } else {
             $file = array_pop($files);
             return $file->getRealPath();

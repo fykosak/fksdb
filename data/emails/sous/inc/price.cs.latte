@@ -1,11 +1,15 @@
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    {if $application->price !== null}
-        {if $application->price == 0}
-            Dle pravidel na stránkách <a href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a> máš soustředění <strong>zadarmo</strong>.
+    {if $holder->getModel()->price !== null}
+        {if $holder->getModel()->price == 0}
+            Dle pravidel na stránkách <a href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a> máš soustředění
+            <strong>zadarmo</strong>.
         {else}
-            Tvoje cena soustředění dle pravidel na stránkách <a href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a> vychází na <strong>{$application->price} CZK</strong>.
+            Tvoje cena soustředění dle pravidel na stránkách <a href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a> vychází na
+            <strong>{$holder->getModel()->price} CZK</strong>.
         {/if}
     {else}
-    Cena soustředění se určuje ze získaných bodů dle pravidel na stránkách <a href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a>.
+        Cena soustředění se určuje ze získaných bodů dle pravidel na stránkách <a
+            href="https://fykos.cz/akce/soustredeni/cena">https://fykos.cz/akce/soustredeni/cena</a>.
     {/if}
 </p>

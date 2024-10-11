@@ -4,38 +4,47 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Warehouse;
 
-use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
 use FKSDB\Models\ORM\Services\Warehouse\ProductService;
-use Nette\Application\UI\Presenter;
-use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 
-class ProductsGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<ProductModel,array{}>
+ */
+class ProductsGrid extends BaseGrid
 {
+    private ProductService $service;
 
-    public function __construct(Container $container)
+    public function inject(ProductService $service): void
     {
-        parent::__construct($container, ProductService::class, [
-            'warehouse_product.product_id',
-            'warehouse_product.name_cs',
-            'warehouse_product.name_en',
-            'warehouse_product.category',
-            'warehouse_producer.name',
-        ]);
+        $this->service = $service;
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
-     * @throws DuplicateColumnException
-     * @throws BadTypeException
-     * @throws DuplicateButtonException
+     * @phpstan-return TypedSelection<ProductModel>
      */
-    protected function configure(Presenter $presenter): void
+    protected function getModels(): TypedSelection
     {
-        parent::configure($presenter);
-        $this->addLinkButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
+        return $this->service->getTable();
+    }
+
+    protected function configure(): void
+    {
+        $this->addSimpleReferencedColumns([
+            '@warehouse_product.product_id',
+            '@warehouse_product.name_cs',
+            '@warehouse_product.name_en',
+            '@warehouse_product.category',
+            '@warehouse_producer.name',
+        ]);
+        $this->addPresenterButton(
+            ':Warehouse:Product:edit',
+            'edit',
+            new Title(null, _('button.edit')),
+            false,
+            ['id' => 'product_id']
+        );
     }
 }

@@ -1,0 +1,31 @@
+version: '3'
+name: fksdb
+
+services:
+  app:
+    image: fksdb
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: on-failure:3
+    container_name: fksdb
+    environment:
+      TZ: 'Europe/Prague'
+      NETTE_DEVEL: '1' # Nette log level, 1 to enable
+    volumes:
+      - ../:/app
+    ports:
+      - 8080:80 # opened ports mapping, not needed with proxy
+
+  mariadb:
+    image: mariadb:lts
+    container_name: fksdb-mariadb
+    restart: on-failure:3
+    environment:
+      TZ: 'Europe/Prague'
+      MYSQL_DATABASE: 'fksdb'
+      MYSQL_USER: 'fksdb'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    volumes:
+      - ./mariadb_data:/var/lib/mysql # path to dir with database data

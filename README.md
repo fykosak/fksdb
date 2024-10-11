@@ -7,21 +7,23 @@
 Installation
 ============
 
-  * install PHP74 + extension
-    * php7.4
-    * php7.4-cli
-    * php7.4-common
-    * php7.4-curl
-    * php7.4-json
-    * php7.4-mbstring
-    * php7.4-mysql
-    * php7.4-opcache
-    * php7.4-readline
-    * php7.4-soap
-    * php7.4-sqlite3
-    * php7.4-xdebug
-    * php7.4-xml
-    * php7.4-xmlrpc
+Check out the instructions for [Development inside Docker](./docker/README.md). You can also use [Dev containers](./.devcontainer/README.md).
+
+  * install PHP8.1 + extension
+    * php8.1
+    * php8.1-cli
+    * php8.1-common
+    * php8.1-curl
+    * php8.1-json
+    * php8.1-mbstring
+    * php8.1-mysql
+    * php8.1-opcache
+    * php8.1-readline
+    * php8.1-soap
+    * php8.1-sqlite3
+    * php8.1-xdebug
+    * php8.1-xml
+    * php8.1-xmlrpc
   * install composer
   * install MySQL/mariaDB
 

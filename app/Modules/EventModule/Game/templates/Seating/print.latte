@@ -1,0 +1,57 @@
+{layout none}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="/assets/main.css" rel="stylesheet"/>
+    <title></title>
+</head>
+<body class="print-area">
+{var \Metzli\Renderer\PngRenderer $renderer = new \Metzli\Renderer\PngRenderer()}
+{foreach $control->getComponent('teamList')->getComponents() as $teamComponent}
+    {varType FKSDB\Components\Game\Seating\Single $teamComponent}
+    <div class="page page-a5-landscape" style="position: relative">
+        <div class="row mt-3">
+            <span class="col-6 text-center">
+        {var $team = $teamComponent->team}
+        ({$team->fyziklani_team_id}) {$team->name}
+        {var $place = $team->getPlace()}
+        {if $place}
+                    {$place->badge()}
+                {/if}
+                </span>
+            <div class="col-6 text-center">
+                <img
+                        src="{$basePath}/images/fyziklani/fyziklani_{$teamComponent->team->event->begin->format('Y')}_logo.svg"
+                        style="height: 2rem"
+                        alt=""/>
+            </div>
+        </div>
+        {control $teamComponent}
+        <div class="row">
+            <div class="col-3 text-center">
+                {var $machineCode = $team->createMachineCode()}
+            {if $machineCode}
+                    {var $aztec = \Metzli\Encoder\Encoder::encode($machineCode)}
+                    <img src="data:image/jpeg;base64,{base64_encode($renderer->render($aztec))}" alt=""/>
+                {/if}
+            </div>
+            <div class="col-9">
+                {var $rests = $team->getScheduleRest()}
+                {if count($rests)}
+                    <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
+                {/if}
+
+                <div style="columns: 2;font-size: .6rem">
+                    {foreach $rests as $personRest}
+                        {foreach $personRest as $rest}
+                            &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {$rest->schedule_item->name->getText($team->game_lang->value)}
+                            <br>
+                        {/foreach}
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+{/foreach}
+</body>
+</html>

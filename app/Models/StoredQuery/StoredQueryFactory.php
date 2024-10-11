@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
-use FKSDB\Modules\OrgModule\BasePresenter;
-use Nette\Application\BadRequestException;
-use Nette\Database\Connection;
-use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\XMLNodeSerializer;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use FKSDB\Modules\OrganizerModule\BasePresenter;
+use Nette\Database\Connection;
+use Nette\InvalidArgumentException;
 
+/**
+ * @phpstan-implements XMLNodeSerializer<StoredQuery>
+ */
 class StoredQueryFactory implements XMLNodeSerializer
 {
 
@@ -32,7 +37,9 @@ class StoredQueryFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param ParameterModel[]|StoredQueryParameter[] $parameters
+     * @phpstan-param (ParameterModel|StoredQueryParameter)[] $parameters
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
     {
@@ -41,6 +48,10 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
     public function createQuery(BasePresenter $presenter, QueryModel $patternQuery): StoredQuery
     {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
@@ -48,11 +59,14 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @phpstan-param array<string,scalar> $parameters
+     */
     public function createQueryFromQid(string $qid, array $parameters): StoredQuery
     {
         $patternQuery = $this->storedQueryService->findByQid($qid);
         if (!$patternQuery) {
-            throw new InvalidArgumentException("Unknown QID '$qid'.");
+            throw new InvalidArgumentException(sprintf(_('Unknown QID "%s".'), $qid));
         }
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters(
@@ -62,6 +76,17 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     * @phpstan-return array{
+     *     contest_id:int,
+     *     contest:int,
+     *     year:int,
+     *     series:int|null,
+     *     ac_year:int,
+     * }
+     */
     private function presenterContextParameters(BasePresenter $presenter): array
     {
         return [
@@ -75,20 +100,21 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     /**
      * @param StoredQuery $dataSource
-     * @throws BadRequestException
+     * @throws \DOMException
+     * @throws BadTypeException
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
     {
         if (!$dataSource instanceof StoredQuery) {
-            throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
+            throw new BadTypeException(StoredQuery::class, $dataSource);
         }
         if ($formatVersion !== self::EXPORT_FORMAT_1 && $formatVersion !== self::EXPORT_FORMAT_2) {
-            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $formatVersion));
+            throw new InvalidArgumentException(sprintf(_('Export format %s not supported.'), $formatVersion));
         }
         // parameters
         $parametersNode = $doc->createElement('parameters');
         $node->appendChild($parametersNode);
-        foreach ($dataSource->getImplicitParameters() as $name => $value) {
+        foreach ($dataSource->implicitParameterValues as $name => $value) {
             $parameterNode = $doc->createElement('parameter', (string)$value);
             $parameterNode->setAttribute('name', (string)$name);
             $parametersNode->appendChild($parameterNode);
@@ -115,10 +141,8 @@ class StoredQueryFactory implements XMLNodeSerializer
                 }
                 if ($formatVersion == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
-                } elseif ($formatVersion == self::EXPORT_FORMAT_2) {
-                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 } else {
-                    throw new BadRequestException(_('Unsupported format'));
+                    $colNode = $doc->createElement(Utils::xmlName($colName));
                 }
                 $textNode = $doc->createTextNode((string)$value);
                 $colNode->appendChild($textNode);

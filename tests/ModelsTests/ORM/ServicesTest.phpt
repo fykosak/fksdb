@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\ORM;
 
-/** @var Container $container */
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
-use Fykosak\NetteORM\Service;
+// phpcs:enable
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\DI\Container;
+use Fykosak\NetteORM\Service\Service;
 use Tester\Assert;
 
 class ServicesTest extends DatabaseTestCase
@@ -20,7 +20,7 @@ class ServicesTest extends DatabaseTestCase
     public function testServices(string $service): void
     {
         Assert::noError(function () use ($service) {
-            $this->getContainer()->getService($service);
+            $this->container->getService($service);
         });
     }
 
@@ -28,9 +28,11 @@ class ServicesTest extends DatabaseTestCase
     {
         return array_map(function (string $service): array {
             return [$service];
-        }, $this->getContainer()->findByType(Service::class));
+        }, $this->container->findByType(Service::class));
     }
 }
 
+// phpcs:disable
 $testCase = new ServicesTest($container);
 $testCase->run();
+// phpcs:enable

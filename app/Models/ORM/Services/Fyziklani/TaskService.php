@@ -4,28 +4,34 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use Fykosak\NetteORM\Service\Service;
 
-class TaskService extends Service
+/**
+ * @phpstan-extends Service<TaskModel>
+ * @phpstan-import-type SerializedTaskModel from TaskModel
+ */
+final class TaskService extends Service
 {
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
-        return $event->getFyziklaniTasks()->where([
+        /** @var TaskModel|null $task */
+        $task = $event->getTasks()->where([
             'label' => $label,
         ])->fetch();
+        return $task;
     }
 
     /**
-     * @return TaskModel[]
+     * @phpstan-return SerializedTaskModel[]
      */
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {
         $tasks = [];
         /** @var TaskModel $model */
-        foreach ($event->getFyziklaniTasks()->order('label') as $model) {
+        foreach ($event->getTasks()->order('label') as $model) {
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Expressions;
 
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
-abstract class EvaluatedExpression
+/**
+ * @phpstan-template GlobalReturn
+ * @phpstan-template SubReturn
+ * @phpstan-template ArgType
+ * @phpstan-implements Statement<GlobalReturn,ArgType>
+ */
+abstract class EvaluatedExpression implements Statement
 {
     use SmartObject;
 
     /**
-     * @param mixed $evaluated
-     * @return mixed
+     * @phpstan-param (callable(ArgType):SubReturn)|SubReturn $evaluated
+     * @phpstan-param ArgType $args
+     * @phpstan-return SubReturn
      */
     final protected function evaluateArgument($evaluated, ...$args)
     {
@@ -22,9 +30,4 @@ abstract class EvaluatedExpression
             return $evaluated;
         }
     }
-
-    /**
-     * @return mixed
-     */
-    abstract public function __invoke(...$args);
 }

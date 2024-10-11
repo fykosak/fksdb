@@ -1,10 +1,7 @@
-{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
-{varType FKSDB\Models\Events\Machine\Machine $machine}
-{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel $application}
-{var $state = $holder->primaryHolder->getModelState()}
+{varType FKSDB\Models\Transitions\Holder\ParticipantHolder $holder}
 <p>
-    Application state of the team <em>{$application}</em> has changed. Current state &ndash;
-    <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
+    Application state of the team <em>{$holder->getModel()}</em> has changed. Current state &ndash;
+    <em>{$holder->getModelState()->label()}</em>.
 </p>
-{include 'inc/eventEdit.en.latte' event => $event, token => $token}
+{include 'inc/eventEdit.en.latte'}
 {include 'inc/closing.en.latte'}

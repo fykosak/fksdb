@@ -1,0 +1,21 @@
+{layout '@layout.latte'}
+{varType FKSDB\Models\Authorization\Roles\ExplicitContestRole[] $roles}
+{block headline}{_'Roles'}{/block}
+{block content}
+    {if count($roles)}
+        <table class="table table-hover">
+            <tbody>
+            {foreach $roles as $grant}
+                <tr>
+                    <td>{FKSDB\Models\UI\ContestBadge::getHtml($grant->getContest())}</td>
+                    <td>{$grant->getRoleId()}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {else}
+        <div class="card-body">
+            {FKSDB\Models\UI\NoRecordsBadge::getHtml()}
+        </div>
+    {/if}
+{/block}

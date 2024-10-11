@@ -5,34 +5,40 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-template TModel of Model
+ */
 abstract class ReferencedContainer extends ContainerWithOptions
 {
-
     public const ID_MASK = 'frm%s-%s';
-    public const CSS_AJAX = 'ajax';
     public const CONTROL_COMPACT = '_c_compact';
     public const SUBMIT_CLEAR = '__clear';
-
-    private ReferencedId $referencedId;
+    /**
+     * @phpstan-var ReferencedId<TModel>|null
+     */
+    private ?ReferencedId $referencedId = null;
 
     protected bool $allowClear = true;
 
     private bool $attachedJS = false;
+    private bool $configured = false;
 
     public function __construct(DIContainer $container, bool $allowClear)
     {
@@ -43,17 +49,29 @@ abstract class ReferencedContainer extends ContainerWithOptions
                 $this->updateHtmlData();
             }
         }, fn() => $this->attachedJS = false);
+        $this->monitor(IContainer::class, function (): void {
+            if (!$this->configured) {
+                $this->configured = true;
+                $this->configure();
+            }
+        });
         $this->createClearButton();
         $this->createCompactValue();
 
         $this->setAllowClear($allowClear);
     }
 
-    public function getReferencedId(): ReferencedId
+    /**
+     * @phpstan-return ReferencedId<TModel>|null
+     */
+    public function getReferencedId(): ?ReferencedId
     {
         return $this->referencedId;
     }
 
+    /**
+     * @phpstan-param ReferencedId<TModel> $referencedId
+     */
     public function setReferencedId(ReferencedId $referencedId): void
     {
         $this->referencedId = $referencedId;
@@ -79,37 +97,41 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(
-                __CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class(
+                self::class . ' can contain only components with get/set option funcionality, ' . get_class(
                     $child
                 ) . ' given.'
             );
         }
     }
 
-    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void
+    /**
+     * @phpstan-param array<string,scalar|null|array<string,scalar|null>> $conflicts
+     */
+    public function setConflicts(array $conflicts, ?ContainerWithOptions $container = null): void
     {
         $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
-            if ($component instanceof Container) {
+            if ($component instanceof ContainerWithOptions) {
+                /** @phpstan-var array<string,scalar|null> $value */
                 $this->setConflicts($value, $component);
             } elseif ($component instanceof BaseControl) {
-                $component->addError(null);
+                $component->addError(_('Field does not match an existing record.'));
             }
         }
     }
 
     private function createClearButton(): void
     {
-        $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
+        $submit = $this->addSubmit(self::SUBMIT_CLEAR, (new Title(null, _('Delete'), 'fas fa-times'))->toHtml())
             ->setValidationScope(null);
-        $submit->getControlPrototype()->class[] = self::CSS_AJAX;
-        $submit->onClick[] = function () {
+        $cb = function (): void {
             if ($this->allowClear) {
                 $this->referencedId->setValue(null);
-                $this->referencedId->invalidateFormGroup();
             }
         };
+        $submit->onClick[] = $cb;
+        $submit->onInvalidClick[] = $cb;
     }
 
     private function createCompactValue(): void
@@ -124,11 +146,13 @@ abstract class ReferencedContainer extends ContainerWithOptions
     {
         $this->setOption(
             'id',
-            sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'))
+            sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath(Form::class))
         );
-        $referencedId = $this->referencedId->getHtmlId();
-        $this->setOption('data-referenced-id', $referencedId);
-        $this->setOption('data-referenced', 1);
+        if (isset($this->referencedId)) {
+            $referencedId = $this->referencedId->getHtmlId();
+            $this->setOption('data-referenced-id', $referencedId);
+            $this->setOption('data-referenced', 1);
+        }
     }
 
     /**
@@ -140,5 +164,5 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?ActiveRow $model, string $mode): void;
+    abstract public function setModel(?Model $model, ReferencedIdMode $mode): void;
 }

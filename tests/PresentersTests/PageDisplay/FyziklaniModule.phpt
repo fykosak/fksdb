@@ -7,8 +7,10 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
+// phpcs:enable
 class FyziklaniModule extends EventModuleTestCase
 {
 
@@ -21,13 +23,15 @@ class FyziklaniModule extends EventModuleTestCase
             'begin' => new \DateTime(),
             'end' => new \DateTime(),
             'name' => 'TEST FOF',
+            'registration_begin' => new \DateTime(),
+            'registration_end' => new \DateTime(),
         ];
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(GameSetupService::class)->createNewModel([
+        $this->container->getByType(GameSetupService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'game_start' => new \DateTime(),
             'result_display' => new \DateTime(),
@@ -43,24 +47,26 @@ class FyziklaniModule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Fyziklani:Close', 'list'],
-            ['Fyziklani:Dashboard', 'default'],
-            ['Fyziklani:Diplomas', 'default',],
-            ['Fyziklani:Diplomas', 'results'],
-            ['Fyziklani:GameSetup', 'default'],
-            ['Fyziklani:Statistics', 'table'],
-            ['Fyziklani:Statistics', 'team'],
-            ['Fyziklani:Statistics', 'task'],
-            ['Fyziklani:Statistics', 'correlation'],
-            ['Fyziklani:Presentation', 'default'],
-            ['Fyziklani:Submit', 'create'],
-            ['Fyziklani:Submit', 'list'],
-            ['Fyziklani:Task', 'list'],
-            ['Fyziklani:Seating', 'list'],
-            ['Fyziklani:Seating', 'print'],
+            ['EventGame:Close', 'list'],
+            ['EventGame:Dashboard', 'default'],
+            ['EventGame:Diplomas', 'default',],
+            ['EventGame:Diplomas', 'results'],
+            ['EventGame:GameSetup', 'default'],
+            ['EventGame:Statistics', 'table'],
+            ['EventGame:Statistics', 'team'],
+            ['EventGame:Statistics', 'task'],
+            ['EventGame:Statistics', 'correlation'],
+            ['EventGame:Presentation', 'default'],
+            ['EventGame:Submit', 'create'],
+            ['EventGame:Submit', 'list'],
+            ['EventGame:Task', 'list'],
+            ['EventGame:Seating', 'default'],
+            ['EventGame:Seating', 'print'],
         ];
     }
 }
 
+// phpcs:disable
 $testCase = new FyziklaniModule($container);
 $testCase->run();
+// phpcs:enable

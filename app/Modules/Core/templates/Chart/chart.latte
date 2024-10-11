@@ -1,11 +1,18 @@
-{block content}
-    {varType FKSDB\Components\Charts\Core\Chart $chart}
-    {var $description = $chart->getDescription()}
+{varType FKSDB\Components\Charts\Core\Chart $chart}
+{block outerContent}
+    {var string|null $description = $chart->getDescription()}
     {if $description}
-        <p>
-            {$description|noescape}
-        </p>
-        <hr/>
+        <div class="panel color-auto">
+            <div class="container px-3">
+                <p>
+                    {$description|noescape}
+                </p>
+            </div>
+        </div>
     {/if}
-    {control chart}
+    <div class="panel color-auto">
+        <div class="container-fluid px-3">
+            {control chart}
+        </div>
+    </div>
 {/block}

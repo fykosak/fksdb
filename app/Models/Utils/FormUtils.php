@@ -6,16 +6,40 @@ namespace FKSDB\Models\Utils;
 
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
-    public static function emptyStrToNull(iterable $values): ArrayHash
+    /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function toPrimitive(array $values): array
     {
-        $result = new ArrayHash();
+        $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $result[$key] = self::emptyStrToNull($value);
+                $result[$key] = self::toPrimitive((array)$value);
+            } elseif ($value instanceof \DateTimeInterface) {
+                $result[$key] = $value->format('c');
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function emptyStrToNull2(array $values): array
+    {
+        $result = [];
+        foreach ($values as $key => $value) {
+            if (is_iterable($value)) {
+                $result[$key] = self::emptyStrToNull2((array)$value);
             } elseif ($value === '') {
                 $result[$key] = null;
             } else {
@@ -25,27 +49,17 @@ class FormUtils
         return $result;
     }
 
-    public static function emptyStrToNull2(iterable $values): array
+    /**
+     * @phpstan-template TArray of array
+     * @phpstan-param TArray $values
+     * @phpstan-return TArray
+     */
+    public static function removeEmptyValues(array $values, bool $ignoreNulls = false): array
     {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_iterable($value)) {
-                $result[$key] = self::emptyStrToNull2($value);
-            } elseif ($value === '') {
-                $result[$key] = null;
-            } else {
-                $result[$key] = $value;
-            }
-        }
-        return $result;
-    }
-
-    public static function removeEmptyValues(iterable $values, bool $ignoreNulls = false): array
-    {
-        $result = [];
-        foreach ($values as $key => $value) {
-            if (is_iterable($value)) {
-                $clear = self::removeEmptyValues($value, $ignoreNulls);
+                $clear = self::removeEmptyValues((array)$value, $ignoreNulls);
                 if (count($clear)) {
                     $result[$key] = $clear;
                 }

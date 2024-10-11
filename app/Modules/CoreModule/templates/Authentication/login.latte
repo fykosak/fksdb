@@ -1,16 +1,12 @@
 {layout ./@layout.latte}
 {block form}
-    {form loginForm class => 'form-signin'}
-        <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
+    {control loginForm}
+    <div class="d-grid gap-2">
+        <div class="fks-divider"><span>{_'or'}</span></div>
+            <a n:href=":Core:Register:default" class="btn btn-outline-primary">{_'Register'}</a>
 
-        {input id}
-        {input password}
-        <div class="d-grid gap-2">
-            {input send class => 'btn btn-outline-success'}
-            <a n:href=":Public:Register:default" class="btn btn-outline-info">{_'Register'}</a>
-            <a class="btn btn-outline-secondary btn-sm" n:href="recover, backlink => null, bc => null, flag => null">{_'Forgotten password'}</a>
-            <a class="btn btn-outline-secondary btn-sm" href="{link google!}"><i
-                        class="fa fa-google me-3"/>{_'Login via Google account'}</a>
-        </div>
-    {/form loginForm}
+        <a class="btn btn-outline-dark btn-sm" n:href="recover, backlink => null, bc => null, flag => null">{_'Forgotten password'}</a>
+            {*<a class="btn btn-outline-dark btn-sm" href="{link google!}">
+                <i class="fa-brands fa-google me-3"/>{_'Login via FYKOS Google account'}</a>*}
+    </div>
 {/block}

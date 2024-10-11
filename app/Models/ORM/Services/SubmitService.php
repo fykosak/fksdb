@@ -4,56 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\TaskModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Service\Service;
+use Fykosak\NetteORM\Selection\TypedSelection;
 
 /**
- * @method SubmitModel findByPrimary($key)
- * @method SubmitModel createNewModel(array $data)
- * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
+ * @phpstan-extends Service<SubmitModel>
  */
-class SubmitService extends Service
+final class SubmitService extends Service
 {
-
-    private array $submitCache = [];
-
-    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?SubmitModel
+    /**
+     * @phpstan-return TypedSelection<SubmitModel>
+     */
+    public function getForContestYear(ContestYearModel $contestYear, int $series): TypedSelection
     {
-        $key = $ctId . ':' . $taskId;
-        if (!isset($this->submitCache[$key]) || !$useCache) {
-            $result = $this->getTable()->where([
-                'contestant_id' => $ctId,
-                'task_id' => $taskId,
-            ])->fetch();
-            $this->submitCache[$key] = $result ?? null;
-        }
-        return $this->submitCache[$key];
-    }
-
-    public function findByContestant(ContestantModel $contestant, TaskModel $task, bool $useCache = true): ?SubmitModel
-    {
-        $key = $contestant->contestant_id . ':' . $task->task_id;
-        if (!isset($this->submitCache[$key]) || !$useCache) {
-            $this->submitCache[$key] = $contestant->related(DbNames::TAB_SUBMIT)->where(
-                'task_id',
-                $task->task_id
-            )->fetch();
-        }
-        return $this->submitCache[$key];
-    }
-
-    public static function serializeSubmit(?SubmitModel $submit, TaskModel $task, ?int $studyYear): array
-    {
-        return [
-            'submitId' => $submit ? $submit->submit_id : null,
-            'name' => $task->getFQName(),
-            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
-            'taskId' => $task->task_id,
-            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
-            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
-        ];
+        return $this->getTable()
+            ->where([
+                'task.contest_id' => $contestYear->contest_id,
+                'task.year' => $contestYear->year,
+                'task.series' => $series,
+            ]);
     }
 }

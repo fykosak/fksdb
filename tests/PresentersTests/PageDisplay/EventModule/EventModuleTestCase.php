@@ -10,13 +10,12 @@ use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
 {
-
     protected EventModel $event;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->event = $this->getContainer()->getByType(EventService::class)->createNewModel($this->getEventData());
+        $this->event = $this->container->getByType(EventService::class)->storeModel($this->getEventData());
     }
 
     abstract protected function getEventData(): array;

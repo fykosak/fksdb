@@ -1,0 +1,113 @@
+transitions:
+    tabor:
+        machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+        stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+        transitions:
+            __init->pending:
+                label: _('Create application')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+
+            # create appliction
+            pending|auto.invited->invited:
+                label: _('Pozvat účastníka')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                afterExecute:
+                    -  FKSDB\Models\Email\Source\Tabor\InvitedEmail()
+            pending|auto.spare->spare:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Pozvat náhradníka')
+                afterExecute:
+                    -  FKSDB\Models\Email\Source\Tabor\SpareEmail()
+
+            # reminders
+            invited->invited1:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send first call')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\ReminderEmail()
+            invited1->invited2:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send second call')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\ReminderEmail()
+            spare->spare1:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send first call')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\ReminderEmail()
+            spare1->spare2:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Send second call')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\ReminderEmail()
+
+            # apply
+            invited|invited1|invited2->applied:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Potvrdit účast')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\AppliedEmail()
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+            spare|spare1|spare2->interested:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Chci jet')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\InterestedEmail()
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+            interested->applied:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Schválit jako účastníka')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\AppliedInterestedEmail()
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+            applied->paid:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Zaplatil')
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\PaidEmail()
+
+            # person didn't confirm
+            invited|invited1|invited2->spare:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Move to spare')
+                validation: false
+                behaviorType: danger
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\NoConfirmEmail()
+
+            # rejected
+            invited|invited1|invited2->rejected:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Odmítnout účast')
+                validation: false
+                behaviorType: danger
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+            spare|spare1|spare2->rejected:
+                condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                label: _('Odmítnout účast')
+                validation: false
+                behaviorType: warning
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+            interested->rejected:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Odmítnout jako účastníka')
+                behaviorType: warning
+                afterExecute:
+                    - FKSDB\Models\Email\Source\Tabor\RejectedEmail()
+                    - FKSDB\Models\Email\Source\Tabor\OrganizerEmail()
+
+            # after event
+            applied|paid->participated:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Zúčastnil se')
+            applied|paid->missed:
+                condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                label: _('Nepřijel')
+
+            # cancel
+            invited|invited1|invited2|auto.invited|spare|spare1|spare2|auto.spare|applied|interested|paid->cancelled:
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                label: _('Zrušit přihlášku')
+                behaviorType: danger

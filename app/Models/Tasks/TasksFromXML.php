@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 use Fykosak\Utils\Logging\MemoryLogger;
 
+/**
+ * @phpstan-extends Stage<SeriesData>
+ */
 class TasksFromXML extends Stage
 {
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
-    /** @var array   xml element => task column */
+    /** @phpstan-var array<string,string> */
     private static array $xmlToColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',
@@ -23,7 +27,7 @@ class TasksFromXML extends Stage
 
     private TaskService $taskService;
 
-    public function __construct(TaskService $taskService)
+    public function inject(TaskService $taskService): void
     {
         $this->taskService = $taskService;
     }
@@ -55,6 +59,9 @@ class TasksFromXML extends Stage
 
         // update fields
         $data = [];
+        /**
+         * @var string $column
+         */
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
             $value = null;
 
@@ -63,7 +70,7 @@ class TasksFromXML extends Stage
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
-                /** @var \SimpleXMLElement[] $elements */
+                /** @phpstan-var \SimpleXMLElement[] $elements */
                 $elements = $xMLTask->{$name};
                 $csvalue = null;
 
@@ -90,11 +97,10 @@ class TasksFromXML extends Stage
             }
             $data[$column] = $value;
         }
-
-        // obtain FKSDB\Models\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($datum->getContestYear(), $series, $tasknr);
-
-        $this->taskService->storeModel(
+        /** @var TaskModel|null $task */
+        $task = $datum->getContestYear()->getTasks($series)->where('tasknr', $tasknr)->fetch();
+        /** @var TaskModel $task */
+        $task = $this->taskService->storeModel(
             array_merge($data, [
                 'contest_id' => $datum->getContestYear()->contest_id,
                 'year' => $datum->getContestYear()->year,
@@ -103,7 +109,6 @@ class TasksFromXML extends Stage
             ]),
             $task
         );
-        // forward it to pipeline
         $datum->addTask($tasknr, $task);
     }
 }

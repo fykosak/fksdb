@@ -7,21 +7,21 @@ namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
-use Nette\Forms\Controls\BaseControl;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<QueryModel,never>
+ */
 class TagsColumnFactory extends ColumnFactory
 {
     private TagTypeService $storedQueryTagTypeService;
 
-    public function __construct(TagTypeService $storedQueryTagTypeService, MetaDataFactory $metaDataFactory)
+    public function injectService(TagTypeService $storedQueryTagTypeService): void
     {
-        parent::__construct($metaDataFactory);
         $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 
@@ -38,17 +38,22 @@ class TagsColumnFactory extends ColumnFactory
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([
-                        'class' => 'badge bg-color-' . $tag->color,
+                        'class' => 'me-2 badge bg-' . $tag->getColor(),
                         'title' => $tag->description,
                     ])
+                    ->addHtml(Html::el('i')->addAttributes(['class' => 'fas fa-tag me-1']))
                     ->addText($tag->name)
             );
         }
         return $baseEl;
     }
 
-    protected function createFormControl(...$args): BaseControl
+    /**
+     * @phpstan-return AutocompleteSelectBox<StoredQueryTagTypeProvider>
+     */
+    protected function createFormControl(...$args): AutocompleteSelectBox
     {
+        /** @phpstan-var AutocompleteSelectBox<StoredQueryTagTypeProvider> $select */
         $select = new AutocompleteSelectBox(true, $this->getTitle(), 'tags');
         $select->setDataProvider(new StoredQueryTagTypeProvider($this->storedQueryTagTypeService));
         $select->setMultiSelect(true);

@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\Model;
-use Nette\Utils\Html;
+use FKSDB\Models\ORM\Columns\Types\StringColumnFactory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Form;
 
-class NameColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends StringColumnFactory<TeamModel2,never>
+ */
+class NameColumnFactory extends StringColumnFactory
 {
-
-    /* TODO fix it
-     *   public function createField(...$args): BaseControl {
-     *       $control = new TextInput($this->getTitle());
-     *       $control->addRule(Form::PATTERN, _('Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici
-     *  a ASCII znaky.'), '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u');
-     *       return $control;
-     *   }
-     * */
-    protected function createHtmlValue(Model $model): Html
+    public function createFormControl(...$args): BaseControl
     {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+        $control = parent::createFormControl(...$args);
+        $control->setRequired();
+        $control->addRule(
+            Form::PATTERN,
+            _(
+                'The team name can contain only Latin, Greek, and Cyrillic alphabet, and ASCII characters.'
+            ),
+            '^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$'
+        );
+        return $control;
     }
 }

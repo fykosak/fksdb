@@ -17,13 +17,14 @@
         {else}
             {if $showParametrizeForm}
                 {foreach $formats as $formatName => $label}
-                    <a class="btn btn-outline-secondary btn-sm" href="{link 'format!', 'format' => $formatName}">{$label}</a>
+                    <a class="btn btn-outline-secondary"
+                       href="{link 'format!', 'format' => $formatName}">{$label}</a>
                 {/foreach}
             {/if}
             {if $storedQuery}
-                {if $storedQuery->hasQueryPattern()}
-                    <a class="btn btn-outline-secondary btn-sm"
-                       href="{plink :Org:StoredQuery:detail 'id'=>$storedQuery->getQueryPattern()->query_id}">{_'Detail of the query'}</a>
+                {if isset($storedQuery->queryPattern)}
+                    <a class="btn btn-outline-secondary"
+                       href="{plink :Organizer:StoredQuery:detail 'id'=>$storedQuery->queryPattern->query_id}">{_'Detail of the query'}</a>
                 {/if}
             {/if}
             {control grid}

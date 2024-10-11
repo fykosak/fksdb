@@ -25,8 +25,8 @@ class SoapResponse implements Response
     {
         try {
             $this->soapServer->handle();
-        } catch (\Throwable $e) {
-            Debugger::log($e);
+        } catch (\Throwable $exception) {
+            Debugger::log($exception, 'soap');
         }
     }
 }

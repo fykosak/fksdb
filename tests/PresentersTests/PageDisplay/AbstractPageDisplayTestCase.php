@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\Grant\BaseGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -24,21 +25,23 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
     {
         parent::setUp();
 
-        $this->person = $this->getContainer()->getByType(PersonService::class)->createNewModel([
+        $this->person = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $this->login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
+        $this->login = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->person->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(GrantService::class)->createNewModel(
-            ['login_id' => $this->login->login_id, 'role_id' => 1000, 'contest_id' => 1]
+        $this->container->getByType(BaseGrantService::class)->storeModel(
+            ['login_id' => $this->login->login_id, 'role' => ExplicitBaseRole::Cartesian]
         );
         $this->authenticateLogin($this->login);
     }
-
+    /**
+     * @phpstan-param array<scalar> $params
+     */
     final protected function createRequest(string $presenterName, string $action, array $params): Request
     {
         $params['lang'] = $params['lang'] ?? 'en';
@@ -48,6 +51,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
 
     /**
      * @dataProvider getPages
+     * @phpstan-param array<scalar> $params
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void
     {
@@ -66,10 +70,17 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
         });
     }
 
+    /**
+     * @phpstan-param array<scalar> $params
+     * @phpstan-return array{string,string,array<scalar>}
+     */
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         return [$presenterName, $action, $params];
     }
 
+    /**
+     * @phpstan-return array<array{string,string}>
+     */
     abstract public function getPages(): array;
 }

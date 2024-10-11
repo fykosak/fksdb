@@ -1,6 +1,6 @@
 name: PHP (Nette Tester)
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   test:
@@ -31,11 +31,18 @@ jobs:
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
         run: composer install --no-progress --prefer-dist
-      - name: FKSDB configuration
-        run: "sed -e 's/user:/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
+      - name: FKSDB configuration user
+        run: "sed -e 's/user: root/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
+      - name: FKSDB configuration password
+        run: "sed -ie 's/password: password/password:/' app/config/config.local.neon"
+      - name: FKSDB configuration database
+        run: "sed -ie 's/dbname=fksdb/dbname=fksdb_test1/' app/config/config.local.neon"
+      - name: FKSDB configuration for MySQL
+        if: ${{ startsWith(matrix.database, 'mysql' ) }}
+        run: "sed -ie 's/mysql:host=mariadb/mysql:host=127.0.0.1/' app/config/config.local.neon"
       - name: FKSDB configuration for MariaDB
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
-        run: sed -ie 's/mysql:host=127.0.0.1/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.tester.neon
+        run: "sed -ie 's/mysql:host=mariadb/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.local.neon"
       - name: i18n compile
         run: |
           sudo apt-get install gettext
@@ -55,7 +62,7 @@ jobs:
         name: Test
       - if: failure()
         name: Failure output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: output
+          name: output ${{ matrix.php }} ${{ matrix.database }}
           path: tests/**/*.actual

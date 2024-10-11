@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Models\ORM\Services\SubmitService;
+use Fykosak\Utils\UI\Title;
 
 class PerSeriesChart extends AbstractPerSeriesChart
 {
@@ -16,6 +17,9 @@ class PerSeriesChart extends AbstractPerSeriesChart
         $this->submitService = $submitService;
     }
 
+    /**
+     * @phpstan-return array<int,array<int,int>>
+     */
     protected function getData(): array
     {
         $query = $this->submitService->getTable()
@@ -23,18 +27,19 @@ class PerSeriesChart extends AbstractPerSeriesChart
             ->group('task.series, task.year')
             ->select('COUNT(DISTINCT contestant_id) AS count,task.series, task.year');
         $data = [];
+        /** @phpstan-var object{year:number,series:number,count:int} $row */
         foreach ($query as $row) {
-            $year = $row->year;
-            $series = $row->series;
+            $year = (int)$row->year;
+            $series = (int)$row->series;
             $data[$year] = $data[$year] ?? [];
-            $data[$year][$series] = $row->count;
+            $data[$year][$series] = (int)$row->count;
         }
         return $data;
     }
 
-    public function getTitle(): string
+    public function getTitle(): Title
     {
-        return _('Contestants per series');
+        return new Title(null, _('Contestants per series'), 'fas fa-chart-column');
     }
 
     public function getDescription(): ?string

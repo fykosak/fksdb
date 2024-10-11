@@ -7,37 +7,39 @@ namespace FKSDB\Models\Results;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
+use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2023;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2012;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2014;
+use FKSDB\Models\Results\EvaluationStrategies\EvaluationVyfuk2023;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
 use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
-use Nette\Database\Connection;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
+/**
+ * @phpstan-implements XMLNodeSerializer<AbstractResultsModel>
+ */
 class ResultsModelFactory implements XMLNodeSerializer
 {
     use SmartObject;
 
-    private Connection $connection;
-    private TaskService $taskService;
+    private Container $container;
 
-    public function __construct(Connection $connection, TaskService $taskService)
+    public function __construct(Container $container)
     {
-        $this->connection = $connection;
-        $this->taskService = $taskService;
+        $this->container = $container;
     }
 
     /**
@@ -45,13 +47,7 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createCumulativeResultsModel(ContestYearModel $contestYear): CumulativeResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new CumulativeResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new CumulativeResultsModel($this->container, $contestYear);
     }
 
     /**
@@ -59,13 +55,7 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createDetailResultsModel(ContestYearModel $contestYear): DetailResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new DetailResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new DetailResultsModel($this->container, $contestYear);
     }
 
     /**
@@ -73,48 +63,47 @@ class ResultsModelFactory implements XMLNodeSerializer
      */
     public function createBrojureResultsModel(ContestYearModel $contestYear): BrojureResultsModel
     {
-        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
-        if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
-            );
-        }
-        return new BrojureResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
+        return new BrojureResultsModel($this->container, $contestYear);
     }
 
     /**
      * @throws BadRequestException
+     * @deprecated
      */
     public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
     {
-        $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
         return new SchoolCumulativeResultsModel(
-            $cumulativeResultsModel,
+            $this->container,
+            $this->createCumulativeResultsModel($contestYear),
             $contestYear,
-            $this->taskService,
-            $this->connection
         );
     }
 
     /**
      * @throws BadRequestException
      */
-    public static function findEvaluationStrategy(ContestYearModel $contestYear): EvaluationStrategy
-    {
+    public static function findEvaluationStrategy(
+        Container $container,
+        ContestYearModel $contestYear
+    ): EvaluationStrategy {
         switch ($contestYear->contest_id) {
             case ContestModel::ID_FYKOS:
-                if ($contestYear->year >= 25) {
-                    return new EvaluationFykos2011();
+                if ($contestYear->year >= 37) {
+                    return new EvaluationFykos2023($container, $contestYear);
+                } elseif ($contestYear->year >= 25) {
+                    return new EvaluationFykos2011($container, $contestYear);
                 } else {
-                    return new EvaluationFykos2001();
+                    return new EvaluationFykos2001($container, $contestYear);
                 }
             case ContestModel::ID_VYFUK:
-                if ($contestYear->year >= 4) {
-                    return new EvaluationVyfuk2014();
+                if ($contestYear->year >= 12) {
+                    return new EvaluationVyfuk2023($container, $contestYear);
+                } elseif ($contestYear->year >= 4) {
+                    return new EvaluationVyfuk2014($container, $contestYear);
                 } elseif ($contestYear->year >= 2) {
-                    return new EvaluationVyfuk2012();
+                    return new EvaluationVyfuk2012($container, $contestYear);
                 } else {
-                    return new EvaluationVyfuk2011();
+                    return new EvaluationVyfuk2011($container, $contestYear);
                 }
         }
         throw new BadRequestException(
@@ -142,7 +131,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->value);
+                $categoryNode->setAttribute('id', (string)$category->contest_category_id);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);
@@ -189,7 +178,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 }
             }
         } catch (\Throwable $exception) {
-            Debugger::log($exception);
+            Debugger::log($exception, 'soap');
             throw new \SoapFault('Receiver', 'Internal error.');
         }
     }

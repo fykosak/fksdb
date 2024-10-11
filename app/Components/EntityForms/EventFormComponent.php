@@ -5,41 +5,47 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EventService;
-use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Models\Utils\Utils;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Form;
 use Nette\Neon\Neon;
-use Nette\Utils\Html;
 
 /**
- * @property EventModel|null $model
+ * @phpstan-extends ModelForm<EventModel,array{event:array{
+ *       event_type_id:int,
+ *       event_year:int,
+ *       name:string,
+ *       begin:\DateTimeInterface,
+ *       end:\DateTimeInterface,
+ *       registration_begin:\DateTimeInterface,
+ *       registration_end:\DateTimeInterface,
+ *       report_cs:string,
+ *       report_en:string,
+ *       description_cs:string,
+ *       description_en:string,
+ *       place:string,
+ *       parameters:string,
+ *  }}>
  */
-class EventFormComponent extends EntityFormComponent
+class EventFormComponent extends ModelForm
 {
     public const CONT_EVENT = 'event';
 
     private ContestYearModel $contestYear;
-    private SingleReflectionFormFactory $singleReflectionFormFactory;
     private AuthTokenService $authTokenService;
     private EventService $eventService;
-    private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ContestYearModel $contestYear, Container $container, ?EventModel $model)
     {
@@ -48,20 +54,17 @@ class EventFormComponent extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        SingleReflectionFormFactory $singleReflectionFormFactory,
         AuthTokenService $authTokenService,
-        EventService $eventService,
-        EventDispatchFactory $eventDispatchFactory
+        EventService $eventService
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->eventService = $eventService;
-        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
     protected function configureForm(Form $form): void
     {
@@ -69,45 +72,22 @@ class EventFormComponent extends EntityFormComponent
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    protected function handleFormSuccess(Form $form): void
-    {
-        $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
-        $data['year'] = $this->contestYear->year;
-        /** @var EventModel $model */
-        $model = $this->eventService->storeModel($data, $this->model);
-        $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
-            $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
-            $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
-            $paramControl->setOption('description', $this->createParamDescription($holder));
-            $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
-                $scheme = $holder->primaryHolder->paramScheme;
+            $paramControl = $form->getComponent(self::CONT_EVENT)->getComponent('parameters'); // @phpstan-ignore-line
+            $paramControl->addRule(function (BaseControl $control): bool {
                 $parameters = $control->getValue();
                 try {
                     if ($parameters) {
-                        $parameters = Neon::decode($parameters);
-                    } else {
-                        $parameters = [];
+                        Neon::decode($parameters);
                     }
-                    NeonScheme::readSection($parameters, $scheme);
                     return true;
-                } catch (NeonSchemaException $exception) {
+                } catch (\Throwable $exception) {
                     $control->addError($exception->getMessage());
                     return false;
                 }
@@ -118,49 +98,54 @@ class EventFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws ForbiddenRequestException
      */
-    private function createEventContainer(): ModelContainer
+    private function createEventContainer(): ContainerWithOptions
     {
-        return $this->singleReflectionFormFactory->createContainer('event', [
-            'event_type_id',
-            'event_year',
-            'name',
-            'begin',
-            'end',
-            'registration_begin',
-            'registration_end',
-            'report',
-            'parameters',
-        ], $this->contestYear->contest);
-    }
-
-    private function createParamDescription(Holder $holder): Html
-    {
-        $scheme = $holder->primaryHolder->paramScheme;
-        $result = Html::el('ul');
-        foreach ($scheme as $key => $meta) {
-            $item = Html::el('li');
-            $result->addText($item);
-
-            $item->addHtml(Html::el()->setText($key));
-            if (isset($meta['default'])) {
-                $item->addText(': ');
-                $item->addHtml(Html::el()->setText(Utils::getRepresentation($meta['default'])));
-            }
-        }
-        return $result;
+        $container = new ModelContainer($this->container, 'event');
+        $container->addField('event_type_id', ['required' => true], null, $this->contestYear->contest);
+        $container->addField('event_year', ['required' => true]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('begin', ['required' => true]);
+        $container->addField('end', ['required' => true]);
+        $container->addField('registration_begin', ['required' => false]);
+        $container->addField('registration_end', ['required' => false]);
+        $container->addField('report_cs', ['required' => false]);
+        $container->addField('report_en', ['required' => false]);
+        $container->addField('description_cs', ['required' => false]);
+        $container->addField('description_en', ['required' => false]);
+        $container->addField('place', ['required' => false]);
+        $container->addField('parameters', ['required' => false]);
+        return $container;
     }
 
     private function updateTokens(EventModel $event): void
     {
-        $connection = $this->authTokenService->explorer->getConnection();
-        $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
         /** @var AuthTokenModel $token $token */
         foreach ($this->authTokenService->findTokensByEvent($event) as $token) {
-            $this->authTokenService->updateModel($token, $tokenData);
+            $this->authTokenService->storeModel($tokenData, $token);
         }
-        $connection->commit();
+    }
+
+    protected function innerSuccess(array $values, Form $form): EventModel
+    {
+        $data = $values[self::CONT_EVENT];
+        $data['year'] = $this->contestYear->year;
+        return $this->eventService->storeModel($data, $this->model);
+    }
+
+    protected function getPostprocessing(): array
+    {
+        $processing = parent::getPostprocessing();
+        $processing[] = fn($model) => $this->updateTokens($model);
+        return $processing;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 }

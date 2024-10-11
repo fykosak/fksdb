@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\ORM\Models\PersonHasFlagModel;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 
-class PersonHasFlagService extends Service
+/**
+ * @phpstan-extends Service<PersonHasFlagModel>
+ */
+final class PersonHasFlagService extends Service
 {
-
-    public function createNewModel(array $data): Model
+    public function storeModel(array $data, ?Model $model = null): PersonHasFlagModel
     {
         $data['modified'] = new \DateTime();
-        return parent::createNewModel($data);
-    }
-
-    public function updateModel(Model $model, array $data): bool
-    {
-        $data['modified'] = new \DateTime();
-        return parent::updateModel($model, $data);
+        return parent::storeModel($data, $model);
     }
 }

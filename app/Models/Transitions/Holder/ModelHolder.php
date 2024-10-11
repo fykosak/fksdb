@@ -5,15 +5,26 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Holder;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Model\Model;
 
+/**
+ * @phpstan-template TModel of Model
+ * @phpstan-template TState of (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ */
 interface ModelHolder
 {
-    public function updateState(EnumColumn $newState): void;
+    /**
+     * @phpstan-param TState $newState
+     */
+    public function setState(EnumColumn $newState): void;
 
-    public function getState(): ?EnumColumn;
+    /**
+     * @phpstan-return TState
+     */
+    public function getState(): EnumColumn;
 
-    public function getModel(): ?Model;
-
-    public function updateData(array $data): void;
+    /**
+     * @phpstan-return TModel
+     */
+    public function getModel(): Model;
 }

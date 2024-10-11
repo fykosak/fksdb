@@ -1,27 +1,94 @@
+@import "variables";
 @import "colors";
-@import "mixins/navigation-item";
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "navigation-item";
 
-.navigation-item {
-  @include navigation-item(var(--color-fykos-main), white, false, false);
+[data-bs-theme="light"][data-style-id~="default"] {
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
-[data-style-id~="fykos"] {
-  @include page-theme(var(--color-fykos-main));
+[data-bs-theme="dark"][data-style-id~="default"] {
+  --fks-page-theme-color: #{$body-color-dark};
+  @include page-theme($body-color-dark, #000);
 }
 
-[data-style-id~="vyfuk"] {
-  @include page-theme(var(--color-vyfuk-main));
+[data-style-id~="login"] {
+  --fks-page-theme-color: #000;
+  @include page-theme(#000);
 }
 
-[data-style-id~="event-type-1"] {
-  @include page-theme(var(--color-fof-main));
+[data-style-id="contest-fykos"],
+[data-style-id="event-type-3"],
+[data-style-id="event-type-4"],
+[data-style-id="event-type-5"],
+[data-style-id="event-type-6"],
+[data-style-id="event-type-7"],
+[data-style-id="event-type-16"] {
+  --fks-page-theme-color: #{$fykos-color};
+  @include page-theme($fykos-color);
+
+  main {
+   // background-image: url(./../../www/images/contests/fykos.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 }
 
-[data-style-id~="event-type-9"] {
-  @include page-theme(var(--color-fol-main));
+[data-style-id="contest-vyfuk"],
+[data-style-id="event-type-10"],
+[data-style-id="event-type-11"],
+[data-style-id="event-type-12"],
+[data-style-id="event-type-15"] {
+  --fks-page-theme-color: #{$vyfuk-color};
+  @include page-theme($vyfuk-color);
 }
 
-[data-style-id~="error"] {
+[data-style-id="contest-ctyrboj"], [data-style-id~="event-type-17"] {
+  --fks-page-theme-color: #{$ctyrboj-color};
+  @include page-theme($ctyrboj-color);
+}
+
+[data-style-id="event-type-1"] {
+  --fks-page-theme-color: #{$fof-color};
+  @include page-theme($fof-color);
+}
+
+[data-style-id="event-type-2"], [data-style-id~="event-type-14"] {
+  --fks-page-theme-color: #{$dsef-color};
+  @include page-theme($dsef-color);
+}
+
+[data-style-id="event-type-9"] {
+  --fks-page-theme-color: #{$fol-color};
+  @include page-theme($fol-color);
+}
+
+[data-style-id="error"] {
+  --fks-page-theme-color: #{$danger};
   @include page-theme($danger);
+}
+
+.icon {
+  &::before {
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    content: "";
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 1em 1em;
+  }
+
+  &.icon-fykos {
+    &::before {
+      background-image: url(./../../www/images/contests/fykos.svg);
+    }
+  }
+
+  &.icon-vyfuk {
+    &::before {
+      background-image: url(./../../www/images/contests/vyfuk.svg);
+    }
+  }
+
 }

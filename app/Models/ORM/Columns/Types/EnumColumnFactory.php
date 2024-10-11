@@ -6,21 +6,33 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\Model;
+use FKSDB\Models\UI\NotSetBadge;
+use FKSDB\Models\Utils\FakeStringEnum;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
+/**
+ * @phpstan-extends ColumnFactory<Model,never>
+ */
 class EnumColumnFactory extends ColumnFactory
 {
-    /** @var EnumColumn|string|enum */
+
+    /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */
     private string $className;
 
+    /**
+     * @phpstan-param class-string<EnumColumn&FakeStringEnum> $className
+     */
     public function setEnumClassName(string $className): void
     {
         $this->className = $className;
     }
 
+    /**
+     * @param never $args
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $items = [];
@@ -29,6 +41,7 @@ class EnumColumnFactory extends ColumnFactory
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($items);
+        $control->setPrompt(_('Select options'));
         return $control;
     }
 
@@ -37,7 +50,10 @@ class EnumColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $enum = $model->{$this->getModelAccessKey()};
+        $enum = $model->{$this->modelAccessKey};
+        if (is_null($enum)) {
+            return NotSetBadge::getHtml();
+        }
         if (!$enum instanceof EnumColumn) {
             throw new BadTypeException(EnumColumn::class, $enum);
         }

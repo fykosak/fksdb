@@ -1,0 +1,15 @@
+{layout '../layout.form.latte'}
+{varType FKSDB\Models\ORM\Models\SubmitModel $submit}
+{define submit-row}
+    <td>
+        {if $submit && ($submit->source->value === FKSDB\Models\ORM\Models\SubmitSource::UPLOAD)}
+            <span class="badge bg-info">{_'was uploaded'}</span>
+        {elseif $submit && ($submit->source === FKSDB\Models\ORM\Models\SubmitSource::QUIZ)}
+            <span class="badge bg-info">{_'was uploaded via a quiz form'}</span>
+        {else}
+        {var string $name = 'submits[' . $ctId . '][' . $taskId . ']'}
+            <input type="date" class="form-control" name="{$name}"
+                   value="{isset($submit)?$submit->submitted_on->format('Y-m-d'):null}"/>
+        {/if}
+    </td>
+{/define}

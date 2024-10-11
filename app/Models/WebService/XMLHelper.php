@@ -16,15 +16,31 @@ class XMLHelper
         throw new InvalidArgumentException();
     }
 
-    public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void
-    {
+    /**
+     * @throws \DOMException
+     * @phpstan-param array<string,mixed> $data
+     */
+    public static function fillArrayToNode(
+        array $data,
+        \DOMDocument $doc,
+        \DOMNode $parentNode,
+        bool $recursive = false
+    ): void {
         foreach ($data as $key => $datum) {
             $childNode = $doc->createElement($key);
-            $childNode->nodeValue = htmlspecialchars((string)$datum);
+            if ($recursive && is_array($datum)) {
+                XMLHelper::fillArrayToNode($datum, $doc, $childNode);
+            } else {
+                $childNode->nodeValue = htmlspecialchars((string)$datum);
+            }
             $parentNode->appendChild($childNode);
         }
     }
 
+    /**
+     * @throws \DOMException
+     * @phpstan-param array<string,array<string,string>> $data
+     */
     public static function fillArrayArgumentsToNode(
         string $attrName,
         array $data,

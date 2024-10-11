@@ -5,94 +5,59 @@ declare(strict_types=1);
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\Authentication\Exceptions\NoLoginException;
-use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Components\Controls\Login\LoginForm;
+use FKSDB\Components\Controls\Recovery\RecoveryForm;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
-use FKSDB\Models\Utils\Utils;
-use FKSDB\Modules\Core\BasePresenter;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
-use Nette\Application\UI\Form;
 use Nette\Http\SessionSection;
 use Nette\Security\AuthenticationException;
 use Nette\Security\UserStorage;
 
 final class AuthenticationPresenter extends BasePresenter
 {
-
     /** @const Reason why the user has been logged out. */
     public const PARAM_REASON = 'reason';
     /** @persistent */
     public ?string $backlink = '';
-    private AuthTokenService $authTokenService;
-    private PasswordAuthenticator $passwordAuthenticator;
-    private AccountManager $accountManager;
     private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
-        AuthTokenService $authTokenService,
-        PasswordAuthenticator $passwordAuthenticator,
-        AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
         GoogleProvider $googleProvider
     ): void {
-        $this->authTokenService = $authTokenService;
-        $this->passwordAuthenticator = $passwordAuthenticator;
-        $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
         $this->googleProvider = $googleProvider;
     }
 
+    public function requiresLogin(): bool
+    {
+        return false;
+    }
+
+    public function authorizedLogin(): bool
+    {
+        return true;
+    }
+
     public function titleLogin(): PageTitle
     {
-        return new PageTitle(null, _('Login'));
-    }
-
-    public function titleRecover(): PageTitle
-    {
-        return new PageTitle(null, _('Password recovery'));
+        return new PageTitle(null, _('Login'), 'fas fa-right-to-bracket');
     }
 
     /**
-     * @throws \Exception
-     */
-    public function actionLogout(): void
-    {
-        if ($this->isLoggedIn()) {
-            $this->getUser()->logout(true); //clear identity
-        }
-        $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
-        $this->redirect('login');
-    }
-
-    /**
-     * This workaround is here because LoginUser storage
-     * returns false when only global login exists.
-     * False is return in order to AuthenticatedPresenter to correctly login the user.
-     */
-    private function isLoggedIn(): bool
-    {
-        return $this->getUser()->isLoggedIn();
-    }
-
-    /**
-     * @throws BadTypeException
      * @throws \Exception
      */
     public function actionLogin(): void
     {
-        if ($this->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->initialRedirect();
         } else {
             if ($this->getParameter(self::PARAM_REASON)) {
@@ -115,6 +80,51 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
+    public function authorizedLogout(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function titleLogout(): PageTitle
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function actionLogout(): void
+    {
+        if ($this->getUser()->isLoggedIn()) {
+            $this->getUser()->logout(true); //clear identity
+        }
+        $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
+        $this->redirect('login');
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return true;
+    }
+
+    public function titleRecover(): PageTitle
+    {
+        return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function actionRecover(): void
+    {
+        if ($this->getUser()->isLoggedIn()) {
+            $this->initialRedirect();
+        }
+    }
+
     /**
      * @throws \Exception
      */
@@ -126,18 +136,15 @@ final class AuthenticationPresenter extends BasePresenter
         $this->redirect(':Core:Dispatch:');
     }
 
-    /*     * ******************* components ****************************** */
-
-    /**
-     * @throws \Exception
-     */
-    public function actionRecover(): void
+    public function authorizedGoogle(): bool
     {
-        if ($this->isLoggedIn()) {
-            $this->initialRedirect();
-        }
+        return true;
     }
 
+    public function titleGoogle(): PageTitle
+    {
+        return new PageTitle(null, _('Google'), 'fas fa-hammer');
+    }
     /**
      * @throws \Exception
      */
@@ -154,8 +161,8 @@ final class AuthenticationPresenter extends BasePresenter
                     'code' => $this->getParameter('code'),
                 ]
             );
-            $ownerDetails = $this->googleProvider->getResourceOwner($token);
-            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
+            $ownerDetails = $this->googleProvider->getResourceOwner($token); // @phpstan-ignore-line
+            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray()); // @phpstan-ignore-line
             $this->getUser()->login($login);
             $this->initialRedirect();
         } catch (UnknownLoginException $exception) {
@@ -169,7 +176,7 @@ final class AuthenticationPresenter extends BasePresenter
 
     public function getGoogleSection(): SessionSection
     {
-        return $this->getSession()->getSection('google-oauth2state');
+        return $this->getSession()->getSection('google-oauth2state');// @phpstan-ignore-line
     }
 
     /**
@@ -185,105 +192,21 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * Login form component factory.
      */
-    protected function createComponentLoginForm(): Form
+    protected function createComponentLoginForm(): LoginForm
     {
-        $form = new Form($this, 'loginForm');
-        $form->addText('id', _('Login or e-mail'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'))
-            ->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'top form-control',
-                    'autofocus' => true,
-                    'placeholder' => _('Login or e-mail'),
-                    'autocomplete' => 'username',
-                ]
-            );
-        $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'bottom mb-3 form-control',
-                    'placeholder' => _('Password'),
-                    'autocomplete' => 'current-password',
-                ]
-            );
-        $form->addSubmit('send', _('Log in'));
-        $form->addProtection(_('The form has expired. Please send it again.'));
-        $form->onSuccess[] = fn(Form $form) => $this->loginFormSubmitted($form);
-
-        return $form;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function loginFormSubmitted(Form $form): void
-    {
-        $values = $form->getValues();
-        try {
-            $this->getUser()->login($values['id'], $values['password']);
-            /** @var LoginModel $login */
-            $this->initialRedirect();
-        } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        }
+        return new LoginForm($this->getContext(), fn() => $this->initialRedirect());
     }
 
     /**
      * Password recover form.
      */
-    protected function createComponentRecoverForm(): Form
+    protected function createComponentRecoverForm(): RecoveryForm
     {
-        $form = new Form();
-        $form->addText('id', _('Login or e-mail address'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'));
-
-        $form->addSubmit('send', _('Continue'));
-
-        $form->addProtection(_('The form has expired. Please send it again.'));
-
-        $form->onSuccess[] = fn(Form $form) => $this->recoverFormSubmitted($form);
-
-        return $form;
+        return new RecoveryForm($this->getContext());
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    private function recoverFormSubmitted(Form $form): void
+    protected function getStyleId(): string
     {
-        $connection = $this->authTokenService->explorer->getConnection();
-        try {
-            $values = $form->getValues();
-
-            $connection->beginTransaction();
-            try {
-                $login = $this->passwordAuthenticator->findLogin($values['id']);
-            } catch (NoLoginException $exception) {
-                $person = $this->passwordAuthenticator->findPersonByEmail($values['id']);
-                $login = $this->accountManager->createLogin($person);
-            }
-
-            $this->accountManager->sendRecovery($login, $login->person->getPreferredLang() ?? $this->getLang());
-            $email = Utils::cryptEmail($login->person->getInfo()->email);
-            $this->flashMessage(
-                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
-                Message::LVL_SUCCESS
-            );
-            $connection->commit();
-            $this->redirect('login');
-        } catch (AuthenticationException | RecoveryException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $connection->rollBack();
-        } catch (SendFailedException $exception) {
-            $connection->rollBack();
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-        }
-    }
-
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->styleIds[] = 'login';
-        $this->getPageStyleContainer()->mainContainerClassNames = [];
-        parent::beforeRender();
+        return 'login';
     }
 }

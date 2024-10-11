@@ -4,94 +4,108 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
+use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
+use FKSDB\Components\Forms\Referenced\Address\AddressSearchContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\AddressService;
 use FKSDB\Models\ORM\Services\SchoolService;
-use FKSDB\Models\Utils\FormUtils;
-use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 
 /**
- * @property SchoolModel|null $model
+ * @phpstan-extends ModelForm<SchoolModel,array{school:array{
+ *      name_full:string,
+ *      name:string,
+ *      name_abbrev:string,
+ *      description:string,
+ *      email:string,
+ *      ic:string,
+ *      izo:string,
+ *      active:bool,
+ *      note:string,
+ *      address_id:int,
+ *  }}>
  */
-class SchoolFormComponent extends EntityFormComponent
+class SchoolFormComponent extends ModelForm
 {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 
-    private AddressService $addressService;
     private SchoolService $schoolService;
-    private SchoolFactory $schoolFactory;
-    private AddressFactory $addressFactory;
+    private AddressService $addressService;
 
     final public function injectPrimary(
-        AddressFactory $addressFactory,
-        SchoolFactory $schoolFactory,
         AddressService $addressService,
         SchoolService $schoolService
     ): void {
-        $this->addressFactory = $addressFactory;
-        $this->schoolFactory = $schoolFactory;
         $this->addressService = $addressService;
         $this->schoolService = $schoolService;
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     * @throws ForbiddenRequestException
+     */
     protected function configureForm(Form $form): void
     {
-        $schoolContainer = $this->schoolFactory->createContainer();
-        $form->addComponent($schoolContainer, self::CONT_SCHOOL);
-
-        $addressContainer = $this->addressFactory->createAddress(null, true, true);
-        $form->addComponent($addressContainer, self::CONT_ADDRESS);
+        $container = new ModelContainer($this->container, 'school');
+        $container->addField('name_full', ['required' => false]);
+        $container->addField('name', ['required' => true]);
+        $container->addField('name_abbrev', ['required' => true]);
+        $container->addField('email', ['required' => false]);
+        $container->addField('ic', ['required' => false]);
+        $container->addField('izo', ['required' => false]);
+        $container->addField('note', ['required' => false]);
+        $container->addField('active', ['required' => false]);
+        $container->addField('study_h', ['required' => false]);
+        $container->addField('study_p', ['required' => false]);
+        $container->addField('study_u', ['required' => false]);
+        $container->addField('verified', ['required' => false]);
+        $address = new ReferencedId(
+            new AddressSearchContainer($this->container),
+            new AddressDataContainer($this->container, false, true),
+            $this->addressService,
+            new AddressHandler($this->container)
+        );
+        $container->addComponent($address, 'address_id');
+        $form->addComponent($container, self::CONT_SCHOOL);
     }
 
-    /**
-     * @throws ModelException
-     */
-    protected function handleFormSuccess(Form $form): void
+    protected function getTemplatePath(): string
     {
-        $values = $form->getValues();
-        $addressData = FormUtils::emptyStrToNull2($values[self::CONT_ADDRESS]);
-        $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
+        return __DIR__ . '/school.latte';
+    }
 
-        $connection = $this->schoolService->explorer->getConnection();
-        $connection->beginTransaction();
+    protected function setDefaults(Form $form): void
+    {
         if (isset($this->model)) {
-            /* Address */
-            $this->addressService->updateModel($this->model->address, $addressData);
-            /* School */
-            $this->schoolService->updateModel($this->model, $schoolData);
+            $form->setDefaults([self::CONT_SCHOOL => $this->model->toArray()]);
         } else {
-            /* Address */
-            $address = $this->addressService->createNewModel($addressData);
-            /* School */
-            $schoolData['address_id'] = $address->address_id;
-            $this->schoolService->createNewModel($schoolData);
+            $form->setDefaults([self::CONT_SCHOOL => ['address_id' => ReferencedId::VALUE_PROMISE]]);
         }
-        $connection->commit();
+    }
 
+    protected function innerSuccess(array $values, Form $form): SchoolModel
+    {
+        /** @var SchoolModel $school */
+        $school = $this->schoolService->storeModel($values[self::CONT_SCHOOL], $this->model);
+        return $school;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School has been updated') : _('School has been created'),
             Message::LVL_SUCCESS
         );
-        $this->getPresenter()->redirect('list');
-    }
-
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
-    {
-        if (isset($this->model)) {
-            $this->getForm()->setDefaults([
-                self::CONT_SCHOOL => $this->model->toArray(),
-                self::CONT_ADDRESS => $this->model->address ? $this->model->address->toArray() : null,
-            ]);
-        }
+        $this->getPresenter()->redirect('default');
     }
 }

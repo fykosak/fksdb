@@ -4,32 +4,35 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
-class Count
+/**
+ * @implements Statement<int,ParticipantHolder>
+ */
+class Count implements Statement
 {
     use SmartObject;
-    use WithEventTrait;
 
-    private string $state;
+    /** @phpstan-var string[] */
+    private array $states;
 
-    public function __construct(string $state)
+    /**
+     * @phpstan-param string[] $states
+     */
+    public function __construct(array $states)
     {
-        $this->state = $state;
+        $this->states = $states;
     }
 
+    /**
+     * @param ParticipantHolder $args
+     */
     public function __invoke(...$args): int
     {
-        $baseHolder = $this->getHolder($args[0])->primaryHolder;
-        $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->eventIdColumn, $this->getEvent($args[0])->getPrimary());
-        $table->where(BaseHolder::STATE_COLUMN, $this->state);
+        [$holder] = $args;
+        $table = $holder->getModel()->event->getParticipants()->where('status', $this->states);
         return $table->count('1');
-    }
-
-    public function __toString(): string
-    {
-        return "count($this->state)";
     }
 }

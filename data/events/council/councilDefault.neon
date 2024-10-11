@@ -1,8 +1,8 @@
 parameters:
     events:
         council:
-            appCond: or(regOpen(), role('admin'))
-            cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Events\Semantics\Role('admin'))
+            cancelable: neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled')))
             person:
                 person:
                     other_name:
@@ -19,69 +19,43 @@ parameters:
                         required: true
                 person_schedule:
                     weekend:
-                        label: _('Program akce')
                         required: false
-
 events:
     council:
-        event_type_id: [15]
+        eventTypeIds: [15]
         formLayout: council.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Výfučí Kyber Koncil <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 0
-
-        baseMachines:
-            PARTICIPANT:
-                service: @orm.event_participant.service
-                states:
-                    - applied
-                    - participated
-                    - missed
-                    - cancelled
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
                 transitions:
                     __init->applied:
-                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        condition: or(and(FKSDB\Models\Events\Semantics\RegOpen(),le(FKSDB\Models\Events\Semantics\Count(['applied']),FKSDB\Models\Events\Semantics\Parameter('capacity'))), FKSDB\Models\Events\Semantics\Role('admin'))
                         label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
+                        afterExecute:
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation)
                     applied->participated:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Prezentovat')
                     applied->missed:
-                        condition: and(role('admin'),eventWas())
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),FKSDB\Models\Events\Semantics\EventWas())
                         label: _('Nepřijel')
                         behaviorType: danger
                     applied->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                        condition: and(FKSDB\Models\Events\Semantics\Role('admin'),neg(or(FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('cancelled'))))
                         label: _('Zrušit přihlášku')
                         behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-                fields:
-                    person_id:
-                        label: _('Person')
-                        required: true
-                        modifiable: %events.council.appCond%
-                        default: fromLogin
-                        factory: RefPerson(%events.council.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    note:
-                       label: _('Další poznámky')
 
-
-        machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
-                    label: _('Účastník')
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
                     required: true
-                    primary: true
+                    modifiable: %events.council.appCond%
+                    default: fromLogin
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.council.person%, email, or(FKSDB\Models\Events\Semantics\State('__init'),FKSDB\Models\Events\Semantics\Role('admin')), FKSDB\Models\Events\Semantics\Role('admin'), false)
+                note:
+                   label: _('Další poznámky')
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
             processings:

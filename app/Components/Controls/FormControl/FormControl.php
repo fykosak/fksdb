@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\FormControl;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -15,23 +14,15 @@ use Nette\Forms\Controls\BaseControl;
  */
 class FormControl extends BaseComponent
 {
-
-    public const SNIPPET_MAIN = 'groupContainer';
-
     protected function createComponentForm(): Form
     {
         return new Form();
     }
 
-    /**
-     * @throws BadTypeException
-     */
     final public function getForm(): Form
     {
+        /** @var Form $component */
         $component = $this->getComponent('form');
-        if (!$component instanceof Form) {
-            throw new BadTypeException(Form::class, $component);
-        }
         return $component;
     }
 
@@ -40,14 +31,19 @@ class FormControl extends BaseComponent
         if (!isset($this->template->mainContainer)) {
             $this->template->form = $this->getComponent('form');
         }
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte', [
+            'lang' => $this->translator->lang
+        ]);
     }
 
+    /**
+     * @phpstan-return array{class:string,id:string}
+     */
     public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array
     {
         return [
             'class' => ($class ?? 'form-group') . ' mb-3'
-                . ($control->hasErrors() ? ' has-error ' : ' ')
+                . ($control->hasErrors() ? ' has-error has-validation ' : ' ')
                 . ($control->isRequired() ? 'required' : ''),
             'id' => $control->getHtmlId() . '-pair',
         ];

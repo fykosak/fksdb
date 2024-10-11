@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
-class OpenedSubmittingColumnFactory extends ColumnFactory
+/**
+ * @phpstan-extends AbstractColumnFactory<TeamModel2>
+ */
+class OpenedSubmittingColumnFactory extends AbstractColumnFactory
 {
 
     /**
-     * @param TeamModel|TeamModel2 $model
+     * @param TeamModel2 $model
      */
     protected function createHtmlValue(Model $model): Html
     {

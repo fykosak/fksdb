@@ -7,15 +7,18 @@ namespace FKSDB\Models\Expressions\Predicates;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
 
+/**
+ * @phpstan-extends EvaluatedExpression<bool,\DateTimeInterface,ArgType>
+ * @phpstan-template ArgType
+ */
 class After extends EvaluatedExpression
 {
 
-    /** @var mixed */
+    /** @phpstan-var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 
     /**
-     * After constructor.
-     * @param \DateTimeInterface|callable $datetime
+     * @phpstan-param (callable(ArgType):\DateTimeInterface)|\DateTimeInterface $datetime
      */
     public function __construct($datetime)
     {
@@ -29,10 +32,5 @@ class After extends EvaluatedExpression
             throw new InvalidStateException();
         }
         return $datetime->getTimestamp() <= time();
-    }
-
-    public function __toString(): string
-    {
-        return "now >= $this->datetime";
     }
 }

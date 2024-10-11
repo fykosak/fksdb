@@ -5,25 +5,30 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\PersonModel;
-use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @method PersonModel|null findByPrimary($key)
- * @method PersonModel storeModel(array $data, ?PersonModel $model = null)
+ * @phpstan-extends Service<PersonModel>
  */
-class PersonService extends Service
+final class PersonService extends Service
 {
 
     public function findByEmail(?string $email): ?PersonModel
     {
-        return $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        /** @var PersonModel|null $person */
+        $person = $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
+        return $person;
     }
 
-    public function createNewModel(array $data): PersonModel
+    /**
+     * @phpstan-param array{gender?:string|null,family_name:string} $data
+     */
+    public function storeModel(array $data, ?Model $model = null): PersonModel
     {
-        if (is_null($data['gender'])) {
+        if (!isset($data['gender']) && !isset($model)) {
             $data['gender'] = PersonModel::inferGender($data);
         }
-        return parent::createNewModel($data);
+        return parent::storeModel($data, $model);
     }
 }

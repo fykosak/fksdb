@@ -9,25 +9,29 @@ use Nette\SmartObject;
 /**
  * Pseudopromise where we want to evaluate a value (provided as callback)
  * later than promise creation.
+ * @phpstan-template TReturn
  */
 class Promise
 {
     use SmartObject;
 
-    /** @var callable */
+    /** @phpstan-var callable():(TReturn|null) */
     private $callback;
 
     private bool $called = false;
-    /** @var mixed */
+    /** @phpstan-var TReturn|null */
     private $value;
 
+    /**
+     * @phpstan-param callable():(TReturn|null) $callback
+     */
     public function __construct(callable $callback)
     {
         $this->callback = $callback;
     }
 
     /**
-     * @return mixed
+     * @phpstan-return TReturn|null
      */
     public function getValue()
     {

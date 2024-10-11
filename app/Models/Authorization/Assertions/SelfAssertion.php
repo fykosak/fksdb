@@ -4,56 +4,38 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\Authorization\Roles\Base\LoggedInRole;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use Nette\InvalidStateException;
-use Nette\Security\IIdentity;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Permission;
-use Nette\Security\UserStorage;
 
 class SelfAssertion implements Assertion
 {
-
-    private UserStorage $userStorage;
-
-    public function __construct(UserStorage $userStorage)
-    {
-        $this->userStorage = $userStorage;
-    }
-
     /**
      * Check that the person is the person of logged user.
      *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
+     * @throws \ReflectionException
      */
-    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl): bool
     {
-        /** @var IIdentity $identity */
-        [$state, $identity] = $this->userStorage->getState();
-        if (!$state) {
-            throw new InvalidStateException('Expecting logged user.');
-        }
-        $model = $acl->getQueriedResource();
-        try {
-            /** @var ContestModel $contest */
-            $contest = ReferencedAccessor::accessModel($model, ContestModel::class);
-            if ($contest->contest_id !== $acl->getQueriedRole()->getContest()->contest_id) {
+        $holder = $acl->getQueriedResource();
+        /** @var Model $model */
+        $model = $holder->getResource();
+        $role = $acl->getQueriedRole();
+        if ($role instanceof LoggedInRole) {
+            $person = null;
+            try {
+                $person = $model->getReferencedModel(PersonModel::class);
+            } catch (CannotAccessModelException $exception) {
+            }
+
+            if (!$person instanceof PersonModel) {
                 return false;
             }
-        } catch (CannotAccessModelException $exception) {
+            return $role->getModel()->login_id === $person->getLogin()->login_id;
         }
-
-        $person = null;
-        try {
-            $person = ReferencedAccessor::accessModel($model, PersonModel::class);
-        } catch (CannotAccessModelException $exception) {
-        }
-
-        if (!$person instanceof PersonModel) {
-            return false;
-        }
-        return ($identity->getId() === $person->getLogin()->login_id);
+        return false;
     }
 }

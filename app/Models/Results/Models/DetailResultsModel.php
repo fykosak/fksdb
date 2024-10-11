@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
 /**
@@ -15,15 +15,18 @@ class DetailResultsModel extends AbstractResultsModel
 {
 
     protected int $series;
-    /** Cache */
+    /**
+     * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>
+     */
     private array $dataColumns = [];
 
     /**
      * Definition of header.
+     * @phpstan-return array<int,array{label:string,limit:float|int|null,alias:string}>
      */
-    public function getDataColumns(ModelCategory $category): array
+    public function getDataColumns(ContestCategoryModel $category): array
     {
-        if (!isset($this->dataColumns[$category->value])) {
+        if (!isset($this->dataColumns[$category->label])) {
             $dataColumns = [];
             $sum = 0;
             /** @var TaskModel $task */
@@ -41,9 +44,9 @@ class DetailResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->value] = $dataColumns;
+            $this->dataColumns[$category->label] = $dataColumns;
         }
-        return $this->dataColumns[$category->value];
+        return $this->dataColumns[$category->label];
     }
 
     public function getSeries(): int
@@ -59,14 +62,9 @@ class DetailResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @return ModelCategory[]
+     * @phpstan-return literal-string
      */
-    public function getCategories(): array
-    {
-        return $this->evaluationStrategy->getCategories();
-    }
-
-    protected function composeQuery(ModelCategory $category): string
+    protected function composeQuery(ContestCategoryModel $category): string
     {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
@@ -77,10 +75,9 @@ class DetailResultsModel extends AbstractResultsModel
             self::DATA_NAME . '`';
         $select[] = 'sch.name_abbrev AS `' . self::DATA_SCHOOL . '`';
 
-        $tasks = $this->getTasks($this->series);
         $i = 0;
         /** @var TaskModel $task */
-        foreach ($tasks as $task) {
+        foreach ($this->getTasks($this->series) as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = 'round(MAX(IF(t.task_id = ' . $task->task_id . ', ' . $points . ", null))) AS '" .
                 self::DATA_PREFIX . $i . "'";
@@ -89,29 +86,26 @@ class DetailResultsModel extends AbstractResultsModel
         $sum = $this->evaluationStrategy->getSumColumn();
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
-        $from = ' from v_contestant ct
+        $query = 'select ' . implode(', ', $select);
+        $query .= ' from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_id';
 
-        $conditions = [
+        $where = $this->conditionsToWhere([
             'ct.year' => $this->contestYear->year,
             'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->series,
-            'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
-        ];
-
-        $query = 'select ' . implode(', ', $select);
-        $query .= $from;
-
-        $where = $this->conditionsToWhere($conditions);
+            'ct.study_year_new' => $this->evaluationStrategy->categoryToStudyYears($category),
+        ]);
         $query .= " where $where";
 
         $query .= ' group by p.person_id, sch.name_abbrev '; //abuse MySQL misimplementation of GROUP BY
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
+        /** @phpstan-ignore-next-line */
         return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM .
             " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' .
             self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "

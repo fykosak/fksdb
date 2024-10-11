@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -12,6 +13,7 @@ use Nette\Utils\Html;
 /**
  * @todo Implement AJAX loading
  *       Should return school_id or null.
+ * @phpstan-template TProvider of DataProvider
  */
 class AutocompleteSelectBox extends TextBase
 {
@@ -20,7 +22,7 @@ class AutocompleteSelectBox extends TextBase
     private const PARAM_NAME = 'acName';
     private const INTERNAL_DELIMITER = ',';
     private const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
-
+    /** @phpstan-var TProvider */
     private DataProvider $dataProvider;
 
     private bool $ajax;
@@ -43,10 +45,10 @@ class AutocompleteSelectBox extends TextBase
     {
         parent::__construct($label);
 
-        $this->monitor(AutocompleteJSONProvider::class, function (AutocompleteJSONProvider $provider) {
+        $this->monitor(BasePresenter::class, function (BasePresenter $provider): void {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
-                $name = $this->lookupPath(AutocompleteJSONProvider::class);
+                $name = $this->lookupPath(BasePresenter::class);
                 $this->ajaxUrl = $provider->link('autocomplete!', [
                     self::PARAM_NAME => $name,
                 ]);
@@ -57,6 +59,7 @@ class AutocompleteSelectBox extends TextBase
         $this->renderMethod = $renderMethod;
     }
 
+    /** @phpstan-return TProvider|null */
     public function getDataProvider(): ?DataProvider
     {
         return $this->dataProvider ?? null;
@@ -77,6 +80,7 @@ class AutocompleteSelectBox extends TextBase
         return $this->multiSelect;
     }
 
+    /** @phpstan-param TProvider $dataProvider */
     public function setDataProvider(DataProvider $dataProvider): void
     {
         if ($this->ajax && !($dataProvider instanceof FilteredDataProvider)) {
@@ -90,7 +94,7 @@ class AutocompleteSelectBox extends TextBase
     {
         $control = parent::getControl();
         $control->addAttributes([
-            'data-ac' => (int)true,
+            'data-ac' => 1,
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
@@ -100,23 +104,22 @@ class AutocompleteSelectBox extends TextBase
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
+            $defaultTextValue = [];
             if ($this->isMultiSelect()) {
-                $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
                     $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$id);
                 }
-                $defaultTextValue = json_encode($defaultTextValue);
                 $control->addAttributes([
                     'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
                 ]);
             } else {
-                $defaultTextValue = $this->getDataProvider()->getItemLabel((int)$defaultValue);
+                $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$defaultValue);
                 $control->addAttributes([
                     'value' => $defaultValue,
                 ]);
             }
             $control->addAttributes([
-                'data-ac-default-value' => $defaultTextValue,
+                'data-ac-default' => $defaultTextValue,
             ]);
         }
 
@@ -139,7 +142,7 @@ class AutocompleteSelectBox extends TextBase
         } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) { // @phpstan-ignore-line
             $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->label));
             $this->setValue(null);
         } else {

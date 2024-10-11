@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 use Nette\SmartObject;
 
-class Parameter
+/**
+ * @implements Statement<mixed,ParticipantHolder>
+ */
+class Parameter implements Statement
 {
     use SmartObject;
-    use WithEventTrait;
 
     private string $parameter;
 
@@ -23,11 +27,8 @@ class Parameter
      */
     public function __invoke(...$args)
     {
-        return $this->getHolder($args[0])->getParameter($this->parameter);
-    }
-
-    public function __toString(): string
-    {
-        return "param($this->parameter)";
+        /** @var ParticipantHolder $holder */
+        [$holder] = $args;
+        return $holder->getModel()->event->getParameter($this->parameter);
     }
 }

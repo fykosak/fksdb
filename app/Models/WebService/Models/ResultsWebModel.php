@@ -5,36 +5,35 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Services\ContestYearService;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 
-class ResultsWebModel extends WebModel
+/**
+ * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>
+ */
+class ResultsWebModel extends WebModel implements SoapWebModel
 {
-
-    private ContestService $contestService;
     private ResultsModelFactory $resultsModelFactory;
+    private ContestYearService $contestYearService;
 
-    public function inject(
-        Container $container,
-        ContestService $contestService,
-        ResultsModelFactory $resultsModelFactory
-    ): void {
-        $this->contestService = $contestService;
+    public function inject(ContestYearService $contestYearService, ResultsModelFactory $resultsModelFactory): void
+    {
+        $this->contestYearService = $contestYearService;
         $this->resultsModelFactory = $resultsModelFactory;
-        $this->container = $container;
     }
 
     /**
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
-    public function getResponse(\stdClass $args): \SoapVar
+    public function getSOAPResponse(\stdClass $args): \SoapVar
     {
         if (
             !isset($args->contest)
@@ -45,9 +44,10 @@ class ResultsWebModel extends WebModel
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
-        $contestYear = $this->contestService->findByPrimary(
-            $this->container->getParameters()['inverseContestMapping'][$args->contest]
-        )->getContestYear($args->year);
+        $contestYear = $this->contestYearService->findByContestAndYear(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest],
+            (int)$args->year
+        );
         $doc = new \DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -57,7 +57,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setSeries(+$seriesSingle);
+                $resultsModel->setSeries((int)$seriesSingle);
                 $resultsNode->appendChild($this->createDetailNode($resultsModel, $doc));
             }
         }
@@ -72,20 +72,6 @@ class ResultsWebModel extends WebModel
             foreach ($args->cumulatives->cumulative as $cumulative) {
                 $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
-            }
-        }
-
-        if (isset($args->{'school-cumulatives'})) {
-            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
-
-            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'}
-                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
-            }
-
-            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
-                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
-                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
             }
         }
 
@@ -118,6 +104,20 @@ class ResultsWebModel extends WebModel
             }
         }
 
+        if (isset($args->{'school-cumulatives'})) {
+            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
+
+            if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
+                $args->{'school-cumulatives'}->{'school-cumulative'}
+                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+            }
+
+            foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
+                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
+                $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
+            }
+        }
+
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($resultsNode), XSD_ANYXML);
@@ -126,11 +126,12 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $detailNode = $doc->createElement('detail');
-        $detailNode->setAttribute('series', (string)$resultsModel->getSeries());
+        $detailNode->setAttribute('series', (string)$resultsModel->getSeries()); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
@@ -139,11 +140,12 @@ class ResultsWebModel extends WebModel
     /**
      * @throws BadTypeException
      * @throws \SoapFault
+     * @throws \DOMException
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $cumulativeNode = $doc->createElement('cumulative');
-        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
@@ -152,11 +154,12 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
         $schoolNode = $doc->createElement('school-cumulative');
-        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
+        $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries())); // @phpstan-ignore-line
 
         $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $schoolNode;
@@ -166,6 +169,7 @@ class ResultsWebModel extends WebModel
      * @param BrojureResultsModel $resultsModel
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \DOMException
      */
     private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -175,5 +179,23 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+
+    protected function isAuthorized(): bool
+    {
+        return false;
+    }
+
+    protected function getExpectedParams(): array
+    {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function getJsonResponse(): array
+    {
+        throw new NotImplementedException();
     }
 }

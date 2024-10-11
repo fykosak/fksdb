@@ -1,0 +1,31 @@
+{varType FKSDB\Models\ORM\Models\ContestantModel $model}
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            {control columnTable [
+            'contestant.contestant_id',
+            'person.person_id',
+            'person.full_name',
+            'person.gender',
+            'contestant.contest_category',
+            'person_history.study_year_new',
+            ], $model,1024}
+            {control columnTable [
+            'school.school',
+            ], $model->getPersonHistory(),1024}
+            {control printer:button 'person.detail', $model}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Submits'}</h2>
+            {control submits}
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Tests'}</h2>
+            {control tests $model,false}
+        </div>
+    </div>
+{/block}

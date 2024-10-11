@@ -1,4 +1,4 @@
 export interface Price {
-    eur: number;
-    czk?: number;
+    EUR?: { currency: string; amount: number };
+    CZK?: { currency: string; amount: number };
 }

@@ -4,62 +4,44 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Models\Expressions\EvaluatedExpression;
-use Nette\Security\User;
-use Nette\SmartObject;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
+ * @implements Statement<bool,\FKSDB\Models\Transitions\Holder\ParticipantHolder>
  */
-class Role extends EvaluatedExpression
+class Role implements Statement
 {
-    use SmartObject;
-    use WithEventTrait;
-
-    public const GUEST = 'guest';
-    public const REGISTERED = 'registered';
-    public const RELATED = 'related';
     public const ADMIN = 'admin';
 
     private string $role;
 
-    private User $user;
-    private EventAuthorizator $eventAuthorizator;
-    private RelatedPersonAuthorizator $relatedAuthorizator;
+    private Authorizator $authorizator;
 
     public function __construct(
         string $role,
-        User $user,
-        EventAuthorizator $eventAuthorizator,
-        RelatedPersonAuthorizator $relatedAuthorizator
+        Authorizator $authorizator
     ) {
         $this->role = $role;
-        $this->user = $user;
-        $this->eventAuthorizator = $eventAuthorizator;
-        $this->relatedAuthorizator = $relatedAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     public function __invoke(...$args): bool
     {
+        /** @var ParticipantHolder $holder */
+        [$holder] = $args;
         switch ($this->role) {
             case self::ADMIN:
-                $event = $this->getEvent($args[0]);
-                return $this->eventAuthorizator->isAllowed($event, 'application', $event);
-            case self::RELATED:
-                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($args[0]));
-            case self::REGISTERED:
-                return $this->user->isLoggedIn();
-            case self::GUEST:
-                return true;
+                return $this->authorizator->isAllowedEvent(
+                    EventResourceHolder::fromOwnResource($holder->getModel()),
+                    'organizer',
+                    $holder->getModel()->event
+                );
             default:
                 return false;
         }
-    }
-
-    public function __toString(): string
-    {
-        return "role($this->role)";
     }
 }

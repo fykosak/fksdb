@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\StudyYear;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
-use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
@@ -18,11 +19,9 @@ class ContestantModel extends AESOPModel
 {
 
     protected TaskService $taskService;
-
-    private ?ModelCategory $category;
+    private ?ContestCategoryModel $category;
 
     /**
-     * ContestantModel constructor.
      * @throws BadRequestException
      */
     public function __construct(Container $container, ContestYearModel $contestYear, ?string $category)
@@ -48,11 +47,9 @@ class ContestantModel extends AESOPModel
 WHERE
 	ac.`x-contest_id` = ?
         AND ac.`x-ac_year` = ?
-        AND (1=1 or ? = 0) -- hack for parameters
                                                order by surname, name",
             $this->contestYear->contest_id,
-            $this->contestYear->ac_year,
-            $this->category->value
+            $this->contestYear->ac_year
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
@@ -68,7 +65,7 @@ WHERE
 
     protected function getMask(): string
     {
-        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->value;
+        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->label;
     }
 
     /**
@@ -77,29 +74,27 @@ WHERE
      */
     public function getMaxPoints(): ?int
     {
-        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         if (!$this->category) {
             return null;
         }
-        $tasks = $this->taskService->getTable()
-            ->where('contest_id', $this->contestYear->contest_id)
-            ->where('year', $this->contestYear->year)
-            ->where('series BETWEEN 1 AND 6');
+        $tasks = $this->contestYear->getTasks()->where('series BETWEEN 1 AND 6');
         $sum = 0;
+        /** @var TaskModel $task */
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
-        return $sum;
+        return (int)$sum;
     }
 
     /**
      * @throws BadRequestException
      */
-    private function getCategory(?string $stringCategory): ?ModelCategory
+    private function getCategory(?string $stringCategory): ?ContestCategoryModel
     {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->value == $stringCategory) {
+            if ($category->label == $stringCategory) {
                 return $category;
             }
         }
@@ -111,12 +106,11 @@ WHERE
      */
     private function filterCategory(ResultSet $data): array
     {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->container, $this->contestYear);
 
         $studyYears = [];
         if ($this->category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($this->category);
-            $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 
         $graduationYears = [];
@@ -160,11 +154,11 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
+    private function studyYearToGraduation(?string $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;
         }
-        return YearCalculator::getGraduationYear($studyYear, $contestYear);
+        return StudyYear::from($studyYear)->getGraduationYear($contestYear->ac_year);
     }
 }

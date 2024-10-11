@@ -1,0 +1,14 @@
+{varType Fykosak\NetteORM\Model\Model|null $model}
+{varType int|null $userPermission}
+{varType Nette\ComponentModel\Container $columns}
+{varType Nette\ComponentModel\Container $buttons}
+{foreach $columns->getComponents() as $component}
+    <td>
+        {control $component $model, $userPermission}
+    </td>
+{/foreach}
+{if count($buttons->getComponents())}
+    <td>
+        {include buttonGroup from '../Button/group.latte',$model, $userPermission,$buttons->getComponents()}
+    </td>
+{/if}

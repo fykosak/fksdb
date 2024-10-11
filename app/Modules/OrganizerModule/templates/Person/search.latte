@@ -1,0 +1,17 @@
+{block outerContent}
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Find'}</h2>
+            {control formSearch}
+        </div>
+    </div>
+
+    <div class="panel color-auto">
+        <div class="container">
+            <h2>{_'Links'}</h2>
+            <a href="{plink 'create'}" class="btn btn-outline-primary">{_'Create person'}</a>
+            <a href="{plink 'tests'}" class="btn btn-outline-primary">{_'Tests'}</a>
+            <a href="{plink 'list'}" class="btn btn-outline-primary">{_'List'}</a>
+        </div>
+    </div>
+{/block}

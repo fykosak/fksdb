@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\ORM\Services\StudyYearService;
-use FKSDB\Models\ORM\Services\TaskService;
-use FKSDB\Models\ORM\Services\TaskContributionService;
-use FKSDB\Models\ORM\Services\TaskStudyYearService;
 use FKSDB\Models\Pipeline\Pipeline;
+use Nette\DI\Container;
 
 /**
  * This is not real factory, it's only used as an internode for defining
@@ -18,39 +15,39 @@ class PipelineFactory
 {
     /**
      * @see StudyYearsFromXML
-     * @var array
+     * @phpstan-var array<int,int[]>
      */
-    private array $defaultStudyYears;
+    private array $defaultCategories;
 
-    private TaskService $taskService;
-    private TaskContributionService $taskContributionService;
-    private TaskStudyYearService $taskStudyYearService;
-    private StudyYearService $studyYearService;
+    private Container $container;
 
+    /**
+     * @phpstan-param array<int,int[]> $defaultCategories
+     */
     public function __construct(
-        array $defaultStudyYears,
-        TaskService $taskService,
-        TaskContributionService $taskContributionService,
-        TaskStudyYearService $taskStudyYearService,
-        StudyYearService $studyYearService
+        array $defaultCategories,
+        Container $container
     ) {
-        $this->defaultStudyYears = $defaultStudyYears;
-        $this->taskService = $taskService;
-        $this->taskContributionService = $taskContributionService;
-        $this->taskStudyYearService = $taskStudyYearService;
-        $this->studyYearService = $studyYearService;
+        $this->container = $container;
+        $this->defaultCategories = $defaultCategories;
     }
 
+    /**
+     * @phpstan-return Pipeline<SeriesData>
+     */
     public function create(): Pipeline
     {
         $pipeline = new Pipeline();
 
         // common stages
-        $pipeline->stages[] = new TasksFromXML($this->taskService);
-        $pipeline->stages[] = new DeadlineFromXML($this->taskService);
-        $pipeline->stages[] = new ContributionsFromXML($this->taskContributionService);
+        $pipeline->stages[] = new TasksFromXML($this->container);
+        $pipeline->stages[] = new DeadlineFromXML($this->container);
+        $pipeline->stages[] = new ContributionsFromXML($this->container);
         $pipeline->stages[] =
-            new StudyYearsFromXML($this->defaultStudyYears, $this->taskStudyYearService, $this->studyYearService);
+            new StudyYearsFromXML(
+                $this->defaultCategories,
+                $this->container
+            );
 
         return $pipeline;
     }

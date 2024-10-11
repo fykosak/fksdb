@@ -1,5 +1,5 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
-
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {block content}
 
 <p n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
@@ -9,7 +9,7 @@
     Ušetříš si tím práci při vyplňování formuláře.
 </p>
 <p>
-    Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
+    Registrace končí <strong>{$holder->event->registration_end|date:'j. n. Y H:i:s'}</strong>.
 </p>
 
 {control form}

@@ -1,0 +1,226 @@
+parameters:
+    events:
+        soustredeni37j:
+            appCond: or(FKSDB\Models\Events\Semantics\RegOpen(), FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+            requiredCond: or(and(neg(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')),or(FKSDB\Models\Events\Semantics\State('applied'),FKSDB\Models\Events\Semantics\State('interested'))), FKSDB\Models\Events\Semantics\State('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    born_id:
+                        required: %events.soustredeni.requiredCond%
+                        description: _("For the insurance company.")
+                    birthplace:
+                        required: FKSDB\Models\Events\Semantics\State('participated')
+                    phone:
+                        required: %events.soustredeni.requiredCond%
+                        description: _("Telephone number (including state prefix), that you will carry with you.")
+                post_contact_p:
+                    address:
+                        required: %events.soustredeni.requiredCond%
+                person_history:
+                    school_id:
+                        required: FKSDB\Models\Events\Semantics\State('participated')
+                        description: _("If you cannot find your school, e-mail the webmaster.")
+                person_schedele:
+                    types: [ 'apparel' ]
+                    collapseChild: false
+                    groupBy: none
+
+events:
+    soustredeni37j:
+        eventTypeIds: [4] # jarní je 4, podzimní 5
+        eventYears: [37] # specify for which years this machine is valid, by default all years
+        formLayout: soustredeni.form
+        machine:
+                machine: FKSDB\Models\Transitions\Machine\EventParticipantMachine
+                stateEnum: FKSDB\Models\ORM\Models\EventParticipantStatus
+                transitions:
+                    # init application
+                    __init->invited:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Pozvat účastníka')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Pozvat účastníka')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                    __init|auto.spare->spare:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Pozvat náhradníka')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\InviteMailCallback()
+                     # participant decides
+                    invited|invited1|invited2|invited3->applied:
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                        label: _('Potvrdit účast')
+                    spare|spare1|spare2|spare3->interested:
+                        condition: FKSDB\Models\Events\Semantics\RegOpen()
+                        label: _('Chci jet')
+                    invited|invited1|invited2|invited3->rejected:
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                        label: _('Odmítnout účast')
+                        behaviorType: danger
+                    # reminders
+                    # 1. reminder
+                    spare->spare1:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat první upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
+                    invited->invited1:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat první upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder1MailCallback()
+                    # 2. reminder
+                    spare1->spare2:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat druhou upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
+                    invited1->invited2:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat druhou upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder2MailCallback()
+                    # 3. reminder
+                    spare2->spare3:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat třetí upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
+                    invited2->invited3:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Poslat třetí upomínku')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\Reminder3MailCallback()
+
+                    # spare reject
+                    spare|spare1|spare2|spare3->rejected:
+                        condition: or(FKSDB\Models\Events\Semantics\RegOpen(),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                        label: _('Odmítnout účast')
+                        behaviorType: danger
+                    # confirm participation
+                    interested->applied:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Potvrdit účast')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\InterestedAppliedMailCallback()
+                    # invite spare
+                    spare->invited:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Invite as participant')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    spare1->invited1:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Invite as participant')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    spare2->invited2:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Invite as participant')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    spare3->invited3:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Invite as participant')
+                        afterExecute:
+                            - FKSDB\Models\Mail\Sous\SpareInvitedMailCallback()
+                    # after sous
+                    applied->participated:
+                        condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                        label: _('Participated')
+                    applied->missed:
+                        condition: and(FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'),FKSDB\Models\Events\Semantics\EventWas())
+                        label: _('Missed')
+
+                    # used in special cases, when it's undesirable to send reminders (e.g. I'll know at later date, will let you know)
+                    invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Cancel application')
+                    invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Deal with outside FKSDB')
+                    out_of_db->invited:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Invited')
+                    out_of_db->invited1:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Invited, first call')
+                    out_of_db->invited2:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Invited, second call')
+                    out_of_db->invited3:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Invited, last call')
+                    out_of_db->auto.invited:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Invited (auto)')
+                    out_of_db->spare:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Spare')
+                    out_of_db->spare1:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Spare, first call')
+                    out_of_db->spare2:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Spare, second call')
+                    out_of_db->spare3:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Spare, last call')
+                    out_of_db->auto.spare:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Spare (auto)')
+                    out_of_db->applied:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Applied')
+                    out_of_db->interested:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Interested')
+                    out_of_db->participated:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Participated')
+                    out_of_db->rejected:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as Rejected')
+                    out_of_db->missed:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as missed')
+                    out_of_db->cancelled:
+                        condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
+                        label: _('Return to DB as cancelled')
+        holder:
+            fields:
+                person_id:
+                    label: _('Person')
+                    required: true
+                    modifiable: %events.soustredeni.appCond%
+                    default: null
+                    factory: FKSDB\Components\Forms\Factories\Events\PersonFactory(%events.soustredeni.person%, email, false, FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'), FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+                diet:
+                    label: _('Food')
+                    description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
+                health_restrictions:
+                    label: _('Health restrictions')
+                    description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
+                #tshirt_size:
+                #    label: _('What size of T-shirt do you wear?')
+                #    required: %events.soustredeni.requiredCond%
+                #    factory: FKSDB\Components\Forms\Factories\Events\ChooserFactory(_("Choose a size"), FKSDB\Components\Forms\Factories\Events\ArrayOptions(%events.soustredeni.tshirt%))
+                #price:
+                #    label: _('Price of camp (CZK)')
+                #    modifiable: false
+                #    description: _("Price calculated according to the rules on our website.")
+            modifiable: or(neg(or(FKSDB\Models\Events\Semantics\State('participated'),FKSDB\Models\Events\Semantics\State('missed'),FKSDB\Models\Events\Semantics\State('rejected'))),FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer'))
+            formAdjustments:
+                - @events.privacyPolicy
+
+            processings:
+                - @events.privacyPolicy

@@ -29,7 +29,6 @@ trait WriteOnlyTrait
     {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {
-                $form->onValidate = $form->onValidate ?: [];
                 array_unshift($form->onValidate, function (): void {
                     if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
                         $this->writeOnlyDisable();
@@ -61,7 +60,7 @@ trait WriteOnlyTrait
 // for JS
         if ($this->writeOnly && $this->getValue() && !$this->hasManualValue) {
             $control->addAttributes([
-                'data-writeOnly' => (int)true,
+                'data-writeOnly' => 1,
                 'data-writeOnly-value' => self::VALUE_ORIGINAL,
                 'data-writeOnly-label' => _('Hidden value'),
                 'value' => self::VALUE_ORIGINAL,

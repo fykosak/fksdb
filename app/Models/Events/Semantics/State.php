@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Semantics;
 
-use FKSDB\Models\Expressions\EvaluatedExpression;
-use Nette\SmartObject;
+use FKSDB\Models\Transitions\Holder\ParticipantHolder;
+use FKSDB\Models\Transitions\Statement;
 
-class State extends EvaluatedExpression
+/**
+ * @implements Statement<bool,ParticipantHolder>
+ */
+class State implements Statement
 {
-    use SmartObject;
-    use WithEventTrait;
-
     private string $state;
 
     public function __construct(string $state)
@@ -21,11 +21,8 @@ class State extends EvaluatedExpression
 
     public function __invoke(...$args): bool
     {
-        return $this->getHolder($args[0])->primaryHolder->getModelState() == $this->state;
-    }
-
-    public function __toString(): string
-    {
-        return "state == $this->state";
+        /** @var ParticipantHolder $holder */
+        [$holder] = $args;
+        return $holder->getState()->value === $this->state;
     }
 }

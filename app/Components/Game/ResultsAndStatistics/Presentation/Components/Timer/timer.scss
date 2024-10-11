@@ -1,0 +1,73 @@
+@import "../../../../../../css/variables";
+
+.game-presentation .presentation-timer {
+  color: $fof-color;
+
+  justify-content: space-between;
+  padding: .25em;
+  font-weight: bold;
+  position: fixed;
+  width: 100%;
+
+  .time-value, .time-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  & > span {
+    display: flex;
+    flex-wrap: wrap;
+    //color: white;
+    color: $fof-color;
+  }
+
+  &.timer-small {
+    font-size: 3.5vw;
+    display: flex;
+    justify-content: center;
+    //background: white;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+
+    & > * {
+      flex-grow: initial;
+    }
+
+    .time-value {
+      line-height: 110%;
+    }
+
+    .time-label {
+      width: 100%;
+      font-size: .7vw;
+    }
+  }
+
+  &.timer-big {
+    //margin-top: 10rem;
+    align-items: center;
+    position: relative;
+
+    .time-value {
+      font-size: 12vw;
+      line-height: 110%;
+    }
+
+    .time-label {
+      font-size: 1.8vw;
+    }
+  }
+}
+
+.game-presentation.game-ctyrboj .presentation-timer {
+  background-color: $ctyrboj-color;
+}
+
+.game-presentation.game-fyziklani .presentation-timer {
+  background-color: $fof-color;
+}
+
+.logo-sponsors {
+  width: 70%;
+}

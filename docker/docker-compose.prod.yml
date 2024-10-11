@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    image: ghcr.io/fykosak/fksdb:web
+    restart: on-failure:3
+    container_name: fksdb
+    environment:
+      TZ: 'Europe/Prague'
+      PUID: 1000 # change to target user
+      GUID: 1000 # change to target group
+    volumes:
+      - ./config.neon:/app/app/config/config.local.neon # nette config
+      - ./msmtprc:/etc/msmtprc # mail configuration
+      - ./log:/app/log
+      - ./temp:/app/temp
+      - ./upload:/app/upload
+    extra_hosts:
+      # access smtp mail server running on host
+      - "host.docker.internal:host-gateway"
+
+  mariadb:
+    image: mariadb:lts
+    container_name: fksdb-mariadb
+    restart: on-failure:3
+    environment:
+      TZ: 'Europe/Prague'
+      MYSQL_DATABASE: 'fksdb'
+      MYSQL_USER: 'fksdb'
+      MYSQL_PASSWORD: 'password' # CREATE STRONG CUSTOM PASSWORD
+      MYSQL_ROOT_PASSWORD: 'password' # CREATE STRONG CUSTOM PASSWORD
+    volumes:
+      - ./mariadb_data:/var/lib/mysql # path to dir with database data

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
+// phpcs:disable
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+// phpcs:enable
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -26,10 +27,12 @@ class ClosePresenter extends FyziklaniTestCase
         $this->event = $this->createEvent([]);
 
         $teams = [];
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 1, 'state' => 'participated']);
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 2, 'state' => 'participated']);
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 3, 'state' => 'participated']);
-        $teams[] = $this->createTeam(['fyziklani_team_id' => 4, 'state' => 'participated', 'category' => 'B']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 1, 'state' => 'participated', 'name' => 'team1']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 2, 'state' => 'participated', 'name' => 'team2']);
+        $teams[] = $this->createTeam(['fyziklani_team_id' => 3, 'state' => 'participated', 'name' => 'team3']);
+        $teams[] = $this->createTeam(
+            ['fyziklani_team_id' => 4, 'state' => 'participated', 'name' => 'team4', 'category' => 'B']
+        );
 
         $tasks = [];
         $tasks[] = $this->createTask(['label' => 'AA']);
@@ -85,8 +88,7 @@ class ClosePresenter extends FyziklaniTestCase
         }
 
         /* Remaining setup stuff */
-        $this->fixture = $this->createPresenter('Fyziklani:Close');
-        $this->mockApplication();
+        $this->fixture = $this->createPresenter('EventGame:Close');
 
         $this->authenticatePerson($this->userPerson, $this->fixture);
     }
@@ -94,7 +96,7 @@ class ClosePresenter extends FyziklaniTestCase
     private function createCloseTeamRequest(array $formData, array $params = []): Request
     {
         return new Request(
-            'Fyziklani:Close:team',
+            'EventGame:Close:team',
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',
@@ -107,7 +109,7 @@ class ClosePresenter extends FyziklaniTestCase
     private function createPostDiplomasRequest(array $formData, array $params = []): Request
     {
         return new Request(
-            'Fyziklani:Diplomas:default',
+            'EventGame:Diplomas:default',
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',
@@ -210,6 +212,7 @@ class ClosePresenter extends FyziklaniTestCase
           }*/
     }
 }
-
+// phpcs:disable
 $testCase = new ClosePresenter($container);
 $testCase->run();
+// phpcs:enable

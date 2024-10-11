@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authentication;
 
-use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
-use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
+use FKSDB\Models\Email\Source\LoginInvitation\LoginInvitationEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\AuthTokenService;
-use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\LoginService;
-use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Modules\Core\Language;
+use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\DateTime;
 
@@ -22,117 +20,46 @@ class AccountManager
 {
     use SmartObject;
 
+    private string $invitationExpiration;
     private LoginService $loginService;
     private AuthTokenService $authTokenService;
-    private string $invitationExpiration;
-    private string $recoveryExpiration;
-    private string $emailFrom;
-    private EmailMessageService $emailMessageService;
-    private MailTemplateFactory $mailTemplateFactory;
+    private Container $container;
 
     public function __construct(
         string $invitationExpiration,
-        string $recoveryExpiration,
-        string $emailFrom,
-        MailTemplateFactory $mailTemplateFactory,
+        Container $container,
         LoginService $loginService,
-        AuthTokenService $authTokenService,
-        EmailMessageService $emailMessageService
+        AuthTokenService $authTokenService
     ) {
         $this->invitationExpiration = $invitationExpiration;
-        $this->recoveryExpiration = $recoveryExpiration;
-        $this->emailFrom = $emailFrom;
         $this->loginService = $loginService;
         $this->authTokenService = $authTokenService;
-        $this->emailMessageService = $emailMessageService;
-        $this->mailTemplateFactory = $mailTemplateFactory;
+        $this->container = $container;
     }
 
     /**
      * Creates login and invites user to set up the account.
      * @throws BadTypeException
      * @throws \Exception
+     * @throws \Throwable
      */
-    public function createLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
+    public function sendLoginWithInvitation(PersonModel $person, Language $lang): LoginModel
     {
-        $login = $this->createLogin($person);
+        $login = $this->loginService->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
-        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
-
-        $templateParams = [
-            'token' => $token->token,
-            'person' => $person,
-            'email' => $email,
-            'until' => $until,
-        ];
-        $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
-            $person->getPreferredLang() ?? $lang,
-            $templateParams
+        $token = $this->authTokenService->createToken(
+            $login,
+            AuthTokenType::from(AuthTokenType::InitialLogin),
+            new DateTime(),
+            $until
         );
-        $data['subject'] = _('Create an account');
-        $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $email;
-        $this->emailMessageService->addMessageToSend($data);
-        return $login;
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws \Exception
-     */
-    public function sendRecovery(LoginModel $login, string $lang): void
-    {
-        $person = $login->person;
-        $recoveryAddress = $person ? $person->getInfo()->email : null;
-        if (!$recoveryAddress) {
-            throw new RecoveryNotImplementedException();
-        }
-        $token = $login->related(DbNames::TAB_AUTH_TOKEN)
-            ->where('type', AuthTokenModel::TYPE_RECOVERY)
-            ->where('until > ?', new DateTime())->fetch();
-        if ($token) {
-            throw new RecoveryExistsException();
-        }
-
-        $until = DateTime::from($this->recoveryExpiration);
-        $token = $this->authTokenService->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
-        $templateParams = [
-            'token' => $token->token,
-            'login' => $login,
-            'until' => $until,
-        ];
-        $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
-        $data['subject'] = _('Password recovery');
-        $data['sender'] = $this->emailFrom;
-        $data['recipient'] = $recoveryAddress;
-
-        $this->emailMessageService->addMessageToSend($data);
-    }
-
-    public function cancelRecovery(LoginModel $login): void
-    {
-        $login->related(DbNames::TAB_AUTH_TOKEN)->where([
-            'type' => AuthTokenModel::TYPE_RECOVERY,
-        ])->delete();
-    }
-
-    final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel
-    {
-        /** @var LoginModel $login */
-        $login = $this->loginService->createNewModel([
-            'person_id' => $person->person_id,
-            'login' => $login,
-            'active' => 1,
+        $email = new LoginInvitationEmail($this->container);
+        $email->createAndSend([
+            'token' => $token,
+            'person' => $person,
+            'lang' => Language::from($person->getPreferredLang() ?? $lang->value),
         ]);
-
-        /* Must be done after login_id is allocated. */
-        if ($password) {
-            $hash = $login->createHash($password);
-            $this->loginService->updateModel($login, ['hash' => $hash]);
-        }
         return $login;
     }
 }

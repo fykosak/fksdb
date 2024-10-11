@@ -1,0 +1,175 @@
+#
+# Contest specific configuration of FKSDB
+#
+
+parameters:
+    forms:
+        registerContestantFykos:
+            person:
+                other_name:
+                  required: true
+                family_name:
+                  required: true
+            person_history:
+                school_id:
+                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
+                class:
+                  required: false
+            post_contact_p:
+                required: true
+            person_info:
+                email:
+                  required: true
+                origin:
+                  required: false
+                agreed:
+                  required: true
+            person_has_flag:
+                spam_mff:
+                  required: true
+        registerContestantVyfuk:
+            person:
+                other_name:
+                  required: true
+                family_name:
+                  required: true
+            person_history:
+                school_id:
+                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
+                class:
+                  required: false
+            post_contact_p:
+                required: true
+            person_info:
+                email:
+                  required: true
+                origin:
+                  required: false
+                agreed:
+                  required: true
+            person_has_flag:
+                spam_mff:
+                  required: true
+        registerTeacher:
+            person:
+                other_name:
+                    required: true
+                family_name:
+                    required: true
+            person_info:
+                email:
+                    required: true
+                phone:
+                    required: false
+                agreed:
+                    required: true
+        adminOrganizer: %forms.adminPerson%
+        adminEventOrganizer: %forms.adminPerson%
+        adminTeacher: %forms.adminPerson%
+        adminContestant:
+            person:
+                other_name:
+                  required: true
+                family_name:
+                  required: true
+                display_name:
+                  required: false
+                gender:
+                  required: true
+            person_info:
+                email:
+                  required: true
+                phone:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
+                born:
+                  required: false
+                birthplace:
+                  required: false
+                id_number:
+                  required: false
+                note:
+                  required: false
+                origin:
+                  required: false
+                agreed:
+                  required: false
+            person_history:
+                school_id:
+                  required: true
+                study_year_new:
+                    required: true
+                    flag: ALL
+            post_contact_d:
+                required: false
+            post_contact_p:
+                required: false
+            person_has_flag:
+                spam_mff:
+                  required: false
+        adminPerson:
+            person:
+                other_name:
+                    required: true
+                family_name:
+                    required: true
+                born_family_name:
+                    required: false
+                gender:
+                    required: true
+            person_info:
+                # extends table person
+                academic_degree_prefix:
+                  required: false
+                academic_degree_suffix:
+                  required: false
+                # contact info
+                email:
+                  required: false
+                phone:
+                  required: false
+                phone_parent_m:
+                  required: false
+                phone_parent_d:
+                  required: false
+                # to DPP/
+                born:
+                  required: false
+                born_id:
+                  required: false
+                birthplace:
+                  required: false
+                id_number:
+                  required: false
+                employer:
+                  required: false
+                health_insurance:
+                  required: false
+                citizenship:
+                  required: false
+                # required to organizer
+                uk_login:
+                  required: false
+                isic_number:
+                  required: false
+                account:
+                  required: false
+                # to webpage
+                career:
+                  required: false
+                homepage:
+                  required: false
+                pizza:
+                    reuired: false
+                # place to others onfo
+                note:
+                  required: false

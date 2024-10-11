@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\TypedGroupedSelection;
-use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-class PersonRelatedGrid extends BaseGrid
+/**
+ * @phpstan-template TModel of \Fykosak\NetteORM\Model\Model
+ * @phpstan-extends BaseGrid<TModel,array{}>
+ */
+final class PersonRelatedGrid extends BaseGrid
 {
-
     protected PersonModel $person;
+    /** @phpstan-var array{table:string,minimalPermission:int,rows:string[],links:string[]} */
     protected array $definition;
     protected int $userPermissions;
 
@@ -33,37 +31,31 @@ class PersonRelatedGrid extends BaseGrid
     }
 
     /**
-     * @return IDataSource
-     * @throws BadTypeException
+     * @phpstan-return TypedGroupedSelection<TModel>
      */
-    protected function getData(): IDataSource
+    protected function getModels(): TypedGroupedSelection
     {
+        /** @phpstan-var TypedGroupedSelection<TModel> $query */
         $query = $this->person->related($this->definition['table']);
-        if (!$query instanceof TypedGroupedSelection) {
-            throw new BadTypeException(TypedGroupedSelection::class, $query);
-        }
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
             $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
-        return new NDataSource($query);
+        return $query;
     }
 
     /**
      * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void
+    protected function configure(): void
     {
         $this->paginate = false;
-        parent::configure($presenter);
-        $this->addColumns($this->definition['rows'], $this->userPermissions);
+        $this->counter = true;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns(array_map(fn($value) => '@' . $value, $this->definition['rows']));
         foreach ($this->definition['links'] as $link) {
             $this->addLink($link);
         }
-        $this->addCSVDownloadButton();
+        // $this->addCSVDownloadButton();
     }
 }

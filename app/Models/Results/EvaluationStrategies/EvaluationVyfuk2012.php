@@ -4,45 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\ContestCategoryModel;
+use FKSDB\Models\ORM\Models\StudyYear;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\Results\ModelCategory;
-use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
  */
-class EvaluationVyfuk2012 implements EvaluationStrategy
+class EvaluationVyfuk2012 extends EvaluationStrategy
 {
-
-    public function getCategories(): array
-    {
-        return [
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_6),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_7),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_8),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_9),
-            ModelCategory::tryFrom(ModelCategory::CAT_UNK),
-        ];
-    }
-
-    public function categoryToStudyYears(ModelCategory $category): array
-    {
-        switch ($category->value) {
-            case ModelCategory::CAT_ES_6:
-                return [6];
-            case ModelCategory::CAT_ES_7:
-                return [7];
-            case ModelCategory::CAT_ES_8:
-                return [8];
-            case ModelCategory::CAT_ES_9:
-                return [9];
-            case ModelCategory::CAT_UNK:
-                return [null];
-            default:
-                throw new InvalidArgumentException('Invalid category ' . $category->value);
-        }
-    }
-
     public function getPointsColumn(TaskModel $task): string
     {
         return 's.raw_points';
@@ -53,13 +24,29 @@ class EvaluationVyfuk2012 implements EvaluationStrategy
         return 's.raw_points';
     }
 
-    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ContestCategoryModel $category): float
     {
         return $task->points;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string
+    public function getSubmitPoints(SubmitModel $submit): ?float
+    {
+        return $submit->raw_points;
+    }
+
+    public function getTaskPointsColumn(ContestCategoryModel $category): string
     {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
+    }
+
+    protected function getCategoryMap(): array
+    {
+        return [
+            ContestCategoryModel::VYFUK_6 => [StudyYear::Primary6],
+            ContestCategoryModel::VYFUK_7 => [StudyYear::Primary7],
+            ContestCategoryModel::VYFUK_8 => [StudyYear::Primary8],
+            ContestCategoryModel::VYFUK_9 => [StudyYear::Primary9],
+            ContestCategoryModel::VYFUK_UNK => [StudyYear::None],
+        ];
     }
 }

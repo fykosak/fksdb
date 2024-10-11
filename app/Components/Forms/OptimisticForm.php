@@ -15,16 +15,16 @@ class OptimisticForm extends Form
 
     private const FINGERPRINT = '__fp';
 
-    /** @var callable */
+    /** @phpstan-var callable():string */
     private $fingerprintCallback;
 
-    /** @var callable */
+    /** @phpstan-var callable():mixed */
     private $defaultsCallback;
 
     /**
      *
-     * @param callable $fingerprintCallback returns fingerprint of current version of the data
-     * @param callable $defaultsCallback returns current version of data, formatted as an array
+     * @phpstan-param callable():string $fingerprintCallback returns fingerprint of current version of the data
+     * @phpstan-param callable():mixed $defaultsCallback returns current version of data, formatted as an array
      */
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback)
     {
@@ -35,7 +35,7 @@ class OptimisticForm extends Form
     }
 
     /**
-     * @param null $data Must be always null! Defaults callback is used to produce the values.
+     * @param mixed $data Must be always null! Defaults callback is used to produce the values.
      * @return static
      * @throws \LogicException
      */
@@ -57,7 +57,7 @@ class OptimisticForm extends Form
 
     private function getFingerprintInput(): HiddenField
     {
-        return $this->getComponent(self::FINGERPRINT);
+        return $this->getComponent(self::FINGERPRINT); // @phpstan-ignore-line
     }
 
     public function isValid(): bool
@@ -65,7 +65,7 @@ class OptimisticForm extends Form
         $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 
-        if ($receivedFingerprint != $currentFingerprint) {
+        if ($receivedFingerprint !== $currentFingerprint) {
             $this->addError(_('There has been a change in the data of this form since it was shown.'));
             $this->setFingerprint($currentFingerprint);
             parent::setValues(($this->defaultsCallback)());

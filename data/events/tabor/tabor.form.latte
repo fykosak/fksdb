@@ -1,16 +1,15 @@
 {layout '../../../app/Components/Controls/Events/layout.application.form.latte'}
-
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $holder}
 {block content}
-
 <ul>
     <li>
         Potvrzením přihlášky se závazně přihlašuješ <strong>na celý tábor</strong>.
     </li>
-    <li n:if="$holder->getParameter('deadline')">
-        Uzávěrka pro vyjádření <strong>{$holder->getParameter('deadline')|date:'j. n. Y H:i:s'}</strong>.
+    <li n:if="$holder->event->getParameter('deadline')">
+        Uzávěrka pro vyjádření <strong>{$holder->event->getParameter('deadline')|date:'j. n. Y H:i:s'}</strong>.
     </li>
     <li>
-        Více informací o táboře se bude průběžně objevovat na <a href="http://vyfuk.mff.cuni.cz/akce/tabor">našich
+        Více informací o táboře se bude průběžně objevovat na <a href="https://vyfuk.org/akce/tabor">našich
             stránkách</a>.
 
     </li>

@@ -1,0 +1,15 @@
+{define group FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel $group}
+    <h2>{_'Schedule group'}</h2>
+    {control columnTable [
+    'schedule_group.schedule_group_id',
+    'schedule_group.name',
+    'schedule_group.schedule_group_type',
+    'event.name_new',
+    'schedule_group.start',
+    'schedule_group.end',
+    'schedule_group.registration_begin',
+    'schedule_group.registration_end',
+    'schedule_group.modification_end',
+    ], $group,1024}
+
+{/define}

@@ -4,33 +4,43 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
-use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
+use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
+use FKSDB\Modules\Core\PresenterTraits\PresenterRole;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\Title;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
-abstract class BasePresenter extends AuthenticatedPresenter
+abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
     use YearPresenterTrait;
 
-    private ?ContestantModel $contestant;
-
-    public function getContestant(): ?ContestantModel
+    /**
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     * @throws NoContestYearAvailable
+     */
+    public function getContestant(): ContestantModel
     {
-        if (!isset($this->contestant)) {
-            /** @var PersonModel $person */
-            $person = $this->user->getIdentity()->person;
-            $this->contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')->where(
-                [
-                    'contest_id' => $this->getSelectedContestYear()->contest_id,
-                    'year' => $this->getSelectedContestYear()->year,
-                ]
-            )->fetch();
+        static $contestant;
+        if (!isset($contestant)) {
+            $contestant = $this->getLoggedPerson()->getContestant($this->getSelectedContestYear());
         }
-        return $this->contestant;
+        if (!$contestant) {
+            throw new NotFoundException(_('Contestant not found'));
+        }
+        return $contestant;
     }
 
+    /**
+     * @throws UnsupportedLanguageException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();
@@ -39,27 +49,47 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     protected function getNavRoots(): array
     {
-        return ['Public.Dashboard.default'];
+        return [
+            [
+                'title' => new Title(null, _('Dashboard')),
+                'items' => [
+                    'Public:Dashboard:default' => [],
+                    'Public:Submit:default' => [],
+                    'Public:Submit:legacy' => [],
+                    'Public:Submit:list' => [],
+                ],
+            ],
+            [
+                'title' => new Title(null, _('My profile')),
+                'items' => [
+                    'Profile:MyApplications:default' => [],
+                    'Shop:MyPayments:default' => [],
+                    'Profile:Email:default' => [],
+                    'Profile:PostContact:default' => [],
+                    'Profile:Lang:default' => [],
+                    'Profile:Login:default' => [],
+                    'Core:Settings:default' => [],
+                ],
+            ],
+        ];
     }
 
-    protected function beforeRender(): void
+    /**
+     * @throws NoContestAvailable
+     */
+    protected function getStyleId(): string
     {
         $contest = $this->getSelectedContest();
-        if (isset($contest) && $contest) {
-            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
-            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-        }
-        parent::beforeRender();
+        return 'contest-' . $contest->getContestSymbol();
     }
 
-    protected function getDefaultSubTitle(): ?string
+    protected function getSubTitle(): ?string
     {
         return sprintf(_('%d. year'), $this->year);
     }
 
-    protected function getRole(): string
+    protected function getRole(): PresenterRole
     {
-        return 'contestant';
+        return PresenterRole::from(PresenterRole::CONTESTANT);
     }
 }

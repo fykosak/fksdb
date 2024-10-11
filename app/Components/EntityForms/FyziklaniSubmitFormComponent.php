@@ -4,22 +4,31 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\EntityForms;
 
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\Handler;
-use Fykosak\Utils\Logging\FlashMessageDump;
-use Fykosak\Utils\Logging\MemoryLogger;
+use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Components\Game\Submits\ClosedSubmittingException;
+use FKSDB\Components\Game\Submits\Handler\Handler;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
- * @property SubmitModel $model
+ * @phpstan-extends ModelForm<SubmitModel,array{points:int}>
  */
-class FyziklaniSubmitFormComponent extends EntityFormComponent
+class FyziklaniSubmitFormComponent extends ModelForm
 {
+    private Handler $handler;
+
+    public function __construct(Container $container, ?Model $model)
+    {
+        parent::__construct($container, $model);
+        $this->handler = $this->model->fyziklani_team->event->createGameHandler($this->getContext());
+    }
+
     /**
      * @throws NotSetGameParametersException
      */
@@ -28,32 +37,23 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @throws BadTypeException
-     */
-    protected function setDefaults(): void
+    protected function setDefaults(Form $form): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
+            $form->setDefaults([
                 'team_id' => $this->model->fyziklani_team_id,
                 'points' => $this->model->points,
             ]);
         }
     }
 
-    protected function handleFormSuccess(Form $form): void
+    protected function onException(\Throwable $exception): bool
     {
-        $values = $form->getValues();
-        try {
-            $logger = new MemoryLogger();
-            $handler = new Handler($this->model->fyziklani_team->event, $this->getContext());
-            $handler->changePoints($logger, $this->model, $values['points']);
-            FlashMessageDump::dump($logger, $this->getPresenter());
-            $this->redirect('this');
-        } catch (ClosedSubmittingException $exception) {
+        if ($exception instanceof ClosedSubmittingException) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
-            $this->redirect('this');
+            return true;
         }
+        return parent::onException($exception);
     }
 
     /**
@@ -64,11 +64,30 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         $field = new RadioList(_('Number of points'));
         $items = [];
-        foreach ($this->model->fyziklani_team->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
+        foreach ($this->model->fyziklani_team->event->getGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);
         $field->setRequired();
         return $field;
+    }
+
+    /**
+     * @throws InvalidLinkException
+     */
+    protected function innerSuccess(array $values, Form $form): Model
+    {
+        $this->handler->edit($this->model, (int)$values['points']);
+        return $this->model;
+    }
+
+    protected function successRedirect(Model $model): void
+    {
+        foreach ($this->handler->logger->getMessages() as $message) {
+            // interpret html edit links
+            $this->getPresenter()->flashMessage(Html::el()->setHtml($message->text), $message->level);
+        }
+        $this->handler->logger->clear();
+        $this->redirect('this');
     }
 }

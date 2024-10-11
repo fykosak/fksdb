@@ -4,36 +4,50 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
-use Nette\Application\UI\Presenter;
-use Nette\DI\Container;
-use NiftyGrid\DuplicateButtonException;
-use NiftyGrid\DuplicateColumnException;
+use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\Utils\UI\Title;
 
-class EmailsGrid extends EntityGrid
+/**
+ * @phpstan-extends BaseGrid<EmailMessageModel,array{}>
+ */
+final class EmailsGrid extends BaseGrid
 {
+    private EmailMessageService $service;
 
-    public function __construct(Container $container)
+    public function inject(EmailMessageService $service): void
     {
-        parent::__construct($container, EmailMessageService::class, [
-            'email_message.email_message_id',
-            'email_message.recipient',
-            'email_message.subject',
-            'email_message.state',
-        ]);
+        $this->service = $service;
     }
 
     /**
-     * @throws BadTypeException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @phpstan-return TypedSelection<EmailMessageModel>
      */
-    protected function configure(Presenter $presenter): void
+    protected function getModels(): TypedSelection
     {
-        parent::configure($presenter);
-        $this->setDefaultOrder('created DESC');
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        return $this->service->getTable()->order('email_message_id DESC');
+    }
+
+    protected function configure(): void
+    {
         $this->paginate = true;
+        $this->counter = false;
+        $this->filtered = false;
+        $this->addSimpleReferencedColumns([
+            '@email_message.email_message_id',
+            '@email_message.recipient',
+            '@person.full_name',
+            '@email_message.subject',
+            '@email_message.state',
+        ]);
+        $this->addPresenterButton(
+            'detail',
+            'detail',
+            new Title(null, _('button.detail')),
+            false,
+            ['id' => 'email_message_id']
+        );
     }
 }
