@@ -85,6 +85,8 @@ class ReferencedPersonHandler extends ReferencedHandler
      * @throws ScheduleException
      * @throws StorageException
      * @throws FullCapacityException
+     * @throws \Throwable
+     * @throws \Throwable
      */
     public function store(array $values, ?Model $model = null): PersonModel
     {

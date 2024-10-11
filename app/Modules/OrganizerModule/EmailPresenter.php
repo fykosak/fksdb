@@ -8,11 +8,12 @@ use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Email\EmailProviderForm;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Email\Source\Sous\ReminderEmail;
 use FKSDB\Models\Email\UIEmailSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\EmailMessageService;
@@ -21,8 +22,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
-use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class EmailPresenter extends BasePresenter
 {
@@ -48,8 +47,8 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedTemplate(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
         );
@@ -71,8 +70,8 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedHowTo(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'howTo',
             $this->getSelectedContest()
         );
@@ -81,15 +80,6 @@ final class EmailPresenter extends BasePresenter
     public function titleHowTo(): PageTitle
     {
         return new PageTitle(null, 'How to', 'fas fa-clipboard-question');
-    }
-
-    public function authorizedDetail(): bool
-    {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getEntity(),
-            'detail',
-            $this->getSelectedContest()
-        );
     }
 
     /**
@@ -101,6 +91,24 @@ final class EmailPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function authorizedDetail(): bool
+    {
+        $authorized = true;
+        /** @var ContestModel $contest */
+        foreach ($this->contestService->getTable() as $contest) {
+            $authorized = $authorized
+                && $this->authorizator->isAllowedContest(
+                    ContestResourceHolder::fromResource($this->getEntity(), $contest),
+                    'detail',
+                    $contest
+                );
+        }
+        return $authorized;
+    }
     /**
      * @throws GoneException
      * @throws NotFoundException
@@ -119,8 +127,8 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedTransition(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'transition',
             $this->getSelectedContest()
         );
@@ -131,14 +139,20 @@ final class EmailPresenter extends BasePresenter
         return new PageTitle(null, _('Transitions'), 'fas fa-envelope-open');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
-    }
-
-    public function titleDefault(): PageTitle
-    {
-        return new PageTitle(null, _('Email dashboard'), 'fas fa-mail-bulk');
     }
 
     /**
@@ -146,11 +160,15 @@ final class EmailPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->contestAuthorizator->isAllowed(
-            $this->getORMService()->getModelClassName()::RESOURCE_ID,
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
             'dashboard',
             $this->getSelectedContest()
         );
+    }
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Email dashboard'), 'fas fa-mail-bulk');
     }
 
     public function renderDefault(): void
@@ -191,16 +209,6 @@ final class EmailPresenter extends BasePresenter
         return $this->emailMessageService;
     }
 
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
     protected function createComponentGrid(): EmailsGrid
     {
         return new EmailsGrid($this->getContext());
@@ -226,14 +234,5 @@ final class EmailPresenter extends BasePresenter
             $this->machineFactory->getEmailMachine(), //@phpstan-ignore-line
             $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready)
         );
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

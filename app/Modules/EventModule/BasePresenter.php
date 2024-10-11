@@ -116,10 +116,8 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                 'items' => [
                     'Event:Report:default' => [],
                     'Event:EventOrganizer:list' => [],
-                    'Event:Payments:create' => [],
-                    'Event:Payments:list' => [],
-                    'Game:Dashboard:default' => [],
-                    'Schedule:Dashboard:default' => [],
+                    'EventGame:Dashboard:default' => [],
+                    'EventSchedule:Dashboard:default' => [],
                     'Event:Chart:list' => [],
                     'Event:Dispatch:default' => [],
                     'Event:Acl:default' => [],

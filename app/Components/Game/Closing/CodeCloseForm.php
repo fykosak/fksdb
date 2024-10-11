@@ -9,7 +9,6 @@ use FKSDB\Components\Game\GameException;
 use FKSDB\Components\Game\Submits\NoTaskLeftException;
 use FKSDB\Components\Game\Submits\TaskCodePreprocessor;
 use FKSDB\Models\ORM\Models\EventModel;
-use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;

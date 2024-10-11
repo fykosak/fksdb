@@ -15,7 +15,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
                 'title' => new Title(null, _('My profile')),
                 'items' => [
                     'Profile:MyApplications:default' => [],
-                    'Profile:MyPayments:default' => [],
+                    'Shop:MyPayments:default' => [],
                     'Profile:Email:default' => [],
                     'Profile:PostContact:default' => [],
                     'Profile:Lang:default' => [],

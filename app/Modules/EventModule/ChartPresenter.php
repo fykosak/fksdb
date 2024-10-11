@@ -9,7 +9,9 @@ use FKSDB\Components\Charts\Event\Applications\ProgressComponent;
 use FKSDB\Components\Charts\Event\Applications\TimeGeoChart;
 use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
@@ -25,7 +27,11 @@ final class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEvent(), 'event.chart', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'event.chart',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -33,6 +39,7 @@ final class ChartPresenter extends BasePresenter
      * @throws UnsupportedLanguageException
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
+     * @throws NotImplementedException
      */
     protected function startup(): void
     {
@@ -43,6 +50,7 @@ final class ChartPresenter extends BasePresenter
     /**
      * @phpstan-return (Chart&IComponent)[]
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function getCharts(): array
     {

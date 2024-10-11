@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule;
 
+use FKSDB\Components\Grids\TaskGrid;
 use FKSDB\Components\Inbox\HandoutFormComponent;
 use FKSDB\Components\Inbox\PointsVariance\ChartComponent;
 use FKSDB\Components\Inbox\TaskImportFormComponent;
-use FKSDB\Components\Grids\TaskGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 
 final class TasksPresenter extends BasePresenter
 {
@@ -37,10 +35,15 @@ final class TasksPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedImport(): bool
     {
-        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'insert', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'insert',
+            $this->getSelectedContestYear()
+        );
     }
 
     public function titleDispatch(): PageTitle
@@ -50,10 +53,15 @@ final class TasksPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedDispatch(): bool
     {
-        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'dispatch', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'dispatch',
+            $this->getSelectedContestYear()
+        );
     }
 
     public function titleList(): PageTitle
@@ -63,10 +71,15 @@ final class TasksPresenter extends BasePresenter
 
     /**
      * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
      */
     public function authorizedList(): bool
     {
-        return $this->contestAuthorizator->isAllowed(TaskModel::RESOURCE_ID, 'list', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(TaskModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'list',
+            $this->getSelectedContestYear()
+        );
     }
 
     /**
@@ -91,28 +104,9 @@ final class TasksPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
-    }
-
     protected function getORMService(): TaskService
     {
         return $this->taskService;
-    }
-
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
     }
 
     /**

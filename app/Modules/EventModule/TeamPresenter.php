@@ -19,7 +19,7 @@ use FKSDB\Components\Game\NotSetGameParametersException;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -27,34 +27,16 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
-use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class TeamPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<TeamModel2> */
-    use EventEntityPresenterTrait;
-
-    private TeamService2 $teamService;
-
-    public function injectService(TeamService2 $service): void
-    {
-        $this->teamService = $service;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
+    /** @use EntityPresenterTrait<TeamModel2> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -69,15 +51,32 @@ final class TeamPresenter extends BasePresenter
         return $this->getAction() !== 'create';
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): TeamService2
     {
-        return $this->teamService;
+        throw new GoneException();
     }
 
+    protected function loadModel(): TeamModel2
+    {
+        /** @var TeamModel2|null $candidate */
+        $candidate = $this->getEvent()->getTeams()->where('fyziklani_team_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
-            new PseudoEventResource(TeamModel2::RESOURCE_ID, $this->getEvent()),
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -89,12 +88,23 @@ final class TeamPresenter extends BasePresenter
     }
 
     /**
+     * @throws GoneException
+     * @throws NotFoundException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
+    }
+    /**
+     * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function renderDetail(): void
     {
@@ -116,7 +126,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \Throwable
      */
@@ -138,19 +147,23 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
+     * @throws NotFoundException
      */
     public function authorizedOrgDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'organizer', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'organizerDetail',
+            $this->getEvent()
+        );
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     public function renderOrgDetail(): void
     {
@@ -159,7 +172,6 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws \Throwable
      */
@@ -180,7 +192,11 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDetailedList(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
     }
 
     public function titleDetailedList(): PageTitle
@@ -190,15 +206,13 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
-            $this->getEntity(),
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'edit',
             $this->getEvent()
         );
@@ -206,10 +220,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -221,7 +233,11 @@ final class TeamPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(TeamModel2::RESOURCE_ID, 'list', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
     }
 
     public function titleDefault(): PageTitle
@@ -231,11 +247,14 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
+            'mass',
+            $this->getEvent()
+        );
     }
 
     public function titleMass(): PageTitle
@@ -277,10 +296,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): TeamForm
     {
@@ -313,11 +330,9 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @phpstan-return TransitionButtonsComponent<TeamModel2>
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotImplementedException
      */
@@ -343,10 +358,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentRests(): TeamRestsComponent
     {
@@ -355,10 +368,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws NotFoundException
      * @throws GoneException
-     * @throws \ReflectionException
      */
     protected function createComponentSeating(): Single
     {
@@ -367,10 +378,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
     {
@@ -387,10 +396,8 @@ final class TeamPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws NotFoundException
-     * @throws \ReflectionException
      */
     protected function createComponentNoteForm(): NoteForm
     {

@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrganizerModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -25,7 +26,6 @@ use Nette\Utils\Html;
 
 final class DeduplicatePresenter extends BasePresenter
 {
-
     private PersonService $personService;
     private Merger $merger;
     private PersonInfoService $personInfoService;
@@ -47,9 +47,27 @@ final class DeduplicatePresenter extends BasePresenter
      */
     public function authorizedPerson(): bool
     {
-        return $this->contestAuthorizator->isAllowed(PersonModel::RESOURCE_ID, 'list', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(PersonModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
     }
 
+    public function titlePerson(): PageTitle
+    {
+        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
+    }
+
+    public function authorizedRecover(): bool
+    {
+        return false;
+    }
+
+    public function titleRecover(): PageTitle
+    {
+        return new PageTitle(null, _('Password recovery'), 'fas fa-hammer');
+    }
     /**
      * @throws NoContestAvailable
      * @throws NotFoundException
@@ -59,24 +77,7 @@ final class DeduplicatePresenter extends BasePresenter
         return $this->authorizedMerge();
     }
 
-    /**
-     * @throws NoContestAvailable
-     * @throws NotFoundException
-     */
-    public function authorizedMerge(): bool
-    {
-        $trunkPerson = $this->personService->findByPrimary($this->getParameter('trunkId'));
-        $mergedPerson = $this->personService->findByPrimary($this->getParameter('mergedId'));
-        if (is_null($trunkPerson) || is_null($mergedPerson)) {
-            throw new NotFoundException('Person does not exists');
-        }
-        $this->trunkPerson = $trunkPerson;
-        $this->mergedPerson = $mergedPerson;
-        return $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge', $this->getSelectedContest()) &&
-            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge', $this->getSelectedContest());
-    }
-
-    public function titleMerge(): PageTitle
+    public function titleDontMerge(): PageTitle
     {
         return new PageTitle(
             null,
@@ -88,11 +89,6 @@ final class DeduplicatePresenter extends BasePresenter
                 $this->mergedPerson->person_id
             )
         );
-    }
-
-    public function titlePerson(): PageTitle
-    {
-        return new PageTitle(null, _('Duplicate persons'), 'fas fa-exchange');
     }
 
     public function actionDontMerge(): void
@@ -118,6 +114,46 @@ final class DeduplicatePresenter extends BasePresenter
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         //$this->backLinkRedirect(true);
     }
+    /**
+     * @throws NoContestAvailable
+     * @throws NotFoundException
+     */
+    public function authorizedMerge(): bool
+    {
+        $trunkPerson = $this->personService->findByPrimary($this->getParameter('trunkId'));
+        $mergedPerson = $this->personService->findByPrimary($this->getParameter('mergedId'));
+        if (is_null($trunkPerson) || is_null($mergedPerson)) {
+            throw new NotFoundException('Person does not exists');
+        }
+        $this->trunkPerson = $trunkPerson;
+        $this->mergedPerson = $mergedPerson;
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->trunkPerson, $this->getSelectedContest()),
+            'merge',
+            $this->getSelectedContest()
+        )
+            &&
+            $this->authorizator->isAllowedContest(
+                ContestResourceHolder::fromResource($this->mergedPerson, $this->getSelectedContest()),
+                'merge',
+                $this->getSelectedContest()
+            );
+    }
+
+    public function titleMerge(): PageTitle
+    {
+        return new PageTitle(
+            null,
+            sprintf(
+                _('Merging persons %s (%d) and %s (%d)'),
+                $this->trunkPerson->getFullName(),
+                $this->trunkPerson->person_id,
+                $this->mergedPerson->getFullName(),
+                $this->mergedPerson->person_id
+            )
+        );
+    }
+
 
     public function actionMerge(): void
     {

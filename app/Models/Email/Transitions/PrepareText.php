@@ -56,7 +56,6 @@ final class PrepareText implements Statement
         $template = $this->templateFactory->create($model->lang);
         // add tokens if is "spam"
         if ($model->topic->isSpam()) {
-            Debugger::barDump($model->person);
             if ($model->person) {
                 $token = $this->authTokenService->createUnsubscribeToken(
                     $model->person->getLogin() ?? $this->loginService->createLogin($model->person)

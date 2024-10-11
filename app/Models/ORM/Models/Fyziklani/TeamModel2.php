@@ -9,12 +9,12 @@ use FKSDB\Components\Game\Closing\NotCheckedSubmitsException;
 use FKSDB\Components\Game\Seating\Place;
 use FKSDB\Components\Game\Seating\Place2022;
 use FKSDB\Components\Game\Seating\Place2024;
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
-use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Tests\Event\Team\CategoryCheck;
 use FKSDB\Models\ORM\Tests\Event\Team\PendingTeams;
 use FKSDB\Models\ORM\Tests\Event\Team\TeamsPerSchool;
@@ -23,7 +23,6 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -59,7 +58,7 @@ use Nette\Utils\DateTime;
  *      gameLang:string|null,
  * }
  */
-final class TeamModel2 extends Model implements Resource
+final class TeamModel2 extends Model implements EventResource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
@@ -156,15 +155,13 @@ final class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @phpstan-param string[] $types
      * @phpstan-return PersonScheduleModel[][]
      */
-    public function getScheduleRest(
-        array $types = [ScheduleGroupType::Accommodation, ScheduleGroupType::Weekend]
-    ): array {
+    public function getScheduleRest(): array
+    {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $rest = $person->getScheduleRests($this->event, $types);
+            $rest = $person->getScheduleRestsForEvent($this->event);
             if (count($rest)) {
                 $toPay[] = $rest;
             }
@@ -269,5 +266,10 @@ final class TeamModel2 extends Model implements Resource
             new PendingTeams($container),
             new TeamsPerSchool($container),
         ];
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->event;
     }
 }

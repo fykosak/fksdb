@@ -67,7 +67,6 @@ final class DispatchGrid extends BaseGrid
         $this->addSimpleReferencedColumns([
             '@contest.contest',
             '@event.year',
-            '@event.role',
         ]);
         $this->addPresenterButton(
             'Dashboard:default',

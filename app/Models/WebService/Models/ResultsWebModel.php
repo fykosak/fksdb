@@ -12,7 +12,6 @@ use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
-use Nette\Schema\Elements\Structure;
 
 /**
  * @phpstan-extends WebModel<array<string,mixed>,array<string,mixed>>

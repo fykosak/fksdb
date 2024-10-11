@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Roles\Events\Fyziklani;
 
 use FKSDB\Models\Authorization\Roles\Events\EventRole;
+use FKSDB\Models\Authorization\Roles\ImplicitRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use Nette\Utils\Html;
 
-final class TeamMemberRole extends EventRole
+final class TeamMemberRole implements EventRole, ImplicitRole
 {
-    public const ROLE_ID = 'event.fyziklani.member';
-    public TeamMemberModel $member;
+    public const RoleId = 'event.teamMember'; // phpcs:ignore
+    private TeamMemberModel $member;
 
-    public function __construct(EventModel $event, TeamMemberModel $member)
+    public function __construct(TeamMemberModel $member)
     {
-        parent::__construct(self::ROLE_ID, $event);
         $this->member = $member;
     }
 
@@ -37,5 +37,20 @@ final class TeamMemberRole extends EventRole
                     $this->member->fyziklani_team->state->label()
                 )
             );
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->member->fyziklani_team->event;
+    }
+
+    public function getModel(): TeamMemberModel
+    {
+        return $this->member;
     }
 }

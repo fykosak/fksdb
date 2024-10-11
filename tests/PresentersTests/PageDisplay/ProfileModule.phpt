@@ -20,7 +20,7 @@ class ProfileModule extends AbstractPageDisplayTestCase
             ['Profile:Lang', 'default'],
             ['Profile:Login', 'default'],
             ['Profile:MyApplications', 'default'],
-            ['Profile:MyPayments', 'default'],
+            ['Shop:MyPayments', 'default'],
             ['Profile:PostContact', 'default'],
         ];
     }

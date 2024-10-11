@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Contests;
 
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
@@ -95,8 +96,8 @@ class ResultsWebModel extends ContestYearWebModel
      */
     protected function isAuthorized(): bool
     {
-        return $this->contestYearAuthorizator->isAllowed(
-            RestApiPresenter::RESOURCE_ID,
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(RestApiPresenter::RESOURCE_ID, $this->getContestYear()),
             self::class,
             $this->getContestYear()
         );

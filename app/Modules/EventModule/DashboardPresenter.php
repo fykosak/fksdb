@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\Utils\UI\Title;
@@ -27,7 +27,11 @@ final class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'dashboard', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'dashboard',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -35,8 +39,8 @@ final class DashboardPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getEvent(),
+        $this->template->isOrganizer = $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
             'edit',
             $this->getEvent()
         );
