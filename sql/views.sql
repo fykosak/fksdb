@@ -177,44 +177,24 @@ where exists(
 
 create or replace view v_dokuwiki_group as
 (
-SELECT T.role_id, T.role_id as name
-from (SELECT 'webmaster' as role_id
-      UNION
-      SELECT 'taskManager'
-      UNION
-      SELECT 'dispatcher'
-      UNION
-      SELECT 'dataManager'
-      UNION
-      SELECT 'eventManager'
-      UNION
-      SELECT 'inboxManager'
-      UNION
-      SELECT 'boss'
-      UNION
-      SELECT 'organizer'
-      UNION
-      SELECT 'contestant'
-      UNION
-      SELECT 'exportDesigner'
-      UNION
-      SELECT 'aesop'
-      UNION
-      SELECT 'schoolManager'
-      UNION
-      SELECT 'web'
-      UNION
-      SELECT 'wiki'
-      UNION
-      SELECT 'superuser'
-      UNION
-      SELECT 'cartesian') as T
-    );
+select distinct `role` as `role_id`, `role` as `name`
+from `contest_grant`
+union
+select distinct `role` as `role_id`, `role` as `name`
+from `base_grant`
+union select 'organizer' as `role`, 'organizer' as `name` -- hardcoded 'organizer'
+);
 
 create or replace view v_dokuwiki_user_group as
-select login_id, role_id, contest_id
-from (select `role` as 'role_id', contest_id, login_id from `contest_grant`) as cg
+(
+select cg.login_id, cg.`role` as 'role_id', cg.contest_id
+from `contest_grant` cg
+union
+select bg.login_id, bg.`role` as 'role_id', c.contest_id
+from `base_grant` bg
+cross join contest c
 union
 select l.login_id, 'organizer' as `role_id`, o.contest_id -- hardcoded 'organizer'
 from org o
-         inner join login l on l.person_id = o.person_id;
+inner join login l on l.person_id = o.person_id
+);
