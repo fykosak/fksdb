@@ -159,4 +159,12 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         }
         throw new NotImplementedException();
     }
+
+    public function isSelectable(): bool
+    {
+        if ($this->value === self::WeekendInfo) {
+            return false;
+        }
+        return true;
+    }
 }
