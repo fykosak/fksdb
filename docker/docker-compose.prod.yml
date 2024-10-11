@@ -7,12 +7,17 @@ services:
     container_name: fksdb
     environment:
       TZ: 'Europe/Prague'
+      PUID: 1000 # change to target user
+      GUID: 1000 # change to target group
     volumes:
       - ./config.neon:/app/app/config/config.local.neon # nette config
+      - ./msmtprc:/etc/msmtprc # mail configuration
       - ./log:/app/log
       - ./temp:/app/temp
       - ./upload:/app/upload
-    user: 1000:1000 # expects the main user as uid:pid
+    extra_hosts:
+      # access smtp mail server running on host
+      - "host.docker.internal:host-gateway"
 
   mariadb:
     image: mariadb:lts
