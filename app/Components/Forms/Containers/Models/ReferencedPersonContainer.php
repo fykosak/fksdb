@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -32,7 +32,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * @phpstan-extends ReferencedContainer<PersonModel>
- * @phpstan-import-type TMeta from ScheduleContainer
+ * @phpstan-import-type TMeta from SectionContainer
  * @phpstan-type EvaluatedFieldMetaData array{
  *     required?:bool,
  *     caption?:string|null,
@@ -149,7 +149,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 continue;
             }
             /**
-             * @var BaseControl|ContainerWithOptions|AddressDataContainer|ScheduleContainer $component
+             * @var BaseControl|ContainerWithOptions|AddressDataContainer|SectionContainer $component
              * @var string $fieldName
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
@@ -187,7 +187,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } else {
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
-                    } elseif ($component instanceof ScheduleContainer) {
+                    } elseif ($component instanceof SectionContainer) {
                         $component->setPerson($model);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
@@ -220,7 +220,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
-                return new ScheduleContainer(
+                return new SectionContainer(
                     $this->container,
                     $this->event,
                     $metadata //@phpstan-ignore-line
