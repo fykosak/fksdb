@@ -346,13 +346,13 @@ final class ACL
 
         $permission->allow(
             ExplicitContestRole::Web,
-            'export',
+            ['export', QueryModel::RESOURCE_ID],
             'execute',
             new StoredQueryTagAssertion(['web-safe'])
         );
         $permission->allow(
             ExplicitContestRole::Wiki,
-            'export',
+            ['export', QueryModel::RESOURCE_ID],
             'execute',
             new StoredQueryTagAssertion(['wiki-safe'])
         );
