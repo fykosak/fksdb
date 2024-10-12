@@ -47,7 +47,7 @@ final class OrganizerRole implements ContestRole, ImplicitRole
         return 'Organizer';
     }
 
-    public function getModel(): Model
+    public function getModel(): OrganizerModel
     {
         return $this->organizer;
     }

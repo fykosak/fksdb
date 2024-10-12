@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Roles\Contest;
 
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\Grant\ContestGrantModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
@@ -24,35 +25,31 @@ final class ExplicitContestRole implements ContestRole
     public const Wiki = 'contest.wiki';
 
     // phpcs:enable
+    private ContestGrantModel $contestGrant;
 
-    private ContestModel $contest;
-    /** @phpstan-var self::* $roleId */
-    private string $roleId;
-
-    /**
-     * @phpstan-param self::* $roleId
-     */
-    public function __construct(string $roleId, ContestModel $contest)
+    public function __construct(ContestGrantModel $contestGrant)
     {
-        $this->roleId = $roleId;
-        $this->contest = $contest;
+        $this->contestGrant = $contestGrant;
     }
 
     public function getContest(): ContestModel
     {
-        return $this->contest;
+        return $this->contestGrant->contest;
     }
 
+    /**
+     * @phpstan-return self::*
+     */
     public function getRoleId(): string
     {
-        return $this->roleId;
+        return $this->contestGrant->role; //@phpstan-ignore-line
     }
 
     public function badge(): Html
     {
         $className = 'badge bg-color-8';
 
-        switch ($this->roleId) {
+        switch ($this->contestGrant->role) {
             case self::TaskManager:
                 $className = 'bg-color-1';
                 break;
@@ -81,7 +78,7 @@ final class ExplicitContestRole implements ContestRole
 
     public function description(): string
     {
-        switch ($this->roleId) {
+        switch ($this->contestGrant->role) {
             case self::TaskManager:
                 return 'úlohář';
             case self::DataManager:
@@ -104,7 +101,7 @@ final class ExplicitContestRole implements ContestRole
 
     public function label(): string
     {
-        switch ($this->roleId) {
+        switch ($this->contestGrant->role) {
             case self::TaskManager:
                 return 'Task manager';
             case self::DataManager:

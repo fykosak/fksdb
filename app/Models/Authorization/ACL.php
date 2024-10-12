@@ -15,7 +15,7 @@ use FKSDB\Models\Authorization\Assertions\IsSelfPersonAssertion;
 use FKSDB\Models\Authorization\Assertions\OwnSubmitAssertion;
 use FKSDB\Models\Authorization\Assertions\Payments\OwnPaymentAssertion;
 use FKSDB\Models\Authorization\Assertions\Payments\PaymentEditableAssertion;
-use FKSDB\Models\Authorization\Assertions\SelfAssertion;
+use FKSDB\Models\Authorization\Assertions\IsSelfOrganizerAssertion;
 use FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\Authorization\Roles\Base\GuestRole;
@@ -217,7 +217,7 @@ final class ACL
             OrganizerRole::RoleId,
             OrganizerModel::RESOURCE_ID,
             'edit',
-            new SelfAssertion()
+            new IsSelfOrganizerAssertion()
         );
         $permission->allow(
             [ExplicitContestRole::DataManager, ExplicitContestRole::Boss],

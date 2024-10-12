@@ -129,7 +129,7 @@ final class LoginModel extends Model implements IIdentity
         }
         /** @var ContestGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitContestRole($grant->role, $grant->contest);
+            $grants[] = new ExplicitContestRole($grant);
         }
         return $grants;
     }
@@ -217,7 +217,7 @@ final class LoginModel extends Model implements IIdentity
             ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitEventRole($grant->role, $grant->event);
+            $grants[] = new ExplicitEventRole($grant);
         }
         return $grants;
     }

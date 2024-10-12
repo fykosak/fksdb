@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model\Model;
  * @property-read int $grant_id
  * @property-read int $login_id
  * @property-read LoginModel $login
- * @property-read ExplicitContestRole::* $role
+ * @property-read string|ExplicitContestRole::* $role
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  */
