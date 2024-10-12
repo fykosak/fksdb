@@ -158,10 +158,10 @@ class CommonAuthenticator implements Authenticator, IdentityHandler
      * @throws InactiveLoginException
      * @throws UnknownLoginException
      */
-    private function findByLogin(string $id): LoginModel
+    public function findByLogin(string $id): LoginModel
     {
-        $login = $this->innerFindByContestEmail($email)
-            ?? $this->innerFindByPersonEmail($email)
+        $login = $this->innerFindByContestEmail($id)
+            ?? $this->innerFindByPersonEmail($id)
             ?? $this->innerFindLogin($id);
         if (!$login) {
             throw new UnknownLoginException();

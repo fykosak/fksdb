@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Recovery;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
+use FKSDB\Models\Authentication\CommonAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
-use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Email\Source\PasswordRecovery\PasswordRecoveryEmail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenType;
@@ -20,19 +20,18 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
 class RecoveryForm extends FormComponent
 {
     private AuthTokenService $authTokenService;
-    private PasswordAuthenticator $passwordAuthenticator;
+    private CommonAuthenticator $authenticator;
 
     final public function inject(
         AuthTokenService $authTokenService,
-        PasswordAuthenticator $passwordAuthenticator
+        CommonAuthenticator $authenticator
     ): void {
         $this->authTokenService = $authTokenService;
-        $this->passwordAuthenticator = $passwordAuthenticator;
+        $this->authenticator = $authenticator;
     }
 
     protected function getTemplatePath(): string
@@ -56,7 +55,7 @@ class RecoveryForm extends FormComponent
 
             $connection->transaction(
                 function () use ($values): void {
-                    $login = $this->passwordAuthenticator->findLogin($values['id']);
+                    $login = $this->authenticator->findByLogin($values['id']);
                     if ($login->hasActiveToken(AuthTokenType::from(AuthTokenType::Recovery))) {
                         throw new RecoveryExistsException();
                     }
