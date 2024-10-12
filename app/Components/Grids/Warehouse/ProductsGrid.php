@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemService;
 use Fykosak\NetteORM\Selection\TypedSelection;
 use Fykosak\Utils\UI\Title;
 
 /**
- * @phpstan-extends BaseGrid<ProductModel,array{}>
+ * @phpstan-extends BaseGrid<WarehouseItemModel,array{}>
  */
 class ProductsGrid extends BaseGrid
 {
-    private ProductService $service;
+    private WarehouseItemService $service;
 
-    public function inject(ProductService $service): void
+    public function inject(WarehouseItemService $service): void
     {
         $this->service = $service;
     }
 
     /**
-     * @phpstan-return TypedSelection<ProductModel>
+     * @phpstan-return TypedSelection<WarehouseItemModel>
      */
     protected function getModels(): TypedSelection
     {

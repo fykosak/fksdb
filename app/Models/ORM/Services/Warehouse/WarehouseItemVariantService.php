@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Warehouse;
 
-use Fykosak\NetteORM\Service\Service;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
 use Fykosak\NetteORM\Selection\TypedSelection;
+use Fykosak\NetteORM\Service\Service;
 
 /**
- * @phpstan-extends Service<ItemModel>
+ * @phpstan-extends Service<WarehouseItemVariantModel>
  */
-final class ItemService extends Service
+final class WarehouseItemVariantService extends Service
 {
     /**
-     * @param string $fingerprint
-     * @return TypedSelection
+     * @return TypedSelection<WarehouseItemVariantModel>
      */
     public function findByFingerprint(string $fingerprint): TypedSelection
     {

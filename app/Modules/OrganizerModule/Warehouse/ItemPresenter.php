@@ -9,20 +9,20 @@ use FKSDB\Components\Grids\Warehouse\ItemsGrid;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
-use FKSDB\Models\ORM\Services\Warehouse\ItemService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemVariantService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
 final class ItemPresenter extends BasePresenter
 {
-    /** @phpstan-use EntityPresenterTrait<ItemModel> */
+    /** @phpstan-use EntityPresenterTrait<WarehouseItemVariantModel> */
     use EntityPresenterTrait;
 
-    private ItemService $itemService;
+    private WarehouseItemVariantService $itemService;
 
-    public function injectService(ItemService $itemService): void
+    public function injectService(WarehouseItemVariantService $itemService): void
     {
         $this->itemService = $itemService;
     }
@@ -33,7 +33,7 @@ final class ItemPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            ContestResourceHolder::fromResourceId(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(WarehouseItemVariantModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }
@@ -49,7 +49,10 @@ final class ItemPresenter extends BasePresenter
      */
     public function authorizedEdit(): bool
     {
-        return $this->isAllowed(ContestResourceHolder::fromOwnResource($this->getEntity()), 'edit');
+        return $this->isAllowed(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'edit'
+        );
     }
 
     public function titleEdit(): PageTitle
@@ -63,7 +66,7 @@ final class ItemPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->isAllowed(
-            ContestResourceHolder::fromResourceId(ItemModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(WarehouseItemVariantModel::RESOURCE_ID, $this->getSelectedContest()),
             'create'
         );
     }
@@ -99,7 +102,7 @@ final class ItemPresenter extends BasePresenter
         return new ItemsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-    protected function getORMService(): ItemService
+    protected function getORMService(): WarehouseItemVariantService
     {
         return $this->itemService;
     }

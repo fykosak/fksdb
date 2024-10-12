@@ -8,18 +8,15 @@ use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
-use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemService;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ModelForm<ProductModel,array{container:array{
+ * @phpstan-extends ModelForm<WarehouseItemModel,array{container:array{
  *        name_cs:string,
  *        name_en:string,
  *        description_cs:string,
@@ -30,17 +27,13 @@ use Nette\Forms\Form;
  */
 final class ProductFormComponent extends ModelForm
 {
-    private ProducerService $producerService;
-    private ProductService $productService;
+    private WarehouseItemService $itemService;
 
     public const CONTAINER = 'container';
 
-    public function injectServiceProducer(
-        ProducerService $producerService,
-        ProductService $productService
-    ): void {
-        $this->producerService = $producerService;
-        $this->productService = $productService;
+    public function injectServiceProducer(WarehouseItemService $itemService): void
+    {
+        $this->itemService = $itemService;
     }
 
     protected function setDefaults(Form $form): void
@@ -64,20 +57,14 @@ final class ProductFormComponent extends ModelForm
         $container->addField('description_en', ['required' => true]);
         $container->addField('category', ['required' => true]);
         $container->addField('note', ['required' => true]);
-        $producers = [];
-        /** @var ProducerModel $producer */
-        foreach ($this->producerService->getTable() as $producer) {
-            $producers[$producer->producer_id] = $producer->name;
-        }
-        $container->addComponent(new SelectBox(_('Producer'), $producers), 'producer_id', 'name_cs');
         $container->addText('url', _('URL'))->addRule(Form::URL);
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function innerSuccess(array $values, Form $form): ProductModel
+    protected function innerSuccess(array $values, Form $form): WarehouseItemModel
     {
-        /** @var ProductModel $product */
-        $product = $this->productService->storeModel($values[self::CONTAINER], $this->model);
+        /** @var WarehouseItemModel $product */
+        $product = $this->itemService->storeModel($values[self::CONTAINER], $this->model);
         return $product;
     }
 

@@ -51,9 +51,8 @@ use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\TeacherModel;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
-use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
 use FKSDB\Models\WebService\WebServiceModel;
 use FKSDB\Modules\CoreModule\AESOPPresenter;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
@@ -433,15 +432,13 @@ final class ACL
 
     private static function createWarehouse(Permission $permission): void
     {
-        $permission->addResource(ProducerModel::RESOURCE_ID);
-        $permission->addResource(ProductModel::RESOURCE_ID);
-        $permission->addResource(ItemModel::RESOURCE_ID);
+        $permission->addResource(WarehouseItemModel::RESOURCE_ID);
+        $permission->addResource(WarehouseItemVariantModel::RESOURCE_ID);
         $permission->allow(
             OrganizerRole::RoleId,
             [
-                ProducerModel::RESOURCE_ID,
-                ProductModel::RESOURCE_ID,
-                ItemModel::RESOURCE_ID,
+                WarehouseItemModel::RESOURCE_ID,
+                WarehouseItemVariantModel::RESOURCE_ID,
             ]
         );
     }

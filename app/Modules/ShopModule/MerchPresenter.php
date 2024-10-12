@@ -7,19 +7,19 @@ namespace FKSDB\Modules\ShopModule;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 
 class MerchPresenter extends BasePresenter
 {
-    /** @phpstan-use EntityPresenterTrait<ProductModel> */
+    /** @phpstan-use EntityPresenterTrait<WarehouseItemModel> */
     use EntityPresenterTrait;
 
-    private ProductService $productService;
+    private WarehouseItemService $productService;
 
-    public function inject(ProductService $productService): void
+    public function inject(WarehouseItemService $productService): void
     {
         $this->productService = $productService;
     }
@@ -43,10 +43,10 @@ class MerchPresenter extends BasePresenter
      */
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, $this->getEntity()->name->getText($this->translator->lang));
+        return new PageTitle(null, $this->getEntity()->getName()->getText($this->translator->lang));
     }
 
-    protected function getORMService(): ProductService
+    protected function getORMService(): WarehouseItemService
     {
         return $this->productService;
     }

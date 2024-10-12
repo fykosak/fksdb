@@ -1456,16 +1456,15 @@ CREATE TABLE IF NOT EXISTS `submit_question_answer`
 -- -----------------------------------------------------
 -- Table `warehouse_product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `warehouse_product`
+CREATE TABLE IF NOT EXISTS `warehouse_item`
 (
-    `warehouse_product_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL,
-    `name_cs`        VARCHAR(256)                                            NOT NULL,
-    `name_en`        VARCHAR(256)                                            NOT NULL,
-    `description_cs` TEXT                                                    NULL DEFAULT NULL,
-    `description_en` TEXT                                                    NULL DEFAULT NULL,
-    `note`           TEXT                                                    NULL DEFAULT NULL COMMENT 'neverejná poznámka',
-    `url`                  VARCHAR(256) NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu'
+    `warehouse_item_id` INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `category`          ENUM ('apparel','game','game-extension','book','other') NOT NULL,
+    `name_cs`           VARCHAR(256)                                            NOT NULL,
+    `name_en`           VARCHAR(256)                                            NOT NULL,
+    `description_cs`    TEXT                                                    NULL DEFAULT NULL,
+    `description_en`    TEXT                                                    NULL DEFAULT NULL,
+    `note`              TEXT COMMENT 'neverejná poznámka'                       NULL DEFAULT NULL COMMENT 'neverejná poznámka' NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu'
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1476,20 +1475,22 @@ CREATE TABLE IF NOT EXISTS `warehouse_product`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `warehouse_item_variant`
 (
-    `warehouse_item_variant_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `product_id`                INT UNSIGNED NOT NULL,
-    `name_cs`                   VARCHAR(256) NOT NULL DEFAULT NULL,
-    `name_en`                   VARCHAR(256) NOT NULL DEFAULT NULL,
-    `description_cs`            VARCHAR(250) NULL     DEFAULT NULL,
-    `description_en`            VARCHAR(250) NULL     DEFAULT NULL,
-    `available`                 INT          NOT NULL DEFAULT 0 COMMENT 'number of available items',
-    `total`                     INT          NOT NULL DEFAULT 0 COMMENT 'number of total items',
+    `warehouse_item_variant_id` INT UNSIGNED   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `warehouse_item_id`         INT UNSIGNED   NOT NULL,
+    `name_cs`                   VARCHAR(256)   NOT NULL DEFAULT NULL,
+    `name_en`                   VARCHAR(256)   NOT NULL DEFAULT NULL,
+    `price_czk`                 DECIMAL(11, 2) NULl     DEFAULT NULL,
+    `price_eur`                 DECIMAL(11, 2) NULl     DEFAULT NULL,
+    `description_cs`            VARCHAR(250)   NULL     DEFAULT NULL,
+    `description_en`            VARCHAR(250)   NULL     DEFAULT NULL,
+    `available`                 INT            NOT NULL DEFAULT 0 COMMENT 'number of available items',
+    `total`                     INT            NOT NULL DEFAULT 0 COMMENT 'number of total items',
     `checked`                   TIMESTAMP COMMENT 'last inventure',
-    `placement`                 VARCHAR(255) NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
-    `note`                      TEXT(1024)   NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
-    CONSTRAINT `fk_warehouse_item__product`
-        FOREIGN KEY (`product_id`)
-            REFERENCES `warehouse_product` (`product_id`)
+    `placement`                 VARCHAR(255)   NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
+    `note`                      TEXT(1024)     NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
+    CONSTRAINT `fk_warehouse_item_variant__warehouse_item`
+        FOREIGN KEY (`warehouse_item_id`)
+            REFERENCES `warehouse_item` (`warehouse_item_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )

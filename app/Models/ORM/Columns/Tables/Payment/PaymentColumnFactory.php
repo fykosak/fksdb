@@ -6,13 +6,13 @@ namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Columns\Types\AbstractColumnFactory;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-extends AbstractColumnFactory<PaymentModel|ItemModel>
+ * @phpstan-extends AbstractColumnFactory<PaymentModel|WarehouseItemVariantModel>
  */
 class PaymentColumnFactory extends AbstractColumnFactory
 {

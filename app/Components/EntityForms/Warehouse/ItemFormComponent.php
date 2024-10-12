@@ -9,11 +9,10 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\ReflectionFactory;
-use FKSDB\Models\ORM\Services\Warehouse\ItemService;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemVariantService;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -24,7 +23,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-extends ModelForm<ItemModel,array{container:array{
+ * @phpstan-extends ModelForm<warehouseItemVariantModel,array{container:array{
  *       state:string,
  *       description_cs:string,
  *       description_en:string,
@@ -38,31 +37,26 @@ use Nette\Forms\Form;
  */
 final class ItemFormComponent extends ModelForm
 {
-
-    private ProductService $productService;
-    private ItemService $itemService;
+    private WarehouseItemService $itemService;
+    private WarehouseItemVariantService $variantService;
     private ContestModel $contest;
 
     public const CONTAINER = 'container';
 
-    public function __construct(Container $container, ContestModel $contest, ?ItemModel $model)
+    public function __construct(Container $container, ContestModel $contest, ?WarehouseItemVariantModel $model)
     {
         parent::__construct($container, $model);
         $this->contest = $contest;
     }
 
     public function injectServiceProducer(
-        ProductService $productService,
-        ItemService $itemService
+        WarehouseItemService $itemService,
+        WarehouseItemVariantService $variantService
     ): void {
-        $this->productService = $productService;
         $this->itemService = $itemService;
+        $this->variantService = $variantService;
     }
 
-    /**
-     * @param Form $form
-     * @return bool
-    */
     protected function isSubmittedByEditAll(Form $form): bool
     {
         if (!isset($form['editAll'])) {
@@ -92,7 +86,7 @@ final class ItemFormComponent extends ModelForm
         if ($this->isSubmittedByEditAll($form) && !$this->isCreating()) {
              // select all models with the same fingerprint
             $items = $this->itemService->findByFingerprint($this->model->fingerprint);
-            /** @var ItemModel $item */
+            /** @var warehouseItemVariantModel $item */
             foreach ($items as $item) {
                 // save $data to separate variable
                 $newModelData = $data;
@@ -138,8 +132,8 @@ final class ItemFormComponent extends ModelForm
         $container->addField('placement', ['required' => true]);
         $container->addField('note', ['required' => true]);
         $products = [];
-        /** @var ProductModel $product */
-        foreach ($this->productService->getTable() as $product) {
+        /** @var WarehouseItemModel $product */
+        foreach ($this->itemService->getTable() as $product) {
             $products[$product->product_id] = $product->name_cs;
         }
         $container->addComponent(new SelectBox(_('Product'), $products), 'product_id', 'state');
@@ -156,14 +150,14 @@ final class ItemFormComponent extends ModelForm
         }
     }
 
-    protected function innerSuccess(array $values, Form $form): ItemModel
+    protected function innerSuccess(array $values, Form $form): WarehouseItemVariantModel
     {
         $data = $values[self::CONTAINER];
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        /** @var ItemModel $item */
-        $item = $this->itemService->storeModel($data, $this->model);
+        /** @var warehouseItemVariantModel $item */
+        $item = $this->variantService->storeModel($data, $this->model);
         return $item;
     }
 

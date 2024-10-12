@@ -9,26 +9,24 @@ use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class ProductCategory extends FakeStringEnum implements EnumColumn
+final class ItemCategory extends FakeStringEnum implements EnumColumn
 {
-    public const APPAREL = 'apparel';
-    public const GAME = 'game';
-    public const GAME_EXTENSION = 'game-extension';
-    public const BOOK = 'book';
-    public const OTHER = 'other';
+    public const Apparel = 'apparel';
+    public const Game = 'game';
+    public const Book = 'book';
+    public const Other = 'other';
 
     public function badge(): Html
     {
         $badge = 'badge bg-color-4';
         switch ($this->value) {
-            case self::APPAREL:
+            case self::Apparel:
                 $badge = 'badge bg-color-2';
                 break;
-            case self::GAME:
-            case self::GAME_EXTENSION:
+            case self::Game:
                 $badge = 'badge bg-color-1';
                 break;
-            case self::BOOK:
+            case self::Book:
                 $badge = 'badge bg-color-3';
                 break;
         }
@@ -38,15 +36,13 @@ final class ProductCategory extends FakeStringEnum implements EnumColumn
     public function label(): string
     {
         switch ($this->value) {
-            case self::GAME:
+            case self::Game:
                 return _('Game');
-            case self::GAME_EXTENSION:
-                return _('Game extension');
-            case self::APPAREL:
+            case self::Apparel:
                 return _('Apparel');
-            case self::BOOK:
+            case self::Book:
                 return _('Book');
-            case self::OTHER:
+            case self::Other:
             default:
                 return _('Other');
         }
@@ -59,6 +55,11 @@ final class ProductCategory extends FakeStringEnum implements EnumColumn
 
     public static function cases(): array
     {
-        return []; // TODO
+        return [
+            new self(self::Apparel),
+            new self(self::Game),
+            new self(self::Book),
+            new self(self::Other),
+        ];
     }
 }
