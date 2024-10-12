@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Roles\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Grant\EventGrantModel;
 use Nette\Utils\Html;
 
 final class ExplicitEventRole implements EventRole
@@ -14,33 +15,27 @@ final class ExplicitEventRole implements EventRole
     public const ApplicationManager = 'event.applicationManager';
     // phpcs:enable
 
-    protected EventModel $event;
-    /** @phpstan-param self::* $roleId */
-    private string $roleId;
+    private EventGrantModel $eventGrant;
 
-    /**
-     * @phpstan-param self::* $roleId
-     */
-    public function __construct(string $roleId, EventModel $event)
+    public function __construct(EventGrantModel $eventGrant)
     {
-        $this->event = $event;
-        $this->roleId = $roleId;
+        $this->eventGrant = $eventGrant;
     }
 
     final public function getEvent(): EventModel
     {
-        return $this->event;
+        return $this->eventGrant->event;
     }
 
     public function getRoleId(): string
     {
-        return $this->roleId;
+        return $this->eventGrant->role;
     }
 
     public function badge(): Html
     {
         return Html::el('span')->addAttributes([
             'class' => 'badge bg-primary',
-        ])->addText($this->roleId);
+        ])->addText($this->eventGrant->role);
     }
 }
