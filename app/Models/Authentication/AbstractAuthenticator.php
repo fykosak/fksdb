@@ -16,22 +16,4 @@ use Tracy\Debugger;
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
 
-    protected LoginService $loginService;
-
-    public function __construct(LoginService $loginService)
-    {
-        $this->loginService = $loginService;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function logAuthentication(LoginModel $login): void
-    {
-        Debugger::log(
-            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),
-            'auth'
-        );
-        $this->loginService->storeModel(['last_login' => DateTime::from(time())], $login);
-    }
 }

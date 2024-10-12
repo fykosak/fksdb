@@ -12,9 +12,6 @@ use Nette\Security\Permission;
 class IsSelfOrganizerAssertion implements Assertion
 {
     /**
-     * Check that the person is the person of logged user.
-     *
-     * @note Grant contest is ignored in this context (i.e. person is context-less).
      * @throws \ReflectionException
      */
     public function __invoke(Permission $acl): bool
@@ -23,10 +20,7 @@ class IsSelfOrganizerAssertion implements Assertion
         /** @var Model $model */
         $model = $holder->getResource();
         $role = $acl->getQueriedRole();
-        if (!$role instanceof OrganizerRole) {
-            return false;
-        }
-        if ($model instanceof OrganizerModel) {
+        if ($model instanceof OrganizerModel && $role instanceof OrganizerRole) {
             return $model->person_id === $role->getModel()->person_id;
         }
         throw new WrongAssertionException();
