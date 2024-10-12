@@ -9,18 +9,18 @@ use FKSDB\Components\Grids\Warehouse\ProductsGrid;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\Warehouse\ProductModel;
-use FKSDB\Models\ORM\Services\Warehouse\ProductService;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemModel;
+use FKSDB\Models\ORM\Services\Warehouse\WarehouseItemService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 
 final class ProductPresenter extends BasePresenter
 {
-    /** @use EntityPresenterTrait<ProductModel> */
+    /** @use EntityPresenterTrait<WarehouseItemModel> */
     use EntityPresenterTrait;
 
-    private ProductService $productService;
+    private WarehouseItemService $productService;
 
     /**
      * @throws NoContestAvailable
@@ -28,7 +28,7 @@ final class ProductPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->isAllowed(
-            ContestResourceHolder::fromResourceId(ProductModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(WarehouseItemModel::RESOURCE_ID, $this->getSelectedContest()),
             'list'
         );
     }
@@ -60,7 +60,7 @@ final class ProductPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->isAllowed(
-            ContestResourceHolder::fromResourceId(ProductModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(WarehouseItemModel::RESOURCE_ID, $this->getSelectedContest()),
             'create'
         );
     }
@@ -70,7 +70,7 @@ final class ProductPresenter extends BasePresenter
         return new PageTitle(null, _('Create product'), 'fas fa-plus');
     }
 
-    public function injectService(ProductService $productService): void
+    public function injectService(WarehouseItemService $productService): void
     {
         $this->productService = $productService;
     }
@@ -94,7 +94,7 @@ final class ProductPresenter extends BasePresenter
         return new ProductsGrid($this->getContext());
     }
 
-    protected function getORMService(): ProductService
+    protected function getORMService(): WarehouseItemService
     {
         return $this->productService;
     }

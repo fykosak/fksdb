@@ -1454,36 +1454,17 @@ CREATE TABLE IF NOT EXISTS `submit_question_answer`
     COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
--- Table `warehouse_producer`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `warehouse_producer`
-(
-    `producer_id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name`        VARCHAR(256) NOT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_czech_ci;
-
--- -----------------------------------------------------
 -- Table `warehouse_product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `warehouse_product`
+CREATE TABLE IF NOT EXISTS `warehouse_item`
 (
-    `product_id`     INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `producer_id`    INT UNSIGNED                                            NULL DEFAULT NULL,
-    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL,
-    `name_cs`        VARCHAR(256)                                            NOT NULL,
-    `name_en`        VARCHAR(256)                                            NOT NULL,
-    `description_cs` TEXT                                                    NULL DEFAULT NULL,
-    `description_en` TEXT                                                    NULL DEFAULT NULL,
-    `note`           TEXT                                                    NULL DEFAULT NULL COMMENT 'neverejná poznámka',
-    `url`            VARCHAR(256)                                            NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu',
-    CONSTRAINT `fk__warehouse_product__producer`
-        FOREIGN KEY (`producer_id`)
-            REFERENCES `warehouse_producer` (`producer_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION
+    `warehouse_item_id` INT UNSIGNED                                            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `category`          ENUM ('apparel','game','game-extension','book','other') NOT NULL,
+    `name_cs`           VARCHAR(256)                                            NOT NULL,
+    `name_en`           VARCHAR(256)                                            NOT NULL,
+    `description_cs`    TEXT                                                    NULL DEFAULT NULL,
+    `description_en`    TEXT                                                    NULL DEFAULT NULL,
+    `note`              TEXT COMMENT 'neverejná poznámka'                       NULL DEFAULT NULL COMMENT 'neverejná poznámka' NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu'
 )
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
@@ -1492,41 +1473,24 @@ CREATE TABLE IF NOT EXISTS `warehouse_product`
 -- -----------------------------------------------------
 -- Table `warehouse_item`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `warehouse_item`
+CREATE TABLE IF NOT EXISTS `warehouse_item_variant`
 (
-    `item_id`           INT UNSIGNED                             NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `product_id`        INT UNSIGNED                             NOT NULL,
-    `contest_id`        INT UNSIGNED                             NOT NULL,
-    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,
-    `description_cs`    VARCHAR(250)                             NULL     DEFAULT NULL,
-    `description_en`    VARCHAR(250)                             NULL     DEFAULT NULL,
-    `data`              VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
-    `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
-    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna',
-    `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
-    `available`         BOOL                                     NOT NULL DEFAULT FALSE COMMENT 'available in online store',
-    `placement`         VARCHAR(250)                             NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
-    `price`             DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'price in FYKOS Coins',
-    `note`              TEXT(1024)                               NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
-    INDEX `idx__warehouse_item__finger_print` (
-                                               `contest_id`,
-                                               `state`,
-                                               `description_cs`,
-                                               `description_en`,
-                                               `price`,
-                                               `shipped`,
-                                               `data`
-        ),
-    INDEX `idx__warehouse_item__shipped` (`shipped`),
-    CONSTRAINT `fk__warehouse_item__product`
-        FOREIGN KEY (`product_id`)
-            REFERENCES `warehouse_product` (`product_id`)
-            ON DELETE NO ACTION
-            ON UPDATE NO ACTION,
-    CONSTRAINT `fk__warehouse_item__contest`
-        FOREIGN KEY (`contest_id`)
-            REFERENCES `contest` (`contest_id`)
+    `warehouse_item_variant_id` INT UNSIGNED   NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `warehouse_item_id`         INT UNSIGNED   NOT NULL,
+    `name_cs`                   VARCHAR(256)   NOT NULL DEFAULT NULL,
+    `name_en`                   VARCHAR(256)   NOT NULL DEFAULT NULL,
+    `price_czk`                 DECIMAL(11, 2) NULl     DEFAULT NULL,
+    `price_eur`                 DECIMAL(11, 2) NULl     DEFAULT NULL,
+    `description_cs`            VARCHAR(250)   NULL     DEFAULT NULL,
+    `description_en`            VARCHAR(250)   NULL     DEFAULT NULL,
+    `available`                 INT            NOT NULL DEFAULT 0 COMMENT 'number of available items',
+    `total`                     INT            NOT NULL DEFAULT 0 COMMENT 'number of total items',
+    `checked`                   TIMESTAMP COMMENT 'last inventure',
+    `placement`                 VARCHAR(255)   NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
+    `note`                      TEXT(1024)     NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
+    CONSTRAINT `fk_warehouse_item_variant__warehouse_item`
+        FOREIGN KEY (`warehouse_item_id`)
+            REFERENCES `warehouse_item` (`warehouse_item_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )

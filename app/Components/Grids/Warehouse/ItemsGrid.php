@@ -7,13 +7,13 @@ namespace FKSDB\Components\Grids\Warehouse;
 use FKSDB\Components\Grids\Components\BaseGrid;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\Warehouse\ItemModel;
+use FKSDB\Models\ORM\Models\Warehouse\WarehouseItemVariantModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
 /**
- * @phpstan-extends BaseGrid<ItemModel,array{}>
+ * @phpstan-extends BaseGrid<WarehouseItemVariantModel,array{}>
  */
 class ItemsGrid extends BaseGrid
 {
@@ -26,7 +26,7 @@ class ItemsGrid extends BaseGrid
     }
 
     /**
-     * @phpstan-return TypedGroupedSelection<ItemModel>
+     * @phpstan-return TypedGroupedSelection<WarehouseItemVariantModel>
      */
     protected function getModels(): TypedGroupedSelection
     {
