@@ -4,82 +4,146 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models\Contests;
 
-use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\OrganizerModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
+use Nette\Security\Permission;
 
 /**
- * @phpstan-extends ContestWebModel<array{contestId:int,app:string},TDatum[]>
+ * @phpstan-extends ContestWebModel<TDatum[]>
  * @phpstan-type TDatum array{
- * name:string,
- * loginId:int|null,
- * login:string|null,
- * hash:string|null,
- * email:string|null,
- * roles:string[],
- * }
+ *   name:string,
+ *   otherName:string,
+ *   familyName:string,
+ *   loginId:int|null,
+ *   personId: int,
+ *   login:string|null,
+ *   hash:string|null,
+ *   emails:array<string,string|null>,
+ *   roles:string[],
+ *   }
  */
-class AuthWebModel extends ContestWebModel
+class AuthWebModel extends WebModel
 {
-    public function getExpectedParams(): Structure
+    private Permission $permission;
+    private ContestService $contestService;
+
+    public const Systems = [
+        'wiki',
+        'pm',
+        'astrid',
+    ];
+
+    public function injectPermission(Permission $permission, ContestService $contestService): void
     {
-        return Expect::structure([
-            'contestId' => Expect::int()->required(),
-            'app' => Expect::anyOf('wiki', 'pm')->required(),
-        ]);
+        $this->permission = $permission;
+        $this->contestService = $contestService;
     }
 
-    /**
-     * @throws NotFoundException
-     */
+    public function getExpectedParams(): array
+    {
+        return [];
+    }
+
     protected function getJsonResponse(): array
     {
-        $data = [];
-        /** @var OrganizerModel $organizer */
-        foreach ($this->getContest()->getOrganizers() as $organizer) {
-            if (
-                $organizer->isActive($this->getContest()->getCurrentContestYear()) ||
-                $this->params['app'] === 'wiki' && $organizer->allow_wiki ||
-                $this->params['app'] === 'pm' && $organizer->allow_pm
-            ) {
-                $data[] = $this->getOrgData($organizer);
+        $persons = [];
+        /** @var ContestModel $contest */
+        foreach ($this->contestService->getTable() as $contest) {
+            /** @var OrganizerModel $organizer */
+            foreach ($contest->getOrganizers() as $organizer) {
+                $active = $organizer->isActive($contest->getCurrentContestYear());
+                $persons[$organizer->person_id] ??= $this->serializePerson($organizer->person);
+                $persons[$organizer->person_id]['emails'][$organizer->contest->getContestSymbol()]
+                    = $organizer->formatDomainEmail();
+                foreach (self::Systems as $system) {
+                    if ($active || $this->isByPassed($system, $organizer)) {
+                        $persons[$organizer->person_id]['roles'] = [
+                            ... $persons[$organizer->person_id]['roles'],
+                            ... $this->getRoles($organizer, $system),
+                        ];
+                    }
+                }
             }
         }
-        return $data;
+        return array_values($persons);
     }
 
     /**
-     * @phpstan-return TDatum
-     * @throws NotFoundException
+     * @phpstan-return array{
+     *  name:string,
+     *  otherName:string,
+     *  familyName:string,
+     *  loginId:int|null,
+     *  personId: int,
+     *  login:string|null,
+     *  hash:string|null,
+     *  emails:array<string,string|null>,
+     *  roles:string[],
+     *  }
      */
-    private function getOrgData(OrganizerModel $organizer): array
+    private function serializePerson(PersonModel $person): array
     {
-        $personInfo = $organizer->person->getInfo();
-        $login = $organizer->person->getLogin();
-        $roles = [];
-        if ($login) {
-            foreach ($login->getContestRoles($this->getContest()) as $grant) {
-                $roles[] = $grant->getRoleId();
-            }
-        }
-
+        $personInfo = $person->getInfo();
+        $login = $person->getLogin();
         return [
-            'name' => $organizer->person->getFullName(),
+            'otherName' => $person->other_name,
+            'familyName' => $person->family_name,
+            'name' => $person->getFullName(),
+            'personId' => $person->person_id,
             'loginId' => $login ? $login->login_id : null,
             'login' => $login ? $login->login : null,
             'hash' => $login ? $login->hash : null,
-            'email' => $personInfo ? $personInfo->email : null,
-            'roles' => $roles,
+            'emails' => $personInfo ? ['personal' => $personInfo->email] : [],
+            'roles' => []
         ];
     }
 
+    private function isByPassed(string $system, OrganizerModel $organizer): bool
+    {
+        switch ($system) {
+            case 'wiki':
+                return (bool)$organizer->allow_wiki;
+            case 'pm':
+                return (bool)$organizer->allow_pm;
+            default:
+                return false;
+        }
+    }
+
     /**
-     * @throws NotFoundException
+     * @return string[]
      */
+    private function getRoles(OrganizerModel $organizer, string $system): array
+    {
+        $login = $organizer->person->getLogin();
+        if (!$login) {
+            return [];
+        }
+        $roles = [];
+        foreach ($login->getContestRoles($organizer->contest) as $grant) {
+            $roles[$grant->getRoleId()] = $grant->getRoleId();
+        }
+        foreach ($roles as $role) {
+            foreach ($this->permission->getRoleParents($role) as $parent) {
+                $roles[$parent] = $parent;
+            }
+        }
+        $newRoles = [];
+        foreach ($roles as $role) {
+            $newRoles[] = 'fksdb-' . $organizer->contest->getContestSymbol() . '-' . $system . '-' . $role;
+        }
+        return $newRoles;
+    }
+
     protected function isAuthorized(): bool
     {
-        return $this->contestAuthorizator->isAllowed(RestApiPresenter::RESOURCE_ID, self::class, $this->getContest());
+        return $this->contestAuthorizator->isAllowedAnyContest(
+            RestApiPresenter::RESOURCE_ID,
+            self::class
+        );
     }
 }

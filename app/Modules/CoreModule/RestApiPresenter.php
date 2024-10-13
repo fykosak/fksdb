@@ -144,7 +144,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
             ])
         );
         $list->addRoute(
-            'contests/<contestId [0-9]+>/auth',
+            'contests/auth',
             array_merge(self::ROUTER, [
                 'model' => Models\Contests\AuthWebModel::class,
             ])

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\UI\EmailPrinter;
 use Fykosak\NetteORM\Model\Model;
 use Nette\InvalidArgumentException;
 
@@ -44,5 +45,16 @@ final class OrganizerModel extends Model implements ContestResource
     public function getContest(): ContestModel
     {
         return $this->contest;
+    }
+
+    public function formatDomainEmail(): ?string
+    {
+        switch ($this->contest_id) {
+            case ContestModel::ID_FYKOS:
+                return $this->domain_alias . '@fykos.cz';
+            case ContestModel::ID_VYFUK:
+                return $this->domain_alias . '@vyfuk.org';
+        }
+        return null;
     }
 }
