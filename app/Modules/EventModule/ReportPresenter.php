@@ -6,6 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\PageTitle;
@@ -22,7 +23,11 @@ final class ReportPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'report', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(EventModel::RESOURCE_ID, $this->getEvent()),
+            'report',
+            $this->getEvent()
+        );
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -13,7 +14,7 @@ use Fykosak\NetteORM\Model\Model;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @phpstan-template TEventModel of (Model&\Nette\Security\Resource)
+ * @phpstan-template TEventModel of (Model&EventResource)
  */
 trait EventEntityPresenterTrait
 {

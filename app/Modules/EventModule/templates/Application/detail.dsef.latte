@@ -25,12 +25,6 @@
             </div>
         </div>
     {/if}
-    <div class="panel color-auto">
-        <div class="container">
-            <h2>{_'Food'}</h2>
-            {control columnTable ['event_participant.lunch_count'],$model,1024}
-        </div>
-    </div>
     {if $event->hasSchedule()}
         <div class="panel color-auto">
             <div class="container">

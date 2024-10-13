@@ -48,10 +48,10 @@ final class PersonGrid extends BaseGrid
             '@person.full_name',
             '@person_info.phone',
             '@event.role',
-            '@payment.payment',
+            '@person_schedule.payment',
             '@person_schedule.state',
         ]);
-        $this->addPresenterButton(':Schedule:Person:detail', 'detail', new Title(null, _('Detail')), false, [
+        $this->addPresenterButton(':EventSchedule:Person:detail', 'detail', new Title(null, _('Detail')), false, [
             'id' => 'person_schedule_id',
         ]);
     }

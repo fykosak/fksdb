@@ -8,6 +8,7 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\SchoolModel;
@@ -15,7 +16,6 @@ use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class SchoolsPresenter extends BasePresenter
 {
@@ -29,16 +29,51 @@ final class SchoolsPresenter extends BasePresenter
         $this->schoolService = $schoolService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create',
+            $this->getSelectedContest()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create school'), 'fas fa-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            'default',
+            $this->getSelectedContest()
+        );
+    }
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Schools'), 'fas fa-school');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'detail',
+            $this->getSelectedContest()
+        );
+    }
     /**
      * @throws GoneException
      * @throws NotFoundException
@@ -64,6 +99,19 @@ final class SchoolsPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'edit',
+            $this->getSelectedContest()
+        );
+    }
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -75,7 +123,11 @@ final class SchoolsPresenter extends BasePresenter
      */
     public function authorizedReport(): bool
     {
-        return $this->contestAuthorizator->isAllowed(SchoolModel::RESOURCE_ID, 'report', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(SchoolModel::RESOURCE_ID, $this->getSelectedContest()),
+            'report',
+            $this->getSelectedContest()
+        );
     }
 
     public function renderReport(): void
@@ -100,15 +152,6 @@ final class SchoolsPresenter extends BasePresenter
     public function titleReport(): PageTitle
     {
         return new PageTitle(null, _('Report'), 'fas fa-school');
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
     protected function getORMService(): SchoolService

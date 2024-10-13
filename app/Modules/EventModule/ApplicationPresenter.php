@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Applications\Single\InvitedForms\SousForm;
-use FKSDB\Components\Applications\Single\OpenForms\DsefForm;
+use FKSDB\Components\Applications\Single\OpenForms\DSEFForm;
 use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
 use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
 use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
@@ -14,42 +14,26 @@ use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\SinglePersonGrid;
-use FKSDB\Models\Authorization\PseudoEventResource;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
-use Nette\Security\Resource;
 use Nette\Utils\Html;
 
 final class ApplicationPresenter extends BasePresenter
 {
-    /** @use EventEntityPresenterTrait<EventParticipantModel> */
-    use EventEntityPresenterTrait;
-
-    protected EventParticipantService $eventParticipantService;
-
-    public function injectService(EventParticipantService $service): void
-    {
-        $this->eventParticipantService = $service;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
-    }
+    /** @use EntityPresenterTrait<EventParticipantModel> */
+    use EntityPresenterTrait;
 
     /**
      * @throws EventNotFoundException
@@ -64,15 +48,32 @@ final class ApplicationPresenter extends BasePresenter
         return $this->getAction() !== 'create';
     }
 
+    /**
+     * @throws GoneException
+     */
     protected function getORMService(): EventParticipantService
     {
-        return $this->eventParticipantService;
+        throw new GoneException();
     }
 
+    protected function loadModel(): EventParticipantModel
+    {
+        /** @var EventParticipantModel|null $candidate */
+        $candidate = $this->getEvent()->getParticipants()->where('event_participant_id', $this->id)->fetch();
+        if ($candidate) {
+            return $candidate;
+        } else {
+            throw new NotFoundException(_('Model does not exist.'));
+        }
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedCreate(): bool
     {
-        return $this->eventAuthorizator->isAllowed(
-            new PseudoEventResource(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -84,17 +85,28 @@ final class ApplicationPresenter extends BasePresenter
     }
 
     /**
+     * @throws GoneException
+     * @throws NotFoundException
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'detail',
+            $this->getEvent()
+        );
+    }
+    /**
+     * @throws EventNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function renderDetail(): void
     {
-        $this->template->isOrganizer = $this->eventAuthorizator->isAllowed(
-            $this->getModelResource(),
+        $this->template->isOrganizer = $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
             'organizer',
             $this->getEvent()
         );
@@ -122,7 +134,6 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws \Throwable
      */
     public function titleDetail(): PageTitle
@@ -141,23 +152,23 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      * @throws NotFoundException
      */
     public function authorizedEdit(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getEntity(), 'edit', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getEvent()
+        );
     }
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function renderEdit(): void
@@ -167,9 +178,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
@@ -183,11 +192,14 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
      */
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized($this->getModelResource(), 'import');
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'import',
+            $this->getEvent()
+        );
     }
 
     public function titleImport(): PageTitle
@@ -202,11 +214,26 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws GoneException
+     */
+    public function authorizedDefault(): bool
+    {
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'list',
+            $this->getEvent()
+        );
+    }
+
+    /**
+     * @throws EventNotFoundException
      */
     public function authorizedMass(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModelResource(), 'organizer', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            'organizer',
+            $this->getEvent()
+        );
     }
 
     public function titleMass(): PageTitle
@@ -232,9 +259,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentEditForm(): BaseComponent
@@ -258,7 +283,7 @@ final class ApplicationPresenter extends BasePresenter
                 );
             case 2:
             case 14:
-                return new DsefForm(
+                return new DSEFForm(
                     $this->getContext(),
                     $model,
                     $this->getEvent(),
@@ -285,10 +310,8 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @phpstan-return TransitionButtonsComponent<EventParticipantModel>
-     * @throws ForbiddenRequestException
      * @throws CannotAccessModelException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws NotImplementedException
@@ -319,9 +342,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentRests(): PersonRestComponent
@@ -339,9 +360,7 @@ final class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
      * @throws GoneException
-     * @throws \ReflectionException
      * @throws NotFoundException
      */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid

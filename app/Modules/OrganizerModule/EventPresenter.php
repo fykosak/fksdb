@@ -6,9 +6,9 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Models\Authorization\Resource\ContestYearResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\PresenterTraits\ContestYearEntityTrait;
@@ -16,7 +16,6 @@ use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\Resource;
 
 final class EventPresenter extends BasePresenter
 {
@@ -30,16 +29,56 @@ final class EventPresenter extends BasePresenter
         $this->eventService = $eventService;
     }
 
+    /**
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(EventModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'list',
+            $this->getSelectedContestYear()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Events'), 'fas fa-calendar-alt');
     }
 
+    /**
+     * @throws NoContestAvailable
+     * @throws NoContestYearAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromResourceId(EventModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            'create',
+            $this->getSelectedContestYear()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Add event'), 'fas fa-calendar-plus');
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws NoContestYearAvailable
+     * @throws NoContestAvailable
+     * @throws \ReflectionException
+     * @throws ForbiddenRequestException
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContestYear(
+            ContestYearResourceHolder::fromOwnResource($this->getEntity()),
+            'edit',
+            $this->getSelectedContestYear()
+        );
+    }
     /**
      * @throws ForbiddenRequestException
      * @throws GoneException
@@ -51,14 +90,6 @@ final class EventPresenter extends BasePresenter
     public function titleEdit(): PageTitle
     {
         return new PageTitle(null, sprintf(_('Edit event %s'), $this->getEntity()->name), 'fas fa-calendar-day');
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function actionDelete(): void
-    {
-        throw new NotImplementedException();
     }
 
     /**
@@ -95,14 +126,5 @@ final class EventPresenter extends BasePresenter
     protected function getORMService(): EventService
     {
         return $this->eventService;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

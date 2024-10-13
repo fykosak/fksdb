@@ -6,7 +6,7 @@ namespace FKSDB\Models\Email\Source\FOF\Info;
 
 use FKSDB\Models\Email\EmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -34,6 +34,9 @@ final class InfoEmail extends EmailSource
         $this->loginService = $loginService;
     }
 
+    /**
+     * @throws \Throwable
+     */
     protected function getSource(array $params): array
     {
         $holder = $params['holder'];
@@ -49,10 +52,11 @@ final class InfoEmail extends EmailSource
                         'token' => $this->createToken($member->person, $holder),
                     ],
                 ],
-                'lang' => Language::from($holder->getModel()->game_lang->value),
                 'data' => [
                     'recipient_person_id' => $member->person_id,
-                    'sender' => 'Fyziklani <fyziklani@fykos.cz>'
+                    'sender' => 'Fyziklani <fyziklani@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'lang' => Language::from($lang),
                 ],
             ];
         }
@@ -66,10 +70,11 @@ final class InfoEmail extends EmailSource
                         'token' => $this->createToken($teacher->person, $holder),
                     ],
                 ],
-                'lang' => Language::from($holder->getModel()->game_lang->value),
                 'data' => [
                     'recipient_person_id' => $teacher->person_id,
-                    'sender' => 'Fyziklani <fyziklani@fykos.cz>'
+                    'sender' => 'Fyziklani <fyziklani@fykos.cz>',
+                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'lang' => Language::from($lang),
                 ],
             ];
         }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Resource;
 

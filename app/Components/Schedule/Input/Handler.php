@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
-use FKSDB\Modules\Core\Language;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Nette\DI\Container;
 
@@ -62,7 +61,7 @@ class Handler
             return;
         }
         if ($value) {
-            if ($group->schedule_group_type->value === ScheduleGroupType::WeekendInfo) {
+            if ($group->schedule_group_type->value === ScheduleGroupType::Info) {
                 throw new ScheduleException($group, _('Info block cannot be selected'));
             }
             /** @var ScheduleItemModel|null $item */
@@ -99,10 +98,10 @@ class Handler
                     )
                 );
             } elseif (!$group->hasFreeCapacity()) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
             if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
-                throw new FullCapacityException($item, $person, Language::from($this->translator->lang));
+                throw new FullCapacityException($item, $person, $this->translator);
             }
 
             $this->service->storeModel(

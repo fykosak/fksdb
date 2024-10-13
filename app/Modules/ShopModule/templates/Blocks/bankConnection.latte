@@ -1,0 +1,21 @@
+{define bankConnection FKSDB\Models\ORM\Models\PaymentModel $model}
+    {if $model->currency === Fykosak\Utils\Price\Currency::CZK}
+        {control columnTable [
+        'payment.constant_symbol',
+        'payment.variable_symbol',
+        'payment.bank_account',
+        'payment.bank_name',
+        'payment.recipient',
+        'payment.iban',
+        'payment.price',
+        ],$model,1024}
+    {else}
+        {control columnTable [
+        'payment.bank_name',
+        'payment.recipient',
+        'payment.iban',
+        'payment.swift',
+        'payment.price',
+        ],$model,1024}
+    {/if}
+{/define}

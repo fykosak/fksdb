@@ -1,0 +1,37 @@
+{layout './layout.latte'}
+{varType FKSDB\Models\ORM\Models\EventParticipantModel $model}
+{varType FKSDB\Models\ORM\Models\AuthTokenModel $token}
+
+{define subject}Registrace na DSEF{/define}
+
+{block body}
+<p style="margin-top:1em;margin-bottom:1em">
+    Ahoj,
+</p>
+<p style="margin-top:1em;margin-bottom:1em">
+    potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci
+    <strong>{$model->event->getName()->getText('cs')}</strong>, která se koná
+    {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
+    {$model->event->begin|date:'j. n. Y'} – {$model->event->end|date:'j. n. Y'}.
+    {else}
+    {$model->event->begin|date:'j. n. Y'}.
+    {/if}
+</p>
+<p style="margin-top:1em;margin-bottom:1em">
+    Případné změny lze provádět až do {$model->event->registration_end|date:'j. n. Y, H:i'}
+    po přihlášení v sekci <a n:href="//:Profile:MyApplications:default">Moje přihlášky</a>
+    nebo využitím soukromého odkazu níže:<br />
+    {var string $link = $control->link('//:Event:Application:edit',
+    ['eventId'=> $model->event->event_id,
+    'at'=>$token->token,
+    'id'=>$model->getPrimary()])}
+    <a href="{$link}">{$link}</a>.
+</p>
+    <p style="margin-top:1em;margin-bottom:1em">
+        Pokud máš přihlášené ubytování nebo bagetu, je nutné je zaplatit přes FKSDB <strong>nejpozději do konce registrace, 18. října</strong>. Na hlavní stránce <a href="https://db.fykos.cz">FKSDB</a> najdeš tlačítko Platby, kde si můžeš vygenerovat platbu.
+    </p>
+    <p style="margin-top:1em;margin-bottom:1em">
+    S pozdravem<br>
+    FKSDB
+</p>
+{/block}

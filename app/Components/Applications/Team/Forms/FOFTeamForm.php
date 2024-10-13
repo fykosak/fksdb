@@ -12,12 +12,14 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
-use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -78,10 +80,12 @@ class FOFTeamForm extends TeamForm
                 $this->event->getContestYear(),
                 'email',
                 true,
-                new SelfACLResolver(
-                    $this->model ?? TeamModel2::RESOURCE_ID,
+                new SelfEventACLResolver(
+                    $this->model
+                        ? EventResourceHolder::fromOwnResource($this->model)
+                        : EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->event),
                     'organizer',
-                    $this->event->event_type->contest,
+                    $this->event,
                     $this->container
                 ),
                 $this->event
@@ -112,22 +116,25 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationTeacher],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                        ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
+                    ],
                     'required' => false,
                     'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_NONE,
+                    'groupBy' => ScheduleContainer::GroupNone,
                 ],
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::TeacherPresent,
-                        ScheduleGroupType::Weekend,
-                        ScheduleGroupType::WeekendInfo,
+                        ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
+                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                        ScheduleGroupType::from(ScheduleGroupType::Info),
                     ],
                     'required' => false,
                     'collapseChild' => true,
                     'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GroupBegin,
                 ],
             ],
         ];
@@ -158,18 +165,24 @@ class FOFTeamForm extends TeamForm
             ],
             'person_schedule' => [
                 'accommodation' => [
-                    'types' => [ScheduleGroupType::Accommodation, ScheduleGroupType::AccommodationGender],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
+                        ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
+                    ],
                     'required' => false,
                     'collapseSelf' => true,
                     'label' => _('Accommodation'),
-                    'groupBy' => ScheduleContainer::GROUP_NONE,
+                    'groupBy' => ScheduleContainer::GroupNone,
                 ],
                 'schedule' => [
-                    'types' => [ScheduleGroupType::Weekend, ScheduleGroupType::WeekendInfo],
+                    'types' => [
+                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
+                        ScheduleGroupType::from(ScheduleGroupType::Info),
+                    ],
                     'required' => false,
                     'collapseChild' => true,
                     'label' => _('Schedule'),
-                    'groupBy' => ScheduleContainer::GROUP_DATE,
+                    'groupBy' => ScheduleContainer::GroupBegin,
                 ],
             ],
         ];

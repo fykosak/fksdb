@@ -14,6 +14,8 @@ class DbNames
     public const TAB_SCHOOL_LABEL = 'school_label';
     public const TAB_FLAG = 'flag';
     public const TAB_EMAIL_MESSAGE = 'email_message';
+    public const TAB_PERSON_CORRESPONDENCE_PREFERENCE = 'person_correspondence_preference';
+    public const TAB_UNSUBSCRIBED_EMAIL = 'unsubscribed_email';
     public const TAB_BANNED_PERSON = 'banned_person';
     public const TAB_BANNED_PERSON_SCOPE = 'banned_person_scope';
     /* person */
@@ -22,6 +24,7 @@ class DbNames
     public const TAB_PERSON_HISTORY = 'person_history';
     public const TAB_PERSON_INFO = 'person_info';
     /* ACL */
+    public const TabBaseGrant = 'base_grant'; //phpcs:ignore
     public const TAB_CONTEST_GRANT = 'contest_grant';
     public const TAB_EVENT_GRANT = 'event_grant';
     /* extended person */

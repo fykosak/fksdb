@@ -13,10 +13,7 @@ use FKSDB\Components\Grids\Components\Table\RelatedTable;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\PersonService;
@@ -127,7 +124,7 @@ final class PersonScheduleList extends BaseList
         /** @phpstan-ignore-next-line */
         $relatedTable->addTableColumn(
         /** @phpstan-ignore-next-line */
-            new SimpleItem($this->container, '@payment.payment'),
+            new SimpleItem($this->container, '@person_schedule.payment'),
             'payment'
         );
         /** @phpstan-ignore-next-line */
@@ -143,7 +140,7 @@ final class PersonScheduleList extends BaseList
                 $this->container,
                 $this->getPresenter(),
                 new Title(null, _('Detail')),
-                fn(PersonScheduleModel $model) => [':Schedule:Person:detail', ['id' => $model->person_schedule_id]]
+                fn(PersonScheduleModel $model) => [':EventSchedule:Person:detail', ['id' => $model->person_schedule_id]]
             ),
             'detail'
         );
@@ -154,7 +151,7 @@ final class PersonScheduleList extends BaseList
                 $this->container,
                 $this->getPresenter(),
                 new Title(null, _('Edit')),
-                fn(PersonScheduleModel $model) => [':Schedule:Person:edit', ['id' => $model->person_schedule_id]]
+                fn(PersonScheduleModel $model) => [':EventSchedule:Person:edit', ['id' => $model->person_schedule_id]]
             ),
             'edit'
         );

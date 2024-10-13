@@ -52,7 +52,7 @@ class Router
             ]
         );
         $service->addRoute(
-            'auth/<action login|logout|fb-login|recover|google>',
+            'auth/<action login|logout|recover|google>',
             ['module' => 'Core', 'presenter' => 'Authentication']
         );
         $service->addRoute('profile/<presenter=Dashboard>/<action=default>', ['module' => 'Profile']);
@@ -71,22 +71,29 @@ class Router
             1
         );
         $service->addRoute('/', ['module' => 'Core', 'presenter' => 'Dispatch', 'action' => 'default']);
-        $service->addRoute('<presenter settings|school>/<action=default>[/<id>]', ['module' => 'Core']);
+        $service->addRoute('<presenter settings|school|unsubscribe>/<action=default>[/<id>]', ['module' => 'Core']);
 
         self::addEventsModule($service->withPath('events/'));
+        self::addShopModule($service->withPath('shop/'));
 
         $service->addRoute(
-            '<module event|game>/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
-            ['presenter' => 'Dashboard']
+            'event/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+            [
+                'presenter' => 'Dashboard',
+                'module' => 'Event',
+            ]
+        );
+        $service->addRoute(
+            'game/[<eventId [0-9]+>/]<presenter>/<action=default>[/<id>]',
+            [
+                'presenter' => 'Dashboard',
+                'module' => 'EventGame',
+            ]
         );
 
         $service->addRoute(
             '<module event|game>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]',
             ['presenter' => 'Dashboard', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
-        );
-        $service->addRoute(
-            'event[<eventId [0-9]+>]/TeamApplication/<action=default>[/<id>]',
-            ['module' => 'Event', 'presenter' => 'Team', 'flag' => [\Nette\Routing\Router::ONE_WAY]]
         );
         // phpcs:disable
         $service->addRoute(
@@ -107,36 +114,29 @@ class Router
         $list->addRoute(
             '<eventId [0-9]+>/schedule/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Dashboard',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/groups[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Group',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/groups/<groupId [0-9]+>/items[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Item',
             ]
         );
         $list->addRoute(
             '<eventId [0-9]+>/schedule/persons[/<id [0-9]+>]/<action>',
             [
-                'module' => 'Schedule',
+                'module' => 'EventSchedule',
                 'presenter' => 'Person',
-            ]
-        );
-        $list->addRoute(
-            '<eventId [0-9]+>/payments[/<id [0-9]+>]/<action>',
-            [
-                'module' => 'Event',
-                'presenter' => 'Payments',
             ]
         );
         $list->addRoute(
@@ -153,5 +153,17 @@ class Router
                 'presenter' => 'Attendance',
             ]
         );
+    }
+
+    private static function addShopModule(RouteList $list): void
+    {
+
+        $list->addRoute('schedule<eventId [0-9]+>[/<id [0-9]+>][/<action=default>]', [
+            'module' => 'Shop',
+            'presenter' => 'Schedule',
+        ]);
+        $list->addRoute('[<presenter=Home>[/<id [0-9]+>][/<action=default>]]', [
+            'module' => 'Shop',
+        ]);
     }
 }

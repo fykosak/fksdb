@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Services\SchoolLabelService;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\LinkGenerator;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
@@ -55,6 +56,9 @@ final class Handler
         $this->linkGenerator = $linkGenerator;
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     public function storeSchool(
         string $schoolLabelKey,
         ?int $schoolId,
@@ -160,6 +164,9 @@ final class Handler
         return $personHistoryModel;
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     private function getPersonEditLink(PersonHistoryModel $personHistory): Html
     {
         $link = $this->linkGenerator->link(
@@ -176,6 +183,9 @@ final class Handler
             ->setText(_('Edit'));
     }
 
+    /**
+     * @throws InvalidLinkException
+     */
     private function getSchoolEditLink(SchoolLabelModel $school): Html
     {
         $link = $this->linkGenerator->link(

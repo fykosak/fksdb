@@ -63,9 +63,9 @@ class Schedule extends EventModuleTestCase
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        if ($presenterName === 'Schedule:Group') {
+        if ($presenterName === 'EventSchedule:Group') {
             $params['id'] = $this->scheduleGroup->schedule_group_id;
-        } elseif ($presenterName === 'Schedule:Item') {
+        } elseif ($presenterName === 'EventSchedule:Item') {
             $params['groupId'] = $this->scheduleGroup->schedule_group_id;
             $params['id'] = $this->scheduleItem->schedule_item_id;
         }
@@ -76,15 +76,15 @@ class Schedule extends EventModuleTestCase
     public function getPages(): array
     {
         return [
-            ['Schedule:Person', 'list'],
+            ['EventSchedule:Person', 'list'],
            // ['Schedule:Person', 'default'],
-            ['Schedule:Item', 'create'],
-            ['Schedule:Item', 'edit'],
-            ['Schedule:Item', 'detail'],
-            ['Schedule:Dashboard', 'default'],
-            ['Schedule:Group', 'create'],
-            ['Schedule:Group', 'edit'],
-            ['Schedule:Group', 'detail'],
+            ['EventSchedule:Item', 'create'],
+            ['EventSchedule:Item', 'edit'],
+            ['EventSchedule:Item', 'detail'],
+            ['EventSchedule:Dashboard', 'default'],
+            ['EventSchedule:Group', 'create'],
+            ['EventSchedule:Group', 'edit'],
+            ['EventSchedule:Group', 'detail'],
         ];
     }
 }

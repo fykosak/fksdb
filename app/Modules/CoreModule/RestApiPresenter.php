@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\WebService\Models;
 use FKSDB\Modules\Core\AuthMethod;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Routers\RouteList;
@@ -25,6 +27,14 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->contestAuthorizator->isAllowedAnyContest(RestApiPresenter::RESOURCE_ID, $this->model);
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function titleDefault(): PageTitle
+    {
+        throw new NotImplementedException();
     }
 
     /**

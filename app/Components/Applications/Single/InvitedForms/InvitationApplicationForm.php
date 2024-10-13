@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -26,7 +27,7 @@ use FKSDB\Models\ORM\ReflectionFactory;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use FKSDB\Models\Persons\Resolvers\SelfACLResolver;
+use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
@@ -161,10 +162,12 @@ abstract class InvitationApplicationForm extends BaseComponent
             $this->event->getContestYear(),
             PersonSearchContainer::SEARCH_ID,
             false,
-            new SelfACLResolver(
-                $this->model ?? EventParticipantModel::RESOURCE_ID,
+            new SelfEventACLResolver(
+                $this->model
+                    ? EventResourceHolder::fromOwnResource($this->model)
+                    : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
                 'organizer',
-                $this->event->event_type->contest,
+                $this->event,
                 $this->container
             ),
             $this->event

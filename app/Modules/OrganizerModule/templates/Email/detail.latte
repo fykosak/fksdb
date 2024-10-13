@@ -5,12 +5,15 @@
             {control columnTable [
             'email_message.email_message_id',
             'email_message.recipient',
+            'person.full_name',
             'email_message.sender',
             'email_message.reply_to',
             'email_message.subject',
             'email_message.carbon_copy',
             'email_message.blind_carbon_copy',
             'email_message.state',
+            'email_message.topic',
+            'email_message.lang',
             'email_message.created',
             'email_message.sent',
             ], $model,1024}
@@ -18,7 +21,18 @@
     </div>
     <div class="panel color-auto">
         <div class="container">
+            <h2>{_'Inner text'}</h2>
+            <p class="text-muted">{_'Inner email content without footer'}</p>
+            <div class="embed-responsive embed-responsive-1by1">
+                <iframe class="embed-responsive-item w-100" style="min-height: 30rem"
+                        srcdoc="{$model->inner_text}"></iframe>
+            </div>
+        </div>
+    </div>
+    <div class="panel color-auto">
+        <div class="container">
             <h2>{_'Text'}</h2>
+            <p class="text-muted">{_'Whole email as was sent, including footer'}</p>
             <div class="embed-responsive embed-responsive-1by1">
                 <iframe class="embed-responsive-item w-100" style="min-height: 30rem"
                         srcdoc="{$model->text}"></iframe>

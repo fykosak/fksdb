@@ -7,6 +7,7 @@ namespace FKSDB\Modules\EventModule\Game;
 use FKSDB\Components\Game\Diplomas\FinalResultsComponent;
 use FKSDB\Components\Game\Diplomas\NotClosedTeamException;
 use FKSDB\Components\Game\Diplomas\RankingStrategy;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Fykosak\Utils\Logging\Message;
@@ -26,7 +27,11 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'diplomas.results', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'diplomas.results',
+            $this->getEvent()
+        );
     }
 
     public function titleDefault(): PageTitle
@@ -39,7 +44,11 @@ final class DiplomasPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed('game', 'diplomas.calculate', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromResourceId('game', $this->getEvent()),
+            'diplomas.calculate',
+            $this->getEvent()
+        );
     }
 
     /**

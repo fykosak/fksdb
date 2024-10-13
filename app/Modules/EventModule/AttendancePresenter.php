@@ -9,11 +9,13 @@ use FKSDB\Components\DataTest\DataTestFactory;
 use FKSDB\Components\DataTest\TestsList;
 use FKSDB\Components\Event\CodeAttendance\CodeAttendance;
 use FKSDB\Components\Event\CodeSearch\CodeSearch;
+use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\Game\Seating\Single;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
@@ -45,7 +47,11 @@ final class AttendancePresenter extends BasePresenter
      */
     public function authorizedDetail(): bool
     {
-        return $this->eventAuthorizator->isAllowed($this->getModel(), 'attendance', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getModel()),
+            'attendance',
+            $this->getEvent()
+        );
     }
 
     /**
@@ -89,14 +95,14 @@ final class AttendancePresenter extends BasePresenter
     public function authorizedSearch(): bool
     {
         if ($this->getEvent()->isTeamEvent()) {
-            return $this->eventAuthorizator->isAllowed(
-                TeamModel2::RESOURCE_ID,
+            return $this->authorizator->isAllowedEvent(
+                EventResourceHolder::fromResourceId(TeamModel2::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );
         } else {
-            return $this->eventAuthorizator->isAllowed(
-                EventParticipantModel::RESOURCE_ID,
+            return $this->authorizator->isAllowedEvent(
+                EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );
@@ -142,6 +148,7 @@ final class AttendancePresenter extends BasePresenter
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentAttendance(): CodeAttendance
     {
@@ -198,6 +205,7 @@ final class AttendancePresenter extends BasePresenter
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      */
     protected function createComponentButtonTransition(): TransitionButtonsComponent
     {
@@ -210,6 +218,7 @@ final class AttendancePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws NotImplementedException
      * @phpstan-return (TTeamEvent is true
      * ?\FKSDB\Models\Transitions\Machine\TeamMachine
      * :Machine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)

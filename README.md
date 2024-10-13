@@ -7,6 +7,8 @@
 Installation
 ============
 
+Check out the instructions for [Development inside Docker](./docker/README.md). You can also use [Dev containers](./.devcontainer/README.md).
+
   * install PHP8.1 + extension
     * php8.1
     * php8.1-cli

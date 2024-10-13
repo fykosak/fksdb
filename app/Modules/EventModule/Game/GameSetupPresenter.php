@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule\Game;
 
 use FKSDB\Components\Game\NotSetGameParametersException;
+use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\Utils\UI\PageTitle;
 
 final class GameSetupPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Fyziklani game setup'), 'fas fa-cogs');
@@ -23,7 +22,11 @@ final class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): bool
     {
-        return $this->eventAuthorizator->isAllowed(EventModel::RESOURCE_ID, 'gameSetup', $this->getEvent());
+        return $this->authorizator->isAllowedEvent(
+            EventResourceHolder::fromOwnResource($this->getEvent()),
+            'gameSetup',
+            $this->getEvent()
+        );
     }
 
     /**

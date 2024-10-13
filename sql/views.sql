@@ -151,3 +151,50 @@ select p.*, res.points, res.points_ratio as `x-points_ratio`, res.rank, res.cont
 from v_aesop_person p
          right join v_aesop_points res on res.person_id = p.`x-person_id` and res.ac_year = p.`x-ac_year`
     );
+
+create or replace view v_dokuwiki_user as
+(
+select l.login_id,
+       l.login,
+       l.hash,
+       IF(display_name is null, concat(other_name, ' ', family_name), display_name) as name,
+       pi.email,
+       concat(family_name, other_name)                                              as name_lex
+from login l
+         left join person p on p.person_id = l.person_id
+         join person_info pi on p.person_id = pi.person_id
+where exists(
+        select 1
+        from org o
+                 inner join contest_year cy
+                            on cy.contest_id = o.contest_id
+                                and cy.ac_year = IF(month(NOW()) >= 9, year(NOW()), year(NOW()) - 1)
+                                and (o.until is null or cy.year between o.since and o.until)
+        where o.person_id = l.person_id
+    )
+   or l.person_id is null
+    );
+
+create or replace view v_dokuwiki_group as
+(
+select distinct `role` as `role_id`, `role` as `name`
+from `contest_grant`
+union
+select distinct `role` as `role_id`, `role` as `name`
+from `base_grant`
+union select 'organizer' as `role`, 'organizer' as `name` -- hardcoded 'organizer'
+);
+
+create or replace view v_dokuwiki_user_group as
+(
+select cg.login_id, cg.`role` as 'role_id', cg.contest_id
+from `contest_grant` cg
+union
+select bg.login_id, bg.`role` as 'role_id', c.contest_id
+from `base_grant` bg
+cross join contest c
+union
+select l.login_id, 'organizer' as `role_id`, o.contest_id -- hardcoded 'organizer'
+from org o
+inner join login l on l.person_id = o.person_id
+);

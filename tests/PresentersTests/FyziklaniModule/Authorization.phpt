@@ -8,16 +8,17 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 $container = require '../../Bootstrap.php';
 
 // phpcs:enable
+use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ContestantService;
-use FKSDB\Models\ORM\Services\EventGrantService;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\ORM\Services\Grant\EventGrantService;
 use FKSDB\Models\ORM\Services\OrganizerService;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -103,7 +104,7 @@ class Authorization extends FyziklaniTestCase
         ], []);
         $this->container->getByType(EventGrantService::class)->storeModel([
             'login_id' => $this->inserter->getLogin()->login_id,
-            'role' => 'game.inserter',
+            'role' => ExplicitEventRole::GameInserter,
             'event_id' => $this->event->event_id,
         ]);
     }
@@ -111,13 +112,13 @@ class Authorization extends FyziklaniTestCase
     public function getTestData(): array
     {
         return [
-            [fn() => null, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->person, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->contestOrganizer, 'Game:Submit', ['create', 'list'], false], # TODO 'edit',
-            [fn() => $this->contestOrganizerOther, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->contestant, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->eventOrganizer, 'Game:Submit', ['create', 'edit', 'list'], false],
-            [fn() => $this->inserter, 'Game:Submit', ['create', 'edit', 'list'], true],
+            [fn() => null, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->person, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestOrganizer, 'EventGame:Submit', ['create', 'list'], false], # TODO 'edit',
+            [fn() => $this->contestOrganizerOther, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->contestant, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->eventOrganizer, 'EventGame:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->inserter, 'EventGame:Submit', ['create', 'edit', 'list'], true],
         ];
     }
 

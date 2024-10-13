@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\ProfileModule;
 
 use FKSDB\Components\Controls\Person\Edit\ChangeEmailComponent;
+use FKSDB\Components\Controls\Person\Edit\EmailPreferenceForm;
 use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\PersonInfoService;
@@ -25,7 +26,7 @@ final class EmailPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('E-mail settings'), 'fas fa-envelope');
+        return new PageTitle(null, _('Email settings'), 'fas fa-envelope');
     }
 
     public function titleConfirm(): PageTitle
@@ -53,6 +54,11 @@ final class EmailPresenter extends BasePresenter
     protected function createComponentChangeEmailForm(): ChangeEmailComponent
     {
         return new ChangeEmailComponent($this->getContext(), $this->getLoggedPerson());
+    }
+
+    protected function createComponentEmailPreferenceForm(): EmailPreferenceForm
+    {
+        return new EmailPreferenceForm($this->getContext(), $this->getLoggedPerson());
     }
 
     private function handleChangeEmail(PersonModel $person, Logger $logger): void

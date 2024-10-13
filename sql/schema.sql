@@ -54,19 +54,6 @@ CREATE TABLE IF NOT EXISTS `contest_year`
     COMMENT = 'mapování ročníků semináře na akademické roky';
 
 -- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `role`
-(
-    `role_id`     INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(16)  NOT NULL,
-    `description` TEXT         NULL DEFAULT NULL
-)
-    ENGINE = InnoDB
-    DEFAULT CHARACTER SET = utf8
-    COLLATE = utf8_czech_ci;
-
--- -----------------------------------------------------
 -- Table `country`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `country`
@@ -204,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `event_participant`
         'approved',
         'auto.invited',
         'auto.spare',
-        'cancelled',
+        'canceled',
         'disqualified',
         'interested',
         'invited',
@@ -310,7 +297,15 @@ CREATE TABLE IF NOT EXISTS `auth_token`
     `token_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id` INT UNSIGNED NOT NULL,
     `token`    VARCHAR(255) NOT NULL,
-    `type`     VARCHAR(31)  NOT NULL COMMENT 'type of token (from programmers POV)', # TODO ENUM
+    `type` ENUM (
+        'initial_login',
+        'recovery',
+        'event_notify',
+        'change_email',
+        'email_message',
+        'unsubscribe',
+        'sso'
+        ) NOT NULL COMMENT 'type of token (from programmers POV)', # TODO ENUM
     `data`     VARCHAR(255) NULL     DEFAULT NULL COMMENT 'various purpose data',
     `since`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `until`    TIMESTAMP    NULL     DEFAULT NULL,
@@ -450,33 +445,50 @@ CREATE TABLE IF NOT EXISTS `org`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
+-- -----------------------------------------------------
+-- Table `base_grant`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `base_grant`
+(
+    `base_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`      INT UNSIGNED NOT NULL,
+    `role`          ENUM (
+        'base.schoolManager',
+        'base.cartesian'
+        )                        NOT NULL,
+    UNIQUE INDEX `uq__base_grant__role` (`role` ASC, `login_id` ASC),
+    INDEX `idx__base_grant__login` (`login_id` ASC),
+    CONSTRAINT `fk__base_grant__login`
+        FOREIGN KEY (`login_id`)
+            REFERENCES `login` (`login_id`)
+            ON DELETE CASCADE
+            ON UPDATE RESTRICT
+)
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8
+    COLLATE = utf8_czech_ci;
+
 
 -- -----------------------------------------------------
--- Table `grant`
+-- Table `contest_grant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contest_grant`
 (
-    `grant_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `login_id`   INT UNSIGNED NOT NULL,
-    `role`       ENUM (
-        'webmaster',
-        'taskManager',
-        'dispatcher',
-        'dataManager',
-        'eventManager',
-        'inboxManager',
-        'boss',
-        'organizer',
-        'contestant',
-        'exportDesigner',
-        'aesop',
-        'schoolManager',
-        'web',
-        'wiki',
-        'superuser',
-        'cartesian'
-        )                     NOT NULL,
-    `contest_id` INT UNSIGNED NOT NULL,
+    `contest_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `login_id`         INT UNSIGNED NOT NULL,
+    `role`             ENUM (
+        'contest.webmaster',
+        'contest.taskManager',
+        'contest.dataManager',
+        'contest.eventManager',
+        'contest.inboxManager',
+        'contest.treasurer',
+        'contest.boss',
+        'contest.aesop',
+        'contest.web',
+        'contest.wiki'
+        )                           NOT NULL,
+    `contest_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__contest_grant__role` (`role` ASC, `login_id` ASC, `contest_id` ASC),
     INDEX `idx__contest_grant__login` (`login_id` ASC),
     CONSTRAINT `fk__contest_grant__login`
@@ -502,10 +514,8 @@ CREATE TABLE IF NOT EXISTS `event_grant`
     `event_grant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `login_id`       INT UNSIGNED NOT NULL,
     `role`           ENUM (
-        'game.inserter',
-        'event.medic',
-        'event.cook',
-        'event.boss'
+        'event.gameInserter',
+        'event.applicationManager'
         )                         NOT NULL,
     `event_id`       INT UNSIGNED NOT NULL,
     UNIQUE INDEX `uq__event_grant__role` (`role` ASC, `login_id` ASC, `event_id` ASC),
@@ -713,7 +723,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
         'participated',
         'missed',
         'disqualified',
-        'cancelled'
+        'canceled'
         )                                NOT NULL DEFAULT 'init',
     `category`          ENUM (
         'A',
@@ -1131,29 +1141,29 @@ CREATE TABLE IF NOT EXISTS `teacher`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `payment`
 (
-    `payment_id`      INT UNSIGNED   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`       INT UNSIGNED   NOT NULL,
+    `payment_id`      INT UNSIGNED       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`       INT UNSIGNED       NOT NULL,
     `state`           ENUM (
         'init',
         'in_progress',
         'canceled',
         'received',
         'waiting'
-        )                            NOT NULL DEFAULT 'init',
-    `price`           DECIMAL(11, 2) NULL     DEFAULT NULL,
-    `currency`        VARCHAR(5)     NULL     DEFAULT NULL,
-    `created`         DATETIME       NULL     DEFAULT NULl,
-    `received`        DATETIME       NULL     DEFAULT NULL,
-    `constant_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
-    `variable_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
-    `specific_symbol` VARCHAR(256)   NULL     DEFAULT NULL,
-    `bank_account`    VARCHAR(32)    NULL     DEFAULT NULL,
-    `bank_name`       VARCHAR(256)   NULL     DEFAULT NULL,
-    `recipient`       VARCHAR(256)   NULL     DEFAULT NULL,
-    `iban`            VARCHAR(256)   NULL     DEFAULT NULL,
-    `swift`           VARCHAR(256)   NULL     DEFAULT NULL,
-    `want_invoice`    BOOL           NOT NULL DEFAULT FALSE,
-    `invoice_id`      VARCHAR(32)    NULL     DEFAULT NULL,
+        )                                NOT NULL DEFAULT 'init',
+    `price`           DECIMAL(11, 2)     NULL     DEFAULT NULL,
+    `currency`        ENUM ('CZK','EUR') NULL     DEFAULT NULL,
+    `created`         DATETIME           NULL     DEFAULT NULl,
+    `received`        DATETIME           NULL     DEFAULT NULL,
+    `constant_symbol` VARCHAR(256)       NULL     DEFAULT NULL,
+    `variable_symbol` VARCHAR(256)       NULL     DEFAULT NULL,
+    `specific_symbol` VARCHAR(256)       NULL     DEFAULT NULL,
+    `bank_account`    VARCHAR(32)        NULL     DEFAULT NULL,
+    `bank_name`       VARCHAR(256)       NULL     DEFAULT NULL,
+    `recipient`       VARCHAR(256)       NULL     DEFAULT NULL,
+    `iban`            VARCHAR(256)       NULL     DEFAULT NULL,
+    `swift`           VARCHAR(256)       NULL     DEFAULT NULL,
+    `want_invoice`    BOOL               NOT NULL DEFAULT FALSE,
+    `invoice_id`      VARCHAR(32)        NULL     DEFAULT NULL,
     INDEX `idx__payment__person` (`person_id` ASC),
     CONSTRAINT `fk__payment__person`
         FOREIGN KEY (`person_id`)
@@ -1207,10 +1217,8 @@ CREATE TABLE IF NOT EXISTS `schedule_group`
         'transport',
         'ticket',
         'weekend',
-        'weekend_info',
-        'dsef_morning',
-        'dsef_afternoon',
-        'dsef_all_day'
+        'info',
+        'excursion'
         )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
@@ -1268,10 +1276,16 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_schedule`
 (
-    `person_schedule_id` INT UNSIGNED                   NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `person_id`          INT UNSIGNED                   NOT NULL,
-    `schedule_item_id`   INT UNSIGNED                   NOT NULL,
-    `state`              ENUM ('participated','missed') NULL DEFAULT NULL,
+    `person_schedule_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `person_id`          INT UNSIGNED NOT NULL,
+    `schedule_item_id`   INT UNSIGNED NOT NULL,
+    `payment_deadline`   DATETIME     NULL DEFAULT NULL,
+    `state`              ENUM (
+        'applied',
+        'participated',
+        'missed',
+        'canceled'
+        )                             NULL DEFAULT NULL,
     UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
     CONSTRAINT `fk__person_schedule__schedule_item`
@@ -1321,19 +1335,39 @@ CREATE TABLE IF NOT EXISTS `schedule_payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
-    `email_message_id`    BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `recipient`           VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `recipient_person_id` INT UNSIGNED    NULl                                           DEFAULT NULL,
-    `sender`              VARCHAR(128)    NOT NULL,
-    `reply_to`            VARCHAR(128)    NOT NULL,
-    `subject`             VARCHAR(128)    NOT NULL,
-    `carbon_copy`         VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `blind_carbon_copy`   VARCHAR(128)    NULL                                           DEFAULT NULL,
-    `text`                TEXT            NOT NULL,
-    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
-    `created`             DATETIME        NOT NULL                                       DEFAULT CURRENT_TIMESTAMP,
-    `sent`                DATETIME        NULL                                           DEFAULT NULL,
-    `priority`            BOOL            NOT NULL                                       DEFAULT FALSE,
+    `email_message_id`    BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`           VARCHAR(128)     NULL     DEFAULT NULL,
+    `recipient_person_id` INT UNSIGNED     NULl     DEFAULT NULL,
+    `sender`              VARCHAR(128)     NOT NULL,
+    `reply_to`            VARCHAR(128)     NOT NULL,
+    `subject`             VARCHAR(128)     NOT NULL,
+    `carbon_copy`         VARCHAR(128)     NULL     DEFAULT NULL,
+    `blind_carbon_copy`   VARCHAR(128)     NULL     DEFAULT NULL,
+    `inner_text`          TEXT             NOT NULL COMMENT 'telo emailu, ktoré sa pri odoslaní zabalí do dalších blokov',
+    `text`                TEXT             NULL     DEFAULT NULL COMMENT 'celý text emailu vrátane pätičky, to čo realne odišlo',
+    `state`               ENUM (
+        'concept',
+        'ready',
+        'waiting',
+        'sent',
+        'failed',
+        'canceled',
+        'rejected'
+        )                                           DEFAULT 'concept',
+    `topic`               ENUM (
+        'spam_contest',
+        'spam_mff',
+        'spam_other',
+        'fykos',
+        'vyfuk',
+        'fof',
+        'fol',
+        'dsef'
+        )                                  NOT NULL,
+    `lang`                ENUM ('cs','en') NOT NULL,
+    `created`             DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `sent`                DATETIME         NULL     DEFAULT NULL,
+    `priority`            BOOL             NOT NULL DEFAULT FALSE,
     INDEX `idx__email_message__state` (`state` ASC),
     INDEX `idx__email_message__person` (`recipient_person_id` ASC),
     CONSTRAINT `fk__email_message__person`
@@ -1346,6 +1380,30 @@ CREATE TABLE IF NOT EXISTS `email_message`
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8
     COLLATE = utf8_czech_ci;
+-- -----------------------------------------------------
+-- Table `email_preference`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `person_correspondence_preference`
+(
+    `person_correspondence_preference_id` INT UNSIGNED                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id`                  INT UNSIGNED                                  NOT NULL,
+    `option`                     ENUM (
+        'spam_contest',
+        'spam_mff',
+        'spam_other',
+        'spam_post' # hack pre poštový spam
+        ) NOT NULL,
+    `value`                      BOOL                                          NOT NULL,
+    `created`                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY `uq__person_correspondence_preference__option` (`person_id`, `option`),
+    CONSTRAINT `fk__person_correspondence_preference__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8
+  COLLATE = utf8_czech_ci;
 
 -- -----------------------------------------------------
 -- Table `submit_question`

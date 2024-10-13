@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 
 /**
  * @property-read string $name
@@ -22,7 +24,7 @@ use Nette\Security\Resource;
  *     name:string|null,
  * }
  */
-final class TaskModel extends Model implements Resource
+final class TaskModel extends Model implements EventResource
 {
     public const RESOURCE_ID = 'game.task';
     /**
@@ -41,5 +43,10 @@ final class TaskModel extends Model implements Resource
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->event;
     }
 }
