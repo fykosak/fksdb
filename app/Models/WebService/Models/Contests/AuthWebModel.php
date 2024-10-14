@@ -13,7 +13,6 @@ use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;
 
 /**
- * @phpstan-extends ContestWebModel<TDatum[]>
  * @phpstan-type TDatum array{
  *   name:string,
  *   otherName:string,
@@ -26,17 +25,20 @@ use Nette\Security\Permission;
  *   roles:string[],
  *   permissions:string[],
  *   }
+ * @phpstan-extends WebModel<array{},TDatum[]>
  */
 class AuthWebModel extends WebModel
 {
     private Permission $permission;
     private ContestService $contestService;
-
+    // phpcs:disable
     public const Systems = [
         'wiki',
         'pm',
         'astrid',
     ];
+
+    //phpcs:enable
 
     public function injectPermission(Permission $permission, ContestService $contestService): void
     {
@@ -73,17 +75,7 @@ class AuthWebModel extends WebModel
     }
 
     /**
-     * @phpstan-return array{
-     *  name:string,
-     *  otherName:string,
-     *  familyName:string,
-     *  loginId:int|null,
-     *  personId: int,
-     *  login:string|null,
-     *  hash:string|null,
-     *  emails:array<string,string|null>,
-     *  roles:string[],
-     *  }
+     * @phpstan-return TDatum
      */
     private function serializePerson(PersonModel $person): array
     {
@@ -139,6 +131,9 @@ class AuthWebModel extends WebModel
         return $newRoles;
     }
 
+    /**
+     * @return string[]
+     */
     private function getPermission(OrganizerModel $organizer): array
     {
         $permission = [];
