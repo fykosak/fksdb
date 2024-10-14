@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\Roles\Contest\OrganizerRole;
+use FKSDB\Models\ORM\Models\OrganizerModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model\Model;
 use Nette\Security\Permission;
@@ -26,8 +26,8 @@ class IsSelfPersonAssertion implements Assertion
             throw new WrongAssertionException();
         }
         $role = $acl->getQueriedRole();
-        if ($role instanceof OrganizerRole) {
-            return $role->getModel()->person_id === $model->person_id;
+        if ($role instanceof OrganizerModel) {
+            return $role->person_id === $model->person_id;
         }
         return false;
     }

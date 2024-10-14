@@ -121,7 +121,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(ContestantModel::ResourceId, $this->getSelectedContestYear()),
             'create',
             $this->getSelectedContestYear()
         );
@@ -138,7 +138,7 @@ final class ContestantPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContestYear(
-            ContestYearResourceHolder::fromResourceId(ContestantModel::RESOURCE_ID, $this->getSelectedContestYear()),
+            ContestYearResourceHolder::fromResourceId(ContestantModel::ResourceId, $this->getSelectedContestYear()),
             'list',
             $this->getSelectedContestYear()
         );

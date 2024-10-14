@@ -107,7 +107,7 @@ final class PersonPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(PersonScheduleModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(PersonScheduleModel::ResourceId, $this->getEvent()),
             'list',
             $this->getEvent()
         );

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
+use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Grant\BaseGrantService;
@@ -35,7 +35,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
             ['person_id' => $this->person->person_id, 'active' => 1]
         );
         $this->container->getByType(BaseGrantService::class)->storeModel(
-            ['login_id' => $this->login->login_id, 'role' => ExplicitBaseRole::Cartesian]
+            ['login_id' => $this->login->login_id, 'role' => BaseGrantModel::Cartesian]
         );
         $this->authenticateLogin($this->login);
     }

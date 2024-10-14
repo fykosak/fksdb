@@ -91,7 +91,7 @@ abstract class OpenApplicationForm extends ModelForm
             new SelfEventACLResolver(
                 $this->model
                     ? EventResourceHolder::fromOwnResource($this->model)
-                    : EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->event),
+                    : EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->event),
                 'organizer',
                 $this->event,
                 $this->container

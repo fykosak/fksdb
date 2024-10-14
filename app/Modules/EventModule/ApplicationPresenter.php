@@ -22,11 +22,9 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
@@ -73,7 +71,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->getEvent()),
             'create',
             $this->getEvent()
         );
@@ -196,7 +194,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedImport(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->getEvent()),
             'import',
             $this->getEvent()
         );
@@ -218,7 +216,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -230,7 +228,7 @@ final class ApplicationPresenter extends BasePresenter
     public function authorizedMass(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->getEvent()),
             'organizer',
             $this->getEvent()
         );

@@ -8,8 +8,7 @@ namespace FKSDB\Tests\PresentersTests\OrganizerModule\Stalking;
 $container = require '../../../Bootstrap.php';
 
 // phpcs:enable
-use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
-use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
+use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
@@ -40,7 +39,7 @@ class Display extends StalkingTestCase
 
     protected function getUserRoleId(): string
     {
-        return ExplicitBaseRole::Cartesian;
+        return BaseGrantModel::Cartesian;
     }
 }
 // phpcs:disable

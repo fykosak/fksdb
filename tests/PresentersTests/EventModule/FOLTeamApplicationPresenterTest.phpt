@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
 // phpcs:disable
-use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Grant\ContestGrantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
@@ -98,7 +98,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testCreateOrganizer(): void
     {
-        $this->loginUser(ExplicitContestRole::EventManager);
+        $this->loginUser(ContestGrantModel::EventManager);
         $data = [
             'team' => [
                 'name' => 'test team A',
@@ -172,7 +172,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
     public function testCreateOrganizerOutDate(): void
     {
         $this->outDateEvent();
-        $this->loginUser(ExplicitContestRole::EventManager);
+        $this->loginUser(ContestGrantModel::EventManager);
         $data = [
             'team' => [
                 'name' => 'test team B',
@@ -275,7 +275,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testEditOrganizer(): void
     {
-        $this->loginUser(ExplicitContestRole::EventManager);
+        $this->loginUser(ContestGrantModel::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [
@@ -333,7 +333,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
     public function testEditOrganizerOutDate(): void
     {
         $this->outDateEvent();
-        $this->loginUser(ExplicitContestRole::EventManager);
+        $this->loginUser(ContestGrantModel::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [
@@ -361,7 +361,7 @@ class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 
     public function testEditReplaceMember(): void
     {
-        $this->loginUser(ExplicitContestRole::EventManager);
+        $this->loginUser(ContestGrantModel::EventManager);
         $team = $this->createTeam('Original', [$this->personA]);
         $data = [
             'team' => [

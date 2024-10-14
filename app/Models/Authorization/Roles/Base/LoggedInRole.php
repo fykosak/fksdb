@@ -9,9 +9,9 @@ use FKSDB\Models\Authorization\Roles\Role;
 use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Utils\Html;
 
-final class LoggedInRole implements Role, ImplicitRole
+final class LoggedInRole implements Role
 {
-    public const RoleId = 'loggedIn'; //@phpcs:ignore
+    public const RoleId = 'base.loggedIn'; //@phpcs:ignore
 
     private LoginModel $login;
 

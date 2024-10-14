@@ -96,7 +96,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(OrganizerModel::Resourceid, $this->getSelectedContest()),
             'create',
             $this->getSelectedContest()
         );
@@ -112,7 +112,7 @@ final class OrganizerPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(OrganizerModel::Resourceid, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -174,6 +174,6 @@ final class OrganizerPresenter extends BasePresenter
      */
     protected function getModelResource(): ContestResourceHolder
     {
-        return ContestResourceHolder::fromResourceId(OrganizerModel::RESOURCE_ID, $this->getSelectedContest());
+        return ContestResourceHolder::fromResourceId(OrganizerModel::Resourceid, $this->getSelectedContest());
     }
 }

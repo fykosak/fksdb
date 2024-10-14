@@ -13,12 +13,10 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 
 final class EventOrganizerPresenter extends BasePresenter
 {
@@ -31,7 +29,7 @@ final class EventOrganizerPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventOrganizerModel::ResourceId, $this->getEvent()),
             'list',
             $this->getEvent()
         );
@@ -47,7 +45,7 @@ final class EventOrganizerPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(EventOrganizerModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(EventOrganizerModel::ResourceId, $this->getEvent()),
             'create',
             $this->getEvent()
         );

@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 final class GuestRole implements Role
 {
-    public const RoleId = 'guest'; //@phpcs:ignore
+    public const RoleId = 'base.guest'; //@phpcs:ignore
 
     public function badge(): Html
     {
