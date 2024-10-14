@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;
-use Tracy\Debugger;
 
 /**
  * @phpstan-extends ContestWebModel<TDatum[]>
@@ -25,6 +24,7 @@ use Tracy\Debugger;
  *   hash:string|null,
  *   emails:array<string,string|null>,
  *   roles:string[],
+ *   permissions:string[],
  *   }
  */
 class AuthWebModel extends WebModel
@@ -56,18 +56,17 @@ class AuthWebModel extends WebModel
         foreach ($this->contestService->getTable() as $contest) {
             /** @var OrganizerModel $organizer */
             foreach ($contest->getOrganizers() as $organizer) {
-                $active = $organizer->isActive($contest->getCurrentContestYear());
                 $persons[$organizer->person_id] ??= $this->serializePerson($organizer->person);
                 $persons[$organizer->person_id]['emails'][$organizer->contest->getContestSymbol()]
                     = $organizer->formatDomainEmail();
-                foreach (self::Systems as $system) {
-                    if ($active || $this->isByPassed($system, $organizer)) {
-                        $persons[$organizer->person_id]['roles'] = [
-                            ... $persons[$organizer->person_id]['roles'],
-                            ... $this->getRoles($organizer, $system),
-                        ];
-                    }
-                }
+                $persons[$organizer->person_id]['roles'] = [
+                    ... $persons[$organizer->person_id]['roles'],
+                    ... $this->getRoles($organizer),
+                ];
+                $persons[$organizer->person_id]['permissions'] = [
+                    ... $persons[$organizer->person_id]['permissions'],
+                    ... $this->getPermission($organizer),
+                ];
             }
         }
         return array_values($persons);
@@ -99,7 +98,8 @@ class AuthWebModel extends WebModel
             'login' => $login ? $login->login : null,
             'hash' => $login ? $login->hash : null,
             'emails' => $personInfo ? ['personal' => $personInfo->email] : [],
-            'roles' => []
+            'roles' => [],
+            'permissions' => [],
         ];
     }
 
@@ -118,7 +118,7 @@ class AuthWebModel extends WebModel
     /**
      * @return string[]
      */
-    private function getRoles(OrganizerModel $organizer, string $system): array
+    private function getRoles(OrganizerModel $organizer): array
     {
         $login = $organizer->person->getLogin();
         if (!$login) {
@@ -134,9 +134,21 @@ class AuthWebModel extends WebModel
         $this->calculateParents($roles);
         $newRoles = [];
         foreach ($roles as $role) {
-            $newRoles[] = 'fksdb/' . $organizer->contest->getContestSymbol() . '/' . $system . '/' . explode('.', $role)[1];
+            $newRoles[] = 'fksdb/' . $organizer->contest->getContestSymbol() . '/' . explode('.', $role)[1];
         }
         return $newRoles;
+    }
+
+    private function getPermission(OrganizerModel $organizer): array
+    {
+        $permission = [];
+        $active = $organizer->isActive($organizer->contest->getCurrentContestYear());
+        foreach (self::Systems as $system) {
+            if ($active || $this->isByPassed($system, $organizer)) {
+                $permission[] = 'fksdb/' . $organizer->contest->getContestSymbol() . '/' . $system;
+            }
+        }
+        return $permission;
     }
 
     /**
