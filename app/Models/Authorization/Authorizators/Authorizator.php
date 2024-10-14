@@ -116,15 +116,15 @@ final class Authorizator
         Resource $resource,
         ?string $privilege
     ): bool {
-        if (!$this->getLogin()) {
-            return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
-        }
-        foreach ($this->getLogin()->getBaseRoles() as $role) {
-            if ($this->permission->isAllowed($role, $resource, $privilege)) {
-                return true;
+
+        if ($this->getLogin()) {
+            foreach ($this->getLogin()->getBaseRoles() as $role) {
+                if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                    return true;
+                }
             }
         }
-        return false;
+        return $this->permission->isAllowed(new GuestRole(), $resource, $privilege);
     }
 
     private function getLogin(): ?LoginModel

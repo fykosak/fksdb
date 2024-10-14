@@ -7,6 +7,7 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 // phpcs:disable
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Grant\ContestGrantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
