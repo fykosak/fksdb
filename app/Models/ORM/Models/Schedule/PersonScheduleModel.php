@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Roles\EventRole;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\Language;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\Html;
 
 /**
  * @property-read PersonModel $person
@@ -24,9 +24,10 @@ use Fykosak\NetteORM\Model\Model;
  * @property-read \DateTime|null $payment_deadline
  * @property-read PersonScheduleState $state
  */
-final class PersonScheduleModel extends Model implements EventResource
+final class PersonScheduleModel extends Model implements EventResource, EventRole
 {
-    public const RESOURCE_ID = 'event.schedule.person';
+    public const ResourceId = 'event.schedule.person';// phpcs:ignore
+    public const RoleId = 'event.scheduleParticipant'; // phpcs:ignore
 
     public function getPayment(): ?PaymentModel
     {
@@ -69,13 +70,25 @@ final class PersonScheduleModel extends Model implements EventResource
         return $value;
     }
 
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
-    }
-
     public function getEvent(): EventModel
     {
         return $this->schedule_item->schedule_group->event;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::ResourceId;
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-color-10'])
+            ->addText(_('Schedule participant'));
     }
 }

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Roles\EventRole;
 use Fykosak\NetteORM\Model\Model;
+use Nette\Utils\Html;
 
 /**
  * @property-read int $e_org_id
@@ -15,15 +17,10 @@ use Fykosak\NetteORM\Model\Model;
  * @property-read int $person_id
  * @property-read PersonModel $person
  */
-final class EventOrganizerModel extends Model implements EventResource
+final class EventOrganizerModel extends Model implements EventResource, EventRole
 {
-
-    public const RESOURCE_ID = 'event.organizer';
-
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
-    }
+    public const ResourceId = 'event.organizer'; // phpcs:ignore
+    public const RoleId = 'event.organizer'; // phpcs:ignore
 
     /**
      * @throws \Throwable
@@ -36,5 +33,22 @@ final class EventOrganizerModel extends Model implements EventResource
     public function getEvent(): EventModel
     {
         return $this->event;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-color-7'])
+            ->addText(sprintf(_('Event organizer: %s'), $this->note));
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::ResourceId;
     }
 }

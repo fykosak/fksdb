@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestYearResource;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Tests\Contestant\ConflictRole;
 use FKSDB\Models\ORM\Tests\Contestant\InvalidCategory;
@@ -14,6 +14,7 @@ use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 
 /**
  * @property-read int $contestant_id
@@ -26,9 +27,10 @@ use Nette\Utils\DateTime;
  * @property-read ContestCategoryModel|null $contest_category
  * @property-read DateTime $created
  */
-final class ContestantModel extends Model implements ContestYearResource
+final class ContestantModel extends Model implements ContestYearResource, ContestYearRole
 {
-    public const RESOURCE_ID = 'contestant';
+    public const ResourceId = 'contestant'; // phpcs:ignore
+    public const RoleId = 'contestYear.contestant'; // phpcs:ignore
 
     public function getContestYear(): ContestYearModel
     {
@@ -40,10 +42,6 @@ final class ContestantModel extends Model implements ContestYearResource
         return $this->person->getHistory($this->getContestYear());
     }
 
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
-    }
 
     /**
      * @phpstan-return TypedGroupedSelection<SubmitModel>
@@ -93,5 +91,32 @@ final class ContestantModel extends Model implements ContestYearResource
     public function getContest(): ContestModel
     {
         return $this->contest;
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::ResourceId;
+    }
+
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'me-2 badge bg-primary'])
+            ->addText($this->label() . ' (' . $this->description() . ')');
+    }
+
+    public function description(): string
+    {
+        return 'řešitel semináře, role je automaticky přiřazována při vytvoření řešitele';
+    }
+
+    public function label(): string
+    {
+        return 'Contestant';
     }
 }

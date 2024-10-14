@@ -102,7 +102,7 @@ final class AttendancePresenter extends BasePresenter
             );
         } else {
             return $this->authorizator->isAllowedEvent(
-                EventResourceHolder::fromResourceId(EventParticipantModel::RESOURCE_ID, $this->getEvent()),
+                EventResourceHolder::fromResourceId(EventParticipantModel::ResourceId, $this->getEvent()),
                 'attendance',
                 $this->getEvent()
             );

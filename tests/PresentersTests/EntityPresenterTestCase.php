@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Grant\BaseGrantService;
@@ -55,7 +55,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(string $roleId = ExplicitBaseRole::Cartesian): void
+    protected function loginUser(string $roleId = BaseGrantModel::Cartesian): void
     {
         $this->cartesianPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
@@ -65,7 +65,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         $this->cartesianLogin = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
-        if ($roleId === ExplicitBaseRole::Cartesian) {
+        if ($roleId === BaseGrantModel::Cartesian) {
             $this->container->getByType(BaseGrantService::class)->storeModel(
                 ['login_id' => $this->cartesianLogin->login_id, 'role' => $roleId]
             );

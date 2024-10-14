@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\Models\WebModel;
 use FKSDB\Modules\CoreModule\RestApiPresenter;
 use Nette\Security\Permission;
+use Tracy\Debugger;
 
 /**
  * @phpstan-extends ContestWebModel<TDatum[]>
@@ -127,16 +128,30 @@ class AuthWebModel extends WebModel
         foreach ($login->getContestRoles($organizer->contest) as $grant) {
             $roles[$grant->getRoleId()] = $grant->getRoleId();
         }
+        foreach ($login->getExplicitBaseRoles() as $grant) {
+            $roles[$grant->getRoleId()] = $grant->getRoleId();
+        }
+        $this->calculateParents($roles);
+        $newRoles = [];
         foreach ($roles as $role) {
-            foreach ($this->permission->getRoleParents($role) as $parent) {
+            $newRoles[] = 'fksdb/' . $organizer->contest->getContestSymbol() . '/' . $system . '/' . explode('.', $role)[1];
+        }
+        return $newRoles;
+    }
+
+    /**
+     * @param string[] $roles
+     */
+    private function calculateParents(array &$roles): void
+    {
+        foreach ($roles as $role) {
+            $parents = $this->permission->getRoleParents($role);
+
+            $this->calculateParents($parents);
+            foreach ($parents as $parent) {
                 $roles[$parent] = $parent;
             }
         }
-        $newRoles = [];
-        foreach ($roles as $role) {
-            $newRoles[] = 'fksdb-' . $organizer->contest->getContestSymbol() . '-' . $system . '-' . $role;
-        }
-        return $newRoles;
     }
 
     protected function isAuthorized(): bool

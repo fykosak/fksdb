@@ -4,15 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\Authorization\Roles\Base\LoggedInRole;
-use FKSDB\Models\Authorization\Roles\Contest\ContestRole;
-use FKSDB\Models\Authorization\Roles\Contest\ExplicitContestRole;
-use FKSDB\Models\Authorization\Roles\Contest\OrganizerRole;
-use FKSDB\Models\Authorization\Roles\ContestYear\ContestantRole;
-use FKSDB\Models\Authorization\Roles\ContestYear\ContestYearRole;
-use FKSDB\Models\Authorization\Roles\Events\EventRole;
-use FKSDB\Models\Authorization\Roles\Events\ExplicitEventRole;
+use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\ContestYearRole;
+use FKSDB\Models\Authorization\Roles\EventRole;
 use FKSDB\Models\Authorization\Roles\Role;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Grant\BaseGrantModel;
@@ -88,7 +83,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return ExplicitBaseRole[]
+     * @phpstan-return BaseGrantModel[]
      */
     public function getExplicitBaseRoles(): array
     {
@@ -96,7 +91,7 @@ final class LoginModel extends Model implements IIdentity
         $query = $this->related(DbNames::TabBaseGrant, 'login_id');
         /** @var BaseGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitBaseRole($grant->role);
+            $grants[] = $grant;
         }
         return $grants;
     }
@@ -118,7 +113,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return ExplicitContestRole[]
+     * @phpstan-return ContestGrantModel[]
      */
     public function getExplicitContestRoles(?ContestModel $contest = null): array
     {
@@ -129,7 +124,7 @@ final class LoginModel extends Model implements IIdentity
         }
         /** @var ContestGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitContestRole($grant);
+            $grants[] = $grant;
         }
         return $grants;
     }
@@ -143,13 +138,7 @@ final class LoginModel extends Model implements IIdentity
         if ($this->person) {
             foreach ($this->person->getActiveOrganizers() as $organizer) {
                 if ($organizer->contest_id === $contest->contest_id) {
-                    $roles[] = new OrganizerRole($organizer);
-                }
-            }
-            /** @var ContestantModel $contestant */
-            foreach ($this->person->getContestants() as $contestant) {
-                if ($contestant->contest_id === $contest->contest_id) {
-                    $roles[] = new ContestantRole($contestant);
+                    $roles[] = $organizer;
                 }
             }
         }
@@ -183,7 +172,7 @@ final class LoginModel extends Model implements IIdentity
             /** @var ContestantModel $contestant */
             foreach ($this->person->getContestants() as $contestant) {
                 if ($contestant->contest_id === $contestYear->contest_id && $contestant->year === $contestYear->year) {
-                    $roles[] = new ContestantRole($contestant);
+                    $roles[] = $contestant;
                 }
             }
         }
@@ -208,7 +197,7 @@ final class LoginModel extends Model implements IIdentity
     }
 
     /**
-     * @phpstan-return ExplicitEventRole[]
+     * @phpstan-return EventGrantModel[]
      */
     public function getExplicitEventRoles(EventModel $event): array
     {
@@ -217,7 +206,7 @@ final class LoginModel extends Model implements IIdentity
             ->where('event_id', $event->event_id);
         /** @var EventGrantModel $grant */
         foreach ($query as $grant) {
-            $grants[] = new ExplicitEventRole($grant);
+            $grants[] = $grant;
         }
         return $grants;
     }

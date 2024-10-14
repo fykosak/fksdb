@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Roles\Events\{EventOrganizerRole,
-    EventRole,
-    Fyziklani\TeamMemberRole,
-    Fyziklani\TeamTeacherRole,
-    ParticipantRole,
-    ScheduleParticipant
-};
+use FKSDB\Models\Authorization\Roles\EventRole;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
@@ -314,24 +308,24 @@ final class PersonModel extends Model implements Resource
         $teachers = $this->getTeamTeachers($event);
         /** @var TeamTeacherModel $teacher */
         foreach ($teachers as $teacher) {
-            $roles[] = new TeamTeacherRole($teacher);
+            $roles[] = $teacher;
         }
         $eventOrganizer = $this->getEventOrganizer($event);
         if (isset($eventOrganizer)) {
-            $roles[] = new EventOrganizerRole($eventOrganizer);
+            $roles[] = $eventOrganizer;
         }
         $eventParticipant = $this->getEventParticipant($event);
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($eventParticipant);
+            $roles[] = $eventParticipant;
         }
         $teamMember = $this->getTeamMember($event);
         if ($teamMember) {
-            $roles[] = new TeamMemberRole($teamMember);
+            $roles[] = $teamMember;
         }
         $personSchedules = $this->getScheduleForEvent($event);
         /** @var PersonScheduleModel $personSchedule */
         foreach ($personSchedules as $personSchedule) {
-            $roles[] = new ScheduleParticipant($personSchedule);
+            $roles[] = $personSchedule;
             break;
         }
         return $roles;
@@ -346,11 +340,11 @@ final class PersonModel extends Model implements Resource
         $teams = [];
         $roles = $this->getEventRoles($event);
         foreach ($roles as $role) {
-            if ($role instanceof TeamTeacherRole) {
-                $teams[] = $role->getModel()->fyziklani_team;
+            if ($role instanceof TeamTeacherModel) {
+                $teams[] = $role->fyziklani_team;
             }
-            if ($role instanceof TeamMemberRole) {
-                $teams[] = $role->getModel()->fyziklani_team;
+            if ($role instanceof TeamMemberModel) {
+                $teams[] = $role->fyziklani_team;
             }
         }
         /** @var TeamModel2 $team */

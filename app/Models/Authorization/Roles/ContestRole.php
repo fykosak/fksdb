@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Authorization\Roles\Contest;
+namespace FKSDB\Models\Authorization\Roles;
 
-use FKSDB\Models\Authorization\Roles\Role;
 use FKSDB\Models\ORM\Models\ContestModel;
 
 interface ContestRole extends Role

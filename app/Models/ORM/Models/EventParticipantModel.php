@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
+use FKSDB\Models\Authorization\Roles\EventRole;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -13,6 +14,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Utils\DateTime;
+use Nette\Utils\Html;
 
 /**
  * @property-read int $event_participant_id
@@ -50,9 +52,10 @@ use Nette\Utils\DateTime;
  *      lunchCount:int|null,
  * }
  */
-final class EventParticipantModel extends Model implements EventResource, NodeCreator
+final class EventParticipantModel extends Model implements EventResource, EventRole, NodeCreator
 {
-    public const RESOURCE_ID = 'event.participant';
+    public const ResourceId = 'event.participant'; // phpcs:ignore
+    public const RoleId = 'event.participant'; // phpcs:ignore
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
@@ -65,11 +68,6 @@ final class EventParticipantModel extends Model implements EventResource, NodeCr
     public function getPrice(): MultiCurrencyPrice
     {
         return new MultiCurrencyPrice([new Price(Currency::from(Currency::CZK), $this->price)]);
-    }
-
-    public function getResourceId(): string
-    {
-        return self::RESOURCE_ID;
     }
 
     /**
@@ -130,8 +128,25 @@ final class EventParticipantModel extends Model implements EventResource, NodeCr
         return $node;
     }
 
+    public function badge(): Html
+    {
+        return Html::el('span')
+            ->addAttributes(['class' => 'badge bg-color-10'])
+            ->addText(sprintf(_('Participant (%s)'), $this->status->label()));
+    }
+
     public function getEvent(): EventModel
     {
         return $this->event;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::ResourceId;
+    }
+
+    public function getRoleId(): string
+    {
+        return self::RoleId;
     }
 }
