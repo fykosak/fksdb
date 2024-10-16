@@ -5,11 +5,11 @@ on: [ push, pull_request ]
 jobs:
   test:
     name: PHP ${{ matrix.php }} with ${{ matrix.database }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' , '8.0' , '8.1' ]
+        php: [ '8.1' ]
         database: [ 'mysql', 'mariadb:10.4' ]
     steps:
       # MariaDB container has to be started in advance to initialize itself before using it.
