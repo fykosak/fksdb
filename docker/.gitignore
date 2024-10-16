@@ -4,3 +4,4 @@ temp
 upload
 config.neon
 msmtprc
+!config/msmtprc

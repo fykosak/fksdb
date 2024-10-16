@@ -1,5 +1,4 @@
-MAILTO=""
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-* * * * * php -e /app/tools/mailer.php
+* * * * * for i in {1..6}; do php -e /app/tools/mailer.php; sleep 10; done
