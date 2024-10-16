@@ -28,7 +28,7 @@ chown "$PUID:$GUID" /app/temp /app/log /app/upload /var/log/apache2/other_vhosts
 
 # register cron
 echo "Register cron"
-printenv | grep "MAILTO" >> /etc/environment # apply whitelisted ENV for cron
+sed -i "1s/^/MAILTO=$MAILTO\n/" /app/docker/config/crontab # apply MAILTO directly to start of crontab
 crontab -u fksdb /app/docker/config/crontab
 
 # run cron
