@@ -9,6 +9,7 @@ services:
       TZ: 'Europe/Prague'
       PUID: 1000 # change to target user
       GUID: 1000 # change to target group
+      MAILTO: ''
     volumes:
       - ./config.neon:/app/app/config/config.local.neon # nette config
       - ./msmtprc:/etc/msmtprc # mail configuration
