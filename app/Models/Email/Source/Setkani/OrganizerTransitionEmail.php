@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\Setkani;
 
-use FKSDB\Models\Email\EmailSource;
+use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\Transitions\Holder\ParticipantHolder;
 use FKSDB\Modules\Core\Language;
 
 /**
- * @phpstan-extends EmailSource<array{model:EventParticipantModel},array{holder:ParticipantHolder}>
+ * @phpstan-extends TransitionEmailSource<EventParticipantModel,array{model:EventParticipantModel}>
  */
-final class OrganizerTransitionEmail extends EmailSource
+final class OrganizerTransitionEmail extends TransitionEmailSource
 {
     protected function getSource(array $params): array
     {
         /** @var ParticipantHolder $holder */
         $holder = $params['holder'];
+
         return [
             [
                 'template' => [
