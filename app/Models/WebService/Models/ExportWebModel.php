@@ -62,8 +62,8 @@ class ExportWebModel extends WebModel implements SoapWebModel
                     $this->log($msg);
                     throw new \SoapFault('Sender', $msg);
                 }
-                $parameters[$parameter->name] = $this->container->getParameters(
-                )['inverseContestMapping'][$parameters[$parameter->name]];
+                $parameters[$parameter->name] = $this->container
+                    ->getParameters()['inverseContestMapping'][$parameters[$parameter->name]];
             }
         }
 
@@ -103,7 +103,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
             (int)$query->implicitParameterValues[StoredQueryFactory::PARAM_CONTEST]
         );
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResource($query->queryPattern, $contest),
+            ContestResourceHolder::fromResource($query, $contest),
             'execute',
             $contest
         );

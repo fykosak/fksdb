@@ -67,4 +67,15 @@ Následně můžeme testy spouštět pomocí `composer run test`.
 - použijeme uvedený `docker-compose.prod.yml` soubor, případně upravíme podle potřeby
 - vytvoříme mount složky `log`, `temp` a `upload` (případně provedeme `chown`, aby byly vlastněny uživatelem, pod kterým kontejner poběží)
 - zkopírujeme `app/config/config.local.neon.sample` do `config.neon` a upravíme zde potřebné údaje (hlavně heslo k databázi)
+- zkopírujeme `docker/config/msmtprc` do `msmtprc` (pokud chceme aby nám fungoval email) a upravíme potřebné údaje
 - spustíme
+
+### Spuštění jako uživatel
+Protože je potřeba cron spouštět jako root, je kontejner by default spuštěn jako root uživatel a v `entrypoint.sh`
+následně vytvoří uživatele a skupinu `fksdb`, která má ID podle ENV parametrů `PUID` a `GUID` a spustí `apache` pod
+tímto uživatelem.
+
+### Email
+V produkčním image je nainstalován program `msmtprc`. Ten je určen pro odesílání mailů a balíček `msmtp-mta` vytváří
+alias pro `sendmail`, aby to bylo možné z PHP dělat. Tento program ale není plnohodnotný mail server, slouží pouze jako
+relay pro maily na plnohodnotný mailový server, například `postfix` na hlavním OS.

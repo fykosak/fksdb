@@ -97,7 +97,7 @@ abstract class BasePresenter extends Presenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
+            if ($this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
             if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
@@ -401,6 +401,7 @@ abstract class BasePresenter extends Presenter
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'auth-token');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
+            $this->getUser()->logout(true);
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {

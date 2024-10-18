@@ -53,7 +53,7 @@ final class SchoolsGrid extends BaseGrid
             }
             switch ($key) {
                 case 'city':
-                    $query->where('address.city', $value);
+                    $query->where('address.city LIKE CONCAT(\'%\', ?, \'%\')', $value);
                     break;
                 case 'country':
                     $query->where('address.country_id', $value);
@@ -64,7 +64,13 @@ final class SchoolsGrid extends BaseGrid
                 case 'term':
                     $tokens = explode(' ', $value);
                     foreach ($tokens as $token) {
-                        $query->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                        $query->whereOr([
+                            'school.name_full LIKE CONCAT(\'%\', ?, \'%\')' => $token,
+                            'school.name LIKE CONCAT(\'%\', ?, \'%\')' => $token,
+                            'school.name_abbrev LIKE CONCAT(\'%\', ?, \'%\')' => $token,
+                            'address.city LIKE CONCAT(\'%\', ?, \'%\')' => $token,
+                            'address.country.name LIKE CONCAT(\'%\', ?, \'%\')' => $token,
+                        ]);
                     }
                     break;
             }
