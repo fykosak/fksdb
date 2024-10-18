@@ -10,14 +10,10 @@ use FKSDB\Modules\Core\BasePresenter;
 
 /**
  * @method BasePresenter getPresenter($need = true)
- * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
  */
 final class SetkaniForm extends OpenApplicationForm
 {
-
-    /**
-     * @phpstan-return EvaluatedFieldsDefinition
-     */
     protected function getPersonFieldsDefinition(): array
     {
         return [
@@ -36,23 +32,27 @@ final class SetkaniForm extends OpenApplicationForm
                 'phone_parent_d' => ['required' => false],
                 'phone' => ['required' => true]
             ],
-            'person_schedule' => [
-                'apparel' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
-                    ],
-                    'required' => true,
-                    'label' => _('Apparel'),
+        ];
+    }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'apparel' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Apparel),
                 ],
-                'transport' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
-                    ],
-                    'required' => true,
-                    'label' => _('Transport & Ticket'),
+                'required' => true,
+                'label' => _('Apparel'),
+            ],
+            'transport' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Transport),
+                    ScheduleGroupType::from(ScheduleGroupType::Ticket),
                 ],
-            ]
+                'required' => true,
+                'label' => _('Transport & Ticket'),
+            ],
         ];
     }
 
