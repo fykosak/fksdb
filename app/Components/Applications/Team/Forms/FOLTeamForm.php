@@ -9,6 +9,7 @@ use FKSDB\Components\Applications\Team\Forms\Processing\SchoolRequirement\FOLSch
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearNewColumnFactory;
 use FKSDB\Modules\Core\Language;
+use Fykosak\Utils\Localization\LocalizedString;
 
 /**
  * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
@@ -53,11 +54,17 @@ class FOLTeamForm extends TeamForm
             'person_info' => [
                 'email' => [
                     'required' => true,
-                    'description' => _('Required for communication'),
+                    'reason' => new LocalizedString([
+                        'en' => 'Required for communication',
+                        'cs' => 'Vyžadováno kvůli komunikaci',
+                    ])
                 ],
                 'born' => [
                     'required' => true,
-                    'description' => _('Required for certificates'),
+                    'reason' => new LocalizedString([
+                        'en' => 'Required for certificates',
+                        'cs' => 'Vyžadováno kvůli certifikátům',
+                    ])
                 ],
             ],
             'person_history' => [
@@ -66,8 +73,11 @@ class FOLTeamForm extends TeamForm
                 ],
                 'study_year_new' => [
                     'required' => true,
-                    'description' => _('Required for category calculation'),
                     'flag' => StudyYearNewColumnFactory::FLAG_ALL,
+                    'reason' => new LocalizedString([
+                        'en' => 'Required for category calculation',
+                        'cs' => 'Vyžadováno kvůli kategorii',
+                    ])
                 ],
             ],
         ];
