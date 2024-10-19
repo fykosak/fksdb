@@ -6,9 +6,11 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
@@ -133,5 +135,16 @@ final class EventParticipantModel extends Model implements EventResource, NodeCr
     public function getEvent(): EventModel
     {
         return $this->event;
+    }
+
+    /*
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
+    public function getSchedule(): TypedGroupedSelection
+    {
+        return $this->person->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
+            'schedule_item.schedule_group.event_id',
+            $this->event_id
+        );
     }
 }
