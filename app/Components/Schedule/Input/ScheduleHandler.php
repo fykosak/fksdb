@@ -46,7 +46,6 @@ final class ScheduleHandler
      */
     public function handle(array $data, array $definition, PersonModel $person): void
     {
-
         foreach ($definition as $key => $definitionDatum) {
             $datum = $data[$key] ?? [];
             foreach ($datum as $dayGroup) {

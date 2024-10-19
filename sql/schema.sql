@@ -1285,7 +1285,7 @@ CREATE TABLE IF NOT EXISTS `person_schedule`
         'participated',
         'missed',
         'canceled'
-        )                             NULL DEFAULT NULL,
+        )                             NOT NULL,
     UNIQUE INDEX `uq__person_schedule__item_person` (`person_id`, `schedule_item_id`),
     INDEX `idx__person_schedule__item` (`schedule_item_id` ASC),
     CONSTRAINT `fk__person_schedule__schedule_item`
