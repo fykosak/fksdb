@@ -22,6 +22,7 @@ final class SchedulePaymentService extends Service
 
     /**
      * @phpstan-param array<array<int,bool>> $data
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
      * @throws EmptyDataException
      * @throws StorageException
      * @throws \PDOException

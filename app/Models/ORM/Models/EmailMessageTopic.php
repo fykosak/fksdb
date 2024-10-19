@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -123,41 +123,41 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>
+     * @phpstan-return LangMap<'cs'|'en',string>
      */
-    public function getReason(): LocalizedString
+    public function getReason(): LangMap
     {
         switch ($this->value) {
             case self::Fykos:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře FYKOS,
                      případně FYKOSího soustředění.',
                     'en' => 'You received this email because you are a participant in the FYKOS competition.',
                 ]);
             case self::Vyfuk:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře Výfuk,
                      případně Výfučího tábora.',
                     'en' => 'You received this email because you are a participant in the Výfuk competition.',
                 ]);
             case self::FOL:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání Online.',
                     'en' => 'You received this email because you are registered for the Physics Brawl Online.',
                 ]);
             case self::FOF:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni do soutěže Fyziklání.',
                     'en' => 'You received this email because you are registered for the Fyziklani
                     competition in Prague.',
                 ]);
             case self::DSEF:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali proto, že jste zaregistrováni na DSEF.',
                     'en' => 'You received this email because you are registered to DSEF.',
                 ]);
             case self::Internal:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Tento mail jste dostali, protože jste ho potřebovali.',
                     'en' => 'You received this email because you needed it.',
                 ]);

@@ -51,6 +51,7 @@ abstract class ModelForm extends FormComponent
 
     protected function onException(\Throwable $exception): bool
     {
+        Debugger::barDump($exception);
         if ($exception instanceof \PDOException) {
             Debugger::log($exception, Debugger::EXCEPTION);
             $previous = $exception->getPrevious();

@@ -52,6 +52,7 @@ abstract class BasePresenter extends Presenter
     private string $language;
     protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> */
     protected GettextTranslator $translator;
     protected bool $authorized = true;
     /** @phpstan-var array<string,bool> */
@@ -64,6 +65,9 @@ abstract class BasePresenter extends Presenter
     protected ContestAuthorizator $contestAuthorizator;
     protected Authorizator $authorizator;
 
+    /**
+     * @phpstan-param  GettextTranslator<'cs'|'en'> $translator
+     */
     final public function injectBase(
         Container $diContainer,
         ContestService $contestService,
@@ -251,6 +255,7 @@ abstract class BasePresenter extends Presenter
 
     /**
      * @throws UnsupportedLanguageException
+     * @phpstan-return 'cs'|'en'
      */
     private function selectLang(): string
     {

@@ -11,7 +11,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
@@ -27,14 +27,14 @@ use Nette\Utils\DateTime;
  * @property-read int|bool $available
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
- * @property-read LocalizedString $name
+ * @property-read LangMap<'cs'|'en',string> $name
  * @property-read int|null $capacity
  * @property-read string|null $description_cs
  * @property-read string|null $description_en
- * @property-read LocalizedString $description
+ * @property-read LangMap<'cs'|'en',string> $description
  * @property-read string|null $long_description_cs
  * @property-read string|null $long_description_en
- * @property-read LocalizedString $long_description
+ * @property-read LangMap<'cs'|'en',string> $long_description
  * @property-read DateTime|null $begin
  * @property-read DateTime|null $end
  * @property-read bool $require_id_number
@@ -134,26 +134,25 @@ final class ScheduleItemModel extends Model implements EventResource, NodeCreato
     }
 
     /**
-     * @return LocalizedString|mixed|Model
      * @throws \ReflectionException
      */
     public function &__get(string $key): mixed // phpcs:ignore
     {
         switch ($key) {
             case 'name':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->name_cs,
                     'en' => $this->name_en,
                 ]);
                 break;
             case 'description':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->description_cs,
                     'en' => $this->description_en,
                 ]);
                 break;
             case 'long_description':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->long_description_cs,
                     'en' => $this->long_description_en,
                 ]);

@@ -29,7 +29,7 @@ final class TransitionEmail extends ParticipantTransitionEmail
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
             'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
-            'lang' => Language::from(Language::CS),
+            'lang' => Language::CS,
         ];
     }
 
@@ -42,6 +42,6 @@ final class TransitionEmail extends ParticipantTransitionEmail
 
     protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
-        return Language::from(Language::CS);
+        return Language::CS;
     }
 }

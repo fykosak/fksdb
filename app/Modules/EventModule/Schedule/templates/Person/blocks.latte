@@ -4,7 +4,7 @@
     <div class="{$className}">
         <div class="card-body">
             <h4 class="card-title">
-                {$item->name->getText($lang)}
+                {$item->name->get($lang)}
             </h4>
             {if $displayTime && ($item->begin || $item->end)}
                 <small class="card-subtitle">
@@ -12,7 +12,7 @@
                 </small>
             {/if}
             <p class="card-text">
-                {$item->description->getText($lang)}
+                {$item->description->get($lang)}
             </p>
         </div>
     </div>

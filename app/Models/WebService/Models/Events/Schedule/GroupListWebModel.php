@@ -97,7 +97,7 @@ class GroupListWebModel extends EventWebModel
                     'begin' => $group->registration_begin ? $group->registration_begin->format('c') : null,
                     'end' => $group->registration_end ? $group->registration_end->format('c') : null,
                 ],
-                'name' => $group->name->__serialize(),
+                'name' => $group->getName()->__serialize(),
                 'eventId' => $group->event_id,
                 'start' => $group->start->format('c'),
                 'end' => $group->end->format('c'),

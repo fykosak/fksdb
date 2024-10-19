@@ -7,22 +7,14 @@ namespace FKSDB\Models\Transitions\Transition;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\FailHandler;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Explorer;
 use Nette\SmartObject;
 
 /**
  * @phpstan-template THolder of ModelHolder
- * @phpstan-type Enum (THolder is \FKSDB\Models\Transitions\Holder\ParticipantHolder
- * ? \FKSDB\Models\ORM\Models\EventParticipantStatus
- * :(THolder is \FKSDB\Models\Transitions\Holder\PaymentHolder
- *     ? \FKSDB\Models\ORM\Models\PaymentState
- *     : (THolder is \FKSDB\Models\Transitions\Holder\TeamHolder
- *     ? \FKSDB\Models\ORM\Models\Fyziklani\TeamState
- *     : (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
- *      )
- *     )
- * )
+ * @phpstan-type Enum (FakeStringEnum|\BackedEnum)&EnumColumn
  */
 class Transition
 {

@@ -31,7 +31,7 @@ final class OrganizerTransitionEmail extends EmailSource
                     'sender' => 'Výfuk <vyfuk@vyfuk.org>',
                     'recipient' => 'Výfučí přihlášky <vyfuk-prihlasky@vyfuk.org>',
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
-                    'lang' => Language::from(Language::CS),
+                    'lang' => Language::CS,
                 ]
             ]
         ];

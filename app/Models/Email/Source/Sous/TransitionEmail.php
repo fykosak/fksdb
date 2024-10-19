@@ -25,7 +25,7 @@ final class TransitionEmail extends ParticipantTransitionEmail
             'blind_carbon_copy' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'sender' => 'Soustředění FYKOSu <soustredeni@fykos.cz>',
             'topic' => EmailMessageTopic::from(EmailMessageTopic::Fykos),
-            'lang' => Language::from(Language::CS),
+            'lang' => Language::CS,
         ];
     }
 
@@ -38,18 +38,16 @@ final class TransitionEmail extends ParticipantTransitionEmail
 
     protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
-        return Language::from(Language::CS);
+        return Language::CS;
     }
 
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {
-        switch ($transition->source->value) {
-            case EventParticipantStatus::INIT:
-            case EventParticipantStatus::AUTO_SPARE:
-            case EventParticipantStatus::AUTO_INVITED:
-                return __DIR__ . DIRECTORY_SEPARATOR . 'init->invite.latte';
-            default:
-                return __DIR__ . DIRECTORY_SEPARATOR . self::resolveLayoutName($transition);
-        }
+        return match ($transition->source->value) {
+            EventParticipantStatus::INIT,
+            EventParticipantStatus::AUTO_SPARE,
+            EventParticipantStatus::AUTO_INVITED => __DIR__ . DIRECTORY_SEPARATOR . 'init->invite.latte',
+            default => __DIR__ . DIRECTORY_SEPARATOR . self::resolveLayoutName($transition),
+        };
     }
 }

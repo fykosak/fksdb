@@ -44,10 +44,9 @@ class ReferencedPersonFactory
         ?ContestYearModel $contestYear,
         string $searchType,
         bool $allowClear,
-        Resolver $resolver,
-        ?EventModel $event = null
+        Resolver $resolver
     ): ReferencedId {
-        $handler = $this->createHandler($contestYear, null, $event);
+        $handler = $this->createHandler($contestYear, null);
         return new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
             new ReferencedPersonContainer(
@@ -55,7 +54,6 @@ class ReferencedPersonFactory
                 $resolver,
                 $contestYear,
                 $fieldsDefinition,
-                $event,
                 $allowClear
             ),
             $this->personService,
@@ -65,16 +63,12 @@ class ReferencedPersonFactory
 
     protected function createHandler(
         ?ContestYearModel $contestYear,
-        ?ResolutionMode $resolution,
-        ?EventModel $event = null
+        ?ResolutionMode $resolution
     ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $contestYear,
             $resolution ?? ResolutionMode::from(ResolutionMode::EXCEPTION)
         );
-        if ($event) {
-            $handler->setEvent($event);
-        }
         $this->context->callInjects($handler);
         return $handler;
     }

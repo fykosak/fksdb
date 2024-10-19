@@ -1,5 +1,5 @@
 {layout './@layout.latte'}
 {varType FKSDB\Models\ORM\Models\EmailMessageModel $model}
 {block footer}
-    {$model->topic->getReason()->getText($model->lang->value)}
+    {$model->topic->getReason()->get($model->lang->value)}
 {/block}

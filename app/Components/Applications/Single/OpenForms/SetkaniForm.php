@@ -7,6 +7,7 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Localization\LangMap;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -39,19 +40,23 @@ final class SetkaniForm extends OpenApplicationForm
     {
         return [
             'apparel' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Apparel,
+                    ],
                 ],
                 'required' => true,
-                'label' => _('Apparel'),
+                'label' => new LangMap(['cs' => _('Apparel'), 'en' => _('Apparel')]),
             ],
             'transport' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::Transport),
-                    ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Transport,
+                        ScheduleGroupType::Ticket,
+                    ],
                 ],
                 'required' => true,
-                'label' => _('Transport & Ticket'),
+                'label' => new LangMap(['cs' => _('Transport & Ticket'), 'en' => _('Transport & Ticket')]),
             ],
         ];
     }

@@ -12,6 +12,7 @@ use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\SectionContainer;
+use FKSDB\Components\Schedule\Input\SectionGroupOptions;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
@@ -19,6 +20,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
+use Fykosak\Utils\Localization\LangMap;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 
 /**
@@ -41,6 +44,9 @@ class FOFTeamForm extends TeamForm
         $this->appendMemberFields($form);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     private function appendTeacherFields(Form $form): void
     {
         $teacherCount = isset($this->model) ? max($this->model->getTeachers()->count('*'), 1) : 1;
@@ -66,8 +72,7 @@ class FOFTeamForm extends TeamForm
                     'organizer',
                     $this->event,
                     $this->container
-                ),
-                $this->event
+                )
             );
             $personContainer->searchContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
             $personContainer->referencedContainer->setOption('label', self::formatTeacherLabel($teacherIndex + 1));
@@ -104,25 +109,29 @@ class FOFTeamForm extends TeamForm
     {
         return [
             'accommodation' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                    ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Accommodation,
+                        ScheduleGroupType::AccommodationTeacher,
+                    ],
                 ],
                 'required' => false,
                 'collapseSelf' => true,
-                'label' => _('Accommodation'),
-                'groupBy' => SectionContainer::GroupNone,
+                'label' => new LangMap(['cs' => 'Ubytovaní', 'en' => 'Accommodation']),
+                'groupBy' => SectionGroupOptions::GroupNone,
             ],
             'schedule' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
-                    ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                    ScheduleGroupType::from(ScheduleGroupType::Info),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::TeacherPresent,
+                        ScheduleGroupType::Weekend,
+                        ScheduleGroupType::Info,
+                    ],
                 ],
                 'required' => false,
                 'collapseChild' => true,
-                'label' => _('Schedule'),
-                'groupBy' => SectionContainer::GroupBegin,
+                'label' => new LangMap(['cs' => 'Program', 'en' => 'Schedule']),
+                'groupBy' => SectionGroupOptions::GroupBegin,
             ],
         ];
     }
@@ -157,24 +166,28 @@ class FOFTeamForm extends TeamForm
     {
         return [
             'accommodation' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                    ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Accommodation,
+                        ScheduleGroupType::AccommodationGender,
+                    ],
                 ],
                 'required' => false,
                 'collapseSelf' => true,
-                'label' => _('Accommodation'),
-                'groupBy' => SectionContainer::GroupNone,
+                'label' => new LangMap(['cs' => _('Accommodation'), 'en' => _('Accommodation')]),
+                'groupBy' => SectionGroupOptions::GroupNone,
             ],
             'schedule' => [
-                'types' => [
-                    ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                    ScheduleGroupType::from(ScheduleGroupType::Info),
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Weekend,
+                        ScheduleGroupType::Info,
+                    ],
                 ],
                 'required' => false,
                 'collapseChild' => true,
-                'label' => _('Schedule'),
-                'groupBy' => SectionContainer::GroupBegin,
+                'label' => new LangMap(['cs' => _('Schedule'), 'en' => _('Schedule')]),
+                'groupBy' => SectionGroupOptions::GroupBegin,
             ],
         ];
     }
@@ -226,11 +239,7 @@ class FOFTeamForm extends TeamForm
         }
     }
     /**
-     * @phpstan-return array{
-     *     name:EvaluatedFieldMetaData,
-     *     game_lang:EvaluatedFieldMetaData,
-     *     phone:EvaluatedFieldMetaData,
-     * }
+     * @phpstan-return array<string,EvaluatedFieldMetaData>
      */
     protected function getTeamFieldsDefinition(): array
     {

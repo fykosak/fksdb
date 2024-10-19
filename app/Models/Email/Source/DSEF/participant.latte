@@ -10,7 +10,7 @@
 </p>
 <p style="margin-top:1em;margin-bottom:1em">
     potvrzujeme přijetí přihlášky osoby {$model->person->getFullName()} na akci
-    <strong>{$model->event->getName()->getText('cs')}</strong>, která se koná
+    <strong>{$model->event->getName()->get('cs')}</strong>, která se koná
     {if $model->event->end->getTimestamp() !== $model->event->begin->getTimestamp()}
     {$model->event->begin|date:'j. n. Y'} – {$model->event->end|date:'j. n. Y'}.
     {else}

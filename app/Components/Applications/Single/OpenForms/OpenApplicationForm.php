@@ -7,12 +7,11 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\Processing\DefaultTransition;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Components\Schedule\Input\ScheduleHandler;
+use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -33,6 +32,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -96,20 +96,17 @@ abstract class OpenApplicationForm extends ModelForm
                 'organizer',
                 $this->event,
                 $this->container
-            ),
-            $this->event
+            )
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));
         $container->addComponent($personContainer, self::PersonContainer);
         $scheduleDefinition = $this->getScheduleDefinition();
         if ($scheduleDefinition) {
-            $scheduleContainer = new ContainerWithOptions($this->container);
-            $container->addComponent($scheduleContainer, self::ScheduleContainer);
-            foreach ($scheduleDefinition as $key => $scheduleDatum) {
-                $scheduleSubContainer = new SectionContainer($this->container, $this->event, $scheduleDatum);
-                $scheduleContainer->addComponent($scheduleSubContainer, $key);
-            }
+            $container->addComponent(
+                new ScheduleContainer($this->container, $scheduleDefinition, $this->event),
+                self::ScheduleContainer
+            );
         }
 
         foreach ($this->getParticipantFieldsDefinition() as $field => $metadata) {
@@ -172,15 +169,16 @@ abstract class OpenApplicationForm extends ModelForm
          * @phpstan-ignore-next-line
          */
         $referencedId = $form['event_participant'][self::PersonContainer];
-        /** @var PersonModel $person */
+        /**
+         * @var ScheduleContainer $scheduleContainer
+         * @phpstan-ignore-next-line
+         */
+        $scheduleContainer = $form['event_participant'][self::ScheduleContainer];
+        Debugger::barDump($form);
         $person = $referencedId->getModel();
-        $handler = new ScheduleHandler($this->container, $this->event);
-        $handler->handle(
-            /** @phpstan-ignore-next-line */
-            $values['event_participant'][self::ScheduleContainer],
-            $this->getScheduleDefinition(),
-            $person
-        );
+        if ($person) {
+            $scheduleContainer->save($person);
+        }
         return $this->eventParticipantService->storeModel(
             array_merge($values['event_participant'], [
                 'event_id' => $this->event->event_id,

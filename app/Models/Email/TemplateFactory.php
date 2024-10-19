@@ -20,21 +20,18 @@ use Nette\Http\IRequest;
  */
 final class TemplateFactory
 {
-    private GettextTranslator $translator;
-    private IRequest $request;
-    private LatteFactory $latteTemplateFactory;
-    private ?IPresenter $presenter;
+    private readonly ?IPresenter $presenter;
 
+    /**
+     * @param GettextTranslator<'cs'|'en'> $translator
+     */
     public function __construct(
-        LatteFactory $latteTemplateFactory,
-        GettextTranslator $translator,
-        IRequest $request,
+        private readonly LatteFactory $latteTemplateFactory,
+        private readonly GettextTranslator $translator,
+        private readonly IRequest $request,
         Application $application,
         IPresenterFactory $presenterFactory
     ) {
-        $this->translator = $translator;
-        $this->request = $request;
-        $this->latteTemplateFactory = $latteTemplateFactory;
         $this->presenter = $application->getPresenter() ?? $presenterFactory->createPresenter('Organizer:Email');
     }
 

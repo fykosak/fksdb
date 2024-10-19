@@ -32,6 +32,7 @@ use FKSDB\Models\Transitions\Machine\TeamMachine;
 use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\DI\Container;
@@ -220,6 +221,9 @@ abstract class TeamForm extends ModelForm
         }
     }
 
+    /**
+     * @throws BadRequestException
+     */
     protected function appendPersonsFields(Form $form): void
     {
         $this->appendMemberFields($form);
@@ -239,11 +243,14 @@ abstract class TeamForm extends ModelForm
      */
     abstract protected function getMemberScheduleDefinition(): ?array;
 
+    /**
+     * @throws BadRequestException
+     */
     protected function appendMemberFields(Form $form): void
     {
         for ($member = 0; $member < 5; $member++) {
             $memberContainer = new ContainerWithOptions($this->container);
-            $scheduleDefinition = $this->getMemberFieldsDefinition();
+            $scheduleDefinition = $this->getMemberScheduleDefinition();
             if ($scheduleDefinition) {
                 $memberContainer->addComponent(
                     new ScheduleContainer($this->container, $scheduleDefinition, $this->event),
@@ -262,8 +269,7 @@ abstract class TeamForm extends ModelForm
                     'organizer',
                     $this->event,
                     $this->container
-                ),
-                $this->event
+                )
             );
             $personContainer->referencedContainer->collapse = true;
             $personContainer->searchContainer->setOption('label', self::formatMemberLabel($member + 1));

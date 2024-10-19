@@ -44,9 +44,9 @@ class Downloader
         $src = "https://$this->httpUser:$this->httpPassword@$this->host$path";
         $dst = tempnam($this->tmpDir, 'task');
 
-        if (!copy($src, $dst)) {//@phpstan-ignore-line
+        if (!copy($src, $dst)) {// @phpstan-ignore-line
             throw new DownloadException(sprintf(_('Cannot copy file "%s".'), $src));
         }
-        return $dst;//@phpstan-ignore-line
+        return $dst; // @phpstan-ignore-line
     }
 }

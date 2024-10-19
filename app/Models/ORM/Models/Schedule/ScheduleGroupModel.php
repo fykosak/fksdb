@@ -6,14 +6,12 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Utils\DateTime;
 
 /**
@@ -25,7 +23,6 @@ use Nette\Utils\DateTime;
  * @property-read DateTime $end
  * @property-read string $name_cs
  * @property-read string $name_en
- * @property-read LocalizedString $name
  * @property-read DateTime|null $registration_begin
  * @property-read DateTime|null $registration_end
  * @phpstan-type SerializedScheduleGroupModel array{
@@ -63,7 +60,7 @@ final class ScheduleGroupModel extends Model implements EventResource, NodeCreat
             'scheduleGroupType' => $this->schedule_group_type->value,
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
-            'name' => $this->name->__serialize(),
+            'name' => $this->getName()->__serialize(),
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
@@ -107,16 +104,21 @@ final class ScheduleGroupModel extends Model implements EventResource, NodeCreat
             case 'schedule_group_type':
                 $value = ScheduleGroupType::from(parent::__get($key));
                 break;
-            case 'name':
-                $value = new LocalizedString([
-                    'cs' => $this->name_cs,
-                    'en' => $this->name_en,
-                ]);
-                break;
             default:
                 $value = parent::__get($key);
         }
         return $value;
+    }
+
+    /**
+     * @phpstan-return LangMap<'cs'|'en',string>
+     */
+    public function getName(): LangMap
+    {
+        return new LangMap([
+            'cs' => $this->name_cs,
+            'en' => $this->name_en,
+        ]);
     }
 
     /**
@@ -134,7 +136,7 @@ final class ScheduleGroupModel extends Model implements EventResource, NodeCreat
             'end' => $this->end->format('c'),
         ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => $this->name->__serialize(),
+            'name' => $this->getName()->__serialize(),
         ], $document, $node);
         return $node;
     }

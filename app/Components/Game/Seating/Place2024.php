@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Game\Seating;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
@@ -39,17 +39,17 @@ final class Place2024 implements Place
     }
 
     /**
-     * @phpstan-return array<self::Sector*,LocalizedString<'cs'|'en'>>
+     * @phpstan-return array<self::Sector*,LangMap<'cs'|'en',string>>
      */
     public static function getSectors(): array
     {
         return [
-            self::SectorRed => new LocalizedString(['en' => 'Red', 'cs' => 'Červený']),
-            self::SectorGreen => new LocalizedString(['en' => 'Green', 'cs' => 'Zelený']),
-            self::SectorBlue => new LocalizedString(['en' => 'Blue', 'cs' => 'Modrý']),
-            self::SectorYellow => new LocalizedString(['en' => 'Yellow', 'cs' => 'Žlutý']),
-            self::SectorMagenta => new LocalizedString(['en' => 'Magenta', 'cs' => 'Purpurová']),
-            self::SectorDark => new LocalizedString(['en' => 'Black', 'cs' => 'Červný']),
+            self::SectorRed => new LangMap(['en' => 'Red', 'cs' => 'Červený']),
+            self::SectorGreen => new LangMap(['en' => 'Green', 'cs' => 'Zelený']),
+            self::SectorBlue => new LangMap(['en' => 'Blue', 'cs' => 'Modrý']),
+            self::SectorYellow => new LangMap(['en' => 'Yellow', 'cs' => 'Žlutý']),
+            self::SectorMagenta => new LangMap(['en' => 'Magenta', 'cs' => 'Purpurová']),
+            self::SectorDark => new LangMap(['en' => 'Black', 'cs' => 'Červný']),
         ];
     }
 
@@ -200,7 +200,7 @@ final class Place2024 implements Place
 
     public function sectorName(string $language): string
     {
-        return self::getSectors()[$this->sector()]->getText($language); //@phpstan-ignore-line
+        return self::getSectors()[$this->sector()]->get($language); //@phpstan-ignore-line
     }
 
     public function layout(): string

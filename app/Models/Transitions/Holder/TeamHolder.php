@@ -24,7 +24,7 @@ final class TeamHolder implements ModelHolder
         $this->service = $service;
     }
 
-    /** @phpstan-param EnumColumn&FakeStringEnum $newState */
+    /** @phpstan-param TeamState $newState */
     public function setState(EnumColumn $newState): void
     {
         $this->service->storeModel(['state' => $newState->value], $this->team);

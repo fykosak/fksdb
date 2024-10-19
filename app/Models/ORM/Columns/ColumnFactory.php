@@ -42,6 +42,7 @@ abstract class ColumnFactory
     protected bool $isWriteOnly = true;
     public FieldLevelPermission $permission;
     protected MetaDataFactory $metaDataFactory;
+    /** @phpstan-var GettextTranslator<'cs'|'en'> */
     protected GettextTranslator $translator;
     /** @phpstan-var class-string<TModel> */
     protected string $modelClassName;
@@ -51,6 +52,9 @@ abstract class ColumnFactory
         $container->callInjects($this);
     }
 
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
     final public function injectMeta(MetaDataFactory $metaDataFactory, GettextTranslator $translator): void
     {
         $this->metaDataFactory = $metaDataFactory;

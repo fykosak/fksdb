@@ -6,8 +6,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
@@ -32,14 +30,14 @@ final class PersonScheduleModel extends Model implements EventResource
     {
         /** @var SchedulePaymentModel|null $schedulePayment */
         $schedulePayment = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->fetch();
-        return $schedulePayment ? $schedulePayment->payment : null;
+        return $schedulePayment?->payment;
     }
 
     public function getLabel(Language $lang): string
     {
         return $this->person->getFullName() . ': '
-            . $this->schedule_item->schedule_group->name->getText($lang->value) . ' - '
-            . $this->schedule_item->name->getText($lang->value);
+            . $this->schedule_item->schedule_group->getName()->get($lang->value) . ' - '
+            . $this->schedule_item->name->get($lang->value);
     }
 
     public function isPaid(): bool
@@ -55,15 +53,14 @@ final class PersonScheduleModel extends Model implements EventResource
     }
 
     /**
-     * @return PersonScheduleState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = PersonScheduleState::from($value ?? PersonScheduleState::Applied);
+                $value = PersonScheduleState::from($value);
                 break;
         }
         return $value;

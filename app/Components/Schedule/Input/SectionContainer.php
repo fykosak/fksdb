@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Schedule\Input;
 
+use Nette\Utils\Html;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
@@ -11,90 +12,96 @@ use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Schedule\PaymentDeadlineStrategy\PaymentDeadlineStrategy;
 use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
  * @phpstan-type TMeta array{
- * types:ScheduleGroupType[],
- * label:string,
- * description?:string,
+ * filter:array{types?:ScheduleGroupType[]},
+ * label:LangMap<'cs'|'en',string>,
+ * description?:LangMap<'cs'|'en',string>,
  * required?:bool,
  * collapseSelf?:bool,
  * collapseChild?:bool,
- * groupBy?:self::Group*,
+ * groupBy?:SectionGroupOptions,
  * paymentDeadline?:PaymentDeadlineStrategy,
  * }
  */
 class SectionContainer extends ContainerWithOptions
 {
-    public const GroupBegin = 'date';// phpcs:ignore
-    public const GroupNone = 'none';// phpcs:ignore
-
-    private EventModel $event;
-    /** @var ScheduleGroupType[] */
-    private array $types;
-    private bool $required;
+    /**
+     * @phpstan-var GettextTranslator<'cs'|'en'>
+     */
     private GettextTranslator $translator;
-    private string $label;
-    private ?string $description;
-    private bool $collapseChild;
-    /** @phpstan-var self::Group* */
-    private string $groupBy;
-
     /**
      * @phpstan-param TMeta $meta
      * @throws BadRequestException
      */
     public function __construct(
         Container $container,
-        EventModel $event,
+        private readonly EventModel $event,
         array $meta
     ) {
         parent::__construct($container);
-        $this->event = $event;
-        $this->types = $meta['types'];
-        $this->required = (bool)($meta['required'] ?? false);
-        $this->label = $meta['label'];
-        $this->description = $meta['description'] ?? null;
-        $this->collapseChild = $meta['collapseChild'] ?? false;
         $this->collapse = $meta['collapseSelf'] ?? false;
-        $this->groupBy = $meta['groupBy'] ?? self::GroupNone;
-        $this->createContainers();
+        $this->createContainers($meta);
     }
 
-    public function inject(GettextTranslator $translator): void
+    /**
+     * @phpstan-param GettextTranslator<'cs'|'en'> $translator
+     */
+    public function injectTranslator(GettextTranslator $translator): void
     {
         $this->translator = $translator;
     }
 
+    public function save(PersonModel $person): void
+    {
+        /** @var ScheduleSelectBox $scheduleSelectBox */
+        foreach ($this->getComponents(true, ScheduleSelectBox::class) as $scheduleSelectBox) {
+            $scheduleSelectBox->save($person);
+        }
+    }
+
     /**
      * @throws BadRequestException
+     * @phpstan-param TMeta $meta
      */
-    public function createContainers(): void
+    private function createContainers(array $meta): void
     {
-        $groups = $this->event->getScheduleGroups()
-            ->where('schedule_group_type', array_map(fn(ScheduleGroupType $case) => $case->value, $this->types))
-            ->order('start, schedule_group_id');
-
-        $this->setOption('label', $this->label);
-        $this->setOption('description', $this->description);
+        $groups = $this->event->getScheduleGroups()->order('start, schedule_group_id');
+        foreach ($meta['filter'] as $key => $filter) {
+            switch ($key) {
+                case 'types':
+                    $groups->where(
+                        'schedule_group_type',
+                        array_map(fn(ScheduleGroupType $case) => $case->value, $filter)
+                    );
+                    break;
+            }
+        }
+        $groupBy = $meta['groupBy'] ?? SectionGroupOptions::GroupNone;
+        $this->setOption('label', $meta['label']->get($this->translator->lang));
+        if (isset($meta['description'])) {
+            $this->setOption('description', $meta['description']->get($this->translator->lang));
+        }
         /** @var ScheduleGroupModel[] $containerGroups */
         $containerGroups = [];
         /** @var ScheduleGroupModel $scheduleGroup */
         foreach ($groups as $scheduleGroup) {
-            $key = $this->getGroupKey($scheduleGroup);
+            $key = $groupBy->getGroupKey($scheduleGroup);
             $containerGroups[$key] = $containerGroups[$key] ?? [];
             $containerGroups[$key][] = $scheduleGroup;
         }
         foreach ($containerGroups as $key => $day) {
             $formContainer = new ContainerWithOptions($this->container);
-            $formContainer->collapse = $this->collapseChild;
-            $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
+            $formContainer->collapse = $meta['collapseChild'] ?? false;
+            $formContainer->setOption('label', $groupBy->getGroupLabel(reset($day)));
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
-                $field = new ScheduleSelectBox($group, $this->translator);
-                if ($this->required) {
+                $field = new ScheduleSelectBox($group, $this->container, $meta);
+                if ($meta['required'] ?? false) {
                     $field->setRequired(_('Field %label is required.'));
                 }
                 $formContainer->addComponent(
@@ -102,28 +109,6 @@ class SectionContainer extends ContainerWithOptions
                     (string)$group->schedule_group_id
                 );
             }
-        }
-    }
-
-    public function getGroupLabel(ScheduleGroupModel $group): ?string
-    {
-        switch ($this->groupBy) {
-            default:
-            case self::GroupNone:
-                return null;
-            case self::GroupBegin:
-                return $group->start->format(_('__date'));
-        }
-    }
-
-    public function getGroupKey(ScheduleGroupModel $group): string
-    {
-        switch ($this->groupBy) {
-            default:
-            case self::GroupNone:
-                return 'none';
-            case self::GroupBegin:
-                return $group->start->format('Y_m_d');
         }
     }
 

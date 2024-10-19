@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ExistingPaymentException;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -45,7 +46,7 @@ use Tracy\Debugger;
 /**
  * @method BasePresenter getPresenter($need = true)
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
- * @phpstan-import-type TMeta from ReferencedPersonContainer
+ * @phpstan-import-type TMeta from SectionContainer
  * @phpstan-type RawFieldMetaData array{
  *     required?:bool|(callable(ParticipantHolder):bool),
  *     caption?:string|null|(callable(ParticipantHolder):string|null),
@@ -169,8 +170,7 @@ abstract class InvitationApplicationForm extends BaseComponent
                 'organizer',
                 $this->event,
                 $this->container
-            ),
-            $this->event
+            )
         );
         $personContainer->searchContainer->setOption('label', _('Participant'));
         $personContainer->referencedContainer->setOption('label', _('Participant'));

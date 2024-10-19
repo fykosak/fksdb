@@ -44,7 +44,7 @@
                 <div style="columns: 2;font-size: .6rem">
                     {foreach $rests as $personRest}
                         {foreach $personRest as $rest}
-                            &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {$rest->schedule_item->name->getText($team->game_lang->value)}
+                            &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {$rest->schedule_item->name->get($team->game_lang->value)}
                             <br>
                         {/foreach}
                     {/foreach}

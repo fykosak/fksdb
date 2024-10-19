@@ -25,7 +25,7 @@ final class CodeAttendance extends CodeTransition
     public function __construct(Container $container, ScheduleItemModel $item, PersonScheduleMachine $machine)
     {
         /** @phpstan-ignore-next-line */
-        parent::__construct($container, PersonScheduleState::from(PersonScheduleState::Participated), $machine);
+        parent::__construct($container,PersonScheduleState::Participated, $machine);
         $this->item = $item;
     }
 

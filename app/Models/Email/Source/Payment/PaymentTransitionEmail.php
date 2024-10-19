@@ -23,7 +23,7 @@ class PaymentTransitionEmail extends TransitionEmailSource
         $holder = $params['holder'];
         /** @phpstan-var  Transition<PaymentHolder> $transition */
         $transition = $params['transition'];
-        $lang = Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN);
+        $lang = Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN->value);
         return [
             [
                 'template' => [

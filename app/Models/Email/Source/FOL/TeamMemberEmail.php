@@ -6,7 +6,6 @@ namespace FKSDB\Models\Email\Source\FOL;
 
 use FKSDB\Models\Email\TransitionEmailSource;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
-use FKSDB\Models\ORM\Models\AuthTokenType;
 use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -54,7 +53,7 @@ final class TeamMemberEmail extends TransitionEmailSource
         $holder = $params['holder'];
         $lang = Language::from($holder->getModel()->game_lang->value);
         $sender = 'Physics Brawl Online <online@physicsbrawl.org>';
-        if ($lang == 'cs') {
+        if ($lang === Language::CS) {
             $sender = 'Fyziklání Online <online@fyziklani.cz>';
         }
         $emails = [];
