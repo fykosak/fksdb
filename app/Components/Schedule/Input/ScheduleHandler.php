@@ -114,7 +114,7 @@ final class ScheduleHandler
         }
 
         // check group capacity
-        if (!$group->hasFreeCapacity()) {
+        if (!$personSchedule && !$group->hasFreeCapacity()) {
             throw new FullCapacityException($item, $person, $this->translator);
         }
         // check item capacity
