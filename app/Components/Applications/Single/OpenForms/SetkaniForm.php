@@ -35,24 +35,28 @@ final class SetkaniForm extends OpenApplicationForm
                 'phone_parent_m' => ['required' => false],
                 'phone_parent_d' => ['required' => false],
                 'phone' => ['required' => true]
-            ],
-            'person_schedule' => [
-                'apparel' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
-                    ],
-                    'required' => true,
-                    'label' => _('Apparel'),
-                ],
-                'transport' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
-                    ],
-                    'required' => true,
-                    'label' => _('Transport & Ticket'),
-                ],
             ]
+        ];
+    }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'apparel' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                ],
+                'required' => true,
+                'label' => _('Apparel'),
+            ],
+            'transport' => [
+                'types' => [
+                    ScheduleGroupType::from(ScheduleGroupType::Transport),
+                    ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                ],
+                'required' => true,
+                'label' => _('Transport & Ticket'),
+            ],
         ];
     }
 
@@ -72,7 +76,8 @@ final class SetkaniForm extends OpenApplicationForm
                 'description' => _('Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na setkání?
                 Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš
                 nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace
-                ohledně tvého zdravotního stavu, co bychom měli vědět?')],
+                ohledně tvého zdravotního stavu, co bychom měli vědět?')
+            ],
             'note' => ['required' => false]
         ];
     }
