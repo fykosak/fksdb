@@ -6,6 +6,7 @@ namespace FKSDB\Components\Schedule\Input;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
@@ -105,7 +106,11 @@ class Handler
             }
 
             $this->service->storeModel(
-                ['person_id' => $person->person_id, 'schedule_item_id' => $value],
+                [
+                    'person_id' => $person->person_id,
+                    'schedule_item_id' => $value,
+                    'state' => PersonScheduleState::Applied,
+                ],
                 $personSchedule
             );
         } elseif ($personSchedule) {

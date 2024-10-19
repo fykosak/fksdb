@@ -6,8 +6,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -94,8 +92,7 @@ final class ScheduleItemModel extends Model implements EventResource, NodeCreato
 
     public function getUsedCapacity(bool $removeRef = false): int
     {
-        //->where('state !=', PersonScheduleState::Cancelled)
-        $query = $this->getInterested();
+        $query = $this->getInterested()->where('state !=', PersonScheduleState::Cancelled);
         if ($removeRef) {
             $query->unsetRefCache();
         }
