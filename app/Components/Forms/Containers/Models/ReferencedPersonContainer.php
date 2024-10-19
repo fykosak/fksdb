@@ -38,7 +38,7 @@ use Nette\InvalidArgumentException;
  *     description?:string|null,
  *     reason?:LangMap<'cs'|'en',string>
  * }
- * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>>
+ * @phpstan-type EvaluatedFieldsDefinition array<'person'|'person_info'|'person_history'|'post_contact_d'|'post_contact_p'|'person_has_flag',array<string,EvaluatedFieldMetaData>>
  */
 class ReferencedPersonContainer extends ReferencedContainer
 {

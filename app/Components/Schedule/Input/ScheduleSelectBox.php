@@ -197,6 +197,9 @@ class ScheduleSelectBox extends SelectBox
                 'longDescription' => $item->long_description->__serialize(),
                 'available' => (bool)$item->available,
                 'requireIdNumber' => $item->require_id_number,
+                'paymentDeadline' => isset($this->definition['paymentDeadline'])
+                    ? $this->definition['paymentDeadline']->invoke($item)
+                    : null,
             ];
         }
 
