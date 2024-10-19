@@ -1,5 +1,5 @@
 parameters:
-    phpVersion: 70400 # php 7.4
+    phpVersion: 80100 # php 7.4
     level: 7
     paths:
         - app

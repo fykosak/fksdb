@@ -6,8 +6,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -39,6 +37,7 @@ use Nette\Utils\DateTime;
  * @property-read LocalizedString $long_description
  * @property-read DateTime|null $begin
  * @property-read DateTime|null $end
+ * @property-read bool $require_id_number
  * @phpstan-type SerializedScheduleItemModel array{
  *      scheduleGroupId:int,
  *      price:array<string, string>,
@@ -135,13 +134,11 @@ final class ScheduleItemModel extends Model implements EventResource, NodeCreato
     }
 
     /**
-     * @param string $key
      * @return LocalizedString|mixed|Model
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
-
         switch ($key) {
             case 'name':
                 $value = new LocalizedString([

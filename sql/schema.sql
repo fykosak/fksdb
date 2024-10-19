@@ -1260,6 +1260,7 @@ CREATE TABLE IF NOT EXISTS `schedule_item`
     `long_description_en` TEXT           NULl     DEFAULT NULL COMMENT 'for web',
     `begin`               DATETIME       NULL     DEFAULT NULL,
     `end`                 DATETIME       NULL     DEFAULT NULL,
+    `require_id_number`   BOOL           NOT NULL DEFAULT FALSE,
     INDEX `fk__schedule_item__group` (`schedule_group_id` ASC),
     CONSTRAINT `fk__schedule_item__group`
         FOREIGN KEY (`schedule_group_id`)

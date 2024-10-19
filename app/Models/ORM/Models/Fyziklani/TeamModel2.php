@@ -187,10 +187,9 @@ final class TeamModel2 extends Model implements EventResource
     }
 
     /**
-     * @return GameLang|TeamCategory|TeamState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed
     {
         $value = parent::__get($key);
         switch ($key) {

@@ -44,7 +44,7 @@ final class CodeAttendance extends CodeTransition
     public function __construct(
         Container $container,
         Model $model,
-        FakeStringEnum $targetState,
+        FakeStringEnum|\BackedEnum $targetState,
         Machine $machine
     ) {
         /** @phpstan-ignore-next-line */

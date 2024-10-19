@@ -22,12 +22,12 @@ final class ScheduleHandler
 {
     private PersonScheduleService $service;
     private GettextTranslator $translator;
-    private EventModel $event;
 
-    public function __construct(Container $container, EventModel $event)
-    {
+    public function __construct(
+        Container $container,
+        private readonly EventModel $event
+    ) {
         $container->callInjects($this);
-        $this->event = $event;
     }
 
     public function inject(PersonScheduleService $service, GettextTranslator $translator): void
@@ -121,6 +121,9 @@ final class ScheduleHandler
         // check item capacity
         if (isset($item->capacity) && ($item->capacity <= $item->getUsedCapacity(true))) {
             throw new FullCapacityException($item, $person, $this->translator);
+        }
+        if ($item->require_id_number && !isset($person->getInfo()->id_number)) {
+            throw new RequiredIdNumberException($person, $item);
         }
         $data = [
             'person_id' => $person->person_id,

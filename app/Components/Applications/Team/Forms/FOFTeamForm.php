@@ -8,20 +8,17 @@ use FKSDB\Components\Applications\Team\Forms\Processing\Category\FOFCategoryProc
 use FKSDB\Components\Applications\Team\Forms\Processing\SchoolsPerTeam\SchoolsPerTeam;
 use FKSDB\Components\Applications\Team\Forms\Processing\SendInfoEmail;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamTeacherService;
 use FKSDB\Models\Persons\Resolvers\SelfEventACLResolver;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
@@ -42,34 +39,6 @@ class FOFTeamForm extends TeamForm
     {
         $this->appendTeacherFields($form);
         $this->appendMemberFields($form);
-        foreach ($form->getComponents(true, ReferencedContainer::class) as $component) {
-            /** @var BaseControl $genderField */
-            $genderField = $component['person']['gender'];//@phpstan-ignore-line
-            /** @var BaseControl $idNumberField */
-            $idNumberField = $component['person_info']['id_number'];//@phpstan-ignore-line
-            /** @var SectionContainer $accommodationField */
-            $accommodationField = $component['person_schedule']['accommodation'];//@phpstan-ignore-line
-            /** @var BaseControl $bornField */
-            $bornField = $component['person_info']['born'];//@phpstan-ignore-line
-            /** @var ContainerWithOptions $dayContainer */
-            foreach ($accommodationField->getComponents() as $dayContainer) {
-                /** @var BaseControl $baseComponent */
-                foreach ($dayContainer->getComponents() as $baseComponent) {
-                    $genderField->addConditionOn($baseComponent, Form::FILLED)
-                        ->addRule(Form::FILLED, _('Field %label is required.'));
-                    $genderField->addConditionOn($baseComponent, Form::FILLED)
-                        ->toggle($genderField->getHtmlId() . '-pair');
-                    $idNumberField->addConditionOn($baseComponent, Form::FILLED)
-                        ->addRule(Form::FILLED, _('Field %label is required.'));
-                    $idNumberField->addConditionOn($baseComponent, Form::FILLED)
-                        ->toggle($idNumberField->getHtmlId() . '-pair');
-                    $bornField->addConditionOn($baseComponent, Form::FILLED)
-                        ->addRule(Form::FILLED, _('Field %label is required.'));
-                    $bornField->addConditionOn($baseComponent, Form::FILLED)
-                        ->toggle($bornField->getHtmlId() . '-pair');
-                }
-            }
-        }
     }
 
     private function appendTeacherFields(Form $form): void

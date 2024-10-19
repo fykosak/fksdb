@@ -88,4 +88,9 @@ class FOLTeamForm extends TeamForm
             ],
         ];
     }
+
+    protected function getMemberScheduleDefinition(): ?array
+    {
+        return null;
+    }
 }

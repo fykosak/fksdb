@@ -14,7 +14,6 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Schedule\Input\ScheduleContainer;
-use FKSDB\Components\Schedule\Input\ScheduleHandler;
 use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -49,26 +48,22 @@ use Tracy\Debugger;
 abstract class TeamForm extends ModelForm
 {
     protected const ScheduleContainer = 'schedule'; //phpcs:ignore
-    protected const PersonSubContainer = 'person_id';
+    protected const PersonSubContainer = 'person_id'; //phpcs:ignore
 
     protected ReflectionFactory $reflectionFormFactory;
     protected TeamMachine $machine;
     protected ReferencedPersonFactory $referencedPersonFactory;
-    protected EventModel $event;
     protected TeamService2 $teamService;
     protected TeamMemberService $teamMemberService;
     protected Request $request;
-    protected ?PersonModel $loggedPerson;
 
     public function __construct(
         Container $container,
         ?Model $model,
-        EventModel $event,
-        ?PersonModel $loggedPerson
+        protected readonly EventModel $event,
+        protected readonly ?PersonModel $loggedPerson
     ) {
-        $this->event = $event;
         parent::__construct($container, $model);
-        $this->loggedPerson = $loggedPerson;
     }
 
     /**
@@ -301,7 +296,6 @@ abstract class TeamForm extends ModelForm
         foreach ($team->getMembers()->where('person_id NOT IN', array_keys($persons)) as $oldMember) {
             $this->teamMemberService->disposeModel($oldMember);
         }
-        $handler = new ScheduleHandler($this->container, $this->event);
         foreach ($persons as $person) {
             $oldMember = $team->getMembers()->where('person_id', $person->person_id)->fetch();
             if (!$oldMember) {
@@ -334,7 +328,10 @@ abstract class TeamForm extends ModelForm
     {
         $persons = [];
         for ($member = 0; $member < 5; $member++) {
-            /** @phpstan-var ReferencedId<PersonModel> $referencedId */
+            /**
+             * @phpstan-var ReferencedId<PersonModel> $referencedId
+             * @phpstan-ignore-next-line
+             */
             $referencedId = $form->getComponent('member_' . $member)['person_id'];
             $person = $referencedId->getModel();
             if ($person) {

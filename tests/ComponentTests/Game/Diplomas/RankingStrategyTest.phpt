@@ -82,8 +82,8 @@ class RankingStrategyTest extends FyziklaniTestCase
     {
         return [
             [null],
-            [TeamCategory::tryFrom('A')],
-            [TeamCategory::tryFrom('B')],
+            [TeamCategory::A],
+            [TeamCategory::B],
         ];
     }
 

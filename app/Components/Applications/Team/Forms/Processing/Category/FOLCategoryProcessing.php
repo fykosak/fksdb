@@ -49,15 +49,15 @@ final class FOLCategoryProcessing extends Preprocessing
         [$olds, $years] = FOFCategoryProcessing::getTeamMembersYears($members, $this->event);
         // evaluate stats
         if ($olds > 0) {
-            return TeamCategory::from(TeamCategory::O);
+            return TeamCategory::O;
         } else {
             $avg = FOFCategoryProcessing::getCoefficientAvg($members, $this->event);
             if ($avg <= 2 && $years[StudyYear::High4] === 0 && $years[StudyYear::High3] <= 2) {
-                return TeamCategory::from(TeamCategory::C);
+                return TeamCategory::C;
             } elseif ($avg <= 3 && $years[StudyYear::High4] <= 2) {
-                return TeamCategory::from(TeamCategory::B);
+                return TeamCategory::B;
             } else {
-                return TeamCategory::from(TeamCategory::A);
+                return TeamCategory::A;
             }
         }
     }
