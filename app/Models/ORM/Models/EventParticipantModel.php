@@ -7,6 +7,7 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
@@ -137,14 +138,16 @@ final class EventParticipantModel extends Model implements EventResource, NodeCr
         return $this->event;
     }
 
-    /*
+    /**
      * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
      */
     public function getSchedule(): TypedGroupedSelection
     {
-        return $this->person->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
+        /** @phpstan-var TypedGroupedSelection<PersonScheduleModel> $selection */
+        $selection = $this->person->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
             'schedule_item.schedule_group.event_id',
             $this->event_id
         );
+        return $selection;
     }
 }
