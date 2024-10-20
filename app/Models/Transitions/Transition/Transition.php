@@ -58,7 +58,8 @@ class Transition
 
     public function getId(): string
     {
-        return str_replace('.', '_', $this->source->value) . '__' . str_replace('.', '_', $this->target->value);
+        return str_replace('.', '_', (string)$this->source->value) . '__'
+            . str_replace('.', '_', (string)$this->target->value);
     }
 
     /**
