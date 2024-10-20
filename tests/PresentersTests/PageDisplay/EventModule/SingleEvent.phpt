@@ -22,7 +22,7 @@ class SingleEvent extends EventModuleTestCase
             'name' => 'TEST DSEF',
             'registration_begin' => new \DateTime(),
             'registration_end' => new \DateTime(),
-            'parameters'=>'hashSalt: abcdefgh'
+            'parameters' => 'hashSalt: abcdefgh'
         ];
     }
 
