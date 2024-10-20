@@ -6,7 +6,6 @@ namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\WebService\Models\Contests\OrganizersWebModel;
 use FKSDB\Models\WebService\Models\Events\EventDetailWebModel;
 use FKSDB\Models\WebService\Models\Events\EventListWebModel;
@@ -80,7 +79,6 @@ final class WebServiceModel
     }
 
     /**
-     * @throws GoneException
      * @throws \ReflectionException
      * @throws \SoapFault
      * @phpstan-ignore-next-line

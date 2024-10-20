@@ -6,8 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
-use FKSDB\Components\Grids\Components\BaseGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\StoredQuery\StoredQuery;
@@ -15,8 +14,6 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
-use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 final class ExportPresenter extends BasePresenter
@@ -49,7 +46,11 @@ final class ExportPresenter extends BasePresenter
      */
     public function authorizedExecute(): bool
     {
-        return $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getStoredQuery()->queryPattern, $this->getSelectedContest()),
+            'execute',
+            $this->getSelectedContest()
+        );
     }
 
     /**
@@ -125,35 +126,8 @@ final class ExportPresenter extends BasePresenter
         return new StoredQueryTagCloudComponent($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentEditForm(): Control
-    {
-        throw new NotImplementedException();
-    }
-
     protected function getORMService(): QueryService
     {
         return $this->queryService;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return false;
-    }
-
-    /**
-     * @return never
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new NotImplementedException();
     }
 }

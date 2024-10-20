@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrganizerModule;
 
 use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\TeacherModel;
@@ -14,7 +15,6 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use FKSDB\Modules\Core\PresenterTraits\NoContestYearAvailable;
 use Fykosak\Utils\UI\PageTitle;
-use Nette\Security\Resource;
 
 final class TeacherPresenter extends BasePresenter
 {
@@ -31,6 +31,19 @@ final class TeacherPresenter extends BasePresenter
     /**
      * @throws GoneException
      * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedEdit(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'edit',
+            $this->getSelectedContest()
+        );
+    }
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
      */
     public function titleEdit(): PageTitle
     {
@@ -41,16 +54,51 @@ final class TeacherPresenter extends BasePresenter
         );
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedCreate(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
+            'create',
+            $this->getSelectedContest()
+        );
+    }
     public function titleCreate(): PageTitle
     {
         return new PageTitle(null, _('Create new teacher'), 'fas fa-user-plus');
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
+    public function authorizedList(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResourceId(TeacherModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list',
+            $this->getSelectedContest()
+        );
+    }
     public function titleList(): PageTitle
     {
         return new PageTitle(null, _('Teacher'), 'fas fa-chalkboard-teacher');
     }
 
+    /**
+     * @throws GoneException
+     * @throws NotFoundException
+     * @throws NoContestAvailable
+     */
+    public function authorizedDetail(): bool
+    {
+        return $this->authorizator->isAllowedContest(
+            ContestResourceHolder::fromResource($this->getEntity(), $this->getSelectedContest()),
+            'detail',
+            $this->getSelectedContest()
+        );
+    }
     public function titleDetail(): PageTitle
     {
         return new PageTitle(null, _('Teacher detail'), 'fas fa-chalkboard-teacher');
@@ -88,15 +136,6 @@ final class TeacherPresenter extends BasePresenter
     protected function createComponentEditForm(): TeacherFormComponent
     {
         return new TeacherFormComponent($this->getContext(), $this->getSelectedContestYear(), $this->getEntity());
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
     protected function getORMService(): TeacherService

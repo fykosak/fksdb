@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrganizerModel;
 use FKSDB\Models\ORM\Services\EventOrganizerService;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -25,7 +25,7 @@ class EventOrganizerFormComponent extends ModelForm
     public const CONTAINER = 'container';
 
     private EventOrganizerService $service;
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event, ?EventOrganizerModel $model)
@@ -36,10 +36,10 @@ class EventOrganizerFormComponent extends ModelForm
 
     final public function injectPrimary(
         EventOrganizerService $service,
-        ContestAuthorizator $contestAuthorizator
+        Authorizator $authorizator
     ): void {
         $this->service = $service;
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     protected function configureForm(Form $form): void
@@ -48,7 +48,7 @@ class EventOrganizerFormComponent extends ModelForm
         $referencedId = $this->createPersonId(
             $this->event->getContestYear(),
             !isset($this->model),
-            new AclResolver($this->contestAuthorizator, $this->event->getContestYear()->contest),
+            new ContestACLResolver($this->authorizator, $this->event->getContestYear()->contest),
             $this->getContext()->getParameters()['forms']['adminEventOrganizer']
         );
         $container->addComponent($referencedId, 'person_id');

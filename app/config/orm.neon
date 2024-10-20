@@ -293,11 +293,14 @@ orm:
         service: FKSDB\Models\ORM\Services\FlagService
         model: FKSDB\Models\ORM\Models\FlagModel
     contest_grant:
-        service: FKSDB\Models\ORM\Services\ContestGrantService
-        model: FKSDB\Models\ORM\Models\ContestGrantModel
+        service: FKSDB\Models\ORM\Services\Grant\ContestGrantService
+        model: FKSDB\Models\ORM\Models\Grant\ContestGrantModel
     event_grant:
-        service: FKSDB\Models\ORM\Services\EventGrantService
-        model: FKSDB\Models\ORM\Models\EventGrantModel
+        service: FKSDB\Models\ORM\Services\Grant\EventGrantService
+        model: FKSDB\Models\ORM\Models\Grant\EventGrantModel
+    base_grant:
+        service: FKSDB\Models\ORM\Services\Grant\BaseGrantService
+        model: FKSDB\Models\ORM\Models\Grant\BaseGrantModel
     login:
         service: FKSDB\Models\ORM\Services\LoginService
         model: FKSDB\Models\ORM\Models\LoginModel
@@ -961,6 +964,9 @@ orm:
         service: FKSDB\Models\ORM\Services\Schedule\PersonScheduleService
         model: FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel
         columns:
+            payment_deadline:
+                type: dateTime
+                title: _('Payment deadline')
             payment:
                 type: class
                 title: _('Payment')
@@ -1007,12 +1013,12 @@ orm:
                 title: _('Modification end')
         links:
             detail:
-                destination: :Schedule:Group:detail
+                destination: :EventSchedule:Group:detail
                 params:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.detail')
             edit:
-                destination: :Schedule:Group:edit
+                destination: :EventSchedule:Group:edit
                 params:
                     id: schedule_group_id
                 title: _('button.scheduleGroup.edit')
@@ -1093,13 +1099,13 @@ orm:
                 title: _('Progress bar')
         links:
             detail:
-                destination: :Schedule:Item:detail
+                destination: :EventSchedule:Item:detail
                 params:
                     groupId: schedule_group_id
                     id: schedule_item_id
                 title: _('button.scheduleItem.detail')
             edit:
-                destination: :Schedule:Item:edit
+                destination: :EventSchedule:Item:edit
                 params:
                     groupId: schedule_group_id
                     id: schedule_item_id

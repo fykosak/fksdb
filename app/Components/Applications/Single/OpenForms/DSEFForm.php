@@ -13,6 +13,7 @@ use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Forms\Form;
+use Nette\Utils\DateTime;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -67,7 +68,8 @@ final class DSEFForm extends OpenApplicationForm
                 'required' => false,
                 'label' => _('Accommodation'),
                 'paymentDeadline' => new ConstantIntervalStrategy(
-                    \DateInterval::createFromDateString('+14days')
+                    \DateInterval::createFromDateString('+14days'),
+                    new \DateTime('2024-10-18 23:59:59')
                 )
             ],
             'food' => [
@@ -75,7 +77,8 @@ final class DSEFForm extends OpenApplicationForm
                 'required' => false,
                 'label' => _('Food'),
                 'paymentDeadline' => new ConstantIntervalStrategy(
-                    \DateInterval::createFromDateString('+14days')
+                    \DateInterval::createFromDateString('+14days'),
+                    new \DateTime('2024-10-18 23:59:59')
                 )
             ],
         ];

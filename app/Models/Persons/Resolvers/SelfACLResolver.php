@@ -4,39 +4,39 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Resolvers;
 
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Persons\ResolutionMode;
 use Nette\DI\Container;
-use Nette\Security\Resource;
 use Nette\Security\User;
 
 class SelfACLResolver implements Resolver
 {
-    /** @var Resource|string */
-    private $resource;
+    private ContestResourceHolder $resource;
     private string $privilege;
     private ContestModel $contest;
     private User $user;
 
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
 
-    /**
-     * @param string|Resource $resource
-     */
-    public function __construct($resource, string $privilege, ContestModel $contest, Container $container)
-    {
+    public function __construct(
+        ContestResourceHolder $resource,
+        string $privilege,
+        ContestModel $contest,
+        Container $container
+    ) {
         $this->contest = $contest;
         $this->resource = $resource;
         $this->privilege = $privilege;
         $container->callInjects($this);
     }
 
-    public function inject(ContestAuthorizator $contestAuthorizator, User $user): void
+    public function inject(Authorizator $authorizator, User $user): void
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
         $this->user = $user;
     }
 
@@ -46,10 +46,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return true;
         }
         return false;
@@ -61,10 +61,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return ResolutionMode::from(ResolutionMode::EXCEPTION);
         }
-        if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return ResolutionMode::from(ResolutionMode::OVERWRITE);
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return ResolutionMode::from(ResolutionMode::OVERWRITE);
         }
         return ResolutionMode::from(ResolutionMode::EXCEPTION);
@@ -75,10 +75,10 @@ class SelfACLResolver implements Resolver
         if (!$person) {
             return false;
         }
-        if (
-            $this->contestAuthorizator->isAllowed($this->resource, $this->privilege, $this->contest)
-            || $this->isSelf($person)
-        ) {
+        if ($this->isSelf($person)) {
+            return true;
+        }
+        if ($this->authorizator->isAllowedContest($this->resource, $this->privilege, $this->contest)) {
             return true;
         }
         return false;

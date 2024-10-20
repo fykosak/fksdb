@@ -53,6 +53,21 @@ final class EventTypeModel extends Model
         }
     }
 
+    public function isOpenType(): bool
+    {
+        switch ($this->event_type_id) {
+            case 1: // FOF
+            case 9: // FOL
+            case 11: // setkani 2x
+            case 12:
+            case 2: // DSEF 2x
+            case 14:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public function getParamSchema(): Schema
     {
         switch ($this->event_type_id) {

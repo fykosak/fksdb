@@ -7,8 +7,6 @@ namespace FKSDB\Models\WebService\Models;
 use FKSDB\Components\DataTest\TestLogger;
 use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use Nette\Schema\Elements\Structure;
-use Nette\Schema\Expect;
 
 /**
  * @phpstan-extends WebModel<array{eventId:int},(array{level:string,text:string})[]>

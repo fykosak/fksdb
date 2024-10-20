@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -50,7 +53,7 @@ use Nette\Utils\DateTime;
  *      lunchCount:int|null,
  * }
  */
-final class EventParticipantModel extends Model implements Resource, NodeCreator
+final class EventParticipantModel extends Model implements EventResource, NodeCreator
 {
     public const RESOURCE_ID = 'event.participant';
 
@@ -128,5 +131,23 @@ final class EventParticipantModel extends Model implements Resource, NodeCreator
             'lunchCount' => $this->lunch_count,
         ], $document, $node);
         return $node;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->event;
+    }
+
+    /**
+     * @phpstan-return TypedGroupedSelection<PersonScheduleModel>
+     */
+    public function getSchedule(): TypedGroupedSelection
+    {
+        /** @phpstan-var TypedGroupedSelection<PersonScheduleModel> $selection */
+        $selection = $this->person->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
+            'schedule_item.schedule_group.event_id',
+            $this->event_id
+        );
+        return $selection;
     }
 }

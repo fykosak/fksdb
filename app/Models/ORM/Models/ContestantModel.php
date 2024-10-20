@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Tests\Contestant\ConflictRole;
 use FKSDB\Models\ORM\Tests\Contestant\InvalidCategory;
@@ -11,7 +13,6 @@ use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Nette\DI\Container;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -25,7 +26,7 @@ use Nette\Utils\DateTime;
  * @property-read ContestCategoryModel|null $contest_category
  * @property-read DateTime $created
  */
-final class ContestantModel extends Model implements Resource
+final class ContestantModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'contestant';
 
@@ -87,5 +88,10 @@ final class ContestantModel extends Model implements Resource
             new InvalidCategory($container),
             new ConflictRole($container),
         ];
+    }
+
+    public function getContest(): ContestModel
+    {
+        return $this->contest;
     }
 }

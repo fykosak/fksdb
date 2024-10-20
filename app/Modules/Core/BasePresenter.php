@@ -13,10 +13,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
-use FKSDB\Models\Authorization\Authorizators\BaseAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
-use FKSDB\Models\Authorization\Authorizators\ContestYearAuthorizator;
-use FKSDB\Models\Authorization\Authorizators\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\LoginModel;
@@ -62,10 +60,9 @@ abstract class BasePresenter extends Presenter
 
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
-    protected EventAuthorizator $eventAuthorizator;
+
     protected ContestAuthorizator $contestAuthorizator;
-    protected ContestYearAuthorizator $contestYearAuthorizator;
-    protected BaseAuthorizator $baseAuthorizator;
+    protected Authorizator $authorizator;
 
     final public function injectBase(
         Container $diContainer,
@@ -84,15 +81,11 @@ abstract class BasePresenter extends Presenter
     }
 
     public function injectAuthorizators(
-        EventAuthorizator $eventAuthorizator,
-        ContestYearAuthorizator $contestYearAuthorizator,
         ContestAuthorizator $contestAuthorizator,
-        BaseAuthorizator $baseAuthorizator
+        Authorizator $authorizator
     ): void {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->eventAuthorizator = $eventAuthorizator;
-        $this->baseAuthorizator = $baseAuthorizator;
-        $this->contestYearAuthorizator = $contestYearAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     /**
@@ -104,7 +97,7 @@ abstract class BasePresenter extends Presenter
     {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
-            if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
+            if ($this->isAuthAllowed(AuthMethod::from(AuthMethod::TOKEN))) {
                 $this->tryAuthToken();
             }
             if (!$this->getUser()->isLoggedIn() && $this->isAuthAllowed(AuthMethod::from(AuthMethod::HTTP))) {
@@ -408,6 +401,7 @@ abstract class BasePresenter extends Presenter
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log(sprintf('%s signed in using token %s.', $login->login, $tokenData), 'auth-token');
             $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
+            $this->getUser()->logout(true);
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {

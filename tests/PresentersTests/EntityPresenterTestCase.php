@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Models\Authorization\Roles\ContestRole;
+use FKSDB\Models\Authorization\Roles\Base\ExplicitBaseRole;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ContestGrantService;
+use FKSDB\Models\ORM\Services\Grant\BaseGrantService;
+use FKSDB\Models\ORM\Services\Grant\ContestGrantService;
 use FKSDB\Models\ORM\Services\LoginService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -54,7 +55,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(string $roleId = ContestRole::Cartesian): void
+    protected function loginUser(string $roleId = ExplicitBaseRole::Cartesian): void
     {
         $this->cartesianPerson = $this->container->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
@@ -64,10 +65,15 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         $this->cartesianLogin = $this->container->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
-
-        $this->container->getByType(ContestGrantService::class)->storeModel(
-            ['login_id' => $this->cartesianLogin->login_id, 'role' => $roleId, 'contest_id' => 1]
-        );
+        if ($roleId === ExplicitBaseRole::Cartesian) {
+            $this->container->getByType(BaseGrantService::class)->storeModel(
+                ['login_id' => $this->cartesianLogin->login_id, 'role' => $roleId]
+            );
+        } else {
+            $this->container->getByType(ContestGrantService::class)->storeModel(
+                ['login_id' => $this->cartesianLogin->login_id, 'role' => $roleId, 'contest_id' => 1]
+            );
+        }
         $this->authenticateLogin($this->cartesianLogin, $this->fixture);
     }
 

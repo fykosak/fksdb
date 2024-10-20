@@ -6,14 +6,13 @@ namespace FKSDB\Modules\OrganizerModule\Spam;
 
 use FKSDB\Components\EntityForms\Spam\MailImportComponent;
 use FKSDB\Components\Grids\MailGrid;
+use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Models\ORM\Models\PersonMailModel;
 use FKSDB\Models\ORM\Services\PersonMailService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\NotImplementedException;
-use Nette\Security\Resource;
 
 final class MailPresenter extends BasePresenter
 {
@@ -27,14 +26,15 @@ final class MailPresenter extends BasePresenter
         $this->personMailService = $personMailService;
     }
 
+    /**
+     * @throws NoContestAvailable
+     */
     public function authorizedImport(): bool
     {
-        return $this->traitIsAuthorized($this->getModelResource(), 'import');
-    }
-
-    public function titleList(): PageTitle
-    {
-        return new PageTitle(null, _('Mail'), 'fas fa-envelope');
+        return $this->isAllowed(
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'import'
+        );
     }
 
     public function titleImport(): PageTitle
@@ -43,19 +43,18 @@ final class MailPresenter extends BasePresenter
     }
 
     /**
-     * @throws NotImplementedException
+     * @throws NoContestAvailable
      */
-    protected function createComponentEditForm(): Control
+    public function authorizedList(): bool
     {
-        throw new NotImplementedException();
+        return $this->isAllowed(
+            ContestResourceHolder::fromResourceId(PersonMailModel::RESOURCE_ID, $this->getSelectedContest()),
+            'list'
+        );
     }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentCreateForm(): Control
+    public function titleList(): PageTitle
     {
-        throw new NotImplementedException();
+        return new PageTitle(null, _('Mail'), 'fas fa-envelope');
     }
 
     protected function createComponentGrid(): Control
@@ -71,14 +70,5 @@ final class MailPresenter extends BasePresenter
     protected function getORMService(): PersonMailService
     {
         return $this->personMailService;
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @throws NoContestAvailable
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isAllowed($resource, $privilege);
     }
 }

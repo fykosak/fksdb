@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
@@ -13,7 +17,6 @@ use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
-use Nette\Security\Resource;
 use Nette\Utils\DateTime;
 
 /**
@@ -50,7 +53,7 @@ use Nette\Utils\DateTime;
  *      longDescription:array<string, string>,
  * }
  */
-final class ScheduleItemModel extends Model implements Resource, NodeCreator
+final class ScheduleItemModel extends Model implements EventResource, NodeCreator
 {
     public const RESOURCE_ID = 'event.schedule.item';
 
@@ -191,5 +194,10 @@ final class ScheduleItemModel extends Model implements Resource, NodeCreator
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->schedule_group->event;
     }
 }

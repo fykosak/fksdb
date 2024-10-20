@@ -30,7 +30,8 @@ class StoredQueryTagAssertion implements Assertion
      */
     public function __invoke(Permission $acl): bool
     {
-        $storedQuery = $acl->getQueriedResource();
+        $holder = $acl->getQueriedResource();
+        $storedQuery = $holder->getResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new WrongAssertionException();
         }

@@ -8,11 +8,11 @@ use FKSDB\Components\EntityForms\ModelForm;
 use FKSDB\Components\EntityForms\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\Authorization\Authorizators\ContestAuthorizator;
+use FKSDB\Models\Authorization\Authorizators\Authorizator;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Persons\Resolvers\AclResolver;
+use FKSDB\Models\Persons\Resolvers\ContestACLResolver;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\Logging\Message;
@@ -30,7 +30,7 @@ final class ContestantForm extends ModelForm
     public const CONT_CONTESTANT = 'contestant';
 
     private ContestYearModel $contestYear;
-    private ContestAuthorizator $contestAuthorizator;
+    private Authorizator $authorizator;
 
     public function __construct(ContestYearModel $contestYear, Container $container, ?ContestantModel $model)
     {
@@ -38,9 +38,9 @@ final class ContestantForm extends ModelForm
         $this->contestYear = $contestYear;
     }
 
-    public function inject(ContestAuthorizator $contestAuthorizator): void
+    public function inject(Authorizator $authorizator): void
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->authorizator = $authorizator;
     }
 
     protected function configureForm(Form $form): void
@@ -49,7 +49,7 @@ final class ContestantForm extends ModelForm
         $referencedId = $this->createPersonId(
             $this->contestYear,
             !isset($this->model),
-            new AclResolver($this->contestAuthorizator, $this->contestYear->contest),
+            new ContestACLResolver($this->authorizator, $this->contestYear->contest),
             $this->getContext()->getParameters()['forms']['adminContestant']
         );
         $container->addComponent($referencedId, 'person_id');

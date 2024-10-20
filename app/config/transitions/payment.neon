@@ -26,7 +26,7 @@ transitions:
             in_progress->waiting:
                 label: _('Generate payment')
                 behaviorType: success
-                successLabel: _('Payment information has been succefully created')
+                successLabel: _('Payment instructions have been successfully generated')
                 beforeExecute:
                     - @fykosPayment.symbolGenerator
                     - @priceCalculator
@@ -37,7 +37,7 @@ transitions:
                 condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\AnyContestRole('edit')
                 behaviorType: danger
             waiting->received:
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\AnyContestRole('organizer')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\EventRole('organizer')
                 label: _('Paid')
                 behaviorType: success
                 afterExecute:

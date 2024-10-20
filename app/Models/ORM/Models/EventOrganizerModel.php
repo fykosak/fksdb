@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\Resource\EventResource;
 use Fykosak\NetteORM\Model\Model;
-use Nette\Security\Resource;
 
 /**
  * @property-read int $e_org_id
@@ -15,7 +15,7 @@ use Nette\Security\Resource;
  * @property-read int $person_id
  * @property-read PersonModel $person
  */
-final class EventOrganizerModel extends Model implements Resource
+final class EventOrganizerModel extends Model implements EventResource
 {
 
     public const RESOURCE_ID = 'event.organizer';
@@ -31,5 +31,10 @@ final class EventOrganizerModel extends Model implements Resource
     public function __toString(): string
     {
         return $this->person->__toString();
+    }
+
+    public function getEvent(): EventModel
+    {
+        return $this->event;
     }
 }

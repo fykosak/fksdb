@@ -25,6 +25,9 @@ final class PreviewComponent extends BaseComponent
         $this->team = $team;
     }
 
+    /**
+     * @throws \Throwable
+     */
     final public function handleClose(): void
     {
         $logger = new MemoryLogger();
