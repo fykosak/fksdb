@@ -10,7 +10,6 @@ use FKSDB\Components\Applications\Single\OpenForms\SetkaniForm;
 use FKSDB\Components\Applications\Single\OpenForms\TaborForm;
 use FKSDB\Components\Applications\Single\SingleApplicationsGrid;
 use FKSDB\Components\Controls\Transition\TransitionButtonsComponent;
-use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Event\Import\ImportComponent;
 use FKSDB\Components\Event\MassTransition\MassTransitionComponent;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
@@ -20,9 +19,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -367,21 +364,5 @@ final class ApplicationPresenter extends BasePresenter
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
         return new SinglePersonGrid($this->getContext(), $this->getEntity()->person, $this->getEvent());
-    }
-
-    /**
-     * @throws EventNotFoundException
-     * @throws MachineCodeException
-     */
-    protected function createComponentCode(): CodeSearch
-    {
-        return new CodeSearch(
-            $this->getContext(),
-            fn(PersonModel $model) => $this->redirect(
-                'detail',
-                ['id' => $model->getEventParticipant($this->getEvent())->event_participant_id]
-            ),
-            $this->getEvent()->getSalt()
-        );
     }
 }

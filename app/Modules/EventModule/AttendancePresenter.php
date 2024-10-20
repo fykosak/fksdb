@@ -278,6 +278,7 @@ final class AttendancePresenter extends BasePresenter
      */
     protected function createComponentPersonScheduleGrid(): SinglePersonGrid
     {
+        /** @phpstan-ignore-next-line */
         return new SinglePersonGrid($this->getContext(), $this->getModel()->person, $this->getEvent());
     }
 }
