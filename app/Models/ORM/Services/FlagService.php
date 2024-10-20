@@ -12,7 +12,6 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class FlagService extends Service
 {
-
     public function findByFid(?string $fid): ?FlagModel
     {
         /** @var FlagModel|null $flag */

@@ -13,7 +13,6 @@ use Nette\DI\Container;
  */
 class ResultsGrid extends BaseComponent
 {
-
     private StoredQuery $storedQuery;
 
     public function __construct(StoredQuery $storedQuery, Container $container)

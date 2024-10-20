@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\SchoolModel;
  */
 class SchoolsReportsWebModel extends WebModel
 {
-
     protected function getExpectedParams(): array
     {
         return [];

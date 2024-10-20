@@ -8,5 +8,4 @@ use Nette\InvalidStateException;
 
 class GameException extends InvalidStateException
 {
-
 }

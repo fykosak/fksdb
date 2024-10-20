@@ -17,7 +17,6 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase
 {
-
     private const SELECTOR_CLASS = 'autocomplete-select';
     private const PARAM_NAME = 'acName';
     private const INTERNAL_DELIMITER = ',';

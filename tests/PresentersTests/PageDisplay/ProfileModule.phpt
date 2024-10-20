@@ -10,7 +10,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 class ProfileModule extends AbstractPageDisplayTestCase
 {
-
     public function getPages(): array
     {
         return [

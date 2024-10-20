@@ -13,7 +13,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class AddressSearchContainer extends SearchContainer
 {
-
     protected function createSearchControl(): ?BaseControl
     {
         return null;

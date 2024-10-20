@@ -17,7 +17,6 @@ use Tester\Assert;
 
 class ClosePresenter extends FyziklaniTestCase
 {
-
     private IPresenter $fixture;
 
     protected function setUp(): void

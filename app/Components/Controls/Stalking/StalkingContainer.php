@@ -29,7 +29,6 @@ use Nette\DI\Container;
 
 class StalkingContainer extends BaseComponent
 {
-
     private PersonModel $person;
     private int $userPermission;
 

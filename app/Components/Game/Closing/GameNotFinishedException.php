@@ -9,7 +9,6 @@ use Nette\Http\IResponse;
 
 final class GameNotFinishedException extends GameException
 {
-
     public function __construct(?\Throwable $previous = null)
     {
         parent::__construct(

@@ -31,7 +31,6 @@ use Nette\Utils\Html;
  */
 final class SchoolModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'school';
 
     public function getResourceId(): string

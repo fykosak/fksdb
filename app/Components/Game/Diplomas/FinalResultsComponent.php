@@ -11,7 +11,6 @@ use Nette\DI\Container;
 
 class FinalResultsComponent extends BaseComponent
 {
-
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event)

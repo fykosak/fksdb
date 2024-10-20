@@ -6,5 +6,4 @@ namespace FKSDB\Models\ORM\Services\Exceptions;
 
 class InvalidAddressException extends \InvalidArgumentException
 {
-
 }
