@@ -6,18 +6,17 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
 use FKSDB\Components\Schedule\Input\ScheduleSelectBox;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
 use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Forms\Form;
-use Nette\Utils\DateTime;
 
 /**
  * @method BasePresenter getPresenter($need = true)
- * @phpstan-import-type TMeta from ScheduleContainer
+ * @phpstan-import-type TMeta from SectionContainer
  * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
  */
 final class DSEFForm extends OpenApplicationForm
@@ -38,14 +37,14 @@ final class DSEFForm extends OpenApplicationForm
                 'email' => ['required' => true],
                 'born' => [
                     'required' => true,
-                    'reason' => new LocalizedString([
+                    'reason' => new LangMap([
                         'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
                         'en' => 'For entering laboratories and possibly accommodation',
                     ])
                 ],
                 'id_number' => [
                     'required' => true,
-                    'reason' => new LocalizedString([
+                    'reason' => new LangMap([
                         'cs' => 'Kvůli vstupu na pracoviště a případně ubytování',
                         'en' => 'For entering laboratories and possibly accommodation',
                     ])
@@ -59,23 +58,23 @@ final class DSEFForm extends OpenApplicationForm
     {
         return [
             'excursion' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Excursion)],
+                'filter' => ['types' => [ScheduleGroupType::Excursion]],
                 'required' => false,
-                'label' => _('Excursion'),
+                'label' => new LangMap(['cs' => _('Excursion'), 'en' => _('Excursion')]),
             ],
             'accommodation' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Accommodation)],
+                'filter' => ['types' => [ScheduleGroupType::Accommodation]],
                 'required' => false,
-                'label' => _('Accommodation'),
+                'label' => new LangMap(['cs' => _('Accommodation'), 'en' => _('Accommodation')]),
                 'paymentDeadline' => new ConstantIntervalStrategy(
                     \DateInterval::createFromDateString('+14days'),
                     new \DateTime('2024-10-18 23:59:59')
                 )
             ],
             'food' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Food)],
+                'filter' => ['types' => [ScheduleGroupType::Food]],
                 'required' => false,
-                'label' => _('Food'),
+                'label' => new LangMap(['cs' => _('Food'), 'en' => _('Food')]),
                 'paymentDeadline' => new ConstantIntervalStrategy(
                     \DateInterval::createFromDateString('+14days'),
                     new \DateTime('2024-10-18 23:59:59')
@@ -87,7 +86,7 @@ final class DSEFForm extends OpenApplicationForm
     protected function configureForm(Form $form): void
     {
         parent::configureForm($form);
-        /**  @var ScheduleContainer $scheduleContainer */
+        /**  @var SectionContainer $scheduleContainer */
         $scheduleContainer = $form['event_participant'][self::ScheduleContainer]['excursion']; // @phpstan-ignore-line
         $halfDayComponents = [];
         $fullDayComponents = [];

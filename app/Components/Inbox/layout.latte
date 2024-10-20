@@ -10,7 +10,7 @@
         <th>{_'Person'}</th>
         {foreach $control->getTasks() as $task}
             {varType FKSDB\Models\ORM\Models\TaskModel $task}
-            <th>{$task->label} - {$task->name->getText($lang)}</th>
+            <th>{$task->label} - {$task->name->get($lang)}</th>
         {/foreach}
     </tr>
 {/define}

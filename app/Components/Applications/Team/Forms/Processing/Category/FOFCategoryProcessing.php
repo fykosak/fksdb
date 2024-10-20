@@ -101,11 +101,11 @@ final class FOFCategoryProcessing extends Preprocessing
         }
         $avg = $this->getCoefficientAvg($members, $this->event);
         if ($avg <= 2 && $years[StudyYear::High4] == 0 && $years[StudyYear::High3] <= 2) {
-            return TeamCategory::from(TeamCategory::C);
+            return TeamCategory::C;
         } elseif ($avg <= 3 && $years[StudyYear::High4] <= 2) {
-            return TeamCategory::from(TeamCategory::B);
+            return TeamCategory::B;
         } else {
-            return TeamCategory::from(TeamCategory::A);
+            return TeamCategory::A;
         }
     }
 

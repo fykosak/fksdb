@@ -46,10 +46,10 @@
                             <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                         </td>
                         <td>
-                            {$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
+                            {$schedulePayment->person_schedule->schedule_item->schedule_group->getName()->get($lang)}
                         </td>
                         <td>
-                            {$schedulePayment->person_schedule->schedule_item->name->getText($lang)}
+                            {$schedulePayment->person_schedule->schedule_item->name->get($lang)}
                         </td>
                         <td>
                             {$schedulePayment->person_schedule->person->getFullName()}

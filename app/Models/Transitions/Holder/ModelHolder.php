@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Holder;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model\Model;
 
 /**
  * @phpstan-template TModel of Model
- * @phpstan-template TState of (\FKSDB\Models\Utils\FakeStringEnum&EnumColumn)
+ * @phpstan-template TState of ((FakeStringEnum|\BackedEnum)&EnumColumn)
  */
 interface ModelHolder
 {

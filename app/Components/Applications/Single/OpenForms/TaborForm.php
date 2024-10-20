@@ -7,6 +7,7 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Localization\LangMap;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -46,24 +47,32 @@ final class TaborForm extends OpenApplicationForm
             ],
             'person_history' => [
                 'school_id' => ['required' => true]
-            ],
-            'person_schedule' => [
-                'apparel' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
-                    ],
-                    'required' => true,
-                    'label' => _('Apparel'),
-                ],
-                'transport' => [
-                    'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
-                    ],
-                    'required' => true,
-                    'label' => _('Transport & Ticket'),
-                ],
             ]
+        ];
+    }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'apparel' => [
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Apparel,
+                    ],
+                ],
+                'required' => true,
+                'label' => new LangMap(['cs' => _('Apparel'), 'en' => _('Apparel')]),
+            ],
+            'transport' => [
+                'filter' => [
+                    'types' => [
+                        ScheduleGroupType::Transport,
+                        ScheduleGroupType::Ticket,
+                    ],
+                ],
+                'required' => true,
+                'label' => new LangMap(['cs' => _('Transport & Ticket'), 'en' => _('Transport & Ticket')]),
+            ],
         ];
     }
 

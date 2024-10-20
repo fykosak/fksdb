@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Tests;
 
 use FKSDB\Components\DataTest\TestLogger;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
 
@@ -27,9 +27,9 @@ abstract class Test
     }
 
     /**
-     * @return LocalizedString<'cs'|'en'>|null
+     * @return LangMap<'cs'|'en',string>|null
      */
-    public function getDescription(): ?LocalizedString
+    public function getDescription(): ?LangMap
     {
         return null;
     }

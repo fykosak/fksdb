@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Utils\Html;
 
 /**
@@ -19,10 +18,7 @@ class LocalizedStringColumnFactory extends AbstractColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        $localizedString = $model->{$this->modelAccessKey};
-        if (!$localizedString instanceof LocalizedString) {
-            throw new BadTypeException(LocalizedString::class, $localizedString);
-        }
-        return Html::el('span')->addText($localizedString->getText($this->translator->lang));
+        $localizedString = $model->{$this->modelAccessKey . '_' . $this->translator->lang};
+        return Html::el('span')->addText($localizedString);
     }
 }

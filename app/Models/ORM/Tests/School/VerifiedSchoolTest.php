@@ -9,7 +9,7 @@ use FKSDB\Components\DataTest\TestMessage;
 use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Tests\Test;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\Title;
 
@@ -23,9 +23,9 @@ final class VerifiedSchoolTest extends Test
         return new Title(null, _('Verified school'));
     }
 
-    public function getDescription(): ?LocalizedString
+    public function getDescription(): ?LangMap
     {
-        return new LocalizedString([
+        return new LangMap([
             'en' => 'Check if school is verified.',
             'cs' => '',
         ]);

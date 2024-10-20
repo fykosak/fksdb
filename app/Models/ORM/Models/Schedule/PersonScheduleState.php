@@ -5,42 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class PersonScheduleState extends FakeStringEnum implements EnumColumn
+enum PersonScheduleState: string implements EnumColumn
 {
-    // phpcs:disable
-    public const Participated = 'participated';
-    public const Missed = 'missed';
-    public const Cancelled = 'cancelled';
-    public const Applied = 'applied';
-
-    // phpcs:enable
-    public static function cases(): array
-    {
-        return [
-            new self(self::Participated),
-            new self(self::Missed),
-            new self(self::Cancelled),
-            new self(self::Applied),
-        ];
-    }
+    case Participated = 'participated';
+    case Missed = 'missed';
+    case Canceled = 'canceled';
+    case Applied = 'applied';
 
     public function behaviorType(): string
     {
-        switch ($this->value) {
-            case self::Participated:
-                return 'success';
-            case self::Missed:
-                return 'danger';
-            case self::Cancelled:
-                return 'secondary';
-            case self::Applied:
-            default:
-                return 'primary';
-        }
+        return match ($this) {
+            self::Participated => 'success',
+            self::Missed => 'danger',
+            self::Canceled => 'secondary',
+            default => 'primary',
+        };
     }
 
     public function badge(): Html
@@ -57,7 +39,7 @@ final class PersonScheduleState extends FakeStringEnum implements EnumColumn
                 return _('Participated');
             case self::Missed:
                 return _('Missed');
-            case self::Cancelled:
+            case self::Canceled:
                 return _('Cancelled');
             default:
             case self::Applied:

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\Schedule;
 
-use FKSDB\Components\Schedule\Input\Handler;
+use FKSDB\Components\Schedule\Input\ScheduleHandler;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
@@ -18,7 +18,7 @@ use Fykosak\Utils\Localization\GettextTranslator;
 
 abstract class HandlerTestCase extends DatabaseTestCase
 {
-    protected Handler $handler;
+    protected ScheduleHandler $handler;
     protected PersonModel $tester;
     protected ScheduleGroupModel $group;
 
@@ -37,7 +37,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
         $this->personScheduleService = $this->container->getByType(PersonScheduleService::class);
         $this->itemService = $this->container->getByType(ScheduleItemService::class);
         $this->groupService = $this->container->getByType(ScheduleGroupService::class);
-        $this->handler = new Handler($this->container);
+
         $this->tester = $this->createPerson('Tester', 'testorovič');
         /** @var EventModel $event */
         $event = $this->container->getByType(EventService::class)->storeModel([
@@ -50,6 +50,7 @@ abstract class HandlerTestCase extends DatabaseTestCase
             'registration_end' => (new \DateTime())->add(new \DateInterval('P1D')),
             'name' => 'Test FOL opened',
         ]);
+        $this->handler = new ScheduleHandler($this->container, $event);
         $this->group = $this->groupService->storeModel([
             'schedule_group_type' => 'accommodation',
             'name_cs' => 'name CS',

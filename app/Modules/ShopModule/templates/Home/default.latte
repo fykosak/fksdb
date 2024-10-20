@@ -44,10 +44,10 @@
                                                     <i class="{$schedulePayment->person_schedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                                                 </td>
                                                 <td>
-                                                    {$schedulePayment->person_schedule->schedule_item->schedule_group->name->getText($lang)}
+                                                    {$schedulePayment->person_schedule->schedule_item->schedule_group->getName()->get($lang)}
                                                 </td>
                                                 <td>
-                                                    {$schedulePayment->person_schedule->schedule_item->name->getText($lang)}
+                                                    {$schedulePayment->person_schedule->schedule_item->name->get($lang)}
                                                 </td>
                                                 <td>
                                                     {$schedulePayment->person_schedule->schedule_item->getPrice()}
@@ -80,7 +80,7 @@
         <div class="container">
             <h2>{_'Rests for events'}</h2>
             {foreach $rests as $eventId => $eventRests}
-                <h3>{$events[$eventId]->getName()->getText($lang)}</h3>
+                <h3>{$events[$eventId]->getName()->get($lang)}</h3>
                 {foreach $eventRests as $personId => $personRests}
                     <h4>{$persons[$personId]->getFullName()}</h4>
                     <table class="table table-striped table-hover">
@@ -102,10 +102,10 @@
                                     <i class="{$personSchedule->schedule_item->schedule_group->schedule_group_type->getIconName()}"></i>
                                 </td>
                                 <td>
-                                    {$personSchedule->schedule_item->schedule_group->name->getText($lang)}
+                                    {$personSchedule->schedule_item->schedule_group->getName()->get($lang)}
                                 </td>
                                 <td>
-                                    {$personSchedule->schedule_item->name->getText($lang)}</td>
+                                    {$personSchedule->schedule_item->name->get($lang)}</td>
                                 <td>
                                     {$personSchedule->schedule_item->getPrice()}
                                 </td>

@@ -1,5 +1,5 @@
-import { LangMap } from '@translator/translator';
-import { ScheduleItemModel } from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
+import {LangMap} from '@translator/translator';
+import {ScheduleItemModel} from 'FKSDB/Models/ORM/Models/Schedule/schedule-item-model';
 
 export interface ScheduleGroupModel {
     items: ScheduleItemModel[];
@@ -12,6 +12,8 @@ export interface ScheduleGroupModel {
     registrationBegin: string | null;
     registrationEnd: string | null;
     modificationEnd: string | null;
+    requireIdNumber: boolean;
+    paymentDeadline: string | null;
 }
 
 export type ScheduleGroupType =

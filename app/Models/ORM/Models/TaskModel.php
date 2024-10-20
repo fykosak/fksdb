@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestYearResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\Localization\GettextTranslator;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Utils\DateTime;
 use Nette\Utils\Strings;
 
@@ -20,7 +19,7 @@ use Nette\Utils\Strings;
  * @property-read string $label
  * @property-read string|null $name_cs
  * @property-read string|null $name_en
- * @property-read LocalizedString $name
+ * @property-read LangMap<'cs'|'en',string> $name
  * @property-read int $contest_id
  * @property-read ContestModel $contest
  * @property-read int $year
@@ -43,6 +42,9 @@ final class TaskModel extends Model implements ContestYearResource
 {
     public const RESOURCE_ID = 'task';
 
+    /**
+     * @param GettextTranslator<'cs'|'en'> $translator
+     */
     public function getFullLabel(
         GettextTranslator $translator,
         bool $includeContest = false,
@@ -70,7 +72,7 @@ final class TaskModel extends Model implements ContestYearResource
                     $label .= $this->series . Utils::ordinal($this->series) . ' series ';
                 }
         }
-        return $label . $this->label . ' - ' . $this->name->getText('en');
+        return $label . $this->label . ' - ' . $this->name->get('en');
     }
 
     /**
@@ -110,14 +112,13 @@ final class TaskModel extends Model implements ContestYearResource
     }
 
     /**
-     * @return mixed
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         switch ($key) {
             case 'name':
-                $value = new LocalizedString(['cs' => $this->name_cs, 'en' => $this->name_en]);
+                $value = new LangMap(['cs' => $this->name_cs, 'en' => $this->name_en]);
                 break;
             default:
                 $value = parent::__get($key);

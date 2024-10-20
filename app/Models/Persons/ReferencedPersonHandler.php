@@ -6,10 +6,8 @@ namespace FKSDB\Models\Persons;
 
 use FKSDB\Components\Forms\Referenced\Address\AddressHandler;
 use FKSDB\Components\Schedule\Input\FullCapacityException;
-use FKSDB\Components\Schedule\Input\Handler;
 use FKSDB\Components\Schedule\Input\ScheduleException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\FlagService;
@@ -42,11 +40,8 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     private PersonHasFlagService $personHasFlagService;
     private ?ContestYearModel $contestYear;
-    private Handler $eventScheduleHandler;
     private FlagService $flagService;
     private Container $container;
-
-    private EventModel $event;
 
     public function __construct(?ContestYearModel $contestYear, ResolutionMode $resolution)
     {
@@ -56,7 +51,6 @@ class ReferencedPersonHandler extends ReferencedHandler
 
     public function inject(
         Container $container,
-        Handler $eventScheduleHandler,
         PersonService $personService,
         PersonInfoService $personInfoService,
         PersonHistoryService $personHistoryService,
@@ -65,7 +59,6 @@ class ReferencedPersonHandler extends ReferencedHandler
         FlagService $flagService
     ): void {
         $this->container = $container;
-        $this->eventScheduleHandler = $eventScheduleHandler;
         $this->personService = $personService;
         $this->personInfoService = $personInfoService;
         $this->personHistoryService = $personHistoryService;
@@ -100,11 +93,6 @@ class ReferencedPersonHandler extends ReferencedHandler
             $this->innerStore($person, $values);
             return $person;
         }
-    }
-
-    public function setEvent(EventModel $event): void
-    {
-        $this->event = $event;
     }
 
     /**
@@ -147,10 +135,6 @@ class ReferencedPersonHandler extends ReferencedHandler
             }
             if (isset($data['person_has_flag'])) {
                 $this->storeFlags($person, (array)$data['person_has_flag']);
-            }
-
-            if (isset($data['person_schedule'])) {
-                $this->eventScheduleHandler->handle($data['person_schedule'], $person, $this->event);
             }
         });
     }

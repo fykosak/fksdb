@@ -39,17 +39,17 @@ class FinalResultsComponent extends BaseComponent
 
     protected function createComponentResultsCategoryAGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::A), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::A, $this->getContext());
     }
 
     protected function createComponentResultsCategoryBGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::B), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::B, $this->getContext());
     }
 
     protected function createComponentResultsCategoryCGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, TeamCategory::from(TeamCategory::C), $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::C, $this->getContext());
     }
 
     protected function createComponentResultsTotalGrid(): ResultsTotalGrid

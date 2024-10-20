@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Controls\ReferencedIdMode;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Referenced\Address\AddressDataContainer;
-use FKSDB\Components\Schedule\Input\ScheduleContainer;
+use FKSDB\Components\Schedule\Input\SectionContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\OmittedControlException;
@@ -22,7 +22,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\ResolutionMode;
 use FKSDB\Models\Persons\Resolvers\Resolver;
 use Fykosak\NetteORM\Model\Model;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -32,16 +32,13 @@ use Nette\InvalidArgumentException;
 
 /**
  * @phpstan-extends ReferencedContainer<PersonModel>
- * @phpstan-import-type TMeta from ScheduleContainer
  * @phpstan-type EvaluatedFieldMetaData array{
  *     required?:bool,
  *     caption?:string|null,
  *     description?:string|null,
- *     reason?:LocalizedString<'cs'|'en'>
+ *     reason?:LangMap<'cs'|'en',string>
  * }
- * @phpstan-type EvaluatedFieldsDefinition array<string,array<string,EvaluatedFieldMetaData>> & array{
- * person_schedule?:array<string,TMeta>
- * }
+ * @phpstan-type EvaluatedFieldsDefinition array<'person'|'person_info'|'person_history'|'post_contact_d'|'post_contact_p'|'person_has_flag',array<string,EvaluatedFieldMetaData>>
  */
 class ReferencedPersonContainer extends ReferencedContainer
 {
@@ -52,7 +49,6 @@ class ReferencedPersonContainer extends ReferencedContainer
     protected PersonService $personService;
     protected ReflectionFactory $reflectionFactory;
     protected FlagFactory $flagFactory;
-    protected ?EventModel $event;
 
     /**
      * @phpstan-param EvaluatedFieldsDefinition $fieldsDefinition
@@ -62,14 +58,12 @@ class ReferencedPersonContainer extends ReferencedContainer
         Resolver $resolver,
         ?ContestYearModel $contestYear,
         array $fieldsDefinition,
-        ?EventModel $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);
         $this->resolver = $resolver;
         $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
-        $this->event = $event;
     }
 
     final public function injectPrimary(
@@ -92,9 +86,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
-            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) { // @phpstan-ignore-line
+            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('label', _('Delivery address'));
-            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) { // @phpstan-ignore-line
+            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
@@ -102,8 +96,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $subContainer->setOption('label', $label);
             }
             if (
-                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY || // @phpstan-ignore-line
-                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT // @phpstan-ignore-line
+                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
+                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT
             ) {
                 if (isset($fields['address'])) {
                     $control = new AddressDataContainer(
@@ -149,7 +143,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                 continue;
             }
             /**
-             * @var BaseControl|ContainerWithOptions|AddressDataContainer|ScheduleContainer $component
+             * @var BaseControl|ContainerWithOptions|AddressDataContainer|SectionContainer $component
              * @var string $fieldName
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
@@ -157,8 +151,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     $model,
                     $sub,
                     $fieldName,
-                    $this->contestYear,
-                    $this->event
+                    $this->contestYear
                 );
                 $controlModifiable = isset($value) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
@@ -187,8 +180,6 @@ class ReferencedPersonContainer extends ReferencedContainer
                 } else {
                     if ($component instanceof AddressDataContainer) {
                         $component->setModel($value ? $value->address : null, $mode);
-                    } elseif ($component instanceof ScheduleContainer) {
-                        $component->setPerson($model);
                     } elseif (
                         $this->getReferencedId()->searchContainer->isSearchSubmitted()
                         || ($mode->value === ReferencedIdMode::FORCE)
@@ -212,19 +203,13 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException
-     * @phpstan-param EvaluatedFieldMetaData|TMeta $metadata
+     * @phpstan-param EvaluatedFieldMetaData $metadata
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent
     {
         switch ($sub) {
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
-            case 'person_schedule':
-                return new ScheduleContainer(
-                    $this->container,
-                    $this->event,
-                    $metadata //@phpstan-ignore-line
-                );
             case 'person':
             case 'person_info':
                 $control = $this->reflectionFactory->createField($sub, $fieldName);
@@ -308,22 +293,16 @@ class ReferencedPersonContainer extends ReferencedContainer
         return false;
     }
 
-    /**
-     * @return mixed
-     */
     private static function getPersonValue(
         ?PersonModel $person,
         string $sub,
         string $field,
         ?ContestYearModel $contestYear = null,
-        ?EventModel $event = null
-    ) {
+    ): mixed {
         if (!$person) {
             return null;
         }
         switch ($sub) {
-            case 'person_schedule':
-                return $person->getSerializedSchedule($event, $field);
             case 'person':
                 return $person->{$field};
             case 'person_info':

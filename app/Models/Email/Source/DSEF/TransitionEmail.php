@@ -31,7 +31,7 @@ final class TransitionEmail extends ParticipantTransitionEmail
             'blind_carbon_copy' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
             'sender' => 'Den s experimentální fyzikou <dsef@fykos.cz>',
             'topic' => EmailMessageTopic::from(EmailMessageTopic::DSEF),
-            'lang' => Language::from(Language::CS),
+            'lang' => Language::CS,
         ];
     }
 
@@ -48,6 +48,6 @@ final class TransitionEmail extends ParticipantTransitionEmail
 
     protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
-        return Language::from(Language::CS);
+        return Language::CS;
     }
 }

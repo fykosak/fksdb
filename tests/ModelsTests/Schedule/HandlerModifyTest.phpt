@@ -27,7 +27,7 @@ class HandlerModifyTest extends HandlerTestCase
         $this->personToItem($this->item1, 2);
         $this->personToItem($this->item2, 2);
         $this->personToItem($this->item3, 2);
-        $this->handler->saveGroup($this->tester, $this->group, $this->item2->schedule_item_id);
+        $this->handler->saveGroup($this->tester, $this->group->schedule_group_id, $this->item2->schedule_item_id, []);
         Assert::equal(3, $this->item2->getInterested()->count('*'));
         Assert::equal(2, $this->item1->getInterested()->count('*'));
     }
@@ -38,7 +38,7 @@ class HandlerModifyTest extends HandlerTestCase
         $this->personToItem($this->item2, 5);
         $this->personToItem($this->item3, 2);
         Assert::exception(
-            fn() => $this->handler->saveGroup($this->tester, $this->group, $this->item2->schedule_item_id),
+            fn() => $this->handler->saveGroup($this->tester, $this->group->schedule_group_id, $this->item2->schedule_item_id, []),
             FullCapacityException::class
         );
     }
@@ -48,7 +48,7 @@ class HandlerModifyTest extends HandlerTestCase
         $this->personToItem($this->item1, 10);
         $this->personToItem($this->item2, 10);
         $this->personToItem($this->item3, 2);
-        $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id);
+        $this->handler->saveGroup($this->tester, $this->group->schedule_group_id, $this->item3->schedule_item_id, []);
         Assert::equal(10, $this->item1->getInterested()->count('*'));
         Assert::equal(3, $this->item3->getInterested()->count('*'));
     }
@@ -63,7 +63,7 @@ class HandlerModifyTest extends HandlerTestCase
         $this->personToItem($this->item2, 2);
         $this->personToItem($this->item3, 2);
         Assert::exception(
-            fn() => $this->handler->saveGroup($this->tester, $this->group, $this->item3->schedule_item_id),
+            fn() => $this->handler->saveGroup($this->tester, $this->group->schedule_group_id, $this->item3->schedule_item_id, []),
             ScheduleException::class
         );
         Assert::equal(2, $this->item3->getInterested()->count('*'));

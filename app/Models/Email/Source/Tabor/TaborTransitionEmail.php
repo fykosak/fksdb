@@ -27,7 +27,7 @@ abstract class TaborTransitionEmail extends ParticipantTransitionEmail
 
     final protected function getLang(ParticipantHolder $holder, Transition $transition): Language
     {
-        return Language::from(Language::CS);
+        return Language::CS;
     }
 
     final protected function getData(ParticipantHolder $holder, Transition $transition): array
@@ -35,7 +35,7 @@ abstract class TaborTransitionEmail extends ParticipantTransitionEmail
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
             'topic' => EmailMessageTopic::from(EmailMessageTopic::Vyfuk),
-            'lang' => Language::from(Language::CS),
+            'lang' => Language::CS,
         ];
     }
 }

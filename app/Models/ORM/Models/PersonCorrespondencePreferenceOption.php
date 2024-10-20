@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
@@ -46,28 +46,28 @@ final class PersonCorrespondencePreferenceOption extends FakeStringEnum implemen
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>
+     * @phpstan-return LangMap<'cs'|'en',string>
      */
-    public function description(): LocalizedString
+    public function description(): LangMap
     {
         switch ($this->value) {
             case self::SpamContest:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Informace o seminářích a akcích pořádaných FYKOSem a Výfukem',
                     'en' => 'Information about competitions and events of FYKOS and Výfuk',
                 ]);
             case self::SpamMff:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Informace o akcích, seminářích a táborech pořádaných ostatními semináři nebo MFF UK',
                     'en' => 'Information about events, competitions and camps organized by other seminars or MFF CUNI',
                 ]);
             case self::SpamOther:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Relevantní informace od našich partnerů',
                     'en' => 'Relevant information from our partners',
                 ]);
             case self::SpamPost:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Letáčky a další materiály zasílané fyzicky poštou',
                     'en' => 'Posters and other materials sent by post'
                 ]);

@@ -23,7 +23,7 @@ final class PendingTeams extends Test
      */
     protected function innerRun(TestLogger $logger, Model $model, string $id): void
     {
-        if ($model->state->value === TeamState::Pending) {
+        if ($model->state === TeamState::Pending) {
             $logger->log(
                 new TestMessage(
                     $id,

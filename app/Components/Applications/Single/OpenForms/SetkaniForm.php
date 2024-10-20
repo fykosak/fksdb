@@ -7,17 +7,14 @@ namespace FKSDB\Components\Applications\Single\OpenForms;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Localization\LangMap;
 
 /**
  * @method BasePresenter getPresenter($need = true)
- * @phpstan-import-type EvaluatedFieldsDefinition from ReferencedPersonContainer
+ * @phpstan-import-type EvaluatedFieldMetaData from ReferencedPersonContainer
  */
 final class SetkaniForm extends OpenApplicationForm
 {
-
-    /**
-     * @phpstan-return EvaluatedFieldsDefinition
-     */
     protected function getPersonFieldsDefinition(): array
     {
         return [
@@ -36,23 +33,31 @@ final class SetkaniForm extends OpenApplicationForm
                 'phone_parent_d' => ['required' => false],
                 'phone' => ['required' => true]
             ],
-            'person_schedule' => [
-                'apparel' => [
+        ];
+    }
+
+    protected function getScheduleDefinition(): ?array
+    {
+        return [
+            'apparel' => [
+                'filter' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                        ScheduleGroupType::Apparel,
                     ],
-                    'required' => true,
-                    'label' => _('Apparel'),
                 ],
-                'transport' => [
+                'required' => true,
+                'label' => new LangMap(['cs' => _('Apparel'), 'en' => _('Apparel')]),
+            ],
+            'transport' => [
+                'filter' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                        ScheduleGroupType::Transport,
+                        ScheduleGroupType::Ticket,
                     ],
-                    'required' => true,
-                    'label' => _('Transport & Ticket'),
                 ],
-            ]
+                'required' => true,
+                'label' => new LangMap(['cs' => _('Transport & Ticket'), 'en' => _('Transport & Ticket')]),
+            ],
         ];
     }
 

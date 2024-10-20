@@ -23,7 +23,7 @@ class PaymentTransitionEmail extends TransitionEmailSource
         $holder = $params['holder'];
         /** @phpstan-var  Transition<PaymentHolder> $transition */
         $transition = $params['transition'];
-        $lang = Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN);
+        $lang = Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN->value);
         return [
             [
                 'template' => [
@@ -38,7 +38,7 @@ class PaymentTransitionEmail extends TransitionEmailSource
                     'blind_carbon_copy' => 'DSEF <dsef@fykos.cz>',
                     'sender' => 'DSEF <dsef@fykos.cz>',
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::DSEF),
-                    'lang' => Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN),
+                    'lang' => Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN->value),
                 ],
             ]
         ];

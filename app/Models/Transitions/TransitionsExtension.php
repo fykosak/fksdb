@@ -57,7 +57,7 @@ class TransitionsExtension extends CompilerExtension
                     'afterExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'beforeExecute' => Expect::listOf(Helpers::createExpressionSchemaType()),
                     'behaviorType' => Expect::anyOf(...array_map(fn($case) => $case->value, BehaviorType::cases()))
-                        ->default(BehaviorType::DEFAULT),
+                        ->default(BehaviorType::Default),
                     'onFail' => Expect::listOf(Helpers::createExpressionSchemaType()),
                 ])->castTo('array'),
                 Expect::string()
@@ -131,7 +131,7 @@ class TransitionsExtension extends CompilerExtension
     }
 
     /**
-     * @phpstan-template TEnum of (EnumColumn&FakeStringEnum)
+     * @phpstan-template TEnum of (EnumColumn&FakeStringEnum)|(EnumColumn&\BackedEnum)
      * @phpstan-param class-string<TEnum> $enumClassName
      * @phpstan-return array{TEnum[],TEnum}
      */

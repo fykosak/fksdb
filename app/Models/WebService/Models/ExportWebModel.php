@@ -68,7 +68,6 @@ class ExportWebModel extends WebModel implements SoapWebModel
         }
 
         try {
-            /** @phpstan-ignore-next-line */
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($args->qid, $parameters);
         } catch (\InvalidArgumentException $exception) {
             throw new \SoapFault('Sender', $exception->getMessage(), (string)$exception);

@@ -5,7 +5,7 @@
 
 <p>
     {if $model->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br />
-    potvrzujeme tvé přijetí na akci <em>{$model->event->getName()->getText('cs')}</em>,
+    potvrzujeme tvé přijetí na akci <em>{$model->event->getName()->get('cs')}</em>,
     která se koná
     {if $model->event->end && $model->event->end->getTimestamp() !==
     $model->event->begin->getTimestamp()}

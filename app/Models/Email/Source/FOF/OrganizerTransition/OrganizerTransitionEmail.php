@@ -38,7 +38,7 @@ final class OrganizerTransitionEmail extends TransitionEmailSource
                     'sender' => 'Fyziklání <fyziklani@fykos.cz>',
                     'recipient' => 'Fyziklání <fyziklani@fykos.cz>',
                     'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
-                    'lang' => Language::from(Language::CS),
+                    'lang' => Language::CS,
                 ]
             ]
         ];

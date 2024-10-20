@@ -6,7 +6,7 @@
 <p>
     {if $model->person->gender->value == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br />
     obdrželi jsme tvoji přihlášku na jméno {$model->person->getFullName()}
-    na akci <em>{$model->event->getName()->getText('cs')}</em>, která se koná
+    na akci <em>{$model->event->getName()->get('cs')}</em>, která se koná
     {if $model->event->end && $model->event->end->getTimestamp() !==
     $model->event->begin->getTimestamp()}
     {$model->event->begin|date:'j. n. Y'} – {$model->event->end|date:'j. n. Y'}.

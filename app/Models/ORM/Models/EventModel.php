@@ -24,7 +24,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
-use Fykosak\Utils\Localization\LocalizedString;
+use Fykosak\Utils\Localization\LangMap;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
@@ -44,10 +44,10 @@ use Nette\Utils\DateTime;
  * @property-read string $name
  * @property-read string|null $report_cs
  * @property-read string|null $report_en
- * @property-read LocalizedString $report
+ * @property-read LangMap<'cs'|'en',string> $report
  * @property-read string|null $description_cs
  * @property-read string|null $description_en
- * @property-read LocalizedString $description
+ * @property-read LangMap<'cs'|'en',string> $description
  * @property-read string|null $place
  * @property-read string|null $parameters
  * @phpstan-type SerializedEventModel array{
@@ -82,10 +82,9 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     private const TEAM_EVENTS = [1, 9, 13, 17];
     public const RESOURCE_ID = 'event';
     private const POSSIBLY_ATTENDING_STATES = [
-        TeamState::Participated,
-        TeamState::Spare,
-        TeamState::Applied,
-        TeamState::Arrived,
+        EventParticipantStatus::PARTICIPATED,
+        EventParticipantStatus::SPARE,
+        EventParticipantStatus::APPLIED,
     ];
 
     public function getContestYear(): ContestYearModel
@@ -157,7 +156,7 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     public function getParticipatingTeams(): TypedGroupedSelection
     {
         /** @phpstan-var TypedGroupedSelection<TeamModel2> $selection */
-        $selection = $this->getTeams()->where('state', TeamState::Participated);
+        $selection = $this->getTeams()->where('state', TeamState::Participated->value);
         return $selection;
     }
 
@@ -202,13 +201,13 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     {
         switch ($key) {
             case 'report':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->report_cs,
                     'en' => $this->report_en,
                 ]);
                 break;
             case 'description':
-                $value = new LocalizedString([
+                $value = new LangMap([
                     'cs' => $this->description_cs,
                     'en' => $this->description_en,
                 ]);
@@ -225,25 +224,25 @@ final class EventModel extends Model implements EventResource, ContestYearResour
     }
 
     /**
-     * @phpstan-return LocalizedString<'cs'|'en'>
+     * @phpstan-return LangMap<'cs'|'en',string>
      */
-    public function getName(): LocalizedString
+    public function getName(): LangMap
     {
         switch ($this->event_type_id) {
             case 4:
             case 5:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => $this->event_type->name . ' ' . $this->place, // TODO
                     'en' => $this->event_type->name . ' ' . $this->place, // TODO
                 ]);
             case 1:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Fyziklání ' . $this->begin->format('Y'),
                     'en' => 'Fyziklani ' . $this->begin->format('Y'),
                 ]);
             case 2:
             case 14:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'DSEF ' .
                         ($this->begin->format('m') < ContestYearService::FIRST_AC_MONTH ? 'jaro' : 'podzim') . ' ' .
                         $this->begin->format('Y'),
@@ -252,12 +251,12 @@ final class EventModel extends Model implements EventResource, ContestYearResour
                         $this->begin->format('Y'),
                 ]);
             case 9:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => 'Fyziklání Online ' . $this->begin->format('Y'),
                     'en' => 'Physics Brawl Online ' . $this->begin->format('Y'),
                 ]);
             default:
-                return new LocalizedString([
+                return new LangMap([
                     'cs' => $this->name,
                     'en' => $this->name,
                 ]);

@@ -33,29 +33,29 @@ class GraphComponent extends FrontEndComponent implements Chart
      */
     final public function getData(): array
     {
-        $edges = [];
+        $links = [];
         $nodes = [];
         foreach ($this->machine->getTransitions()->toArray() as $transition) {
-            if (!isset($nodes[$transition->source->value])) {
-                $nodes[$transition->source->value] = [
+            if (!isset($nodes[(string)$transition->source->value])) {
+                $nodes[(string)$transition->source->value] = [
                     'label' => $transition->source->label(),
                     'type' => 'default',
                 ];
             }
-            if (!isset($nodes[$transition->target->value])) {
-                $nodes[$transition->target->value] = [
+            if (!isset($nodes[(string)$transition->target->value])) {
+                $nodes[(string)$transition->target->value] = [
                     'label' => $transition->target->label(),
                     'type' => 'default',
                 ];
             }
-            $edges[] = [
-                'from' => $transition->source->value,
-                'to' => $transition->target->value,
+            $links[] = [
+                'from' => (string)$transition->source->value,
+                'to' => (string)$transition->target->value,
                 'label' => $transition->label->toHtml(),
                 'behaviorType' => $transition->behaviorType->value,
             ];
         }
-        return ['nodes' => $nodes, 'links' => $edges];
+        return ['nodes' => $nodes, 'links' => $links];
     }
 
     public function getTitle(): Title

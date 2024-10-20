@@ -79,8 +79,8 @@ final class ItemPresenter extends BasePresenter
             null,
             \sprintf(
                 _('%s of %s '),
-                $this->getEntity()->name->getText($this->translator->lang),
-                $this->getEntity()->schedule_group->name->getText($this->translator->lang)
+                $this->getEntity()->name->get($this->translator->lang),
+                $this->getEntity()->schedule_group->getName()->get($this->translator->lang)
             ),
             'fas fa-clipboard'
         );
@@ -109,7 +109,7 @@ final class ItemPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            \sprintf(_('Edit item "%s"'), $this->getEntity()->name->getText($this->translator->lang)),
+            \sprintf(_('Edit item "%s"'), $this->getEntity()->name->get($this->translator->lang)),
             'fas fa-pen'
         );
     }

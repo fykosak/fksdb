@@ -28,7 +28,7 @@ abstract class CodeTransition extends CodeForm
     protected Machine $machine;
 
     /** @phpstan-var TState */
-    protected FakeStringEnum $targetState;
+    protected FakeStringEnum|\BackedEnum $targetState;
 
     /**
      * @phpstan-param TState $targetState
@@ -36,7 +36,7 @@ abstract class CodeTransition extends CodeForm
      */
     public function __construct(
         Container $container,
-        FakeStringEnum $targetState,
+        FakeStringEnum|\BackedEnum $targetState,
         Machine $machine
     ) {
         parent::__construct($container);
