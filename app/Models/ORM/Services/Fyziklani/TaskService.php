@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class TaskService extends Service
 {
-
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
         /** @var TaskModel|null $task */

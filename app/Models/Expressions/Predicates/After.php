@@ -13,7 +13,6 @@ use Nette\InvalidStateException;
  */
 class After extends EvaluatedExpression
 {
-
     /** @phpstan-var (callable(ArgType):\DateTimeInterface)|\DateTimeInterface */
     private $datetime;
 

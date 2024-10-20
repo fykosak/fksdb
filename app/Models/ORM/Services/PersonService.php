@@ -13,7 +13,6 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class PersonService extends Service
 {
-
     public function findByEmail(?string $email): ?PersonModel
     {
         /** @var PersonModel|null $person */

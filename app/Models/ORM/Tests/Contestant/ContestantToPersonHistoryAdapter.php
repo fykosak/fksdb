@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Model\Model;
  */
 final class ContestantToPersonHistoryAdapter extends Adapter
 {
-
     protected function getModels(Model $model): iterable
     {
         return [$model->getPersonHistory()];

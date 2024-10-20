@@ -9,7 +9,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 final class DispatchPresenter extends \FKSDB\Modules\Core\BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('List of events'), 'fas fa-calendar-alt');

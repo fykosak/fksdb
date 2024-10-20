@@ -16,7 +16,6 @@ use Nette\Utils\Html;
 
 final class DiplomasPresenter extends BasePresenter
 {
-
     public function titleResults(): PageTitle
     {
         return new PageTitle(null, _('Results for diplomas'), 'fas fa-trophy');

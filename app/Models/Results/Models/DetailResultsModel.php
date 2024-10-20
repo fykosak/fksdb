@@ -13,7 +13,6 @@ use Nette\InvalidStateException;
  */
 class DetailResultsModel extends AbstractResultsModel
 {
-
     protected int $series;
     /**
      * @phpstan-var array<string,array<int,array{label:string,limit:float|int|null,alias:string}>>

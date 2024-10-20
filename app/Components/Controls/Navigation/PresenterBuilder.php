@@ -13,7 +13,6 @@ use Nette\Application\UI\Presenter;
 
 class PresenterBuilder
 {
-
     private IPresenterFactory $presenterFactory;
     /**
      * @phpstan-var array<string,IPresenter>

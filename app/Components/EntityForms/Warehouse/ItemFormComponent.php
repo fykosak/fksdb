@@ -35,7 +35,6 @@ use Nette\Forms\Form;
  */
 final class ItemFormComponent extends ModelForm
 {
-
     private ProductService $productService;
     private ItemService $itemService;
     private ContestModel $contest;

@@ -19,7 +19,6 @@ use Nette\Utils\Html;
  */
 class EventTypeColumnFactory extends ColumnFactory
 {
-
     /**
      * @throws BadTypeException
      */

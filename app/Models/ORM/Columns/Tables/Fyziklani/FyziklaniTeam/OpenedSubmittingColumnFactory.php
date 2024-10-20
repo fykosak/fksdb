@@ -14,7 +14,6 @@ use Nette\Utils\Html;
  */
 class OpenedSubmittingColumnFactory extends AbstractColumnFactory
 {
-
     /**
      * @param TeamModel2 $model
      */

@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
 {
-
     private EventModel $event;
 
     public function __construct(Container $context, EventModel $event)

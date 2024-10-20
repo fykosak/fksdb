@@ -30,7 +30,6 @@ use Nette\Forms\Form;
  */
 class ScheduleItemForm extends ModelForm
 {
-
     public const CONTAINER = 'container';
 
     private ScheduleItemService $scheduleItemService;

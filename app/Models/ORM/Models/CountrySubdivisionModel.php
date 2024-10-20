@@ -15,5 +15,4 @@ use Fykosak\NetteORM\Model\Model;
  */
 final class CountrySubdivisionModel extends Model
 {
-
 }

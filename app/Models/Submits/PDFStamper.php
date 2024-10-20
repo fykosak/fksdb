@@ -16,7 +16,6 @@ use setasign\Fpdi\PdfReader\PdfReaderException;
 
 class PDFStamper implements StorageProcessing
 {
-
     private string $inputFile;
 
     private string $outputFile;

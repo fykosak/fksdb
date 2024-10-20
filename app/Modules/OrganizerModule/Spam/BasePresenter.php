@@ -10,7 +10,6 @@ use Fykosak\Utils\UI\Title;
 
 abstract class BasePresenter extends \FKSDB\Modules\OrganizerModule\BasePresenter
 {
-
     /**
      * @throws NoContestAvailable
      */

@@ -9,7 +9,6 @@ use Nette\Utils\Html;
 
 class SQLConsole extends TextArea
 {
-
     protected const CSS_CLASS = 'sql-console';
 
     public function getControl(): Html
