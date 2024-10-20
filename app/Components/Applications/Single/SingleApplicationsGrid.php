@@ -39,7 +39,7 @@ class SingleApplicationsGrid extends BaseGrid
         switch ($this->event->event_type_id) {
             case 2:
             case 14:
-            return [];
+                return [];
         }
         return [
             'price',

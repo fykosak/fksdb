@@ -10,7 +10,6 @@ use Nette\Database\Row;
 
 class AggregatedSeriesChart extends AbstractPerSeriesChart
 {
-
     private Explorer $explorer;
 
     public function injectSecondary(Explorer $explorer): void

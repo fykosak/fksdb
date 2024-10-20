@@ -9,7 +9,6 @@ use Fykosak\Utils\Logging\Message;
 
 final class BehaviorType extends FakeStringEnum
 {
-
     public const SUCCESS = Message::LVL_SUCCESS;
     public const WARNING = Message::LVL_WARNING;
     public const DANGEROUS = Message::LVL_ERROR;

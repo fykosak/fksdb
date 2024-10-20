@@ -17,7 +17,6 @@ use Fykosak\NetteORM\Model\Model;
  */
 final class EventOrganizerModel extends Model implements EventResource
 {
-
     public const RESOURCE_ID = 'event.organizer';
 
     public function getResourceId(): string

@@ -14,7 +14,6 @@ use Nette\Application\ForbiddenRequestException;
 
 class SubmitsPreviewComponent extends SeriesTableComponent
 {
-
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitHandlerFactory): void

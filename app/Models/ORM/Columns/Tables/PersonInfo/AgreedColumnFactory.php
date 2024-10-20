@@ -17,7 +17,6 @@ use Nette\Utils\Html;
  */
 class AgreedColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = new Checkbox($this->getTitle());

@@ -19,7 +19,6 @@ use Fykosak\Utils\UI\Title;
  */
 final class PostgraduateStudyTest extends Test
 {
-
     public function getTitle(): Title
     {
         return new Title(null, _('Postgraduate study'));

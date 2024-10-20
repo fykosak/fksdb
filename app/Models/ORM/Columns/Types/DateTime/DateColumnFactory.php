@@ -14,7 +14,6 @@ use Nette\Forms\Controls\BaseControl;
  */
 class DateColumnFactory extends AbstractDateTimeColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         return new DateInput($this->getTitle());

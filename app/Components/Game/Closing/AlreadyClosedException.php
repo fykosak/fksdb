@@ -10,7 +10,6 @@ use Nette\Http\IResponse;
 
 final class AlreadyClosedException extends GameException
 {
-
     public function __construct(TeamModel2 $team, ?\Throwable $previous = null)
     {
         parent::__construct(

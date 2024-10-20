@@ -9,7 +9,6 @@ use Fykosak\Utils\UI\Title;
 
 class PerSeriesChart extends AbstractPerSeriesChart
 {
-
     private SubmitService $submitService;
 
     public function injectSecondary(SubmitService $submitService): void

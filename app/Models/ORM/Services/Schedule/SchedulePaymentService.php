@@ -19,7 +19,6 @@ use Fykosak\Utils\Localization\GettextTranslator;
  */
 final class SchedulePaymentService extends Service
 {
-
     /**
      * @phpstan-param array<array<int,bool>> $data
      * @throws EmptyDataException

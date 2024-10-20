@@ -9,7 +9,6 @@ use Nette\Http\IResponse;
 
 class NotImplementedException extends BadRequestException
 {
-
     public function __construct(?string $message = null, ?\Throwable $previous = null)
     {
         parent::__construct(
