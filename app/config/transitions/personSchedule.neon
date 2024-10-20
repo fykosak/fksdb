@@ -13,7 +13,11 @@ transitions:
                 label: _('Missed')
                 behaviorType: danger
             applied->cancelled:
-                label: _('Cancel')
-                behaviorType: danger
-
-
+                 condition: FKSDB\Models\Expressions\Logic\LogicAnd(
+                                FKSDB\Models\Transitions\Transition\Statements\Conditions\IsScheduleGroupModifiable(),
+                                FKSDB\Models\Expressions\Logic\Not(
+                                    FKSDB\Models\Transitions\Transition\Statements\Conditions\HasPersonSchedulePayment()
+                                )
+                                )
+                 label: _('Cancel')
+                 behaviorType: danger
