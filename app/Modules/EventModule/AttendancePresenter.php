@@ -12,6 +12,7 @@ use FKSDB\Components\Event\CodeSearch\CodeSearch;
 use FKSDB\Components\Game\Seating\Single;
 use FKSDB\Components\Schedule\Rests\PersonRestComponent;
 use FKSDB\Components\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Schedule\SinglePersonGrid;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
@@ -61,6 +62,7 @@ final class AttendancePresenter extends BasePresenter
     public function renderDetail(): void
     {
         $this->template->model = $this->getModel();
+        $this->template->isOrganizer = true;
     }
 
     /**
@@ -268,5 +270,14 @@ final class AttendancePresenter extends BasePresenter
         } else {
             return new TestsList($this->getContext(), [], false); // @phpstan-ignore-line
         }
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NotFoundException
+     */
+    protected function createComponentPersonScheduleGrid(): SinglePersonGrid
+    {
+        return new SinglePersonGrid($this->getContext(), $this->getModel()->person, $this->getEvent());
     }
 }
