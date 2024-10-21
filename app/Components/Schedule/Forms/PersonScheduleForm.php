@@ -64,7 +64,7 @@ final class PersonScheduleForm extends ModelForm
         $items = [];
         /** @var ScheduleGroupModel $group */
         foreach ($this->event->getScheduleGroups() as $group) {
-            if ($group->schedule_group_type->value === ScheduleGroupType::Info) {
+            if ($group->schedule_group_type === ScheduleGroupType::Info) {
                 continue;
             }
             $subItems = [];

@@ -6,8 +6,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -98,10 +96,9 @@ final class ScheduleGroupModel extends Model implements EventResource, NodeCreat
     }
 
     /**
-     * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         switch ($key) {
             case 'schedule_group_type':

@@ -117,8 +117,8 @@ class FOFTeamForm extends TeamForm
             'person_schedule' => [
                 'accommodation' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                        ScheduleGroupType::from(ScheduleGroupType::AccommodationTeacher),
+                        ScheduleGroupType::Accommodation,
+                        ScheduleGroupType::AccommodationTeacher,
                     ],
                     'required' => false,
                     'collapseSelf' => true,
@@ -127,9 +127,9 @@ class FOFTeamForm extends TeamForm
                 ],
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::TeacherPresent),
-                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                        ScheduleGroupType::from(ScheduleGroupType::Info),
+                       ScheduleGroupType::TeacherPresent,
+                       ScheduleGroupType::Weekend,
+                        ScheduleGroupType::Info,
                     ],
                     'required' => false,
                     'collapseChild' => true,
@@ -166,8 +166,8 @@ class FOFTeamForm extends TeamForm
             'person_schedule' => [
                 'accommodation' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Accommodation),
-                        ScheduleGroupType::from(ScheduleGroupType::AccommodationGender),
+                        ScheduleGroupType::Accommodation,
+                       ScheduleGroupType::AccommodationGender,
                     ],
                     'required' => false,
                     'collapseSelf' => true,
@@ -176,8 +176,8 @@ class FOFTeamForm extends TeamForm
                 ],
                 'schedule' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Weekend),
-                        ScheduleGroupType::from(ScheduleGroupType::Info),
+                       ScheduleGroupType::Weekend,
+                       ScheduleGroupType::Info,
                     ],
                     'required' => false,
                     'collapseChild' => true,

@@ -25,7 +25,7 @@ class Schedule extends EventModuleTestCase
         $this->scheduleGroup = $this->container
             ->getByType(ScheduleGroupService::class)
             ->storeModel([
-                'schedule_group_type' => ScheduleGroupType::Accommodation,
+                'schedule_group_type' => ScheduleGroupType::Accommodation->value,
                 'name_cs' => 'name CS',
                 'name_en' => 'name EN',
                 'event_id' => $this->event->event_id,

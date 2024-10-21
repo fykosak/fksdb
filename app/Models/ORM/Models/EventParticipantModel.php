@@ -92,10 +92,9 @@ final class EventParticipantModel extends Model implements EventResource, NodeCr
     }
 
     /**
-     * @return EventParticipantStatus|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

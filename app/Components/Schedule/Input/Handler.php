@@ -61,7 +61,7 @@ class Handler
             return;
         }
         if ($value) {
-            if ($group->schedule_group_type->value === ScheduleGroupType::Info) {
+            if ($group->schedule_group_type === ScheduleGroupType::Info) {
                 throw new ScheduleException($group, _('Info block cannot be selected'));
             }
             /** @var ScheduleItemModel|null $item */
