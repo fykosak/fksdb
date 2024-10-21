@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
+use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 

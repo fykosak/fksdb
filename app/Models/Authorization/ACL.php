@@ -369,16 +369,16 @@ final class ACL
 
     private static function createPayment(Permission $permission): void
     {
-        $permission->addResource(PaymentModel::RESOURCE_ID);
+        $permission->addResource(PaymentModel::ResourceId);
         $permission->allow(
             LoggedInRole::RoleId,
-            PaymentModel::RESOURCE_ID,
+            PaymentModel::ResourceId,
             'detail',
             new OwnPaymentAssertion()
         );
         $permission->allow(
             LoggedInRole::RoleId,
-            PaymentModel::RESOURCE_ID,
+            PaymentModel::ResourceId,
             'edit',
             new LogicAnd(
                 new OwnPaymentAssertion(),
@@ -391,10 +391,10 @@ final class ACL
                 TeamTeacherRole::RoleId,
                 ScheduleParticipant::RoleId,
             ],
-            PaymentModel::RESOURCE_ID,
+            PaymentModel::ResourceId,
             'create'
         );
-        $permission->allow(ExplicitContestRole::Treasurer, PaymentModel::RESOURCE_ID);
+        $permission->allow(ExplicitContestRole::Treasurer, PaymentModel::ResourceId);
     }
 
     private static function createGame(Permission $permission): void

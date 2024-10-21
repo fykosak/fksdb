@@ -41,7 +41,7 @@ final class AdminPresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(PaymentModel::ResourceId, $this->getEvent()),
             'organizer',
             $this->getEvent()
         );
@@ -124,7 +124,7 @@ final class AdminPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
+            ContestResourceHolder::fromResourceId(PaymentModel::ResourceId, $this->getContest()),
             'organizer',
             $this->getContest()
         );
@@ -138,7 +138,7 @@ final class AdminPresenter extends BasePresenter
     public function authorizedSchedule(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getContest()),
+            ContestResourceHolder::fromResourceId(PaymentModel::ResourceId, $this->getContest()),
             'organizer',
             $this->getContest()
         );
