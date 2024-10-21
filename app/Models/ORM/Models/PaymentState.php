@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class PaymentState extends FakeStringEnum implements EnumColumn
+enum PaymentState: string implements EnumColumn
 {
-    public const WAITING = 'waiting'; // waiting for confirm payment
-    public const RECEIVED = 'received'; // payment received
-    public const CANCELED = 'canceled'; // payment canceled
-    public const IN_PROGRESS = 'in_progress';
-    public const INIT = 'init'; // virtual state for correct ORM
+    case Waiting = 'waiting'; // waiting for confirm payment
+    case Received = 'received'; // payment received
+    case Canceled = 'canceled'; // payment canceled
+    case InProgress = 'in_progress';
+    case Init = 'init'; // virtual state for correct ORM
 
     public function badge(): Html
     {
@@ -26,43 +25,32 @@ final class PaymentState extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::IN_PROGRESS:
+        switch ($this) {
+            case self::InProgress:
                 return _('In progress');
-            case self::WAITING:
+            case self::Waiting:
                 return _('Waiting for paying');
-            case self::RECEIVED:
+            case self::Received:
                 return _('Payment received');
             default:
-            case self::CANCELED:
+            case self::Canceled:
                 return _('Payment canceled');
         }
     }
 
     public function behaviorType(): string
     {
-        switch ($this->value) {
-            case self::IN_PROGRESS:
+        switch ($this) {
+            case self::InProgress:
                 return 'primary';
-            case self::WAITING:
+            case self::Waiting:
                 return 'warning';
-            case self::RECEIVED:
+            case self::Received:
                 return 'success';
             default:
-            case self::CANCELED:
+            case self::Canceled:
                 return 'secondary';
         }
-    }
-
-    public static function cases(): array
-    {
-        return [
-            new self(self::WAITING),
-            new self(self::RECEIVED),
-            new self(self::CANCELED),
-            new self(self::IN_PROGRESS),
-            new self(self::INIT),
-        ];
     }
 
     public function title(): Title

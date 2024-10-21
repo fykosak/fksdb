@@ -12,7 +12,6 @@ use FKSDB\Models\Transitions\TransitionsMachineFactory;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\Application\UI\Template;
-use Tracy\Debugger;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
@@ -54,7 +53,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         static $payments;
         if (!isset($payments)) {
             $person = $this->getLoggedPerson();
-            $payments = $person->getPayments()->where('state', PaymentState::IN_PROGRESS);
+            $payments = $person->getPayments()->where('state', PaymentState::InProgress->value);
         }
         return $payments;
     }

@@ -28,15 +28,10 @@ final class PaymentTransitions implements TransitionsDecorator
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
-        foreach (
-            [
-                PaymentState::from(PaymentState::IN_PROGRESS),
-                PaymentState::from(PaymentState::WAITING),
-            ] as $state
-        ) {
+        foreach ([PaymentState::InProgress, PaymentState::Waiting] as $state) {
             $transition = $machine->getTransitions()
                 ->filterBySource($state)
-                ->filterByTarget(PaymentState::from(PaymentState::CANCELED))
+                ->filterByTarget(PaymentState::Canceled)
                 ->select();
             $transition->beforeExecute[] = function (PaymentHolder $holder): void {
                 Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');

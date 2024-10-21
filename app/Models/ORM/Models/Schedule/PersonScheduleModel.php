@@ -51,7 +51,7 @@ final class PersonScheduleModel extends Model implements EventResource
         if (!$payment) {
             return false;
         }
-        return $payment->state->value === PaymentState::RECEIVED;
+        return $payment->state === PaymentState::Received;
     }
 
     /**

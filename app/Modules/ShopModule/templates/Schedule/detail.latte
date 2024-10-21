@@ -4,12 +4,12 @@
     <div class="panel color-auto">
         <div class="container">
             {var $progress = 0}
-            {switch $model->state->value}
-                {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
+            {switch $model->state}
+                {case FKSDB\Models\ORM\Models\PaymentState::InProgress}
                 {php $progress = 1}
-                {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
+                {case FKSDB\Models\ORM\Models\PaymentState::Waiting}
                 {php $progress = 2}
-                {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+                {case FKSDB\Models\ORM\Models\PaymentState::Received}
                 {php $progress = 3}
             {/switch}
             {*<div class="state-line mt-3 mb-3">
@@ -25,8 +25,8 @@
                         <span>{_'Payment received'}</span>
                     </div>
             </div>*}
-            {switch $model->state->value}
-                {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
+            {switch $model->state}
+                {case FKSDB\Models\ORM\Models\PaymentState::Waiting}
                 {if $lang === 'cs'}
                     <p>
                         O přijetí a úspěšném zpracování platby budete informováni e-mailem. Pokud potvrzení neobdržíte zhruba
@@ -39,7 +39,7 @@
                         <a href="mailto:dsef@fykos.org">dsef@fykos.org</a>.
                     </p>
                 {/if}
-            {case FKSDB\Models\ORM\Models\PaymentState::IN_PROGRESS}
+            {case FKSDB\Models\ORM\Models\PaymentState::InProgress}
                 {if $lang === 'cs'}
                     <p>
                         Platba je nyní rozpracovaná; pokud jste vybrali všechny položky, které chcete zaplatit, přejděte k
@@ -52,7 +52,7 @@
                         completely canceled.
                     </p>
                 {/if}
-            {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+            {case FKSDB\Models\ORM\Models\PaymentState::Received}
                 {if $lang === 'cs'}
                     <p>Platbu jsme úspěšně přijali, děkujeme!</p>
                 {else}
@@ -88,7 +88,7 @@
             </div>
         </div>
     {/if}
-    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
+    {if $model->state === FKSDB\Models\ORM\Models\PaymentState::Waiting && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Scan and pay'}</h2>

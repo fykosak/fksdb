@@ -482,7 +482,7 @@ final class PersonModel extends Model implements Resource
         /** @var PersonScheduleModel $pSchedule */
         foreach ($schedule as $pSchedule) {
             $payment = $pSchedule->getPayment();
-            if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
+            if (!$payment || $payment->state !== PaymentState::Received) {
                 $toPay[] = $pSchedule;
             }
         }
