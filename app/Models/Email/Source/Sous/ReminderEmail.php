@@ -60,7 +60,7 @@ final class ReminderEmail extends UIEmailSource
     {
         $source = $this->eventParticipantService->getTable()
             ->where('event_id', $params['event_id'])
-            ->where('status', [EventParticipantStatus::INVITED, EventParticipantStatus::SPARE]);
+            ->where('status', [EventParticipantStatus::Invited->value, EventParticipantStatus::Spare->value]);
         $data = [];
         /** @var EventParticipantModel $participant */
         foreach ($source as $participant) {

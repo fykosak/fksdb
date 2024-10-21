@@ -6,12 +6,12 @@ namespace FKSDB\Components\Schedule\Attendance;
 
 use FKSDB\Components\Transitions\Code\CodeTransition;
 use FKSDB\Models\MachineCode\MachineCodeException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleState;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
-use Fykosak\NetteORM\Model\Model;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
@@ -33,7 +33,7 @@ final class CodeAttendance extends CodeTransition
      * @throws BadRequestException
      * @throws MachineCodeException
      */
-    protected function resolveModel(Model $model): PersonScheduleModel
+    protected function resolveModel(PersonModel|TeamModel2 $model): PersonScheduleModel
     {
         if (!$model instanceof PersonModel) {
             throw new MachineCodeException(_('Unsupported code type'));

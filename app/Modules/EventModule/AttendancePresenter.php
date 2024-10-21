@@ -24,9 +24,9 @@ use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\Model\Model;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -35,7 +35,6 @@ use Nette\Utils\Html;
 
 /**
  * @phpstan-template TTeamEvent of bool
- * @phpstan-import-type TSupportedModel from MachineCode
  */
 final class AttendancePresenter extends BasePresenter
 {
@@ -124,8 +123,7 @@ final class AttendancePresenter extends BasePresenter
     {
         return new CodeSearch(
             $this->getContext(),
-            /** @phpstan-param TSupportedModel $model */
-            function (Model $model): void {
+            function (PersonModel|TeamModel2 $model): void {
                 if ($model instanceof TeamModel2 && $this->getEvent()->isTeamEvent()) {
                     $application = $model;
                 } elseif ($model instanceof PersonModel && !$this->getEvent()->isTeamEvent()) {
@@ -146,7 +144,6 @@ final class AttendancePresenter extends BasePresenter
     }
 
     /**
-     * @phpstan-return (TTeamEvent is true?CodeAttendance<TeamModel2>:CodeAttendance<EventParticipantModel>)
      * @throws NotFoundException
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
@@ -160,14 +157,14 @@ final class AttendancePresenter extends BasePresenter
                 $this->getContext(),
                 $model,
                 TeamState::from(TeamState::Arrived),
-                $this->getMachine() //@phpstan-ignore-line
+                $this->getMachine()
             );
         } else {
             return new CodeAttendance(
                 $this->getContext(),
                 $model,
-                EventParticipantStatus::from(EventParticipantStatus::PARTICIPATED),
-                $this->getMachine() //@phpstan-ignore-line
+                EventParticipantStatus::Participated,
+                $this->getMachine()
             );
         }
     }
@@ -177,7 +174,7 @@ final class AttendancePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotFoundException
      */
-    private function getModel(): Model
+    private function getModel(): TeamModel2|EventParticipantModel
     {
         static $model;
         if (isset($this->id) && !isset($model)) {
@@ -222,10 +219,10 @@ final class AttendancePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotImplementedException
      * @phpstan-return (TTeamEvent is true
-     * ?\FKSDB\Models\Transitions\Machine\TeamMachine
-     * :Machine<\FKSDB\Models\Transitions\Holder\ParticipantHolder>)
+     * ?TeamMachine
+     * :EventParticipantMachine)
      */
-    private function getMachine(): Machine
+    private function getMachine(): TeamMachine|EventParticipantMachine
     {
         return $this->eventDispatchFactory->getEventMachine($this->getEvent());
     }

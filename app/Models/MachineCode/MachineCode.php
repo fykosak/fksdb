@@ -4,28 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\MachineCode;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\Model\Model;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Service\Service;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
-/**
- * @phpstan-type TSupportedModel = (
- *     \FKSDB\Models\ORM\Models\PersonModel
- *     |\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2)
- */
 final class MachineCode
 {
     private const CIP_ALGO = 'aes-256-cbc';
 
     /**
-     * @phpstan-param TSupportedModel $model
      * @throws MachineCodeException
-     * @throws NotImplementedException
      * @throws BadRequestException
      */
-    public static function createModelHash(Model $model, string $salt): string
+    public static function createModelHash(PersonModel|TeamModel2 $model, string $salt): string
     {
         $type = MachineCodeType::fromModel($model);
         $modelCode = $type->value . $model->getPrimary();
@@ -37,10 +30,9 @@ final class MachineCode
     }
 
     /**
-     * @phpstan-return TSupportedModel $model
      * @throws MachineCodeException
      */
-    public static function parseModelHash(Container $container, string $code, string $salt): Model
+    public static function parseModelHash(Container $container, string $code, string $salt): PersonModel|TeamModel2
     {
         $data = self::parseStringHash($code, $salt);
         if (!preg_match('/([A-Z]{2})([0-9]+)/', $data, $matches)) {
@@ -48,7 +40,7 @@ final class MachineCode
         }
         [, $type, $id] = $matches;
         $type = MachineCodeType::from($type);
-        /** @var Service<TSupportedModel> $service */
+        /** @var Service<PersonModel|TeamModel2> $service */
         $service = $container->getByType($type->getServiceClassName());
         $model = $service->findByPrimary($id);
         if (!$model) {

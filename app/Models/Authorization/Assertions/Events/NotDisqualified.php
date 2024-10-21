@@ -22,7 +22,7 @@ class NotDisqualified implements Assertion
             return $application->state->value !== TeamState::Disqualified;
         }
         if ($application instanceof EventParticipantModel) {
-            return $application->status->value !== EventParticipantStatus::DISQUALIFIED;
+            return $application->status !== EventParticipantStatus::Disqualified;
         }
         throw new WrongAssertionException();
     }

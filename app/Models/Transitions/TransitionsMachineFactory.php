@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Machine\EmailMachine;
 use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Machine\PersonScheduleMachine;
 use FKSDB\Models\Transitions\Machine\TeamMachine;
@@ -87,10 +86,9 @@ class TransitionsMachineFactory
     }
 
     /**
-     * @phpstan-return EventParticipantMachine|TeamMachine
      * @throws NotImplementedException
      */
-    public function getEventMachine(EventModel $event): Machine
+    public function getEventMachine(EventModel $event): TeamMachine|EventParticipantMachine
     {
         if ($event->isTeamEvent()) {
             return $this->getTeamMachine($event);

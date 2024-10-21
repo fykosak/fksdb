@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\MachineCode;
 
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\PersonService;
-use Fykosak\NetteORM\Model\Model;
 use Fykosak\NetteORM\Service\Service;
-use Nette\Application\BadRequestException;
 
-/**
- * @phpstan-import-type TSupportedModel from MachineCode
- */
 enum MachineCodeType: string
 {
     case Person = 'PE';
     case Team = 'TE';
 
     /**
-     * @phpstan-return class-string<Service<TSupportedModel>>
+     * @phpstan-return class-string<Service<EventParticipantModel|TeamModel2>>
      */
     public function getServiceClassName(): string
     {
@@ -32,17 +28,12 @@ enum MachineCodeType: string
         };
     }
 
-    /**
-     * @throws BadRequestException
-     * @phpstan-param TSupportedModel $model
-     */
-    public static function fromModel(Model $model): self
+    public static function fromModel(PersonModel|TeamModel2 $model): self
     {
         if ($model instanceof PersonModel) {
             return self::Person;
-        } elseif ($model instanceof TeamModel2) {
+        } else {
             return self::Team;
         }
-        throw new BadRequestException(_('Wrong type of code.')); //@phpstan-ignore-line
     }
 }

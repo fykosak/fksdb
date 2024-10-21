@@ -6,20 +6,18 @@ namespace FKSDB\Components\Event\CodeSearch;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
 use FKSDB\Models\MachineCode\MachineCode;
-use Fykosak\NetteORM\Model\Model;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
-/**
- * @phpstan-import-type TSupportedModel from MachineCode
- */
 final class CodeSearch extends CodeForm
 {
-    /** @phpstan-var callable(TSupportedModel):void */
+    /** @phpstan-var callable(PersonModel|TeamModel2):void */
     private $callback;
     private string $salt;
 
-    /** @phpstan-param callable(TSupportedModel):void $callback */
+    /** @phpstan-param callable(PersonModel|TeamModel2):void $callback */
     public function __construct(Container $container, callable $callback, string $salt)
     {
         parent::__construct($container);
@@ -27,7 +25,7 @@ final class CodeSearch extends CodeForm
         $this->salt = $salt;
     }
 
-    protected function innerHandleSuccess(Model $model, Form $form): void
+    protected function innerHandleSuccess(PersonModel|TeamModel2 $model, Form $form): void
     {
         ($this->callback)($model);
     }

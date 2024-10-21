@@ -139,7 +139,7 @@ abstract class InvitationApplicationForm extends BaseComponent
         } else {
             $holder = null;
             $transitions = $machine->getTransitions()
-                ->filterBySource(EventParticipantStatus::from(EventParticipantStatus::INIT));
+                ->filterBySource(EventParticipantStatus::Init);
         }
         foreach ($transitions->toArray() as $transition) {
             $submit = new TransitionSubmitButton($transition, $holder);
