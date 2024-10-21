@@ -46,7 +46,6 @@ final class ScheduleHandler
      */
     public function handle(array $data, array $definition, PersonModel $person): void
     {
-
         foreach ($definition as $key => $definitionDatum) {
             $datum = $data[$key] ?? [];
             foreach ($datum as $dayGroup) {
@@ -115,7 +114,7 @@ final class ScheduleHandler
         }
 
         // check group capacity
-        if (!$group->hasFreeCapacity()) {
+        if (!$personSchedule && !$group->hasFreeCapacity()) {
             throw new FullCapacityException($item, $person, $this->translator);
         }
         // check item capacity
