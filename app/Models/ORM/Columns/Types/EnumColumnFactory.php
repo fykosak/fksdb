@@ -18,7 +18,6 @@ use Nette\Utils\Html;
  */
 class EnumColumnFactory extends ColumnFactory
 {
-
     /** @phpstan-var class-string<EnumColumn&FakeStringEnum> */
     private string $className;
 

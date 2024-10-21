@@ -6,5 +6,4 @@ namespace FKSDB\Models\Authentication\Exceptions;
 
 class ChangeInProgressException extends \Exception
 {
-
 }

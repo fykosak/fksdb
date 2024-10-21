@@ -22,7 +22,6 @@ use Tester\Assert;
 
 abstract class EntityPresenterTestCase extends DatabaseTestCase
 {
-
     protected PersonModel $cartesianPerson;
     protected LoginModel $cartesianLogin;
     protected Presenter $fixture;

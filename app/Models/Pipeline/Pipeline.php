@@ -13,7 +13,6 @@ use Fykosak\Utils\Logging\MemoryLogger;
  */
 class Pipeline
 {
-
     /** @phpstan-var Stage<TData>[] */
     public array $stages = [];
 

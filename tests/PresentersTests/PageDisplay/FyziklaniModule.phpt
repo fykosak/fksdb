@@ -13,7 +13,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 class FyziklaniModule extends EventModuleTestCase
 {
-
     protected function getEventData(): array
     {
         return [

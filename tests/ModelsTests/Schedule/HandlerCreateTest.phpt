@@ -13,7 +13,6 @@ use Tester\Assert;
 
 class HandlerCreateTest extends HandlerTestCase
 {
-
     public function testCapacityOk(): void
     {
         $this->personToItem($this->item1, 2);

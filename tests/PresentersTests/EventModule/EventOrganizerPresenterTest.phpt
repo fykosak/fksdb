@@ -22,7 +22,6 @@ use Tester\Assert;
 
 class EventOrganizerPresenterTest extends EntityPresenterTestCase
 {
-
     private PersonModel $person;
     private PersonModel $eventOrganizerPerson;
     private EventOrganizerModel $eventOrganizer;

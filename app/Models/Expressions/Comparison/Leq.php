@@ -12,7 +12,6 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
  */
 class Leq extends EvaluatedExpression
 {
-
     /** @phpstan-var (callable(ArgType):scalar)|scalar */
     private $aValue;
     /** @phpstan-var (callable(ArgType):scalar)|scalar */

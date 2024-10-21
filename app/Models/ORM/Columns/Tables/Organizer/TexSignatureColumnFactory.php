@@ -14,7 +14,6 @@ use Nette\Forms\Form;
  */
 class TexSignatureColumnFactory extends StringColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = parent::createFormControl(...$args);

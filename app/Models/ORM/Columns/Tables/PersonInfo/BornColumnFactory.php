@@ -17,7 +17,6 @@ use Nette\Utils\Html;
  */
 class BornColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         $control = new WriteOnlyDatePicker($this->getTitle());

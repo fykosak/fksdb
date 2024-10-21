@@ -28,7 +28,6 @@ use Nette\Http\IResponse;
  */
 class DefaultGenerator implements Statement
 {
-
     protected PaymentService $paymentService;
 
     /** @phpstan-var TInfo $params */

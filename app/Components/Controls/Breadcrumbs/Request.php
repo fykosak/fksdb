@@ -12,7 +12,6 @@ use Nette\Application\Request as AppRequest;
  */
 class Request
 {
-
     public ?int $user;
     public AppRequest $request;
     public Title $title;

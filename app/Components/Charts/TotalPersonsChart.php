@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class TotalPersonsChart extends FrontEndComponent implements Chart
 {
-
     private PersonService $personService;
 
     public function __construct(Container $container)

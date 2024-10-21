@@ -18,7 +18,6 @@ use Nette\Utils\Html;
  */
 class SinceColumnFactory extends ColumnFactory
 {
-
     protected function createFormControl(...$args): BaseControl
     {
         [$min, $max] = $args;
