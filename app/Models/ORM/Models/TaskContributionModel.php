@@ -16,7 +16,6 @@ use Fykosak\NetteORM\Model\Model;
  */
 final class TaskContributionModel extends Model
 {
-
     /**
      * @return TaskContributionType|mixed|null
      * @throws \ReflectionException

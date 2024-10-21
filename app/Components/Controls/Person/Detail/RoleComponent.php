@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 
 class RoleComponent extends BaseComponent
 {
-
     final public function render(): void
     {
         if ($this->beforeRender()) {

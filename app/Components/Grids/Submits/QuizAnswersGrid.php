@@ -19,7 +19,6 @@ use Nette\Utils\Html;
  */
 class QuizAnswersGrid extends BaseGrid
 {
-
     private SubmitModel $submit;
     private bool $showResults;
 

@@ -12,7 +12,6 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class ContestYearService extends Service
 {
-
     /**
      * @const First month of the academic year (for high schoolers).
      */

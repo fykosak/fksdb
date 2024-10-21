@@ -18,7 +18,6 @@ use Nette\Utils\Html;
  */
 class UntilColumnFactory extends ColumnFactory
 {
-
     /**
      * @param OrganizerModel $model
      */

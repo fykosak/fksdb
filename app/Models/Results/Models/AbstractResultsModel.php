@@ -20,7 +20,6 @@ use Nette\DI\Container;
  */
 abstract class AbstractResultsModel
 {
-
     public const COL_DEF_LABEL = 'label';
     public const COL_DEF_LIMIT = 'limit';
     public const DATA_NAME = 'name';

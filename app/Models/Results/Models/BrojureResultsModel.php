@@ -13,7 +13,6 @@ use Nette\InvalidStateException;
  */
 class BrojureResultsModel extends AbstractResultsModel
 {
-
     public const COL_SERIES_PREFIX = 's';
     /** @phpstan-var int[] */
     protected array $series;

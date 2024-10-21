@@ -12,7 +12,6 @@ use FKSDB\Models\Expressions\EvaluatedExpression;
  */
 class Not extends EvaluatedExpression
 {
-
     /** @phpstan-var (callable(ArgType):bool)|bool */
     private $expression;
 

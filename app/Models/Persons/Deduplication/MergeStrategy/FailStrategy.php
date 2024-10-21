@@ -10,7 +10,6 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
  */
 class FailStrategy implements MergeStrategy
 {
-
     /**
      * @phpstan-param TValue $trunk
      * @phpstan-param TValue $merged

@@ -16,7 +16,6 @@ use Nette\DI\Container;
 
 class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
 {
-
     private SubmitService $submitService;
     private TaskService $taskService;
     private ContestYearModel $contestYear;

@@ -14,7 +14,6 @@ use FKSDB\Modules\Core\BasePresenter;
  */
 final class SetkaniForm extends OpenApplicationForm
 {
-
     /**
      * @phpstan-return EvaluatedFieldsDefinition
      */

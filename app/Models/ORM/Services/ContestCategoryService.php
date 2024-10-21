@@ -12,7 +12,6 @@ use Fykosak\NetteORM\Service\Service;
  */
 final class ContestCategoryService extends Service
 {
-
     public function findByLabel(string $label): ?ContestCategoryModel
     {
         /** @var ContestCategoryModel|null $contestCategory */

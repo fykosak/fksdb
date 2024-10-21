@@ -12,7 +12,6 @@ use Nette\Forms\Controls\HiddenField;
  */
 class OptimisticForm extends Form
 {
-
     private const FINGERPRINT = '__fp';
 
     /** @phpstan-var callable():string */

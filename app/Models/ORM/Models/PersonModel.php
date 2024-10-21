@@ -44,7 +44,6 @@ use Nette\Utils\DateTime;
  */
 final class PersonModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'person';
 
     public function getFullName(): string

@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class PerYearsChart extends FrontEndComponent implements Chart
 {
-
     private SubmitService $submitService;
     protected ContestModel $contest;
 

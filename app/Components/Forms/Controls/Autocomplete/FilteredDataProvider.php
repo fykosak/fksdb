@@ -10,7 +10,6 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
  */
 interface FilteredDataProvider extends DataProvider
 {
-
     /**
      * @phpstan-return array<int,TItem> see parent + filtered by the user input
      */
