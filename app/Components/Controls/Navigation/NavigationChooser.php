@@ -185,7 +185,7 @@ final class NavigationChooser extends NavigationItemComponent
                 ':' . $item['presenter'] . ':' . $item['action'],
                 array_merge($this->getPresenter()->getParameters(), $item['params'])
             );
-        } catch (AbortException$exception) {
+        } catch (AbortException $exception) {
             return false;
         }
     }
