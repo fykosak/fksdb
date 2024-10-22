@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions\Events;
 
 use FKSDB\Models\Authorization\Assertions\Assertion;
+use FKSDB\Models\Authorization\Assertions\WrongAssertionException;
 use FKSDB\Models\Authorization\Resource\EventResourceHolder;
 use FKSDB\Models\Authorization\Roles\ContestYear\ContestantRole;
 use Nette\Security\Permission;
@@ -20,7 +21,7 @@ class IsOpenForContestYearTypeEvent implements Assertion
 
         $holder = $acl->getQueriedResource();
         if (!$holder instanceof EventResourceHolder) {
-            return false;
+            throw new WrongAssertionException();
         }
 
         $contestantContestYear = $role->getContestYear();
