@@ -112,7 +112,7 @@ class CSVResponse implements IResponse
         // ----------------------------------------------------
         $httpResponse->setContentType($this->contentType, $this->charset);
 
-        if (empty($this->name)) {
+        if (!isset($this->name)) {
             $httpResponse->setHeader('Content-Disposition', 'attachment');
         } else {
             $httpResponse->setHeader('Content-Disposition', 'attachment; filename="' . $this->name . '"');
@@ -127,7 +127,7 @@ class CSVResponse implements IResponse
     public function formatCsv(): string
     {
         // ----------------------------------------------------
-        if (empty($this->data)) {
+        if (!isset($this->data)) {
             return '';
         }
         if ($this->getQuotes()) {

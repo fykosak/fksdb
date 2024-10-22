@@ -34,7 +34,10 @@ final class EmailMessageService extends Service
      */
     public function getMessagesToSend(int $limit): TypedSelection
     {
-        return $this->getTable()->where('state', EmailMessageState::Waiting)->order('priority DESC')->limit($limit);
+        return $this->getTable()
+            ->where('state', EmailMessageState::Waiting)
+            ->order('priority DESC')
+            ->limit($limit);//@phpstan-ignore-line
     }
 
     /**

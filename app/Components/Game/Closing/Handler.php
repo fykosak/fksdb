@@ -65,7 +65,7 @@ final class Handler
         $nextTask = $team->event
             ->getTasks()
             ->order('label')
-            ->limit(1, $submits + $tasksOnBoard)
+            ->limit(1, $submits + $tasksOnBoard)//@phpstan-ignore-line
             ->fetch();
         return $nextTask;
     }

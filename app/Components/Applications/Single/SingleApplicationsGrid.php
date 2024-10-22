@@ -76,6 +76,7 @@ class SingleApplicationsGrid extends BaseGrid
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getParticipants();
+        /** @var string $key */
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;

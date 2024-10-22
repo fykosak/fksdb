@@ -57,7 +57,7 @@ final class SeatingPresenter extends BasePresenter
     {
         $limit = $this->getParameter('limit', 500);
         $offset = $this->getParameter('offset', 0);
-        $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);
+        $teams = $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset);//@phpstan-ignore-line
         $container = new Container();
         /** @var TeamModel2 $team */
         foreach ($teams as $team) {

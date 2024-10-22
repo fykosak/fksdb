@@ -92,9 +92,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions($this->container);
-            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) { // @phpstan-ignore-line
+            if ($sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('label', _('Delivery address'));
-            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) { // @phpstan-ignore-line
+            } elseif ($sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $label = _('Permanent address');
                 if ($this->getComponent(ReferencedPersonHandler::POST_CONTACT_DELIVERY, false)) {
                     $label .= ' ' . _('(when different from delivery address)');
@@ -102,8 +102,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $subContainer->setOption('label', $label);
             }
             if (
-                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY || // @phpstan-ignore-line
-                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT // @phpstan-ignore-line
+                $sub === ReferencedPersonHandler::POST_CONTACT_DELIVERY ||
+                $sub === ReferencedPersonHandler::POST_CONTACT_PERMANENT
             ) {
                 if (isset($fields['address'])) {
                     $control = new AddressDataContainer(
@@ -139,7 +139,6 @@ class ReferencedPersonContainer extends ReferencedContainer
         }
         $this->getReferencedId()->handler->setResolution($resolution);
 
-        /** @phpstan-ignore-next-line */
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         /**
          * @var string $sub
@@ -165,7 +164,6 @@ class ReferencedPersonContainer extends ReferencedContainer
                 if (!$controlVisible && !$controlModifiable) {
                     /** @phpstan-ignore-next-line */
                     $this[$sub]->removeComponent($component);
-                    /** @phpstan-ignore-next-line */
                 } elseif (!$controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, true);
                   //  $component->setDisabled(false);
