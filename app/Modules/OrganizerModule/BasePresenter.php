@@ -96,7 +96,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
      * @throws NoContestAvailable
      * @throws NoContestYearAvailable
      */
-    protected function getSubTitle(): ?string
+    protected function getSubTitle(): string
     {
         return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
     }

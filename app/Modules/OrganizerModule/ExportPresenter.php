@@ -106,7 +106,7 @@ final class ExportPresenter extends BasePresenter
         $this->template->model = $this->getStoredQuery()->queryPattern;
     }
 
-    protected function getHttpRealm(): ?string
+    protected function getHttpRealm(): string
     {
         return 'FKSDB-export';
     }

@@ -24,7 +24,10 @@ final class PostgraduateStudyTest extends Test
         return new Title(null, _('Postgraduate study'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Checks if any of postgraduate studies are not followed by undergraduate.',

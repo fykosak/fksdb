@@ -132,12 +132,6 @@ final class WebServiceModel
         $webModelClass = self::WEB_MODELS[$name] ?? self::WEB_MODELS[ucfirst($name)] ?? null;
         if ($webModelClass) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
-            if (!$reflection->isSubclassOf(WebModel::class)) {
-                return null;
-            }
-            if (!$reflection->isSubclassOf(SoapWebModel::class)) {
-                return null;
-            }
             /** @phpstan-var WebModel<array<mixed>,array<mixed>>&SoapWebModel $model */
             $model = $reflection->newInstance($this->container, null);
             return $model;

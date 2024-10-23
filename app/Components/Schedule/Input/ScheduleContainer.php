@@ -79,7 +79,7 @@ class ScheduleContainer extends ContainerWithOptions
 
         $this->setOption('label', $this->label);
         $this->setOption('description', $this->description);
-        /** @var ScheduleGroupModel[] $containerGroups */
+        /** @var ScheduleGroupModel[][] $containerGroups */
         $containerGroups = [];
         /** @var ScheduleGroupModel $scheduleGroup */
         foreach ($groups as $scheduleGroup) {
@@ -90,7 +90,7 @@ class ScheduleContainer extends ContainerWithOptions
         foreach ($containerGroups as $key => $day) {
             $formContainer = new ContainerWithOptions($this->container);
             $formContainer->collapse = $this->collapseChild;
-            $formContainer->setOption('label', $this->getGroupLabel(reset($day)));
+            $formContainer->setOption('label', $this->getGroupLabel(reset($day)));//@phpstan-ignore-line
             $this->addComponent($formContainer, $key);
             foreach ($day as $group) {
                 $field = new ScheduleSelectBox($group, $this->translator);

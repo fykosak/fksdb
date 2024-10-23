@@ -32,15 +32,15 @@ class TransitionsMachineFactory
         switch ($event->event_type_id) {
             case 4:
             case 5:
-                return $this->container->getService('transitions.sous.machine'); //@phpstan-ignore-line
+                return $this->container->getService('transitions.sous.machine');
             case 2:
             case 14:
-                return $this->container->getService('transitions.dsef.machine'); //@phpstan-ignore-line
+                return $this->container->getService('transitions.dsef.machine');
             case 10:
-                return $this->container->getService('transitions.tabor.machine'); //@phpstan-ignore-line
+                return $this->container->getService('transitions.tabor.machine');
             case 11:
             case 12:
-                return $this->container->getService('transitions.setkani.machine'); //@phpstan-ignore-line
+                return $this->container->getService('transitions.setkani.machine');
             default:
                 throw new NotImplementedException();
         }
@@ -48,17 +48,17 @@ class TransitionsMachineFactory
 
     public function getPaymentMachine(): PaymentMachine
     {
-        return $this->container->getService($this->getPaymentFactoryName() . '.machine'); //@phpstan-ignore-line
+        return $this->container->getService($this->getPaymentFactoryName() . '.machine');
     }
 
     public function getPersonScheduleMachine(): PersonScheduleMachine
     {
-        return $this->container->getService('transitions.personSchedule.machine'); //@phpstan-ignore-line
+        return $this->container->getService('transitions.personSchedule.machine');
     }
 
     public function getEmailMachine(): EmailMachine
     {
-        return $this->container->getService('transitions.email.machine'); //@phpstan-ignore-line
+        return $this->container->getService('transitions.email.machine');
     }
 
 
@@ -82,7 +82,7 @@ class TransitionsMachineFactory
             default:
                 throw new NotImplementedException();
         }
-        return $machine; //@phpstan-ignore-line
+        return $machine;
     }
 
     /**

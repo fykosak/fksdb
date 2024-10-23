@@ -34,6 +34,7 @@ class PersonFlag extends SelectBox
 
     /**
      * @return bool|int|string|null
+     * @phpstan-ignore-next-line
      */
     public function getValue()
     {

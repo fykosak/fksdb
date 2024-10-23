@@ -24,7 +24,10 @@ final class StudyYearTest extends Test
         return new Title(null, _('Graduation years'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Compares graduation years of each year, checks if they are the same.',

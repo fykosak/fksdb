@@ -95,7 +95,7 @@ class PersonTestComponent extends BaseComponent
      */
     private function calculateProblems(): array
     {
-        $query = $this->personService->getTable()->limit($this->limit, $this->offset);
+        $query = $this->personService->getTable()->limit($this->limit, $this->offset);//@phpstan-ignore-line
         $logs = [];
         /** @var PersonModel $model */
         foreach ($query as $model) {
