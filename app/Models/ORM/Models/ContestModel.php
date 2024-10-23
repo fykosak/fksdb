@@ -78,13 +78,10 @@ final class ContestModel extends Model implements ContestResource
     /**
      * @throws NotFoundException
      */
-    public function getContestYear(int $year): ContestYearModel
+    public function getContestYear(?int $year): ?ContestYearModel
     {
         /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->getContestYears()->where('year', $year)->fetch();
-        if (!$contestYear) {
-            throw new NotFoundException();
-        }
         return $contestYear;
     }
 
