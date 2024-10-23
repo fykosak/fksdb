@@ -55,7 +55,7 @@ final class InfoEmail extends EmailSource
                 'data' => [
                     'recipient_person_id' => $member->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'topic' => EmailMessageTopic::FOF,
                     'lang' => Language::from($lang),
                 ],
             ];
@@ -73,7 +73,7 @@ final class InfoEmail extends EmailSource
                 'data' => [
                     'recipient_person_id' => $teacher->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'topic' => EmailMessageTopic::FOF,
                     'lang' => Language::from($lang),
                 ],
             ];

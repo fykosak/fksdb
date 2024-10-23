@@ -70,7 +70,7 @@ final class FOFTransitionEmail extends TransitionEmailSource
                 'data' => [
                     'recipient_person_id' => $member->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'topic' => EmailMessageTopic::FOF,
                     'lang' => Language::from($gameLang->value),
                 ],
             ];
@@ -88,7 +88,7 @@ final class FOFTransitionEmail extends TransitionEmailSource
                 'data' => [
                     'recipient_person_id' => $teacher->person_id,
                     'sender' => 'Fyziklani <fyziklani@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOF),
+                    'topic' => EmailMessageTopic::FOF,
                     'lang' => Language::from($gameLang->value),
                 ],
             ];

@@ -72,7 +72,7 @@ final class TeamMemberEmail extends TransitionEmailSource
                     'blind_carbon_copy' => 'Fyziklání Online <online@fyziklani.cz>',
                     'sender' => $sender,
                     'recipient_person_id' => $member->person_id,
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::FOL),
+                    'topic' => EmailMessageTopic::FOL,
                     'lang' => $lang,
                 ],
             ];

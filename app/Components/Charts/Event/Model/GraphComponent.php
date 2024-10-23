@@ -29,7 +29,7 @@ class GraphComponent extends FrontEndComponent implements Chart
     }
 
     /**
-     * @phpstan-return array{nodes:array<string,array{label:string,type:string}>,links:array<int,array{from:string,to:string,label:string|Html}>}
+     * @phpstan-return array{nodes:array<array{label:string,type:string}>,links:array<array{from:string,to:string,label:string|Html}>}
      */
     final public function getData(): array
     {
@@ -49,8 +49,8 @@ class GraphComponent extends FrontEndComponent implements Chart
                 ];
             }
             $edges[] = [
-                'from' => $transition->source->value,
-                'to' => $transition->target->value,
+                'from' => (string)$transition->source->value,
+                'to' => (string)$transition->target->value,
                 'label' => $transition->label->toHtml(),
                 'behaviorType' => $transition->behaviorType->value,
             ];

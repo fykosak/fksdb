@@ -35,7 +35,7 @@ final class EmailMessageService extends Service
     public function getMessagesToSend(int $limit): TypedSelection
     {
         return $this->getTable()
-            ->where('state', EmailMessageState::Waiting)
+            ->where('state', EmailMessageState::Waiting->value)
             ->order('priority DESC')
             ->limit($limit);//@phpstan-ignore-line
     }
@@ -45,7 +45,7 @@ final class EmailMessageService extends Service
      */
     public function addMessageToSend(array $data): EmailMessageModel
     {
-        $data['state'] = EmailMessageState::Ready;
+        $data['state'] = EmailMessageState::Ready->value;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];
         }

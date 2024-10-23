@@ -37,7 +37,7 @@ final class LoginInvitationEmail extends EmailSource
                 'data' => [
                     'sender' => 'FKSDB <fksdb@fykos.cz>',
                     'recipient_person_id' => $person->person_id,
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                    'topic' => EmailMessageTopic::Internal,
                     'lang' => $lang,
                 ]
             ]

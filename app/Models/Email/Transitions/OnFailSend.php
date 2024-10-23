@@ -29,10 +29,10 @@ final class OnFailSend implements FailHandler
     {
         $model = $holder->getModel();
         if ($exception instanceof RejectedEmailException) {
-            $this->emailMessageService->storeModel(['state' => EmailMessageState::Rejected], $model);
+            $this->emailMessageService->storeModel(['state' => EmailMessageState::Rejected->value], $model);
             Debugger::log($exception, 'mailer-exceptions-unsubscribed');
         } else {
-            $this->emailMessageService->storeModel(['state' => EmailMessageState::Failed], $model);
+            $this->emailMessageService->storeModel(['state' => EmailMessageState::Failed->value], $model);
             Debugger::log($exception, 'mailer-exceptions');
         }
     }

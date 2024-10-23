@@ -474,10 +474,10 @@ final class ACL
 
     private static function createEmails(Permission $permission): void
     {
-        $permission->addResource(EmailMessageModel::RESOURCE_ID); // dashboard, detail, list, template, howTo
+        $permission->addResource(EmailMessageModel::ResourceId); // dashboard, detail, list, template, howTo
         $permission->allow(
             [ExplicitContestRole::DataManager, ExplicitContestRole::EventManager, ExplicitContestRole::Boss],
-            EmailMessageModel::RESOURCE_ID,
+            EmailMessageModel::ResourceId,
             ['dashboard', 'howTo', 'list', 'template']
         );
     }

@@ -75,8 +75,8 @@
                         <div class="card-body">
                             <h5 class="card-title">
                                 Topicy
-                                {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Fykos)->badge()}
-                                 {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Vyfuk)->badge()}
+                                {FKSDB\Models\ORM\Models\EmailMessageTopic::Fykos->badge()}
+                                 {FKSDB\Models\ORM\Models\EmailMessageTopic::Vyfuk->badge()}
                             </h5>
                             <p class="card-text">
                                 Sem spadajú všetky email týkajúce sa semináru, (FYKOSu a Výfuku) pre riešiteľov,
@@ -108,9 +108,9 @@
                     <div class="card border-fof">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topicy {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::FOL)->badge()}
-            {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::FOF)->badge()}
-            {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::DSEF)->badge()}
+                                Topicy {FKSDB\Models\ORM\Models\EmailMessageTopic::FOL->badge()}
+            {FKSDB\Models\ORM\Models\EmailMessageTopic::FOF->badge()}
+            {FKSDB\Models\ORM\Models\EmailMessageTopic::DSEF->badge()}
                             </h5>
                             <p class="card-text">
                                 Tieto topicy slúžia pre akcie s otvorenou registráciou (netreba riešiť seminár aby sa
@@ -138,7 +138,7 @@
                     <div class="card border-secondary">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::Internal)->badge()}</h5>
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::Internal->badge()}</h5>
                             <p class="card-text">
                                 Sem patria automaticky generované emaily napr. zmena hesla, zmena emailu, reset hesla...
                             </p>
@@ -164,7 +164,7 @@
                     <div class="card border-warning">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamContest)->badge()}</h5>
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::SpamContest->badge()}</h5>
                             <p class="card-text">
                                 Ako napovedá názov je to prvý spamoidný topic, tento je určený pre naše akcie tj, ktoré
                                 poriadame my.
@@ -188,7 +188,7 @@
                     <div class="card border-warning">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamMff)->badge()}</h5>
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::SpamMff->badge()}</h5>
                             <p class="card-text">
                                 Sú to akcie MFF, ktoré FYKOS priamo neorganizuje napr. matematický náboj, prip. nejaké
                                 DODy a pod.
@@ -214,7 +214,7 @@
                     <div class="card border-warning">
                         <div class="card-body">
                             <h5 class="card-title">
-                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::from(FKSDB\Models\ORM\Models\EmailMessageTopic::SpamOther)->badge()}</h5>
+                                Topic {FKSDB\Models\ORM\Models\EmailMessageTopic::SpamOther->badge()}</h5>
                             <p class="card-text">
                                 Teda všetko čo sa nedá nazadiť nikde inde a je to spam.
                             </p>
@@ -245,20 +245,20 @@
             </p>
             {control stateChart}
             <ul>
-                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Concept)->badge()}
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::Concept->badge()}
                     Stav emailu po importovaní cez adminer, tento stav nemá žiadný extra význam, je to len pomocný stav, aby sa neimportovali emaily rovno do stavového automatu.</li>
-                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()} Toto je prvý stav v automate a tu email začína svoju cestu.
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::Ready->badge()} Toto je prvý stav v automate a tu email začína svoju cestu.
                     Tento stav hovorí, že <code>inner_text</code> emailu je hotový vrátane všetkých ostatných povinných
                     vecí.
                 </li>
-                  <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Waiting)->badge()}
+                  <li>{FKSDB\Models\ORM\Models\EmailMessageState::Waiting->badge()}
                   Tento stav hovorí, že mail má už vygenerovanú pätičku a čaká vo fronte emailov na odoslanie.</li>
-                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Sent)->badge()}
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::Sent->badge()}
                     Email bol úspešne odoslaný, neznamená, že bol úspešne doručený.
                 </li>
-                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Rejected)->badge()}
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::Rejected->badge()}
                     Posielanie emailu bolo zastavné, pretože uživateľ tento typ emailov nechce, alebo je email v tab. <code>{FKSDB\Models\ORM\DbNames::TAB_UNSUBSCRIBED_EMAIL}</code></li>
-                <li>{FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Failed)->badge()}
+                <li>{FKSDB\Models\ORM\Models\EmailMessageState::Failed->badge()}
                     Email nebol úspešne odoslaný, nastala tam nejaká chyba (pravdepodobne IT charakteru)</li>
             </ul>
         </div>
@@ -268,12 +268,12 @@
             <h2>Workflow posielania emailov cez adminera</h2>
             <ol>
                 <li>Emaily sa nahrajú do adminera, buď vo forme csv, alebo SQL scriptu. Stav emailu pri nahrávaní musí
-                    byť {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Concept)->badge()}</li>
+                    byť {FKSDB\Models\ORM\Models\EmailMessageState::Concept->badge()}</li>
                 <li>Ak nahranie prebehlo v poriadku a emaily sú skontrolované a naozaj ich chceme odoslať, zmeníme iba
                     emailom, ktoré chceme poslať stav
-                    na {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()}</li>
+                    na {FKSDB\Models\ORM\Models\EmailMessageState::Ready->badge()}</li>
                 <li>Emaily teraz čakajú na priradenie patičky podľa topicu. Na to potreba ručne spustiť prechod
-                    {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Ready)->badge()} -> {FKSDB\Models\ORM\Models\EmailMessageState::from(FKSDB\Models\ORM\Models\EmailMessageState::Waiting)->badge()}
+                    {FKSDB\Models\ORM\Models\EmailMessageState::Ready->badge()} -> {FKSDB\Models\ORM\Models\EmailMessageState::Waiting->badge()}
                     <a href="{plink transition}">na tejto stránke</a>.
                 </li>
                 <li>Ak všetko prebehlo správne email sa zaradil do fronty a v poradí určených <code>priortiy</code> sa

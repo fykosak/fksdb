@@ -30,18 +30,17 @@ use Nette\Utils\DateTime;
  */
 final class EmailMessageModel extends Model implements Resource
 {
-    public const RESOURCE_ID = 'emailMessage';
+    public const ResourceId = 'emailMessage';//phpcs:ignore
 
     public function getResourceId(): string
     {
-        return self::RESOURCE_ID;
+        return self::ResourceId;
     }
 
     /**
-     * @return EmailMessageState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {
