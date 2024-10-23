@@ -43,13 +43,11 @@ final class TransitionEmail extends ParticipantTransitionEmail
 
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {
-        switch ($transition->source->value) {
-            case EventParticipantStatus::INIT:
-            case EventParticipantStatus::AUTO_SPARE:
-            case EventParticipantStatus::AUTO_INVITED:
-                return __DIR__ . DIRECTORY_SEPARATOR . 'init->invite.latte';
-            default:
-                return __DIR__ . DIRECTORY_SEPARATOR . self::resolveLayoutName($transition);
-        }
+        return match ($transition->source) {
+            EventParticipantStatus::Init,
+            EventParticipantStatus::AutoSpare,
+            EventParticipantStatus::AutoInvited => __DIR__ . DIRECTORY_SEPARATOR . 'init->invite.latte',
+            default => __DIR__ . DIRECTORY_SEPARATOR . self::resolveLayoutName($transition),
+        };
     }
 }

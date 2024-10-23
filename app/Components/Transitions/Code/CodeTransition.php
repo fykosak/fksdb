@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Transitions\Code;
 
 use FKSDB\Components\Controls\FormComponent\CodeForm;
-use FKSDB\Models\MachineCode\MachineCode;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Machine\TransitionsSelection;
@@ -17,9 +20,8 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @phpstan-import-type TSupportedModel from MachineCode
  * @phpstan-template TModel of Model
- * @phpstan-type TState (\FKSDB\Models\Utils\FakeStringEnum&\FKSDB\Models\ORM\Columns\Types\EnumColumn)
+ * @phpstan-type TState (FakeStringEnum&EnumColumn)
  * @phpstan-type TMachine Machine<ModelHolder<TModel,TState>>
  */
 abstract class CodeTransition extends CodeForm
@@ -55,7 +57,7 @@ abstract class CodeTransition extends CodeForm
     /**
      * @throws \Throwable
      */
-    final protected function innerHandleSuccess(Model $model, Form $form): void
+    final protected function innerHandleSuccess(TeamModel2|PersonModel $model, Form $form): void
     {
         $holder = $this->machine->createHolder($this->resolveModel($model));
 
@@ -72,10 +74,9 @@ abstract class CodeTransition extends CodeForm
     }
 
     /**
-     * @phpstan-param TSupportedModel $model
      * @phpstan-return TModel
      */
-    abstract protected function resolveModel(Model $model): Model;
+    abstract protected function resolveModel(TeamModel2|PersonModel $model): Model;
 
     abstract protected function finalRedirect(): void;
 }

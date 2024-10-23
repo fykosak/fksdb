@@ -58,10 +58,19 @@ final class EventTypeModel extends Model
         switch ($this->event_type_id) {
             case 1: // FOF
             case 9: // FOL
-            case 11: // setkani 2x
-            case 12:
             case 2: // DSEF 2x
             case 14:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public function isOpenForContestYearType(): bool
+    {
+        switch ($this->event_type_id) {
+            case 11: // setkani 2x
+            case 12:
                 return true;
             default:
                 return false;

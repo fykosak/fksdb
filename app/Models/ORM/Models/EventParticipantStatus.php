@@ -5,102 +5,74 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
+enum EventParticipantStatus: string implements EnumColumn
 {
-    public const INIT = '__init';
-    public const APPLIED = 'applied';
-    public const AUTO_INVITED = 'auto.invited';
-    public const AUTO_SPARE = 'auto.spare';
-    public const CANCELLED = 'cancelled';
-    public const DISQUALIFIED = 'disqualified';
-    public const INTERESTED = 'interested';
-    public const INVITED = 'invited';
-    public const INVITED1 = 'invited1';
-    public const INVITED2 = 'invited2';
-    public const INVITED3 = 'invited3';
-    public const MISSED = 'missed';
+    case Init = '__init';
+    case Applied = 'applied';
+    case AutoInvited = 'auto.invited';
+    case AutoSpare = 'auto.spare';
+    case Cancelled = 'cancelled';
+    case Disqualified = 'disqualified';
+    case Interested = 'interested';
+    case Invited = 'invited';
+    case Invited1 = 'invited1';
+    case Invited2 = 'invited2';
+    case Invited3 = 'invited3';
+    case Missed = 'missed';
     //public const OUT_OF_DB = 'out_of_db';
-    public const OUT_OF_DB = 'outOfDB';
-    public const PAID = 'paid';
-    public const PARTICIPATED = 'participated';
-    public const PENDING = 'pending';
-    public const REJECTED = 'rejected';
-    public const SPARE = 'spare';
-    public const SPARE1 = 'spare1';
-    public const SPARE2 = 'spare2';
-    public const SPARE3 = 'spare3';
-
-    public static function cases(): array
-    {
-        return [
-            new self(self::INIT),
-            new self(self::APPLIED),
-            new self(self::AUTO_INVITED),
-            new self(self::AUTO_SPARE),
-            new self(self::CANCELLED),
-            new self(self::DISQUALIFIED),
-            new self(self::INTERESTED),
-            new self(self::INVITED),
-            new self(self::INVITED1),
-            new self(self::INVITED2),
-            new self(self::INVITED3),
-            new self(self::MISSED),
-            new self(self::OUT_OF_DB),
-            new self(self::PAID),
-            new self(self::PARTICIPATED),
-            new self(self::PENDING),
-            new self(self::REJECTED),
-            new self(self::SPARE),
-            new self(self::SPARE1),
-            new self(self::SPARE2),
-            new self(self::SPARE3),
-        ];
-    }
+    case OutOfDB = 'outOfDB';
+    case Paid = 'paid';
+    case Participated = 'participated';
+    case Pending = 'pending';
+    case Rejected = 'rejected';
+    case Spare = 'spare';
+    case Spare1 = 'spare1';
+    case Spare2 = 'spare2';
+    case Spare3 = 'spare3';
 
     public function badge(): Html
     {
         $badge = '';
-        switch ($this->value) {
-            case self::APPLIED:
-            case self::INTERESTED:
-            case self::PENDING:
+        switch ($this) {
+            case self::Applied:
+            case self::Interested:
+            case self::Pending:
                 $badge = 'badge bg-color-2';
                 break;
-            case self::PARTICIPATED:
+            case self::Participated:
                 $badge = 'badge bg-color-3';
                 break;
-            case self::MISSED:
+            case self::Missed:
                 $badge = 'badge bg-color-4';
                 break;
-            case self::DISQUALIFIED:
+            case self::Disqualified:
                 $badge = 'badge bg-color-5';
                 break;
-            case self::REJECTED:
-            case self::CANCELLED:
+            case self::Rejected:
+            case self::Cancelled:
                 $badge = 'badge bg-color-6';
                 break;
-            case self::PAID:
+            case self::Paid:
                 $badge = 'badge bg-color-7';
                 break;
-            case self::OUT_OF_DB:
+            case self::OutOfDB:
                 $badge = 'badge bg-color-8';
                 break;
-            case self::SPARE:
-            case self::SPARE1:
-            case self::SPARE2:
-            case self::SPARE3:
-            case self::AUTO_SPARE:
+            case self::Spare:
+            case self::Spare1:
+            case self::Spare2:
+            case self::Spare3:
+            case self::AutoSpare:
                 $badge = 'badge bg-color-9';
                 break;
-            case self::INVITED:
-            case self::INVITED1:
-            case self::INVITED2:
-            case self::INVITED3:
-            case self::AUTO_INVITED:
+            case self::Invited:
+            case self::Invited1:
+            case self::Invited2:
+            case self::Invited3:
+            case self::AutoInvited:
                 $badge = 'badge bg-color-10';
                 break;
         }
@@ -109,46 +81,46 @@ final class EventParticipantStatus extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        switch ($this->value) {
-            case self::APPLIED:
+        switch ($this) {
+            case self::Applied:
                 return _('Applied');
-            case self::AUTO_INVITED:
+            case self::AutoInvited:
                 return _('Auto invited');
-            case self::AUTO_SPARE:
+            case self::AutoSpare:
                 return _('Auto spare');
-            case self::CANCELLED:
+            case self::Cancelled:
                 return _('Cancelled');
-            case self::DISQUALIFIED:
+            case self::Disqualified:
                 return _('Disqualified');
-            case self::INTERESTED:
+            case self::Interested:
                 return _('Interested');
-            case self::INVITED:
+            case self::Invited:
                 return _('Invited');
-            case self::INVITED1:
+            case self::Invited1:
                 return _('Invited 1');
-            case self::INVITED2:
+            case self::Invited2:
                 return _('Invited 2');
-            case self::INVITED3:
+            case self::Invited3:
                 return _('Invited 3');
-            case self::MISSED:
+            case self::Missed:
                 return _('Missed');
-            case self::OUT_OF_DB:
+            case self::OutOfDB:
                 return _('Out of DB');
-            case self::PAID:
+            case self::Paid:
                 return _('Paid');
-            case self::PARTICIPATED:
+            case self::Participated:
                 return _('Participated');
-            case self::PENDING:
+            case self::Pending:
                 return _('Pending');
-            case self::REJECTED:
+            case self::Rejected:
                 return _('Rejected');
-            case self::SPARE:
+            case self::Spare:
                 return _('Spare');
-            case self::SPARE1:
+            case self::Spare1:
                 return _('Spare 1');
-            case self::SPARE2:
+            case self::Spare2:
                 return _('Spare 2');
-            case self::SPARE3:
+            case self::Spare3:
                 return _('Spare 3');
         }
         return $this->value;

@@ -13,7 +13,6 @@ use FKSDB\Models\Schedule\PaymentDeadlineStrategy\ConstantIntervalStrategy;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Localization\LocalizedString;
 use Nette\Forms\Form;
-use Nette\Utils\DateTime;
 
 /**
  * @method BasePresenter getPresenter($need = true)
@@ -59,12 +58,12 @@ final class DSEFForm extends OpenApplicationForm
     {
         return [
             'excursion' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Excursion)],
+                'types' => [ScheduleGroupType::Excursion],
                 'required' => false,
                 'label' => _('Excursion'),
             ],
             'accommodation' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Accommodation)],
+                'types' => [ScheduleGroupType::Accommodation],
                 'required' => false,
                 'label' => _('Accommodation'),
                 'paymentDeadline' => new ConstantIntervalStrategy(
@@ -73,7 +72,7 @@ final class DSEFForm extends OpenApplicationForm
                 )
             ],
             'food' => [
-                'types' => [ScheduleGroupType::from(ScheduleGroupType::Food)],
+                'types' => [ScheduleGroupType::Food],
                 'required' => false,
                 'label' => _('Food'),
                 'paymentDeadline' => new ConstantIntervalStrategy(

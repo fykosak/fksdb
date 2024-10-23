@@ -6,54 +6,29 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\UI\Title;
 use Nette\Utils\Html;
 
-final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
+enum ScheduleGroupType: string implements EnumColumn
 {
-    // phpcs:disable
-    public const Accommodation = 'accommodation';
-    public const AccommodationGender = 'accommodation_gender';
-    public const AccommodationTeacher = 'accommodation_teacher';
-    public const Visa = 'visa';
-    public const VaccinationCovid = 'vaccination_covid';
+    case Accommodation = 'accommodation';
+    case AccommodationGender = 'accommodation_gender';
+    case AccommodationTeacher = 'accommodation_teacher';
+    case Visa = 'visa';
+    case VaccinationCovid = 'vaccination_covid';
 
-    public const TeacherPresent = 'teacher_present';
+    case TeacherPresent = 'teacher_present';
 
-    public const Weekend = 'weekend';
-    public const Info = 'info';
+    case Weekend = 'weekend';
+    case Info = 'info';
 
-    public const Excursion = 'excursion';
+    case Excursion = 'excursion';
 
-    public const Apparel = 'apparel';
-    public const Food = 'food';
+    case Apparel = 'apparel';
+    case Food = 'food';
 
-    public const Transport = 'transport';
-    public const Ticket = 'ticket';
-    // phpcs:enable
-
-    /**
-     * @return self[]
-     */
-    public static function cases(): array
-    {
-        return [
-            new self(self::Accommodation),
-            new self(self::AccommodationGender),
-            new self(self::AccommodationTeacher),
-            new self(self::Visa),
-            new self(self::VaccinationCovid),
-            new self(self::TeacherPresent),
-            new self(self::Info),
-            new self(self::Weekend),
-            new self(self::Excursion),
-            new self(self::Apparel),
-            new self(self::Transport),
-            new self(self::Ticket),
-            new self(self::Food),
-        ];
-    }
+    case Transport = 'transport';
+    case Ticket = 'ticket';
 
     /**
      * @throws NotImplementedException
@@ -61,7 +36,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
     public function badge(): Html
     {
         $badge = '';
-        switch ($this->value) {
+        switch ($this) {
             case self::Accommodation:
                 $badge = 'badge bg-color-1';
                 break;
@@ -109,19 +84,14 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 
     public function getIconName(): string
     {
-        switch ($this->value) {
-            case self::Accommodation:
-                return 'fas fa-bed';
-            case self::Weekend:
-                return 'fas fa-calendar';
-            case self::Info:
-                return 'fas fa-info';
-            case self::Excursion:
-                return 'fas fa-flask';
-            case self::Food:
-                return 'fas fa-utensils';
-        }
-        return '';
+        return match ($this) {
+            self::Accommodation => 'fas fa-bed',
+            self::Weekend => 'fas fa-calendar',
+            self::Info => 'fas fa-info',
+            self::Excursion => 'fas fa-flask',
+            self::Food => 'fas fa-utensils',
+            default => '',
+        };
     }
 
     /**
@@ -129,7 +99,7 @@ final class ScheduleGroupType extends FakeStringEnum implements EnumColumn
      */
     public function label(): string
     {
-        switch ($this->value) {
+        switch ($this) {
             case self::Accommodation:
                 return _('Accommodation');
             case self::AccommodationGender:

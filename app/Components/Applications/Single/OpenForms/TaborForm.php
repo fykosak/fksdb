@@ -49,15 +49,15 @@ final class TaborForm extends OpenApplicationForm
             'person_schedule' => [
                 'apparel' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Apparel),
+                        ScheduleGroupType::Apparel,
                     ],
                     'required' => true,
                     'label' => _('Apparel'),
                 ],
                 'transport' => [
                     'types' => [
-                        ScheduleGroupType::from(ScheduleGroupType::Transport),
-                        ScheduleGroupType::from(ScheduleGroupType::Ticket),
+                        ScheduleGroupType::Transport,
+                        ScheduleGroupType::Ticket,
                     ],
                     'required' => true,
                     'label' => _('Transport & Ticket'),

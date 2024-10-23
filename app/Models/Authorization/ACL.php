@@ -6,6 +6,7 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization\Assertions\ContestContestantAssertion;
 use FKSDB\Models\Authorization\Assertions\ContestRelatedAssertion;
+use FKSDB\Models\Authorization\Assertions\Events\IsOpenForContestYearTypeEvent;
 use FKSDB\Models\Authorization\Assertions\Events\IsOpenTypeEvent;
 use FKSDB\Models\Authorization\Assertions\Events\IsRegistrationOpened;
 use FKSDB\Models\Authorization\Assertions\Events\NotDisqualified;
@@ -116,7 +117,7 @@ final class ACL
         $permission->addRole(ExplicitEventRole::GameInserter, LoggedInRole::RoleId);
         $permission->addRole(ExplicitEventRole::ApplicationManager, LoggedInRole::RoleId);
 
-// permissions
+        // permissions
 
         $permission->addResource(EventModel::RESOURCE_ID);
         self::createSchool($permission);
@@ -255,6 +256,15 @@ final class ACL
             new LogicAnd(
                 new IsRegistrationOpened(),
                 new IsOpenTypeEvent()
+            )
+        );
+        $permission->allow(
+            ContestantRole::RoleId,
+            EventParticipantModel::RESOURCE_ID,
+            'create',
+            new LogicAnd(
+                new IsRegistrationOpened(),
+                new IsOpenForContestYearTypeEvent()
             )
         );
         $permission->allow(

@@ -69,7 +69,7 @@ final class ScheduleHandler
         if (!$group) {
             throw new ScheduleException(null, _('Schedule does not exist'));
         }
-        if ($group->schedule_group_type->value === ScheduleGroupType::Info) {
+        if ($group->schedule_group_type === ScheduleGroupType::Info) {
             throw new ScheduleException($group, _('Info block cannot be selected'));
         }
         $personSchedule = $person->getScheduleByGroup($group);

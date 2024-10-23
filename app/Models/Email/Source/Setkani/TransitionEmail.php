@@ -20,15 +20,15 @@ final class TransitionEmail extends ParticipantTransitionEmail
 {
     protected function getTemplatePath(ParticipantHolder $holder, Transition $transition): string
     {
-        $transitionId = self::resolveLayoutName($transition);
-        return __DIR__ . DIRECTORY_SEPARATOR . "$transitionId.latte";
+        $layoutName = self::resolveLayoutName($transition);
+        return __DIR__ . DIRECTORY_SEPARATOR . "$layoutName";
     }
 
     protected function getData(ParticipantHolder $holder, Transition $transition): array
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
-            'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+            'topic' => EmailMessageTopic::from(EmailMessageTopic::Vyfuk),
             'lang' => Language::from(Language::CS),
         ];
     }

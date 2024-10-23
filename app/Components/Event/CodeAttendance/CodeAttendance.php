@@ -7,45 +7,29 @@ namespace FKSDB\Components\Event\CodeAttendance;
 use FKSDB\Components\Transitions\Code\CodeTransition;
 use FKSDB\Models\MachineCode\MachineCodeException;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\EventParticipantStatus;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Utils\FakeStringEnum;
-use Fykosak\NetteORM\Model\Model;
+use FKSDB\Models\Transitions\Machine\EventParticipantMachine;
+use FKSDB\Models\Transitions\Machine\TeamMachine;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
- * @phpstan-template TModel of TeamModel2|\FKSDB\Models\ORM\Models\EventParticipantModel
- * @phpstan-type TState (TModel is TeamModel2
- *     ?\FKSDB\Models\ORM\Models\Fyziklani\TeamState
- *     :\FKSDB\Models\ORM\Models\EventParticipantStatus)
- * @phpstan-type TMachine (TModel is TeamModel2
- *     ?\FKSDB\Models\Transitions\Machine\TeamMachine
- *     :\FKSDB\Models\Transitions\Machine\EventParticipantMachine)
- * @phpstan-extends CodeTransition<TModel>
+ * @phpstan-extends CodeTransition<TeamModel2|EventParticipantModel>
  */
 final class CodeAttendance extends CodeTransition
 {
-    /**
-     * @phpstan-var TModel
-     * @var EventParticipantModel|TeamModel2
-     */
-    private Model $model;
+    private EventParticipantModel|TeamModel2 $model;
 
-    /**
-     * @phpstan-param TState $targetState
-     * @phpstan-param TMachine $machine
-     * @phpstan-param TModel $model
-     * @param EventParticipantModel|TeamModel2 $model
-     */
     public function __construct(
         Container $container,
-        Model $model,
-        FakeStringEnum $targetState,
-        Machine $machine
+        TeamModel2|EventParticipantModel $model,
+        TeamState|EventParticipantStatus $targetState,
+        TeamMachine|EventParticipantMachine $machine
     ) {
         /** @phpstan-ignore-next-line */
         parent::__construct($container, $targetState, $machine);
@@ -77,23 +61,19 @@ final class CodeAttendance extends CodeTransition
     }
 
     /**
-     * @return EventParticipantModel|TeamModel2
      * @throws BadRequestException
-     * @phpstan-return TModel
      */
-    protected function resolveModel(Model $model): Model
+    protected function resolveModel(PersonModel|TeamModel2 $model): EventParticipantModel|TeamModel2
     {
         if ($model instanceof TeamModel2) {
             $application = $model;
-        } elseif ($model instanceof PersonModel) {
-            $application = $model->getEventParticipant($this->model->event);
         } else {
-            throw new BadRequestException(_('Wrong type of code.'));
+            $application = $model->getEventParticipant($this->model->event);
         }
         if (!$application || $application->getPrimary() !== $this->model->getPrimary()) {
             throw new BadRequestException(_('Models do not match')); // TODO
         }
-        return $application; // @phpstan-ignore-line
+        return $application;
     }
 
     /**
