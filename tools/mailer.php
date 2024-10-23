@@ -26,8 +26,8 @@ $query = $serviceEmailMessage->getMessagesToSend(
 
 $machine = $container->getByType(TransitionsMachineFactory::class)->getEmailMachine();
 $transition = $machine->getTransitions()
-    ->filterBySource(EmailMessageState::from(EmailMessageState::Waiting))
-    ->filterByTarget(EmailMessageState::from(EmailMessageState::Sent))
+    ->filterBySource(EmailMessageState::Waiting)
+    ->filterByTarget(EmailMessageState::Sent)
     ->select();
 $counter = 0;
 /** @var EmailMessageModel $model */

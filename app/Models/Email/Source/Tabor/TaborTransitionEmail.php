@@ -34,7 +34,7 @@ abstract class TaborTransitionEmail extends ParticipantTransitionEmail
     {
         return [
             'sender' => 'Výfuk <vyfuk@vyfuk.org>',
-            'topic' => EmailMessageTopic::from(EmailMessageTopic::Vyfuk),
+            'topic' => EmailMessageTopic::Vyfuk,
             'lang' => Language::from(Language::CS),
         ];
     }

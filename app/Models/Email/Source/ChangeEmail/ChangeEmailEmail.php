@@ -60,7 +60,7 @@ class ChangeEmailEmail extends EmailSource
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => (string)$person->getInfo()->email,
-                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'topic' => EmailMessageTopic::Internal,
                 'lang' => $lang,
             ]
         ];
@@ -72,7 +72,7 @@ class ChangeEmailEmail extends EmailSource
             'data' => [
                 'sender' => 'FKSDB <fksdb@fykos.cz>',
                 'recipient' => $newEmail,
-                'topic' => EmailMessageTopic::from(EmailMessageTopic::Internal),
+                'topic' => EmailMessageTopic::Internal,
                 'lang' => $lang,
             ]
         ];

@@ -5,23 +5,22 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Localization\LocalizedString;
 use Fykosak\Utils\UI\Title;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
+enum EmailMessageTopic: string implements EnumColumn
 {
-    public const SpamContest = 'spam_contest'; //phpcs:ignore
-    public const SpamMff = 'spam_mff'; //phpcs:ignore
-    public const SpamOther = 'spam_other'; //phpcs:ignore
-    public const Fykos = 'fykos'; //phpcs:ignore
-    public const Vyfuk = 'vyfuk'; //phpcs:ignore
-    public const FOF = 'fof';
-    public const FOL = 'fol';
-    public const DSEF = 'dsef';
-    public const Internal = 'internal'; //phpcs:ignore
+    case SpamContest = 'spam_contest';
+    case SpamMff = 'spam_mff';
+    case SpamOther = 'spam_other';
+    case Fykos = 'fykos';
+    case Vyfuk = 'vyfuk';
+    case FOF = 'fof';
+    case FOL = 'fol';
+    case DSEF = 'dsef';
+    case Internal = 'internal';
 
     public function badge(): Html
     {
@@ -32,7 +31,7 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public function behaviorType(): string
     {
-        switch ($this->value) {
+        switch ($this) {
             case self::SpamOther:
             case self::SpamMff:
             case self::SpamContest:
@@ -55,7 +54,7 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
 
     public function label(): string
     {
-        switch ($this->value) {
+        switch ($this) {
             case self::SpamContest:
                 return _('Spam contest');
             case self::SpamMff:
@@ -83,43 +82,22 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
         return new Title(null, $this->label());
     }
 
-    public static function cases(): array
-    {
-        return [
-            new self(self::SpamContest),
-            new self(self::SpamMff),
-            new self(self::SpamOther),
-            new self(self::Fykos),
-            new self(self::Vyfuk),
-            new self(self::FOF),
-            new self(self::FOL),
-            new self(self::DSEF),
-            new self(self::Internal),
-        ];
-    }
-
     public function isSpam(): bool
     {
-        switch ($this->value) {
-            case self::SpamContest:
-            case self::SpamMff:
-            case self::SpamOther:
-                return true;
-        }
-        return false;
+        return match ($this) {
+            self::SpamContest, self::SpamMff, self::SpamOther => true,
+            default => false,
+        };
     }
 
     public function mapToPreference(): ?PersonCorrespondencePreferenceOption
     {
-        switch ($this->value) {
-            case self::SpamContest:
-                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamContest);
-            case self::SpamMff:
-                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamMff);
-            case self::SpamOther:
-                return PersonCorrespondencePreferenceOption::from(PersonCorrespondencePreferenceOption::SpamOther);
-        }
-        return null;
+        return match ($this) {
+            self::SpamContest => PersonCorrespondencePreferenceOption::SpamContest,
+            self::SpamMff => PersonCorrespondencePreferenceOption::SpamMff,
+            self::SpamOther => PersonCorrespondencePreferenceOption::SpamOther,
+            default => null,
+        };
     }
 
     /**
@@ -127,7 +105,7 @@ final class EmailMessageTopic extends FakeStringEnum implements EnumColumn
      */
     public function getReason(): LocalizedString
     {
-        switch ($this->value) {
+        switch ($this) {
             case self::Fykos:
                 return new LocalizedString([
                     'cs' => 'Tento mail jste dostali proto, že jste účastníkem semináře FYKOS,

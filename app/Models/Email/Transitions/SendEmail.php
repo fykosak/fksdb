@@ -58,7 +58,7 @@ final class SendEmail implements Statement
         $this->mailer->send($message);
 // change state to sent
         $this->emailMessageService->storeModel([
-            'state' => EmailMessageState::Sent,
+            'state' => EmailMessageState::Sent->value,
             'sent' => new DateTime(),
         ], $model);
     }

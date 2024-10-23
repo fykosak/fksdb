@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Email\Source\Payment;
 
-use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\Email\TransitionEmailSource;
+use FKSDB\Models\ORM\Models\EmailMessageTopic;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
@@ -37,7 +37,7 @@ class PaymentTransitionEmail extends TransitionEmailSource
                     'recipient_person_id' => $holder->getModel()->person_id,
                     'blind_carbon_copy' => 'DSEF <dsef@fykos.cz>',
                     'sender' => 'DSEF <dsef@fykos.cz>',
-                    'topic' => EmailMessageTopic::from(EmailMessageTopic::DSEF),
+                    'topic' => EmailMessageTopic::DSEF,
                     'lang' => Language::from($holder->getModel()->person->getPreferredLang() ?? Language::EN),
                 ],
             ]

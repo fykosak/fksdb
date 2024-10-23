@@ -48,7 +48,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedTemplate(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::ResourceId, $this->getSelectedContest()),
             'template',
             $this->getSelectedContest()
         );
@@ -71,7 +71,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedHowTo(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::ResourceId, $this->getSelectedContest()),
             'howTo',
             $this->getSelectedContest()
         );
@@ -128,7 +128,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedTransition(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::ResourceId, $this->getSelectedContest()),
             'transition',
             $this->getSelectedContest()
         );
@@ -145,7 +145,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedList(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::ResourceId, $this->getSelectedContest()),
             'list',
             $this->getSelectedContest()
         );
@@ -161,7 +161,7 @@ final class EmailPresenter extends BasePresenter
     public function authorizedDefault(): bool
     {
         return $this->authorizator->isAllowedContest(
-            ContestResourceHolder::fromResourceId(EmailMessageModel::RESOURCE_ID, $this->getSelectedContest()),
+            ContestResourceHolder::fromResourceId(EmailMessageModel::ResourceId, $this->getSelectedContest()),
             'dashboard',
             $this->getSelectedContest()
         );
@@ -232,7 +232,7 @@ final class EmailPresenter extends BasePresenter
         return new MassTransitionComponent(
             $this->getContext(),
             $this->machineFactory->getEmailMachine(), //@phpstan-ignore-line
-            $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready)
+            $this->emailMessageService->getTable()->where('state', EmailMessageState::Ready->value)
         );
     }
 }
