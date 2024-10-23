@@ -22,6 +22,16 @@ parameters:
         #- app/Models/WebService/*
         - app/Models/WebService/AESOP/*
     treatPhpDocTypesAsCertain: false
+    polluteScopeWithLoopInitialAssignments: false
+    polluteScopeWithAlwaysIterableForeach: false
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    reportMaybesInMethodSignatures: true
+    reportMaybesInPropertyPhpDocTypes: true
+    reportStaticMethodSignatures: true
+    checkDynamicProperties: true
+    reportWrongPhpDocTypeInVarTag: true
     strictRules:
         allRules: false
         requireParentConstructorCall: true

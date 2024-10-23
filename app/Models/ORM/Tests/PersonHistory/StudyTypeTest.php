@@ -24,7 +24,10 @@ final class StudyTypeTest extends Test
         return new Title(null, _('Study type'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Checks if school provides study type filled in study_year field.',

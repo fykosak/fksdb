@@ -9,8 +9,8 @@ use FKSDB\Components\Grids\Components\Referenced\SimpleItem;
 use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\NetteORM\Selection\TypedSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * @phpstan-extends BaseGrid<PersonScheduleModel,array{}>
@@ -47,7 +47,10 @@ class AllRestsComponent extends BaseGrid
         $this->addTableColumn(new SimpleItem($this->container, '@payment.payment'), 'payment');
     }
 
-    protected function getModels(): Selection
+    /**
+     * @return TypedSelection<PersonScheduleModel>
+     */
+    protected function getModels(): TypedSelection
     {
         /** @var TypedSelection<PersonScheduleModel> $query */
         $query = $this->personScheduleService->getTable()

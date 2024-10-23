@@ -34,7 +34,10 @@ final class ParticipantsDurationTest extends Test
         return new Title(null, _('Participation duration'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Check how long person participated in events of the contest.',
