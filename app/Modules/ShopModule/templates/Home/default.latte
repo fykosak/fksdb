@@ -9,8 +9,8 @@
             <h2>{_'Ongoing payments'}</h2>
             <div class="row row-cols-1 row-cols-md-1 g-4 mb-3">
                 {foreach $payments as $payment}
-                    {continueIf $payment->state->value === FKSDB\Models\ORM\Models\PaymentState::CANCELED}
-                    {continueIf $payment->state->value === FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
+                    {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::Canceled}
+                    {continueIf $payment->state === FKSDB\Models\ORM\Models\PaymentState::Received}
                     {var $behavior = $payment->state->behaviorType()}
                     <div class="col">
                         <div class="card border-{$behavior}">

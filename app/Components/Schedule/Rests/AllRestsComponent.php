@@ -57,7 +57,7 @@ class AllRestsComponent extends BaseGrid
             ->where('schedule_item.payable = TRUE')
             ->whereOr([
                 ':schedule_payment.payment.payment_id IS NULL',
-                ':schedule_payment.payment.state NOT ?' => PaymentState::RECEIVED
+                ':schedule_payment.payment.state NOT ?' => PaymentState::Received->value
             ]);
         /*     foreach ($this->filterParams as $key => $param) {
                  if (!$param) {

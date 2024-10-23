@@ -58,7 +58,7 @@ class AdminPaymentList extends BaseList
     {
         $states = [];
         foreach (PaymentState::cases() as $case) {
-            $states[$case->value] = $case->label();
+            $states[$case->value] = $case->label2()->getText($this->translator->lang); //@phpstan-ignore-line
         }
         $form->addSelect('state', ('State'), $states)->setPrompt(_('Select state'));
         $form->addText('vs', _('Variable symbol'))->setHtmlType('number');

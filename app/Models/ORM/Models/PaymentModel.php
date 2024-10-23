@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Cassandra\Date;
 use FKSDB\Models\Authorization\Resource\EventResource;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
@@ -38,7 +37,7 @@ use Nette\Utils\DateTime;
  */
 final class PaymentModel extends Model implements EventResource
 {
-    public const RESOURCE_ID = 'payment';
+    public const ResourceId = 'payment';//phpcs:ignore
 
     /**
      * @phpstan-return TypedGroupedSelection<SchedulePaymentModel>
@@ -68,12 +67,7 @@ final class PaymentModel extends Model implements EventResource
 
     public function getResourceId(): string
     {
-        return self::RESOURCE_ID;
-    }
-
-    public function canEdit(): bool
-    {
-        return $this->state->value === PaymentState::IN_PROGRESS;
+        return self::ResourceId;
     }
 
     /**
@@ -93,10 +87,9 @@ final class PaymentModel extends Model implements EventResource
     }
 
     /**
-     * @return PaymentState|mixed|null
      * @throws \ReflectionException
      */
-    public function &__get(string $key) // phpcs:ignore
+    public function &__get(string $key): mixed // phpcs:ignore
     {
         $value = parent::__get($key);
         switch ($key) {

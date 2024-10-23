@@ -7,6 +7,7 @@ namespace FKSDB\Models\Authorization\Assertions\Payments;
 use FKSDB\Models\Authorization\Assertions\Assertion;
 use FKSDB\Models\Authorization\Assertions\WrongAssertionException;
 use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use Nette\Security\Permission;
 
 class PaymentEditableAssertion implements Assertion
@@ -16,7 +17,7 @@ class PaymentEditableAssertion implements Assertion
         $holder = $acl->getQueriedResource();
         $payment = $holder->getResource();
         if ($payment instanceof PaymentModel) {
-            return $payment->canEdit();
+            return $payment->state === PaymentState::InProgress;
         }
         throw new WrongAssertionException();
     }
