@@ -56,8 +56,8 @@ class ResultsComponent extends BaseComponent
             /**
              * @var string $key
              */
-            foreach ($values[self::CONT_PARAMS] as $key => $values) {
-                $this->parameters[$key] = $values['value'];
+            foreach ($values[self::CONT_PARAMS] as $key => $datum) {
+                $this->parameters[$key] = $datum['value'];
             }
         };
         return $control;

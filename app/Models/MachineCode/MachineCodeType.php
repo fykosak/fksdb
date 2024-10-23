@@ -43,6 +43,6 @@ enum MachineCodeType: string
         } elseif ($model instanceof TeamModel2) {
             return self::Team;
         }
-        throw new BadRequestException(_('Wrong type of code.')); //@phpstan-ignore-line
+        throw new BadRequestException(_('Wrong type of code.'));
     }
 }

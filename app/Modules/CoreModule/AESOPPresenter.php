@@ -105,7 +105,7 @@ final class AESOPPresenter extends \FKSDB\Modules\Core\BasePresenter
         return false;
     }
 
-    protected function getHttpRealm(): ?string
+    protected function getHttpRealm(): string
     {
         return 'AESOP';
     }

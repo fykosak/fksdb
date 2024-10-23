@@ -23,7 +23,10 @@ final class VerifiedSchoolTest extends Test
         return new Title(null, _('Verified school'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Check if school is verified.',

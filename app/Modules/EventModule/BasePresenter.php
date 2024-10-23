@@ -73,7 +73,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function getSubTitle(): ?string
+    protected function getSubTitle(): string
     {
         return $this->getEvent()->getName()->getText($this->translator->lang); // @phpstan-ignore-line
     }

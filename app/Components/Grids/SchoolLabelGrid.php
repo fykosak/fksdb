@@ -40,7 +40,7 @@ final class SchoolLabelGrid extends BaseGrid
             }
             switch ($key) {
                 case 'school_name':
-                    $tokens = explode(' ', $this->filterParams['school_name']);
+                    $tokens = explode(' ', $filterParam);
                     foreach ($tokens as $token) {
                         $query->where(
                             'CONCAT(school.name_full, school.name_abbrev, school.address.city)

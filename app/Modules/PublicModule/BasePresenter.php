@@ -83,7 +83,7 @@ abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
         return 'contest-' . $contest->getContestSymbol();
     }
 
-    protected function getSubTitle(): ?string
+    protected function getSubTitle(): string
     {
         return sprintf(_('%d. year'), $this->year);
     }

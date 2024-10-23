@@ -66,7 +66,6 @@ final class ConflictRole extends Test
         $contestYear = $contestant->getContestYear();
         /** @var OrganizerModel $organizer */
         foreach ($contestant->person->getOrganizers() as $organizer) {
-            $contestYears[$organizer->contest_id] = [];
             foreach (range($organizer->since, $organizer->until ?? $organizer->contest->getLastYear()) as $year) {
                 $organizerContestYear = $organizer->contest->getContestYear($year);
                 if (

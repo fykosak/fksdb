@@ -56,7 +56,7 @@ class OptimisticForm extends Form
 
     private function getFingerprintInput(): HiddenField
     {
-        return $this->getComponent(self::FINGERPRINT); // @phpstan-ignore-line
+        return $this->getComponent(self::FINGERPRINT);
     }
 
     public function isValid(): bool

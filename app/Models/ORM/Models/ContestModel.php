@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\Resource\ContestResource;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ContestYearService;
 use Fykosak\NetteORM\Model\Model;
@@ -74,10 +75,16 @@ final class ContestModel extends Model implements ContestResource
         return $selection;
     }
 
-    public function getContestYear(?int $year): ?ContestYearModel
+    /**
+     * @throws NotFoundException
+     */
+    public function getContestYear(int $year): ContestYearModel
     {
         /** @var ContestYearModel|null $contestYear */
         $contestYear = $this->getContestYears()->where('year', $year)->fetch();
+        if (!$contestYear) {
+            throw new NotFoundException();
+        }
         return $contestYear;
     }
 

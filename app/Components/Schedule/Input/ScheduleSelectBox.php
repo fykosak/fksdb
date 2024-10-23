@@ -61,7 +61,6 @@ class ScheduleSelectBox extends SelectBox
         if ($person) {
             $personSchedule = $person->getScheduleByGroup($this->group);
             if ($personSchedule) {
-                /** @phpstan-ignore-next-line */
                 if (is_array($this->disabled) && isset($this->disabled[$personSchedule->schedule_item_id])) {
                     unset($this->disabled[$personSchedule->schedule_item_id]);
                 }

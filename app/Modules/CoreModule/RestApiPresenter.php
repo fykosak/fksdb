@@ -81,7 +81,7 @@ final class RestApiPresenter extends \FKSDB\Modules\Core\BasePresenter
         return false;
     }
 
-    protected function getHttpRealm(): ?string
+    protected function getHttpRealm(): string
     {
         return 'JSON';
     }

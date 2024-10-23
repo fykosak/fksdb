@@ -22,6 +22,7 @@ trait TeamTrait
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getTeams();
+        /** @var string $key */
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;

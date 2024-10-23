@@ -60,7 +60,7 @@ class PresenterBuilder
 
     private function getCachePresenter(string $presenterName): IPresenter
     {
-        if (!isset($this->presenters[$presenterName])) {
+        if (!isset($this->presenterCache[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }
         return $this->presenterCache[$presenterName];

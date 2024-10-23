@@ -23,7 +23,10 @@ final class StudyYearFillTest extends Test
         return new Title(null, _('Filled study years'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Checks if school has filled any of study types (study_* fields).',
