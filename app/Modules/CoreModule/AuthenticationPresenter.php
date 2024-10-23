@@ -176,7 +176,7 @@ final class AuthenticationPresenter extends BasePresenter
 
     public function getGoogleSection(): SessionSection
     {
-        return $this->getSession()->getSection('google-oauth2state');// @phpstan-ignore-line
+        return $this->getSession()->getSection('google-oauth2state');
     }
 
     /**

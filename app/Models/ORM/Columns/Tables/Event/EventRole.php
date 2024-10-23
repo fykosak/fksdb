@@ -44,7 +44,7 @@ class EventRole extends AbstractColumnFactory
         return EventRolePrinter::getHtml($person, $event);
     }
 
-    protected function resolveModel(Model $modelSingle): ?Model
+    protected function resolveModel(Model $modelSingle): Model
     {
         return $modelSingle; // need to be original model because of referenced access
     }

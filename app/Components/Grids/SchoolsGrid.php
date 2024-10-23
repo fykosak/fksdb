@@ -47,6 +47,7 @@ final class SchoolsGrid extends BaseGrid
     protected function getModels(): TypedSelection
     {
         $query = $this->service->getTable();
+        /** @var string $key */
         foreach ($this->filterParams as $key => $value) {
             if (!$value) {
                 continue;

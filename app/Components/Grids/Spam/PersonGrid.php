@@ -34,7 +34,7 @@ final class PersonGrid extends BaseGrid
         $query = $this->service->getTable()->order('person_history_id DESC');
         $query->joinWhere('person:person_has_flag', 'person:person_has_flag.ac_year = person_history.ac_year');
         $query->where('person:person_has_flag.flag.fid', 'source_spam');
-
+        /** @var string $key */
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;

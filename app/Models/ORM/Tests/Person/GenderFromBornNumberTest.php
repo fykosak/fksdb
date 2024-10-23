@@ -24,7 +24,10 @@ final class GenderFromBornNumberTest extends Test
         return new Title(null, _('Gender from born Id'), 'fas fa-venus-mars');
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Tests, if gender matches born ID',

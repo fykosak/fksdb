@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrganizerModule\Warehouse;
 
-use FKSDB\Models\Authorization\Resource\ContestResource;
 use FKSDB\Models\Authorization\Resource\ContestResourceHolder;
 use FKSDB\Modules\Core\PresenterTraits\NoContestAvailable;
 use Fykosak\Utils\UI\Title;

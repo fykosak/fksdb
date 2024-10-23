@@ -29,9 +29,6 @@ class OrganizersWebModel extends ContestWebModel implements SoapWebModel
         $contest = $this->getContest();
         if (isset($this->params['year'])) {
             $contestYear = $contest->getContestYear($this->params['year']);
-            if (!$contestYear) {
-                throw new NotFoundException();
-            }
             $organizers = $contestYear->getOrganizers();
         } else {
             $organizers = $contest->getOrganizers();
@@ -80,6 +77,7 @@ class OrganizersWebModel extends ContestWebModel implements SoapWebModel
     /**
      * @throws \SoapFault
      * @throws \DOMException
+     * @throws NotFoundException
      */
     public function getSOAPResponse(\stdClass $args): \SoapVar
     {

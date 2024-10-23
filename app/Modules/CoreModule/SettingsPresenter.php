@@ -124,7 +124,7 @@ final class SettingsPresenter extends BasePresenter
         );
 
         if ($verifyOldPassword) {
-            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED) // @phpstan-ignore-line
+            $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
             ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
         } elseif ($requirePassword) {
             $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));

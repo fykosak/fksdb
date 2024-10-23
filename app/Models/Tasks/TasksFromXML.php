@@ -71,6 +71,7 @@ class TasksFromXML extends Stage
                 $name = $matches[1];
                 $lang = $matches[2];
                 /** @phpstan-var \SimpleXMLElement[] $elements */
+                /** @phpstan-ignore-next-line */
                 $elements = $xMLTask->{$name};
                 $csvalue = null;
 
@@ -91,8 +92,9 @@ class TasksFromXML extends Stage
                         break;
                     }
                 }
-                $value = $value ?: $csvalue;
+                $value = $value ? $value : $csvalue;
             } else {
+                /** @phpstan-ignore-next-line */
                 $value = (string)$xMLTask->{$xmlElement};
             }
             $data[$column] = $value;
