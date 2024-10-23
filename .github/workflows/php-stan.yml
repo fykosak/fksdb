@@ -4,7 +4,7 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    name: PHP ${{ matrix.php }} with ${{ matrix.database }}
+    name: PHPStan with ${{ matrix.php }}
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
