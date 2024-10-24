@@ -9,7 +9,6 @@ namespace FKSDB\Components\Forms\Controls\WriteOnly;
  */
 interface WriteOnly
 {
-
     public const VALUE_ORIGINAL = '__original';
 
     public function setWriteOnly(bool $value = true): void;

@@ -39,7 +39,7 @@ final class SchedulePresenter extends BasePresenter
     public function authorizedCreate(): bool
     {
         return $this->authorizator->isAllowedEvent(
-            EventResourceHolder::fromResourceId(PaymentModel::RESOURCE_ID, $this->getEvent()),
+            EventResourceHolder::fromResourceId(PaymentModel::ResourceId, $this->getEvent()),
             'create',
             $this->getEvent()
         );

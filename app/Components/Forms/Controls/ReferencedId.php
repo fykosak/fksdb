@@ -128,7 +128,7 @@ class ReferencedId extends HiddenField
             return $this->promise->getValue();
         }
         $value = parent::getValue();
-        return $value ?: null;
+        return $value ? $value : null;
     }
 
     public function rollback(): void

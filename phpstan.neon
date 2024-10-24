@@ -1,5 +1,9 @@
+includes:
+    - vendor/phpstan/phpstan-nette/extension.neon
+    - vendor/phpstan/phpstan-nette/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
 parameters:
-    phpVersion: 70400 # php 7.4
+    phpVersion: 80100 # php 8.1
     level: 7
     paths:
         - app
@@ -7,10 +11,7 @@ parameters:
         #- tools
         #- tests
     ignoreErrors:
-        - '#Access to an undefined property Nette\\Bridges\\ApplicationLatte\\Template::.*.#'
-        - '#Access to an undefined property Nette\\Application\\UI\\Template::.*.#'
-        - '#Access to an undefined property Nette\\Http\\SessionSection::.*.#'
-        - '#Access to an undefined property Nette\\Application\\UI\\Template|stdClass::.*.#'
+        - '#Parameter .* of .* should be contravariant with parameter .* of method .*#'
     excludePaths:
         - app/Models/Persons/Deduplication/*.php
         - app/Components/Controls/Breadcrumbs/*.php
@@ -20,4 +21,23 @@ parameters:
         - libs/Forms/KdybyReplicator/KdybyReplicator.php
         #- app/Models/WebService/*
         - app/Models/WebService/AESOP/*
-
+    treatPhpDocTypesAsCertain: false
+    polluteScopeWithLoopInitialAssignments: false
+    polluteScopeWithAlwaysIterableForeach: false
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkInternalClassCaseSensitivity: true
+    reportMaybesInMethodSignatures: true
+    reportMaybesInPropertyPhpDocTypes: true
+    reportStaticMethodSignatures: true
+    checkDynamicProperties: true
+    reportWrongPhpDocTypeInVarTag: true
+    strictRules:
+        allRules: false
+        requireParentConstructorCall: true
+        overwriteVariablesWithLoop: true
+        closureUsesThis: true
+        matchingInheritedMethodNames: true
+        noVariableVariables: true
+        switchConditionsMatchingType: true
+        disallowedConstructs: true

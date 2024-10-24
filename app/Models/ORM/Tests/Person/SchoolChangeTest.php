@@ -25,7 +25,10 @@ final class SchoolChangeTest extends Test
         return new Title(null, _('School change'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Checks if person changes primary school or high school during the study.',

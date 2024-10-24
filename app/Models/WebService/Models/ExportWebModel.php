@@ -55,6 +55,7 @@ class ExportWebModel extends WebModel implements SoapWebModel
             $args->parameter = [$args->parameter];
         }
         foreach ($args->parameter as $parameter) {
+            /** @phpstan-ignore-next-line */
             $parameters[$parameter->name] = $parameter->{'_'};
             if ($parameter->name == StoredQueryFactory::PARAM_CONTEST) {
                 if (!isset($this->container->getParameters()['inverseContestMapping'][$parameters[$parameter->name]])) {

@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Applications\Single;
 
 use FKSDB\Components\Grids\Components\BaseGrid;
+use FKSDB\Models\MachineCode\MachineCode;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\EventParticipantStatus;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Selection\TypedGroupedSelection;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -37,7 +39,7 @@ class SingleApplicationsGrid extends BaseGrid
         switch ($this->event->event_type_id) {
             case 2:
             case 14:
-                return ['lunch_count'];
+                return [];
         }
         return [
             'price',
@@ -74,6 +76,7 @@ class SingleApplicationsGrid extends BaseGrid
     protected function getModels(): TypedGroupedSelection
     {
         $query = $this->event->getParticipants();
+        /** @var string $key */
         foreach ($this->filterParams as $key => $filterParam) {
             if (!$filterParam) {
                 continue;
@@ -81,6 +84,15 @@ class SingleApplicationsGrid extends BaseGrid
             switch ($key) {
                 case 'status':
                     $query->where('event_participant.status', $filterParam);
+                    break;
+                case 'code':
+                    try {
+                        /** @var PersonModel $model */
+                        $model = MachineCode::parseModelHash($this->container, $filterParam, $this->event->getSalt());
+                        $query->where('event_participant.person_id', $model->person_id);
+                    } catch (\Throwable $exception) {
+                    }
+                    break;
             }
         }
         return $query;
@@ -112,5 +124,6 @@ class SingleApplicationsGrid extends BaseGrid
             $items[$state->value] = $state->label();
         }
         $form->addSelect('status', _('Status'), $items)->setPrompt(_('Select state'));
+        $form->addText('code', _('Code'));
     }
 }

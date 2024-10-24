@@ -6,5 +6,4 @@ namespace FKSDB\Modules\CoreModule;
 
 abstract class BasePresenter extends \FKSDB\Modules\Core\BasePresenter
 {
-
 }

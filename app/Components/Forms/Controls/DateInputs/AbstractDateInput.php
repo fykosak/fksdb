@@ -9,7 +9,6 @@ use Nette\Utils\DateTime;
 
 abstract class AbstractDateInput extends TextInput
 {
-
     protected string $format;
 
     public function __construct(string $type, string $format, ?string $label = null)

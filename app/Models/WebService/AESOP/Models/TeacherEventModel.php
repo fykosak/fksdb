@@ -8,7 +8,6 @@ use FKSDB\Models\Exports\Formats\PlainTextResponse;
 
 class TeacherEventModel extends EventModel
 {
-
     public function createResponse(): PlainTextResponse
     {
         $query = $this->explorer->query(

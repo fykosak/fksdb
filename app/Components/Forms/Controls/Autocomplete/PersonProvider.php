@@ -21,7 +21,6 @@ use Nette\DI\Container;
  */
 class PersonProvider implements FilteredDataProvider
 {
-
     private PersonService $personService;
     /**
      * @phpstan-var TypedSelection<PersonModel>

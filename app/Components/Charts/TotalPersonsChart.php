@@ -13,7 +13,6 @@ use Nette\DI\Container;
 
 class TotalPersonsChart extends FrontEndComponent implements Chart
 {
-
     private PersonService $personService;
 
     public function __construct(Container $container)
@@ -49,7 +48,7 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
         return new Title(null, _('Total persons in FKSDB'), 'fas fa-chart-line');
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return _('Graph shows the progress in the number of people in FKSDB and the number of assigned person_ids.');
     }

@@ -18,7 +18,6 @@ use Nette\DI\Container;
  */
 class StudyYearsFromXML extends Stage
 {
-
     public const XML_ELEMENT_PARENT = 'study-years';
     public const XML_ELEMENT_CHILD = 'study-year';
     /** @phpstan-var array<int,int[]> */
@@ -68,10 +67,11 @@ class StudyYearsFromXML extends Stage
         // parse contributors
         $studyYears = [];
         $hasYears = false;
-
+        /** @phpstan-ignore-next-line */
         $parentEl = $xMLTask->{self::XML_ELEMENT_PARENT};
-
+        /** @phpstan-ignore-next-line */
         if ($parentEl && isset($parentEl->{self::XML_ELEMENT_CHILD})) {
+            /** @phpstan-ignore-next-line */
             foreach ($parentEl->{self::XML_ELEMENT_CHILD} as $element) {
                 $studyYear = (string)$element;
                 $studyYear = trim($studyYear);

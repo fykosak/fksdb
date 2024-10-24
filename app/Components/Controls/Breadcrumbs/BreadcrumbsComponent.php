@@ -33,7 +33,6 @@ use Tracy\Debugger;
  */
 class BreadcrumbsComponent extends BaseComponent
 {
-
     public const SECTION_REQUESTS = self::class . '.main';
     public const SECTION_BACKIDS = self::class . '.backids';
     public const SECTION_REVERSE = self::class . '.reverse';

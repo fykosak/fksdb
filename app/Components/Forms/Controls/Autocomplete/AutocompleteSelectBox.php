@@ -17,7 +17,6 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase
 {
-
     private const SELECTOR_CLASS = 'autocomplete-select';
     private const PARAM_NAME = 'acName';
     private const INTERNAL_DELIMITER = ',';
@@ -142,7 +141,7 @@ class AutocompleteSelectBox extends TextBase
         } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) { // @phpstan-ignore-line
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
             $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->label));
             $this->setValue(null);
         } else {

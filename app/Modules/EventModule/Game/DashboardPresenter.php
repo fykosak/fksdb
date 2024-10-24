@@ -10,7 +10,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 final class DashboardPresenter extends BasePresenter
 {
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Game'), 'fas fa-laptop-code');

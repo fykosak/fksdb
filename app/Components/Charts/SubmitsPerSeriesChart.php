@@ -16,7 +16,6 @@ use Nette\DI\Container;
 
 class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
 {
-
     private SubmitService $submitService;
     private TaskService $taskService;
     private ContestYearModel $contestYear;
@@ -75,7 +74,7 @@ class SubmitsPerSeriesChart extends FrontEndComponent implements Chart
         return new Title(null, _('Submits per series'), 'fas fa-chart-line');
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return _('Graph shows the cumulative number of submits per series in time before deadline.');
     }

@@ -106,12 +106,14 @@ class ResultsWebModel extends WebModel implements SoapWebModel
 
         if (isset($args->{'school-cumulatives'})) {
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
-
+            /** @phpstan-ignore-next-line */
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'}
-                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+                /** @phpstan-ignore-next-line */
+                $args->{'school-cumulatives'}->{'school-cumulative'} =
+                    /** @phpstan-ignore-next-line */
+                    [$args->{'school-cumulatives'}->{'school-cumulative'}];
             }
-
+            /** @phpstan-ignore-next-line */
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
                 $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
                 $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));

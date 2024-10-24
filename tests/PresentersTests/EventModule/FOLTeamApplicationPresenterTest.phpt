@@ -23,7 +23,6 @@ $container = require '../../Bootstrap.php';
 
 class FOLTeamApplicationPresenterTest extends TeamApplicationPresenterTestCase
 {
-
     protected function createEvent(): EventModel
     {
         return $this->container->getByType(EventService::class)->storeModel([

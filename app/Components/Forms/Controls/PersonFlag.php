@@ -9,7 +9,6 @@ use Nette\Utils\Html;
 
 class PersonFlag extends SelectBox
 {
-
     public const FLAG_YES = 'flag-yes';
     // It's necessary that value for FLAG_NO cannot coerce to false/null.
     public const FLAG_NO = 'flag-no';
@@ -35,6 +34,7 @@ class PersonFlag extends SelectBox
 
     /**
      * @return bool|int|string|null
+     * @phpstan-ignore-next-line
      */
     public function getValue()
     {

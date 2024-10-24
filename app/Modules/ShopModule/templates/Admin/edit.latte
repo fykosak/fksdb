@@ -2,7 +2,7 @@
 {block outerContent}
     <div class="panel color-auto">
         <div class="container">
-            {if !$model->canEdit()}
+            {if $model->state !== FKSDB\Models\ORM\Models\PaymentState::InProgress}
                 <div class="alert-danger alert">
                     <h3>Platba má již napočítanou cenu!</h3>
                     Platba už má napočítanou cenu, změny se <b>nepromítnou</b> do výsledné ceny.

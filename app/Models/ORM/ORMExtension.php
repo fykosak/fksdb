@@ -44,7 +44,6 @@ use Nette\Schema\Schema;
  */
 class ORMExtension extends Extension
 {
-
     /**
      * @throws NotImplementedException
      */

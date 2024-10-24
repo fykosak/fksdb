@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\TaskModel;
  */
 class EvaluationVyfuk2011 extends EvaluationStrategy
 {
-
     public function getPointsColumn(TaskModel $task): string
     {
         return 's.raw_points';

@@ -12,7 +12,6 @@ use Nette\DI\Container;
 
 class AjaxPersonFormComponent extends AjaxComponent
 {
-
     private ContestYearModel $contestYear;
     private Handler $handler;
 

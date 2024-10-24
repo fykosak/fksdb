@@ -24,7 +24,6 @@ use Fykosak\Utils\UI\Title;
  */
 final class ParticipantsDurationTest extends Test
 {
-
     private const CONTESTS = [
         ContestModel::ID_FYKOS => [5, 6],
         ContestModel::ID_VYFUK => [5, 6],
@@ -35,7 +34,10 @@ final class ParticipantsDurationTest extends Test
         return new Title(null, _('Participation duration'));
     }
 
-    public function getDescription(): ?LocalizedString
+    /**
+     * @return LocalizedString<'cs'|'en'>
+     */
+    public function getDescription(): LocalizedString
     {
         return new LocalizedString([
             'en' => 'Check how long person participated in events of the contest.',

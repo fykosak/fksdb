@@ -16,7 +16,6 @@ use Tracy\Debugger;
 
 class UploadedStorage implements SubmitStorage
 {
-
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
     /** @const File extension that marks original untouched file. */

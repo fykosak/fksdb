@@ -13,7 +13,6 @@ use Fykosak\Utils\UI\Title;
 
 final class DashboardPresenter extends BasePresenter
 {
-
     /**
      * @throws EventNotFoundException
      */

@@ -16,7 +16,6 @@ use Nette\Utils\Html;
 
 final class DiplomasPresenter extends BasePresenter
 {
-
     public function titleResults(): PageTitle
     {
         return new PageTitle(null, _('Results for diplomas'), 'fas fa-trophy');
@@ -102,7 +101,7 @@ final class DiplomasPresenter extends BasePresenter
 
         // check saved points against submits
         $invalidTeams = $rankingStrategy->getInvalidTeamsPoints($category);
-        if (!empty($invalidTeams)) {
+        if (count($invalidTeams)) {
             $log = Html::el('ul');
             foreach ($invalidTeams as $team) {
                 $log->addHtml(
@@ -126,7 +125,7 @@ final class DiplomasPresenter extends BasePresenter
 
         // check ranking
         $invalidTeams = $rankingStrategy->getInvalidTeamsRank($category);
-        if (!empty($invalidTeams)) {
+        if (count($invalidTeams)) {
             $log = Html::el('ul');
             foreach ($invalidTeams as $team) {
                 $log->addHtml(

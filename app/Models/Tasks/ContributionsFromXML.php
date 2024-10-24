@@ -53,12 +53,15 @@ class ContributionsFromXML extends Stage
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
             [$parent, $child] = explode('/', $xmlElement);
+            /** @phpstan-ignore-next-line */
             $parentEl = $xMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
+            /** @phpstan-ignore-next-line */
             if (!$parentEl || !isset($parentEl->{$child})) {
                 continue;
             }
+            /** @phpstan-ignore-next-line */
             foreach ($parentEl->{$child} as $element) {
                 $signature = (string)$element;
                 $signature = trim($signature);

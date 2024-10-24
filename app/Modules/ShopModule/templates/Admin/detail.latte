@@ -16,7 +16,7 @@
             </div>
         </div>
     {/if}
-    {if $model->state->value === FKSDB\Models\ORM\Models\PaymentState::WAITING && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
+    {if $model->state === FKSDB\Models\ORM\Models\PaymentState::Waiting && $model->currency->value === Fykosak\Utils\Price\Currency::CZK}
         <div class="panel color-auto">
             <div class="container">
                 <h2>{_'Scan and pay'}</h2>

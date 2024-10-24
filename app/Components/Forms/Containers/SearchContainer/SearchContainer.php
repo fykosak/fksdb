@@ -36,7 +36,7 @@ abstract class SearchContainer extends ContainerWithOptions
     {
         return $this->getForm(false)
             && $this->getComponent(self::SUBMIT_SEARCH, false)
-            && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy(); // @phpstan-ignore-line
+            && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
     protected function createSearchButton(): void
@@ -50,7 +50,7 @@ abstract class SearchContainer extends ContainerWithOptions
         $submit->setValidationScope([$this->getComponent(self::CONTROL_SEARCH)]);
 
         $cb = function (): void {
-            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue(); // @phpstan-ignore-line
+            $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->getSearchCallback())($term);
 
             $values = [];

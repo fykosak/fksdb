@@ -13,7 +13,6 @@ $container = require '../../Bootstrap.php';
 // phpcs:enable
 class OrganizerModule extends AbstractPageDisplayTestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
